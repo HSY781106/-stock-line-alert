@@ -97,7 +97,6 @@ def get_history(symbol):
     if data.empty:
         return None
 
-    # yfinance 新版有時會回傳 MultiIndex
     if hasattr(data.columns, "levels"):
         try:
             close = data["Close"]
@@ -120,8 +119,8 @@ def get_history(symbol):
 
 def get_latest_price(symbol):
     """
-    嘗試取得最新價格。
-    若盤中資料不可用，退回最近可取得價格。
+    優先取得當日盤中價格。
+    如果無法取得，退回最近日線價格。
     """
 
     ticker = yf.Ticker(symbol)
@@ -143,7 +142,6 @@ def get_latest_price(symbol):
     except Exception as e:
         print(f"{symbol} 1m資料失敗: {e}")
 
-    # 退回最近日線價格
     try:
         daily = ticker.history(
             period="5d",
@@ -164,11 +162,6 @@ def get_latest_price(symbol):
 
 
 def get_previous_close(history):
-    """
-    最後一筆日線可能就是今天已經形成的資料，
-    所以取倒數第二筆作為前一交易日收盤。
-    """
-
     closes = history.dropna()
 
     if len(closes) < 2:
@@ -177,14 +170,9 @@ def get_previous_close(history):
     return float(closes.iloc[-2])
 
 
-def get_week_high(symbol, history):
+def get_week_high(symbol):
     """
-    使用過去7個曆日內的日線最高價。
-
-    注意：
-    這裡使用的是「最高價 High」，
-    因為你的原始需求是：
-    今天價格與一週內曾經出現的價格比較。
+    過去7個曆日內的最高價。
     """
 
     end = datetime.now(TW_TZ)
@@ -216,9 +204,6 @@ def format_price(price):
     if price >= 1000:
         return f"{price:,.0f}"
 
-    if price >= 100:
-        return f"{price:,.2f}"
-
     return f"{price:,.2f}"
 
 
@@ -244,7 +229,7 @@ def check_stock(name, symbol, state):
         print("無法取得前一交易日收盤價")
         return
 
-    week_high = get_week_high(symbol, history)
+    week_high = get_week_high(symbol)
 
     if week_high is None:
         print("無法取得7日最高價")
@@ -269,9 +254,7 @@ def check_stock(name, symbol, state):
             "date": today
         }
 
-    # 新的一天
     if state[name].get("date") != today:
-
         state[name]["daily_alert"] = False
         state[name]["date"] = today
 
@@ -284,12 +267,12 @@ def check_stock(name, symbol, state):
         if not state[name]["daily_alert"]:
 
             message = (
-                "🔴 股票跌幅警報\n\n"
+                "🔴 跌幅通知\n\n"
                 f"標的：{name}\n"
                 f"目前價格：{format_price(current)}\n"
                 f"前一交易日收盤：{format_price(previous_close)}\n"
                 f"單日跌幅：{daily_change:.2%}\n\n"
-                "⚠️ 已達到單日 -5% 警戒"
+                "⚠️ 已達到單日 -5%，可加碼"
             )
 
             send_line(message)
@@ -307,12 +290,12 @@ def check_stock(name, symbol, state):
         if not state[name]["weekly_alert"]:
 
             message = (
-                "🔴 一週跌幅警報\n\n"
+                "🔴 跌幅通知\n\n"
                 f"標的：{name}\n"
                 f"目前價格：{format_price(current)}\n"
                 f"過去7日最高價：{format_price(week_high)}\n"
-                f"距7日高點：{weekly_change:.2%}\n\n"
-                "⚠️ 已達到一週 -10% 警戒"
+                f"距7日高點跌幅：{weekly_change:.2%}\n\n"
+                "⚠️ 已達到一週 -10%，可加碼"
             )
 
             send_line(message)
@@ -335,7 +318,7 @@ def check_stock(name, symbol, state):
 def main():
 
     print("================================")
-    print("股票跌幅 LINE 警報")
+    print("股票跌幅 LINE 通知")
     print("================================")
 
     state = load_state()
