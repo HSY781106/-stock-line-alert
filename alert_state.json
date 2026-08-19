@@ -42,7 +42,7 @@
   },
   "3711 日月光投控": {
     "daily_alert": false,
-    "weekly_alert": true,
+    "weekly_alert": false,
     "date": "2026-08-19"
   }
 }
