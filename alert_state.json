@@ -71,5 +71,9 @@
       "weekly_alert": false,
       "date": "2026-08-19"
     }
+  },
+  "valuation_v2": {
+    "2330": false,
+    "3711": false
   }
 }
