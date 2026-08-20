@@ -1,4 +1,4 @@
-# stock_alert.py V2.9.3
+# stock_alert.py V2.9.4
 # 效能修正版：全市場資料批次化、單次執行快取、限制 Yahoo/API 重試、15分鐘資料僅抓目標股
 # 股票跌幅 + 15分鐘區間最低價 + 動態估值 + 技術 + 籌碼 + 100分制加碼決策
 import os, json, time, math, traceback, re
@@ -222,24 +222,53 @@ def parse_time(v):
     except:return None
 
 def get_interval_stats(symbol,start_iso):
-    """取得上次執行到本次執行的實際盤中最低。
-    優先 5 分鐘資料，失敗再嘗試 1 分鐘。正常排程只需最近 1 日。
+    """取得上次執行到本次執行的盤中最低。
+    先嘗試 TWSE MIS 圖表資料；Yahoo 5m/1m 僅作 fallback。
+    注意：第一次成功取得資料前不會更新 state 基準，避免每輪都把起點重設。
     """
-    now=datetime.now(TW_TZ);start=parse_time(start_iso) if start_iso else now-timedelta(minutes=15)
-    if not start or start>now:start=now-timedelta(minutes=15)
+    now=datetime.now(TW_TZ); start=parse_time(start_iso) if start_iso else now-timedelta(minutes=15)
+    if not start or start>now: start=now-timedelta(minutes=15)
+    # TWSE MIS chart endpoint：台股上市/上櫃盤中圖表資料
+    if symbol.endswith('.TW') or symbol.endswith('.TWO'):
+        try:
+            code=clean_code(symbol); ex='tse' if symbol.endswith('.TW') else 'otc'
+            data=http_json('https://mis.twse.com.tw/stock/api/getChartOhlcStatis.jsp',{'ex':ex,'ch':code+'.tw','fqy':1,'_':int(time.time()*1000)},timeout=5,retries=0)
+            points=[]
+            def walk(x):
+                if isinstance(x,dict):
+                    # 常見欄位組合：t/time + l/low；也接受 timestamp/close 等命名
+                    tv=first_value(x,['t','time','timestamp','ts','timeStamp','date'])
+                    lv=first_value(x,['l','low','Low','最低'])
+                    if tv is not None and lv is not None:
+                        try:
+                            if isinstance(tv,(int,float)) or str(tv).isdigit(): dt=datetime.fromtimestamp(float(tv)/1000,tz=TW_TZ)
+                            else:
+                                st=str(tv).replace('/','-')
+                                dt=datetime.fromisoformat(st)
+                                if dt.tzinfo is None: dt=dt.replace(tzinfo=TW_TZ)
+                                else: dt=dt.astimezone(TW_TZ)
+                            vv=to_float(lv)
+                            if vv is not None: points.append((dt,vv))
+                        except: pass
+                    for v in x.values(): walk(v)
+                elif isinstance(x,list):
+                    for v in x: walk(v)
+            walk(data)
+            vals=[v for dt,v in points if start<=dt<=now]
+            if vals: return {'low':min(vals),'start':start,'end':now,'source':'TWSE-MIS'}
+        except Exception as e:
+            print(f'TWSE MIS盤中資料失敗 {symbol}：{e}')
     for interval,period in [('5m','1d'),('1m','1d')]:
         d=yf_download(symbol,period,interval)
-        if d is None or d.empty or 'Low' not in d:continue
+        if d is None or d.empty or 'Low' not in d: continue
         try:
             idx=pd.to_datetime(d.index)
-            if getattr(idx,'tz',None) is None:idx=idx.tz_localize('UTC').tz_convert(TW_TZ)
-            else:idx=idx.tz_convert(TW_TZ)
+            if getattr(idx,'tz',None) is None: idx=idx.tz_localize('UTC').tz_convert(TW_TZ)
+            else: idx=idx.tz_convert(TW_TZ)
             d=d.copy();d.index=idx
             low=pd.to_numeric(d.loc[(d.index>=start)&(d.index<=now),'Low'],errors='coerce').dropna()
-            if not low.empty:
-                return {'low':float(low.min()),'start':start,'end':now,'source':interval}
-        except Exception as e:
-            print(f'15分鐘資料解析失敗 {symbol} [{interval}]：{e}')
+            if not low.empty: return {'low':float(low.min()),'start':start,'end':now,'source':interval}
+        except Exception as e: print(f'15分鐘資料解析失敗 {symbol} [{interval}]：{e}')
     return None
 
 def check_interval_low(name,symbol,state):
@@ -259,8 +288,12 @@ def check_interval_low(name,symbol,state):
     elif prev_t and not stats:
         # Yahoo 盤中資料若暫時不可用，不覆蓋基準；下一輪仍會以同一個起點重新嘗試。
         print(f'⚠️ 15分鐘資料暫時無法取得；保留上次執行基準：{prev_t}')
-    s.update({'last_check':iso,'last_price':cur})
-    if stats:s['last_interval_low']=stats['low'];s['last_interval_source']=stats.get('source')
+    # 關鍵修正：若盤中資料取得失敗，不得更新基準時間/價格。
+    # 否則下一輪會把剛剛失敗的時間當成新起點，永遠無法形成完整區間。
+    if not prev_t or stats:
+        s.update({'last_check':iso,'last_price':cur})
+    if stats:
+        s['last_interval_low']=stats['low'];s['last_interval_source']=stats.get('source')
     return result
 
 def check_drop_alert(name,symbol,state):
@@ -356,7 +389,8 @@ def institutional(code,market,days=20):
     if key in INSTITUTIONAL_CACHE:return INSTITUTIONAL_CACHE[key]
     history=load_json(CHIP_HISTORY_FILE)
     market_hist=history.setdefault(market,{})
-    today=datetime.now(TW_TZ).date();dates=[];d=today
+    # T86 通常在收盤後才完整；不要把今天尚未公布的資料算進20日。
+    today=datetime.now(TW_TZ).date();dates=[];d=today-timedelta(days=1)
     while len(dates)<days:
         if d.weekday()<5:dates.append(d)
         d-=timedelta(days=1)
@@ -573,7 +607,7 @@ def analysis(query,u,backfill=True,interval_result=None):
             z=get_interval_stats(symbol,st.get('last_check'))
             if z: interval_result={'previous_price':st.get('last_price'),'interval_low':z['low'],'drop':z['low']/st.get('last_price')-1,'start':z['start'].isoformat(),'end':z['end'].isoformat()}
     peer_text='、'.join(f"{x['code']} {x['name']}" for x in peers) or '無法取得市值資料'
-    return (f'📊 股票加碼分析 V2.9.3\n\n標的：{name}（{code}）\n市場：{market}\n產業：{industry}\n\n'
+    return (f'📊 股票加碼分析 V2.9.4\n\n標的：{name}（{code}）\n市場：{market}\n產業：{industry}\n\n'
             f'【估值 / 基本面 40分】\nPE：{fmt(pe)}\n一年平均PE：{fmt(one)}（樣本 {sample}）\n同業Top10平均PE：{fmt(peer_mean)}\n同業Top10中位數PE：{fmt(peer_med)}（有效 {len(vals)}/10）\nPB：{fmt(pb)}\n殖利率：{fmt(yld)}%\nEPS成長：{fmt(yf_f["eps_growth"])}%\nPEG：{fmt(yf_f["peg"])}\nROE：{fmt(yf_f["roe"])}%\n基本面得分：{fs}/40\n\n'
             f'【動態同業 Top 10】\n{peer_text}\n\n'
             f'【技術面 30分】\nRSI：{fmt(tech["rsi"])}\nKD：K={fmt(tech["k"])} / D={fmt(tech["d"])}\nMA20：{fmt(tech["ma20"])}\nMA60：{fmt(tech["ma60"])}\n趨勢：{tech["trend"] or "N/A"}\n距20日低點：{pct(tech["distance_low"])}\n技術得分：{ts}/30\n\n'
@@ -605,7 +639,7 @@ def run_alerts():
     global RUN_CACHE,INSTITUTIONAL_CACHE,MARGIN_CACHE
     RUN_CACHE={};INSTITUTIONAL_CACHE={};MARGIN_CACHE={}
     started=time.time()
-    print('================================\n股票跌幅 + 15分鐘區間最低價 + V2.9.3自動估值 + 技術 + 籌碼\n================================')
+    print('================================\n股票跌幅 + 15分鐘區間最低價 + V2.9.4自動估值 + 技術 + 籌碼\n================================')
     state=load_json(STATE_FILE);u=get_market_universe()
     print(f'[耗時 {time.time()-started:.1f}s] 股票池完成：{len(u)}')
     # 只預抓真正會分析的 TWSE/TPEx 個股法人與融資資料；每種市場各抓一次。
