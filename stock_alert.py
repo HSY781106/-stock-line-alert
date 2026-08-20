@@ -1,8 +1,8 @@
 # ============================================================
-# stock_alert.py V2.7.1
+# stock_alert.py V2.8
 # 股票跌幅 + 15分鐘區間最低價 + 動態產業估值 + 技術 + 籌碼
 #
-# V2.7.1 重點
+# V2.8 重點
 # 1. TWSE + TPEx 動態股票池
 # 2. TPEx API 改用目前官方 OpenAPI endpoint，並提供多層 fallback
 # 3. API 失敗時優先使用快取；不因 TPEx 失敗而讓整體股票池變 0
@@ -54,6 +54,7 @@ DAILY_THRESHOLD = -0.05
 WEEK_THRESHOLD = -0.10
 PE_MIN_HISTORY = 60
 PE_MAX_VALID = 200
+PE_ONE_YEAR_TRADING_DAYS = 240
 STRONG_SCORE = 8
 GOOD_SCORE = 6
 UNIVERSE_CACHE_HOURS = 24
@@ -488,7 +489,7 @@ def get_twse_daily_quotes(use_cache=True, quiet=False):
     return {}
 
 # ============================================================
-# TPEx Universe — V2.7 核心修正
+# TPEx Universe — V2.8 核心修正
 # ============================================================
 
 def normalize_tpex_profile(row):
@@ -572,7 +573,7 @@ def get_tpex_daily_quotes():
 
 
 def get_tpex_market_values():
-    # V2.7：tpex_daily_market_value 是歷史排行 endpoint，直接取最新資料可能受日期參數/回傳格式影響。
+    # V2.8：tpex_daily_market_value 是歷史排行 endpoint，直接取最新資料可能受日期參數/回傳格式影響。
     # 因此先嘗試官方排行，再以每日行情的資本額 × 收盤價作 fallback。
     result = {}
     data = tpex_get("/tpex_daily_market_value")
@@ -599,7 +600,7 @@ def estimate_market_cap(capital, price):
 
 
 def build_market_universe():
-    print("\n========== 建立動態市場股票池 V2.7.1 ==========")
+    print("\n========== 建立動態市場股票池 V2.8 ==========")
 
     twse = get_twse_universe()
     tpex = get_tpex_universe_primary()
@@ -716,7 +717,7 @@ def resolve_stock(query, universe):
     if not q:
         return None
 
-    # V2.7.1：主程式傳入的標的是「2330 台積電」這類顯示名稱，
+    # V2.8：主程式傳入的標的是「2330 台積電」這類顯示名稱，
     # 舊版 clean_code() 會得到「2330 台積電」，因此無法命中 universe。
     # 先從輸入中擷取純股票代號，再進行名稱比對。
     import re
@@ -983,6 +984,22 @@ def get_twse_pe_by_date(date_string):
     return result
 
 
+def get_tpex_pe_by_date(date_string):
+    result = {}
+    data = tpex_get("/tpex_mainboard_peratio_analysis", {"date": date_string})
+    if isinstance(data, list):
+        for row in data:
+            code = clean_code(first_value(row, ["SecuritiesCompanyCode", "Code", "證券代號"]))
+            if not code:
+                continue
+            result[code] = {
+                "pe": find_value(row, ["PERatio", "PE", "本益比"]),
+                "pb": find_value(row, ["PBRatio", "PBR", "股價淨值比"]),
+                "yield": find_value(row, ["DividendYield", "殖利率"]),
+            }
+    return result
+
+
 def get_current_pe_data(universe):
     result = {}
     # TWSE：官方 BWIBBU_ALL
@@ -1013,7 +1030,7 @@ def get_current_pe_data(universe):
     return result
 
 
-def backfill_pe_history(code, history):
+def backfill_pe_history(code, history, market='TWSE'):
     history.setdefault(code, {})
     current_count = sum(
         1 for v in history[code].values()
@@ -1037,7 +1054,10 @@ def backfill_pe_history(code, history):
             checked += 1
             continue
 
-        pe_data = get_twse_pe_by_date(ds)
+        if market == "TPEX":
+            pe_data = get_tpex_pe_by_date(ds)
+        else:
+            pe_data = get_twse_pe_by_date(ds)
         pe = pe_data.get(code, {}).get("pe")
         if pe is not None and 0 < pe <= PE_MAX_VALID:
             history[code][ds] = float(pe)
@@ -1052,6 +1072,7 @@ def backfill_pe_history(code, history):
 
 
 def calculate_one_year_average_pe(code, history):
+    """最近365日有效官方PE平均；至少60筆才啟用，最多採最近240筆。"""
     values = []
     cutoff = datetime.now(TW_TZ).date() - timedelta(days=365)
     for ds, pe in history.get(code, {}).items():
@@ -1063,10 +1084,12 @@ def calculate_one_year_average_pe(code, history):
             continue
         pe = to_float(pe)
         if pe is not None and 0 < pe <= PE_MAX_VALID:
-            values.append(pe)
+            values.append((d, pe))
+    values.sort(key=lambda x: x[0], reverse=True)
+    values = values[:PE_ONE_YEAR_TRADING_DAYS]
     if len(values) < PE_MIN_HISTORY:
         return None, len(values)
-    return sum(values) / len(values), len(values)
+    return sum(v for _, v in values) / len(values), len(values)
 
 
 def calculate_taiex_market_pe():
@@ -1108,35 +1131,62 @@ def get_dynamic_industry_pe(code, industry, universe, current_pe_data):
         item = current_pe_data.get(peer["code"])
         pe = item.get("pe") if item else None
         if pe is not None and 0 < pe <= PE_MAX_VALID:
-            vals.append(pe)
+            vals.append(float(pe))
     if not vals:
-        return None, peers
-    return sum(vals) / len(vals), peers
+        return None, None, 0, peers
+    return float(sum(vals) / len(vals)), float(np.median(vals)), len(vals), peers
 
 
-def valuation_score(stock_pe, industry_pe, one_year_pe, stock_pb, stock_yield, earnings_growth, peg, roe, model):
-    score = 0
+def valuation_score(stock_pe, industry_pe_median, one_year_pe, stock_pb, stock_yield,
+                    earnings_growth, peg, roe, model):
+    """V2.8：估值/基本面獨立評分，滿分10。"""
+    score = 0.0
     reasons = []
 
-    def add(condition, positive, text):
-        nonlocal score
-        if condition:
-            score += 1 if positive else 0
-            reasons.append((text, positive))
+    if model.get("pe") and stock_pe is not None and industry_pe_median is not None:
+        if stock_pe < industry_pe_median:
+            score += 2
+            reasons.append(("低於同業PE中位數", True))
+        elif stock_pe <= industry_pe_median * 1.10:
+            score += 1
+            reasons.append(("接近同業PE中位數", True))
 
-    if model.get("pe"):
-        add(stock_pe is not None and industry_pe is not None, stock_pe < industry_pe if stock_pe and industry_pe else False, "低於同業PE")
-        add(stock_pe is not None and one_year_pe is not None, stock_pe < one_year_pe if stock_pe and one_year_pe else False, "低於一年平均PE")
-    if model.get("pb"):
-        add(stock_pb is not None, stock_pb < 2 if stock_pb is not None else False, "PB合理")
-    if model.get("yield"):
-        add(stock_yield is not None, stock_yield >= 3 if stock_yield is not None else False, "殖利率達3%")
-    if model.get("peg"):
-        add(peg is not None, peg < 1.5 if peg is not None else False, "PEG合理")
-    if model.get("roe"):
-        add(roe is not None, roe >= 10 if roe is not None else False, "ROE達10%")
-    add(earnings_growth is not None, earnings_growth > 0 if earnings_growth is not None else False, "獲利成長")
-    return score, reasons
+    if model.get("pe") and stock_pe is not None and one_year_pe is not None:
+        if stock_pe < one_year_pe * 0.90:
+            score += 2
+            reasons.append(("低於歷史PE", True))
+        elif stock_pe <= one_year_pe * 1.10:
+            score += 1
+            reasons.append(("接近歷史PE", True))
+
+    if model.get("pb") and stock_pb is not None:
+        if stock_pb < 2:
+            score += 1
+        elif stock_pb < 4:
+            score += 0.5
+
+    if model.get("yield") and stock_yield is not None:
+        if stock_yield >= 4:
+            score += 1
+        elif stock_yield >= 2:
+            score += 0.5
+
+    if model.get("peg") and peg is not None:
+        if 0 < peg < 1:
+            score += 1
+        elif 0 < peg < 1.5:
+            score += 0.5
+
+    if model.get("roe") and roe is not None:
+        if roe >= 20:
+            score += 1
+        elif roe >= 10:
+            score += 0.5
+
+    if earnings_growth is not None and earnings_growth > 0:
+        score += 1
+
+    return min(10, score), reasons
 
 # ============================================================
 # 技術面
@@ -1285,21 +1335,39 @@ def calculate_institutional_scores(code, history):
     }
 
 
-def get_margin_change(symbol):
-    # Yahoo沒有可靠的台股融資融券歷史；此處優先使用 TWSE/TPEx 官方 endpoint。
+def get_margin_change(symbol, market=None):
     code = clean_code(symbol)
+    if not code.isdigit():
+        return None
     try:
-        if code.isdigit():
+        if market == "TPEX":
+            for endpoint in ["/tpex_margin_balance", "/tpex_daily_margin_trading"]:
+                data = tpex_get(endpoint)
+                if isinstance(data, list):
+                    for row in data:
+                        if clean_code(first_value(row, ["SecuritiesCompanyCode", "Code", "證券代號"])) == code:
+                            return find_value(row, [
+                                "MarginPurchaseChange", "MarginBuyChange", "融資增減",
+                                "FinancingBalanceChange", "MarginPurchaseBalanceChange"
+                            ])
+        else:
             data = twse_get("/exchangeReport/MI_MARGN")
             if isinstance(data, dict):
                 fields = data.get("fields", [])
                 for table in data.get("data", []):
-                    if isinstance(table, list):
-                        for row in table:
-                            if isinstance(row, list):
-                                obj = dict(zip(fields, row))
-                                if clean_code(first_value(obj, ["股票代號", "證券代號"])) == code:
-                                    return find_value(obj, ["融資增減"])
+                    if not isinstance(table, list):
+                        continue
+                    rows = table if table and isinstance(table[0], list) else [table]
+                    for row in rows:
+                        if not isinstance(row, list):
+                            continue
+                        obj = dict(zip(fields, row)) if fields else {}
+                        if clean_code(first_value(obj, ["股票代號", "證券代號", "Code"])) == code:
+                            value = find_value(obj, [
+                                "融資增減", "融資餘額增減", "MarginPurchaseChange"
+                            ])
+                            if value is not None:
+                                return value
     except Exception as e:
         print(f"融資資料失敗 {symbol}: {e}")
     return None
@@ -1333,7 +1401,7 @@ def line_single_stock_analysis(query, universe, backfill_pe=True):
     if not isinstance(history, dict):
         history = {}
     if backfill_pe:
-        history = backfill_pe_history(code, history)
+        history = backfill_pe_history(code, history, market)
         save_json(PE_HISTORY_FILE, history)
 
     yf_fund = get_yahoo_fundamentals(symbol)
@@ -1342,31 +1410,64 @@ def line_single_stock_analysis(query, universe, backfill_pe=True):
     stock_pb = official.get("pb") or yf_fund.get("pb")
     stock_yield = official.get("yield") or yf_fund.get("yield")
 
-    industry_pe, peers = get_dynamic_industry_pe(code, industry, universe, current_pe_data)
+    industry_pe_mean, industry_pe_median, industry_pe_count, peers = get_dynamic_industry_pe(
+        code, industry, universe, current_pe_data
+    )
     one_year_pe, sample_count = calculate_one_year_average_pe(code, history)
     market_pe = calculate_taiex_market_pe() if market == "TWSE" else None
 
     tech = get_technical(symbol)
     inst_history = get_institutional_data(code, market, 20)
     inst = calculate_institutional_scores(code, inst_history)
-    margin_change = get_margin_change(symbol)
+    margin_change = get_margin_change(symbol, market)
 
     model = INDUSTRY_MODEL.get(industry, DEFAULT_MODEL)
     score, reasons = valuation_score(
-        stock_pe, industry_pe, one_year_pe, stock_pb, stock_yield,
+        stock_pe, industry_pe_median, one_year_pe, stock_pb, stock_yield,
         yf_fund.get("eps_growth"), yf_fund.get("peg"), yf_fund.get("roe"), model
     )
 
-    if score >= STRONG_SCORE:
+    valuation_score_10 = score
+
+    # 技術 0~5：不與估值混在一起
+    tech_score = 0
+    k, d, rsi = tech.get("k"), tech.get("d"), tech.get("rsi")
+    if k is not None and d is not None:
+        if k > d and k < 80:
+            tech_score += 2
+        elif k >= d:
+            tech_score += 1
+    if rsi is not None:
+        if 40 <= rsi <= 65:
+            tech_score += 2
+        elif 30 <= rsi < 70:
+            tech_score += 1
+    tech_score = min(5, tech_score)
+
+    # 籌碼 0~5
+    chip_score = 0
+    if inst.get("5d") is not None and inst["5d"] > 0:
+        chip_score += 1
+    if inst.get("20d") is not None and inst["20d"] > 0:
+        chip_score += 2
+    if margin_change is not None:
+        chip_score += 1 if margin_change < 0 else 0
+    chip_score = min(5, chip_score)
+
+    # 估值50 + 技術20 + 籌碼20 + 資料完整度10
+    total_score = int(round(valuation_score_10 * 5 + tech_score * 4 + chip_score * 4))
+    completeness = 10 if stock_pe is not None and industry_pe_median is not None else 5
+    total_score = min(100, total_score + completeness)
+
+    if total_score >= 75:
         verdict = "🟢 偏適合加碼"
-    elif score >= GOOD_SCORE:
+    elif total_score >= 55:
         verdict = "🟡 可分批觀察"
     else:
         verdict = "🔴 暫不建議急著加碼"
 
     peer_text = "、".join(f"{p.get('code')} {p.get('name')}" for p in peers) if peers else "無法取得市值資料"
     warning = []
-    k, d, rsi = tech.get("k"), tech.get("d"), tech.get("rsi")
     if k is not None and d is not None and k > 70 and d > 70:
         warning.append("KD高檔")
     if rsi is not None and rsi > 70:
@@ -1377,34 +1478,38 @@ def line_single_stock_analysis(query, universe, backfill_pe=True):
         warning.append("融資下降")
 
     return (
-        f"📊 股票加碼分析 V2.7.1\n\n"
-        f"標的：{name}（{code}）\n"
-        f"市場：{market}\n"
-        f"產業：{industry}\n\n"
-        f"【估值】\n"
-        f"PE：{format_number(stock_pe)}\n"
-        f"同業市值Top10平均PE：{format_number(industry_pe)}\n"
-        f"一年平均PE：{format_number(one_year_pe)}（樣本 {sample_count}/{PE_MIN_HISTORY}）\n"
-        f"TAIEX PE：{format_number(market_pe)}\n"
-        f"PB：{format_number(stock_pb)}\n"
-        f"殖利率：{format_number(stock_yield)}%\n"
-        f"EPS成長：{format_number(yf_fund.get('eps_growth'))}%\n"
-        f"PEG：{format_number(yf_fund.get('peg'))}\n"
-        f"ROE：{format_number(yf_fund.get('roe'))}%\n\n"
-        f"【動態同業 Top 10】\n{peer_text}\n\n"
-        f"【技術】\n"
-        f"KD：K={format_number(k)} / D={format_number(d)}\n"
-        f"RSI：{format_number(rsi)}\n\n"
-        f"【籌碼】\n"
-        f"法人最新：{format_number(inst.get('latest'), 0)} 股\n"
-        f"法人5日：{format_number(inst.get('5d'), 0)} 股\n"
-        f"法人20日：{format_number(inst.get('20d'), 0)} 股\n"
-        f"融資變化：{format_number(margin_change, 0)} 張\n\n"
-        f"【評分】\n"
-        f"估值/基本面：{score} 分\n"
-        f"結論：{verdict}\n"
-        f"風險提醒：{'、'.join(warning) if warning else '目前無主要技術/籌碼警訊'}\n\n"
-        "※ V2.7 的 PE 歷史只採該交易日官方資料；不足60筆時，一年平均PE不進入評分。"
+        f"📊 股票加碼分析 V2.8\\n\\n"
+        f"標的：{name}（{code}）\\n"
+        f"市場：{market}\\n"
+        f"產業：{industry}\\n\\n"
+        f"【估值】\\n"
+        f"PE：{format_number(stock_pe)}\\n"
+        f"同業市值Top10平均PE：{format_number(industry_pe_mean)}\\n"
+        f"同業市值Top10中位數PE：{format_number(industry_pe_median)}（有效 {industry_pe_count}/10）\\n"
+        f"一年平均PE：{format_number(one_year_pe)}（最近365日樣本 {sample_count}）\\n"
+        f"TAIEX PE：{format_number(market_pe)}\\n"
+        f"PB：{format_number(stock_pb)}\\n"
+        f"殖利率：{format_number(stock_yield)}%\\n"
+        f"EPS成長：{format_number(yf_fund.get('eps_growth'))}%\\n"
+        f"PEG：{format_number(yf_fund.get('peg'))}\\n"
+        f"ROE：{format_number(yf_fund.get('roe'))}%\\n\\n"
+        f"【動態同業 Top 10】\\n{peer_text}\\n\\n"
+        f"【技術】\\n"
+        f"KD：K={format_number(k)} / D={format_number(d)}\\n"
+        f"RSI：{format_number(rsi)}\\n"
+        f"技術評分：{tech_score}/5\\n\\n"
+        f"【籌碼】\\n"
+        f"法人最新：{format_number(inst.get('latest'), 0)} 股\\n"
+        f"法人5日：{format_number(inst.get('5d'), 0)} 股\\n"
+        f"法人20日：{format_number(inst.get('20d'), 0)} 股\\n"
+        f"融資變化：{format_number(margin_change, 0)} 張\\n"
+        f"籌碼評分：{chip_score}/5\\n\\n"
+        f"【評分】\\n"
+        f"估值/基本面：{valuation_score_10:.1f}/10\\n"
+        f"綜合評分：{total_score}/100\\n"
+        f"結論：{verdict}\\n"
+        f"風險提醒：{'、'.join(warning) if warning else '目前無主要技術/籌碼警訊'}\\n\\n"
+        "※ V2.8：一年平均PE以最近365日有效官方資料計算，至少60筆才啟用；同業同時顯示平均與中位數，估值評分主要採中位數。"
     )
 
 # ============================================================
@@ -1423,7 +1528,7 @@ def handle_line_webhook_event(event, universe):
         return
     if text.lower() in {"help", "說明", "功能", "股票"}:
         reply_line(token,
-            "📈 股票加碼分析 Bot V2.7.1\n\n"
+            "📈 股票加碼分析 Bot V2.8\n\n"
             "直接輸入股票代號或名稱即可。\n\n"
             "例如：\n2330\n台積電\n5347\n世界\n\n"
             "Bot會自動：\n"
@@ -1463,7 +1568,7 @@ def run_webhook_server():
 
     port = int(os.environ.get("PORT", "8080"))
     print("================================")
-    print("LINE Webhook Server V2.7.1")
+    print("LINE Webhook Server V2.8")
     print(f"Port：{port}")
     print("================================")
     app.run(host="0.0.0.0", port=port)
@@ -1474,7 +1579,7 @@ def run_webhook_server():
 
 def run_alerts():
     print("================================")
-    print("股票跌幅 + 15分鐘區間最低價 + V2.7.1自動估值 + 技術 + 籌碼")
+    print("股票跌幅 + 15分鐘區間最低價 + V2.8自動估值 + 技術 + 籌碼")
     print("================================")
 
     state = load_json(STATE_FILE)
@@ -1494,7 +1599,7 @@ def run_alerts():
             print(f"{name} 價格/通知分析失敗：{e}")
             traceback.print_exc()
 
-        # V2.7：正式執行時也必須產生單股分析結果。
+        # V2.8：正式執行時也必須產生單股分析結果。
         # PE 歷史回補只在 `analyze` 指令執行，避免每次排程都對官方歷史 API 發出大量請求。
         try:
             if symbol.startswith("^") or name == "台灣加權指數":
