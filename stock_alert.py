@@ -70,8 +70,8 @@ SUBINDUSTRY_CACHE_FILE = 'subindustry_cache.json'
 LINE_REPLY_URL = 'https://api.line.me/v2/bot/message/reply'
 LINE_BROADCAST_URL = 'https://api.line.me/v2/bot/message/broadcast'
 
-DAILY_THRESHOLD = -0.00
-WEEK_THRESHOLD = -0.00
+DAILY_THRESHOLD = -0.05
+WEEK_THRESHOLD = -0.10
 
 PE_MIN_HISTORY = 60
 PE_MAX_VALID = 200
