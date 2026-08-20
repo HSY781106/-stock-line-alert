@@ -1,4 +1,4 @@
-# stock_alert.py V2.9.8
+# stock_alert.py V2.9.9
 # 效能修正版：
 # 1. 全市場資料批次化
 # 2. 單次執行快取
@@ -27,6 +27,7 @@
 # - 保留原本基本面 / 技術 / 籌碼 / 風險 / LINE 功能
 #
 # 股票跌幅 + 15分鐘區間最低價 + 動態估值 + 技術 + 籌碼 + 100分制加碼決策
+# V2.9.9：UTF-8/快取三層亂碼防護 + T86法人資料補抓 + Yahoo實際最新K棒區間
 
 import os
 import json
@@ -315,18 +316,78 @@ def symbol_for(code, market=None):
     return c
 
 
+def _repair_mojibake_text(value):
+    """
+    修復常見的 UTF-8 -> Latin-1/CP1252 中文亂碼。
+
+    例如：
+        æ¶åè£½é  -> 晶圓製造
+        ICå°è£æ¸¬è©¦ -> IC封裝測試
+
+    最多連續修復 3 次，並以「亂碼特徵是否下降」判斷是否採用結果，
+    避免誤傷正常中文、英文或數字。
+    """
+    if value is None:
+        return ''
+
+    s = str(value)
+    if not s:
+        return ''
+
+    def badness(x):
+        markers = 'ÃÂâðæåçèéêëìíîïòóôõöùúûüýÿ'
+        control = sum(1 for ch in x if 0x80 <= ord(ch) <= 0x9F)
+        marker = sum(1 for ch in x if ch in markers)
+        replacement = x.count('�')
+        return marker + control * 2 + replacement * 4
+
+    for _ in range(3):
+        before = badness(s)
+        if before <= 0:
+            break
+
+        candidates = []
+        for enc in ('latin1', 'cp1252'):
+            try:
+                candidates.append(s.encode(enc).decode('utf-8'))
+            except (UnicodeEncodeError, UnicodeDecodeError):
+                pass
+
+        if not candidates:
+            break
+
+        best = min(candidates, key=badness)
+        if badness(best) < before:
+            s = best
+        else:
+            break
+
+    return s
+
+
+def _repair_json_strings(obj):
+    """遞迴修復 JSON 快取內所有字串，特別是舊次產業快取。"""
+    if isinstance(obj, str):
+        return _repair_mojibake_text(obj)
+    if isinstance(obj, list):
+        return [_repair_json_strings(x) for x in obj]
+    if isinstance(obj, dict):
+        return {
+            _repair_json_strings(k): _repair_json_strings(v)
+            for k, v in obj.items()
+        }
+    return obj
+
+
 def normalize_subindustry(v):
     """
     統一次產業名稱。
 
-    注意：
-    這裡不建立任何「股票代碼 -> 次產業」對應。
-
-    只做文字標準化。
+    V2.9.9 三層防護的最後一層：即使 API 或舊快取已經留下
+    UTF-8/Latin-1/CP1252 mojibake，最終顯示與比對前仍會修復。
+    不建立任何股票代碼 -> 次產業硬編碼。
     """
-
-    s = str(v or '').strip()
-
+    s = _repair_mojibake_text(v).strip()
     s = s.replace('　', ' ')
     s = re.sub(r'\s+', '', s)
 
@@ -350,7 +411,7 @@ def http_json(
     last = None
 
     base_headers = {
-        'User-Agent': 'Mozilla/5.0 stock-alert/2.9.8'
+        'User-Agent': 'Mozilla/5.0 stock-alert/2.9.9'
     }
 
     if headers:
@@ -368,7 +429,13 @@ def http_json(
 
             r.raise_for_status()
 
-            return r.json()
+            # V2.9.9：API 原始 bytes 強制以 UTF-8 解碼，避免
+            # requests 自動猜測編碼後產生 mojibake。
+            try:
+                text = r.content.decode('utf-8-sig')
+                return json.loads(text)
+            except Exception:
+                return r.json()
 
         except Exception as e:
 
@@ -398,7 +465,7 @@ def http_text(
                 timeout=timeout,
                 headers={
                     'User-Agent':
-                        'Mozilla/5.0 stock-alert/2.9.8'
+                        'Mozilla/5.0 stock-alert/2.9.9'
                 }
             )
 
@@ -456,6 +523,10 @@ def load_json(f):
 
             d = json.load(x)
 
+            # V2.9.9：舊快取讀取時強制修復 UTF-8 -> Latin-1/CP1252
+            # 亂碼；即使 V2.9.8 已經把錯誤文字寫進快取，也能自動恢復。
+            d = _repair_json_strings(d)
+
             return d if isinstance(d, dict) else {}
 
     except Exception:
@@ -466,6 +537,8 @@ def load_json(f):
 def save_json(f, d):
 
     t = f + '.tmp'
+
+    d = _repair_json_strings(d)
 
     with open(
         t,
@@ -1093,14 +1166,20 @@ def fetch_value_chain_for_stock(code):
             timeout=VALUE_CHAIN_TIMEOUT,
             headers={
                 'User-Agent':
-                    'Mozilla/5.0 stock-alert/2.9.8',
+                    'Mozilla/5.0 stock-alert/2.9.9',
                 'Accept-Language': 'zh-TW,zh;q=0.9,en;q=0.8'
             }
         )
         r.raise_for_status()
 
+        # V2.9.9：產業價值鏈頁面也不使用 requests 猜測編碼。
+        try:
+            page_text = r.content.decode('utf-8-sig')
+        except Exception:
+            page_text = r.text
+
         parsed = parse_value_chain_html(
-            r.text,
+            page_text,
             code
         )
 
@@ -1260,7 +1339,7 @@ def get_public_subindustry(u):
         missing = list(candidate_codes)
 
     print(
-        '\n========== 更新動態次產業資料 V2.9.8 =========='
+        '\n========== 更新動態次產業資料 V2.9.9 =========='
     )
     print(
         '次產業來源：TPEx/TWSE 產業價值鏈資訊平台（公開資料）'
@@ -1564,7 +1643,7 @@ def get_subindustry_display(
     if not subs:
         return '次產業資料不可用'
 
-    return '、'.join(subs)
+    return '、'.join(normalize_subindustry(x) for x in subs)
 
 
 # ============================================================
@@ -1575,7 +1654,7 @@ def build_universe():
 
     print(
         '\n========== '
-        '建立動態市場股票池 V2.9.8 '
+        '建立動態市場股票池 V2.9.9 '
         '=========='
     )
 
@@ -2004,230 +2083,111 @@ def yahoo_chart_intraday(
     end_dt,
     interval='5m'
 ):
+    """
+    取得 Yahoo 盤中 K 棒。
 
-    ranges = {
-        '5m': '5d',
-        '1m': '1d'
-    }
-
-    hosts = (
-        'query1.finance.yahoo.com',
-        'query2.finance.yahoo.com'
-    )
+    V2.9.9：
+    Yahoo 台股盤中資料常停在最後一根已完成 K 棒（例如 13:30），
+    不再拿 GitHub Actions 的目前時間硬套區間；一律先找 Yahoo
+    實際最新 K 棒，再以該時間作為有效 end。
+    """
+    ranges = {'5m': '5d', '1m': '1d'}
+    hosts = ('query1.finance.yahoo.com', 'query2.finance.yahoo.com')
 
     try:
-
         if start_dt.tzinfo is None:
-
-            start_dt = start_dt.replace(
-                tzinfo=TW_TZ
-            )
-
+            start_dt = start_dt.replace(tzinfo=TW_TZ)
         else:
-
-            start_dt = start_dt.astimezone(
-                TW_TZ
-            )
+            start_dt = start_dt.astimezone(TW_TZ)
 
         if end_dt.tzinfo is None:
-
-            end_dt = end_dt.replace(
-                tzinfo=TW_TZ
-            )
-
+            end_dt = end_dt.replace(tzinfo=TW_TZ)
         else:
-
-            end_dt = end_dt.astimezone(
-                TW_TZ
-            )
+            end_dt = end_dt.astimezone(TW_TZ)
 
         for host in hosts:
-
             try:
-
-                url = (
-                    f'https://{host}/v8/finance/chart/'
-                    f'{symbol}'
-                )
-
+                url = f'https://{host}/v8/finance/chart/{symbol}'
                 r = requests.get(
                     url,
                     params={
-                        'range':
-                            ranges[interval],
-                        'interval':
-                            interval,
-                        'events':
-                            'history',
-                        'includePrePost':
-                            'false',
-                        'includeAdjustedClose':
-                            'true'
+                        'range': ranges[interval],
+                        'interval': interval,
+                        'events': 'history',
+                        'includePrePost': 'false',
+                        'includeAdjustedClose': 'true'
                     },
                     headers={
-                        'User-Agent':
-                            'Mozilla/5.0 '
-                            '(Windows NT 10.0; Win64; x64) '
-                            'AppleWebKit/537.36 '
-                            'Chrome/124.0 Safari/537.36'
+                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/124.0 Safari/537.36'
                     },
-                    timeout=8
+                    timeout=10
                 )
-
                 r.raise_for_status()
-
                 payload = r.json()
-
-                chart = (
-                    payload.get('chart')
-                    or {}
-                )
-
-                result = (
-                    chart.get('result')
-                    or [None]
-                )[0]
+                chart = payload.get('chart') or {}
+                result = (chart.get('result') or [None])[0]
 
                 if not result:
-
-                    err = chart.get(
-                        'error'
-                    )
-
-                    print(
-                        f'Yahoo Chart無資料 '
-                        f'{symbol} '
-                        f'[{interval}] '
-                        f'{host}: '
-                        f'{err or "empty result"}'
-                    )
-
+                    err = chart.get('error')
+                    print(f'Yahoo Chart無資料 {symbol} [{interval}] {host}: {err or "empty result"}')
                     continue
 
-                ts = (
-                    result.get(
-                        'timestamp'
-                    )
-                    or []
-                )
+                ts = result.get('timestamp') or []
+                q = ((result.get('indicators') or {}).get('quote') or [{}])[0]
+                lows = q.get('low') or []
 
-                q = (
-                    (
-                        result.get(
-                            'indicators'
-                        )
-                        or {}
-                    )
-                    .get(
-                        'quote'
-                    )
-                    or [{}]
-                )[0]
-
-                lows = q.get(
-                    'low'
-                ) or []
-
-                points = []
-
-                for t, lv in zip(
-                    ts,
-                    lows
-                ):
-
-                    if (
-                        t is None
-                        or lv is None
-                    ):
+                all_points = []
+                for t, lv in zip(ts, lows):
+                    if t is None or lv is None:
                         continue
+                    try:
+                        dt = datetime.fromtimestamp(float(t), tz=TW_TZ)
+                    except Exception:
+                        continue
+                    v = to_float(lv)
+                    if v is not None:
+                        all_points.append((dt, v))
 
-                    dt = datetime.fromtimestamp(
-                        float(t),
-                        tz=TW_TZ
-                    )
+                if not all_points:
+                    print(f'Yahoo Chart無有效K棒 {symbol} [{interval}] {host}')
+                    continue
 
-                    if (
-                        start_dt
-                        <= dt
-                        <= end_dt
-                    ):
+                latest = max(dt for dt, _ in all_points)
 
-                        v = to_float(lv)
+                # 核心修正：Yahoo 最新 K 棒才是資料真正的 end。
+                effective_end = min(end_dt, latest)
+                effective_start = start_dt
 
-                        if v is not None:
+                # 如果 GitHub Actions 執行時間已經晚於 Yahoo 最新K棒，
+                # 原本會因 start > latest 而整段 N/A。現在改抓最新K棒往前15分鐘。
+                if effective_start > effective_end:
+                    effective_end = latest
+                    effective_start = latest - timedelta(minutes=15)
 
-                            points.append(
-                                (dt, v)
-                            )
-
-                if points:
-
-                    return {
-                        'low':
-                            min(
-                                v
-                                for _, v
-                                in points
-                            ),
-                        'start':
-                            start_dt,
-                        'end':
-                            end_dt,
-                        'source':
-                            f'Yahoo-{interval}'
-                    }
-
-                all_times = [
-                    datetime.fromtimestamp(
-                        float(t),
-                        tz=TW_TZ
-                    )
-                    for t in ts
-                    if t is not None
+                points = [
+                    (dt, v) for dt, v in all_points
+                    if effective_start <= dt <= effective_end
                 ]
 
-                latest = (
-                    max(all_times)
-                    if all_times
-                    else None
-                )
-
-                latest_text = (
-                    latest.strftime(
-                        '%Y-%m-%d %H:%M:%S'
-                    )
-                    if latest
-                    else 'N/A'
-                )
+                if points:
+                    return {
+                        'low': min(v for _, v in points),
+                        'start': min(dt for dt, _ in points),
+                        'end': max(dt for dt, _ in points),
+                        'source': f'Yahoo-{interval}',
+                        'latest_bar': latest
+                    }
 
                 print(
-                    f'Yahoo Chart區間無K棒 '
-                    f'{symbol} '
-                    f'[{interval}] '
-                    f'{host}；'
-                    f'最新K棒：'
-                    f'{latest_text}'
+                    f'Yahoo Chart區間無K棒 {symbol} [{interval}] {host}；'
+                    f'實際最新K棒：{latest.strftime("%Y-%m-%d %H:%M:%S")}'
                 )
-
             except Exception as e:
-
-                print(
-                    f'Yahoo Chart失敗 '
-                    f'{symbol} '
-                    f'[{interval}] '
-                    f'{host}：{e}'
-                )
+                print(f'Yahoo Chart失敗 {symbol} [{interval}] {host}：{e}')
 
         return None
-
     except Exception as e:
-
-        print(
-            f'Yahoo Chart盤中資料失敗 '
-            f'{symbol} '
-            f'[{interval}]：{e}'
-        )
-
+        print(f'Yahoo Chart盤中資料失敗 {symbol} [{interval}]：{e}')
         return None
 
 
@@ -2344,7 +2304,7 @@ def check_interval_low(
             'start':
                 stats['start'].isoformat(),
             'end':
-                iso,
+                stats.get('end', now).isoformat(),
             'source':
                 stats.get(
                     'source'
@@ -3239,177 +3199,132 @@ def institutional(
     market,
     days=20
 ):
-
-    key = (
-        'inst',
-        market,
-        days
-    )
+    """
+    V2.9.9 法人資料：
+    - TWSE T86 timeout 由 4 秒提高至 10 秒
+    - 暫時性失敗允許 1 次重試
+    - 先抓最近 20 個交易日，若不足 20 日，再自動往前補抓 10 日
+    - 已成功資料立即寫入 chip_history.json，避免單日 timeout 造成整批失敗
+    """
+    key = ('inst', market, days)
 
     if key in INSTITUTIONAL_CACHE:
         return INSTITUTIONAL_CACHE[key]
 
-    history = load_json(
-        CHIP_HISTORY_FILE
-    )
+    history = load_json(CHIP_HISTORY_FILE)
+    market_hist = history.setdefault(market, {})
+    today = datetime.now(TW_TZ).date()
 
-    market_hist = history.setdefault(
-        market,
-        {}
-    )
+    def weekday_dates(start_date, count):
+        out = []
+        d = start_date
+        while len(out) < count:
+            if d.weekday() < 5:
+                out.append(d)
+            d -= timedelta(days=1)
+        return out
 
-    today = datetime.now(
-        TW_TZ
-    ).date()
-
-    dates = []
-
-    d = today - timedelta(
-        days=1
-    )
-
-    while len(dates) < days:
-
-        if d.weekday() < 5:
-            dates.append(d)
-
-        d -= timedelta(
-            days=1
-        )
-
-    missing = [
-        x
-        for x in dates
-        if x.strftime(
-            '%Y%m%d'
-        )
-        not in market_hist
-    ]
-
-    print(
-        f'法人資料：'
-        f'{market} 已有 '
-        f'{len(dates)-len(missing)}/'
-        f'{days} 日快取，'
-        f'需補 {len(missing)} 日'
-    )
-
-    from concurrent.futures import (
-        ThreadPoolExecutor,
-        as_completed
-    )
+    # V2.9.9：把今天也納入候選；若 T86 尚未發布，該日會自然失敗，
+    # 程式會繼續使用前一交易日資料。
+    dates = weekday_dates(today, days)
 
     def fetch(dt):
-
-        ds = dt.strftime(
-            '%Y%m%d'
-        )
+        ds = dt.strftime('%Y%m%d')
 
         if market == 'TPEX':
-
             x = tpex_get(
                 '/tpex_3insti_daily_trading',
-                {
-                    'date': ds
-                }
+                {'date': ds}
             )
-
-            return (
-                ds,
-                parse_tpex_inst(
-                    x
-                )
-                if x
-                else {}
-            )
+            return ds, parse_tpex_inst(x) if x else {}
 
         x = http_json(
             TWSE_WEB_BASE + '/fund/T86',
             {
-                'date':
-                    ds,
-                'selectType':
-                    'ALL',
-                'response':
-                    'json'
+                'date': ds,
+                'selectType': 'ALL',
+                'response': 'json'
             },
-            timeout=4,
-            retries=0
+            timeout=10,
+            retries=1
+        )
+        return ds, parse_t86(x) if x else {}
+
+    def fetch_missing(target_dates):
+        missing = [
+            x for x in target_dates
+            if x.strftime('%Y%m%d') not in market_hist
+        ]
+
+        print(
+            f'法人資料：{market} 已有 '
+            f'{len(target_dates)-len(missing)}/{len(target_dates)} 日快取，'
+            f'需補 {len(missing)} 日'
         )
 
-        return (
-            ds,
-            parse_t86(x)
-            if x
-            else {}
-        )
+        if not missing:
+            return
 
-    if missing:
+        from concurrent.futures import ThreadPoolExecutor, as_completed
 
-        with ThreadPoolExecutor(
-            max_workers=min(
-                5,
-                len(missing)
-            )
-        ) as ex:
-
-            futs = [
-                ex.submit(
-                    fetch,
-                    x
-                )
-                for x in missing
-            ]
-
-            for f in as_completed(
-                futs
-            ):
-
+        with ThreadPoolExecutor(max_workers=min(5, len(missing))) as ex:
+            futs = [ex.submit(fetch, x) for x in missing]
+            for f in as_completed(futs):
                 try:
-
                     ds, data = f.result()
-
                     if data:
-                        market_hist[
-                            ds
-                        ] = data
-
+                        market_hist[ds] = data
                 except Exception as e:
+                    print('法人批次失敗：', e)
 
-                    print(
-                        '法人批次失敗：',
-                        e
-                    )
+        save_json(CHIP_HISTORY_FILE, history)
 
-        save_json(
-            CHIP_HISTORY_FILE,
-            history
+    fetch_missing(dates)
+
+    # 若最近 20 個交易日仍不足 20 日，向前再補 10 個交易日。
+    available = sum(
+        1 for dt in dates
+        if dt.strftime('%Y%m%d') in market_hist
+    )
+
+    if available < days:
+        extended = weekday_dates(
+            today - timedelta(days=1),
+            days + 10
         )
+        extra = [
+            dt for dt in extended
+            if dt.strftime('%Y%m%d') not in {
+                x.strftime('%Y%m%d') for x in dates
+            }
+        ][:10]
+
+        if extra:
+            print(
+                f'法人資料不足 {days} 日，追加往前補抓：{len(extra)} 日'
+            )
+            fetch_missing(extra)
+
+    # 重新建立最近可用交易日清單，最多取 days 日。
+    all_dates = weekday_dates(today, days + 10)
+    usable = [
+        dt for dt in all_dates
+        if dt.strftime('%Y%m%d') in market_hist
+    ][:days]
 
     result = [
         {
-            'date':
-                dt.strftime(
-                    '%Y%m%d'
-                ),
-            'data':
-                market_hist[
-                    dt.strftime(
-                        '%Y%m%d'
-                    )
-                ]
+            'date': dt.strftime('%Y%m%d'),
+            'data': market_hist[dt.strftime('%Y%m%d')]
         }
-        for dt in dates
-        if dt.strftime(
-            '%Y%m%d'
-        ) in market_hist
+        for dt in usable
     ]
 
     INSTITUTIONAL_CACHE[key] = result
 
     print(
-        f'法人資料完成：'
-        f'{len(result)} 個交易日'
+        f'法人資料完成：{len(result)} 個交易日'
+        + ('（完整20日）' if len(result) >= days else '（目前不足20日）')
     )
 
     return result
@@ -4376,7 +4291,9 @@ def analysis(
 
     subindustry_display = (
         '、'.join(
-            subindustries
+            normalize_subindustry(x)
+            for x in subindustries
+            if normalize_subindustry(x)
         )
         if subindustries
         else '次產業資料不可用'
@@ -4704,7 +4621,7 @@ def analysis(
     # --------------------------------------------------------
 
     return (
-        f'📊 股票加碼分析 V2.9.8\n\n'
+        f'📊 股票加碼分析 V2.9.9\n\n'
         f'標的：{name}（{code}）\n'
         f'市場：{market}\n'
         f'產業：{industry}\n'
@@ -4827,7 +4744,7 @@ def handle_event(e, u):
 
         reply_line(
             token,
-            '📈 股票加碼分析 Bot V2.9.8\n\n'
+            '📈 股票加碼分析 Bot V2.9.9\n\n'
             '輸入股票代號或名稱即可。\n'
             '例如：2330、台積電、3711、日月光投控\n\n'
             '模型：基本面40 + 技術30 + 籌碼20 + 風險10。\n\n'
@@ -4926,7 +4843,7 @@ def run_alerts():
     print(
         '================================\n'
         '股票跌幅 + 15分鐘區間最低價 + '
-        'V2.9.8自動估值 + 技術 + 籌碼\n'
+        'V2.9.9自動估值 + 技術 + 籌碼\n'
         '================================'
     )
 
@@ -4943,7 +4860,7 @@ def run_alerts():
     )
 
     # --------------------------------------------------------
-    # 顯示 V2.9.8 次產業狀態
+    # 顯示 V2.9.9 次產業狀態
     # --------------------------------------------------------
 
     sub_count = sum(
