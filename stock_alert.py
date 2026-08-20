@@ -1,4 +1,4 @@
-# stock_alert.py V2.9.5
+# stock_alert.py V2.9.6
 # 效能修正版：全市場資料批次化、單次執行快取、限制 Yahoo/API 重試、15分鐘資料僅抓目標股
 # 股票跌幅 + 15分鐘區間最低價 + 動態估值 + 技術 + 籌碼 + 100分制加碼決策
 import os, json, time, math, traceback, re
@@ -67,7 +67,7 @@ def http_json(url,params=None,timeout=20,retries=2):
     last=None
     for i in range(retries+1):
         try:
-            r=requests.get(url,params=params,timeout=timeout,headers={'User-Agent':'Mozilla/5.0 stock-alert/2.9.1'}); r.raise_for_status(); return r.json()
+            r=requests.get(url,params=params,timeout=timeout,headers={'User-Agent':'Mozilla/5.0 stock-alert/2.9.6'}); r.raise_for_status(); return r.json()
         except Exception as e:
             last=e
             if i<retries:time.sleep(.8*(i+1))
@@ -75,7 +75,7 @@ def http_json(url,params=None,timeout=20,retries=2):
 def http_text(url,params=None,timeout=20,retries=2):
     for i in range(retries+1):
         try:
-            r=requests.get(url,params=params,timeout=timeout,headers={'User-Agent':'Mozilla/5.0 stock-alert/2.9.1'}); r.raise_for_status(); return r.content.decode('utf-8-sig','replace')
+            r=requests.get(url,params=params,timeout=timeout,headers={'User-Agent':'Mozilla/5.0 stock-alert/2.9.6'}); r.raise_for_status(); return r.content.decode('utf-8-sig','replace')
         except Exception as e:
             if i<retries:time.sleep(.8*(i+1))
     return None
@@ -222,91 +222,61 @@ def parse_time(v):
     except:return None
 
 def yahoo_chart_intraday(symbol, start_dt, end_dt, interval='5m'):
-    """直接呼叫 Yahoo chart API，繞過 yfinance 對盤中資料的額外處理。
-    5m 可取得數日內資料；本程式只需要上次執行到本次執行的區間。
+    """穩定取得盤中 OHLC。
+    GitHub Actions 對 period1/period2 的 Yahoo 盤中查詢較容易得到空結果，
+    因此改用 range：5m=5d、1m=1d，再在本機精確切出上次成功執行到本次執行的區間。
+    query1/query2 雙主機 fallback。
     """
+    ranges={'5m':'5d','1m':'1d'}
+    hosts=('query1.finance.yahoo.com','query2.finance.yahoo.com')
     try:
-        if start_dt.tzinfo is None: start_dt=start_dt.replace(tzinfo=TW_TZ)
-        if end_dt.tzinfo is None: end_dt=end_dt.replace(tzinfo=TW_TZ)
-        # Yahoo chart API 對 period1/2 使用 Unix timestamp。
-        # 多留 30 分鐘避免邊界 candle 被切掉。
-        p1=int((start_dt-timedelta(minutes=30)).timestamp())
-        p2=int((end_dt+timedelta(minutes=5)).timestamp())
-        url=f'https://query1.finance.yahoo.com/v8/finance/chart/{symbol}'
-        r=requests.get(url,params={'period1':p1,'period2':p2,'interval':interval,'events':'history','includeAdjustedClose':'true'},
-                       headers={'User-Agent':'Mozilla/5.0 stock-alert/2.9.5'},timeout=8)
-        r.raise_for_status()
-        payload=r.json()
-        result=((payload.get('chart') or {}).get('result') or [None])[0]
-        if not result:return None
-        ts=result.get('timestamp') or []
-        q=((result.get('indicators') or {}).get('quote') or [{}])[0]
-        lows=q.get('low') or []
-        points=[]
-        for t,lv in zip(ts,lows):
-            if lv is None:continue
-            dt=datetime.fromtimestamp(float(t),tz=TW_TZ)
-            if start_dt<=dt<=end_dt:
-                v=to_float(lv)
-                if v is not None:points.append((dt,v))
-        if not points:return None
-        return {'low':min(v for _,v in points),'start':start_dt,'end':end_dt,'source':f'Yahoo-{interval}'}
+        if start_dt.tzinfo is None:start_dt=start_dt.replace(tzinfo=TW_TZ)
+        else:start_dt=start_dt.astimezone(TW_TZ)
+        if end_dt.tzinfo is None:end_dt=end_dt.replace(tzinfo=TW_TZ)
+        else:end_dt=end_dt.astimezone(TW_TZ)
+        for host in hosts:
+            try:
+                url=f'https://{host}/v8/finance/chart/{symbol}'
+                r=requests.get(url,params={'range':ranges[interval],'interval':interval,'events':'history','includePrePost':'false','includeAdjustedClose':'true'},headers={'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/124.0 Safari/537.36'},timeout=8)
+                r.raise_for_status(); payload=r.json()
+                chart=payload.get('chart') or {}; result=(chart.get('result') or [None])[0]
+                if not result:
+                    err=chart.get('error')
+                    print(f'Yahoo Chart無資料 {symbol} [{interval}] {host}: {err or "empty result"}')
+                    continue
+                ts=result.get('timestamp') or []
+                q=((result.get('indicators') or {}).get('quote') or [{}])[0]
+                lows=q.get('low') or []
+                points=[]
+                for t,lv in zip(ts,lows):
+                    if t is None or lv is None:continue
+                    dt=datetime.fromtimestamp(float(t),tz=TW_TZ)
+                    if start_dt <= dt <= end_dt:
+                        v=to_float(lv)
+                        if v is not None:points.append((dt,v))
+                if points:
+                    return {'low':min(v for _,v in points),'start':start_dt,'end':end_dt,'source':f'Yahoo-{interval}'}
+                # Yahoo 有資料但沒有落在區間內：把最新一筆時間印出來，方便判斷延遲/時區問題。
+                all_times=[datetime.fromtimestamp(float(t),tz=TW_TZ) for t in ts if t is not None]
+                latest=max(all_times) if all_times else None
+                print(f'Yahoo Chart區間無K棒 {symbol} [{interval}] {host}；最新K棒：{latest.strftime("%Y-%m-%d %H:%M:%S") if latest else "N/A"}')
+            except Exception as e:
+                print(f'Yahoo Chart失敗 {symbol} [{interval}] {host}：{e}')
+        return None
     except Exception as e:
-        print(f'Yahoo Chart失敗 {symbol} [{interval}]：{e}')
+        print(f'Yahoo Chart盤中資料失敗 {symbol} [{interval}]：{e}')
         return None
 
 def get_interval_stats(symbol,start_iso):
     """取得上次成功基準到本次執行的實際盤中最低價。
-    優先直接 Yahoo Chart API，再用 yfinance；TWSE MIS 最後才 fallback。
+    只使用 Yahoo Chart；不再呼叫不穩定的 TWSE MIS，避免同一次執行浪費 timeout。
     """
     now=datetime.now(TW_TZ)
     start=parse_time(start_iso) if start_iso else now-timedelta(minutes=15)
     if not start or start>now:start=now-timedelta(minutes=15)
-
-    # 先直接打 Yahoo Chart，避免 yfinance 在 GitHub Actions 對 intraday 資料失敗。
     for interval in ('5m','1m'):
         z=yahoo_chart_intraday(symbol,start,now,interval)
         if z:return z
-
-    # 再嘗試 yfinance；只在直接 Chart API 失敗時使用。
-    for interval,period in [('5m','5d'),('1m','1d')]:
-        d=yf_download(symbol,period,interval)
-        if d is None or d.empty or 'Low' not in d:continue
-        try:
-            idx=pd.to_datetime(d.index)
-            if getattr(idx,'tz',None) is None:idx=idx.tz_localize('UTC').tz_convert(TW_TZ)
-            else:idx=idx.tz_convert(TW_TZ)
-            d=d.copy();d.index=idx
-            low=pd.to_numeric(d.loc[(d.index>=start)&(d.index<=now),'Low'],errors='coerce').dropna()
-            if not low.empty:return {'low':float(low.min()),'start':start,'end':now,'source':f'yfinance-{interval}'}
-        except Exception as e:print(f'15分鐘資料解析失敗 {symbol} [{interval}]：{e}')
-
-    # 最後才嘗試 TWSE MIS；失敗不再重試，避免拖慢整個 workflow。
-    if symbol.endswith('.TW') or symbol.endswith('.TWO'):
-        try:
-            code=clean_code(symbol);ex='tse' if symbol.endswith('.TW') else 'otc'
-            data=http_json('https://mis.twse.com.tw/stock/api/getChartOhlcStatis.jsp',
-                           {'ex':ex,'ch':code+'.tw','fqy':1,'_':int(time.time()*1000)},timeout=3,retries=0)
-            points=[]
-            def walk(x):
-                if isinstance(x,dict):
-                    tv=first_value(x,['t','time','timestamp','ts','timeStamp','date'])
-                    lv=first_value(x,['l','low','Low','最低'])
-                    if tv is not None and lv is not None:
-                        try:
-                            if isinstance(tv,(int,float)) or str(tv).isdigit():dt=datetime.fromtimestamp(float(tv)/1000,tz=TW_TZ)
-                            else:
-                                dt=datetime.fromisoformat(str(tv).replace('/','-'));dt=dt.replace(tzinfo=TW_TZ) if dt.tzinfo is None else dt.astimezone(TW_TZ)
-                            vv=to_float(lv)
-                            if vv is not None:points.append((dt,vv))
-                        except:pass
-                    for v in x.values():walk(v)
-                elif isinstance(x,list):
-                    for v in x:walk(v)
-            walk(data)
-            vals=[v for dt,v in points if start<=dt<=now]
-            if vals:return {'low':min(vals),'start':start,'end':now,'source':'TWSE-MIS'}
-        except Exception as e:print(f'TWSE MIS盤中資料失敗 {symbol}：{e}')
     return None
 
 def check_interval_low(name,symbol,state):
@@ -648,7 +618,7 @@ def analysis(query,u,backfill=True,interval_result=None):
             RUN_CACHE[('interval_attempted',symbol)]=True
             if z: interval_result={'previous_price':st.get('last_price'),'interval_low':z['low'],'drop':z['low']/st.get('last_price')-1,'start':z['start'].isoformat(),'end':z['end'].isoformat()}
     peer_text='、'.join(f"{x['code']} {x['name']}" for x in peers) or '無法取得市值資料'
-    return (f'📊 股票加碼分析 V2.9.5\n\n標的：{name}（{code}）\n市場：{market}\n產業：{industry}\n\n'
+    return (f'📊 股票加碼分析 V2.9.6\n\n標的：{name}（{code}）\n市場：{market}\n產業：{industry}\n\n'
             f'【估值 / 基本面 40分】\nPE：{fmt(pe)}\n一年平均PE：{fmt(one)}（樣本 {sample}）\n同業Top10平均PE：{fmt(peer_mean)}\n同業Top10中位數PE：{fmt(peer_med)}（有效 {len(vals)}/10）\nPB：{fmt(pb)}\n殖利率：{fmt(yld)}%\nEPS成長：{fmt(yf_f["eps_growth"])}%\nPEG：{fmt(yf_f["peg"])}\nROE：{fmt(yf_f["roe"])}%\n基本面得分：{fs}/40\n\n'
             f'【動態同業 Top 10】\n{peer_text}\n\n'
             f'【技術面 30分】\nRSI：{fmt(tech["rsi"])}\nKD：K={fmt(tech["k"])} / D={fmt(tech["d"])}\nMA20：{fmt(tech["ma20"])}\nMA60：{fmt(tech["ma60"])}\n趨勢：{tech["trend"] or "N/A"}\n距20日低點：{pct(tech["distance_low"])}\n技術得分：{ts}/30\n\n'
@@ -680,7 +650,7 @@ def run_alerts():
     global RUN_CACHE,INSTITUTIONAL_CACHE,MARGIN_CACHE
     RUN_CACHE={};INSTITUTIONAL_CACHE={};MARGIN_CACHE={}
     started=time.time()
-    print('================================\n股票跌幅 + 15分鐘區間最低價 + V2.9.5自動估值 + 技術 + 籌碼\n================================')
+    print('================================\n股票跌幅 + 15分鐘區間最低價 + V2.9.6自動估值 + 技術 + 籌碼\n================================')
     state=load_json(STATE_FILE);u=get_market_universe()
     print(f'[耗時 {time.time()-started:.1f}s] 股票池完成：{len(u)}')
     # 只預抓真正會分析的 TWSE/TPEx 個股法人與融資資料；每種市場各抓一次。
