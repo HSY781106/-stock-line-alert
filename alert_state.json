@@ -127,28 +127,28 @@
   "drop_alert": {
     "0050 元大台灣50": {
       "date": "2026-08-20",
-      "daily_alert": false,
-      "weekly_alert": false
+      "daily_alert": true,
+      "weekly_alert": true
     },
     "2330 台積電": {
       "date": "2026-08-20",
       "daily_alert": false,
-      "weekly_alert": false
+      "weekly_alert": true
     },
     "3711 日月光投控": {
       "date": "2026-08-20",
       "daily_alert": false,
-      "weekly_alert": false
+      "weekly_alert": true
     },
     "QQQ": {
       "date": "2026-08-20",
-      "daily_alert": false,
-      "weekly_alert": false
+      "daily_alert": true,
+      "weekly_alert": true
     },
     "台灣加權指數": {
       "date": "2026-08-20",
       "daily_alert": false,
-      "weekly_alert": false
+      "weekly_alert": true
     }
   },
   "interval_low": {
