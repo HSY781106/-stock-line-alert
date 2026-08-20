@@ -1,4 +1,4 @@
-# stock_alert.py V2.9.2
+# stock_alert.py V2.9.3
 # 效能修正版：全市場資料批次化、單次執行快取、限制 Yahoo/API 重試、15分鐘資料僅抓目標股
 # 股票跌幅 + 15分鐘區間最低價 + 動態估值 + 技術 + 籌碼 + 100分制加碼決策
 import os, json, time, math, traceback, re
@@ -191,61 +191,76 @@ def yf_download(symbol,period='1y',interval='1d'):
         return RUN_CACHE[key]
     try:
         d=yf.download(symbol,period=period,interval=interval,progress=False,auto_adjust=False,threads=False,timeout=YF_TIMEOUT)
-        if d is None or d.empty:return None
+        if d is None or d.empty:
+            RUN_CACHE[key]=None; return None
         if isinstance(d.columns,pd.MultiIndex):d.columns=[x[0] for x in d.columns]
         RUN_CACHE[key]=d
         return d
-    except Exception as e:print(f'Yahoo download失敗 {symbol}: {e}');RUN_CACHE[key]=None;return None
+    except Exception as e:
+        print(f'Yahoo download失敗 {symbol} [{interval}/{period}]: {e}')
+        RUN_CACHE[key]=None;return None
+
 def get_latest_price(symbol):
     key=('latest',symbol)
     if key in RUN_CACHE:return RUN_CACHE[key]
     d=yf_download(symbol,'5d','1d')
-    try:
-        v=float(d['Close'].dropna().iloc[-1]) if d is not None and not d.empty else None
+    try:v=float(d['Close'].dropna().iloc[-1]) if d is not None and not d.empty else None
     except:v=None
-    RUN_CACHE[key]=v
-    return v
+    RUN_CACHE[key]=v;return v
+
 def get_previous_close(symbol):
-    d=yf_download(symbol,'10d','1d');c=pd.to_numeric(d['Close'],errors='coerce').dropna() if d is not None and 'Close' in d else pd.Series(dtype=float);return float(c.iloc[-2]) if len(c)>=2 else None
+    d=yf_download(symbol,'10d','1d');c=pd.to_numeric(d['Close'],errors='coerce').dropna() if d is not None and 'Close' in d else pd.Series(dtype=float)
+    return float(c.iloc[-2]) if len(c)>=2 else None
+
 def get_week_high(symbol):
-    d=yf_download(symbol,'10d','1d');h=pd.to_numeric(d['High'],errors='coerce').dropna() if d is not None and 'High' in d else pd.Series(dtype=float);return float(h.tail(7).max()) if not h.empty else None
+    d=yf_download(symbol,'10d','1d');h=pd.to_numeric(d['High'],errors='coerce').dropna() if d is not None and 'High' in d else pd.Series(dtype=float)
+    return float(h.tail(7).max()) if not h.empty else None
+
 def parse_time(v):
     try:
         d=datetime.fromisoformat(v);return d if d.tzinfo else d.replace(tzinfo=TW_TZ)
     except:return None
+
 def get_interval_stats(symbol,start_iso):
-    now=datetime.now(TW_TZ);start=parse_time(start_iso) if start_iso else now-timedelta(minutes=15);start=start or now-timedelta(minutes=15)
-    if start>now:start=now-timedelta(minutes=15)
-    # Yahoo 1分鐘資料只在短期內可取得；正常排程每次約15分鐘，因此只抓1日資料即可。
-    d=yf_download(symbol,'2d','1m')
-    if d is None or d.empty or 'Low' not in d:return None
-    idx=pd.to_datetime(d.index)
-    try: idx=idx.tz_localize('UTC').tz_convert(TW_TZ) if idx.tz is None else idx.tz_convert(TW_TZ)
-    except: return None
-    d=d.copy();d.index=idx;mask=(d.index>=start)&(d.index<=now)
-    low=pd.to_numeric(d.loc[mask,'Low'],errors='coerce').dropna()
-    return {'low':float(low.min()),'start':start,'end':now} if not low.empty else None
+    """取得上次執行到本次執行的實際盤中最低。
+    優先 5 分鐘資料，失敗再嘗試 1 分鐘。正常排程只需最近 1 日。
+    """
+    now=datetime.now(TW_TZ);start=parse_time(start_iso) if start_iso else now-timedelta(minutes=15)
+    if not start or start>now:start=now-timedelta(minutes=15)
+    for interval,period in [('5m','1d'),('1m','1d')]:
+        d=yf_download(symbol,period,interval)
+        if d is None or d.empty or 'Low' not in d:continue
+        try:
+            idx=pd.to_datetime(d.index)
+            if getattr(idx,'tz',None) is None:idx=idx.tz_localize('UTC').tz_convert(TW_TZ)
+            else:idx=idx.tz_convert(TW_TZ)
+            d=d.copy();d.index=idx
+            low=pd.to_numeric(d.loc[(d.index>=start)&(d.index<=now),'Low'],errors='coerce').dropna()
+            if not low.empty:
+                return {'low':float(low.min()),'start':start,'end':now,'source':interval}
+        except Exception as e:
+            print(f'15分鐘資料解析失敗 {symbol} [{interval}]：{e}')
+    return None
 
 def check_interval_low(name,symbol,state):
     now=datetime.now(TW_TZ);iso=now.isoformat()
     s=state.setdefault('interval_low',{}).setdefault(name,{})
-    prev_t=s.get('last_check');prev_p=to_float(s.get('last_price'))
-    cur=get_latest_price(symbol)
-    stats=get_interval_stats(symbol,prev_t) if cur is not None else None
+    prev_t=s.get('last_check');prev_p=to_float(s.get('last_price'));cur=get_latest_price(symbol)
+    stats=get_interval_stats(symbol,prev_t) if prev_t and cur is not None else None
     result=None
     if prev_t and prev_p and stats:
         drop=stats['low']/prev_p-1
-        result={'previous_price':prev_p,'interval_low':stats['low'],'drop':drop,'start':stats['start'].isoformat(),'end':iso}
-        print(f'【15分鐘區間】上次執行：{stats["start"].strftime("%H:%M:%S")} 本次執行：{now.strftime("%H:%M:%S")} 期間最低：{stats["low"]:,.2f} 目前價格：{cur:,.2f} 區間跌幅：{drop:.2%}')
+        result={'previous_price':prev_p,'interval_low':stats['low'],'drop':drop,'start':stats['start'].isoformat(),'end':iso,'source':stats.get('source')}
+        print(f'【15分鐘區間】上次執行：{stats["start"].strftime("%H:%M:%S")} 本次執行：{now.strftime("%H:%M:%S")} 期間最低：{stats["low"]:,.2f} 目前價格：{cur:,.2f} 區間跌幅：{drop:.2%}（{stats.get("source","5m")}）')
         if drop<=DAILY_THRESHOLD:
             send_line(f'🔴 15分鐘區間低點通知\n\n標的：{name}\n上次執行：{stats["start"].strftime("%H:%M:%S")}\n本次執行：{now.strftime("%H:%M:%S")}\n期間最低：{stats["low"]:,.2f}\n目前價格：{cur:,.2f}\n區間跌幅：{drop:.2%}')
     elif not prev_t:
-        # 第一次執行沒有可比較的前次時間，這次只建立基準；下一次執行才計算完整區間。
         print(f'【15分鐘區間】首次建立基準：{now.strftime("%H:%M:%S")}，目前價格：{fmt(cur)}')
     elif prev_t and not stats:
-        print(f'⚠️ 15分鐘資料暫時無法取得；已保留上次執行基準：{prev_t}')
+        # Yahoo 盤中資料若暫時不可用，不覆蓋基準；下一輪仍會以同一個起點重新嘗試。
+        print(f'⚠️ 15分鐘資料暫時無法取得；保留上次執行基準：{prev_t}')
     s.update({'last_check':iso,'last_price':cur})
-    if stats:s['last_interval_low']=stats['low']
+    if stats:s['last_interval_low']=stats['low'];s['last_interval_source']=stats.get('source')
     return result
 
 def check_drop_alert(name,symbol,state):
@@ -334,47 +349,61 @@ def parse_t86(data):
         if c:out[c]={'foreign':f,'trust':t,'dealer':d,'total':sum(x for x in (f,t,d) if x is not None)}
     return out
 def institutional(code,market,days=20):
+    """批次取得法人資料，並持久化到 CHIP_HISTORY_FILE。
+    不再對同一日期反覆重試；成功過的日期直接使用快取。
+    """
     key=('inst',market,days)
-    if key not in INSTITUTIONAL_CACHE:
-        today=datetime.now(TW_TZ).date(); result=[]
-        dates=[];d=today
-        while d.weekday()>=5:d-=timedelta(days=1)
-        for i in range(min(35,days+15)):
-            x=today-timedelta(days=i)
-            if x.weekday()<5:dates.append(x)
-        from concurrent.futures import ThreadPoolExecutor,as_completed
-        def fetch(d):
-            if market=='TPEX':
-                x=tpex_get('/tpex_3insti_daily_trading');return {'date':d.strftime('%Y%m%d'),'data':parse_tpex_inst(x)} if x else None
-            x=parse_t86(twse_get('/fund/T86',{'date':d.strftime('%Y%m%d')}))
-            if not x:
-                x=parse_t86(twse_web_get('/fund/T86',{'date':d.strftime('%Y%m%d'),'selectType':'ALL','response':'json'}))
-            return {'date':d.strftime('%Y%m%d'),'data':x} if x else None
-        print(f'法人資料：一次批次抓取 {market}，最多 {len(dates)} 個交易日')
-        with ThreadPoolExecutor(max_workers=5) as ex:
-            futs=[ex.submit(fetch,d) for d in dates]
+    if key in INSTITUTIONAL_CACHE:return INSTITUTIONAL_CACHE[key]
+    history=load_json(CHIP_HISTORY_FILE)
+    market_hist=history.setdefault(market,{})
+    today=datetime.now(TW_TZ).date();dates=[];d=today
+    while len(dates)<days:
+        if d.weekday()<5:dates.append(d)
+        d-=timedelta(days=1)
+    missing=[x for x in dates if x.strftime('%Y%m%d') not in market_hist]
+    print(f'法人資料：{market} 已有 {len(dates)-len(missing)}/{days} 日快取，需補 {len(missing)} 日')
+    from concurrent.futures import ThreadPoolExecutor,as_completed
+    def fetch(dt):
+        ds=dt.strftime('%Y%m%d')
+        if market=='TPEX':
+            x=tpex_get('/tpex_3insti_daily_trading')
+            return ds,parse_tpex_inst(x) if x else {}
+        # TWSE 網頁 T86 對日期查詢較穩定；單次 timeout，不做多次重試。
+        x=http_json(TWSE_WEB_BASE+'/fund/T86',{'date':ds,'selectType':'ALL','response':'json'},timeout=4,retries=0)
+        return ds,parse_t86(x) if x else {}
+    if missing:
+        with ThreadPoolExecutor(max_workers=min(5,len(missing))) as ex:
+            futs=[ex.submit(fetch,x) for x in missing]
             for f in as_completed(futs):
                 try:
-                    x=f.result()
-                    if x and x['data']:result.append(x)
+                    ds,data=f.result()
+                    if data:market_hist[ds]=data
                 except Exception as e:print('法人批次失敗：',e)
-        result.sort(key=lambda x:x['date'],reverse=True)
-        INSTITUTIONAL_CACHE[key]=result[:days]
-        print(f'法人資料完成：{len(INSTITUTIONAL_CACHE[key])} 個交易日')
-    h=INSTITUTIONAL_CACHE[key]
-    return h
+        save_json(CHIP_HISTORY_FILE,history)
+    result=[{'date':dt.strftime('%Y%m%d'),'data':market_hist[dt.strftime('%Y%m%d')]} for dt in dates if dt.strftime('%Y%m%d') in market_hist]
+    INSTITUTIONAL_CACHE[key]=result
+    print(f'法人資料完成：{len(result)} 個交易日')
+    return result
+
 def parse_tpex_inst(data):
     out={}
     if not isinstance(data,list):return out
     for r in data:
-        c=clean_code(first_value(r,['SecuritiesCompanyCode','Code','證券代號']));
+        c=clean_code(first_value(r,['SecuritiesCompanyCode','Code','證券代號']))
         if not c:continue
         def net(b,s):
             a=find_value(r,b);z=find_value(r,s);return a-z if a is not None and z is not None else None
-        f=net(['Foreign Investors include Mainland Area Investors (Foreign Dealers excluded)-Total Buy','ForeignInvestors-TotalBuy','Foreign Buy'],['Foreign Investors include Mainland Area Investors (Foreign Dealers excluded)-Total Sell','ForeignInvestors-TotalSell','Foreign Sell']);t=net(['SecuritiesInvestmentTrustCompanies-TotalBuy','InvestmentTrust-TotalBuy'],['SecuritiesInvestmentTrustCompanies-TotalSell','InvestmentTrust-TotalSell']);d=net(['Dealers-TotalBuy','Dealer-TotalBuy'],['Dealers-TotalSell','Dealer-TotalSell']);out[c]={'foreign':f,'trust':t,'dealer':d,'total':sum(x for x in (f,t,d) if x is not None)}
+        f=net(['Foreign Investors include Mainland Area Investors (Foreign Dealers excluded)-Total Buy','ForeignInvestors-TotalBuy','Foreign Buy'],['Foreign Investors include Mainland Area Investors (Foreign Dealers excluded)-Total Sell','ForeignInvestors-TotalSell','Foreign Sell'])
+        t=net(['SecuritiesInvestmentTrustCompanies-TotalBuy','InvestmentTrust-TotalBuy'],['SecuritiesInvestmentTrustCompanies-TotalSell','InvestmentTrust-TotalSell'])
+        d=net(['Dealers-TotalBuy','Dealer-TotalBuy'],['Dealers-TotalSell','Dealer-TotalSell'])
+        out[c]={'foreign':f,'trust':t,'dealer':d,'total':sum(x for x in (f,t,d) if x is not None)}
     return out
+
 def chip_sums(code,h):
-    v=[x.get('data',{}).get(code,{}).get('total') for x in h];v=[x for x in v if x is not None];return {'latest':v[0] if v else None,'5d':sum(v[:5]) if len(v)>=5 else None,'20d':sum(v[:20]) if len(v)>=20 else None}
+    v=[x.get('data',{}).get(code,{}).get('total') for x in h]
+    v=[x for x in v if x is not None]
+    return {'latest':v[0] if v else None,'5d':sum(v[:5]) if len(v)>=5 else None,'20d':sum(v[:20]) if len(v)>=20 else None}
+
 def parse_margin_row(row):
     """解析 TWSE/TPEX 融資融券個股資料；同時支援中英文欄位。"""
     if not isinstance(row,dict):
@@ -544,7 +573,7 @@ def analysis(query,u,backfill=True,interval_result=None):
             z=get_interval_stats(symbol,st.get('last_check'))
             if z: interval_result={'previous_price':st.get('last_price'),'interval_low':z['low'],'drop':z['low']/st.get('last_price')-1,'start':z['start'].isoformat(),'end':z['end'].isoformat()}
     peer_text='、'.join(f"{x['code']} {x['name']}" for x in peers) or '無法取得市值資料'
-    return (f'📊 股票加碼分析 V2.9.2\n\n標的：{name}（{code}）\n市場：{market}\n產業：{industry}\n\n'
+    return (f'📊 股票加碼分析 V2.9.3\n\n標的：{name}（{code}）\n市場：{market}\n產業：{industry}\n\n'
             f'【估值 / 基本面 40分】\nPE：{fmt(pe)}\n一年平均PE：{fmt(one)}（樣本 {sample}）\n同業Top10平均PE：{fmt(peer_mean)}\n同業Top10中位數PE：{fmt(peer_med)}（有效 {len(vals)}/10）\nPB：{fmt(pb)}\n殖利率：{fmt(yld)}%\nEPS成長：{fmt(yf_f["eps_growth"])}%\nPEG：{fmt(yf_f["peg"])}\nROE：{fmt(yf_f["roe"])}%\n基本面得分：{fs}/40\n\n'
             f'【動態同業 Top 10】\n{peer_text}\n\n'
             f'【技術面 30分】\nRSI：{fmt(tech["rsi"])}\nKD：K={fmt(tech["k"])} / D={fmt(tech["d"])}\nMA20：{fmt(tech["ma20"])}\nMA60：{fmt(tech["ma60"])}\n趨勢：{tech["trend"] or "N/A"}\n距20日低點：{pct(tech["distance_low"])}\n技術得分：{ts}/30\n\n'
@@ -576,7 +605,7 @@ def run_alerts():
     global RUN_CACHE,INSTITUTIONAL_CACHE,MARGIN_CACHE
     RUN_CACHE={};INSTITUTIONAL_CACHE={};MARGIN_CACHE={}
     started=time.time()
-    print('================================\n股票跌幅 + 15分鐘區間最低價 + V2.9.2自動估值 + 技術 + 籌碼\n================================')
+    print('================================\n股票跌幅 + 15分鐘區間最低價 + V2.9.3自動估值 + 技術 + 籌碼\n================================')
     state=load_json(STATE_FILE);u=get_market_universe()
     print(f'[耗時 {time.time()-started:.1f}s] 股票池完成：{len(u)}')
     # 只預抓真正會分析的 TWSE/TPEx 個股法人與融資資料；每種市場各抓一次。
