@@ -1,4 +1,4 @@
-# stock_alert.py V2.9.7.5
+# stock_alert.py V2.9.8
 # 效能修正版：
 # 1. 全市場資料批次化
 # 2. 單次執行快取
@@ -8,26 +8,23 @@
 # 6. 動態次產業分類，不使用股票代碼硬編碼
 # 7. 同次產業 Top 10 依目前市值動態排序
 # 8. PE 同業比較改為「同次產業」
-# 9. FinMind 次產業資料持久化快取
-# 10. 保留原本基本面 / 技術 / 籌碼 / 風險 / LINE 功能
+# 9. 使用 TPEx/TWSE 產業價值鏈公開資料取得次產業
+# 10. 次產業按股票快取 30 天，避免每日大量請求
+# 11. 保留原本基本面 / 技術 / 籌碼 / 風險 / LINE 功能
 #
-# V2.9.7.5
+# V2.9.8
 #
 # 次產業資料來源：
-# FinMind TaiwanStockIndustryChain
+# 證券交易所 / 櫃買中心「產業價值鏈資訊平台」公開資料
+# https://ic.tpex.org.tw/company_chain.php
 #
-# GitHub Actions 建議設定：
-# FINMIND_API_TOKEN = 你的 FinMind Token
-#
-# 注意：
-# TaiwanStockIndustryChain 目前 FinMind 官方文件標示為
-# Backer / Sponsor 資料集。
-#
-# 若沒有 FINMIND_API_TOKEN：
-# - 程式仍可正常執行
-# - 但無法保證取得完整次產業分類
-# - 不會使用 2330 / 3711 等股票代碼硬編碼
-# - 會顯示次產業資料不可用
+# 特色：
+# - 不再使用 FinMind TaiwanStockIndustryChain
+# - 不需要 FINMIND_API_TOKEN
+# - 不使用股票代碼硬編碼
+# - 次產業資料按股票快取 30 天
+# - 只抓本次 STOCKS 目標股所在大產業的候選股票
+# - 保留原本基本面 / 技術 / 籌碼 / 風險 / LINE 功能
 #
 # 股票跌幅 + 15分鐘區間最低價 + 動態估值 + 技術 + 籌碼 + 100分制加碼決策
 
@@ -53,14 +50,9 @@ import yfinance as yf
 
 LINE_TOKEN = os.environ.get('LINE_CHANNEL_ACCESS_TOKEN', '')
 
-# FinMind Token
-# 不硬編碼任何股票與次產業對應
-FINMIND_API_TOKEN = os.environ.get('FINMIND_API_TOKEN', '').strip()
-
 TWSE_BASE = 'https://openapi.twse.com.tw/v1'
 TWSE_WEB_BASE = 'https://www.twse.com.tw/rwd/zh'
 TPEX_BASE = 'https://www.tpex.org.tw/openapi/v1'
-FINMIND_BASE = 'https://api.finmindtrade.com/api/v4/data'
 
 TW_TZ = ZoneInfo('Asia/Taipei')
 
@@ -72,7 +64,7 @@ UNIVERSE_CACHE_FILE = 'market_universe_cache.json'
 TWSE_PROFILE_CACHE_FILE = 'twse_profile_cache.json'
 TWSE_QUOTES_CACHE_FILE = 'twse_quotes_cache.json'
 
-# V2.9.7.5 新增
+# V2.9.8 新增
 SUBINDUSTRY_CACHE_FILE = 'subindustry_cache.json'
 
 LINE_REPLY_URL = 'https://api.line.me/v2/bot/message/reply'
@@ -89,7 +81,6 @@ UNIVERSE_CACHE_HOURS = 24
 
 TWSE_TIMEOUT = 8
 TPEX_TIMEOUT = 10
-FINMIND_TIMEOUT = 15
 
 API_SLEEP = .05
 PE_BACKFILL_MAX_DAYS = 370
@@ -97,8 +88,8 @@ PE_BACKFILL_MAX_DAYS = 370
 YF_TIMEOUT = 10
 MAX_HISTORY_DAYS_PER_RUN = 75
 
-# 次產業快取時間
-SUBINDUSTRY_CACHE_HOURS = 24
+# 次產業快取時間（實際以天數控制）
+SUBINDUSTRY_CACHE_DAYS = 30
 
 RUN_CACHE = {}
 INSTITUTIONAL_CACHE = {}
@@ -359,7 +350,7 @@ def http_json(
     last = None
 
     base_headers = {
-        'User-Agent': 'Mozilla/5.0 stock-alert/2.9.7.5'
+        'User-Agent': 'Mozilla/5.0 stock-alert/2.9.8'
     }
 
     if headers:
@@ -407,7 +398,7 @@ def http_text(
                 timeout=timeout,
                 headers={
                     'User-Agent':
-                        'Mozilla/5.0 stock-alert/2.9.7.5'
+                        'Mozilla/5.0 stock-alert/2.9.8'
                 }
             )
 
@@ -450,38 +441,6 @@ def tpex_get(e, p=None):
         p,
         TPEX_TIMEOUT,
         retries=1
-    )
-
-
-def finmind_get(params):
-    """
-    FinMind V4 API。
-
-    Token 可透過 GitHub Actions Secret：
-        FINMIND_API_TOKEN
-
-    若未設定 Token：
-        仍嘗試匿名請求一次。
-
-    TaiwanStockIndustryChain 目前官方文件標示
-    為 Backer / Sponsor 資料集。
-    """
-
-    headers = {
-        'User-Agent': 'Mozilla/5.0 stock-alert/2.9.7.5'
-    }
-
-    if FINMIND_API_TOKEN:
-        headers['Authorization'] = (
-            f'Bearer {FINMIND_API_TOKEN}'
-        )
-
-    return http_json(
-        FINMIND_BASE,
-        params,
-        FINMIND_TIMEOUT,
-        retries=0,
-        headers=headers
     )
 
 
@@ -1010,102 +969,216 @@ def get_tpex_market_values():
 
 
 # ============================================================
-# V2.9.7.5
+# V2.9.8
 # Dynamic Subindustry
 # ============================================================
 
-def parse_finmind_industry_chain(data):
+# 證交所 / 櫃買中心共同的「產業價值鏈資訊平台」
+# 例如：
+#   2330 -> 半導體 > 晶圓製造
+#   3711 -> 半導體 > IC封裝測試
+#
+# 平台本身同時涵蓋上市、上櫃公司。
+# 不使用股票代碼硬編碼。
 
+VALUE_CHAIN_BASE = 'https://ic.tpex.org.tw/company_chain.php'
+VALUE_CHAIN_TIMEOUT = 10
+VALUE_CHAIN_WORKERS = 8
+SUBINDUSTRY_CACHE_DAYS = 30
+
+
+class _TextExtractor(__import__('html.parser', fromlist=['HTMLParser']).HTMLParser):
+    """輕量 HTML 文字解析器，不新增第三方套件依賴。"""
+
+    def __init__(self):
+        super().__init__()
+        self.parts = []
+
+    def handle_data(self, data):
+        if data:
+            self.parts.append(data)
+
+    def text(self):
+        return ' '.join(self.parts)
+
+
+def parse_value_chain_html(text, code):
     """
-    將 FinMind TaiwanStockIndustryChain
-    統一解析成：
+    解析 TPEx/TWSE 產業價值鏈資訊平台的公司頁面。
 
-    {
-        "2330": {
-            "subindustries": [
-                "晶圓製造"
-            ],
-            "records": [...]
+    頁面格式例如：
+        ► 半導體 > 晶圓製造
+        ► 半導體 > IC封裝測試
+
+    回傳與舊版 FinMind 結構相容的資料：
+        {
+            '2330': {
+                'subindustries': ['晶圓製造'],
+                'records': [...]
+            }
         }
+    """
+
+    out = {
+        'subindustries': [],
+        'records': []
     }
 
-    不使用任何股票代碼硬編碼。
-
-    注意：
-    一家公司可能同時屬於多個產業鏈，
-    所以保留 subindustries list。
-    """
-
-    out = {}
-
-    if not isinstance(data, dict):
+    if not text:
         return out
 
-    rows = data.get('data', [])
+    parser = _TextExtractor()
+    try:
+        parser.feed(text)
+        plain = parser.text()
+    except Exception:
+        plain = text
 
-    if not isinstance(rows, list):
-        return out
+    # HTML 轉文字後，箭頭與 > 之間可能有空白或換行。
+    plain = plain.replace('\r', ' ')
+    plain = re.sub(r'[ \t\n\u00a0]+', ' ', plain)
 
-    for row in rows:
+    pattern = r'[►▸]\s*([^>]{1,80}?)\s*>\s*([^►▸]{1,160})'
+    matches = re.findall(pattern, plain)
 
-        if not isinstance(row, dict):
+    # 第二個 pattern 太寬，只接受合理的產業鏈文字。
+    for industry, node in matches:
+        industry = normalize_subindustry(industry)
+        node = normalize_subindustry(node)
+
+        if not industry or not node:
             continue
 
-        code = clean_code(
-            row.get('stock_id')
-            or row.get('stockId')
-            or row.get('代號')
-            or row.get('股票代號')
-        )
-
-        if not code:
+        # 過濾導覽列 / URL / 非產業鏈內容。
+        if len(industry) > 60 or len(node) > 180:
+            continue
+        if industry in {'個體公司所屬產業鏈如下', '產業鏈簡介'}:
+            continue
+        if 'http' in industry.lower() or 'http' in node.lower():
+            continue
+        if node.startswith('使用條款') or node.startswith('隱私權'):
             continue
 
-        industry = normalize_subindustry(
-            row.get('industry')
-        )
-
-        subindustry = normalize_subindustry(
-            row.get('sub_industry')
-            or row.get('subIndustry')
-        )
-
-        if not subindustry:
+        # 避免同一條產業鏈重複。
+        key = (industry, node)
+        if key in {
+            (r.get('industry', ''), r.get('sub_industry', ''))
+            for r in out['records']
+        }:
             continue
 
-        item = out.setdefault(
-            code,
-            {
-                'subindustries': [],
-                'records': []
-            }
-        )
+        out['records'].append({
+            'industry': industry,
+            'sub_industry': node,
+            'date': datetime.now(TW_TZ).strftime('%Y-%m-%d')
+        })
 
-        if subindustry not in item['subindustries']:
-            item['subindustries'].append(
-                subindustry
-            )
-
-        item['records'].append(
-            {
-                'industry': industry,
-                'sub_industry': subindustry,
-                'date': row.get('date')
-            }
-        )
+        if node not in out['subindustries']:
+            out['subindustries'].append(node)
 
     return out
 
 
-def get_finmind_subindustry():
+def fetch_value_chain_for_stock(code):
+    """從公開產業價值鏈平台取得單一股票的次產業。"""
 
+    code = clean_code(code)
+    if not code or not code.isdigit():
+        return None
+
+    try:
+        r = requests.get(
+            VALUE_CHAIN_BASE,
+            params={'stk_code': code},
+            timeout=VALUE_CHAIN_TIMEOUT,
+            headers={
+                'User-Agent':
+                    'Mozilla/5.0 stock-alert/2.9.8',
+                'Accept-Language': 'zh-TW,zh;q=0.9,en;q=0.8'
+            }
+        )
+        r.raise_for_status()
+
+        parsed = parse_value_chain_html(
+            r.text,
+            code
+        )
+
+        if parsed.get('subindustries'):
+            return parsed
+
+    except Exception as e:
+        print(
+            f'次產業 API失敗：{code} / {e}'
+        )
+
+    return None
+
+
+def _fetch_missing_value_chains(codes):
+    """平行取得缺少的產業價值鏈資料，避免 1985 檔逐檔慢速請求。"""
+
+    from concurrent.futures import (
+        ThreadPoolExecutor,
+        as_completed
+    )
+
+    codes = [
+        clean_code(x)
+        for x in codes
+        if clean_code(x)
+    ]
+
+    codes = list(dict.fromkeys(codes))
+
+    if not codes:
+        return {}
+
+    result = {}
+
+    workers = min(
+        VALUE_CHAIN_WORKERS,
+        max(1, len(codes))
+    )
+
+    with ThreadPoolExecutor(
+        max_workers=workers
+    ) as executor:
+
+        futures = {
+            executor.submit(
+                fetch_value_chain_for_stock,
+                code
+            ): code
+            for code in codes
+        }
+
+        for future in as_completed(futures):
+            code = futures[future]
+            try:
+                data = future.result()
+            except Exception:
+                data = None
+
+            if data:
+                result[code] = data
+
+    return result
+
+
+def get_public_subindustry(u):
     """
-    批次取得目前所有股票的次產業分類。
+    V2.9.8 免費次產業來源：
 
-    優先使用：
-        FINMIND_API_TOKEN
+    證交所 / 櫃買中心「產業價值鏈資訊平台」。
 
-    不逐檔呼叫 API。
+    策略：
+    1. 次產業不是每日變動資料，因此快取 30 天。
+    2. 不再呼叫 FinMind TaiwanStockIndustryChain。
+    3. 只抓本次 STOCKS 需要的「大產業」股票，
+       不對全部 1985 檔無差別逐檔請求。
+    4. 目標股所在產業的候選股票才會補抓次產業。
+    5. 已存在快取的股票完全不請求。
     """
 
     global SUBINDUSTRY_CACHE
@@ -1124,105 +1197,128 @@ def get_finmind_subindustry():
         {}
     )
 
-    # --------------------------------------------------------
-    # 24 小時內直接使用快取
-    # --------------------------------------------------------
+    if not isinstance(cached_data, dict):
+        cached_data = {}
 
-    if (
-        isinstance(cached_data, dict)
-        and cached_data
-        and time.time() - cached_at
-        < SUBINDUSTRY_CACHE_HOURS * 3600
-    ):
-
-        SUBINDUSTRY_CACHE = cached_data
-
-        print(
-            f'次產業資料：'
-            f'{len(cached_data)} 檔（快取）'
-        )
-
-        return cached_data
-
-    # --------------------------------------------------------
-    # API
-    # --------------------------------------------------------
-
-    print(
-        '\n========== 更新動態次產業資料 =========='
+    now = time.time()
+    cache_fresh = (
+        now - cached_at
+        < SUBINDUSTRY_CACHE_DAYS * 86400
     )
 
-    if FINMIND_API_TOKEN:
+    # --------------------------------------------------------
+    # 需要分析的目標股 -> 對應官方大產業
+    # --------------------------------------------------------
+
+    target_codes = []
+    for value in STOCKS.values():
+        code = clean_code(value)
+        if code.isdigit():
+            target_codes.append(code)
+
+    target_industries = set()
+
+    for code in target_codes:
+        item = u.get(code)
+        if item:
+            target_industries.add(
+                canonical_industry(
+                    item.get('industry')
+                )
+            )
+
+    # 若沒有成功建立股票池，至少抓目標股票本身。
+    if not target_industries:
+        target_industries = set()
+
+    candidate_codes = []
+    for code, item in u.items():
+        if target_industries and canonical_industry(
+            item.get('industry')
+        ) not in target_industries:
+            continue
+        candidate_codes.append(code)
+
+    # 目標股永遠加入候選。
+    candidate_codes.extend(target_codes)
+    candidate_codes = list(dict.fromkeys(
+        clean_code(x) for x in candidate_codes
+        if clean_code(x)
+    ))
+
+    # --------------------------------------------------------
+    # 30 天快取仍有效：只補缺少的股票。
+    # --------------------------------------------------------
+
+    if cache_fresh:
+        missing = [
+            code for code in candidate_codes
+            if code not in cached_data
+        ]
+    else:
+        # 超過 30 天：重新驗證本次目標產業的全部候選股票。
+        missing = list(candidate_codes)
+
+    print(
+        '\n========== 更新動態次產業資料 V2.9.8 =========='
+    )
+    print(
+        '次產業來源：TPEx/TWSE 產業價值鏈資訊平台（公開資料）'
+    )
+    print(
+        f'次產業快取：{SUBINDUSTRY_CACHE_DAYS} 天'
+    )
+    print(
+        f'目標大產業：{len(target_industries)} 個'
+    )
+    print(
+        f'候選股票：{len(candidate_codes)} 檔；'
+        f'需更新：{len(missing)} 檔'
+    )
+
+    if missing:
+        fetched = _fetch_missing_value_chains(
+            missing
+        )
+
+        cached_data.update(fetched)
 
         print(
-            'FinMind Token：已設定'
+            f'本次公開資料取得：'
+            f'{len(fetched)}/{len(missing)} 檔'
         )
 
     else:
-
         print(
-            '⚠️ FinMind Token：未設定'
+            '本次無需重新抓取次產業資料'
         )
 
-    data = finmind_get(
-        {
-            'dataset':
-                'TaiwanStockIndustryChain'
-        }
-    )
+    # --------------------------------------------------------
+    # 保存快取
+    # --------------------------------------------------------
 
-    parsed = parse_finmind_industry_chain(
-        data
-    )
-
-    if parsed:
-
+    if cached_data:
+        saved_at = now if missing else cached_at
         save_json(
             SUBINDUSTRY_CACHE_FILE,
             {
-                '_cached_at': time.time(),
+                '_cached_at': saved_at,
                 'source':
-                    'FinMind TaiwanStockIndustryChain',
-                'data': parsed
+                    'TPEx/TWSE Industry Value Chain',
+                'source_url': VALUE_CHAIN_BASE,
+                'cache_days': SUBINDUSTRY_CACHE_DAYS,
+                'data': cached_data
             }
         )
 
-        SUBINDUSTRY_CACHE = parsed
-
-        print(
-            f'動態次產業資料：'
-            f'{len(parsed)} 檔'
-        )
-
-        return parsed
-
-    # --------------------------------------------------------
-    # API 失敗時使用舊快取
-    # --------------------------------------------------------
-
-    if (
-        isinstance(cached_data, dict)
-        and cached_data
-    ):
-
-        SUBINDUSTRY_CACHE = cached_data
-
-        print(
-            f'⚠️ 次產業 API 無法取得，'
-            f'使用舊快取：'
-            f'{len(cached_data)} 檔'
-        )
-
-        return cached_data
+    SUBINDUSTRY_CACHE = cached_data
 
     print(
-        '⚠️ 無法取得次產業資料。'
-        '本次不使用股票代碼硬編碼。'
+        f'動態次產業覆蓋：'
+        f'{len(cached_data)} 檔'
     )
 
-    SUBINDUSTRY_CACHE = {}
-
-    return {}
+    return cached_data
 
 
 def attach_subindustries(u, subindustry_data):
@@ -1231,12 +1327,8 @@ def attach_subindustries(u, subindustry_data):
     將次產業資料附加到市場股票池。
 
     每檔股票：
-
-    subindustries = [
-        ...
-    ]
-
-    subindustry = 主要顯示用次產業
+        subindustries = [...] 
+        subindustry = 主要顯示用次產業
 
     不建立任何股票代碼硬編碼。
     """
@@ -1265,12 +1357,9 @@ def attach_subindustries(u, subindustry_data):
             if normalize_subindustry(x)
         ]
 
-        # 去重
         subs = list(dict.fromkeys(subs))
 
         item['subindustries'] = subs
-
-        # 第一個作為主要顯示分類
         item['subindustry'] = (
             subs[0]
             if subs
@@ -1379,7 +1468,7 @@ def get_dynamic_subindustry_peers(
 ):
 
     """
-    V2.9.7.5 核心：
+    V2.9.8 核心：
 
     1. 先確認目標股的次產業
     2. 同時要求官方產業相容
@@ -1387,12 +1476,8 @@ def get_dynamic_subindustry_peers(
     4. 依目前 market_cap 排序
     5. 取 Top 10
 
-    不使用：
-
-        2330 -> 晶圓製造
-        3711 -> IC封裝測試
-
-    之類硬編碼。
+    次產業來源改為公開產業價值鏈資料，
+    PE / 技術 / 籌碼邏輯完全不變。
     """
 
     code = clean_code(code)
@@ -1490,7 +1575,7 @@ def build_universe():
 
     print(
         '\n========== '
-        '建立動態市場股票池 V2.9.7.5 '
+        '建立動態市場股票池 V2.9.8 '
         '=========='
     )
 
@@ -1618,7 +1703,7 @@ def get_market_universe(
         # 若快取存在但次產業資料不存在，
         # 仍重新補次產業。
 
-        sub_data = get_finmind_subindustry()
+        sub_data = get_public_subindustry(d)
 
         d = attach_subindustries(
             d,
@@ -1631,7 +1716,7 @@ def get_market_universe(
 
     if u:
 
-        sub_data = get_finmind_subindustry()
+        sub_data = get_public_subindustry(u)
 
         u = attach_subindustries(
             u,
@@ -1650,7 +1735,7 @@ def get_market_universe(
 
     if isinstance(d, dict):
 
-        sub_data = get_finmind_subindustry()
+        sub_data = get_public_subindustry(d)
 
         d = attach_subindustries(
             d,
@@ -4350,7 +4435,7 @@ def analysis(
     )
 
     # --------------------------------------------------------
-    # V2.9.7.5
+    # V2.9.8
     # 動態次產業 Top 10
     # --------------------------------------------------------
 
@@ -4619,7 +4704,7 @@ def analysis(
     # --------------------------------------------------------
 
     return (
-        f'📊 股票加碼分析 V2.9.7.5\n\n'
+        f'📊 股票加碼分析 V2.9.8\n\n'
         f'標的：{name}（{code}）\n'
         f'市場：{market}\n'
         f'產業：{industry}\n'
@@ -4742,7 +4827,7 @@ def handle_event(e, u):
 
         reply_line(
             token,
-            '📈 股票加碼分析 Bot V2.9.7.5\n\n'
+            '📈 股票加碼分析 Bot V2.9.8\n\n'
             '輸入股票代號或名稱即可。\n'
             '例如：2330、台積電、3711、日月光投控\n\n'
             '模型：基本面40 + 技術30 + 籌碼20 + 風險10。\n\n'
@@ -4841,21 +4926,9 @@ def run_alerts():
     print(
         '================================\n'
         '股票跌幅 + 15分鐘區間最低價 + '
-        'V2.9.7.5自動估值 + 技術 + 籌碼\n'
+        'V2.9.8自動估值 + 技術 + 籌碼\n'
         '================================'
     )
-
-    if FINMIND_API_TOKEN:
-
-        print(
-            'FinMind 次產業 Token：已設定'
-        )
-
-    else:
-
-        print(
-            '⚠️ FinMind 次產業 Token：未設定'
-        )
 
     state = load_json(
         STATE_FILE
@@ -4870,7 +4943,7 @@ def run_alerts():
     )
 
     # --------------------------------------------------------
-    # 顯示 V2.9.7.5 次產業狀態
+    # 顯示 V2.9.8 次產業狀態
     # --------------------------------------------------------
 
     sub_count = sum(
