@@ -1,4 +1,4 @@
-# stock_alert.py V2.9.7.1
+# stock_alert.py V2.9.7.2
 # 效能修正版：全市場資料批次化、單次執行快取、限制 Yahoo/API 重試、15分鐘資料僅抓目標股
 # 股票跌幅 + 15分鐘區間最低價 + 動態估值 + 技術 + 籌碼 + 100分制加碼決策
 import os, json, time, math, traceback, re
@@ -28,6 +28,51 @@ STOCKS={'0050 元大台灣50':'0050.TW','2330 台積電':'2330.TW','3711 日月�
 INDUSTRY_CODE_MAP={'01':'水泥工業','02':'食品工業','03':'塑膠工業','04':'紡織纖維','05':'電機機械','06':'電器電纜','08':'玻璃陶瓷','09':'造紙工業','10':'鋼鐵工業','11':'橡膠工業','12':'汽車工業','13':'電子工業','14':'建材營造','15':'航運業','16':'觀光餐旅','17':'金融業','18':'貿易百貨','19':'綜合','20':'其他','21':'化學工業','22':'生技醫療','23':'油電燃氣業','24':'半導體業','25':'電腦及週邊設備業','26':'光電業','27':'通信網路業','28':'電子零組件業','29':'電子通路業','30':'資訊服務業','31':'其他電子業','32':'文化創意業','33':'農業科技','34':'電子商務','35':'數位雲端','36':'運動休閒','37':'居家生活','38':'綠能環保','39':'數位經濟','40':'其他'}
 INDUSTRY_MODEL={'金融業':{'pe':False,'peg':False,'pb':True,'yield':True,'roe':True},'銀行業':{'pe':False,'peg':False,'pb':True,'yield':True,'roe':True},'保險業':{'pe':False,'peg':False,'pb':True,'yield':True,'roe':True}}
 DEFAULT_MODEL={'pe':True,'peg':True,'pb':True,'yield':True,'roe':True}
+
+# ---------- 次產業分類 V2.9.7.2 ----------
+# TWSE/TPEX 官方資料提供的是較大的產業類別；估值比較不能只用「半導體業」
+# 來分群，因此在大產業下再建立次產業。明確指定的股票優先使用這裡的分類，
+# 其餘股票則回退到大產業，避免因分類不足而完全失去同業比較。
+SUBINDUSTRY_OVERRIDES={
+    # 晶圓代工
+    '2330':'晶圓代工','2303':'晶圓代工','5347':'晶圓代工','6770':'晶圓代工',
+    # 封裝測試 / OSAT
+    '3711':'封裝測試','6239':'封裝測試','2449':'封裝測試','6147':'封裝測試',
+    '6257':'封裝測試','3264':'封裝測試','8150':'封裝測試','2441':'封裝測試',
+    '2369':'封裝測試','2329':'封裝測試',
+    # IC 設計
+    '2454':'IC設計','2379':'IC設計','3034':'IC設計','3661':'IC設計','3529':'IC設計',
+    '6415':'IC設計','3443':'IC設計','5269':'IC設計','3035':'IC設計','6533':'IC設計',
+    # 記憶體
+    '2408':'記憶體','2344':'記憶體','3260':'記憶體','5351':'記憶體',
+    # IC 載板
+    '3189':'IC載板','3037':'IC載板','8046':'IC載板','6239':'封裝測試',
+    # 半導體設備
+    '3583':'半導體設備','3131':'半導體設備','3413':'半導體設備','2464':'半導體設備',
+    '1560':'半導體設備','6207':'半導體設備','8028':'半導體設備',
+    # 半導體材料
+    '3016':'半導體材料','3532':'半導體材料','4755':'半導體材料','6488':'半導體材料',
+    # 電信
+    '2412':'電信','3045':'電信','4904':'電信',
+    # 金融
+    '2881':'金融','2882':'金融','2886':'金融','2891':'金融','5880':'金融',
+    '2884':'金融','2885':'金融','2890':'金融','2880':'金融','2834':'金融',
+}
+
+# 舊版明確同業池保留作為分類依據；同一分類內仍以動態市值排序，避免固定名單過時。
+SUBINDUSTRY_POOLS={
+    '晶圓代工':['2330','2303','5347','6770'],
+    '封裝測試':['3711','6239','2449','6147','6257','3264','8150','2441','2369','2329'],
+    'IC設計':['2454','2379','3034','3661','3529','6415','3443','5269','3035','6533'],
+    '金融':['2881','2882','2886','2891','5880','2884','2885','2890','2880','2834'],
+    '電信':['2412','3045','4904'],
+}
+
+def get_subindustry(code,industry=None):
+    c=clean_code(code)
+    if c in SUBINDUSTRY_OVERRIDES:return SUBINDUSTRY_OVERRIDES[c]
+    return canonical_industry(industry)
+
 
 # ---------- helpers ----------
 def to_float(v):
@@ -107,7 +152,7 @@ def normalize_profile(row,market):
     code=clean_code(first_value(row,['公司代號','證券代號','SecuritiesCompanyCode','Code'])); name=first_value(row,['公司簡稱','公司名稱','證券名稱','CompanyAbbreviation','CompanyName']) or code
     industry=canonical_industry(first_value(row,['產業類別','產業別','SecuritiesIndustryCode','Industry']) or '其他'); cap=find_value(row,['實收資本額','實收資本額(元)','PaidinCapital','Capital','Capitals'])
     if not code.isdigit():return None
-    return {'code':code,'name':str(name).strip(),'industry':industry,'market':market,'symbol':symbol_for(code,market),'capital':cap}
+    return {'code':code,'name':str(name).strip(),'industry':industry,'subindustry':get_subindustry(code,industry),'market':market,'symbol':symbol_for(code,market),'capital':cap}
 def get_twse_universe():
     data=twse_get('/opendata/t187ap03_L');out=[]
     if isinstance(data,list):
@@ -174,7 +219,19 @@ def get_market_universe(force_refresh=False):
     if u:save_json(UNIVERSE_CACHE_FILE,{'_cached_at':time.time(),'data':u});return u
     return d or {}
 def get_dynamic_industry_peers(code,industry,u,limit=10):
-    p=[x for c,x in u.items() if c!=code and canonical_industry(x.get('industry'))==canonical_industry(industry) and to_float(x.get('market_cap')) is not None];p.sort(key=lambda x:x.get('market_cap',0),reverse=True);return p[:limit]
+    target=u.get(clean_code(code),{})
+    target_sub=get_subindustry(code,target.get('industry') or industry)
+    target_ind=canonical_industry(target.get('industry') or industry)
+    # 先依次產業找同業；若資料不足，不跨到其他次產業補足，避免估值失真。
+    p=[]
+    for c,x in u.items():
+        if c==clean_code(code):continue
+        if get_subindustry(c,x.get('industry'))!=target_sub:continue
+        if to_float(x.get('market_cap')) is None:continue
+        p.append(x)
+    p.sort(key=lambda x:x.get('market_cap',0),reverse=True)
+    return p[:limit]
+
 def resolve_stock(q,u):
     q=str(q or '').strip();m=re.match(r'^(?:TWSE:|TPEX:)?(\d{4,6})(?:\.TW|\.TWO)?(?:\s+.*)?$',q,re.I)
     if m and m.group(1) in u:return u[m.group(1)]
@@ -221,12 +278,25 @@ def parse_time(v):
         d=datetime.fromisoformat(v);return d if d.tzinfo else d.replace(tzinfo=TW_TZ)
     except:return None
 
+def us_market_currently_closed():
+    # 台灣時間：美股一般交易時段約 21:30-04:00（夏令）/22:30-05:00（冬令）。
+    # 若目前不在美股交易時段，QQQ 等美股標的沒有新的盤中K棒，直接略過 Yahoo Chart，
+    # 避免 GitHub Actions 每次執行重複刷「區間無K棒」警告。
+    now=datetime.now(TW_TZ)
+    wd=now.weekday()
+    if wd>=5:return True
+    h=now.hour+now.minute/60
+    # 以夏令時間為主要判斷；冬令期間即使提前/延後一小時，也不會影響保留基準的安全性。
+    return 4.5 <= h < 21.0
+
 def yahoo_chart_intraday(symbol, start_dt, end_dt, interval='5m'):
     """穩定取得盤中 OHLC。
     GitHub Actions 對 period1/period2 的 Yahoo 盤中查詢較容易得到空結果，
     因此改用 range：5m=5d、1m=1d，再在本機精確切出上次成功執行到本次執行的區間。
     query1/query2 雙主機 fallback。
     """
+    if not str(symbol).startswith(('^','0')) and str(symbol).upper() in {'QQQ','SPY','DIA','VOO'} and us_market_currently_closed():
+        return None
     ranges={'5m':'5d','1m':'1d'}
     hosts=('query1.finance.yahoo.com','query2.finance.yahoo.com')
     try:
@@ -288,7 +358,7 @@ def check_interval_low(name,symbol,state):
     result=None
     if prev_t and prev_p and stats:
         drop=stats['low']/prev_p-1
-        result={'previous_price':prev_p,'interval_low':stats['low'],'drop':drop,'start':stats['start'].isoformat(),'end':iso,'source':stats.get('source')}
+        result={'previous_price':prev_p,'interval_low':stats['low'],'current_price':cur,'drop':drop,'start':stats['start'].isoformat(),'end':iso,'source':stats.get('source')}
         print(f'【15分鐘區間】上次執行：{stats["start"].strftime("%H:%M:%S")} 本次執行：{now.strftime("%H:%M:%S")} 期間最低：{stats["low"]:,.2f} 目前價格：{cur:,.2f} 區間跌幅：{drop:.2%}（{stats.get("source","5m")}）')
         if drop<=DAILY_THRESHOLD:
             send_line(f'🔴 15分鐘區間低點通知\n\n標的：{name}\n上次執行：{stats["start"].strftime("%H:%M:%S")}\n本次執行：{now.strftime("%H:%M:%S")}\n期間最低：{stats["low"]:,.2f}\n目前價格：{cur:,.2f}\n區間跌幅：{drop:.2%}')
@@ -597,19 +667,20 @@ def score_risk(t,c,m):
 def analysis(query,u,backfill=True,interval_result=None):
     item=resolve_stock(query,u)
     if not item:return f'❌ 找不到股票：{query}'
-    code=item['code'];name=item['name'];market=item['market'];industry=canonical_industry(item['industry']);symbol=item['symbol']
+    code=item['code'];name=item['name'];market=item['market'];industry=canonical_industry(item['industry']);subindustry=get_subindustry(code,industry);symbol=item['symbol']
     pe_data=get_current_pe_data();h=load_json(PE_HISTORY_FILE)
     if backfill:h=backfill_pe(code,h,market);save_json(PE_HISTORY_FILE,h)
     yf_f=yahoo_fund(symbol);off=pe_data.get(code,{})
     pe=off.get('pe') or yf_f.get('pe');pb=off.get('pb') or yf_f.get('pb');yld=off.get('yield') or yf_f.get('yield');one,sample=one_year_pe(code,h)
     peers=get_dynamic_industry_peers(code,industry,u,10);vals=[pe_data.get(x['code'],{}).get('pe') for x in peers];vals=[x for x in vals if x and 0<x<=PE_MAX_VALID];peer_mean=sum(vals)/len(vals) if vals else None;peer_med=float(np.median(vals)) if vals else None
-    tech=technical(symbol);inst=chip_sums(code,institutional(code,market,20));margin=margin_data(code,market);fs,fr=score_fund(pe,one,peer_med,yf_f['peg'],yf_f['roe'],yf_f['eps_growth'],pb,yld,INDUSTRY_MODEL.get(industry,DEFAULT_MODEL));ts,tr=score_tech(tech);cs,cr=score_chip(inst,margin);risk,rr=score_risk(tech,inst,margin);total=max(0,min(100,fs+ts+cs+(10-risk)))
+    tech=technical(symbol);inst=chip_sums(code,institutional(code,market,20));margin=margin_data(code,market);fs,fr=score_fund(pe,one,peer_med,yf_f['peg'],yf_f['roe'],yf_f['eps_growth'],pb,yld,INDUSTRY_MODEL.get(subindustry,INDUSTRY_MODEL.get(industry,DEFAULT_MODEL)));ts,tr=score_tech(tech);cs,cr=score_chip(inst,margin);risk,rr=score_risk(tech,inst,margin);total=max(0,min(100,fs+ts+cs+(10-risk)))
     if total>=90:verdict='🟢 強力加碼'
     elif total>=75:verdict='🟢 可分批加碼'
     elif total>=60:verdict='🟡 等待回檔/止跌'
     elif total>=40:verdict='🟠 暫緩加碼'
     else:verdict='🔴 不建議加碼'
-    interval=u.get(code,{}).get('price')
+    interval=(interval_result or {}).get('current_price') if interval_result else None
+    if interval is None:interval=get_latest_price(symbol) or u.get(code,{}).get('price')
     # run_alerts 已經先嘗試過區間資料；即使失敗也不要在 analysis 再打一次 API。
     # webhook/analyze 模式沒有傳入 interval_result 時，才自行讀取 state 並嘗試一次。
     if interval_result is None and not RUN_CACHE.get(('interval_attempted',symbol),False):
@@ -619,7 +690,7 @@ def analysis(query,u,backfill=True,interval_result=None):
             RUN_CACHE[('interval_attempted',symbol)]=True
             if z: interval_result={'previous_price':st.get('last_price'),'interval_low':z['low'],'drop':z['low']/st.get('last_price')-1,'start':z['start'].isoformat(),'end':z['end'].isoformat()}
     peer_text='、'.join(f"{x['code']} {x['name']}" for x in peers) or '無法取得市值資料'
-    return (f'📊 股票加碼分析 V2.9.7.1\n\n標的：{name}（{code}）\n市場：{market}\n產業：{industry}\n\n'
+    return (f'📊 股票加碼分析 V2.9.7.2\n\n標的：{name}（{code}）\n市場：{market}\n產業：{industry}\n次產業：{subindustry}\n\n'
             f'【估值 / 基本面 40分】\nPE：{fmt(pe)}\n一年平均PE：{fmt(one)}（樣本 {sample}）\n同業Top10平均PE：{fmt(peer_mean)}\n同業Top10中位數PE：{fmt(peer_med)}（有效 {len(vals)}/10）\nPB：{fmt(pb)}\n殖利率：{fmt(yld)}%\nEPS成長：{fmt(yf_f["eps_growth"])}%\nPEG：{fmt(yf_f["peg"])}\nROE：{fmt(yf_f["roe"])}%\n基本面得分：{fs}/40\n\n'
             f'【動態同業 Top 10】\n{peer_text}\n\n'
             f'【技術面 30分】\nRSI：{fmt(tech["rsi"])}\nKD：K={fmt(tech["k"])} / D={fmt(tech["d"])}\nMA20：{fmt(tech["ma20"])}\nMA60：{fmt(tech["ma60"])}\n趨勢：{tech["trend"] or "N/A"}\n距20日低點：{pct(tech["distance_low"])}\n技術得分：{ts}/30\n\n'
@@ -651,7 +722,7 @@ def run_alerts():
     global RUN_CACHE,INSTITUTIONAL_CACHE,MARGIN_CACHE
     RUN_CACHE={};INSTITUTIONAL_CACHE={};MARGIN_CACHE={}
     started=time.time()
-    print('================================\n股票跌幅 + 15分鐘區間最低價 + V2.9.7.1自動估值 + 技術 + 籌碼\n================================')
+    print('================================\n股票跌幅 + 15分鐘區間最低價 + V2.9.7.2自動估值 + 技術 + 籌碼\n================================')
     state=load_json(STATE_FILE);u=get_market_universe()
     print(f'[耗時 {time.time()-started:.1f}s] 股票池完成：{len(u)}')
     # 只預抓真正會分析的 TWSE/TPEx 個股法人與融資資料；每種市場各抓一次。
