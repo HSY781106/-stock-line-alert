@@ -1,30 +1,53 @@
 # ============================================================
-# stock_alert.py V2.3
+# stock_alert.py V2.4
 #
-# V2.3 完整版
+# 股票跌幅 + 15分鐘區間最低價
+# + 自動股票搜尋
+# + 自動產業判斷
+# + 動態產業市值前十大
+# + PE歷史60筆回補
+# + 技術面
+# + 三大法人
+# + 融資融券
+# + LINE通知
 #
-# 功能：
-# 1. 15分鐘區間最低價跌破通知
-# 2. 單日 -5% 跌幅通知
-# 3. 7日高點 -10% 通知
-# 4. TWSE / TPEX 股票自動辨識
-# 5. LINE 輸入股票代號 / 股票名稱即可單股分析
-# 6. 自動判斷產業
-# 7. 自動套用產業估值模型
-# 8. 自動找同業
-# 9. PE / PB / PEG / 殖利率 / ROE
-# 10. KD / RSI
-# 11. 三大法人
-# 12. 融資融券
-# 13. PE 歷史不足60筆時，自動向過去日期回補
-# 14. 不會拿舊資料假填今天
-# 15. PE累積滿60筆後才正式啟用歷史平均PE評分
+# V2.4 修正：
+#
+# 1. PE歷史不足60筆：
+#    - 不使用今天PE硬補歷史
+#    - 只接受指定日期真正取得的PE
+#    - 往過去交易日回補
+#    - 未滿60筆不啟用一年平均PE評分
+#    - 滿60筆後正式啟用
+#
+# 2. 產業同業：
+#    - 不再使用固定INDUSTRY_POOL
+#    - 自動取得上市/上櫃股票
+#    - 依產業分類
+#    - 依目前市值排序
+#    - 自動取產業市值前10大
+#
+# 3. LINE單股分析：
+#    - 輸入股票代號或股票名稱
+#    - 自動搜尋
+#    - 自動判斷產業
+#    - 自動套用產業模型
+#    - 自動尋找市值前十大同業
+#
+# 4. 15分鐘區間：
+#    - 保存上一次偵測時間
+#    - 計算兩次偵測間的最低價
+#    - 區間最低價跌破門檻才通知
+#
+# 5. 完整防呆：
+#    - Yahoo資料不存在不讓程式中斷
+#    - 單一股票失敗不影響其他股票
+#
 # ============================================================
 
 import os
 import json
 import time
-import threading
 import requests
 import yfinance as yf
 
@@ -36,11 +59,15 @@ from zoneinfo import ZoneInfo
 # 基本設定
 # ============================================================
 
-LINE_TOKEN = os.environ["LINE_CHANNEL_ACCESS_TOKEN"]
+LINE_TOKEN = os.environ.get(
+    "LINE_CHANNEL_ACCESS_TOKEN",
+    ""
+)
 
 TWSE_BASE = "https://openapi.twse.com.tw/v1"
 TWSE_WEB_BASE = "https://www.twse.com.tw/rwd/zh"
-TPEX_BASE = "https://www.tpex.org.tw"
+
+TPEX_BASE = "https://www.tpex.org.tw/openapi/v1"
 
 STATE_FILE = "alert_state.json"
 PE_HISTORY_FILE = "pe_history.json"
@@ -61,12 +88,21 @@ TWSE_TIMEOUT = 20
 T86_RETRIES = 2
 API_SLEEP = 0.20
 
-# 每15分鐘執行一次
-INTERVAL_MINUTES = 15
+# 15分鐘區間
+INTRADAY_INTERVAL = "1m"
+
+# Yahoo 1m資料通常只能取得近期資料
+INTRADAY_LOOKBACK_DAYS = 7
+
+# 同業取目前市值前10
+TOP_INDUSTRY_COMPANIES = 10
+
+# 市值快取時間
+MARKET_CAP_CACHE_DAYS = 1
 
 
 # ============================================================
-# 固定監控標的
+# 監控標的
 # ============================================================
 
 STOCKS = {
@@ -79,7 +115,7 @@ STOCKS = {
 
 
 # ============================================================
-# 固定估值股票
+# 固定需要每日自動估值的股票
 # ============================================================
 
 VALUATION_STOCKS = {
@@ -87,94 +123,28 @@ VALUATION_STOCKS = {
         "name": "2330 台積電",
         "symbol": "2330.TW",
         "industry": "晶圓代工",
-        "market": "TWSE",
     },
     "3711": {
         "name": "3711 日月光投控",
         "symbol": "3711.TW",
         "industry": "封裝測試",
-        "market": "TWSE",
     },
 }
 
 
 # ============================================================
-# 產業同業池
-# ============================================================
-
-INDUSTRY_POOL = {
-    "晶圓代工": [
-        "2330",
-        "2303",
-        "5347",
-        "6770",
-    ],
-
-    "封裝測試": [
-        "3711",
-        "6239",
-        "2449",
-        "6147",
-        "6257",
-        "3264",
-        "8150",
-        "2441",
-        "2369",
-        "2329",
-    ],
-
-    "IC設計": [
-        "2454",
-        "2379",
-        "3034",
-        "3661",
-        "3529",
-        "6415",
-        "3443",
-        "5269",
-        "3035",
-        "6533",
-    ],
-
-    "金融": [
-        "2881",
-        "2882",
-        "2886",
-        "2891",
-        "5880",
-        "2884",
-        "2885",
-        "2890",
-        "2880",
-        "2834",
-    ],
-
-    "電信": [
-        "2412",
-        "3045",
-        "4904",
-    ],
-
-    "成熟傳產": [
-        "1101",
-        "1102",
-        "1216",
-        "1301",
-        "1303",
-        "2002",
-        "2105",
-        "2207",
-        "2603",
-        "2615",
-    ],
-}
-
-
-# ============================================================
-# 產業模型
+# 產業估值模型
+#
+# 注意：
+# 這裡只定義「不同產業用哪些指標」。
+#
+# 同業股票不再固定寫在這裡。
+# 同業會由程式自動從市場股票清單中找出，
+# 再依市值排序取前10名。
 # ============================================================
 
 INDUSTRY_MODEL = {
+
     "晶圓代工": {
         "pe": True,
         "peg": True,
@@ -228,6 +198,16 @@ INDUSTRY_MODEL = {
         "dcf": False,
         "roe": False,
     },
+
+    # 預設產業
+    "其他": {
+        "pe": True,
+        "peg": False,
+        "pb": True,
+        "yield": False,
+        "dcf": False,
+        "roe": False,
+    },
 }
 
 
@@ -236,28 +216,67 @@ INDUSTRY_MODEL = {
 # ============================================================
 
 def twse_get(endpoint, timeout=TWSE_TIMEOUT):
-    response = requests.get(
-        TWSE_BASE + endpoint,
-        timeout=timeout,
-        headers={"User-Agent": "Mozilla/5.0"},
-    )
+    try:
+        response = requests.get(
+            TWSE_BASE + endpoint,
+            timeout=timeout,
+            headers={"User-Agent": "Mozilla/5.0"},
+        )
 
-    response.raise_for_status()
+        response.raise_for_status()
 
-    return response.json()
+        return response.json()
+
+    except Exception as e:
+        print(f"TWSE API失敗：{endpoint} / {e}")
+        return None
 
 
-def twse_web_get(endpoint, params=None, timeout=TWSE_TIMEOUT):
-    response = requests.get(
-        TWSE_WEB_BASE + endpoint,
-        params=params,
-        timeout=timeout,
-        headers={"User-Agent": "Mozilla/5.0"},
-    )
+def twse_web_get(
+    endpoint,
+    params=None,
+    timeout=TWSE_TIMEOUT,
+):
+    try:
+        response = requests.get(
+            TWSE_WEB_BASE + endpoint,
+            params=params,
+            timeout=timeout,
+            headers={"User-Agent": "Mozilla/5.0"},
+        )
 
-    response.raise_for_status()
+        response.raise_for_status()
 
-    return response.json()
+        return response.json()
+
+    except Exception as e:
+        print(
+            f"TWSE Web API失敗："
+            f"{endpoint} / {e}"
+        )
+
+        return None
+
+
+def tpex_get(endpoint, timeout=TWSE_TIMEOUT):
+    try:
+        response = requests.get(
+            TPEX_BASE + endpoint,
+            timeout=timeout,
+            headers={"User-Agent": "Mozilla/5.0"},
+        )
+
+        response.raise_for_status()
+
+        return response.json()
+
+    except Exception as e:
+        print(
+            f"TPEX API失敗："
+            f"{endpoint} / {e}"
+        )
+
+        return None
 
 
 # ============================================================
@@ -265,65 +284,44 @@ def twse_web_get(endpoint, params=None, timeout=TWSE_TIMEOUT):
 # ============================================================
 
 def send_line(message):
-    response = requests.post(
-        "https://api.line.me/v2/bot/message/broadcast",
-        headers={
-            "Authorization": f"Bearer {LINE_TOKEN}",
-            "Content-Type": "application/json",
-        },
-        json={
-            "messages": [
-                {
-                    "type": "text",
-                    "text": message,
-                }
-            ],
-        },
-        timeout=20,
-    )
-
-    if response.status_code != 200:
-        raise Exception(
-            f"LINE API error: "
-            f"{response.status_code} "
-            f"{response.text}"
-        )
-
-
-def reply_line(user_id, message):
-    """
-    LINE webhook 回覆。
-    若沒有 reply token，則使用 push message。
-    """
+    if not LINE_TOKEN:
+        print("⚠️ LINE_TOKEN不存在，跳過LINE通知")
+        return False
 
     try:
         response = requests.post(
-            "https://api.line.me/v2/bot/message/push",
+            "https://api.line.me/v2/bot/message/broadcast",
             headers={
-                "Authorization": f"Bearer {LINE_TOKEN}",
-                "Content-Type": "application/json",
+                "Authorization":
+                    f"Bearer {LINE_TOKEN}",
+                "Content-Type":
+                    "application/json",
             },
             json={
-                "to": user_id,
                 "messages": [
                     {
                         "type": "text",
                         "text": message,
                     }
-                ],
+                ]
             },
             timeout=20,
         )
 
         if response.status_code != 200:
             print(
-                f"LINE push error："
+                "LINE API error："
                 f"{response.status_code} "
                 f"{response.text}"
             )
 
+            return False
+
+        return True
+
     except Exception as e:
-        print(f"LINE回覆失敗：{e}")
+        print(f"LINE通知失敗：{e}")
+        return False
 
 
 # ============================================================
@@ -353,21 +351,27 @@ def load_json(filename):
 
 
 def save_json(filename, data):
-    tmp = filename + ".tmp"
+    try:
+        tmp = filename + ".tmp"
 
-    with open(
-        tmp,
-        "w",
-        encoding="utf-8",
-    ) as f:
-        json.dump(
-            data,
-            f,
-            ensure_ascii=False,
-            indent=2,
+        with open(
+            tmp,
+            "w",
+            encoding="utf-8",
+        ) as f:
+            json.dump(
+                data,
+                f,
+                ensure_ascii=False,
+                indent=2,
+            )
+
+        os.replace(tmp, filename)
+
+    except Exception as e:
+        print(
+            f"{filename} 儲存失敗：{e}"
         )
-
-    os.replace(tmp, filename)
 
 
 # ============================================================
@@ -407,11 +411,14 @@ def find_value(row, names):
         return None
 
     for name in names:
-        if name in row:
-            value = to_float(row[name])
 
-            if value is not None:
-                return value
+        if name not in row:
+            continue
+
+        value = to_float(row[name])
+
+        if value is not None:
+            return value
 
     return None
 
@@ -421,6 +428,158 @@ def format_number(value, digits=2):
         return "N/A"
 
     return f"{value:,.{digits}f}"
+
+
+# ============================================================
+# 日期
+# ============================================================
+
+def get_today():
+    return datetime.now(TW_TZ).date()
+
+
+def date_to_string(date_obj):
+    return date_obj.strftime("%Y%m%d")
+
+
+def is_weekday(date_obj):
+    return date_obj.weekday() < 5
+
+
+# ============================================================
+# TWSE / TPEX 股票清單
+# ============================================================
+
+def get_twse_stock_list():
+    """
+    取得上市股票基本資料。
+    """
+
+    result = []
+
+    data = twse_get(
+        "/exchangeReport/STOCK_DAY_ALL"
+    )
+
+    if isinstance(data, list):
+
+        for row in data:
+
+            if not isinstance(row, dict):
+                continue
+
+            code = str(
+                row.get("Code", "")
+            ).strip()
+
+            name = str(
+                row.get("Name", "")
+            ).strip()
+
+            if (
+                not code
+                or not name
+                or not code.isdigit()
+            ):
+                continue
+
+            result.append({
+                "code": code,
+                "name": name,
+                "market": "TWSE",
+                "symbol": f"{code}.TW",
+            })
+
+    return result
+
+
+def get_tpex_stock_list():
+    """
+    取得上櫃股票基本資料。
+    """
+
+    result = []
+
+    data = tpex_get(
+        "/tpex_mainboard_peratio_analysis"
+    )
+
+    if isinstance(data, list):
+
+        for row in data:
+
+            if not isinstance(row, dict):
+                continue
+
+            code = str(
+                row.get(
+                    "SecuritiesCompanyCode",
+                    row.get(
+                        "Code",
+                        ""
+                    ),
+                )
+            ).strip()
+
+            name = str(
+                row.get(
+                    "CompanyName",
+                    row.get(
+                        "Name",
+                        ""
+                    ),
+                )
+            ).strip()
+
+            if (
+                not code
+                or not name
+                or not code.isdigit()
+            ):
+                continue
+
+            result.append({
+                "code": code,
+                "name": name,
+                "market": "TPEX",
+                "symbol": f"{code}.TWO",
+            })
+
+    return result
+
+
+def get_all_market_stocks():
+    """
+    上市 + 上櫃股票。
+
+    如果某一邊API失敗，
+    仍然保留另一邊資料。
+    """
+
+    stocks = []
+
+    twse = get_twse_stock_list()
+    tpex = get_tpex_stock_list()
+
+    stocks.extend(twse)
+    stocks.extend(tpex)
+
+    unique = {}
+
+    for item in stocks:
+        code = item["code"]
+
+        if code not in unique:
+            unique[code] = item
+
+    result = list(unique.values())
+
+    print(
+        f"市場股票清單："
+        f"{len(result)} 檔"
+    )
+
+    return result
 
 
 # ============================================================
@@ -439,6 +598,7 @@ def get_twse_pe_data():
             return result
 
         for row in data:
+
             code = str(
                 row.get("Code", "")
             ).strip()
@@ -451,7 +611,6 @@ def get_twse_pe_data():
                     "Name",
                     "",
                 ),
-
                 "pe": find_value(
                     row,
                     [
@@ -460,7 +619,6 @@ def get_twse_pe_data():
                         "本益比",
                     ],
                 ),
-
                 "yield": find_value(
                     row,
                     [
@@ -469,7 +627,6 @@ def get_twse_pe_data():
                         "殖利率(%)",
                     ],
                 ),
-
                 "pb": find_value(
                     row,
                     [
@@ -484,7 +641,7 @@ def get_twse_pe_data():
 
     except Exception as e:
         print(
-            f"取得 TWSE PE/PB/殖利率失敗：{e}"
+            f"取得TWSE PE/PB失敗：{e}"
         )
 
         return {}
@@ -495,9 +652,16 @@ def get_twse_pe_data():
 # ============================================================
 
 def get_twse_pe_by_date(date_string):
+    """
+    只取得指定日期真正存在的PE。
+
+    絕對不使用目前PE代替歷史PE。
+    """
+
     try:
+
         data = twse_get(
-            f"/exchangeReport/BWIBBU_d"
+            "/exchangeReport/BWIBBU_d"
             f"?date={date_string}"
         )
 
@@ -507,140 +671,7 @@ def get_twse_pe_by_date(date_string):
             return result
 
         for row in data:
-            code = str(
-                row.get("Code", "")
-            ).strip()
 
-            if not code:
-                continue
-
-            result[code] = find_value(
-                row,
-                [
-                    "PEratio",
-                    "PER",
-                    "本益比",
-                ],
-            )
-
-        return result
-
-    except Exception as e:
-        print(
-            f"取得 {date_string} PE 失敗：{e}"
-        )
-
-        return {}
-
-
-# ============================================================
-# TPEX 股票清單
-# ============================================================
-
-def get_tpex_stock_list():
-    """
-    取得上櫃股票清單。
-    用於：
-    1. 股票名稱搜尋
-    2. 股票市場辨識
-    3. Yahoo symbol 建立
-    """
-
-    result = {}
-
-    urls = [
-        (
-            "https://www.tpex.org.tw"
-            "/openapi/v1/"
-            "tpex_mainboard_peratio"
-        ),
-        (
-            "https://www.tpex.org.tw"
-            "/openapi/v1/"
-            "tpex_mainboard_quotes"
-        ),
-    ]
-
-    for url in urls:
-        try:
-            response = requests.get(
-                url,
-                timeout=TWSE_TIMEOUT,
-                headers={
-                    "User-Agent": "Mozilla/5.0"
-                },
-            )
-
-            if response.status_code != 200:
-                continue
-
-            data = response.json()
-
-            if not isinstance(data, list):
-                continue
-
-            for row in data:
-                if not isinstance(row, dict):
-                    continue
-
-                code = str(
-                    row.get(
-                        "SecuritiesCompanyCode",
-                        row.get(
-                            "SecuritiesCompanyCode",
-                            row.get(
-                                "Code",
-                                "",
-                            ),
-                        ),
-                    )
-                ).strip()
-
-                name = str(
-                    row.get(
-                        "CompanyName",
-                        row.get(
-                            "Name",
-                            "",
-                        ),
-                    )
-                ).strip()
-
-                if code and name:
-                    result[code] = {
-                        "code": code,
-                        "name": name,
-                        "market": "TPEX",
-                        "symbol": f"{code}.TWO",
-                    }
-
-            if result:
-                break
-
-        except Exception as e:
-            print(
-                f"TPEX股票清單取得失敗：{e}"
-            )
-
-    return result
-
-
-# ============================================================
-# 上市股票清單
-# ============================================================
-
-def get_twse_stock_list():
-    result = {}
-
-    try:
-        data = twse_get(
-            "/exchangeReport/STOCK_DAY_ALL"
-        )
-
-        if not isinstance(data, list):
-            return result
-
-        for row in data:
             if not isinstance(row, dict):
                 continue
 
@@ -651,303 +682,125 @@ def get_twse_stock_list():
                 )
             ).strip()
 
-            name = str(
-                row.get(
-                    "Name",
-                    "",
-                )
-            ).strip()
-
-            if not code or not name:
+            if not code:
                 continue
 
-            result[code] = {
-                "code": code,
-                "name": name,
-                "market": "TWSE",
-                "symbol": f"{code}.TW",
-            }
+            pe = find_value(
+                row,
+                [
+                    "PEratio",
+                    "PER",
+                    "本益比",
+                ],
+            )
+
+            if (
+                pe is not None
+                and 0 < pe <= 200
+            ):
+                result[code] = pe
+
+        return result
 
     except Exception as e:
         print(
-            f"TWSE股票清單取得失敗：{e}"
+            f"{date_string} PE取得失敗：{e}"
         )
 
-    return result
+        return {}
 
 
 # ============================================================
-# 股票自動辨識
+# TAIEX市場PE
 # ============================================================
 
-def normalize_stock_query(text):
-    if text is None:
-        return ""
-
-    return (
-        str(text)
-        .strip()
-        .replace(" ", "")
-        .replace("　", "")
-        .upper()
+def calculate_taiex_market_pe(
+    current_pe_data=None
+):
+    print(
+        "計算 TAIEX 官方口徑市場 PE..."
     )
 
+    try:
 
-def find_stock(query):
-    """
-    支援：
+        if not current_pe_data:
+            current_pe_data = (
+                get_twse_pe_data()
+            )
 
-    2330
-    台積電
-    5347
-    世界
-    """
+        values = []
 
-    query = normalize_stock_query(query)
+        for row in current_pe_data.values():
 
-    if not query:
+            pe = row.get("pe")
+
+            if (
+                pe is None
+                or pe <= 0
+                or pe > 200
+            ):
+                continue
+
+            values.append(pe)
+
+        print(
+            f"有效市場股票："
+            f"{len(values)} 家"
+        )
+
+        if not values:
+            return None
+
+        market_pe = (
+            sum(values)
+            / len(values)
+        )
+
+        print(
+            "TAIEX 官方口徑市場 PE："
+            f"{market_pe:.2f}"
+        )
+
+        return market_pe
+
+    except Exception as e:
+
+        print(
+            f"TAIEX市場PE失敗：{e}"
+        )
+
         return None
-
-    # --------------------------------------------------------
-    # 先檢查固定資料
-    # --------------------------------------------------------
-
-    if query in VALUATION_STOCKS:
-        item = VALUATION_STOCKS[query].copy()
-        return item
-
-    # --------------------------------------------------------
-    # 建立TWSE清單
-    # --------------------------------------------------------
-
-    twse = get_twse_stock_list()
-
-    # 代號
-    if query in twse:
-        return twse[query]
-
-    # 名稱
-    for code, item in twse.items():
-        name = normalize_stock_query(
-            item.get("name", "")
-        )
-
-        if query == name:
-            return item
-
-    # --------------------------------------------------------
-    # TPEX
-    # --------------------------------------------------------
-
-    tpex = get_tpex_stock_list()
-
-    if query in tpex:
-        return tpex[query]
-
-    for code, item in tpex.items():
-        name = normalize_stock_query(
-            item.get("name", "")
-        )
-
-        if query == name:
-            return item
-
-    # --------------------------------------------------------
-    # Yahoo symbol fallback
-    # --------------------------------------------------------
-
-    if query.isdigit():
-        for suffix, market in [
-            (".TW", "TWSE"),
-            (".TWO", "TPEX"),
-        ]:
-            symbol = query + suffix
-
-            try:
-                ticker = yf.Ticker(symbol)
-
-                info = ticker.fast_info
-
-                if info:
-                    return {
-                        "code": query,
-                        "name": query,
-                        "market": market,
-                        "symbol": symbol,
-                    }
-
-            except Exception:
-                pass
-
-    return None
-
-
-# ============================================================
-# 自動產業判斷
-# ============================================================
-
-def infer_industry(code, name=""):
-    """
-    優先使用既有產業池。
-    找不到時使用名稱關鍵字。
-    """
-
-    for industry, codes in INDUSTRY_POOL.items():
-        if code in codes:
-            return industry
-
-    text = (
-        str(name)
-        + " "
-        + str(code)
-    )
-
-    keyword_map = {
-        "晶圓代工": [
-            "晶圓",
-            "代工",
-        ],
-
-        "封裝測試": [
-            "封裝",
-            "測試",
-            "封測",
-        ],
-
-        "IC設計": [
-            "IC設計",
-            "半導體",
-            "晶片",
-        ],
-
-        "金融": [
-            "金控",
-            "銀行",
-            "證券",
-            "金融",
-        ],
-
-        "電信": [
-            "電信",
-        ],
-
-        "成熟傳產": [
-            "鋼",
-            "水泥",
-            "塑化",
-            "食品",
-            "汽車",
-            "航運",
-            "電子",
-        ],
-    }
-
-    for industry, keywords in keyword_map.items():
-        for keyword in keywords:
-            if keyword in text:
-                return industry
-
-    # 預設
-    return "成熟傳產"
-
-
-# ============================================================
-# 股票資訊補完
-# ============================================================
-
-def enrich_stock_info(stock):
-    code = stock.get("code")
-    name = stock.get("name", "")
-    symbol = stock.get("symbol")
-
-    if not code:
-        return None
-
-    industry = infer_industry(
-        code,
-        name,
-    )
-
-    stock["industry"] = industry
-
-    if not symbol:
-        if stock.get("market") == "TPEX":
-            stock["symbol"] = f"{code}.TWO"
-        else:
-            stock["symbol"] = f"{code}.TW"
-
-    if not name or name == code:
-        try:
-            pe_data = get_twse_pe_data()
-
-            if code in pe_data:
-                stock["name"] = pe_data[
-                    code
-                ].get(
-                    "name",
-                    code,
-                )
-        except Exception:
-            pass
-
-    return stock
-
-
-# ============================================================
-# 交易日
-# ============================================================
-
-def is_weekday(date_obj):
-    return date_obj.weekday() < 5
 
 
 # ============================================================
 # PE歷史
-#
-# V2.3核心：
-#
-# 新股票加入：
-#
-# 今天
-# ↓
-# 取得今天PE
-# ↓
-# 若 < 60筆
-# ↓
-# 往過去交易日查
-# ↓
-# 只儲存真正存在且有效的PE
-# ↓
-# 累積60筆停止
-#
-# 絕對不會：
-# 舊PE → 新日期
-# """
+# ============================================================
 
-def get_valid_pe_count(code, history):
-    values = history.get(
+def get_existing_pe_count(
+    code,
+    history,
+):
+    stock_history = history.get(
         code,
         {},
     )
 
     count = 0
 
-    for date_string, pe in values.items():
+    for date_string, pe in stock_history.items():
 
-        if date_string.startswith("_"):
+        if not isinstance(
+            date_string,
+            str,
+        ):
             continue
 
-        try:
-            datetime.strptime(
-                date_string,
-                "%Y%m%d",
-            )
-        except Exception:
+        if not date_string.isdigit():
             continue
 
         if (
             pe is not None
-            and 0 < float(pe) <= 200
+            and 0 < pe <= 200
         ):
             count += 1
 
@@ -959,25 +812,32 @@ def update_pe_history(
     history,
 ):
     """
-    V2.3 PE自動回補。
+    V2.4 PE核心。
 
-    每個股票個別補。
+    例如：
+
+    現有2筆
+        ↓
+    往過去交易日查
+        ↓
+    取得指定日期PE
+        ↓
+    寫入真正歷史值
+        ↓
+    到60筆停止
+
+    不會把今天PE複製成60天。
     """
 
-    today = datetime.now(
-        TW_TZ
-    ).date()
+    today = get_today()
 
     for code in target_codes:
 
-        history.setdefault(
-            code,
-            {},
-        )
-
-        current_count = get_valid_pe_count(
-            code,
-            history,
+        current_count = (
+            get_existing_pe_count(
+                code,
+                history,
+            )
         )
 
         print(
@@ -985,55 +845,13 @@ def update_pe_history(
             f"{current_count}筆"
         )
 
-        # ----------------------------------------------------
-        # 今天的PE
-        # ----------------------------------------------------
-
-        if (
-            is_weekday(today)
-            and today.strftime("%Y%m%d")
-            not in history[code]
-        ):
-
-            today_string = today.strftime(
-                "%Y%m%d"
-            )
-
-            pe_data = get_twse_pe_by_date(
-                today_string
-            )
-
-            pe = pe_data.get(code)
-
-            if (
-                pe is not None
-                and 0 < pe <= 200
-            ):
-                history[code][
-                    today_string
-                ] = pe
-
-                current_count += 1
-
-                print(
-                    f"{code} 新增今日PE："
-                    f"{pe:.2f}"
-                )
-
-        # ----------------------------------------------------
-        # 已滿60，不需要回補
-        # ----------------------------------------------------
-
         if current_count >= PE_MIN_HISTORY:
             print(
-                f"{code} PE已滿"
+                f"{code} PE歷史已達"
                 f"{PE_MIN_HISTORY}筆"
             )
-            continue
 
-        # ----------------------------------------------------
-        # 往過去找有效PE
-        # ----------------------------------------------------
+            continue
 
         print(
             f"{code} PE不足"
@@ -1041,42 +859,48 @@ def update_pe_history(
             "開始往過去日期回補..."
         )
 
-        date_cursor = today - timedelta(
+        current_date = today - timedelta(
             days=1
         )
 
-        checked_days = 0
+        attempts = 0
 
         while (
-            current_count < PE_MIN_HISTORY
-            and checked_days < 800
+            current_count
+            < PE_MIN_HISTORY
+            and attempts < 450
         ):
 
             if not is_weekday(
-                date_cursor
+                current_date
             ):
-                date_cursor -= timedelta(
+                current_date -= timedelta(
                     days=1
                 )
+
+                attempts += 1
                 continue
 
-            date_string = date_cursor.strftime(
-                "%Y%m%d"
+            date_string = date_to_string(
+                current_date
             )
 
-            # 已經有資料，不重新抓
-            if (
-                date_string
-                in history[code]
+            # 已經有資料就跳過
+            if date_string in history.get(
+                code,
+                {},
             ):
-                date_cursor -= timedelta(
+                current_date -= timedelta(
                     days=1
                 )
-                checked_days += 1
+
+                attempts += 1
                 continue
 
-            pe_data = get_twse_pe_by_date(
-                date_string
+            pe_data = (
+                get_twse_pe_by_date(
+                    date_string
+                )
             )
 
             pe = pe_data.get(code)
@@ -1085,6 +909,12 @@ def update_pe_history(
                 pe is not None
                 and 0 < pe <= 200
             ):
+
+                history.setdefault(
+                    code,
+                    {},
+                )
+
                 history[code][
                     date_string
                 ] = pe
@@ -1099,15 +929,21 @@ def update_pe_history(
                     f"{PE_MIN_HISTORY})"
                 )
 
-            date_cursor -= timedelta(
+            else:
+
+                print(
+                    f"{code} "
+                    f"{date_string} "
+                    "沒有有效PE，跳過"
+                )
+
+            current_date -= timedelta(
                 days=1
             )
 
-            checked_days += 1
+            attempts += 1
 
-            time.sleep(
-                API_SLEEP
-            )
+            time.sleep(API_SLEEP)
 
         print(
             f"{code} PE回補完成："
@@ -1116,10 +952,6 @@ def update_pe_history(
 
     return history
 
-
-# ============================================================
-# 一年平均PE
-# ============================================================
 
 def calculate_one_year_average_pe(
     code,
@@ -1134,20 +966,13 @@ def calculate_one_year_average_pe(
         return None, 0
 
     cutoff = (
-        datetime.now(
-            TW_TZ
-        ).date()
-        - timedelta(
-            days=365
-        )
+        get_today()
+        - timedelta(days=365)
     )
 
     values = []
 
     for date_string, pe in stock_history.items():
-
-        if date_string.startswith("_"):
-            continue
 
         try:
             date_obj = datetime.strptime(
@@ -1182,69 +1007,278 @@ def calculate_one_year_average_pe(
 
 
 # ============================================================
-# TAIEX 市場PE
+# 股票名稱搜尋
 # ============================================================
 
-def calculate_taiex_market_pe():
-    print(
-        "計算 TAIEX 官方口徑市場 PE..."
+def normalize_stock_query(text):
+    if text is None:
+        return ""
+
+    return (
+        str(text)
+        .strip()
+        .replace(
+            "　",
+            " ",
+        )
     )
 
-    try:
-        data = twse_get(
-            "/exchangeReport/BWIBBU_ALL"
-        )
 
-        values = []
+def find_stock(
+    query,
+    stock_list,
+):
+    """
+    支援：
+
+    2330
+    台積電
+    台積
+    5347
+    世界
+    """
+
+    query = normalize_stock_query(
+        query
+    )
+
+    if not query:
+        return None
+
+    # 完整代號
+    for stock in stock_list:
+
+        if stock["code"] == query:
+            return stock
+
+    # 完整名稱
+    for stock in stock_list:
+
+        if stock["name"] == query:
+            return stock
+
+    # 名稱包含
+    matches = []
+
+    for stock in stock_list:
+
+        if query in stock["name"]:
+            matches.append(stock)
+
+    if len(matches) == 1:
+        return matches[0]
+
+    # 代號包含
+    matches = []
+
+    for stock in stock_list:
+
+        if query in stock["code"]:
+            matches.append(stock)
+
+    if len(matches) == 1:
+        return matches[0]
+
+    return None
+
+
+# ============================================================
+# 股票產業
+# ============================================================
+
+def get_stock_industry(
+    code,
+    stock_list=None,
+):
+    """
+    優先使用TWSE/TPEX分類。
+
+    若API資料無法取得，
+    再用Yahoo industry作為備援。
+    """
+
+    # --------------------------------------------------------
+    # TWSE產業
+    # --------------------------------------------------------
+
+    try:
+
+        data = twse_get(
+            "/exchangeReport/STOCK_DAY_ALL"
+        )
 
         if isinstance(data, list):
 
             for row in data:
 
-                pe = find_value(
-                    row,
-                    [
-                        "PEratio",
-                        "PER",
-                        "本益比",
-                    ],
-                )
-
-                if (
-                    pe is None
-                    or pe <= 0
-                    or pe > 200
-                ):
+                if str(
+                    row.get(
+                        "Code",
+                        "",
+                    )
+                ).strip() != code:
                     continue
 
-                values.append(pe)
+                industry = (
+                    row.get(
+                        "Industry",
+                        row.get(
+                            "產業別",
+                            "",
+                        ),
+                    )
+                )
 
-        print(
-            f"有效市場股票："
-            f"{len(values)} 家"
+                if industry:
+                    return normalize_industry(
+                        industry
+                    )
+
+    except Exception:
+        pass
+
+    # --------------------------------------------------------
+    # Yahoo備援
+    # --------------------------------------------------------
+
+    try:
+
+        ticker = yf.Ticker(
+            f"{code}.TW"
         )
 
-        if not values:
-            return None
+        info = ticker.info
 
-        market_pe = (
-            sum(values)
-            / len(values)
+        industry = info.get(
+            "industry"
         )
 
-        print(
-            f"TAIEX 官方口徑市場 PE："
-            f"{market_pe:.2f}"
+        sector = info.get(
+            "sector"
         )
 
-        return market_pe
+        if industry:
+            return normalize_industry(
+                industry
+            )
+
+        if sector:
+            return normalize_industry(
+                sector
+            )
 
     except Exception as e:
+
         print(
-            f"TAIEX 市場 PE 失敗：{e}"
+            f"{code} Yahoo產業取得失敗："
+            f"{e}"
         )
 
-        return None
+    return "其他"
+
+
+def normalize_industry(
+    industry
+):
+    """
+    把市場實際產業分類映射到
+    我們的估值模型分類。
+    """
+
+    if not industry:
+        return "其他"
+
+    text = str(
+        industry
+    ).strip()
+
+    # 晶圓代工
+    if any(
+        keyword in text
+        for keyword in [
+            "晶圓代工",
+            "半導體業",
+            "半導體",
+        ]
+    ):
+
+        # 如果明確是封裝測試，
+        # 後面會優先處理
+        if any(
+            keyword in text
+            for keyword in [
+                "封裝",
+                "測試",
+                "IC封測",
+            ]
+        ):
+            return "封裝測試"
+
+        return "晶圓代工"
+
+    # 封裝測試
+    if any(
+        keyword in text
+        for keyword in [
+            "封裝",
+            "測試",
+            "IC封測",
+        ]
+    ):
+        return "封裝測試"
+
+    # IC設計
+    if any(
+        keyword in text
+        for keyword in [
+            "IC設計",
+            "設計",
+            "半導體設計",
+        ]
+    ):
+        return "IC設計"
+
+    # 金融
+    if any(
+        keyword in text
+        for keyword in [
+            "金融",
+            "銀行",
+            "保險",
+            "證券",
+        ]
+    ):
+        return "金融"
+
+    # 電信
+    if any(
+        keyword in text
+        for keyword in [
+            "通信",
+            "電信",
+            "通訊",
+        ]
+    ):
+        return "電信"
+
+    # 傳產
+    if any(
+        keyword in text
+        for keyword in [
+            "水泥",
+            "食品",
+            "塑膠",
+            "鋼鐵",
+            "汽車",
+            "航運",
+            "電機",
+            "化學",
+            "建材",
+        ]
+    ):
+        return "成熟傳產"
+
+    return "其他"
 
 
 # ============================================================
@@ -1253,99 +1287,216 @@ def calculate_taiex_market_pe():
 
 def get_market_cap(
     code,
-    market="TWSE",
+    symbol=None,
 ):
+    """
+    取得目前市值。
+
+    Yahoo失敗就回傳None。
+    不讓單一股票阻斷整個程式。
+    """
+
+    if symbol is None:
+        symbol = f"{code}.TW"
+
     try:
-        suffix = (
-            ".TWO"
-            if market == "TPEX"
-            else ".TW"
+
+        ticker = yf.Ticker(
+            symbol
         )
 
-        info = yf.Ticker(
-            f"{code}{suffix}"
-        ).fast_info
+        fast_info = ticker.fast_info
 
-        value = getattr(
-            info,
+        market_cap = getattr(
+            fast_info,
             "market_cap",
             None,
         )
 
-        if value is not None:
-            return float(value)
+        if market_cap is not None:
+            return float(
+                market_cap
+            )
 
     except Exception as e:
+
         print(
-            f"{code} 市值取得失敗：{e}"
+            f"{code} 市值取得失敗："
+            f"{e}"
         )
+
+    # Yahoo fast_info失敗，
+    # 再嘗試info
+    try:
+
+        ticker = yf.Ticker(
+            symbol
+        )
+
+        info = ticker.info
+
+        market_cap = info.get(
+            "marketCap"
+        )
+
+        if market_cap is not None:
+            return float(
+                market_cap
+            )
+
+    except Exception:
+        pass
 
     return None
 
 
 # ============================================================
-# 同業
+# 動態產業市值前十大
 # ============================================================
 
 def get_top_industry_companies(
     industry,
-    exclude_code=None,
+    exclude_code,
+    stock_list,
+    current_pe_data,
 ):
-    result = []
+    """
+    V2.4核心：
 
-    for code in INDUSTRY_POOL.get(
-        industry,
-        [],
-    ):
+    不再：
+
+    INDUSTRY_POOL = {
+        "晶圓代工": [
+            "2330",
+            "2303",
+            ...
+        ]
+    }
+
+    而是：
+
+    1. 全市場股票
+    2. 找相同產業
+    3. 取得目前市值
+    4. 排序
+    5. 取前10
+
+    最後排除自己。
+    """
+
+    candidates = []
+
+    for stock in stock_list:
+
+        code = stock["code"]
 
         if code == exclude_code:
             continue
 
-        # 已知上櫃股票
-        market = (
-            "TPEX"
-            if code in [
-                "5347",
-                "6770",
-                "6239",
-                "6147",
-                "6257",
-                "3264",
-                "8150",
-                "2441",
-                "2369",
-                "2329",
-                "5269",
-                "6533",
-            ]
-            else "TWSE"
+        stock_industry = get_cached_industry(
+            code,
+            stock,
         )
+
+        if stock_industry != industry:
+            continue
+
+        # 必須有PE才有資格參與同業PE
+        pe_item = current_pe_data.get(
+            code
+        )
+
+        if not pe_item:
+            continue
+
+        pe = pe_item.get(
+            "pe"
+        )
+
+        if (
+            pe is None
+            or pe <= 0
+            or pe > 200
+        ):
+            continue
 
         market_cap = get_market_cap(
             code,
-            market,
+            stock.get(
+                "symbol"
+            ),
         )
 
-        if market_cap is not None:
-            result.append(
-                {
-                    "code": code,
-                    "market_cap": market_cap,
-                    "market": market,
-                }
-            )
+        if market_cap is None:
+            continue
+
+        candidates.append({
+            "code": code,
+            "name": stock["name"],
+            "industry": industry,
+            "market_cap": market_cap,
+            "pe": pe,
+        })
 
         time.sleep(
             API_SLEEP
         )
 
-    result.sort(
+    candidates.sort(
         key=lambda x:
         x["market_cap"],
         reverse=True,
     )
 
-    return result[:10]
+    result = candidates[
+        :TOP_INDUSTRY_COMPANIES
+    ]
+
+    print(
+        f"{industry} "
+        "目前市值前十大同業："
+    )
+
+    for index, item in enumerate(
+        result,
+        start=1,
+    ):
+        print(
+            f"{index}. "
+            f"{item['code']} "
+            f"{item['name']} "
+            f"市值="
+            f"{item['market_cap']:,.0f} "
+            f"PE="
+            f"{item['pe']:.2f}"
+        )
+
+    return result
+
+
+# ============================================================
+# 產業快取
+# ============================================================
+
+INDUSTRY_CACHE = {}
+
+
+def get_cached_industry(
+    code,
+    stock,
+):
+    if code in INDUSTRY_CACHE:
+        return INDUSTRY_CACHE[code]
+
+    industry = get_stock_industry(
+        code
+    )
+
+    INDUSTRY_CACHE[
+        code
+    ] = industry
+
+    return industry
 
 
 # ============================================================
@@ -1354,6 +1505,7 @@ def get_top_industry_companies(
 
 def calculate_kd(symbol):
     try:
+
         data = yf.Ticker(
             symbol
         ).history(
@@ -1414,7 +1566,9 @@ def calculate_kd(symbol):
 
         for value in rsv.dropna():
 
-            value = float(value)
+            value = float(
+                value
+            )
 
             k = (
                 k * 2 / 3
@@ -1432,8 +1586,10 @@ def calculate_kd(symbol):
         )
 
     except Exception as e:
+
         print(
-            f"{symbol} KD失敗：{e}"
+            f"{symbol} KD失敗："
+            f"{e}"
         )
 
         return None, None
@@ -1448,6 +1604,7 @@ def calculate_rsi(
     period=14,
 ):
     try:
+
         data = yf.Ticker(
             symbol
         ).history(
@@ -1459,9 +1616,10 @@ def calculate_rsi(
         if data.empty:
             return None
 
-        close = data[
-            "Close"
-        ].dropna()
+        close = (
+            data["Close"]
+            .dropna()
+        )
 
         if len(close) < period + 2:
             return None
@@ -1500,8 +1658,10 @@ def calculate_rsi(
         )
 
     except Exception as e:
+
         print(
-            f"{symbol} RSI失敗：{e}"
+            f"{symbol} RSI失敗："
+            f"{e}"
         )
 
         return None
@@ -1512,7 +1672,7 @@ def calculate_rsi(
 # ============================================================
 
 def get_company_fundamentals(
-    symbol,
+    symbol
 ):
     result = {
         "earnings_growth": None,
@@ -1520,6 +1680,7 @@ def get_company_fundamentals(
     }
 
     try:
+
         info = yf.Ticker(
             symbol
         ).info
@@ -1547,16 +1708,22 @@ def get_company_fundamentals(
 
         if roe is not None:
 
-            roe = float(roe)
+            roe = float(
+                roe
+            )
 
             if abs(roe) < 5:
                 roe *= 100
 
-            result["roe"] = roe
+            result[
+                "roe"
+            ] = roe
 
     except Exception as e:
+
         print(
-            f"{symbol} 基本面資料失敗：{e}"
+            f"{symbol} 基本面失敗："
+            f"{e}"
         )
 
     return result
@@ -1566,27 +1733,27 @@ def calculate_peg(
     pe,
     growth,
 ):
-    if (
-        pe is None
-        or growth is None
-    ):
+    if pe is None:
         return None
 
-    if (
-        pe <= 0
-        or growth <= 0
-    ):
+    if growth is None:
+        return None
+
+    if pe <= 0:
+        return None
+
+    if growth <= 0:
         return None
 
     return pe / growth
 
 
 # ============================================================
-# T86
+# T86 三大法人
 # ============================================================
 
 def get_t86_data(
-    date_string,
+    date_string
 ):
     for attempt in range(
         T86_RETRIES + 1
@@ -1597,9 +1764,12 @@ def get_t86_data(
             payload = twse_web_get(
                 "/fund/T86",
                 params={
-                    "date": date_string,
-                    "selectType": "ALL",
-                    "response": "json",
+                    "date":
+                        date_string,
+                    "selectType":
+                        "ALL",
+                    "response":
+                        "json",
                 },
             )
 
@@ -1614,7 +1784,8 @@ def get_t86_data(
             ) != "OK":
 
                 print(
-                    f"T86 {date_string} "
+                    f"T86 "
+                    f"{date_string} "
                     "尚未有資料"
                 )
 
@@ -1622,20 +1793,21 @@ def get_t86_data(
 
             fields = payload.get(
                 "fields",
-                []
+                [],
             )
 
             rows = payload.get(
                 "data",
-                []
+                [],
             )
 
             result = {}
 
             for raw_row in rows:
 
-                if len(raw_row) != len(
-                    fields
+                if (
+                    len(raw_row)
+                    != len(fields)
                 ):
                     continue
 
@@ -1660,34 +1832,35 @@ def get_t86_data(
                     continue
 
                 result[code] = {
-                    "total": find_value(
-                        row,
-                        [
-                            "三大法人買賣超股數",
-                            "三大法人買賣超",
-                        ],
-                    ),
-
-                    "foreign": find_value(
-                        row,
-                        [
-                            "外陸資買賣超股數",
-                        ],
-                    ),
-
-                    "trust": find_value(
-                        row,
-                        [
-                            "投信買賣超股數",
-                        ],
-                    ),
-
-                    "dealer": find_value(
-                        row,
-                        [
-                            "自營商買賣超股數",
-                        ],
-                    ),
+                    "total":
+                        find_value(
+                            row,
+                            [
+                                "三大法人買賣超股數",
+                                "三大法人買賣超",
+                            ],
+                        ),
+                    "foreign":
+                        find_value(
+                            row,
+                            [
+                                "外陸資買賣超股數",
+                            ],
+                        ),
+                    "trust":
+                        find_value(
+                            row,
+                            [
+                                "投信買賣超股數",
+                            ],
+                        ),
+                    "dealer":
+                        find_value(
+                            row,
+                            [
+                                "自營商買賣超股數",
+                            ],
+                        ),
                 }
 
             return result
@@ -1695,7 +1868,8 @@ def get_t86_data(
         except requests.exceptions.RequestException as e:
 
             print(
-                f"T86 {date_string} "
+                f"T86 "
+                f"{date_string} "
                 f"取得失敗：{e}"
             )
 
@@ -1705,7 +1879,8 @@ def get_t86_data(
         except Exception as e:
 
             print(
-                f"T86 {date_string} "
+                f"T86 "
+                f"{date_string} "
                 f"解析失敗：{e}"
             )
 
@@ -1715,13 +1890,11 @@ def get_t86_data(
 
 
 def get_recent_t86_history(
-    count=20,
+    count=20
 ):
     result = []
 
-    current = datetime.now(
-        TW_TZ
-    ).date()
+    current = get_today()
 
     for i in range(45):
 
@@ -1730,11 +1903,11 @@ def get_recent_t86_history(
             - timedelta(days=i)
         )
 
-        if day.weekday() >= 5:
+        if not is_weekday(day):
             continue
 
-        date_string = day.strftime(
-            "%Y%m%d"
+        date_string = date_to_string(
+            day
         )
 
         data = get_t86_data(
@@ -1743,12 +1916,12 @@ def get_recent_t86_history(
 
         if data:
 
-            result.append(
-                {
-                    "date": date_string,
-                    "data": data,
-                }
-            )
+            result.append({
+                "date":
+                    date_string,
+                "data":
+                    data,
+            })
 
             if len(result) >= count:
                 break
@@ -1768,10 +1941,11 @@ def calculate_institutional_scores(
 
     for item in t86_history:
 
-        stock = (
-            item
-            .get("data", {})
-            .get(code)
+        stock = item.get(
+            "data",
+            {},
+        ).get(
+            code
         )
 
         if not stock:
@@ -1787,6 +1961,7 @@ def calculate_institutional_scores(
             )
 
     if not values:
+
         return {
             "5d": None,
             "20d": None,
@@ -1794,19 +1969,18 @@ def calculate_institutional_scores(
         }
 
     return {
-        "5d": (
+        "5d":
             sum(values[:5])
             if len(values) >= 5
-            else None
-        ),
+            else None,
 
-        "20d": (
+        "20d":
             sum(values[:20])
             if len(values) >= 20
-            else None
-        ),
+            else None,
 
-        "latest": values[0],
+        "latest":
+            values[0],
     }
 
 
@@ -1816,6 +1990,7 @@ def calculate_institutional_scores(
 
 def get_margin_data():
     try:
+
         data = twse_get(
             "/exchangeReport/MI_MARGN"
         )
@@ -1850,30 +2025,33 @@ def get_margin_data():
                 continue
 
             result[code] = {
-                "margin": find_value(
-                    row,
-                    [
-                        "融資餘額",
-                        "MarginBalance",
-                        "融資餘額(張)",
-                    ],
-                ),
+                "margin":
+                    find_value(
+                        row,
+                        [
+                            "融資餘額",
+                            "MarginBalance",
+                            "融資餘額(張)",
+                        ],
+                    ),
 
-                "short": find_value(
-                    row,
-                    [
-                        "融券餘額",
-                        "ShortBalance",
-                        "融券餘額(張)",
-                    ],
-                ),
+                "short":
+                    find_value(
+                        row,
+                        [
+                            "融券餘額",
+                            "ShortBalance",
+                            "融券餘額(張)",
+                        ],
+                    ),
             }
 
         return result
 
     except Exception as e:
+
         print(
-            f"融資融券取得失敗：{e}"
+            f"融資融券失敗：{e}"
         )
 
         return {}
@@ -1883,9 +2061,11 @@ def update_margin_history(
     codes,
     history,
 ):
-    today_string = datetime.now(
-        TW_TZ
-    ).strftime("%Y%m%d")
+    today_string = (
+        datetime.now(
+            TW_TZ
+        ).strftime("%Y%m%d")
+    )
 
     if today_string in history.get(
         "_dates",
@@ -1896,7 +2076,6 @@ def update_margin_history(
     data = get_margin_data()
 
     if not data:
-
         print(
             "今日融資融券尚未更新"
         )
@@ -1905,13 +2084,15 @@ def update_margin_history(
 
     for code in codes:
 
-        item = data.get(code)
+        item = data.get(
+            code
+        )
 
         if item:
 
             history.setdefault(
                 code,
-                {}
+                {},
             )
 
             history[code][
@@ -1940,7 +2121,7 @@ def calculate_margin_change(
 ):
     stock = history.get(
         code,
-        {}
+        {},
     )
 
     dates = []
@@ -1953,7 +2134,9 @@ def calculate_margin_change(
                 "%Y%m%d",
             )
 
-            dates.append(key)
+            dates.append(
+                key
+            )
 
         except Exception:
             pass
@@ -1967,14 +2150,20 @@ def calculate_margin_change(
 
     latest = stock[
         dates[0]
-    ].get("margin")
+    ].get(
+        "margin"
+    )
+
+    previous_index = min(
+        5,
+        len(dates) - 1,
+    )
 
     previous = stock[
-        dates[min(
-            5,
-            len(dates) - 1
-        )]
-    ].get("margin")
+        dates[previous_index]
+    ].get(
+        "margin"
+    )
 
     if (
         latest is None
@@ -1983,8 +2172,7 @@ def calculate_margin_change(
         return None
 
     return (
-        latest
-        - previous
+        latest - previous
     )
 
 
@@ -1994,7 +2182,7 @@ def get_latest_margin_item(
 ):
     stock = history.get(
         code,
-        {}
+        {},
     )
 
     dates = []
@@ -2002,12 +2190,15 @@ def get_latest_margin_item(
     for key in stock:
 
         try:
+
             datetime.strptime(
                 key,
                 "%Y%m%d",
             )
 
-            dates.append(key)
+            dates.append(
+                key
+            )
 
         except Exception:
             pass
@@ -2015,13 +2206,17 @@ def get_latest_margin_item(
     if not dates:
         return None
 
-    return stock[
-        max(dates)
-    ]
+    latest = max(
+        dates
+    )
+
+    return stock.get(
+        latest
+    )
 
 
 def calculate_short_margin_ratio(
-    item,
+    item
 ):
     if not item:
         return None
@@ -2042,55 +2237,52 @@ def calculate_short_margin_ratio(
         return None
 
     return (
-        short
-        / margin
-        * 100
+        short / margin * 100
     )
 
 
 # ============================================================
-# V2.3單股分析
+# 評分
 # ============================================================
 
 def analyze_stock(
+    code,
     stock_info,
     current_pe_data,
     market_pe,
     pe_history,
     margin_history,
     t86_history,
+    stock_list,
 ):
     """
-    回傳：
-    {
-        message: LINE文字,
-        score: int,
-        possible_score: int,
-        level: str
-    }
+    回傳完整分析結果。
+
+    不直接發LINE。
+    方便：
+
+    1. 每日自動分析
+    2. LINE好友查詢
+
+    共用同一套分析邏輯。
     """
 
-    stock_info = enrich_stock_info(
-        stock_info
-    )
+    name = stock_info["name"]
+    symbol = stock_info["symbol"]
 
-    code = stock_info["code"]
-    name = stock_info.get(
-        "name",
-        code,
-    )
-
-    symbol = stock_info[
-        "symbol"
-    ]
-
-    industry = stock_info[
+    industry = stock_info.get(
         "industry"
-    ]
+    )
 
-    market = stock_info.get(
-        "market",
-        "TWSE",
+    if not industry:
+        industry = get_stock_industry(
+            code,
+            stock_list,
+        )
+
+    model = INDUSTRY_MODEL.get(
+        industry,
+        INDUSTRY_MODEL["其他"],
     )
 
     print(
@@ -2107,7 +2299,8 @@ def analyze_stock(
     )
 
     print(
-        f"市場：{market}"
+        f"市場："
+        f"{stock_info.get('market', 'N/A')}"
     )
 
     print(
@@ -2118,34 +2311,12 @@ def analyze_stock(
         "================================"
     )
 
-    model = INDUSTRY_MODEL.get(
-        industry,
-        {
-            "pe": True,
-            "peg": False,
-            "pb": True,
-            "yield": False,
-            "dcf": False,
-            "roe": False,
-        },
-    )
-
-    # --------------------------------------------------------
-    # PE
-    # --------------------------------------------------------
-
     item = current_pe_data.get(
         code
     )
 
-    # TPEX目前資料可能不在TWSE PE API
-    if item is None:
-        item = {
-            "name": name,
-            "pe": None,
-            "yield": None,
-            "pb": None,
-        }
+    if not item:
+        return None
 
     stock_pe = item.get(
         "pe"
@@ -2158,10 +2329,6 @@ def analyze_stock(
     stock_pb = item.get(
         "pb"
     )
-
-    # --------------------------------------------------------
-    # 基本面
-    # --------------------------------------------------------
 
     fundamentals = (
         get_company_fundamentals(
@@ -2184,10 +2351,6 @@ def analyze_stock(
         earnings_growth,
     )
 
-    # --------------------------------------------------------
-    # 歷史PE
-    # --------------------------------------------------------
-
     one_year_pe, sample_count = (
         calculate_one_year_average_pe(
             code,
@@ -2209,54 +2372,31 @@ def analyze_stock(
             "一年平均PE暫不計分"
         )
 
-    else:
-
-        print(
-            f"歷史PE已達"
-            f"{sample_count}筆，"
-            "正式啟用一年平均PE"
-        )
-
     # --------------------------------------------------------
-    # 同業
+    # 動態同業
     # --------------------------------------------------------
-
-    industry_pe = None
 
     peers = (
         get_top_industry_companies(
             industry,
-            exclude_code=code,
+            code,
+            stock_list,
+            current_pe_data,
         )
     )
 
-    peer_values = []
-
-    for peer in peers:
-
-        peer_item = (
-            current_pe_data.get(
-                peer["code"]
-            )
-        )
-
-        if not peer_item:
-            continue
-
-        peer_pe = peer_item.get(
-            "pe"
-        )
-
+    peer_values = [
+        x["pe"]
+        for x in peers
         if (
-            peer_pe is not None
-            and 0 < peer_pe <= 200
-        ):
-            peer_values.append(
-                peer_pe
-            )
+            x.get("pe")
+            is not None
+        )
+    ]
+
+    industry_pe = None
 
     if peer_values:
-
         industry_pe = (
             sum(peer_values)
             / len(peer_values)
@@ -2317,9 +2457,9 @@ def analyze_stock(
         )
     )
 
-    # ========================================================
+    # --------------------------------------------------------
     # 評分
-    # ========================================================
+    # --------------------------------------------------------
 
     score = 0
     possible_score = 0
@@ -2340,23 +2480,21 @@ def analyze_stock(
         possible_score += 1
 
         if positive:
+
             score += 1
+
             reasons_good.append(
                 reason
             )
 
-    # --------------------------------------------------------
     # PE
-    # --------------------------------------------------------
-
-    if model["pe"]:
+    if model.get("pe"):
 
         add_score(
             (
                 stock_pe is not None
                 and market_pe is not None
             ),
-
             (
                 stock_pe < market_pe
                 if (
@@ -2365,7 +2503,6 @@ def analyze_stock(
                 )
                 else False
             ),
-
             "PE低於TAIEX",
         )
 
@@ -2374,7 +2511,6 @@ def analyze_stock(
                 stock_pe is not None
                 and industry_pe is not None
             ),
-
             (
                 stock_pe < industry_pe
                 if (
@@ -2383,18 +2519,15 @@ def analyze_stock(
                 )
                 else False
             ),
-
             "PE低於同業",
         )
 
-        # 只有60筆以上才加入
         add_score(
             (
                 historical_active
                 and stock_pe is not None
                 and one_year_pe is not None
             ),
-
             (
                 stock_pe < one_year_pe
                 if (
@@ -2403,95 +2536,70 @@ def analyze_stock(
                 )
                 else False
             ),
-
-            "PE低於60筆歷史平均",
+            "PE低於60筆以上歷史平均",
         )
 
-    # --------------------------------------------------------
     # PEG
-    # --------------------------------------------------------
-
-    if model["peg"]:
+    if model.get("peg"):
 
         add_score(
             peg is not None,
-
             (
                 peg < 1
                 if peg is not None
                 else False
             ),
-
             "PEG < 1",
         )
 
-    # --------------------------------------------------------
     # PB
-    # --------------------------------------------------------
-
-    if model["pb"]:
+    if model.get("pb"):
 
         add_score(
             (
                 stock_pb is not None
                 and stock_pb > 0
             ),
-
             (
                 stock_pb < 1
                 if stock_pb is not None
                 else False
             ),
-
             "PB < 1",
         )
 
-    # --------------------------------------------------------
     # 殖利率
-    # --------------------------------------------------------
-
-    if model["yield"]:
+    if model.get("yield"):
 
         add_score(
             stock_yield is not None,
-
             (
                 stock_yield >= 4
                 if stock_yield is not None
                 else False
             ),
-
             "殖利率 >= 4%",
         )
 
-    # --------------------------------------------------------
     # ROE
-    # --------------------------------------------------------
-
     if model.get("roe"):
 
         add_score(
             roe is not None,
-
             (
                 roe >= 10
                 if roe is not None
                 else False
             ),
-
             "ROE >= 10%",
         )
 
-    # --------------------------------------------------------
     # KD
-    # --------------------------------------------------------
-
     add_score(
         (
             k is not None
             and d is not None
         ),
-
         (
             k < 30
             and d < 30
@@ -2501,73 +2609,55 @@ def analyze_stock(
             )
             else False
         ),
-
         "KD < 30",
     )
 
-    # --------------------------------------------------------
     # RSI
-    # --------------------------------------------------------
-
     add_score(
         rsi is not None,
-
         (
             rsi < 35
             if rsi is not None
             else False
         ),
-
         "RSI < 35",
     )
 
-    # --------------------------------------------------------
     # 法人
-    # --------------------------------------------------------
-
     add_score(
         inst_5d is not None,
-
         (
             inst_5d > 0
             if inst_5d is not None
             else False
         ),
-
         "法人5日買超",
     )
 
     add_score(
         inst_20d is not None,
-
         (
             inst_20d > 0
             if inst_20d is not None
             else False
         ),
-
         "法人20日買超",
     )
 
-    # --------------------------------------------------------
     # 融資
-    # --------------------------------------------------------
-
     add_score(
         margin_change is not None,
-
         (
             margin_change < 0
             if margin_change is not None
             else False
         ),
-
         "融資5日下降",
     )
 
-    # ========================================================
+    # --------------------------------------------------------
     # 風險
-    # ========================================================
+    # --------------------------------------------------------
 
     warnings = []
 
@@ -2598,17 +2688,12 @@ def analyze_stock(
         )
 
     if (
-        short_margin_ratio
-        is not None
+        short_margin_ratio is not None
         and short_margin_ratio < 3
     ):
         warnings.append(
             "券資比偏低"
         )
-
-    # ========================================================
-    # 評級
-    # ========================================================
 
     ratio = (
         score / possible_score
@@ -2633,11 +2718,97 @@ def analyze_stock(
         level = "🟡 建議分批加碼"
 
     else:
-        level = "⚪ 暫不建議加碼"
+        level = "🔴 目前不建議加碼"
 
-    # ========================================================
-    # 主控台
-    # ========================================================
+    result = {
+        "code": code,
+        "name": name,
+        "symbol": symbol,
+        "industry": industry,
+        "model": model,
+
+        "stock_pe": stock_pe,
+        "market_pe": market_pe,
+        "industry_pe": industry_pe,
+
+        "one_year_pe":
+            one_year_pe,
+
+        "sample_count":
+            sample_count,
+
+        "stock_pb":
+            stock_pb,
+
+        "stock_yield":
+            stock_yield,
+
+        "earnings_growth":
+            earnings_growth,
+
+        "peg":
+            peg,
+
+        "roe":
+            roe,
+
+        "k":
+            k,
+
+        "d":
+            d,
+
+        "rsi":
+            rsi,
+
+        "inst_5d":
+            inst_5d,
+
+        "inst_20d":
+            inst_20d,
+
+        "margin_change":
+            margin_change,
+
+        "short_margin_ratio":
+            short_margin_ratio,
+
+        "score":
+            score,
+
+        "possible_score":
+            possible_score,
+
+        "ratio":
+            ratio,
+
+        "level":
+            level,
+
+        "strong":
+            strong,
+
+        "good":
+            good,
+
+        "reasons_good":
+            reasons_good,
+
+        "warnings":
+            warnings,
+
+        "pe_history_active":
+            historical_active,
+
+        "pe_history":
+            sample_count,
+
+        "pe_history_required":
+            PE_MIN_HISTORY,
+
+        "peers":
+            peers,
+    }
 
     print(
         f"PE："
@@ -2661,7 +2832,7 @@ def analyze_stock(
 
     print(
         f"PE歷史樣本："
-        f"{sample_count}/{PE_MIN_HISTORY}"
+        f"{sample_count}"
     )
 
     print(
@@ -2691,8 +2862,8 @@ def analyze_stock(
 
     print(
         f"KD："
-        f"K={format_number(k)} / "
-        f"D={format_number(d)}"
+        f"K={format_number(k)} "
+        f"/ D={format_number(d)}"
     )
 
     print(
@@ -2725,302 +2896,180 @@ def analyze_stock(
         f"{score}/{possible_score}"
     )
 
-    # ========================================================
-    # LINE訊息
-    # ========================================================
+    return result
 
-    historical_status = (
-        f"已啟用（{sample_count}筆）"
-        if historical_active
-        else
-        f"尚未啟用（{sample_count}/"
-        f"{PE_MIN_HISTORY}筆）"
+
+# ============================================================
+# LINE單股分析訊息
+# ============================================================
+
+def format_stock_analysis_message(
+    result
+):
+    if not result:
+        return None
+
+    name = result["name"]
+    code = result["code"]
+    industry = result[
+        "industry"
+    ]
+
+    score = result[
+        "score"
+    ]
+
+    possible = result[
+        "possible_score"
+    ]
+
+    ratio = result[
+        "ratio"
+    ]
+
+    level = result[
+        "level"
+    ]
+
+    peers = result.get(
+        "peers",
+        [],
     )
 
-    warning_text = (
-        "、".join(warnings)
-        if warnings
-        else "無"
-    )
+    peer_text = "無"
 
-    reasons_text = (
-        "、".join(
-            reasons_good
+    if peers:
+
+        peer_text = "、".join(
+            [
+                (
+                    f"{x['code']} "
+                    f"{x['name']}"
+                )
+                for x in peers
+            ]
         )
-        if reasons_good
+
+    reasons = (
+        "、".join(
+            result[
+                "reasons_good"
+            ]
+        )
+        if result[
+            "reasons_good"
+        ]
         else "無"
     )
+
+    warnings = (
+        "、".join(
+            result[
+                "warnings"
+            ]
+        )
+        if result[
+            "warnings"
+        ]
+        else "無"
+    )
+
+    if (
+        result[
+            "pe_history_active"
+        ]
+    ):
+
+        history_text = (
+            f"{result['pe_history']}筆"
+        )
+
+        average_text = (
+            f"{format_number(result['one_year_pe'])}"
+        )
+
+    else:
+
+        history_text = (
+            f"{result['pe_history']}/"
+            f"{result['pe_history_required']}筆"
+        )
+
+        average_text = (
+            "暫不納入評分"
+        )
 
     message = (
         f"{level}\n\n"
 
-        f"標的："
+        f"【股票】\n"
         f"{code} {name}\n"
+        f"產業：{industry}\n\n"
 
-        f"市場："
-        f"{market}\n"
-
-        f"產業："
-        f"{industry}\n\n"
-
-        "【估值】\n"
-
+        f"【估值】\n"
         f"PE："
-        f"{format_number(stock_pe)} 倍\n"
-
+        f"{format_number(result['stock_pe'])} 倍\n"
         f"TAIEX PE："
-        f"{format_number(market_pe)} 倍\n"
-
+        f"{format_number(result['market_pe'])} 倍\n"
         f"同業平均 PE："
-        f"{format_number(industry_pe)} 倍\n"
-
+        f"{format_number(result['industry_pe'])} 倍\n"
         f"1年平均 PE："
-        f"{format_number(one_year_pe)} 倍\n"
-
-        f"PE歷史："
-        f"{sample_count}/{PE_MIN_HISTORY}筆\n"
-
-        f"歷史PE狀態："
-        f"{historical_status}\n"
-
+        f"{average_text}\n"
+        f"PE歷史資料："
+        f"{history_text}\n"
         f"PB："
-        f"{format_number(stock_pb)} 倍\n"
-
+        f"{format_number(result['stock_pb'])} 倍\n"
         f"殖利率："
-        f"{format_number(stock_yield)}%\n"
-
+        f"{format_number(result['stock_yield'])}%\n"
         f"EPS成長："
-        f"{format_number(earnings_growth)}%\n"
-
+        f"{format_number(result['earnings_growth'])}%\n"
         f"PEG："
-        f"{format_number(peg)}\n"
-
+        f"{format_number(result['peg'])}\n"
         f"ROE："
-        f"{format_number(roe)}%\n\n"
+        f"{format_number(result['roe'])}%\n\n"
 
-        "【技術】\n"
+        f"【動態同業】\n"
+        f"{peer_text}\n\n"
 
+        f"【技術】\n"
         f"KD："
-        f"K {format_number(k)} / "
-        f"D {format_number(d)}\n"
-
+        f"K {format_number(result['k'])} "
+        f"/ D {format_number(result['d'])}\n"
         f"RSI："
-        f"{format_number(rsi)}\n\n"
+        f"{format_number(result['rsi'])}\n\n"
 
-        "【籌碼】\n"
-
+        f"【籌碼】\n"
         f"法人5日："
-        f"{format_number(inst_5d, 0)} 股\n"
-
+        f"{format_number(result['inst_5d'], 0)} 股\n"
         f"法人20日："
-        f"{format_number(inst_20d, 0)} 股\n"
-
+        f"{format_number(result['inst_20d'], 0)} 股\n"
         f"融資5日變化："
-        f"{format_number(margin_change, 0)} 張\n"
-
+        f"{format_number(result['margin_change'], 0)} 張\n"
         f"券資比："
-        f"{format_number(short_margin_ratio)}%\n\n"
+        f"{format_number(result['short_margin_ratio'])}%\n\n"
 
-        "━━━━━━━━━━\n"
-
+        f"━━━━━━━━━━\n"
         f"加碼評分："
-        f"{score}/{possible_score} "
-        f"({ratio:.0%})\n"
-
+        f"{score}/{possible}"
+        f" ({ratio:.0%})\n"
         f"{level}\n"
+        f"━━━━━━━━━━\n\n"
 
-        "━━━━━━━━━━\n\n"
+        f"加分項目：\n"
+        f"{reasons}\n\n"
 
-        "加分項目：\n"
-
-        f"{reasons_text}\n\n"
-
-        "風險提示：\n"
-
-        f"{warning_text}"
+        f"風險提示：\n"
+        f"{warnings}"
     )
 
-    return {
-        "message": message,
-        "score": score,
-        "possible_score": possible_score,
-        "level": level,
-    }
+    return message
 
 
 # ============================================================
-# LINE單股查詢
+# 價格歷史
 # ============================================================
 
-def handle_stock_query(
-    query,
-):
-    print(
-        f"LINE股票查詢：{query}"
-    )
-
-    stock = find_stock(
-        query
-    )
-
-    if not stock:
-
-        return (
-            "❌ 找不到這支股票。\n\n"
-            "請輸入：\n"
-            "2330\n"
-            "台積電\n"
-            "5347\n"
-            "世界"
-        )
-
-    stock = enrich_stock_info(
-        stock
-    )
-
-    # --------------------------------------------------------
-    # 目前基本面
-    # --------------------------------------------------------
-
-    current_pe_data = (
-        get_twse_pe_data()
-    )
-
-    market_pe = (
-        calculate_taiex_market_pe()
-    )
-
-    # --------------------------------------------------------
-    # PE歷史
-    # --------------------------------------------------------
-
-    pe_history = load_json(
-        PE_HISTORY_FILE
-    )
-
-    pe_history = update_pe_history(
-        [stock["code"]],
-        pe_history,
-    )
-
-    save_json(
-        PE_HISTORY_FILE,
-        pe_history,
-    )
-
-    # --------------------------------------------------------
-    # 融資
-    # --------------------------------------------------------
-
-    margin_history = load_json(
-        CHIP_HISTORY_FILE
-    )
-
-    margin_history = update_margin_history(
-        [stock["code"]],
-        margin_history,
-    )
-
-    save_json(
-        CHIP_HISTORY_FILE,
-        margin_history,
-    )
-
-    # --------------------------------------------------------
-    # 法人
-    # --------------------------------------------------------
-
-    t86_history = (
-        get_recent_t86_history(
-            20
-        )
-    )
-
-    result = analyze_stock(
-        stock,
-        current_pe_data,
-        market_pe,
-        pe_history,
-        margin_history,
-        t86_history,
-    )
-
-    return result[
-        "message"
-    ]
-
-
-# ============================================================
-# LINE Webhook
-#
-# 若使用 GitHub Actions / cron：
-# 可另外透過 Web Server 將 webhook POST到此程式。
-#
-# 此函式保留給 Flask / FastAPI 使用。
-# ============================================================
-
-def process_line_event(
-    event,
-):
-    try:
-
-        if event.get(
-            "type"
-        ) != "message":
-
-            return
-
-        message = event.get(
-            "message",
-            {}
-        )
-
-        if message.get(
-            "type"
-        ) != "text":
-
-            return
-
-        text = message.get(
-            "text",
-            ""
-        ).strip()
-
-        source = event.get(
-            "source",
-            {}
-        )
-
-        user_id = source.get(
-            "userId"
-        )
-
-        if not user_id:
-            return
-
-        response = handle_stock_query(
-            text
-        )
-
-        reply_line(
-            user_id,
-            response
-        )
-
-    except Exception as e:
-
-        print(
-            f"LINE事件處理失敗：{e}"
-        )
-
-
-# ============================================================
-# 價格
-# ============================================================
-
-def get_history(
-    symbol,
-):
+def get_history(symbol):
     end = datetime.now(
         TW_TZ
     )
@@ -3052,40 +3101,33 @@ def get_history(
     except Exception as e:
 
         print(
-            f"{symbol} 歷史資料失敗：{e}"
+            f"{symbol} "
+            f"歷史資料失敗：{e}"
         )
 
         return None
 
-    if data.empty:
+    if data is None or data.empty:
         return None
 
     try:
 
-        close = data[
-            "Close"
-        ]
+        close = data["Close"]
 
         if hasattr(
             close,
             "columns",
         ):
-            close = close.iloc[
-                :, 0
-            ]
+            close = close.iloc[:, 0]
 
     except Exception:
 
-        close = data.iloc[
-            :, 0
-        ]
+        close = data.iloc[:, 0]
 
     return close.dropna()
 
 
-def get_latest_price(
-    symbol,
-):
+def get_latest_price(symbol):
     ticker = yf.Ticker(
         symbol
     )
@@ -3099,12 +3141,13 @@ def get_latest_price(
             auto_adjust=False,
         )
 
-        if not intraday.empty:
+        if (
+            intraday is not None
+            and not intraday.empty
+        ):
 
             prices = (
-                intraday[
-                    "Close"
-                ]
+                intraday["Close"]
                 .dropna()
             )
 
@@ -3116,7 +3159,8 @@ def get_latest_price(
     except Exception as e:
 
         print(
-            f"{symbol} 1m資料失敗：{e}"
+            f"{symbol} 1m資料失敗："
+            f"{e}"
         )
 
     try:
@@ -3127,12 +3171,13 @@ def get_latest_price(
             auto_adjust=False,
         )
 
-        if not daily.empty:
+        if (
+            daily is not None
+            and not daily.empty
+        ):
 
             prices = (
-                daily[
-                    "Close"
-                ]
+                daily["Close"]
                 .dropna()
             )
 
@@ -3144,14 +3189,15 @@ def get_latest_price(
     except Exception as e:
 
         print(
-            f"{symbol} 日線資料失敗：{e}"
+            f"{symbol} 日線資料失敗："
+            f"{e}"
         )
 
     return None
 
 
 def get_previous_close(
-    history,
+    history
 ):
     if (
         history is None
@@ -3164,9 +3210,7 @@ def get_previous_close(
     )
 
 
-def get_week_high(
-    symbol,
-):
+def get_week_high(symbol):
     end = datetime.now(
         TW_TZ
     )
@@ -3194,7 +3238,10 @@ def get_week_high(
             auto_adjust=False,
         )
 
-        if data.empty:
+        if (
+            data is None
+            or data.empty
+        ):
             return None
 
         highs = (
@@ -3212,72 +3259,74 @@ def get_week_high(
     except Exception as e:
 
         print(
-            f"{symbol} 7日高點失敗：{e}"
+            f"{symbol} "
+            f"7日高點失敗：{e}"
         )
 
         return None
 
 
 # ============================================================
-# 15分鐘區間最低價
+# 15分鐘區間資料
 # ============================================================
 
-def get_interval_low(
+def get_intraday_low_between(
     symbol,
+    start_time,
+    end_time,
 ):
     """
-    取得最近15分鐘區間的最低價。
+    取得：
 
-    用1分鐘資料。
+    上一次偵測時間
+          ↓
+    本次偵測時間
 
-    若API只回傳部分資料，
-    仍以實際取得資料計算。
+    期間最低價。
+
+    使用1分鐘資料，
+    因此不是只拿「當下價格」。
     """
+
+    if (
+        start_time is None
+        or end_time is None
+    ):
+        return None, None
 
     try:
 
-        data = yf.Ticker(
+        ticker = yf.Ticker(
             symbol
-        ).history(
-            period="1d",
-            interval="1m",
+        )
+
+        data = ticker.history(
+            start=(
+                start_time
+                - timedelta(
+                    minutes=2
+                )
+            ).strftime(
+                "%Y-%m-%d %H:%M:%S"
+            ),
+            end=(
+                end_time
+                + timedelta(
+                    minutes=1
+                )
+            ).strftime(
+                "%Y-%m-%d %H:%M:%S"
+            ),
+            interval=INTRADAY_INTERVAL,
             prepost=False,
             auto_adjust=False,
         )
 
-        if data.empty:
-            return None
-
-        now = datetime.now(
-            TW_TZ
-        )
-
-        cutoff = (
-            now
-            - timedelta(
-                minutes=INTERVAL_MINUTES
-            )
-        )
-
-        # yfinance index可能帶timezone
-        try:
-            if data.index.tz is None:
-                data.index = data.index.tz_localize(
-                    TW_TZ
-                )
-            else:
-                data.index = data.index.tz_convert(
-                    TW_TZ
-                )
-        except Exception:
-            pass
-
-        data = data[
-            data.index >= cutoff
-        ]
-
-        if data.empty:
-            return None
+        if (
+            data is None
+            or data.empty
+        ):
+            return None, None
 
         lows = (
             data["Low"]
@@ -3285,176 +3334,352 @@ def get_interval_low(
         )
 
         if len(lows) == 0:
-            return None
+            return None, None
 
-        return float(
+        minimum = float(
             lows.min()
+        )
+
+        minimum_time = (
+            lows.idxmin()
+        )
+
+        return (
+            minimum,
+            minimum_time,
         )
 
     except Exception as e:
 
         print(
-            f"{symbol} 15分鐘最低價失敗：{e}"
+            f"{symbol} "
+            "15分鐘區間資料失敗："
+            f"{e}"
         )
 
-        return None
+        return None, None
 
 
-# ============================================================
-# 15分鐘區間跌破通知
-#
-# 邏輯：
-#
-# 第一次：
-# 建立基準
-#
-# 下一次：
-# 取得這15分鐘內最低價
-#
-# 如果本次最低價 < 上次基準
-# → 通知
-#
-# 然後更新基準
-# ============================================================
-
-def check_interval_break(
+def check_intraday_interval(
     name,
     symbol,
     state,
 ):
+    """
+    V2.4：
+
+    第一次執行：
+        建立基準，不通知
+
+    第二次以後：
+        計算上次偵測→這次偵測
+        的最低價
+
+    若區間最低價跌破門檻，
+    就發送通知。
+    """
+
     print(
         f"\n---------- "
         f"15分鐘區間：{name}"
         f" ----------"
     )
 
+    now = datetime.now(
+        TW_TZ
+    )
+
+    state.setdefault(
+        "intraday_15m",
+        {},
+    )
+
+    stock_state = state[
+        "intraday_15m"
+    ].setdefault(
+        symbol,
+        {},
+    )
+
+    previous_string = (
+        stock_state.get(
+            "last_check"
+        )
+    )
+
+    # --------------------------------------------------------
+    # 第一次執行
+    # --------------------------------------------------------
+
+    if not previous_string:
+
+        stock_state[
+            "last_check"
+        ] = now.isoformat()
+
+        print(
+            "第一次執行，"
+            "建立區間基準"
+        )
+
+        return
+
+    # --------------------------------------------------------
+    # 解析上一時間
+    # --------------------------------------------------------
+
+    try:
+
+        previous_time = (
+            datetime.fromisoformat(
+                previous_string
+            )
+        )
+
+        if (
+            previous_time.tzinfo
+            is None
+        ):
+            previous_time = (
+                previous_time.replace(
+                    tzinfo=TW_TZ
+                )
+            )
+
+    except Exception:
+
+        stock_state[
+            "last_check"
+        ] = now.isoformat()
+
+        print(
+            "上次時間格式錯誤，"
+            "重新建立基準"
+        )
+
+        return
+
+    # --------------------------------------------------------
+    # 防止時間異常
+    # --------------------------------------------------------
+
+    if now <= previous_time:
+
+        stock_state[
+            "last_check"
+        ] = now.isoformat()
+
+        return
+
+    # 如果兩次執行距離太久，
+    # 超過7天就不要查
+    if (
+        now - previous_time
+    ).days > INTRADAY_LOOKBACK_DAYS:
+
+        stock_state[
+            "last_check"
+        ] = now.isoformat()
+
+        print(
+            "距離上次執行超過"
+            f"{INTRADAY_LOOKBACK_DAYS}天，"
+            "重新建立基準"
+        )
+
+        return
+
+    minimum, minimum_time = (
+        get_intraday_low_between(
+            symbol,
+            previous_time,
+            now,
+        )
+    )
+
     current = get_latest_price(
         symbol
     )
 
-    interval_low = get_interval_low(
-        symbol
-    )
-
-    if (
-        current is None
-        or interval_low is None
-    ):
+    if minimum is None:
 
         print(
             "無法取得15分鐘區間資料"
         )
 
+        # 注意：
+        # 即使查不到資料，
+        # 也更新時間，避免下次查超大區間
+        stock_state[
+            "last_check"
+        ] = now.isoformat()
+
         return
 
-    state.setdefault(
-        "interval_low",
-        {}
+    print(
+        f"上次偵測："
+        f"{previous_time}"
     )
 
-    item = state[
-        "interval_low"
-    ].get(
-        name
+    print(
+        f"本次偵測："
+        f"{now}"
     )
 
-    now_string = datetime.now(
-        TW_TZ
-    ).strftime(
-        "%Y-%m-%d %H:%M:%S"
+    print(
+        f"區間最低價："
+        f"{minimum}"
     )
 
-    if not item:
+    if minimum_time is not None:
 
-        state[
-            "interval_low"
-        ][name] = {
-            "low": interval_low,
-            "time": now_string,
-        }
+        try:
+
+            if hasattr(
+                minimum_time,
+                "to_pydatetime",
+            ):
+                minimum_time = (
+                    minimum_time
+                    .to_pydatetime()
+                )
+
+            if minimum_time.tzinfo is None:
+                minimum_time = (
+                    minimum_time.replace(
+                        tzinfo=TW_TZ
+                    )
+                )
+
+            print(
+                f"最低價時間："
+                f"{minimum_time}"
+            )
+
+        except Exception:
+            pass
+
+    # --------------------------------------------------------
+    # 目前價格
+    # --------------------------------------------------------
+
+    if current is None:
 
         print(
-            "第一次執行，建立區間基準"
+            "無法取得目前價格"
         )
 
-        print(
-            f"基準最低價："
-            f"{interval_low}"
-        )
+        stock_state[
+            "last_check"
+        ] = now.isoformat()
 
         return
 
-    previous_low = item.get(
-        "low"
+    # --------------------------------------------------------
+    # 跌幅判斷
+    #
+    # 這裡的「區間最低價」
+    # 與上次偵測時價格比較。
+    # --------------------------------------------------------
+
+    previous_price = (
+        stock_state.get(
+            "last_price"
+        )
     )
 
-    if previous_low is None:
+    if previous_price is None:
 
-        state[
-            "interval_low"
-        ][name] = {
-            "low": interval_low,
-            "time": now_string,
-        }
+        previous_price = current
 
-        return
+    previous_price = to_float(
+        previous_price
+    )
 
-    print(
-        f"上次區間最低："
-        f"{previous_low}"
+    if previous_price is None:
+
+        previous_price = current
+
+    interval_change = (
+        minimum
+        / previous_price
+        - 1
     )
 
     print(
-        f"本次區間最低："
-        f"{interval_low}"
+        f"上次偵測價格："
+        f"{previous_price}"
     )
 
     print(
-        f"目前價格："
-        f"{current}"
+        f"區間最低跌幅："
+        f"{interval_change:.2%}"
     )
 
     # --------------------------------------------------------
-    # 跌破上次區間最低
+    # 通知
     # --------------------------------------------------------
 
-    if interval_low < previous_low:
+    alerted = stock_state.get(
+        "alerted",
+        False,
+    )
 
-        send_line(
-            "🔴 15分鐘區間低點跌破\n\n"
+    if (
+        interval_change
+        <= DAILY_THRESHOLD
+    ):
 
-            f"標的：{name}\n"
+        if not alerted:
 
-            f"目前價格："
-            f"{current:,.2f}\n"
+            message = (
+                "🔴 15分鐘區間跌幅通知\n\n"
 
-            f"上次區間最低："
-            f"{previous_low:,.2f}\n"
+                f"標的：{name}\n"
+                f"目前價格："
+                f"{current:,.2f}\n"
 
-            f"本次區間最低："
-            f"{interval_low:,.2f}\n\n"
+                f"上次偵測價格："
+                f"{previous_price:,.2f}\n"
 
-            "⚠️ 本次15分鐘區間最低價"
-            "已跌破上一次偵測基準"
-        )
+                f"區間最低價："
+                f"{minimum:,.2f}\n"
 
-        print(
-            "🔴 已發送15分鐘區間低點跌破通知"
-        )
+                f"區間最低跌幅："
+                f"{interval_change:.2%}\n\n"
+
+                "⚠️ 上次偵測至本次偵測期間，"
+                "最低價已達 -5%"
+            )
+
+            if send_line(message):
+
+                stock_state[
+                    "alerted"
+                ] = True
+
+                print(
+                    "已發送："
+                    "15分鐘區間 -5%"
+                )
 
     else:
 
-        print(
-            "未跌破上次區間最低"
-        )
+        stock_state[
+            "alerted"
+        ] = False
 
+    # --------------------------------------------------------
     # 更新基準
-    state[
-        "interval_low"
-    ][name] = {
-        "low": interval_low,
-        "time": now_string,
-    }
+    # --------------------------------------------------------
+
+    stock_state[
+        "last_check"
+    ] = now.isoformat()
+
+    stock_state[
+        "last_price"
+    ] = current
 
 
 # ============================================================
@@ -3533,7 +3758,8 @@ def check_stock(
     )
 
     print(
-        f"目前價格：{current}"
+        f"目前價格："
+        f"{current}"
     )
 
     print(
@@ -3564,7 +3790,7 @@ def check_stock(
 
     state.setdefault(
         "daily",
-        {}
+        {},
     )
 
     state[
@@ -3572,9 +3798,12 @@ def check_stock(
     ].setdefault(
         name,
         {
-            "daily_alert": False,
-            "weekly_alert": False,
-            "date": today,
+            "daily_alert":
+                False,
+            "weekly_alert":
+                False,
+            "date":
+                today,
         },
     )
 
@@ -3602,7 +3831,7 @@ def check_stock(
         ] = today
 
     # --------------------------------------------------------
-    # 單日 -5%
+    # 單日跌幅
     # --------------------------------------------------------
 
     if (
@@ -3629,8 +3858,7 @@ def check_stock(
                 f"單日跌幅："
                 f"{daily_change:.2%}\n\n"
 
-                "⚠️ 已達到單日 -5%，"
-                "可加碼"
+                "⚠️ 已達到單日 -5%"
             )
 
             stock_state[
@@ -3648,7 +3876,7 @@ def check_stock(
         ] = False
 
     # --------------------------------------------------------
-    # 一週 -10%
+    # 一週跌幅
     # --------------------------------------------------------
 
     if (
@@ -3675,8 +3903,7 @@ def check_stock(
                 f"距7日高點跌幅："
                 f"{weekly_change:.2%}\n\n"
 
-                "⚠️ 已達到一週 -10%，"
-                "可加碼"
+                "⚠️ 已達到一週 -10%"
             )
 
             stock_state[
@@ -3693,147 +3920,257 @@ def check_stock(
             "weekly_alert"
         ] = False
 
+    # --------------------------------------------------------
+    # 15分鐘區間
+    # --------------------------------------------------------
+
+    check_intraday_interval(
+        name,
+        symbol,
+        state,
+    )
+
 
 # ============================================================
-# 每日估值
+# 每日自動估值
 # ============================================================
 
-def run_valuation():
+def run_daily_valuation(
+    current_pe_data,
+    market_pe,
+    pe_history,
+    margin_history,
+    t86_history,
+    stock_list,
+    state,
+):
     print(
         "\n========== "
         "每日自動估值分析 "
         "=========="
     )
 
-    current_pe_data = (
-        get_twse_pe_data()
-    )
-
-    if not current_pe_data:
-
-        print(
-            "⚠️ TWSE基本面資料取得失敗"
-        )
-
-        return
-
-    market_pe = (
-        calculate_taiex_market_pe()
-    )
-
-    pe_history = load_json(
-        PE_HISTORY_FILE
-    )
-
-    target_codes = list(
-        VALUATION_STOCKS.keys()
-    )
-
-    pe_history = update_pe_history(
-        target_codes,
-        pe_history,
-    )
-
-    save_json(
-        PE_HISTORY_FILE,
-        pe_history,
-    )
-
-    margin_history = load_json(
-        CHIP_HISTORY_FILE
-    )
-
-    margin_history = update_margin_history(
-        target_codes,
-        margin_history,
-    )
-
-    save_json(
-        CHIP_HISTORY_FILE,
-        margin_history,
-    )
-
-    print(
-        "\n========== "
-        "取得三大法人最近20交易日資料 "
-        "=========="
-    )
-
-    t86_history = (
-        get_recent_t86_history(
-            20
-        )
-    )
-
-    print(
-        f"法人有效交易日："
-        f"{len(t86_history)}"
-    )
-
-    for code, stock_info in (
+    for code, original_info in (
         VALUATION_STOCKS.items()
     ):
 
         try:
 
+            # ------------------------------------------------
+            # 重新從市場股票清單取得資料
+            # ------------------------------------------------
+
+            market_stock = None
+
+            for stock in stock_list:
+
+                if stock[
+                    "code"
+                ] == code:
+
+                    market_stock = stock
+                    break
+
+            if market_stock:
+
+                stock_info = {
+                    **market_stock,
+                    "industry":
+                        original_info.get(
+                            "industry"
+                        ),
+                }
+
+                if not stock_info.get(
+                    "industry"
+                ):
+
+                    stock_info[
+                        "industry"
+                    ] = get_stock_industry(
+                        code,
+                        stock_list,
+                    )
+
+            else:
+
+                stock_info = original_info
+
             result = analyze_stock(
+                code,
                 stock_info,
                 current_pe_data,
                 market_pe,
                 pe_history,
                 margin_history,
                 t86_history,
+                stock_list,
             )
 
-            # 自動估值每日執行
-            # 只有真正達到加碼門檻才通知
+            if not result:
+                continue
+
+            # ------------------------------------------------
+            # 每日自動估值：
+            # 只有達到加碼門檻才LINE通知
+            # ------------------------------------------------
+
+            state.setdefault(
+                "valuation_v24",
+                {},
+            )
+
             if (
-                result["level"]
-                in [
-                    "🟢 強烈建議加碼",
-                    "🟡 建議分批加碼",
-                ]
+                result["strong"]
+                or result["good"]
             ):
 
-                state = load_json(
-                    STATE_FILE
-                )
-
-                state.setdefault(
-                    "valuation_v23",
-                    {}
-                )
-
-                code_state = state[
-                    "valuation_v23"
+                already = state[
+                    "valuation_v24"
                 ].get(
                     code,
                     False,
                 )
 
-                if not code_state:
+                if not already:
 
-                    send_line(
-                        result[
-                            "message"
-                        ]
+                    message = (
+                        format_stock_analysis_message(
+                            result
+                        )
                     )
 
-                    state[
-                        "valuation_v23"
-                    ][code] = True
+                    if message:
 
-                    save_json(
-                        STATE_FILE,
-                        state,
-                    )
+                        if send_line(
+                            message
+                        ):
+
+                            state[
+                                "valuation_v24"
+                            ][code] = True
+
+                            print(
+                                "已發送V2.4估值通知"
+                            )
+
+            else:
+
+                state[
+                    "valuation_v24"
+                ][code] = False
 
         except Exception as e:
 
             print(
-                f"{stock_info['name']} "
-                f"V2.3分析錯誤：{e}"
+                f"{code} "
+                f"V2.4分析錯誤："
+                f"{e}"
             )
+
+
+# ============================================================
+# LINE Webhook
+#
+# 注意：
+# GitHub Actions本身不能直接接LINE webhook。
+#
+# 這部分保留給你後續部署Webhook服務。
+# 分析核心已經完成。
+# ============================================================
+
+def analyze_line_query(
+    query,
+    stock_list,
+    current_pe_data,
+    market_pe,
+    pe_history,
+    margin_history,
+    t86_history,
+):
+    """
+    給LINE webhook呼叫。
+
+    輸入：
+        2330
+        台積電
+        5347
+        世界
+
+    回傳：
+        單股分析文字
+    """
+
+    stock = find_stock(
+        query,
+        stock_list,
+    )
+
+    if stock is None:
+
+        return (
+            "❌ 找不到股票\n\n"
+            f"你輸入：{query}\n\n"
+            "請輸入：\n"
+            "• 股票代號，例如 2330\n"
+            "• 股票名稱，例如 台積電"
+        )
+
+    code = stock["code"]
+
+    industry = get_stock_industry(
+        code,
+        stock_list,
+    )
+
+    stock_info = {
+        **stock,
+        "industry":
+            industry,
+    }
+
+    try:
+
+        result = analyze_stock(
+            code,
+            stock_info,
+            current_pe_data,
+            market_pe,
+            pe_history,
+            margin_history,
+            t86_history,
+            stock_list,
+        )
+
+        if not result:
+
+            return (
+                f"❌ {code} "
+                f"{stock['name']} "
+                "目前資料不足，"
+                "無法完成分析。"
+            )
+
+        return (
+            format_stock_analysis_message(
+                result
+            )
+        )
+
+    except Exception as e:
+
+        print(
+            f"LINE單股分析錯誤："
+            f"{e}"
+        )
+
+        return (
+            "❌ 分析時發生錯誤\n\n"
+            f"標的："
+            f"{code} "
+            f"{stock['name']}\n"
+            f"錯誤：{e}"
+        )
 
 
 # ============================================================
@@ -3849,7 +4186,7 @@ def main():
     print(
         "股票跌幅 + "
         "15分鐘區間最低價 + "
-        "V2.3自動估值 + "
+        "V2.4自動估值 + "
         "技術 + 籌碼"
     )
 
@@ -3857,13 +4194,33 @@ def main():
         "================================"
     )
 
+    # --------------------------------------------------------
+    # State
+    # --------------------------------------------------------
+
     state = load_json(
         STATE_FILE
     )
 
-    # ========================================================
-    # 基本資料
-    # ========================================================
+    pe_history = load_json(
+        PE_HISTORY_FILE
+    )
+
+    margin_history = load_json(
+        CHIP_HISTORY_FILE
+    )
+
+    # --------------------------------------------------------
+    # 股票清單
+    # --------------------------------------------------------
+
+    stock_list = (
+        get_all_market_stocks()
+    )
+
+    # --------------------------------------------------------
+    # 當日PE/PB/殖利率
+    # --------------------------------------------------------
 
     current_pe_data = (
         get_twse_pe_data()
@@ -3880,32 +4237,33 @@ def main():
     else:
 
         print(
-            "⚠️ TWSE基本面資料取得失敗"
+            "⚠️ "
+            "TWSE基本面資料取得失敗"
         )
 
-    # ========================================================
+    # --------------------------------------------------------
     # 市場PE
-    # ========================================================
+    # --------------------------------------------------------
 
     market_pe = (
-        calculate_taiex_market_pe()
+        calculate_taiex_market_pe(
+            current_pe_data
+        )
     )
 
-    # ========================================================
-    # PE歷史
-    # ========================================================
-
-    pe_history = load_json(
-        PE_HISTORY_FILE
-    )
+    # --------------------------------------------------------
+    # PE歷史回補
+    # --------------------------------------------------------
 
     target_codes = list(
         VALUATION_STOCKS.keys()
     )
 
-    pe_history = update_pe_history(
-        target_codes,
-        pe_history,
+    pe_history = (
+        update_pe_history(
+            target_codes,
+            pe_history,
+        )
     )
 
     save_json(
@@ -3913,17 +4271,15 @@ def main():
         pe_history,
     )
 
-    # ========================================================
-    # 融資
-    # ========================================================
+    # --------------------------------------------------------
+    # 融資融券
+    # --------------------------------------------------------
 
-    margin_history = load_json(
-        CHIP_HISTORY_FILE
-    )
-
-    margin_history = update_margin_history(
-        target_codes,
-        margin_history,
+    margin_history = (
+        update_margin_history(
+            target_codes,
+            margin_history,
+        )
     )
 
     save_json(
@@ -3931,9 +4287,9 @@ def main():
         margin_history,
     )
 
-    # ========================================================
-    # 法人
-    # ========================================================
+    # --------------------------------------------------------
+    # 三大法人
+    # --------------------------------------------------------
 
     print(
         "\n========== "
@@ -3952,9 +4308,9 @@ def main():
         f"{len(t86_history)}"
     )
 
-    # ========================================================
-    # 跌幅 + 15分鐘
-    # ========================================================
+    # --------------------------------------------------------
+    # 跌幅監控
+    # --------------------------------------------------------
 
     for name, symbol in (
         STOCKS.items()
@@ -3962,15 +4318,7 @@ def main():
 
         try:
 
-            # 原本跌幅通知
             check_stock(
-                name,
-                symbol,
-                state,
-            )
-
-            # 新15分鐘區間低點
-            check_interval_break(
                 name,
                 symbol,
                 state,
@@ -3979,92 +4327,29 @@ def main():
         except Exception as e:
 
             print(
-                f"{name} 發生錯誤："
-                f"{e}"
+                f"{name} "
+                f"發生錯誤：{e}"
             )
 
-    # ========================================================
-    # 自動估值
-    # ========================================================
+    # --------------------------------------------------------
+    # 每日估值
+    # --------------------------------------------------------
 
     if current_pe_data:
 
-        for code, stock_info in (
-            VALUATION_STOCKS.items()
-        ):
+        run_daily_valuation(
+            current_pe_data,
+            market_pe,
+            pe_history,
+            margin_history,
+            t86_history,
+            stock_list,
+            state,
+        )
 
-            try:
-
-                result = analyze_stock(
-                    stock_info,
-                    current_pe_data,
-                    market_pe,
-                    pe_history,
-                    margin_history,
-                    t86_history,
-                )
-
-                # ------------------------------------------------
-                # 達標才通知
-                # ------------------------------------------------
-
-                if result[
-                    "level"
-                ] in [
-                    "🟢 強烈建議加碼",
-                    "🟡 建議分批加碼",
-                ]:
-
-                    state.setdefault(
-                        "valuation_v23",
-                        {}
-                    )
-
-                    if not state[
-                        "valuation_v23"
-                    ].get(
-                        code,
-                        False,
-                    ):
-
-                        send_line(
-                            result[
-                                "message"
-                            ]
-                        )
-
-                        state[
-                            "valuation_v23"
-                        ][code] = True
-
-                        print(
-                            "🟢 已發送V2.3 "
-                            "加碼通知"
-                        )
-
-                else:
-
-                    state.setdefault(
-                        "valuation_v23",
-                        {}
-                    )
-
-                    # 離開條件後解除鎖定
-                    state[
-                        "valuation_v23"
-                    ][code] = False
-
-            except Exception as e:
-
-                print(
-                    f"{stock_info['name']} "
-                    f"V2.3檢查錯誤："
-                    f"{e}"
-                )
-
-    # ========================================================
-    # 儲存狀態
-    # ========================================================
+    # --------------------------------------------------------
+    # 儲存
+    # --------------------------------------------------------
 
     save_json(
         STATE_FILE,
@@ -4077,7 +4362,7 @@ def main():
 
 
 # ============================================================
-# 執行
+# ENTRY
 # ============================================================
 
 if __name__ == "__main__":
