@@ -1,8 +1,8 @@
 # ============================================================
-# stock_alert.py V2.6
+# stock_alert.py V2.7
 # 股票跌幅 + 15分鐘區間最低價 + 動態產業估值 + 技術 + 籌碼
 #
-# V2.6 重點
+# V2.7 重點
 # 1. TWSE + TPEx 動態股票池
 # 2. TPEx API 改用目前官方 OpenAPI endpoint，並提供多層 fallback
 # 3. API 失敗時優先使用快取；不因 TPEx 失敗而讓整體股票池變 0
@@ -42,6 +42,8 @@ STATE_FILE = "alert_state.json"
 PE_HISTORY_FILE = "pe_history.json"
 CHIP_HISTORY_FILE = "chip_history.json"
 UNIVERSE_CACHE_FILE = "market_universe_cache.json"
+TWSE_PROFILE_CACHE_FILE = "twse_profile_cache.json"
+TWSE_QUOTES_CACHE_FILE = "twse_quotes_cache.json"
 
 LINE_REPLY_URL = "https://api.line.me/v2/bot/message/reply"
 LINE_BROADCAST_URL = "https://api.line.me/v2/bot/message/broadcast"
@@ -230,6 +232,24 @@ def http_json(url, params=None, timeout=20, retries=2):
     return None
 
 
+def http_text(url, params=None, timeout=20, retries=2):
+    last_error = None
+    headers = {"User-Agent": "Mozilla/5.0 stock-alert/2.7", "Accept": "text/csv,text/plain,text/html,*/*"}
+    for attempt in range(retries + 1):
+        try:
+            r = requests.get(url, params=params, timeout=timeout, headers=headers)
+            r.raise_for_status()
+            text = r.content.decode("utf-8-sig", errors="replace")
+            if text and text.strip():
+                return text
+        except Exception as e:
+            last_error = e
+            if attempt < retries:
+                time.sleep(0.8 * (attempt + 1))
+    print(f"文字API失敗：{url} / {last_error}")
+    return None
+
+
 def twse_get(endpoint, params=None):
     return http_json(TWSE_BASE + endpoint, params, TWSE_TIMEOUT, 2)
 
@@ -326,7 +346,24 @@ def normalize_twse_profile(row):
     }
 
 
+def parse_twse_profile_csv(text):
+    result = []
+    if not text:
+        return result
+    try:
+        from io import StringIO
+        df = pd.read_csv(StringIO(text), dtype=str)
+        for _, row in df.fillna("").iterrows():
+            item = normalize_twse_profile(row.to_dict())
+            if item:
+                result.append(item)
+    except Exception as e:
+        print(f"TWSE CSV 基本資料解析失敗：{e}")
+    return result
+
+
 def get_twse_universe():
+    # 第一層：TWSE OpenAPI
     data = twse_get("/opendata/t187ap03_L")
     result = []
     if isinstance(data, list):
@@ -334,11 +371,83 @@ def get_twse_universe():
             item = normalize_twse_profile(row)
             if item:
                 result.append(item)
-    print(f"TWSE 基本資料：{len(result)}")
+    if result:
+        save_json(TWSE_PROFILE_CACHE_FILE, {"cached_at": time.time(), "data": result})
+        print(f"TWSE 基本資料：{len(result)}（OpenAPI）")
+        return result
+
+    # 第二層：MOPS 官方 CSV。OpenAPI 掛掉時仍可取得產業與資本額。
+    csv_url = "https://mopsfin.twse.com.tw/opendata/t187ap03_L.csv"
+    text = http_text(csv_url, timeout=TWSE_TIMEOUT, retries=2)
+    result = parse_twse_profile_csv(text)
+    if result:
+        save_json(TWSE_PROFILE_CACHE_FILE, {"cached_at": time.time(), "data": result})
+        print(f"TWSE 基本資料：{len(result)}（MOPS CSV fallback）")
+        return result
+
+    # 第三層：上一次成功的 TWSE profile cache
+    cache = load_json(TWSE_PROFILE_CACHE_FILE)
+    cached = cache.get("data") if isinstance(cache, dict) else None
+    if isinstance(cached, list) and cached:
+        print(f"⚠️ TWSE 基本資料 API/CSV 皆失敗，使用快取：{len(cached)}")
+        return cached
+
+    # 第四層：由當日行情建立最小清單，之後再補產業
+    quotes = get_twse_daily_quotes(use_cache=True, quiet=True)
+    result = []
+    for code, q in quotes.items():
+        result.append({
+            "code": code, "name": q.get("name") or code, "industry": "其他",
+            "market": "TWSE", "symbol": symbol_for(code, "TWSE"),
+            "capital": q.get("capital"),
+        })
+    print(f"⚠️ TWSE 基本資料 fallback 至行情清單：{len(result)}")
     return result
 
 
-def get_twse_daily_quotes():
+def parse_twse_mi_index(data):
+    result = {}
+    if not isinstance(data, dict) or data.get("stat") not in (None, "OK"):
+        return result
+    tables = data.get("tables") or []
+    # MI_INDEX 的每日收盤行情通常位於 data9；同時兼容 tables 格式。
+    candidates = []
+    if isinstance(data.get("data9"), list):
+        candidates.append(data["data9"])
+    candidates.extend(tables if isinstance(tables, list) else [])
+    for table in candidates:
+        if not isinstance(table, list) or not table:
+            continue
+        for row in table:
+            if not isinstance(row, list) or len(row) < 9:
+                continue
+            code = clean_code(row[0])
+            if not code or not code.isdigit():
+                continue
+            # data9 常見欄位：代號、名稱、成交股數、成交筆數、成交金額、開、高、低、收盤...
+            name = str(row[1]).strip() if len(row) > 1 else code
+            nums = []
+            for x in row[2:]:
+                try:
+                    nums.append(float(str(x).replace(",", "").replace("--", "nan")))
+                except Exception:
+                    nums.append(float("nan"))
+            def n(i):
+                return None if i >= len(nums) or math.isnan(nums[i]) else nums[i]
+            # 2:volume, 3:transactions, 4:value, 5:open, 6:high, 7:low, 8:close
+            close = n(6)
+            if close is None:
+                continue
+            result[code] = {
+                "name": name, "close": close, "open": n(3), "high": n(4),
+                "low": n(5), "volume": n(0),
+            }
+        if result:
+            break
+    return result
+
+
+def get_twse_daily_quotes(use_cache=True, quiet=False):
     result = {}
     data = twse_get("/exchangeReport/STOCK_DAY_ALL")
     if isinstance(data, list):
@@ -347,18 +456,39 @@ def get_twse_daily_quotes():
             close = find_value(row, ["ClosingPrice", "收盤價"])
             if code and close is not None:
                 result[code] = {
-                    "close": close,
-                    "open": find_value(row, ["OpeningPrice", "開盤價"]),
+                    "name": first_value(row, ["Name", "證券名稱", "公司簡稱"]) or code,
+                    "close": close, "open": find_value(row, ["OpeningPrice", "開盤價"]),
                     "high": find_value(row, ["HighestPrice", "最高價"]),
                     "low": find_value(row, ["LowestPrice", "最低價"]),
                     "change": find_value(row, ["Change", "漲跌價差"]),
                     "volume": find_value(row, ["TradeVolume", "成交股數"]),
                 }
-    print(f"TWSE 當日行情：{len(result)}")
-    return result
+    if not result:
+        # 官方 TWSE 網站 MI_INDEX 是比 OpenAPI 更可靠的第二來源。
+        data = twse_web_get("/afterTrading/MI_INDEX", {
+            "date": datetime.now(TW_TZ).strftime("%Y%m%d"),
+            "type": "ALLBUT0999", "response": "json"
+        })
+        result = parse_twse_mi_index(data)
+    if result:
+        save_json(TWSE_QUOTES_CACHE_FILE, {"cached_at": time.time(), "data": result})
+        if not quiet:
+            print(f"TWSE 當日行情：{len(result)}")
+        return result
+
+    if use_cache:
+        cache = load_json(TWSE_QUOTES_CACHE_FILE)
+        cached = cache.get("data") if isinstance(cache, dict) else None
+        if isinstance(cached, dict) and cached:
+            if not quiet:
+                print(f"⚠️ TWSE 當日行情 API 失敗，使用快取：{len(cached)}")
+            return cached
+    if not quiet:
+        print("TWSE 當日行情：0（OpenAPI + MI_INDEX + cache 皆失敗）")
+    return {}
 
 # ============================================================
-# TPEx Universe — V2.6 核心修正
+# TPEx Universe — V2.7 核心修正
 # ============================================================
 
 def normalize_tpex_profile(row):
@@ -442,7 +572,7 @@ def get_tpex_daily_quotes():
 
 
 def get_tpex_market_values():
-    # V2.6：tpex_daily_market_value 是歷史排行 endpoint，直接取最新資料可能受日期參數/回傳格式影響。
+    # V2.7：tpex_daily_market_value 是歷史排行 endpoint，直接取最新資料可能受日期參數/回傳格式影響。
     # 因此先嘗試官方排行，再以每日行情的資本額 × 收盤價作 fallback。
     result = {}
     data = tpex_get("/tpex_daily_market_value")
@@ -469,15 +599,13 @@ def estimate_market_cap(capital, price):
 
 
 def build_market_universe():
-    print("\n========== 建立動態市場股票池 V2.6 ==========")
+    print("\n========== 建立動態市場股票池 V2.7 ==========")
 
     twse = get_twse_universe()
     tpex = get_tpex_universe_primary()
-
     if not tpex:
         print("⚠️ TPEx 基本資料 endpoint 無有效資料，啟用每日行情 fallback")
         tpex = get_tpex_universe_fallback()
-
     print(f"TPEx 基本資料：{len(tpex)}")
 
     twse_quotes = get_twse_daily_quotes()
@@ -485,38 +613,34 @@ def build_market_universe():
     tpex_values = get_tpex_market_values()
 
     universe = {}
-
     for item in twse:
         code = item["code"]
         q = twse_quotes.get(code, {})
-        price = q.get("close")
         item = dict(item)
-        item["price"] = price
-        item["market_cap"] = estimate_market_cap(item.get("capital"), price)
-        item["industry"] = canonical_industry(item.get("industry"))
+        item["price"] = q.get("close")
+        item["market_cap"] = estimate_market_cap(item.get("capital"), q.get("close"))
+        if not item.get("name"):
+            item["name"] = q.get("name") or code
+        item["industry"] = canonical_industry(item.get("industry")) or "其他"
         universe[code] = item
 
     for item in tpex:
         code = item["code"]
         q = tpex_quotes.get(code, {})
-        price = q.get("close")
         item = dict(item)
-        item["price"] = price
-        # 官方市值 > 由資本額估算 > None
+        item["price"] = q.get("close")
         item["market_cap"] = tpex_values.get(code)
         if item["market_cap"] is None:
-            item["market_cap"] = estimate_market_cap(item.get("capital") or q.get("capital"), price)
-        item["industry"] = canonical_industry(item.get("industry"))
+            item["market_cap"] = estimate_market_cap(item.get("capital") or q.get("capital"), q.get("close"))
+        if not item.get("name"):
+            item["name"] = q.get("name") or code
+        item["industry"] = canonical_industry(item.get("industry")) or "其他"
         universe[code] = item
 
-    # 不再因為某個市場 API 失敗就整個 universe 歸零。
     valid = {}
     for code, item in universe.items():
         if not item.get("name"):
             continue
-        if not item.get("industry"):
-            item["industry"] = "其他"
-        # 市值可以暫缺；LINE 單股分析仍可工作。
         valid[code] = item
 
     print(f"有效動態股票：{len(valid)}")
@@ -531,15 +655,23 @@ def get_market_universe(force_refresh=False):
     cached_data = cache.get("data")
     now = time.time()
 
-    if not force_refresh and cached_at and isinstance(cached_data, dict):
-        if now - float(cached_at) < UNIVERSE_CACHE_HOURS * 3600:
-            print(f"使用市場股票池快取：{len(cached_data)}")
-            return cached_data
+    # 一般執行仍可使用 24 小時快取，但若快取沒有 TWSE，強制重建。
+    cached_twse = sum(1 for x in (cached_data or {}).values() if isinstance(x, dict) and x.get("market") == "TWSE") if isinstance(cached_data, dict) else 0
+    if (not force_refresh and cached_at and isinstance(cached_data, dict)
+            and cached_twse > 0 and now - float(cached_at) < UNIVERSE_CACHE_HOURS * 3600):
+        print(f"使用市場股票池快取：{len(cached_data)}（TWSE {cached_twse}）")
+        return cached_data
 
     universe = build_market_universe()
     if universe:
-        save_json(UNIVERSE_CACHE_FILE, {"_cached_at": now, "data": universe})
-        return universe
+        twse_count = sum(1 for x in universe.values() if x.get("market") == "TWSE")
+        # TPEx-only 結果不能覆蓋原本含 TWSE 的完整 cache。
+        if twse_count > 0 or not cached_data:
+            save_json(UNIVERSE_CACHE_FILE, {"_cached_at": now, "data": universe})
+            return universe
+        if isinstance(cached_data, dict) and cached_data:
+            print("⚠️ 本次 TWSE 仍為 0，不覆蓋既有完整股票池快取")
+            return cached_data
 
     if isinstance(cached_data, dict) and cached_data:
         print(f"⚠️ 市場資料更新失敗，使用舊快取：{len(cached_data)}")
@@ -551,14 +683,8 @@ def get_market_universe(force_refresh=False):
         code = clean_code(symbol)
         if code.isdigit():
             fallback[code] = {
-                "code": code,
-                "name": label,
-                "industry": "其他",
-                "market": "TWSE",
-                "symbol": symbol,
-                "capital": None,
-                "price": None,
-                "market_cap": None,
+                "code": code, "name": label, "industry": "其他", "market": "TWSE",
+                "symbol": symbol, "capital": None, "price": None, "market_cap": None,
             }
     return fallback
 
@@ -1170,7 +1296,7 @@ def get_margin_change(symbol):
 # LINE 單股分析
 # ============================================================
 
-def line_single_stock_analysis(query, universe):
+def line_single_stock_analysis(query, universe, backfill_pe=True):
     item = resolve_stock(query, universe)
     if item is None:
         # 直接接受 Yahoo symbol，例如 QQQ、^TWII、2330.TW。
@@ -1194,8 +1320,9 @@ def line_single_stock_analysis(query, universe):
     history = load_json(PE_HISTORY_FILE)
     if not isinstance(history, dict):
         history = {}
-    history = backfill_pe_history(code, history)
-    save_json(PE_HISTORY_FILE, history)
+    if backfill_pe:
+        history = backfill_pe_history(code, history)
+        save_json(PE_HISTORY_FILE, history)
 
     yf_fund = get_yahoo_fundamentals(symbol)
     official = current_pe_data.get(code, {})
@@ -1238,7 +1365,7 @@ def line_single_stock_analysis(query, universe):
         warning.append("融資下降")
 
     return (
-        f"📊 股票加碼分析 V2.6\n\n"
+        f"📊 股票加碼分析 V2.7\n\n"
         f"標的：{name}（{code}）\n"
         f"市場：{market}\n"
         f"產業：{industry}\n\n"
@@ -1265,7 +1392,7 @@ def line_single_stock_analysis(query, universe):
         f"估值/基本面：{score} 分\n"
         f"結論：{verdict}\n"
         f"風險提醒：{'、'.join(warning) if warning else '目前無主要技術/籌碼警訊'}\n\n"
-        "※ V2.6 的 PE 歷史只採該交易日官方資料；不足60筆時，一年平均PE不進入評分。"
+        "※ V2.7 的 PE 歷史只採該交易日官方資料；不足60筆時，一年平均PE不進入評分。"
     )
 
 # ============================================================
@@ -1284,7 +1411,7 @@ def handle_line_webhook_event(event, universe):
         return
     if text.lower() in {"help", "說明", "功能", "股票"}:
         reply_line(token,
-            "📈 股票加碼分析 Bot V2.6\n\n"
+            "📈 股票加碼分析 Bot V2.7\n\n"
             "直接輸入股票代號或名稱即可。\n\n"
             "例如：\n2330\n台積電\n5347\n世界\n\n"
             "Bot會自動：\n"
@@ -1324,7 +1451,7 @@ def run_webhook_server():
 
     port = int(os.environ.get("PORT", "8080"))
     print("================================")
-    print("LINE Webhook Server V2.6")
+    print("LINE Webhook Server V2.7")
     print(f"Port：{port}")
     print("================================")
     app.run(host="0.0.0.0", port=port)
@@ -1335,7 +1462,7 @@ def run_webhook_server():
 
 def run_alerts():
     print("================================")
-    print("股票跌幅 + 15分鐘區間最低價 + V2.6自動估值 + 技術 + 籌碼")
+    print("股票跌幅 + 15分鐘區間最低價 + V2.7自動估值 + 技術 + 籌碼")
     print("================================")
 
     state = load_json(STATE_FILE)
@@ -1346,13 +1473,48 @@ def run_alerts():
         return
 
     for name, symbol in STOCKS.items():
+        print(f"\n========== {name} ==========")
         try:
-            print(f"\n========== {name} ==========")
+            # 先做原本的跌幅與「上次執行→本次執行」最低價監控。
             check_drop_alert(name, symbol, state)
             check_interval_low(name, symbol, state)
         except Exception as e:
-            print(f"{name} 分析失敗：{e}")
+            print(f"{name} 價格/通知分析失敗：{e}")
             traceback.print_exc()
+
+        # V2.7：正式執行時也必須產生單股分析結果。
+        # PE 歷史回補只在 `analyze` 指令執行，避免每次排程都對官方歷史 API 發出大量請求。
+        try:
+            if symbol.startswith("^") or name == "台灣加權指數":
+                tech = get_technical(symbol)
+                latest = get_latest_price(symbol)
+                print(
+                    "\n📈 指數分析\n"
+                    f"標的：{name}\n"
+                    f"目前價格：{format_number(latest)}\n"
+                    f"KD：K={format_number(tech.get('k'))} / D={format_number(tech.get('d'))}\n"
+                    f"RSI：{format_number(tech.get('rsi'))}"
+                )
+            elif name == "0050 元大台灣50" or name == "QQQ":
+                tech = get_technical(symbol)
+                latest = get_latest_price(symbol)
+                previous = get_previous_close(symbol)
+                change = safe_div(latest, previous) - 1 if latest is not None and previous else None
+                print(
+                    "\n📊 ETF分析\n"
+                    f"標的：{name}\n"
+                    f"目前價格：{format_number(latest)}\n"
+                    f"日變化：{format_number(change * 100 if change is not None else None)}%\n"
+                    f"KD：K={format_number(tech.get('k'))} / D={format_number(tech.get('d'))}\n"
+                    f"RSI：{format_number(tech.get('rsi'))}"
+                )
+            else:
+                result = line_single_stock_analysis(name, universe, backfill_pe=False)
+                print("\n" + result)
+        except Exception as e:
+            print(f"{name} 單股分析失敗：{e}")
+            traceback.print_exc()
+            print(f"⚠️ {name} 本次分析失敗，但不影響其他標的繼續執行。")
 
     save_json(STATE_FILE, state)
     print("\n========== 完成 ==========")
@@ -1370,7 +1532,7 @@ def main():
         if not query:
             print("用法：python stock_alert.py analyze 2330")
             return
-        print(line_single_stock_analysis(query, universe))
+        print(line_single_stock_analysis(query, universe, backfill_pe=True))
     else:
         run_alerts()
 
