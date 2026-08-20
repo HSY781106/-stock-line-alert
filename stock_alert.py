@@ -1,8 +1,8 @@
 # ============================================================
-# stock_alert.py V2.7
+# stock_alert.py V2.7.1
 # 股票跌幅 + 15分鐘區間最低價 + 動態產業估值 + 技術 + 籌碼
 #
-# V2.7 重點
+# V2.7.1 重點
 # 1. TWSE + TPEx 動態股票池
 # 2. TPEx API 改用目前官方 OpenAPI endpoint，並提供多層 fallback
 # 3. API 失敗時優先使用快取；不因 TPEx 失敗而讓整體股票池變 0
@@ -599,7 +599,7 @@ def estimate_market_cap(capital, price):
 
 
 def build_market_universe():
-    print("\n========== 建立動態市場股票池 V2.7 ==========")
+    print("\n========== 建立動態市場股票池 V2.7.1 ==========")
 
     twse = get_twse_universe()
     tpex = get_tpex_universe_primary()
@@ -716,11 +716,23 @@ def resolve_stock(query, universe):
     if not q:
         return None
 
+    # V2.7.1：主程式傳入的標的是「2330 台積電」這類顯示名稱，
+    # 舊版 clean_code() 會得到「2330 台積電」，因此無法命中 universe。
+    # 先從輸入中擷取純股票代號，再進行名稱比對。
+    import re
+    m = re.match(r"^(?:TWSE:|TPEX:)?(\d{4,6})(?:\.TW|\.TWO)?(?:\s+.*)?$", q, re.I)
+    if m:
+        code = m.group(1)
+        if code in universe:
+            return universe[code]
+
     code = clean_code(q)
     if code in universe:
         return universe[code]
 
-    nq = normalize_name(q)
+    # 「2330 台積電」這種輸入也拆成名稱部分再比對。
+    name_query = re.sub(r"^(?:TWSE:|TPEX:)?\d{4,6}(?:\.TW|\.TWO)?\s*", "", q, flags=re.I).strip()
+    nq = normalize_name(name_query or q)
     exact = [item for item in universe.values() if normalize_name(item.get("name")) == nq]
     if len(exact) == 1:
         return exact[0]
@@ -1365,7 +1377,7 @@ def line_single_stock_analysis(query, universe, backfill_pe=True):
         warning.append("融資下降")
 
     return (
-        f"📊 股票加碼分析 V2.7\n\n"
+        f"📊 股票加碼分析 V2.7.1\n\n"
         f"標的：{name}（{code}）\n"
         f"市場：{market}\n"
         f"產業：{industry}\n\n"
@@ -1411,7 +1423,7 @@ def handle_line_webhook_event(event, universe):
         return
     if text.lower() in {"help", "說明", "功能", "股票"}:
         reply_line(token,
-            "📈 股票加碼分析 Bot V2.7\n\n"
+            "📈 股票加碼分析 Bot V2.7.1\n\n"
             "直接輸入股票代號或名稱即可。\n\n"
             "例如：\n2330\n台積電\n5347\n世界\n\n"
             "Bot會自動：\n"
@@ -1451,7 +1463,7 @@ def run_webhook_server():
 
     port = int(os.environ.get("PORT", "8080"))
     print("================================")
-    print("LINE Webhook Server V2.7")
+    print("LINE Webhook Server V2.7.1")
     print(f"Port：{port}")
     print("================================")
     app.run(host="0.0.0.0", port=port)
@@ -1462,7 +1474,7 @@ def run_webhook_server():
 
 def run_alerts():
     print("================================")
-    print("股票跌幅 + 15分鐘區間最低價 + V2.7自動估值 + 技術 + 籌碼")
+    print("股票跌幅 + 15分鐘區間最低價 + V2.7.1自動估值 + 技術 + 籌碼")
     print("================================")
 
     state = load_json(STATE_FILE)
