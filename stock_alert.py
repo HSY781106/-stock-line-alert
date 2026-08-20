@@ -1,13 +1,35 @@
-# stock_alert.py V2.9.7.6
-# 修正版：
+# stock_alert.py V2.9.7.5
+# 效能修正版：
 # 1. 全市場資料批次化
 # 2. 單次執行快取
 # 3. 限制 Yahoo/API 重試
-# 4. 15分鐘資料僅抓目標股
-# 5. 15分鐘區間改用 Yahoo 實際最新 K 棒時間，不再使用未來的 GitHub Actions 執行時間
-# 6. 修正 Yahoo 延遲造成「區間無K棒」問題
-# 7. 第一次建立實際市場 K 棒基準
-# 8. 股票跌幅 + 15分鐘區間最低價 + 動態估值 + 技術 + 籌碼 + 100分制加碼決策
+# 4. 15 分鐘資料僅抓目標股
+# 5. 動態市場股票池
+# 6. 動態次產業分類，不使用股票代碼硬編碼
+# 7. 同次產業 Top 10 依目前市值動態排序
+# 8. PE 同業比較改為「同次產業」
+# 9. FinMind 次產業資料持久化快取
+# 10. 保留原本基本面 / 技術 / 籌碼 / 風險 / LINE 功能
+#
+# V2.9.7.5
+#
+# 次產業資料來源：
+# FinMind TaiwanStockIndustryChain
+#
+# GitHub Actions 建議設定：
+# FINMIND_API_TOKEN = 你的 FinMind Token
+#
+# 注意：
+# TaiwanStockIndustryChain 目前 FinMind 官方文件標示為
+# Backer / Sponsor 資料集。
+#
+# 若沒有 FINMIND_API_TOKEN：
+# - 程式仍可正常執行
+# - 但無法保證取得完整次產業分類
+# - 不會使用 2330 / 3711 等股票代碼硬編碼
+# - 會顯示次產業資料不可用
+#
+# 股票跌幅 + 15分鐘區間最低價 + 動態估值 + 技術 + 籌碼 + 100分制加碼決策
 
 import os
 import json
@@ -15,6 +37,7 @@ import time
 import math
 import traceback
 import re
+
 from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 
@@ -30,9 +53,14 @@ import yfinance as yf
 
 LINE_TOKEN = os.environ.get('LINE_CHANNEL_ACCESS_TOKEN', '')
 
+# FinMind Token
+# 不硬編碼任何股票與次產業對應
+FINMIND_API_TOKEN = os.environ.get('FINMIND_API_TOKEN', '').strip()
+
 TWSE_BASE = 'https://openapi.twse.com.tw/v1'
 TWSE_WEB_BASE = 'https://www.twse.com.tw/rwd/zh'
 TPEX_BASE = 'https://www.tpex.org.tw/openapi/v1'
+FINMIND_BASE = 'https://api.finmindtrade.com/api/v4/data'
 
 TW_TZ = ZoneInfo('Asia/Taipei')
 
@@ -43,6 +71,9 @@ CHIP_HISTORY_FILE = 'chip_history.json'
 UNIVERSE_CACHE_FILE = 'market_universe_cache.json'
 TWSE_PROFILE_CACHE_FILE = 'twse_profile_cache.json'
 TWSE_QUOTES_CACHE_FILE = 'twse_quotes_cache.json'
+
+# V2.9.7.5 新增
+SUBINDUSTRY_CACHE_FILE = 'subindustry_cache.json'
 
 LINE_REPLY_URL = 'https://api.line.me/v2/bot/message/reply'
 LINE_BROADCAST_URL = 'https://api.line.me/v2/bot/message/broadcast'
@@ -58,19 +89,26 @@ UNIVERSE_CACHE_HOURS = 24
 
 TWSE_TIMEOUT = 8
 TPEX_TIMEOUT = 10
+FINMIND_TIMEOUT = 15
 
-API_SLEEP = 0.05
-
+API_SLEEP = .05
 PE_BACKFILL_MAX_DAYS = 370
 
 YF_TIMEOUT = 10
+MAX_HISTORY_DAYS_PER_RUN = 75
 
-# Yahoo 盤中資料可能延遲。
-# 因此不再把 datetime.now() 直接當成資料終點。
-INTRADAY_RANGES = {
-    '5m': '5d',
-    '1m': '1d',
-}
+# 次產業快取時間
+SUBINDUSTRY_CACHE_HOURS = 24
+
+RUN_CACHE = {}
+INSTITUTIONAL_CACHE = {}
+MARGIN_CACHE = {}
+SUBINDUSTRY_CACHE = {}
+
+
+# ============================================================
+# 目標標的
+# ============================================================
 
 STOCKS = {
     '0050 元大台灣50': '0050.TW',
@@ -80,6 +118,10 @@ STOCKS = {
     '台灣加權指數': '^TWII'
 }
 
+
+# ============================================================
+# TWSE 官方產業代碼
+# ============================================================
 
 INDUSTRY_CODE_MAP = {
     '01': '水泥工業',
@@ -124,6 +166,10 @@ INDUSTRY_CODE_MAP = {
 }
 
 
+# ============================================================
+# 產業模型
+# ============================================================
+
 INDUSTRY_MODEL = {
     '金融業': {
         'pe': False,
@@ -148,7 +194,6 @@ INDUSTRY_MODEL = {
     }
 }
 
-
 DEFAULT_MODEL = {
     'pe': True,
     'peg': True,
@@ -156,15 +201,6 @@ DEFAULT_MODEL = {
     'yield': True,
     'roe': True
 }
-
-
-# ============================================================
-# Runtime Cache
-# ============================================================
-
-RUN_CACHE = {}
-INSTITUTIONAL_CACHE = {}
-MARGIN_CACHE = {}
 
 
 # ============================================================
@@ -177,7 +213,8 @@ def to_float(v):
 
     try:
         s = str(v).strip()
-        s = s.replace(',', '').replace('%', '')
+        s = s.replace(',', '')
+        s = s.replace('%', '')
 
         if s in {
             '',
@@ -242,33 +279,17 @@ def normalize_name(v):
 
 def safe_div(a, b):
     try:
-        if a is None or b in (None, 0):
-            return None
-
-        return a / b
-
+        return None if a is None or b in (None, 0) else a / b
     except Exception:
         return None
 
 
 def fmt(v, d=2):
-    if v is None:
-        return 'N/A'
-
-    try:
-        return f'{float(v):,.{d}f}'
-    except Exception:
-        return 'N/A'
+    return 'N/A' if v is None else f'{float(v):,.{d}f}'
 
 
 def pct(v):
-    if v is None:
-        return 'N/A'
-
-    try:
-        return f'{v:.2%}'
-    except Exception:
-        return 'N/A'
+    return 'N/A' if v is None else f'{v:.2%}'
 
 
 def canonical_industry(v):
@@ -303,12 +324,46 @@ def symbol_for(code, market=None):
     return c
 
 
+def normalize_subindustry(v):
+    """
+    統一次產業名稱。
+
+    注意：
+    這裡不建立任何「股票代碼 -> 次產業」對應。
+
+    只做文字標準化。
+    """
+
+    s = str(v or '').strip()
+
+    s = s.replace('　', ' ')
+    s = re.sub(r'\s+', '', s)
+
+    if not s:
+        return ''
+
+    return s
+
+
 # ============================================================
-# HTTP / LINE / JSON
+# HTTP
 # ============================================================
 
-def http_json(url, params=None, timeout=20, retries=2):
+def http_json(
+    url,
+    params=None,
+    timeout=20,
+    retries=2,
+    headers=None
+):
     last = None
+
+    base_headers = {
+        'User-Agent': 'Mozilla/5.0 stock-alert/2.9.7.5'
+    }
+
+    if headers:
+        base_headers.update(headers)
 
     for i in range(retries + 1):
 
@@ -317,10 +372,7 @@ def http_json(url, params=None, timeout=20, retries=2):
                 url,
                 params=params,
                 timeout=timeout,
-                headers={
-                    'User-Agent':
-                        'Mozilla/5.0 stock-alert/2.9.7.6'
-                }
+                headers=base_headers
             )
 
             r.raise_for_status()
@@ -328,6 +380,7 @@ def http_json(url, params=None, timeout=20, retries=2):
             return r.json()
 
         except Exception as e:
+
             last = e
 
             if i < retries:
@@ -338,18 +391,23 @@ def http_json(url, params=None, timeout=20, retries=2):
     return None
 
 
-def http_text(url, params=None, timeout=20, retries=2):
-
+def http_text(
+    url,
+    params=None,
+    timeout=20,
+    retries=2
+):
     for i in range(retries + 1):
 
         try:
+
             r = requests.get(
                 url,
                 params=params,
                 timeout=timeout,
                 headers={
                     'User-Agent':
-                        'Mozilla/5.0 stock-alert/2.9.7.6'
+                        'Mozilla/5.0 stock-alert/2.9.7.5'
                 }
             )
 
@@ -390,22 +448,64 @@ def tpex_get(e, p=None):
     return http_json(
         TPEX_BASE + e,
         p,
-        TPEX_TIMEOUT
+        TPEX_TIMEOUT,
+        retries=1
     )
 
 
+def finmind_get(params):
+    """
+    FinMind V4 API。
+
+    Token 可透過 GitHub Actions Secret：
+        FINMIND_API_TOKEN
+
+    若未設定 Token：
+        仍嘗試匿名請求一次。
+
+    TaiwanStockIndustryChain 目前官方文件標示
+    為 Backer / Sponsor 資料集。
+    """
+
+    headers = {
+        'User-Agent': 'Mozilla/5.0 stock-alert/2.9.7.5'
+    }
+
+    if FINMIND_API_TOKEN:
+        headers['Authorization'] = (
+            f'Bearer {FINMIND_API_TOKEN}'
+        )
+
+    return http_json(
+        FINMIND_BASE,
+        params,
+        FINMIND_TIMEOUT,
+        retries=0,
+        headers=headers
+    )
+
+
+# ============================================================
+# JSON
+# ============================================================
+
 def load_json(f):
+
     try:
+
         with open(f, encoding='utf-8') as x:
+
             d = json.load(x)
 
-        return d if isinstance(d, dict) else {}
+            return d if isinstance(d, dict) else {}
 
     except Exception:
+
         return {}
 
 
 def save_json(f, d):
+
     t = f + '.tmp'
 
     with open(
@@ -413,6 +513,7 @@ def save_json(f, d):
         'w',
         encoding='utf-8'
     ) as x:
+
         json.dump(
             d,
             x,
@@ -423,11 +524,17 @@ def save_json(f, d):
     os.replace(t, f)
 
 
+# ============================================================
+# LINE
+# ============================================================
+
 def send_line(msg):
+
     if not LINE_TOKEN:
         return False
 
     try:
+
         r = requests.post(
             LINE_BROADCAST_URL,
             headers={
@@ -437,12 +544,10 @@ def send_line(msg):
                     'application/json'
             },
             json={
-                'messages': [
-                    {
-                        'type': 'text',
-                        'text': str(msg)[:5000]
-                    }
-                ]
+                'messages': [{
+                    'type': 'text',
+                    'text': str(msg)[:5000]
+                }]
             },
             timeout=20
         )
@@ -452,16 +557,19 @@ def send_line(msg):
         return r.status_code == 200
 
     except Exception as e:
+
         print('LINE廣播失敗：', e)
 
         return False
 
 
 def reply_line(token, msg):
+
     if not LINE_TOKEN or not token:
         return False
 
     try:
+
         r = requests.post(
             LINE_REPLY_URL,
             headers={
@@ -472,12 +580,10 @@ def reply_line(token, msg):
             },
             json={
                 'replyToken': token,
-                'messages': [
-                    {
-                        'type': 'text',
-                        'text': str(msg)[:5000]
-                    }
-                ]
+                'messages': [{
+                    'type': 'text',
+                    'text': str(msg)[:5000]
+                }]
             },
             timeout=20
         )
@@ -485,6 +591,7 @@ def reply_line(token, msg):
         return r.status_code == 200
 
     except Exception:
+
         return False
 
 
@@ -506,16 +613,19 @@ def normalize_profile(row, market):
         )
     )
 
-    name = first_value(
-        row,
-        [
-            '公司簡稱',
-            '公司名稱',
-            '證券名稱',
-            'CompanyAbbreviation',
-            'CompanyName'
-        ]
-    ) or code
+    name = (
+        first_value(
+            row,
+            [
+                '公司簡稱',
+                '公司名稱',
+                '證券名稱',
+                'CompanyAbbreviation',
+                'CompanyName'
+            ]
+        )
+        or code
+    )
 
     industry = canonical_industry(
         first_value(
@@ -526,7 +636,8 @@ def normalize_profile(row, market):
                 'SecuritiesIndustryCode',
                 'Industry'
             ]
-        ) or '其他'
+        )
+        or '其他'
     )
 
     cap = find_value(
@@ -556,6 +667,7 @@ def normalize_profile(row, market):
 def get_twse_universe():
 
     data = twse_get('/opendata/t187ap03_L')
+
     out = []
 
     if isinstance(data, list):
@@ -581,7 +693,8 @@ def get_twse_universe():
         )
 
         print(
-            f'TWSE 基本資料：{len(out)}（OpenAPI）'
+            f'TWSE 基本資料：'
+            f'{len(out)}（OpenAPI）'
         )
 
         return out
@@ -603,7 +716,8 @@ def get_twse_universe():
                 x
                 for _, r in df.fillna('').iterrows()
                 if (
-                    x := normalize_profile(
+                    x :=
+                    normalize_profile(
                         r.to_dict(),
                         'TWSE'
                     )
@@ -611,6 +725,7 @@ def get_twse_universe():
             ]
 
         except Exception:
+
             out = []
 
     if out:
@@ -624,7 +739,8 @@ def get_twse_universe():
         )
 
         print(
-            f'TWSE 基本資料：{len(out)}（CSV）'
+            f'TWSE 基本資料：'
+            f'{len(out)}（CSV）'
         )
 
         return out
@@ -634,7 +750,8 @@ def get_twse_universe():
     ).get('data', [])
 
     print(
-        f'⚠️ TWSE 基本資料使用快取：{len(c)}'
+        f'⚠️ TWSE 基本資料使用快取：'
+        f'{len(c)}'
     )
 
     return c
@@ -892,10 +1009,489 @@ def get_tpex_market_values():
     return out
 
 
+# ============================================================
+# V2.9.7.5
+# Dynamic Subindustry
+# ============================================================
+
+def parse_finmind_industry_chain(data):
+
+    """
+    將 FinMind TaiwanStockIndustryChain
+    統一解析成：
+
+    {
+        "2330": {
+            "subindustries": [
+                "晶圓製造"
+            ],
+            "records": [...]
+        }
+    }
+
+    不使用任何股票代碼硬編碼。
+
+    注意：
+    一家公司可能同時屬於多個產業鏈，
+    所以保留 subindustries list。
+    """
+
+    out = {}
+
+    if not isinstance(data, dict):
+        return out
+
+    rows = data.get('data', [])
+
+    if not isinstance(rows, list):
+        return out
+
+    for row in rows:
+
+        if not isinstance(row, dict):
+            continue
+
+        code = clean_code(
+            row.get('stock_id')
+            or row.get('stockId')
+            or row.get('代號')
+            or row.get('股票代號')
+        )
+
+        if not code:
+            continue
+
+        industry = normalize_subindustry(
+            row.get('industry')
+        )
+
+        subindustry = normalize_subindustry(
+            row.get('sub_industry')
+            or row.get('subIndustry')
+        )
+
+        if not subindustry:
+            continue
+
+        item = out.setdefault(
+            code,
+            {
+                'subindustries': [],
+                'records': []
+            }
+        )
+
+        if subindustry not in item['subindustries']:
+            item['subindustries'].append(
+                subindustry
+            )
+
+        item['records'].append(
+            {
+                'industry': industry,
+                'sub_industry': subindustry,
+                'date': row.get('date')
+            }
+        )
+
+    return out
+
+
+def get_finmind_subindustry():
+
+    """
+    批次取得目前所有股票的次產業分類。
+
+    優先使用：
+        FINMIND_API_TOKEN
+
+    不逐檔呼叫 API。
+    """
+
+    global SUBINDUSTRY_CACHE
+
+    cache = load_json(
+        SUBINDUSTRY_CACHE_FILE
+    )
+
+    cached_at = cache.get(
+        '_cached_at',
+        0
+    )
+
+    cached_data = cache.get(
+        'data',
+        {}
+    )
+
+    # --------------------------------------------------------
+    # 24 小時內直接使用快取
+    # --------------------------------------------------------
+
+    if (
+        isinstance(cached_data, dict)
+        and cached_data
+        and time.time() - cached_at
+        < SUBINDUSTRY_CACHE_HOURS * 3600
+    ):
+
+        SUBINDUSTRY_CACHE = cached_data
+
+        print(
+            f'次產業資料：'
+            f'{len(cached_data)} 檔（快取）'
+        )
+
+        return cached_data
+
+    # --------------------------------------------------------
+    # API
+    # --------------------------------------------------------
+
+    print(
+        '\n========== 更新動態次產業資料 =========='
+    )
+
+    if FINMIND_API_TOKEN:
+
+        print(
+            'FinMind Token：已設定'
+        )
+
+    else:
+
+        print(
+            '⚠️ FinMind Token：未設定'
+        )
+
+    data = finmind_get(
+        {
+            'dataset':
+                'TaiwanStockIndustryChain'
+        }
+    )
+
+    parsed = parse_finmind_industry_chain(
+        data
+    )
+
+    if parsed:
+
+        save_json(
+            SUBINDUSTRY_CACHE_FILE,
+            {
+                '_cached_at': time.time(),
+                'source':
+                    'FinMind TaiwanStockIndustryChain',
+                'data': parsed
+            }
+        )
+
+        SUBINDUSTRY_CACHE = parsed
+
+        print(
+            f'動態次產業資料：'
+            f'{len(parsed)} 檔'
+        )
+
+        return parsed
+
+    # --------------------------------------------------------
+    # API 失敗時使用舊快取
+    # --------------------------------------------------------
+
+    if (
+        isinstance(cached_data, dict)
+        and cached_data
+    ):
+
+        SUBINDUSTRY_CACHE = cached_data
+
+        print(
+            f'⚠️ 次產業 API 無法取得，'
+            f'使用舊快取：'
+            f'{len(cached_data)} 檔'
+        )
+
+        return cached_data
+
+    print(
+        '⚠️ 無法取得次產業資料。'
+        '本次不使用股票代碼硬編碼。'
+    )
+
+    SUBINDUSTRY_CACHE = {}
+
+    return {}
+
+
+def attach_subindustries(u, subindustry_data):
+
+    """
+    將次產業資料附加到市場股票池。
+
+    每檔股票：
+
+    subindustries = [
+        ...
+    ]
+
+    subindustry = 主要顯示用次產業
+
+    不建立任何股票代碼硬編碼。
+    """
+
+    count = 0
+    multi_count = 0
+
+    for code, item in u.items():
+
+        info = subindustry_data.get(
+            clean_code(code),
+            {}
+        )
+
+        subs = info.get(
+            'subindustries',
+            []
+        )
+
+        if not isinstance(subs, list):
+            subs = []
+
+        subs = [
+            normalize_subindustry(x)
+            for x in subs
+            if normalize_subindustry(x)
+        ]
+
+        # 去重
+        subs = list(dict.fromkeys(subs))
+
+        item['subindustries'] = subs
+
+        # 第一個作為主要顯示分類
+        item['subindustry'] = (
+            subs[0]
+            if subs
+            else ''
+        )
+
+        if subs:
+            count += 1
+
+        if len(subs) > 1:
+            multi_count += 1
+
+    print(
+        f'次產業掛載：'
+        f'{count}/{len(u)} 檔'
+    )
+
+    if multi_count:
+        print(
+            f'多重次產業股票：'
+            f'{multi_count} 檔'
+        )
+
+    return u
+
+
+def get_subindustries_for_stock(
+    code,
+    item=None
+):
+
+    c = clean_code(code)
+
+    if item is not None:
+
+        subs = item.get(
+            'subindustries',
+            []
+        )
+
+        if isinstance(subs, list):
+            subs = [
+                normalize_subindustry(x)
+                for x in subs
+                if normalize_subindustry(x)
+            ]
+
+            if subs:
+                return list(
+                    dict.fromkeys(subs)
+                )
+
+    info = SUBINDUSTRY_CACHE.get(
+        c,
+        {}
+    )
+
+    subs = info.get(
+        'subindustries',
+        []
+    )
+
+    if not isinstance(subs, list):
+        return []
+
+    return list(
+        dict.fromkeys(
+            normalize_subindustry(x)
+            for x in subs
+            if normalize_subindustry(x)
+        )
+    )
+
+
+def same_subindustry(
+    target_subindustries,
+    peer_subindustries
+):
+
+    target = {
+        normalize_subindustry(x)
+        for x in target_subindustries
+        if normalize_subindustry(x)
+    }
+
+    peer = {
+        normalize_subindustry(x)
+        for x in peer_subindustries
+        if normalize_subindustry(x)
+    }
+
+    if not target or not peer:
+        return False
+
+    return bool(
+        target.intersection(peer)
+    )
+
+
+def get_dynamic_subindustry_peers(
+    code,
+    industry,
+    subindustry,
+    u,
+    limit=10
+):
+
+    """
+    V2.9.7.5 核心：
+
+    1. 先確認目標股的次產業
+    2. 同時要求官方產業相容
+    3. 只在相同次產業股票中排名
+    4. 依目前 market_cap 排序
+    5. 取 Top 10
+
+    不使用：
+
+        2330 -> 晶圓製造
+        3711 -> IC封裝測試
+
+    之類硬編碼。
+    """
+
+    code = clean_code(code)
+
+    target = u.get(code)
+
+    if not target:
+        return []
+
+    target_industry = canonical_industry(
+        industry
+    )
+
+    target_subs = (
+        get_subindustries_for_stock(
+            code,
+            target
+        )
+    )
+
+    if not target_subs:
+        return []
+
+    candidates = []
+
+    for c, x in u.items():
+
+        if clean_code(c) == code:
+            continue
+
+        if canonical_industry(
+            x.get('industry')
+        ) != target_industry:
+            continue
+
+        market_cap = to_float(
+            x.get('market_cap')
+        )
+
+        if market_cap is None:
+            continue
+
+        peer_subs = (
+            get_subindustries_for_stock(
+                c,
+                x
+            )
+        )
+
+        if not peer_subs:
+            continue
+
+        if not same_subindustry(
+            target_subs,
+            peer_subs
+        ):
+            continue
+
+        candidates.append(
+            x
+        )
+
+    candidates.sort(
+        key=lambda x:
+            to_float(
+                x.get('market_cap')
+            ) or 0,
+        reverse=True
+    )
+
+    return candidates[:limit]
+
+
+def get_subindustry_display(
+    code,
+    item
+):
+
+    subs = get_subindustries_for_stock(
+        code,
+        item
+    )
+
+    if not subs:
+        return '次產業資料不可用'
+
+    return '、'.join(subs)
+
+
+# ============================================================
+# Build universe
+# ============================================================
+
 def build_universe():
 
     print(
-        '\n========== 建立動態市場股票池 V2.9.7.6 =========='
+        '\n========== '
+        '建立動態市場股票池 V2.9.7.5 '
+        '=========='
     )
 
     tw = get_twse_universe()
@@ -915,6 +1511,10 @@ def build_universe():
 
     u = {}
 
+    # --------------------------------------------------------
+    # TWSE
+    # --------------------------------------------------------
+
     for x in tw:
 
         x = dict(x)
@@ -924,21 +1524,32 @@ def build_universe():
             {}
         )
 
-        x['price'] = q.get('close')
-
-        x['market_cap'] = (
-            safe_div(
-                x.get('capital'),
-                10
-            ) * q.get('close')
-            if (
-                x.get('capital')
-                and q.get('close')
-            )
-            else None
+        x['price'] = q.get(
+            'close'
         )
 
+        if (
+            x.get('capital')
+            and q.get('close')
+        ):
+
+            x['market_cap'] = (
+                safe_div(
+                    x.get('capital'),
+                    10
+                )
+                * q.get('close')
+            )
+
+        else:
+
+            x['market_cap'] = None
+
         u[x['code']] = x
+
+    # --------------------------------------------------------
+    # TPEX
+    # --------------------------------------------------------
 
     for x in tx:
 
@@ -949,16 +1560,20 @@ def build_universe():
             {}
         )
 
-        x['price'] = q.get('close')
+        x['price'] = q.get(
+            'close'
+        )
 
         x['market_cap'] = (
             xv.get(x['code'])
-            or (
+            or
+            (
                 safe_div(
                     x.get('capital')
                     or q.get('capital'),
                     10
-                ) * q.get('close')
+                )
+                * q.get('close')
                 if (
                     x.get('capital')
                     or q.get('capital')
@@ -986,7 +1601,10 @@ def get_market_universe(
     )
 
     d = c.get('data')
-    t = c.get('_cached_at', 0)
+    t = c.get(
+        '_cached_at',
+        0
+    )
 
     if (
         not force_refresh
@@ -995,11 +1613,30 @@ def get_market_universe(
         and time.time() - t
         < UNIVERSE_CACHE_HOURS * 3600
     ):
+
+        # 舊版股票池可能沒有次產業
+        # 若快取存在但次產業資料不存在，
+        # 仍重新補次產業。
+
+        sub_data = get_finmind_subindustry()
+
+        d = attach_subindustries(
+            d,
+            sub_data
+        )
+
         return d
 
     u = build_universe()
 
     if u:
+
+        sub_data = get_finmind_subindustry()
+
+        u = attach_subindustries(
+            u,
+            sub_data
+        )
 
         save_json(
             UNIVERSE_CACHE_FILE,
@@ -1011,41 +1648,21 @@ def get_market_universe(
 
         return u
 
+    if isinstance(d, dict):
+
+        sub_data = get_finmind_subindustry()
+
+        d = attach_subindustries(
+            d,
+            sub_data
+        )
+
     return d or {}
 
 
-def get_dynamic_industry_peers(
-    code,
-    industry,
-    u,
-    limit=10
-):
-
-    p = [
-        x
-        for c, x in u.items()
-        if (
-            c != code
-            and canonical_industry(
-                x.get('industry')
-            )
-            == canonical_industry(industry)
-            and to_float(
-                x.get('market_cap')
-            ) is not None
-        )
-    ]
-
-    p.sort(
-        key=lambda x: x.get(
-            'market_cap',
-            0
-        ),
-        reverse=True
-    )
-
-    return p[:limit]
-
+# ============================================================
+# 股票解析
+# ============================================================
 
 def resolve_stock(q, u):
 
@@ -1103,7 +1720,11 @@ def resolve_stock(q, u):
         )
     ]
 
-    return hits[0] if len(hits) == 1 else None
+    return (
+        hits[0]
+        if len(hits) == 1
+        else None
+    )
 
 
 # ============================================================
@@ -1147,6 +1768,7 @@ def yf_download(
             d.columns,
             pd.MultiIndex
         ):
+
             d.columns = [
                 x[0]
                 for x in d.columns
@@ -1161,7 +1783,8 @@ def yf_download(
         print(
             f'Yahoo download失敗 '
             f'{symbol} '
-            f'[{interval}/{period}]: {e}'
+            f'[{interval}/{period}]: '
+            f'{e}'
         )
 
         RUN_CACHE[key] = None
@@ -1201,6 +1824,7 @@ def get_latest_price(symbol):
         )
 
     except Exception:
+
         v = None
 
     RUN_CACHE[key] = v
@@ -1266,68 +1890,40 @@ def get_week_high(symbol):
     )
 
 
+# ============================================================
+# 15 分鐘區間
+# ============================================================
+
 def parse_time(v):
 
     try:
 
         d = datetime.fromisoformat(v)
 
-        if d.tzinfo is None:
-            return d.replace(
+        return (
+            d
+            if d.tzinfo
+            else d.replace(
                 tzinfo=TW_TZ
             )
-
-        return d.astimezone(
-            TW_TZ
         )
 
     except Exception:
+
         return None
 
-
-# ============================================================
-# Yahoo Chart
-# V2.9.7.6 核心修正
-# ============================================================
 
 def yahoo_chart_intraday(
     symbol,
-    start_dt=None,
-    end_dt=None,
+    start_dt,
+    end_dt,
     interval='5m'
 ):
-    """
-    V2.9.7.6
 
-    不再直接拿 datetime.now() 當 Yahoo 資料終點。
-
-    Yahoo 盤中資料經常延遲，例如：
-
-        GitHub Actions：13:07
-        Yahoo 最新 K 棒：12:48
-
-    舊版會變成：
-
-        start = 13:07
-        end   = 13:07
-        Yahoo latest = 12:48
-
-    結果永遠：
-        區間無 K 棒
-
-    新版：
-
-    1. 先取得 Yahoo 全部可用 K 棒
-    2. 找出實際最新 K 棒時間
-    3. end_dt 使用「實際最新 K 棒」
-    4. 如果 start_dt 晚於 Yahoo 最新資料：
-       不會把基準寫成未來時間
-    5. 回傳 last_timestamp / last_price
-       供 STATE_FILE 使用
-    """
-
-    if interval not in INTRADAY_RANGES:
-        return None
+    ranges = {
+        '5m': '5d',
+        '1m': '1d'
+    }
 
     hosts = (
         'query1.finance.yahoo.com',
@@ -1336,35 +1932,36 @@ def yahoo_chart_intraday(
 
     try:
 
-        if start_dt is not None:
+        if start_dt.tzinfo is None:
 
-            if start_dt.tzinfo is None:
-                start_dt = start_dt.replace(
-                    tzinfo=TW_TZ
-                )
-            else:
-                start_dt = start_dt.astimezone(
-                    TW_TZ
-                )
+            start_dt = start_dt.replace(
+                tzinfo=TW_TZ
+            )
 
-        if end_dt is not None:
+        else:
 
-            if end_dt.tzinfo is None:
-                end_dt = end_dt.replace(
-                    tzinfo=TW_TZ
-                )
-            else:
-                end_dt = end_dt.astimezone(
-                    TW_TZ
-                )
+            start_dt = start_dt.astimezone(
+                TW_TZ
+            )
+
+        if end_dt.tzinfo is None:
+
+            end_dt = end_dt.replace(
+                tzinfo=TW_TZ
+            )
+
+        else:
+
+            end_dt = end_dt.astimezone(
+                TW_TZ
+            )
 
         for host in hosts:
 
             try:
 
                 url = (
-                    f'https://{host}'
-                    f'/v8/finance/chart/'
+                    f'https://{host}/v8/finance/chart/'
                     f'{symbol}'
                 )
 
@@ -1372,7 +1969,7 @@ def yahoo_chart_intraday(
                     url,
                     params={
                         'range':
-                            INTRADAY_RANGES[interval],
+                            ranges[interval],
                         'interval':
                             interval,
                         'events':
@@ -1396,16 +1993,15 @@ def yahoo_chart_intraday(
 
                 payload = r.json()
 
-                chart = payload.get(
-                    'chart'
-                ) or {}
-
-                result_list = (
-                    chart.get('result')
-                    or [None]
+                chart = (
+                    payload.get('chart')
+                    or {}
                 )
 
-                result = result_list[0]
+                result = (
+                    chart.get('result')
+                    or [None]
+                )[0]
 
                 if not result:
 
@@ -1415,219 +2011,125 @@ def yahoo_chart_intraday(
 
                     print(
                         f'Yahoo Chart無資料 '
-                        f'{symbol} [{interval}] '
+                        f'{symbol} '
+                        f'[{interval}] '
                         f'{host}: '
                         f'{err or "empty result"}'
                     )
 
                     continue
 
-                timestamps = (
-                    result.get('timestamp')
+                ts = (
+                    result.get(
+                        'timestamp'
+                    )
                     or []
                 )
 
-                quote = (
-                    (result.get(
-                        'indicators'
-                    ) or {})
-                    .get('quote')
+                q = (
+                    (
+                        result.get(
+                            'indicators'
+                        )
+                        or {}
+                    )
+                    .get(
+                        'quote'
+                    )
                     or [{}]
                 )[0]
 
-                lows = quote.get(
+                lows = q.get(
                     'low'
-                ) or []
-
-                closes = quote.get(
-                    'close'
                 ) or []
 
                 points = []
 
-                for i, ts in enumerate(
-                    timestamps
+                for t, lv in zip(
+                    ts,
+                    lows
                 ):
 
-                    if ts is None:
+                    if (
+                        t is None
+                        or lv is None
+                    ):
                         continue
 
                     dt = datetime.fromtimestamp(
-                        float(ts),
+                        float(t),
                         tz=TW_TZ
                     )
 
-                    low = (
-                        lows[i]
-                        if i < len(lows)
-                        else None
-                    )
+                    if (
+                        start_dt
+                        <= dt
+                        <= end_dt
+                    ):
 
-                    close = (
-                        closes[i]
-                        if i < len(closes)
-                        else None
-                    )
+                        v = to_float(lv)
 
-                    low = to_float(low)
-                    close = to_float(close)
+                        if v is not None:
 
-                    if low is None:
-                        continue
+                            points.append(
+                                (dt, v)
+                            )
 
-                    points.append(
-                        {
-                            'dt': dt,
-                            'low': low,
-                            'close': close
-                        }
-                    )
-
-                if not points:
-                    continue
-
-                points.sort(
-                    key=lambda x: x['dt']
-                )
-
-                latest_point = points[-1]
-
-                yahoo_latest_dt = (
-                    latest_point['dt']
-                )
-
-                yahoo_latest_price = (
-                    latest_point['close']
-                )
-
-                # ------------------------------------------------
-                # 如果沒有指定起點，只回傳 Yahoo 最新資料
-                # ------------------------------------------------
-
-                if start_dt is None:
+                if points:
 
                     return {
                         'low':
-                            latest_point['low'],
+                            min(
+                                v
+                                for _, v
+                                in points
+                            ),
                         'start':
-                            yahoo_latest_dt,
+                            start_dt,
                         'end':
-                            yahoo_latest_dt,
-                        'last_timestamp':
-                            yahoo_latest_dt,
-                        'last_price':
-                            yahoo_latest_price,
+                            end_dt,
                         'source':
                             f'Yahoo-{interval}'
                     }
 
-                # ------------------------------------------------
-                # 關鍵修正：
-                #
-                # Yahoo 最新時間早於 state 的基準時間
-                #
-                # 不允許產生「未來基準」。
-                # ------------------------------------------------
-
-                if start_dt > yahoo_latest_dt:
-
-                    print(
-                        f'⚠️ Yahoo資料落後狀態基準 '
-                        f'{symbol} [{interval}]：'
-                        f'狀態基準 '
-                        f'{start_dt.strftime("%H:%M:%S")} '
-                        f'> Yahoo最新 '
-                        f'{yahoo_latest_dt.strftime("%H:%M:%S")}'
+                all_times = [
+                    datetime.fromtimestamp(
+                        float(t),
+                        tz=TW_TZ
                     )
-
-                    return {
-                        'low':
-                            None,
-                        'start':
-                            None,
-                        'end':
-                            yahoo_latest_dt,
-                        'last_timestamp':
-                            yahoo_latest_dt,
-                        'last_price':
-                            yahoo_latest_price,
-                        'source':
-                            f'Yahoo-{interval}',
-                        'data_lag':
-                            True
-                    }
-
-                # end 不再使用 now
-                actual_end = yahoo_latest_dt
-
-                if end_dt is not None:
-                    actual_end = min(
-                        actual_end,
-                        end_dt
-                    )
-
-                selected = [
-                    p
-                    for p in points
-                    if (
-                        start_dt
-                        <= p['dt']
-                        <= actual_end
-                    )
+                    for t in ts
+                    if t is not None
                 ]
 
-                if not selected:
+                latest = (
+                    max(all_times)
+                    if all_times
+                    else None
+                )
 
-                    print(
-                        f'Yahoo Chart區間無K棒 '
-                        f'{symbol} [{interval}] '
-                        f'{host}；'
-                        f'最新K棒：'
-                        f'{yahoo_latest_dt.strftime("%Y-%m-%d %H:%M:%S")}'
+                latest_text = (
+                    latest.strftime(
+                        '%Y-%m-%d %H:%M:%S'
                     )
+                    if latest
+                    else 'N/A'
+                )
 
-                    return {
-                        'low':
-                            None,
-                        'start':
-                            start_dt,
-                        'end':
-                            actual_end,
-                        'last_timestamp':
-                            yahoo_latest_dt,
-                        'last_price':
-                            yahoo_latest_price,
-                        'source':
-                            f'Yahoo-{interval}',
-                        'data_lag':
-                            True
-                    }
-
-                return {
-                    'low':
-                        min(
-                            p['low']
-                            for p in selected
-                        ),
-                    'start':
-                        selected[0]['dt'],
-                    'end':
-                        selected[-1]['dt'],
-                    'last_timestamp':
-                        yahoo_latest_dt,
-                    'last_price':
-                        yahoo_latest_price,
-                    'source':
-                        f'Yahoo-{interval}',
-                    'data_lag':
-                        False
-                }
+                print(
+                    f'Yahoo Chart區間無K棒 '
+                    f'{symbol} '
+                    f'[{interval}] '
+                    f'{host}；'
+                    f'最新K棒：'
+                    f'{latest_text}'
+                )
 
             except Exception as e:
 
                 print(
                     f'Yahoo Chart失敗 '
-                    f'{symbol} [{interval}] '
+                    f'{symbol} '
+                    f'[{interval}] '
                     f'{host}：{e}'
                 )
 
@@ -1637,7 +2139,8 @@ def yahoo_chart_intraday(
 
         print(
             f'Yahoo Chart盤中資料失敗 '
-            f'{symbol} [{interval}]：{e}'
+            f'{symbol} '
+            f'[{interval}]：{e}'
         )
 
         return None
@@ -1645,21 +2148,8 @@ def yahoo_chart_intraday(
 
 def get_interval_stats(
     symbol,
-    start_iso=None
+    start_iso
 ):
-    """
-    取得：
-
-        上一次「成功取得的 Yahoo K 棒」
-        ↓
-        本次「最新 Yahoo K 棒」
-
-    而不是：
-
-        上次 GitHub Actions 執行時間
-        ↓
-        本次 GitHub Actions 執行時間
-    """
 
     now = datetime.now(
         TW_TZ
@@ -1668,8 +2158,16 @@ def get_interval_stats(
     start = (
         parse_time(start_iso)
         if start_iso
-        else None
+        else now - timedelta(
+            minutes=15
+        )
     )
+
+    if not start or start > now:
+
+        start = now - timedelta(
+            minutes=15
+        )
 
     for interval in (
         '5m',
@@ -1678,30 +2176,12 @@ def get_interval_stats(
 
         z = yahoo_chart_intraday(
             symbol,
-            start_dt=start,
-            end_dt=now,
-            interval=interval
+            start,
+            now,
+            interval
         )
 
-        if z is None:
-            continue
-
-        # --------------------------------------------------------
-        # 有舊基準，但 Yahoo 資料仍落後
-        # --------------------------------------------------------
-
-        if z.get('data_lag'):
-
-            return z
-
-        # --------------------------------------------------------
-        # 成功取得區間
-        # --------------------------------------------------------
-
-        if (
-            z.get('low') is not None
-            and z.get('last_timestamp')
-        ):
+        if z:
             return z
 
     return None
@@ -1712,6 +2192,12 @@ def check_interval_low(
     symbol,
     state
 ):
+
+    now = datetime.now(
+        TW_TZ
+    )
+
+    iso = now.isoformat()
 
     s = (
         state
@@ -1726,175 +2212,54 @@ def check_interval_low(
     )
 
     prev_t = s.get(
-        'last_data_timestamp'
+        'last_check'
     )
-
-    # 相容 V2.9.7.1 舊格式
-    if not prev_t:
-        prev_t = s.get(
-            'last_check'
-        )
 
     prev_p = to_float(
         s.get(
-            'last_data_price'
+            'last_price'
         )
     )
 
-    if prev_p is None:
-        prev_p = to_float(
-            s.get(
-                'last_price'
-            )
-        )
-
-    print(
-        f'【15分鐘區間】'
-        f'Yahoo基準：'
-        f'{prev_t or "首次建立"}'
+    cur = get_latest_price(
+        symbol
     )
 
-    stats = get_interval_stats(
-        symbol,
-        prev_t
+    stats = (
+        get_interval_stats(
+            symbol,
+            prev_t
+        )
+        if prev_t
+        and cur is not None
+        else None
     )
 
     result = None
 
-    # ========================================================
-    # 第一次執行
-    # ========================================================
-
-    if not prev_t:
-
-        if stats and stats.get(
-            'last_timestamp'
-        ):
-
-            latest_dt = stats[
-                'last_timestamp'
-            ]
-
-            latest_price = (
-                stats.get(
-                    'last_price'
-                )
-                or get_latest_price(symbol)
-            )
-
-            s.update({
-                'last_data_timestamp':
-                    latest_dt.isoformat(),
-                'last_data_price':
-                    latest_price,
-
-                # 保留舊欄位，避免其他程式相容性問題
-                'last_check':
-                    latest_dt.isoformat(),
-                'last_price':
-                    latest_price
-            })
-
-            print(
-                f'【15分鐘區間】首次建立基準：'
-                f'{latest_dt.strftime("%H:%M:%S")} '
-                f'價格：{fmt(latest_price)}'
-            )
-
-        else:
-
-            print(
-                '⚠️ 首次執行仍無法取得 Yahoo 盤中資料，'
-                '本次不建立基準。'
-            )
-
-        return None
-
-    # ========================================================
-    # Yahoo 仍然落後於上次成功基準
-    # ========================================================
-
-    if stats and stats.get(
-        'data_lag'
-    ):
-
-        latest_dt = stats.get(
-            'last_timestamp'
-        )
-
-        latest_price = stats.get(
-            'last_price'
-        )
-
-        if latest_dt:
-
-            print(
-                f'⚠️ Yahoo盤中資料尚未超過上次基準：'
-                f'{latest_dt.strftime("%H:%M:%S")} '
-                f'目前狀態基準：'
-                f'{prev_t}'
-            )
-
-        # 不更新 state
-        return None
-
-    # ========================================================
-    # 正常取得區間
-    # ========================================================
-
     if (
         prev_t
-        and prev_p is not None
+        and prev_p
         and stats
-        and stats.get('low') is not None
-        and stats.get('last_timestamp')
     ):
 
-        latest_dt = stats[
-            'last_timestamp'
-        ]
-
-        latest_price = (
-            stats.get(
-                'last_price'
-            )
-            or get_latest_price(symbol)
-        )
-
-        interval_low = stats[
-            'low'
-        ]
-
         drop = (
-            interval_low / prev_p - 1
+            stats['low']
+            / prev_p
+            - 1
         )
 
         result = {
             'previous_price':
                 prev_p,
-
             'interval_low':
-                interval_low,
-
+                stats['low'],
             'drop':
                 drop,
-
             'start':
-                (
-                    stats['start']
-                    .isoformat()
-                    if stats.get('start')
-                    else prev_t
-                ),
-
+                stats['start'].isoformat(),
             'end':
-                (
-                    stats['end']
-                    .isoformat()
-                    if stats.get('end')
-                    else latest_dt.isoformat()
-                ),
-
+                iso,
             'source':
                 stats.get(
                     'source'
@@ -1903,23 +2268,17 @@ def check_interval_low(
 
         print(
             f'【15分鐘區間】'
-            f'基準：'
-            f'{stats["start"].strftime("%H:%M:%S") '
-            if stats.get("start")
-            else "N/A"}'
-            f' → '
-            f'{stats["end"].strftime("%H:%M:%S") '
-            if stats.get("end")
-            else "N/A"}'
+            f'上次執行：'
+            f'{stats["start"].strftime("%H:%M:%S")} '
+            f'本次執行：'
+            f'{now.strftime("%H:%M:%S")} '
             f'期間最低：'
-            f'{interval_low:,.2f} '
-            f'基準價格：'
-            f'{prev_p:,.2f} '
-            f'最新價格：'
-            f'{latest_price:,.2f} '
+            f'{stats["low"]:,.2f} '
+            f'目前價格：'
+            f'{cur:,.2f} '
             f'區間跌幅：'
             f'{drop:.2%} '
-            f'（{stats.get("source", "Yahoo")}）'
+            f'（{stats.get("source","5m")}）'
         )
 
         if drop <= DAILY_THRESHOLD:
@@ -1927,63 +2286,61 @@ def check_interval_low(
             send_line(
                 f'🔴 15分鐘區間低點通知\n\n'
                 f'標的：{name}\n'
-                f'基準時間：'
-                f'{stats["start"].strftime("%H:%M:%S") '
-                if stats.get("start")
-                else "N/A"}\n'
-                f'最新資料：'
-                f'{latest_dt.strftime("%H:%M:%S")}\n'
-                f'基準價格：{prev_p:,.2f}\n'
-                f'期間最低：{interval_low:,.2f}\n'
-                f'目前價格：{latest_price:,.2f}\n'
-                f'區間跌幅：{drop:.2%}'
+                f'上次執行：'
+                f'{stats["start"].strftime("%H:%M:%S")}\n'
+                f'本次執行：'
+                f'{now.strftime("%H:%M:%S")}\n'
+                f'期間最低：'
+                f'{stats["low"]:,.2f}\n'
+                f'目前價格：'
+                f'{cur:,.2f}\n'
+                f'區間跌幅：'
+                f'{drop:.2%}'
             )
 
-        # ----------------------------------------------------
-        # 關鍵：
-        # 只把「實際 Yahoo 最新 K 棒」寫入 state
-        # ----------------------------------------------------
+    elif not prev_t:
+
+        print(
+            f'【15分鐘區間】'
+            f'首次建立基準：'
+            f'{now.strftime("%H:%M:%S")}，'
+            f'目前價格：'
+            f'{fmt(cur)}'
+        )
+
+    elif prev_t and not stats:
+
+        print(
+            f'⚠️ 15分鐘資料暫時無法取得；'
+            f'保留上次執行基準：'
+            f'{prev_t}'
+        )
+
+    # 關鍵：
+    # 盤中資料失敗不得更新基準
+    if not prev_t or stats:
 
         s.update({
-            'last_data_timestamp':
-                latest_dt.isoformat(),
-
-            'last_data_price':
-                latest_price,
-
-            # 相容舊版
             'last_check':
-                latest_dt.isoformat(),
-
+                iso,
             'last_price':
-                latest_price,
-
-            'last_interval_low':
-                interval_low,
-
-            'last_interval_source':
-                stats.get(
-                    'source'
-                )
+                cur
         })
 
-        return result
+    if stats:
 
-    # ========================================================
-    # 沒有有效區間
-    # ========================================================
+        s[
+            'last_interval_low'
+        ] = stats['low']
 
-    print(
-        '⚠️ 15分鐘資料暫時無法形成新區間；'
-        '保留上次成功基準。'
-    )
+        s[
+            'last_interval_source'
+        ] = stats.get(
+            'source'
+        )
 
-    return None
+    return result
 
-
-# ============================================================
-# Drop Alert
-# ============================================================
 
 def check_drop_alert(
     name,
@@ -2003,10 +2360,7 @@ def check_drop_alert(
         symbol
     )
 
-    if (
-        cur is None
-        or pc is None
-    ):
+    if cur is None or pc is None:
         return
 
     day = cur / pc - 1
@@ -2038,9 +2392,12 @@ def check_drop_alert(
     if s.get('date') != today:
 
         s.update({
-            'date': today,
-            'daily_alert': False,
-            'weekly_alert': False
+            'date':
+                today,
+            'daily_alert':
+                False,
+            'weekly_alert':
+                False
         })
 
     if (
@@ -2116,6 +2473,7 @@ def parse_pe(data):
         )
 
     else:
+
         return out
 
     for r in (
@@ -2127,7 +2485,12 @@ def parse_pe(data):
         if isinstance(r, list):
 
             o = (
-                dict(zip(fields, r))
+                dict(
+                    zip(
+                        fields,
+                        r
+                    )
+                )
                 if fields
                 else {}
             )
@@ -2137,6 +2500,7 @@ def parse_pe(data):
             o = r
 
         else:
+
             continue
 
         c = clean_code(
@@ -2164,7 +2528,6 @@ def parse_pe(data):
                             'PE'
                         ]
                     ),
-
                 'pb':
                     find_value(
                         o,
@@ -2175,7 +2538,6 @@ def parse_pe(data):
                             'PBRatio'
                         ]
                     ),
-
                 'yield':
                     find_value(
                         o,
@@ -2225,23 +2587,21 @@ def get_pe_by_date(
     market
 ):
 
-    if market == 'TPEX':
-
-        return parse_pe(
-            tpex_get(
-                '/tpex_mainboard_peratio_analysis',
-                {
-                    'date': ds
-                }
-            )
-        )
-
     return parse_pe(
-        twse_web_get(
+        tpex_get(
+            '/tpex_mainboard_peratio_analysis',
+            {
+                'date': ds
+            }
+        )
+        if market == 'TPEX'
+        else twse_web_get(
             '/afterTrading/BWIBBU_ALL',
             {
-                'date': ds,
-                'response': 'json'
+                'date':
+                    ds,
+                'response':
+                    'json'
             }
         )
     )
@@ -2276,8 +2636,7 @@ def backfill_pe(
 
     while (
         n < PE_MIN_HISTORY
-        and checked
-        < PE_BACKFILL_MAX_DAYS
+        and checked < PE_BACKFILL_MAX_DAYS
     ):
 
         if d.weekday() < 5:
@@ -2293,16 +2652,23 @@ def backfill_pe(
                         ds,
                         market
                     )
-                    .get(code, {})
-                    .get('pe')
+                    .get(
+                        code,
+                        {}
+                    )
+                    .get(
+                        'pe'
+                    )
                 )
 
                 if (
                     pe
-                    and 0 < pe <= PE_MAX_VALID
+                    and 0 < pe
+                    <= PE_MAX_VALID
                 ):
 
                     h[code][ds] = pe
+
                     n += 1
 
         d -= timedelta(
@@ -2338,45 +2704,48 @@ def one_year_pe(
     ).items():
 
         try:
+
             d = datetime.strptime(
                 ds,
                 '%Y%m%d'
             ).date()
 
         except Exception:
+
             continue
 
-        fx = to_float(x)
+        value = to_float(x)
 
         if (
             d >= cutoff
-            and fx
-            and 0 < fx <= PE_MAX_VALID
+            and value
+            and 0 < value
+            <= PE_MAX_VALID
         ):
+
             v.append(
-                (
-                    d,
-                    float(fx)
-                )
+                (d, value)
             )
 
     v = sorted(
         v,
         reverse=True
-    )[
-        :PE_ONE_YEAR_TRADING_DAYS
-    ]
+    )[:PE_ONE_YEAR_TRADING_DAYS]
 
     return (
         (
             sum(
                 x
                 for _, x in v
-            ) / len(v),
+            )
+            / len(v),
             len(v)
         )
         if len(v) >= PE_MIN_HISTORY
-        else (None, len(v))
+        else (
+            None,
+            len(v)
+        )
     )
 
 
@@ -2407,20 +2776,29 @@ def yahoo_fund(symbol):
 
         o['pe'] = (
             to_float(
-                i.get('trailingPE')
+                i.get(
+                    'trailingPE'
+                )
             )
-            or to_float(
-                i.get('forwardPE')
+            or
+            to_float(
+                i.get(
+                    'forwardPE'
+                )
             )
         )
 
         o['pb'] = to_float(
-            i.get('priceToBook')
+            i.get(
+                'priceToBook'
+            )
         )
 
         o['yield'] = (
             to_float(
-                i.get('dividendYield')
+                i.get(
+                    'dividendYield'
+                )
             ) * 100
             if i.get(
                 'dividendYield'
@@ -2430,7 +2808,9 @@ def yahoo_fund(symbol):
 
         o['eps_growth'] = (
             to_float(
-                i.get('earningsGrowth')
+                i.get(
+                    'earningsGrowth'
+                )
             ) * 100
             if i.get(
                 'earningsGrowth'
@@ -2440,7 +2820,9 @@ def yahoo_fund(symbol):
 
         o['roe'] = (
             to_float(
-                i.get('returnOnEquity')
+                i.get(
+                    'returnOnEquity'
+                )
             ) * 100
             if i.get(
                 'returnOnEquity'
@@ -2449,7 +2831,9 @@ def yahoo_fund(symbol):
         )
 
         o['peg'] = to_float(
-            i.get('pegRatio')
+            i.get(
+                'pegRatio'
+            )
         )
 
     except Exception as e:
@@ -2474,10 +2858,13 @@ def rsi(
     p=14
 ):
 
-    c = pd.to_numeric(
-        c,
-        errors='coerce'
-    ).dropna()
+    c = (
+        pd.to_numeric(
+            c,
+            errors='coerce'
+        )
+        .dropna()
+    )
 
     d = c.diff()
 
@@ -2490,19 +2877,20 @@ def rsi(
     )
 
     l = (
-        -d.clip(
+        (-d.clip(
             upper=0
-        )
+        ))
         .rolling(p)
         .mean()
     )
 
     x = (
         100
-        - 100 / (
+        - 100
+        / (
             1
-            + g /
-            l.replace(
+            + g
+            / l.replace(
                 0,
                 np.nan
             )
@@ -2518,23 +2906,15 @@ def rsi(
 
 def kd(d):
 
-    if (
-        d is None
-        or len(d) < 20
-    ):
+    if d is None or len(d) < 20:
         return None, None
 
     h = d['High']
     l = d['Low']
     c = d['Close']
 
-    lo = l.rolling(
-        9
-    ).min()
-
-    hi = h.rolling(
-        9
-    ).max()
+    lo = l.rolling(9).min()
+    hi = h.rolling(9).max()
 
     r = (
         (c - lo)
@@ -2555,18 +2935,22 @@ def kd(d):
         adjust=False
     ).mean()
 
-    if (
-        k.dropna().empty
-        or dd.dropna().empty
-    ):
-        return None, None
-
     return (
-        float(
-            k.dropna().iloc[-1]
-        ),
-        float(
-            dd.dropna().iloc[-1]
+        (
+            float(
+                k.dropna().iloc[-1]
+            ),
+            float(
+                dd.dropna().iloc[-1]
+            )
+        )
+        if (
+            not k.dropna().empty
+            and not dd.dropna().empty
+        )
+        else (
+            None,
+            None
         )
     )
 
@@ -2591,37 +2975,46 @@ def technical(symbol):
         'recent_low': None
     }
 
-    if (
-        d is None
-        or d.empty
-    ):
+    if d is None or d.empty:
         return o
 
-    c = pd.to_numeric(
-        d['Close'],
-        errors='coerce'
-    ).dropna()
+    c = (
+        pd.to_numeric(
+            d['Close'],
+            errors='coerce'
+        )
+        .dropna()
+    )
 
     k, dd = kd(d)
 
     o.update({
-        'k': k,
-        'd': dd,
-        'rsi': rsi(c),
+        'k':
+            k,
+        'd':
+            dd,
+        'rsi':
+            rsi(c),
         'ma20':
-            float(
-                c.tail(20).mean()
-            )
-            if len(c) >= 20
-            else None,
+            (
+                float(
+                    c.tail(20).mean()
+                )
+                if len(c) >= 20
+                else None
+            ),
         'ma60':
-            float(
-                c.tail(60).mean()
-            )
-            if len(c) >= 60
-            else None,
+            (
+                float(
+                    c.tail(60).mean()
+                )
+                if len(c) >= 60
+                else None
+            ),
         'price':
-            float(c.iloc[-1])
+            float(
+                c.iloc[-1]
+            )
     })
 
     o['trend'] = (
@@ -2633,7 +3026,8 @@ def technical(symbol):
             > o['ma20']
             > o['ma60']
         )
-        else (
+        else
+        (
             '空頭'
             if (
                 o['ma20']
@@ -2673,10 +3067,7 @@ def parse_t86(data):
 
     out = {}
 
-    if not isinstance(
-        data,
-        dict
-    ):
+    if not isinstance(data, dict):
         return out
 
     fields = data.get(
@@ -2737,18 +3128,22 @@ def parse_t86(data):
         if c:
 
             out[c] = {
-                'foreign': f,
-                'trust': t,
-                'dealer': d,
-                'total': sum(
-                    x
-                    for x in (
-                        f,
-                        t,
-                        d
+                'foreign':
+                    f,
+                'trust':
+                    t,
+                'dealer':
+                    d,
+                'total':
+                    sum(
+                        x
+                        for x in (
+                            f,
+                            t,
+                            d
+                        )
+                        if x is not None
                     )
-                    if x is not None
-                )
             }
 
     return out
@@ -2773,12 +3168,9 @@ def institutional(
         CHIP_HISTORY_FILE
     )
 
-    market_hist = (
-        history
-        .setdefault(
-            market,
-            {}
-        )
+    market_hist = history.setdefault(
+        market,
+        {}
     )
 
     today = datetime.now(
@@ -2803,20 +3195,18 @@ def institutional(
     missing = [
         x
         for x in dates
-        if (
-            x.strftime(
-                '%Y%m%d'
-            )
-            not in market_hist
+        if x.strftime(
+            '%Y%m%d'
         )
+        not in market_hist
     ]
 
     print(
-        f'法人資料：{market} '
-        f'已有 '
-        f'{len(dates)-len(missing)}/{days} '
-        f'日快取，需補 '
-        f'{len(missing)} 日'
+        f'法人資料：'
+        f'{market} 已有 '
+        f'{len(dates)-len(missing)}/'
+        f'{days} 日快取，'
+        f'需補 {len(missing)} 日'
     )
 
     from concurrent.futures import (
@@ -2833,12 +3223,17 @@ def institutional(
         if market == 'TPEX':
 
             x = tpex_get(
-                '/tpex_3insti_daily_trading'
+                '/tpex_3insti_daily_trading',
+                {
+                    'date': ds
+                }
             )
 
             return (
                 ds,
-                parse_tpex_inst(x)
+                parse_tpex_inst(
+                    x
+                )
                 if x
                 else {}
             )
@@ -2846,9 +3241,12 @@ def institutional(
         x = http_json(
             TWSE_WEB_BASE + '/fund/T86',
             {
-                'date': ds,
-                'selectType': 'ALL',
-                'response': 'json'
+                'date':
+                    ds,
+                'selectType':
+                    'ALL',
+                'response':
+                    'json'
             },
             timeout=4,
             retries=0
@@ -2887,7 +3285,9 @@ def institutional(
                     ds, data = f.result()
 
                     if data:
-                        market_hist[ds] = data
+                        market_hist[
+                            ds
+                        ] = data
 
                 except Exception as e:
 
@@ -2915,12 +3315,9 @@ def institutional(
                 ]
         }
         for dt in dates
-        if (
-            dt.strftime(
-                '%Y%m%d'
-            )
-            in market_hist
-        )
+        if dt.strftime(
+            '%Y%m%d'
+        ) in market_hist
     ]
 
     INSTITUTIONAL_CACHE[key] = result
@@ -3016,18 +3413,22 @@ def parse_tpex_inst(data):
         )
 
         out[c] = {
-            'foreign': f,
-            'trust': t,
-            'dealer': d,
-            'total': sum(
-                x
-                for x in (
-                    f,
-                    t,
-                    d
+            'foreign':
+                f,
+            'trust':
+                t,
+            'dealer':
+                d,
+            'total':
+                sum(
+                    x
+                    for x in (
+                        f,
+                        t,
+                        d
+                    )
+                    if x is not None
                 )
-                if x is not None
-            )
         }
 
     return out
@@ -3042,10 +3443,12 @@ def chip_sums(
         x.get(
             'data',
             {}
-        ).get(
+        )
+        .get(
             code,
             {}
-        ).get(
+        )
+        .get(
             'total'
         )
         for x in h
@@ -3062,12 +3465,10 @@ def chip_sums(
             v[0]
             if v
             else None,
-
         '5d':
             sum(v[:5])
             if len(v) >= 5
             else None,
-
         '20d':
             sum(v[:20])
             if len(v) >= 20
@@ -3087,10 +3488,14 @@ def parse_margin_row(row):
     ):
 
         return {
-            'margin_change': None,
-            'margin_balance': None,
-            'short_change': None,
-            'short_balance': None
+            'margin_change':
+                None,
+            'margin_balance':
+                None,
+            'short_change':
+                None,
+            'short_balance':
+                None
         }
 
     margin_today = find_value(
@@ -3144,7 +3549,8 @@ def parse_margin_row(row):
     )
 
     mc = (
-        margin_today - margin_prev
+        margin_today
+        - margin_prev
         if (
             margin_today is not None
             and margin_prev is not None
@@ -3161,7 +3567,8 @@ def parse_margin_row(row):
     )
 
     sc = (
-        short_today - short_prev
+        short_today
+        - short_prev
         if (
             short_today is not None
             and short_prev is not None
@@ -3178,14 +3585,20 @@ def parse_margin_row(row):
     )
 
     return {
-        'margin_change': mc,
-        'margin_balance': margin_today,
-        'short_change': sc,
-        'short_balance': short_today
+        'margin_change':
+            mc,
+        'margin_balance':
+            margin_today,
+        'short_change':
+            sc,
+        'short_balance':
+            short_today
     }
 
 
-def _parse_margin_payload(data):
+def _parse_margin_payload(
+    data
+):
 
     out = {}
 
@@ -3226,7 +3639,12 @@ def _parse_margin_payload(data):
                     c
                     and c.isdigit()
                 ):
-                    out[c] = parse_margin_row(o)
+
+                    out[c] = (
+                        parse_margin_row(
+                            o
+                        )
+                    )
 
             elif (
                 isinstance(r, list)
@@ -3257,7 +3675,12 @@ def _parse_margin_payload(data):
                     c
                     and c.isdigit()
                 ):
-                    out[c] = parse_margin_row(o)
+
+                    out[c] = (
+                        parse_margin_row(
+                            o
+                        )
+                    )
 
     if isinstance(
         data,
@@ -3358,8 +3781,10 @@ def margin_data(
                     '/tpex_mainboard_margin_balance'
                 )
 
-                out = _parse_margin_payload(
-                    data
+                out = (
+                    _parse_margin_payload(
+                        data
+                    )
                 )
 
             else:
@@ -3368,8 +3793,10 @@ def margin_data(
                     '/exchangeReport/MI_MARGN'
                 )
 
-                out = _parse_margin_payload(
-                    data
+                out = (
+                    _parse_margin_payload(
+                        data
+                    )
                 )
 
                 if not out:
@@ -3384,8 +3811,10 @@ def margin_data(
                         }
                     )
 
-                    out = _parse_margin_payload(
-                        data
+                    out = (
+                        _parse_margin_payload(
+                            data
+                        )
                     )
 
         except Exception as e:
@@ -3406,10 +3835,14 @@ def margin_data(
     return MARGIN_CACHE[key].get(
         code,
         {
-            'margin_change': None,
-            'margin_balance': None,
-            'short_change': None,
-            'short_balance': None
+            'margin_change':
+                None,
+            'margin_balance':
+                None,
+            'short_change':
+                None,
+            'short_balance':
+                None
         }
     )
 
@@ -3445,6 +3878,7 @@ def score_fund(
             if r <= .9:
 
                 s += 10
+
                 why.append(
                     '低於自身歷史PE'
                 )
@@ -3452,6 +3886,7 @@ def score_fund(
             elif r <= 1.05:
 
                 s += 7
+
                 why.append(
                     '接近自身歷史PE'
                 )
@@ -3470,15 +3905,17 @@ def score_fund(
             if r < .85:
 
                 s += 10
+
                 why.append(
-                    '低於同業中位數'
+                    '低於同次產業中位數'
                 )
 
             elif r <= 1.05:
 
                 s += 7
+
                 why.append(
-                    '接近同業中位數'
+                    '接近同次產業中位數'
                 )
 
             elif r <= 1.15:
@@ -3488,34 +3925,43 @@ def score_fund(
     if peg is not None:
 
         if peg < .8:
+
             s += 6
 
         elif peg < 1:
+
             s += 5
 
         elif peg < 1.2:
+
             s += 3
 
     if roe is not None:
 
         if roe >= 30:
+
             s += 6
 
         elif roe >= 20:
+
             s += 5
 
         elif roe >= 10:
+
             s += 3
 
     if eps is not None:
 
         if eps >= 50:
+
             s += 6
 
         elif eps >= 20:
+
             s += 5
 
         elif eps > 0:
+
             s += 3
 
     if (
@@ -3524,9 +3970,11 @@ def score_fund(
     ):
 
         if pb < 2:
+
             s += 4
 
         elif pb < 4:
+
             s += 2
 
     if (
@@ -3535,15 +3983,17 @@ def score_fund(
     ):
 
         if yld >= 5:
+
             s += 3
 
         elif yld >= 3:
+
             s += 2
 
-    return min(
-        40,
-        s
-    ), why
+    return (
+        min(40, s),
+        why
+    )
 
 
 def score_tech(t):
@@ -3599,26 +4049,24 @@ def score_tech(t):
 
             s += 4
 
-    if (
-        p
-        and m20
-    ):
+    if p and m20:
 
         if p >= m20:
+
             s += 5
 
         elif p >= m20 * .97:
+
             s += 3
 
-    if (
-        p
-        and m60
-    ):
+    if p and m60:
 
         if p >= m60:
+
             s += 5
 
         elif p >= m60 * .95:
+
             s += 3
 
     if t['trend'] == '多頭':
@@ -3634,6 +4082,7 @@ def score_tech(t):
         if dist <= .03:
 
             s += 3
+
             reasons.append(
                 '接近20日低點'
             )
@@ -3642,16 +4091,13 @@ def score_tech(t):
 
             s += 2
 
-    return min(
-        30,
-        s
-    ), reasons
+    return (
+        min(30, s),
+        reasons
+    )
 
 
-def score_chip(
-    c,
-    m
-):
+def score_chip(c, m):
 
     s = 0
     r = []
@@ -3690,9 +4136,11 @@ def score_chip(
     if mc is not None:
 
         if mc < 0:
+
             s += 1
 
         elif mc > 0:
+
             r.append(
                 '融資增加'
             )
@@ -3701,12 +4149,13 @@ def score_chip(
         sc is not None
         and sc > 0
     ):
+
         s += 1
 
-    return min(
-        20,
-        s
-    ), r
+    return (
+        min(20, s),
+        r
+    )
 
 
 def score_risk(
@@ -3724,6 +4173,7 @@ def score_risk(
     ):
 
         risk += 3
+
         r.append(
             'RSI過熱'
         )
@@ -3736,6 +4186,7 @@ def score_risk(
     ):
 
         risk += 2
+
         r.append(
             'KD高檔'
         )
@@ -3746,6 +4197,7 @@ def score_risk(
     ):
 
         risk += 2
+
         r.append(
             '法人連續賣超'
         )
@@ -3757,6 +4209,7 @@ def score_risk(
     ):
 
         risk += 1
+
         r.append(
             '融資增加'
         )
@@ -3764,10 +4217,12 @@ def score_risk(
     if (
         t.get('price')
         and t.get('ma20')
-        and t['price'] < t['ma20']
+        and t['price']
+        < t['ma20']
     ):
 
         risk += 1
+
         r.append(
             '跌破MA20'
         )
@@ -3775,18 +4230,20 @@ def score_risk(
     if (
         t.get('price')
         and t.get('ma60')
-        and t['price'] < t['ma60']
+        and t['price']
+        < t['ma60']
     ):
 
         risk += 1
+
         r.append(
             '跌破MA60'
         )
 
-    return min(
-        10,
-        risk
-    ), r
+    return (
+        min(10, risk),
+        r
+    )
 
 
 # ============================================================
@@ -3806,15 +4263,43 @@ def analysis(
     )
 
     if not item:
-        return f'❌ 找不到股票：{query}'
+
+        return (
+            f'❌ 找不到股票：{query}'
+        )
 
     code = item['code']
     name = item['name']
     market = item['market']
+
     industry = canonical_industry(
         item['industry']
     )
+
     symbol = item['symbol']
+
+    # --------------------------------------------------------
+    # 次產業
+    # --------------------------------------------------------
+
+    subindustries = (
+        get_subindustries_for_stock(
+            code,
+            item
+        )
+    )
+
+    subindustry_display = (
+        '、'.join(
+            subindustries
+        )
+        if subindustries
+        else '次產業資料不可用'
+    )
+
+    # --------------------------------------------------------
+    # PE
+    # --------------------------------------------------------
 
     pe_data = get_current_pe_data()
 
@@ -3864,18 +4349,28 @@ def analysis(
         h
     )
 
-    peers = get_dynamic_industry_peers(
+    # --------------------------------------------------------
+    # V2.9.7.5
+    # 動態次產業 Top 10
+    # --------------------------------------------------------
+
+    peers = get_dynamic_subindustry_peers(
         code,
         industry,
+        subindustry_display,
         u,
         10
     )
 
     vals = [
-        pe_data.get(
+        pe_data
+        .get(
             x['code'],
             {}
-        ).get('pe')
+        )
+        .get(
+            'pe'
+        )
         for x in peers
     ]
 
@@ -3884,7 +4379,8 @@ def analysis(
         for x in vals
         if (
             x
-            and 0 < x <= PE_MAX_VALID
+            and 0 < x
+            <= PE_MAX_VALID
         )
     ]
 
@@ -3895,14 +4391,24 @@ def analysis(
     )
 
     peer_med = (
-        float(np.median(vals))
+        float(
+            np.median(vals)
+        )
         if vals
         else None
     )
 
+    # --------------------------------------------------------
+    # Technical
+    # --------------------------------------------------------
+
     tech = technical(
         symbol
     )
+
+    # --------------------------------------------------------
+    # Chips
+    # --------------------------------------------------------
 
     inst = chip_sums(
         code,
@@ -3917,6 +4423,10 @@ def analysis(
         code,
         market
     )
+
+    # --------------------------------------------------------
+    # Score
+    # --------------------------------------------------------
 
     fs, fr = score_fund(
         pe,
@@ -3961,93 +4471,167 @@ def analysis(
 
     if total >= 90:
 
-        verdict = '🟢 強力加碼'
+        verdict = (
+            '🟢 強力加碼'
+        )
 
     elif total >= 75:
 
-        verdict = '🟢 可分批加碼'
+        verdict = (
+            '🟢 可分批加碼'
+        )
 
     elif total >= 60:
 
-        verdict = '🟡 等待回檔/止跌'
+        verdict = (
+            '🟡 等待回檔/止跌'
+        )
 
     elif total >= 40:
 
-        verdict = '🟠 暫緩加碼'
+        verdict = (
+            '🟠 暫緩加碼'
+        )
 
     else:
 
-        verdict = '🔴 不建議加碼'
+        verdict = (
+            '🔴 不建議加碼'
+        )
 
-    interval = u.get(
-        code,
-        {}
-    ).get('price')
+    interval = (
+        u.get(
+            code,
+            {}
+        ).get(
+            'price'
+        )
+    )
 
-    peer_text = (
-        '、'.join(
+    # --------------------------------------------------------
+    # Webhook / analyze 模式
+    # --------------------------------------------------------
+
+    if (
+        interval_result is None
+        and not RUN_CACHE.get(
+            (
+                'interval_attempted',
+                symbol
+            ),
+            False
+        )
+    ):
+
+        st = (
+            load_json(
+                STATE_FILE
+            )
+            .get(
+                'interval_low',
+                {}
+            )
+            .get(
+                next(
+                    (
+                        k
+                        for k, v
+                        in STOCKS.items()
+                        if clean_code(v)
+                        == code
+                    ),
+                    ''
+                ),
+                {}
+            )
+        )
+
+        if (
+            st.get(
+                'last_check'
+            )
+            and st.get(
+                'last_price'
+            )
+        ):
+
+            z = get_interval_stats(
+                symbol,
+                st.get(
+                    'last_check'
+                )
+            )
+
+            RUN_CACHE[
+                (
+                    'interval_attempted',
+                    symbol
+                )
+            ] = True
+
+            if z:
+
+                interval_result = {
+                    'previous_price':
+                        st.get(
+                            'last_price'
+                        ),
+                    'interval_low':
+                        z['low'],
+                    'drop':
+                        z['low']
+                        / st.get(
+                            'last_price'
+                        )
+                        - 1,
+                    'start':
+                        z['start'].isoformat(),
+                    'end':
+                        z['end'].isoformat()
+                }
+
+    # --------------------------------------------------------
+    # 同次產業 Top 10
+    # --------------------------------------------------------
+
+    if peers:
+
+        peer_text = '、'.join(
             f"{x['code']} {x['name']}"
             for x in peers
         )
-        or '無法取得市值資料'
-    )
 
-    if interval_result:
+    elif not subindustries:
 
-        try:
-            interval_start = (
-                datetime.fromisoformat(
-                    interval_result['start']
-                ).strftime(
-                    "%H:%M:%S"
-                )
-            )
-
-        except Exception:
-            interval_start = 'N/A'
-
-        try:
-            interval_end = (
-                datetime.fromisoformat(
-                    interval_result['end']
-                ).strftime(
-                    "%H:%M:%S"
-                )
-            )
-
-        except Exception:
-            interval_end = 'N/A'
-
-        interval_low = fmt(
-            interval_result.get(
-                'interval_low'
-            )
-        )
-
-        interval_drop = pct(
-            interval_result.get(
-                'drop'
-            )
+        peer_text = (
+            '⚠️ 無次產業資料，'
+            '本次不進行同次產業排名'
         )
 
     else:
 
-        interval_start = 'N/A'
-        interval_end = 'N/A'
-        interval_low = 'N/A'
-        interval_drop = 'N/A'
+        peer_text = (
+            '⚠️ 找不到相同次產業且有市值資料的股票'
+        )
+
+    # --------------------------------------------------------
+    # Output
+    # --------------------------------------------------------
 
     return (
-        f'📊 股票加碼分析 V2.9.7.6\n\n'
+        f'📊 股票加碼分析 V2.9.7.5\n\n'
         f'標的：{name}（{code}）\n'
         f'市場：{market}\n'
-        f'產業：{industry}\n\n'
+        f'產業：{industry}\n'
+        f'次產業：{subindustry_display}\n\n'
 
         f'【估值 / 基本面 40分】\n'
         f'PE：{fmt(pe)}\n'
-        f'一年平均PE：{fmt(one)}（樣本 {sample}）\n'
-        f'同業Top10平均PE：{fmt(peer_mean)}\n'
-        f'同業Top10中位數PE：'
+        f'一年平均PE：{fmt(one)}'
+        f'（樣本 {sample}）\n'
+        f'同次產業Top10平均PE：'
+        f'{fmt(peer_mean)}\n'
+        f'同次產業Top10中位數PE：'
         f'{fmt(peer_med)}'
         f'（有效 {len(vals)}/10）\n'
         f'PB：{fmt(pb)}\n'
@@ -4058,7 +4642,7 @@ def analysis(
         f'ROE：{fmt(yf_f["roe"])}%\n'
         f'基本面得分：{fs}/40\n\n'
 
-        f'【動態同業 Top 10】\n'
+        f'【動態次產業 Top 10】\n'
         f'{peer_text}\n\n'
 
         f'【技術面 30分】\n'
@@ -4096,23 +4680,23 @@ def analysis(
         f'{("、".join(rr) if rr else "目前無主要風險警訊")}\n\n'
 
         f'【15分鐘區間】\n'
-        f'上次成功資料：'
-        f'{interval_start}\n'
-        f'本次最新資料：'
-        f'{interval_end}\n'
+        f'上次執行：'
+        f'{datetime.fromisoformat(interval_result["start"]).strftime("%H:%M:%S") if interval_result else "N/A"}\n'
+        f'本次執行：'
+        f'{datetime.fromisoformat(interval_result["end"]).strftime("%H:%M:%S") if interval_result else "N/A"}\n'
         f'期間最低：'
-        f'{interval_low}\n'
+        f'{fmt(interval_result["interval_low"]) if interval_result else "N/A"}\n'
         f'目前價格：'
         f'{fmt(interval)}\n'
         f'區間跌幅：'
-        f'{interval_drop}\n\n'
+        f'{pct(interval_result["drop"]) if interval_result else "N/A"}\n\n'
 
         f'【加碼決策】\n'
         f'綜合評分：{total}/100\n'
         f'結論：{verdict}\n\n'
 
         f'加分因素：'
-        f'{"、".join(fr+tr) if fr+tr else "無"}\n'
+        f'{"、".join(fr + tr) if fr + tr else "無"}\n'
         f'籌碼訊號：'
         f'{"、".join(cr) if cr else "無"}\n'
         f'風險提醒：'
@@ -4124,18 +4708,18 @@ def analysis(
 # Webhook
 # ============================================================
 
-def handle_event(
-    e,
-    u
-):
+def handle_event(e, u):
 
     if (
         e.get('type')
         != 'message'
-        or e.get(
+        or
+        e.get(
             'message',
             {}
-        ).get('type')
+        ).get(
+            'type'
+        )
         != 'text'
     ):
         return
@@ -4158,10 +4742,12 @@ def handle_event(
 
         reply_line(
             token,
-            '📈 股票加碼分析 Bot V2.9.7.6\n\n'
+            '📈 股票加碼分析 Bot V2.9.7.5\n\n'
             '輸入股票代號或名稱即可。\n'
             '例如：2330、台積電、3711、日月光投控\n\n'
-            '模型：基本面40 + 技術30 + 籌碼20 + 風險10。'
+            '模型：基本面40 + 技術30 + 籌碼20 + 風險10。\n\n'
+            '同業估值已改為：\n'
+            '「動態次產業 Top 10」'
         )
 
         return
@@ -4195,9 +4781,7 @@ def run_webhook_server():
         request
     )
 
-    app = Flask(
-        __name__
-    )
+    app = Flask(__name__)
 
     u = get_market_universe()
 
@@ -4218,6 +4802,7 @@ def run_webhook_server():
             'events',
             []
         ):
+
             handle_event(
                 e,
                 u
@@ -4237,7 +4822,7 @@ def run_webhook_server():
 
 
 # ============================================================
-# Alert
+# Alerts
 # ============================================================
 
 def run_alerts():
@@ -4245,6 +4830,7 @@ def run_alerts():
     global RUN_CACHE
     global INSTITUTIONAL_CACHE
     global MARGIN_CACHE
+    global SUBINDUSTRY_CACHE
 
     RUN_CACHE = {}
     INSTITUTIONAL_CACHE = {}
@@ -4255,9 +4841,21 @@ def run_alerts():
     print(
         '================================\n'
         '股票跌幅 + 15分鐘區間最低價 + '
-        'V2.9.7.6自動估值 + 技術 + 籌碼\n'
+        'V2.9.7.5自動估值 + 技術 + 籌碼\n'
         '================================'
     )
+
+    if FINMIND_API_TOKEN:
+
+        print(
+            'FinMind 次產業 Token：已設定'
+        )
+
+    else:
+
+        print(
+            '⚠️ FinMind 次產業 Token：未設定'
+        )
 
     state = load_json(
         STATE_FILE
@@ -4266,12 +4864,49 @@ def run_alerts():
     u = get_market_universe()
 
     print(
-        f'[耗時 {time.time()-started:.1f}s] '
+        f'[耗時 '
+        f'{time.time()-started:.1f}s] '
         f'股票池完成：{len(u)}'
     )
 
     # --------------------------------------------------------
-    # 預先建立法人 / 融資批次資料
+    # 顯示 V2.9.7.5 次產業狀態
+    # --------------------------------------------------------
+
+    sub_count = sum(
+        1
+        for x in u.values()
+        if x.get(
+            'subindustries'
+        )
+    )
+
+    print(
+        f'動態次產業覆蓋：'
+        f'{sub_count}/{len(u)}'
+    )
+
+    for name, symbol in STOCKS.items():
+
+        c = clean_code(
+            symbol
+        )
+
+        if c in u:
+
+            subs = get_subindustries_for_stock(
+                c,
+                u[c]
+            )
+
+            print(
+                f'次產業：'
+                f'{name} → '
+                f'{", ".join(subs) if subs else "N/A"}'
+            )
+
+    # --------------------------------------------------------
+    # 法人 / 融資
     # --------------------------------------------------------
 
     target_markets = set()
@@ -4297,38 +4932,40 @@ def run_alerts():
             'TPEX'
         ):
 
-            sample_code = (
+            dummy = (
                 '2330'
                 if m == 'TWSE'
                 else next(
                     (
                         x['code']
                         for x in u.values()
-                        if x.get('market')
-                        == m
+                        if x.get(
+                            'market'
+                        ) == m
                     ),
                     ''
                 )
             )
 
             institutional(
-                sample_code,
+                dummy,
                 m,
                 20
             )
 
             margin_data(
-                sample_code,
+                dummy,
                 m
             )
 
     print(
-        f'[耗時 {time.time()-started:.1f}s] '
+        f'[耗時 '
+        f'{time.time()-started:.1f}s] '
         f'法人/融資批次資料完成'
     )
 
     # --------------------------------------------------------
-    # 逐一處理目標
+    # 逐目標分析
     # --------------------------------------------------------
 
     for name, symbol in STOCKS.items():
@@ -4341,8 +4978,6 @@ def run_alerts():
             clean_code(symbol)
         )
 
-        interval_result = None
-
         try:
 
             check_drop_alert(
@@ -4351,8 +4986,6 @@ def run_alerts():
                 state
             )
 
-            # 告訴 analysis：
-            # run_alerts 已經處理過區間資料
             RUN_CACHE[
                 (
                     'interval_attempted',
@@ -4375,11 +5008,9 @@ def run_alerts():
                 e
             )
 
-        try:
+            interval_result = None
 
-            # ------------------------------------------------
-            # 指數
-            # ------------------------------------------------
+        try:
 
             if symbol.startswith('^'):
 
@@ -4399,10 +5030,6 @@ def run_alerts():
                     f'{fmt(t["rsi"])}'
                 )
 
-            # ------------------------------------------------
-            # ETF
-            # ------------------------------------------------
-
             elif name in (
                 '0050 元大台灣50',
                 'QQQ'
@@ -4420,10 +5047,6 @@ def run_alerts():
                     f'RSI：'
                     f'{fmt(t["rsi"])}'
                 )
-
-            # ------------------------------------------------
-            # 個股
-            # ------------------------------------------------
 
             elif item:
 
@@ -4448,7 +5071,8 @@ def run_alerts():
         except Exception as e:
 
             print(
-                f'{name} 分析失敗：{e}'
+                f'{name} 分析失敗：'
+                f'{e}'
             )
 
             traceback.print_exc()
@@ -4459,8 +5083,10 @@ def run_alerts():
     )
 
     print(
-        f'\n========== 完成｜總耗時 '
-        f'{time.time()-started:.1f} 秒 =========='
+        f'\n========== '
+        f'完成｜總耗時 '
+        f'{time.time()-started:.1f} 秒 '
+        f'=========='
     )
 
 
