@@ -1,4 +1,5 @@
-# stock_alert.py V2.9
+# stock_alert.py V2.9.1
+# 效能修正版：全市場資料批次化、單次執行快取、限制 Yahoo/API 重試、15分鐘資料僅抓目標股
 # 股票跌幅 + 15分鐘區間最低價 + 動態估值 + 技術 + 籌碼 + 100分制加碼決策
 import os, json, time, math, traceback, re
 from datetime import datetime, timedelta
@@ -17,7 +18,11 @@ STATE_FILE='alert_state.json'; PE_HISTORY_FILE='pe_history.json'; CHIP_HISTORY_F
 UNIVERSE_CACHE_FILE='market_universe_cache.json'; TWSE_PROFILE_CACHE_FILE='twse_profile_cache.json'; TWSE_QUOTES_CACHE_FILE='twse_quotes_cache.json'
 LINE_REPLY_URL='https://api.line.me/v2/bot/message/reply'; LINE_BROADCAST_URL='https://api.line.me/v2/bot/message/broadcast'
 DAILY_THRESHOLD=-0.05; WEEK_THRESHOLD=-0.10; PE_MIN_HISTORY=60; PE_MAX_VALID=200; PE_ONE_YEAR_TRADING_DAYS=240
-UNIVERSE_CACHE_HOURS=24; TWSE_TIMEOUT=20; TPEX_TIMEOUT=25; API_SLEEP=.12; PE_BACKFILL_MAX_DAYS=500
+UNIVERSE_CACHE_HOURS=24; TWSE_TIMEOUT=8; TPEX_TIMEOUT=10; API_SLEEP=.05; PE_BACKFILL_MAX_DAYS=370
+YF_TIMEOUT=10; MAX_HISTORY_DAYS_PER_RUN=75
+RUN_CACHE={}
+INSTITUTIONAL_CACHE={}
+MARGIN_CACHE={}
 STOCKS={'0050 元大台灣50':'0050.TW','2330 台積電':'2330.TW','3711 日月光投控':'3711.TW','QQQ':'QQQ','台灣加權指數':'^TWII'}
 
 INDUSTRY_CODE_MAP={'01':'水泥工業','02':'食品工業','03':'塑膠工業','04':'紡織纖維','05':'電機機械','06':'電器電纜','08':'玻璃陶瓷','09':'造紙工業','10':'鋼鐵工業','11':'橡膠工業','12':'汽車工業','13':'電子工業','14':'建材營造','15':'航運業','16':'觀光餐旅','17':'金融業','18':'貿易百貨','19':'綜合','20':'其他','21':'化學工業','22':'生技醫療','23':'油電燃氣業','24':'半導體業','25':'電腦及週邊設備業','26':'光電業','27':'通信網路業','28':'電子零組件業','29':'電子通路業','30':'資訊服務業','31':'其他電子業','32':'文化創意業','33':'農業科技','34':'電子商務','35':'數位雲端','36':'運動休閒','37':'居家生活','38':'綠能環保','39':'數位經濟','40':'其他'}
@@ -62,7 +67,7 @@ def http_json(url,params=None,timeout=20,retries=2):
     last=None
     for i in range(retries+1):
         try:
-            r=requests.get(url,params=params,timeout=timeout,headers={'User-Agent':'Mozilla/5.0 stock-alert/2.9'}); r.raise_for_status(); return r.json()
+            r=requests.get(url,params=params,timeout=timeout,headers={'User-Agent':'Mozilla/5.0 stock-alert/2.9.1'}); r.raise_for_status(); return r.json()
         except Exception as e:
             last=e
             if i<retries:time.sleep(.8*(i+1))
@@ -70,7 +75,7 @@ def http_json(url,params=None,timeout=20,retries=2):
 def http_text(url,params=None,timeout=20,retries=2):
     for i in range(retries+1):
         try:
-            r=requests.get(url,params=params,timeout=timeout,headers={'User-Agent':'Mozilla/5.0'}); r.raise_for_status(); return r.content.decode('utf-8-sig','replace')
+            r=requests.get(url,params=params,timeout=timeout,headers={'User-Agent':'Mozilla/5.0 stock-alert/2.9.1'}); r.raise_for_status(); return r.content.decode('utf-8-sig','replace')
         except Exception as e:
             if i<retries:time.sleep(.8*(i+1))
     return None
@@ -181,16 +186,25 @@ def resolve_stock(q,u):
 
 # ---------- Yahoo / interval ----------
 def yf_download(symbol,period='1y',interval='1d'):
+    key=(symbol,period,interval)
+    if key in RUN_CACHE:
+        return RUN_CACHE[key]
     try:
-        d=yf.download(symbol,period=period,interval=interval,progress=False,auto_adjust=False,threads=False)
+        d=yf.download(symbol,period=period,interval=interval,progress=False,auto_adjust=False,threads=False,timeout=YF_TIMEOUT)
         if d is None or d.empty:return None
         if isinstance(d.columns,pd.MultiIndex):d.columns=[x[0] for x in d.columns]
+        RUN_CACHE[key]=d
         return d
-    except Exception as e:print(f'Yahoo download失敗 {symbol}: {e}');return None
+    except Exception as e:print(f'Yahoo download失敗 {symbol}: {e}');RUN_CACHE[key]=None;return None
 def get_latest_price(symbol):
+    key=('latest',symbol)
+    if key in RUN_CACHE:return RUN_CACHE[key]
+    d=yf_download(symbol,'5d','1d')
     try:
-        d=yf.Ticker(symbol).history(period='2d',interval='1d',auto_adjust=False);return float(d['Close'].dropna().iloc[-1]) if not d.empty else None
-    except:return None
+        v=float(d['Close'].dropna().iloc[-1]) if d is not None and not d.empty else None
+    except:v=None
+    RUN_CACHE[key]=v
+    return v
 def get_previous_close(symbol):
     d=yf_download(symbol,'10d','1d');c=pd.to_numeric(d['Close'],errors='coerce').dropna() if d is not None and 'Close' in d else pd.Series(dtype=float);return float(c.iloc[-2]) if len(c)>=2 else None
 def get_week_high(symbol):
@@ -202,10 +216,16 @@ def parse_time(v):
 def get_interval_stats(symbol,start_iso):
     now=datetime.now(TW_TZ);start=parse_time(start_iso) if start_iso else now-timedelta(minutes=15);start=start or now-timedelta(minutes=15)
     if start>now:start=now-timedelta(minutes=15)
-    mins=max(15,int((now-start).total_seconds()/60)+5);period='1d' if mins<=1440 else '5d';d=yf_download(symbol,period,'1m')
+    # Yahoo 1分鐘資料只在短期內可取得；正常排程每次約15分鐘，因此只抓1日資料即可。
+    d=yf_download(symbol,'1d','1m')
     if d is None or d.empty or 'Low' not in d:return None
-    idx=pd.to_datetime(d.index);idx=idx.tz_localize('UTC').tz_convert(TW_TZ) if idx.tz is None else idx.tz_convert(TW_TZ);d=d.copy();d.index=idx
-    mask=(d.index>=start)&(d.index<=now);low=pd.to_numeric(d.loc[mask,'Low'],errors='coerce').dropna();return {'low':float(low.min()),'start':start,'end':now} if not low.empty else None
+    idx=pd.to_datetime(d.index)
+    try: idx=idx.tz_localize('UTC').tz_convert(TW_TZ) if idx.tz is None else idx.tz_convert(TW_TZ)
+    except: return None
+    d=d.copy();d.index=idx;mask=(d.index>=start)&(d.index<=now)
+    low=pd.to_numeric(d.loc[mask,'Low'],errors='coerce').dropna()
+    return {'low':float(low.min()),'start':start,'end':now} if not low.empty else None
+
 def check_interval_low(name,symbol,state):
     now=datetime.now(TW_TZ);iso=now.isoformat();s=state.setdefault('interval_low',{}).setdefault(name,{});prev_t=s.get('last_check');prev_p=to_float(s.get('last_price'));cur=get_latest_price(symbol);stats=get_interval_stats(symbol,prev_t) if cur is not None else None
     result=None
@@ -240,7 +260,13 @@ def parse_pe(data):
         c=clean_code(first_value(o,['證券代號','公司代號','Code','SecuritiesCompanyCode']));
         if c:out[c]={'pe':find_value(o,['本益比','PEratio','PERatio','PE']),'pb':find_value(o,['股價淨值比','PBratio','PBR','PBRatio']),'yield':find_value(o,['殖利率(%)','殖利率','DividendYield'])}
     return out
-def get_current_pe_data():return {**parse_pe(twse_get('/exchangeReport/BWIBBU_ALL')),**parse_pe(tpex_get('/tpex_mainboard_peratio_analysis'))}
+def get_current_pe_data():
+    key='current_pe'
+    if key in RUN_CACHE:return RUN_CACHE[key]
+    out={**parse_pe(twse_get('/exchangeReport/BWIBBU_ALL')),**parse_pe(tpex_get('/tpex_mainboard_peratio_analysis'))}
+    RUN_CACHE[key]=out
+    print(f'本次執行 PE 資料：{len(out)} 檔（只抓一次）')
+    return out
 def get_pe_by_date(ds,market):return parse_pe(tpex_get('/tpex_mainboard_peratio_analysis',{'date':ds}) if market=='TPEX' else twse_web_get('/afterTrading/BWIBBU_ALL',{'date':ds,'response':'json'}))
 def backfill_pe(code,h,market):
     h.setdefault(code,{});n=sum(1 for v in h[code].values() if to_float(v) and 0<to_float(v)<=PE_MAX_VALID)
@@ -261,11 +287,14 @@ def one_year_pe(code,h):
         if d>=cutoff and to_float(x) and 0<to_float(x)<=PE_MAX_VALID:v.append((d,float(x)))
     v=sorted(v,reverse=True)[:PE_ONE_YEAR_TRADING_DAYS];return (sum(x for _,x in v)/len(v),len(v)) if len(v)>=PE_MIN_HISTORY else (None,len(v))
 def yahoo_fund(symbol):
+    key=('fund',symbol)
+    if key in RUN_CACHE:return RUN_CACHE[key]
     o={'eps_growth':None,'roe':None,'peg':None,'pb':None,'yield':None,'pe':None}
     try:
         i=yf.Ticker(symbol).info
         o['pe']=to_float(i.get('trailingPE')) or to_float(i.get('forwardPE'));o['pb']=to_float(i.get('priceToBook'));o['yield']=to_float(i.get('dividendYield'))*100 if i.get('dividendYield') is not None else None;o['eps_growth']=to_float(i.get('earningsGrowth'))*100 if i.get('earningsGrowth') is not None else None;o['roe']=to_float(i.get('returnOnEquity'))*100 if i.get('returnOnEquity') is not None else None;o['peg']=to_float(i.get('pegRatio'))
     except Exception as e:print('Yahoo fundamentals失敗',symbol,e)
+    RUN_CACHE[key]=o
     return o
 
 # ---------- technical ----------
@@ -292,16 +321,33 @@ def parse_t86(data):
         if c:out[c]={'foreign':f,'trust':t,'dealer':d,'total':sum(x for x in (f,t,d) if x is not None)}
     return out
 def institutional(code,market,days=20):
-    out=[];today=datetime.now(TW_TZ).date()
-    if market=='TPEX':
-        p=tpex_get('/tpex_3insti_daily_trading');return [{'date':today.strftime('%Y%m%d'),'data':parse_tpex_inst(p)}] if p else []
-    for i in range(45):
-        d=today-timedelta(days=i)
-        if d.weekday()>=5:continue
-        x=parse_t86(twse_web_get('/fund/T86',{'date':d.strftime('%Y%m%d'),'selectType':'ALL','response':'json'}))
-        if x:out.append({'date':d.strftime('%Y%m%d'),'data':x})
-        if len(out)>=days:break
-    return out
+    key=('inst',market,days)
+    if key not in INSTITUTIONAL_CACHE:
+        today=datetime.now(TW_TZ).date(); result=[]
+        dates=[];d=today
+        while d.weekday()>=5:d-=timedelta(days=1)
+        for i in range(min(35,days+15)):
+            x=today-timedelta(days=i)
+            if x.weekday()<5:dates.append(x)
+        from concurrent.futures import ThreadPoolExecutor,as_completed
+        def fetch(d):
+            if market=='TPEX':
+                x=tpex_get('/tpex_3insti_daily_trading');return {'date':d.strftime('%Y%m%d'),'data':parse_tpex_inst(x)} if x else None
+            x=parse_t86(twse_web_get('/fund/T86',{'date':d.strftime('%Y%m%d'),'selectType':'ALL','response':'json'}))
+            return {'date':d.strftime('%Y%m%d'),'data':x} if x else None
+        print(f'法人資料：一次批次抓取 {market}，最多 {len(dates)} 個交易日')
+        with ThreadPoolExecutor(max_workers=5) as ex:
+            futs=[ex.submit(fetch,d) for d in dates]
+            for f in as_completed(futs):
+                try:
+                    x=f.result()
+                    if x and x['data']:result.append(x)
+                except Exception as e:print('法人批次失敗：',e)
+        result.sort(key=lambda x:x['date'],reverse=True)
+        INSTITUTIONAL_CACHE[key]=result[:days]
+        print(f'法人資料完成：{len(INSTITUTIONAL_CACHE[key])} 個交易日')
+    h=INSTITUTIONAL_CACHE[key]
+    return h
 def parse_tpex_inst(data):
     out={}
     if not isinstance(data,list):return out
@@ -315,34 +361,29 @@ def parse_tpex_inst(data):
 def chip_sums(code,h):
     v=[x.get('data',{}).get(code,{}).get('total') for x in h];v=[x for x in v if x is not None];return {'latest':v[0] if v else None,'5d':sum(v[:5]) if len(v)>=5 else None,'20d':sum(v[:20]) if len(v)>=20 else None}
 def margin_data(code,market):
-    try:
-        data=tpex_get('/tpex_mainboard_margin_balance') if market=='TPEX' else twse_get('/exchangeReport/MI_MARGN')
-        if market=='TPEX':
-            if isinstance(data,list):
+    key=('margin',market)
+    if key not in MARGIN_CACHE:
+        out={}
+        try:
+            data=tpex_get('/tpex_mainboard_margin_balance') if market=='TPEX' else twse_get('/exchangeReport/MI_MARGN')
+            if market=='TPEX' and isinstance(data,list):
                 for r in data:
-                    if clean_code(first_value(r,['SecuritiesCompanyCode','Code','證券代號']))==code:return parse_margin_row(r)
-        elif isinstance(data,dict):
-            fields=data.get('fields',[])
-            # TWSE MI_MARGN has summary and detail tables; inspect all list rows and map by the table header when present.
-            for table in data.get('data',[]):
-                if not isinstance(table,list):continue
-                for r in table:
-                    if isinstance(r,list) and len(r)>1:
-                        o=dict(zip(fields,r)) if fields and len(fields)==len(r) else {}
-                        if not o and table and isinstance(table[0],list) and r is not table[0]:o=dict(zip(table[0],r))
-                        if clean_code(first_value(o,['股票代號','證券代號','Code']))==code:return parse_margin_row(o)
-    except Exception as e:print('融資融券失敗',code,e)
-    return {'margin_change':None,'margin_balance':None,'short_change':None,'short_balance':None}
-def parse_margin_row(o):
-    mb=find_value(o,['今日融資餘額','融資餘額','MarginBalance','FinancingBalance'])
-    mp=find_value(o,['前日融資餘額','昨日融資餘額','昨日融資餘額','PreviousMarginBalance'])
-    sb=find_value(o,['今日融券餘額','融券餘額','ShortBalance','ShortSellingBalance'])
-    sp=find_value(o,['前日融券餘額','昨日融券餘額','PreviousShortBalance'])
-    mc=find_value(o,['融資增減','融資餘額增減','MarginPurchaseChange','FinancingBalanceChange'])
-    sc=find_value(o,['融券增減','融券餘額增減','ShortSaleChange','ShortBalanceChange'])
-    if mc is None and mb is not None and mp is not None: mc=mb-mp
-    if sc is None and sb is not None and sp is not None: sc=sb-sp
-    return {'margin_change':mc,'margin_balance':mb,'short_change':sc,'short_balance':sb}
+                    c=clean_code(first_value(r,['SecuritiesCompanyCode','Code','證券代號']))
+                    if c:out[c]=parse_margin_row(r)
+            elif market=='TWSE' and isinstance(data,dict):
+                fields=data.get('fields',[])
+                for table in data.get('data',[]):
+                    if not isinstance(table,list):continue
+                    header=table[0] if table and isinstance(table[0],list) else fields
+                    for r in table[1:] if header is table[0] else table:
+                        if not isinstance(r,list):continue
+                        o=dict(zip(header,r)) if header else {}
+                        c=clean_code(first_value(o,['股票代號','證券代號','Code']))
+                        if c:out[c]=parse_margin_row(o)
+        except Exception as e:print('融資融券批次失敗：',e)
+        MARGIN_CACHE[key]=out
+        print(f'融資融券資料完成：{market} {len(out)} 檔（只抓一次）')
+    return MARGIN_CACHE[key].get(code,{'margin_change':None,'margin_balance':None,'short_change':None,'short_balance':None})
 
 
 # ---------- scoring ----------
@@ -446,7 +487,7 @@ def analysis(query,u,backfill=True,interval_result=None):
             z=get_interval_stats(symbol,st.get('last_check'))
             if z: interval_result={'previous_price':st.get('last_price'),'interval_low':z['low'],'drop':z['low']/st.get('last_price')-1,'start':z['start'].isoformat(),'end':z['end'].isoformat()}
     peer_text='、'.join(f"{x['code']} {x['name']}" for x in peers) or '無法取得市值資料'
-    return (f'📊 股票加碼分析 V2.9\n\n標的：{name}（{code}）\n市場：{market}\n產業：{industry}\n\n'
+    return (f'📊 股票加碼分析 V2.9.1\n\n標的：{name}（{code}）\n市場：{market}\n產業：{industry}\n\n'
             f'【估值 / 基本面 40分】\nPE：{fmt(pe)}\n一年平均PE：{fmt(one)}（樣本 {sample}）\n同業Top10平均PE：{fmt(peer_mean)}\n同業Top10中位數PE：{fmt(peer_med)}（有效 {len(vals)}/10）\nPB：{fmt(pb)}\n殖利率：{fmt(yld)}%\nEPS成長：{fmt(yf_f["eps_growth"])}%\nPEG：{fmt(yf_f["peg"])}\nROE：{fmt(yf_f["roe"])}%\n基本面得分：{fs}/40\n\n'
             f'【動態同業 Top 10】\n{peer_text}\n\n'
             f'【技術面 30分】\nRSI：{fmt(tech["rsi"])}\nKD：K={fmt(tech["k"])} / D={fmt(tech["d"])}\nMA20：{fmt(tech["ma20"])}\nMA60：{fmt(tech["ma60"])}\n趨勢：{tech["trend"] or "N/A"}\n距20日低點：{pct(tech["distance_low"])}\n技術得分：{ts}/30\n\n'
@@ -475,10 +516,25 @@ def run_webhook_server():
         return 'OK',200
     app.run(host='0.0.0.0',port=int(os.environ.get('PORT','8080')))
 def run_alerts():
-    print('================================\n股票跌幅 + 15分鐘區間最低價 + V2.9自動估值 + 技術 + 籌碼\n================================')
+    global RUN_CACHE,INSTITUTIONAL_CACHE,MARGIN_CACHE
+    RUN_CACHE={};INSTITUTIONAL_CACHE={};MARGIN_CACHE={}
+    started=time.time()
+    print('================================\n股票跌幅 + 15分鐘區間最低價 + V2.9.1自動估值 + 技術 + 籌碼\n================================')
     state=load_json(STATE_FILE);u=get_market_universe()
+    print(f'[耗時 {time.time()-started:.1f}s] 股票池完成：{len(u)}')
+    # 只預抓真正會分析的 TWSE/TPEx 個股法人與融資資料；每種市場各抓一次。
+    target_markets=set()
+    for name,symbol in STOCKS.items():
+        c=clean_code(symbol)
+        if c in u:target_markets.add(u[c].get('market'))
+    for m in target_markets:
+        if m in ('TWSE','TPEX'):
+            institutional('2330' if m=='TWSE' else next((x['code'] for x in u.values() if x.get('market')==m),''),m,20)
+            margin_data('2330' if m=='TWSE' else next((x['code'] for x in u.values() if x.get('market')==m),''),m)
+    print(f'[耗時 {time.time()-started:.1f}s] 法人/融資批次資料完成')
     for name,symbol in STOCKS.items():
         print(f'\n========== {name} ==========')
+        item=u.get(clean_code(symbol))
         try:
             check_drop_alert(name,symbol,state); interval_result=check_interval_low(name,symbol,state)
         except Exception as e: print('價格/通知失敗：',e); interval_result=None
@@ -487,9 +543,13 @@ def run_alerts():
                 t=technical(symbol);print(f'\n📈 指數分析\n標的：{name}\n目前價格：{fmt(get_latest_price(symbol))}\nKD：K={fmt(t["k"])} / D={fmt(t["d"])}\nRSI：{fmt(t["rsi"])}')
             elif name in ('0050 元大台灣50','QQQ'):
                 t=technical(symbol);print(f'\n📊 ETF分析\n標的：{name}\n目前價格：{fmt(get_latest_price(symbol))}\nRSI：{fmt(t["rsi"])}')
-            else:print('\n'+analysis(name,u,False,interval_result))
-        except Exception as e:print(f'{name} 分析失敗：{e}')
-    save_json(STATE_FILE,state);print('\n========== 完成 ==========')
+            elif item:
+                print('\n'+analysis(name,u,False,interval_result))
+            else:
+                print(f'⚠️ {name} 不在動態股票池，跳過詳細估值')
+        except Exception as e:print(f'{name} 分析失敗：{e}');traceback.print_exc()
+    save_json(STATE_FILE,state)
+    print(f'\n========== 完成｜總耗時 {time.time()-started:.1f} 秒 ==========' )
 def main():
     import sys
     if len(sys.argv)>1 and sys.argv[1].lower()=='webhook':run_webhook_server()
