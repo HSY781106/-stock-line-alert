@@ -1,4 +1,4 @@
-# stock_alert.py V2.10.2
+# stock_alert.py V2.10.3
 # 效能修正版：
 # 1. 全市場資料批次化
 # 2. 單次執行快取
@@ -92,6 +92,7 @@ TPEX_TIMEOUT = 10
 
 API_SLEEP = .05
 PE_BACKFILL_MAX_DAYS = 370
+PE_HISTORY_TIMEOUT = 8
 # PE 歷史查詢以日期快取，避免同一次執行 2330/3711 重複打同一天 API
 PE_DATE_CACHE = {}
 
@@ -2642,32 +2643,86 @@ def get_current_pe_data():
     return out
 
 
+PE_HISTORY_MARKET_BLOCKED = set()
+
+
 def get_pe_by_date(
     ds,
     market
 ):
-    """取得指定交易日 PE；同一次執行依市場/日期快取，避免重複 API。"""
+    """
+    取得指定交易日 PE。
+
+    V2.10.3 修正：
+    - TWSE 歷史日 PE 不再使用 BWIBBU_ALL（該端點在 GitHub Actions
+      上容易回 428 Precondition Required）。
+    - 改用官方歷史日資料端點 BWIBBU_d + selectType=ALL。
+    - 加入瀏覽器 Referer/Accept。
+    - 歷史 PE 單次請求不重試，避免 TWSE 回 428 時一個日期卡住數十秒。
+    - 同一市場一旦收到 428，本次執行立即停止該市場的歷史 PE 回補，
+      不會再浪費數分鐘重複打 API。
+    """
 
     key = (market, ds)
 
     if key in PE_DATE_CACHE:
         return PE_DATE_CACHE[key]
 
-    try:
-        data = (
-            tpex_get(
+    if market in PE_HISTORY_MARKET_BLOCKED:
+        PE_DATE_CACHE[key] = {}
+        return {}
+
+    if market == 'TPEX':
+        try:
+            data = tpex_get(
                 '/tpex_mainboard_peratio_analysis',
                 {'date': ds}
             )
-            if market == 'TPEX'
-            else twse_web_get(
-                '/afterTrading/BWIBBU_ALL',
-                {
-                    'date': ds,
-                    'response': 'json'
-                }
-            )
+            parsed = parse_pe(data)
+            PE_DATE_CACHE[key] = parsed
+            return parsed
+        except Exception as e:
+            print(f'歷史 PE 取得失敗：{market} {ds} / {e}')
+            PE_DATE_CACHE[key] = {}
+            return {}
+
+    # TWSE：使用官方每日本益比/殖利率/PB 歷史端點。
+    url = TWSE_WEB_BASE + '/afterTrading/BWIBBU_d'
+    params = {
+        'date': ds,
+        'selectType': 'ALL',
+        'response': 'json'
+    }
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/131 Safari/537.36',
+        'Referer': 'https://www.twse.com.tw/zh/trading/historical/bwibbu-day.html',
+        'Accept': 'application/json,text/plain,*/*',
+        'Accept-Language': 'zh-TW,zh;q=0.9,en;q=0.8'
+    }
+
+    try:
+        r = requests.get(
+            url,
+            params=params,
+            timeout=PE_HISTORY_TIMEOUT,
+            headers=headers
         )
+
+        if r.status_code == 428:
+            print(
+                f'歷史 PE API 暫時拒絕（428）：TWSE {ds}；'
+                f'本次執行停止 TWSE 歷史 PE 回補，避免長時間重試。'
+            )
+            PE_HISTORY_MARKET_BLOCKED.add('TWSE')
+            PE_DATE_CACHE[key] = {}
+            return {}
+
+        r.raise_for_status()
+
+        try:
+            data = json.loads(r.content.decode('utf-8-sig'))
+        except Exception:
+            data = r.json()
 
         parsed = parse_pe(data)
         PE_DATE_CACHE[key] = parsed
