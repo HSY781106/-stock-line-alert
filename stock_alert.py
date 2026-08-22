@@ -1,4 +1,4 @@
-# stock_alert.py V2.10.1
+# stock_alert.py V2.10.2
 # 效能修正版：
 # 1. 全市場資料批次化
 # 2. 單次執行快取
@@ -27,7 +27,7 @@
 # - 保留原本基本面 / 技術 / 籌碼 / 風險 / LINE 功能
 #
 # 股票跌幅 + 15分鐘區間最低價 + 動態估值 + 技術 + 籌碼 + 100分制加碼決策
-# V2.10.1：LINE 即時個股查詢（立即回覆 + 背景完整分析 + Push）
+# V2.10.2：以 V2.10.1 為底修正 PE 歷史回補 + 15 分鐘目前價格 + LINE 輸出
 #          + LINE webhook HMAC-SHA256 簽章驗證 + 群組/聊天室支援
 
 import os
@@ -92,6 +92,8 @@ TPEX_TIMEOUT = 10
 
 API_SLEEP = .05
 PE_BACKFILL_MAX_DAYS = 370
+# PE 歷史查詢以日期快取，避免同一次執行 2330/3711 重複打同一天 API
+PE_DATE_CACHE = {}
 
 YF_TIMEOUT = 10
 MAX_HISTORY_DAYS_PER_RUN = 75
@@ -421,7 +423,7 @@ def http_json(
     last = None
 
     base_headers = {
-        'User-Agent': 'Mozilla/5.0 stock-alert/2.10.1'
+        'User-Agent': 'Mozilla/5.0 stock-alert/2.10.2'
     }
 
     if headers:
@@ -475,7 +477,7 @@ def http_text(
                 timeout=timeout,
                 headers={
                     'User-Agent':
-                        'Mozilla/5.0 stock-alert/2.10.1'
+                        'Mozilla/5.0 stock-alert/2.10.2'
                 }
             )
 
@@ -1176,7 +1178,7 @@ def fetch_value_chain_for_stock(code):
             timeout=VALUE_CHAIN_TIMEOUT,
             headers={
                 'User-Agent':
-                    'Mozilla/5.0 stock-alert/2.10.1',
+                    'Mozilla/5.0 stock-alert/2.10.2',
                 'Accept-Language': 'zh-TW,zh;q=0.9,en;q=0.8'
             }
         )
@@ -1664,7 +1666,7 @@ def build_universe():
 
     print(
         '\n========== '
-        '建立動態市場股票池 V2.9.9 '
+        '建立動態市場股票池 V2.10.2 '
         '=========='
     )
 
@@ -2245,7 +2247,8 @@ def get_interval_stats(
 def check_interval_low(
     name,
     symbol,
-    state
+    state,
+    current_price=None
 ):
 
     now = datetime.now(
@@ -2276,9 +2279,11 @@ def check_interval_low(
         )
     )
 
-    cur = get_latest_price(
-        symbol
-    )
+    # 15 分鐘區間的「目前價格」優先使用 TWSE/TPEx 股票池官方最新價，
+    # 避免 Yahoo 日線收盤價或舊 K 棒造成與主分析價格不一致。
+    cur = to_float(current_price)
+    if cur is None:
+        cur = get_latest_price(symbol)
 
     stats = (
         get_interval_stats(
@@ -2641,25 +2646,37 @@ def get_pe_by_date(
     ds,
     market
 ):
+    """取得指定交易日 PE；同一次執行依市場/日期快取，避免重複 API。"""
 
-    return parse_pe(
-        tpex_get(
-            '/tpex_mainboard_peratio_analysis',
-            {
-                'date': ds
-            }
+    key = (market, ds)
+
+    if key in PE_DATE_CACHE:
+        return PE_DATE_CACHE[key]
+
+    try:
+        data = (
+            tpex_get(
+                '/tpex_mainboard_peratio_analysis',
+                {'date': ds}
+            )
+            if market == 'TPEX'
+            else twse_web_get(
+                '/afterTrading/BWIBBU_ALL',
+                {
+                    'date': ds,
+                    'response': 'json'
+                }
+            )
         )
-        if market == 'TPEX'
-        else twse_web_get(
-            '/afterTrading/BWIBBU_ALL',
-            {
-                'date':
-                    ds,
-                'response':
-                    'json'
-            }
-        )
-    )
+
+        parsed = parse_pe(data)
+        PE_DATE_CACHE[key] = parsed
+        return parsed
+
+    except Exception as e:
+        print(f'歷史 PE 取得失敗：{market} {ds} / {e}')
+        PE_DATE_CACHE[key] = {}
+        return {}
 
 
 def backfill_pe(
@@ -2667,72 +2684,56 @@ def backfill_pe(
     h,
     market
 ):
+    """
+    確保指定股票至少累積 PE_MIN_HISTORY 個「有效 PE」。
 
-    h.setdefault(
-        code,
-        {}
-    )
+    重要修正：
+    1. 不是只看有幾個日期，而是只計算 0 < PE <= PE_MAX_VALID。
+    2. 舊快取中的 NA / 空字串 / 無效 PE 會重新抓，不會永久卡住。
+    3. 每個日期的 API 結果在同一次執行快取，避免不同股票重複抓。
+    4. 最多往前搜尋 PE_BACKFILL_MAX_DAYS 個曆日。
+    """
 
-    n = sum(
-        1
-        for v in h[code].values()
-        if (
-            to_float(v)
-            and 0 < to_float(v)
-            <= PE_MAX_VALID
-        )
-    )
+    h.setdefault(code, {})
 
-    d = datetime.now(
-        TW_TZ
-    ).date()
+    def valid_pe(v):
+        x = to_float(v)
+        return x is not None and 0 < x <= PE_MAX_VALID
 
+    def count_valid():
+        return sum(1 for v in h[code].values() if valid_pe(v))
+
+    n = count_valid()
+    d = datetime.now(TW_TZ).date()
     checked = 0
 
-    while (
-        n < PE_MIN_HISTORY
-        and checked < PE_BACKFILL_MAX_DAYS
-    ):
-
+    while n < PE_MIN_HISTORY and checked < PE_BACKFILL_MAX_DAYS:
         if d.weekday() < 5:
+            ds = d.strftime('%Y%m%d')
+            old = h[code].get(ds)
 
-            ds = d.strftime(
-                '%Y%m%d'
-            )
+            # 已有有效值就保留；只有缺少/NA/無效值才重新查。
+            if not valid_pe(old):
+                data = get_pe_by_date(ds, market)
+                pe = data.get(code, {}).get('pe')
 
-            if ds not in h[code]:
-
-                pe = (
-                    get_pe_by_date(
-                        ds,
-                        market
-                    )
-                    .get(
-                        code,
-                        {}
-                    )
-                    .get(
-                        'pe'
-                    )
-                )
-
-                if (
-                    pe
-                    and 0 < pe
-                    <= PE_MAX_VALID
-                ):
-
+                if valid_pe(pe):
                     h[code][ds] = pe
+                else:
+                    # 保留日期標記，避免本次/後續反覆判斷時無法辨識；
+                    # 但下次執行仍會重新查，因為 NA 不被視為有效值。
+                    h[code][ds] = old if old is not None else None
 
-                    n += 1
+            n = count_valid()
 
-        d -= timedelta(
-            days=1
-        )
-
+        d -= timedelta(days=1)
         checked += 1
+        time.sleep(.01)
 
-        time.sleep(.03)
+    print(
+        f'PE歷史回補：{code} {n}/{PE_MIN_HISTORY} 個有效PE，'
+        f'搜尋 {checked} 天'
+    )
 
     return h
 
@@ -2741,67 +2742,40 @@ def one_year_pe(
     code,
     h
 ):
+    """計算最近一年有效 PE 的平均；最多採用最近 240 個交易日。"""
 
     cutoff = (
-        datetime.now(
-            TW_TZ
-        ).date()
-        - timedelta(
-            days=365
-        )
+        datetime.now(TW_TZ).date()
+        - timedelta(days=365)
     )
 
     v = []
 
-    for ds, x in h.get(
-        code,
-        {}
-    ).items():
-
+    for ds, x in h.get(code, {}).items():
         try:
-
-            d = datetime.strptime(
-                ds,
-                '%Y%m%d'
-            ).date()
-
+            d = datetime.strptime(ds, '%Y%m%d').date()
         except Exception:
-
             continue
 
         value = to_float(x)
-
         if (
             d >= cutoff
-            and value
-            and 0 < value
-            <= PE_MAX_VALID
+            and value is not None
+            and 0 < value <= PE_MAX_VALID
         ):
+            v.append((d, value))
 
-            v.append(
-                (d, value)
-            )
+    v.sort(key=lambda x: x[0], reverse=True)
+    v = v[:PE_ONE_YEAR_TRADING_DAYS]
 
-    v = sorted(
-        v,
-        reverse=True
-    )[:PE_ONE_YEAR_TRADING_DAYS]
+    if not v:
+        return None, 0
 
-    return (
-        (
-            sum(
-                x
-                for _, x in v
-            )
-            / len(v),
-            len(v)
-        )
-        if len(v) >= PE_MIN_HISTORY
-        else (
-            None,
-            len(v)
-        )
-    )
+    # 只有至少 60 個有效樣本才產生一年平均 PE。
+    if len(v) < PE_MIN_HISTORY:
+        return None, len(v)
+
+    return sum(x for _, x in v) / len(v), len(v)
 
 
 def yahoo_fund(symbol):
@@ -4631,7 +4605,7 @@ def analysis(
     # --------------------------------------------------------
 
     return (
-        f'📊 股票加碼分析 V2.9.9\n\n'
+        f'📊 股票加碼分析 V2.10.2\n\n'
         f'標的：{name}（{code}）\n'
         f'市場：{market}\n'
         f'產業：{industry}\n'
@@ -4691,18 +4665,6 @@ def analysis(
         f'風險扣分：-{risk}\n'
         f'{("、".join(rr) if rr else "目前無主要風險警訊")}\n\n'
 
-        f'【15分鐘區間】\n'
-        f'上次執行：'
-        f'{datetime.fromisoformat(interval_result["start"]).strftime("%H:%M:%S") if interval_result else "N/A"}\n'
-        f'本次執行：'
-        f'{datetime.fromisoformat(interval_result["end"]).strftime("%H:%M:%S") if interval_result else "N/A"}\n'
-        f'期間最低：'
-        f'{fmt(interval_result["interval_low"]) if interval_result else "N/A"}\n'
-        f'目前價格：'
-        f'{fmt(interval)}\n'
-        f'區間跌幅：'
-        f'{pct(interval_result["drop"]) if interval_result else "N/A"}\n\n'
-
         f'【加碼決策】\n'
         f'綜合評分：{total}/100\n'
         f'結論：{verdict}\n\n'
@@ -4717,7 +4679,7 @@ def analysis(
 
 
 # ============================================================
-# Webhook / LINE 即時查詢 V2.10.1
+# Webhook / LINE 即時查詢 V2.10.2
 # ============================================================
 
 
@@ -4856,7 +4818,7 @@ def handle_event(e, u):
     }:
         reply_line(
             token,
-            '📈 股票加碼分析 Bot V2.10.1\n\n'
+            '📈 股票加碼分析 Bot V2.10.2\n\n'
             '輸入股票代號或名稱即可查詢。\n'
             '例如：2330、台積電、3711、日月光投控\n\n'
             '模型：基本面40 + 技術30 + 籌碼20 + 風險10。\n'
@@ -4899,7 +4861,7 @@ def run_webhook_server():
     app = Flask(__name__)
 
     print('================================')
-    print('LINE Webhook Server V2.10.1')
+    print('LINE Webhook Server V2.10.2')
     print('模式：立即回覆 + 背景完整分析 + Push')
     print('================================')
 
@@ -4913,7 +4875,7 @@ def run_webhook_server():
 
     @app.get('/')
     def health():
-        return 'stock_alert V2.10.1 OK', 200
+        return 'stock_alert V2.10.2 OK', 200
 
     @app.get('/health')
     def health2():
@@ -4973,7 +4935,7 @@ def run_alerts():
     print(
         '================================\n'
         '股票跌幅 + 15分鐘區間最低價 + '
-        'V2.9.9自動估值 + 技術 + 籌碼\n'
+        'V2.10.2自動估值 + 技術 + 籌碼\n'
         '================================'
     )
 
@@ -5024,6 +4986,28 @@ def run_alerts():
                 f'{name} → '
                 f'{", ".join(subs) if subs else "N/A"}'
             )
+
+    # --------------------------------------------------------
+    # PE 歷史：先為本次目標股補足最近一年至少 60 個有效 PE
+    # 再進入逐股 analysis，避免 analysis(..., backfill=False) 時
+    # 只讀到 pe_history.json 裡少數舊資料。
+    # --------------------------------------------------------
+    pe_history = load_json(PE_HISTORY_FILE)
+    for target_name, target_symbol in STOCKS.items():
+        target_code = clean_code(target_symbol)
+        target_item = u.get(target_code)
+        if target_item and target_symbol and not target_symbol.startswith('^'):
+            target_market = target_item.get('market')
+            if target_market in ('TWSE', 'TPEX'):
+                try:
+                    pe_history = backfill_pe(
+                        target_code,
+                        pe_history,
+                        target_market
+                    )
+                except Exception as e:
+                    print(f'PE歷史回補失敗：{target_code} / {e}')
+    save_json(PE_HISTORY_FILE, pe_history)
 
     # --------------------------------------------------------
     # 法人 / 融資
@@ -5117,7 +5101,8 @@ def run_alerts():
                 check_interval_low(
                     name,
                     symbol,
-                    state
+                    state,
+                    item.get('price') if item else None
                 )
             )
 
