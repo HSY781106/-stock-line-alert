@@ -1,4 +1,4 @@
-# stock_alert.py V2.10.0
+# stock_alert.py V2.10.1
 # 效能修正版：
 # 1. 全市場資料批次化
 # 2. 單次執行快取
@@ -12,7 +12,7 @@
 # 10. 次產業按股票快取 30 天，避免每日大量請求
 # 11. 保留原本基本面 / 技術 / 籌碼 / 風險 / LINE 功能
 #
-# V2.10.0
+# V2.9.8
 #
 # 次產業資料來源：
 # 證券交易所 / 櫃買中心「產業價值鏈資訊平台」公開資料
@@ -27,7 +27,8 @@
 # - 保留原本基本面 / 技術 / 籌碼 / 風險 / LINE 功能
 #
 # 股票跌幅 + 15分鐘區間最低價 + 動態估值 + 技術 + 籌碼 + 100分制加碼決策
-# V2.10.0：UTF-8/快取三層亂碼防護 + T86法人資料補抓 + Yahoo實際最新K棒區間
+# V2.10.1：LINE 即時個股查詢（立即回覆 + 背景完整分析 + Push）
+#          + LINE webhook HMAC-SHA256 簽章驗證 + 群組/聊天室支援
 
 import os
 import json
@@ -35,6 +36,10 @@ import time
 import math
 import traceback
 import re
+import hmac
+import hashlib
+import base64
+import threading
 
 from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
@@ -50,6 +55,7 @@ import yfinance as yf
 # ============================================================
 
 LINE_TOKEN = os.environ.get('LINE_CHANNEL_ACCESS_TOKEN', '')
+LINE_CHANNEL_SECRET = os.environ.get('LINE_CHANNEL_SECRET', '')
 
 TWSE_BASE = 'https://openapi.twse.com.tw/v1'
 TWSE_WEB_BASE = 'https://www.twse.com.tw/rwd/zh'
@@ -65,10 +71,11 @@ UNIVERSE_CACHE_FILE = 'market_universe_cache.json'
 TWSE_PROFILE_CACHE_FILE = 'twse_profile_cache.json'
 TWSE_QUOTES_CACHE_FILE = 'twse_quotes_cache.json'
 
-# V2.10.0 新增
+# V2.9.8 新增
 SUBINDUSTRY_CACHE_FILE = 'subindustry_cache.json'
 
 LINE_REPLY_URL = 'https://api.line.me/v2/bot/message/reply'
+LINE_PUSH_URL = 'https://api.line.me/v2/bot/message/push'
 LINE_BROADCAST_URL = 'https://api.line.me/v2/bot/message/broadcast'
 
 DAILY_THRESHOLD = -0.05
@@ -96,6 +103,9 @@ RUN_CACHE = {}
 INSTITUTIONAL_CACHE = {}
 MARGIN_CACHE = {}
 SUBINDUSTRY_CACHE = {}
+
+# V2.10.1：LINE 查詢分析鎖，避免多個訊息同時改寫全域快取。
+LINE_ANALYSIS_LOCK = threading.Lock()
 
 
 # ============================================================
@@ -383,7 +393,7 @@ def normalize_subindustry(v):
     """
     統一次產業名稱。
 
-    V2.10.0 三層防護的最後一層：即使 API 或舊快取已經留下
+    V2.9.9 三層防護的最後一層：即使 API 或舊快取已經留下
     UTF-8/Latin-1/CP1252 mojibake，最終顯示與比對前仍會修復。
     不建立任何股票代碼 -> 次產業硬編碼。
     """
@@ -411,7 +421,7 @@ def http_json(
     last = None
 
     base_headers = {
-        'User-Agent': 'Mozilla/5.0 stock-alert/2.9.9'
+        'User-Agent': 'Mozilla/5.0 stock-alert/2.10.1'
     }
 
     if headers:
@@ -429,7 +439,7 @@ def http_json(
 
             r.raise_for_status()
 
-            # V2.10.0：API 原始 bytes 強制以 UTF-8 解碼，避免
+            # V2.9.9：API 原始 bytes 強制以 UTF-8 解碼，避免
             # requests 自動猜測編碼後產生 mojibake。
             try:
                 text = r.content.decode('utf-8-sig')
@@ -465,7 +475,7 @@ def http_text(
                 timeout=timeout,
                 headers={
                     'User-Agent':
-                        'Mozilla/5.0 stock-alert/2.9.9'
+                        'Mozilla/5.0 stock-alert/2.10.1'
                 }
             )
 
@@ -523,8 +533,8 @@ def load_json(f):
 
             d = json.load(x)
 
-            # V2.10.0：舊快取讀取時強制修復 UTF-8 -> Latin-1/CP1252
-            # 亂碼；即使 V2.10.0 已經把錯誤文字寫進快取，也能自動恢復。
+            # V2.9.9：舊快取讀取時強制修復 UTF-8 -> Latin-1/CP1252
+            # 亂碼；即使 V2.9.8 已經把錯誤文字寫進快取，也能自動恢復。
             d = _repair_json_strings(d)
 
             return d if isinstance(d, dict) else {}
@@ -1042,7 +1052,7 @@ def get_tpex_market_values():
 
 
 # ============================================================
-# V2.10.0
+# V2.9.8
 # Dynamic Subindustry
 # ============================================================
 
@@ -1166,13 +1176,13 @@ def fetch_value_chain_for_stock(code):
             timeout=VALUE_CHAIN_TIMEOUT,
             headers={
                 'User-Agent':
-                    'Mozilla/5.0 stock-alert/2.9.9',
+                    'Mozilla/5.0 stock-alert/2.10.1',
                 'Accept-Language': 'zh-TW,zh;q=0.9,en;q=0.8'
             }
         )
         r.raise_for_status()
 
-        # V2.10.0：產業價值鏈頁面也不使用 requests 猜測編碼。
+        # V2.9.9：產業價值鏈頁面也不使用 requests 猜測編碼。
         try:
             page_text = r.content.decode('utf-8-sig')
         except Exception:
@@ -1247,7 +1257,7 @@ def _fetch_missing_value_chains(codes):
 
 def get_public_subindustry(u):
     """
-    V2.10.0 免費次產業來源：
+    V2.9.8 免費次產業來源：
 
     證交所 / 櫃買中心「產業價值鏈資訊平台」。
 
@@ -1339,7 +1349,7 @@ def get_public_subindustry(u):
         missing = list(candidate_codes)
 
     print(
-        '\n========== 更新動態次產業資料 V2.10.0 =========='
+        '\n========== 更新動態次產業資料 V2.9.9 =========='
     )
     print(
         '次產業來源：TPEx/TWSE 產業價值鏈資訊平台（公開資料）'
@@ -1547,7 +1557,7 @@ def get_dynamic_subindustry_peers(
 ):
 
     """
-    V2.10.0 核心：
+    V2.9.8 核心：
 
     1. 先確認目標股的次產業
     2. 同時要求官方產業相容
@@ -1654,7 +1664,7 @@ def build_universe():
 
     print(
         '\n========== '
-        '建立動態市場股票池 V2.10.0 '
+        '建立動態市場股票池 V2.9.9 '
         '=========='
     )
 
@@ -2086,7 +2096,7 @@ def yahoo_chart_intraday(
     """
     取得 Yahoo 盤中 K 棒。
 
-    V2.10.0：
+    V2.9.9：
     Yahoo 台股盤中資料常停在最後一根已完成 K 棒（例如 13:30），
     不再拿 GitHub Actions 的目前時間硬套區間；一律先找 Yahoo
     實際最新 K 棒，再以該時間作為有效 end。
@@ -2238,127 +2248,259 @@ def check_interval_low(
     state
 ):
 
-    now = datetime.now(TW_TZ)
+    now = datetime.now(
+        TW_TZ
+    )
+
     iso = now.isoformat()
-    s = state.setdefault('interval_low', {}).setdefault(name, {})
-    prev_t = s.get('last_check')
-    prev_p = to_float(s.get('last_price'))
-    cur = get_latest_price(symbol)
+
+    s = (
+        state
+        .setdefault(
+            'interval_low',
+            {}
+        )
+        .setdefault(
+            name,
+            {}
+        )
+    )
+
+    prev_t = s.get(
+        'last_check'
+    )
+
+    prev_p = to_float(
+        s.get(
+            'last_price'
+        )
+    )
+
+    cur = get_latest_price(
+        symbol
+    )
 
     stats = (
-        get_interval_stats(symbol, prev_t)
-        if prev_t and cur is not None else None
+        get_interval_stats(
+            symbol,
+            prev_t
+        )
+        if prev_t
+        and cur is not None
+        else None
     )
+
     result = None
 
-    if prev_t and prev_p and stats:
-        drop = stats['low'] / prev_p - 1
-        result = {
-            'previous_price': prev_p,
-            'interval_low': stats['low'],
-            'drop': drop,
-            'start': stats['start'].isoformat(),
-            'end': stats.get('end', now).isoformat(),
-            'source': stats.get('source')
-        }
-        print(
-            f'【15分鐘區間】上次執行：{stats["start"].strftime("%H:%M:%S")} '
-            f'本次執行：{now.strftime("%H:%M:%S")} '
-            f'期間最低：{stats["low"]:,.2f} '
-            f'目前價格：{cur:,.2f} '
-            f'區間跌幅：{drop:.2%}（{stats.get("source","5m")}）'
+    if (
+        prev_t
+        and prev_p
+        and stats
+    ):
+
+        drop = (
+            stats['low']
+            / prev_p
+            - 1
         )
-        # V2.10.0：先回傳警報，待完整分析完成後合併送 LINE。
-        result['alert'] = drop <= DAILY_THRESHOLD
+
+        result = {
+            'previous_price':
+                prev_p,
+            'interval_low':
+                stats['low'],
+            'drop':
+                drop,
+            'start':
+                stats['start'].isoformat(),
+            'end':
+                stats.get('end', now).isoformat(),
+            'source':
+                stats.get(
+                    'source'
+                )
+        }
+
+        print(
+            f'【15分鐘區間】'
+            f'上次執行：'
+            f'{stats["start"].strftime("%H:%M:%S")} '
+            f'本次執行：'
+            f'{now.strftime("%H:%M:%S")} '
+            f'期間最低：'
+            f'{stats["low"]:,.2f} '
+            f'目前價格：'
+            f'{cur:,.2f} '
+            f'區間跌幅：'
+            f'{drop:.2%} '
+            f'（{stats.get("source","5m")}）'
+        )
+
+        if drop <= DAILY_THRESHOLD:
+
+            send_line(
+                f'🔴 15分鐘區間低點通知\n\n'
+                f'標的：{name}\n'
+                f'上次執行：'
+                f'{stats["start"].strftime("%H:%M:%S")}\n'
+                f'本次執行：'
+                f'{now.strftime("%H:%M:%S")}\n'
+                f'期間最低：'
+                f'{stats["low"]:,.2f}\n'
+                f'目前價格：'
+                f'{cur:,.2f}\n'
+                f'區間跌幅：'
+                f'{drop:.2%}'
+            )
 
     elif not prev_t:
-        print(
-            f'【15分鐘區間】首次建立基準：{now.strftime("%H:%M:%S")}，'
-            f'目前價格：{fmt(cur)}'
-        )
-    elif prev_t and not stats:
-        print(f'⚠️ 15分鐘資料暫時無法取得；保留上次執行基準：{prev_t}')
 
+        print(
+            f'【15分鐘區間】'
+            f'首次建立基準：'
+            f'{now.strftime("%H:%M:%S")}，'
+            f'目前價格：'
+            f'{fmt(cur)}'
+        )
+
+    elif prev_t and not stats:
+
+        print(
+            f'⚠️ 15分鐘資料暫時無法取得；'
+            f'保留上次執行基準：'
+            f'{prev_t}'
+        )
+
+    # 關鍵：
     # 盤中資料失敗不得更新基準
     if not prev_t or stats:
-        s.update({'last_check': iso, 'last_price': cur})
+
+        s.update({
+            'last_check':
+                iso,
+            'last_price':
+                cur
+        })
+
     if stats:
-        s['last_interval_low'] = stats['low']
-        s['last_interval_source'] = stats.get('source')
+
+        s[
+            'last_interval_low'
+        ] = stats['low']
+
+        s[
+            'last_interval_source'
+        ] = stats.get(
+            'source'
+        )
+
     return result
+
 
 def check_drop_alert(
     name,
     symbol,
     state
 ):
-    cur = get_latest_price(symbol)
-    pc = get_previous_close(symbol)
-    wh = get_week_high(symbol)
+
+    cur = get_latest_price(
+        symbol
+    )
+
+    pc = get_previous_close(
+        symbol
+    )
+
+    wh = get_week_high(
+        symbol
+    )
+
     if cur is None or pc is None:
-        return []
+        return
+
     day = cur / pc - 1
-    week = cur / wh - 1 if wh else None
-    s = state.setdefault('drop_alert', {}).setdefault(name, {})
-    today = datetime.now(TW_TZ).strftime('%Y-%m-%d')
+
+    week = (
+        cur / wh - 1
+        if wh
+        else None
+    )
+
+    s = (
+        state
+        .setdefault(
+            'drop_alert',
+            {}
+        )
+        .setdefault(
+            name,
+            {}
+        )
+    )
+
+    today = datetime.now(
+        TW_TZ
+    ).strftime(
+        '%Y-%m-%d'
+    )
+
     if s.get('date') != today:
-        s.update({'date': today, 'daily_alert': False, 'weekly_alert': False})
 
-    alerts=[]
-    if day <= DAILY_THRESHOLD and not s.get('daily_alert'):
-        alerts.append({'type':'daily','current_price':cur,'previous_close':pc,'drop':day})
-        s['daily_alert']=True
+        s.update({
+            'date':
+                today,
+            'daily_alert':
+                False,
+            'weekly_alert':
+                False
+        })
+
+    if (
+        day <= DAILY_THRESHOLD
+        and not s.get(
+            'daily_alert'
+        )
+    ):
+
+        send_line(
+            f'🔴 跌幅通知\n\n'
+            f'標的：{name}\n'
+            f'目前價格：{cur:,.2f}\n'
+            f'前一交易日收盤：{pc:,.2f}\n'
+            f'單日跌幅：{day:.2%}'
+        )
+
+        s['daily_alert'] = True
+
     elif day > DAILY_THRESHOLD:
-        s['daily_alert']=False
 
-    if week is not None and week <= WEEK_THRESHOLD and not s.get('weekly_alert'):
-        alerts.append({'type':'weekly','current_price':cur,'week_high':wh,'drop':week})
-        s['weekly_alert']=True
-    elif week is not None and week > WEEK_THRESHOLD:
-        s['weekly_alert']=False
-    return alerts
+        s['daily_alert'] = False
 
+    if (
+        week is not None
+        and week <= WEEK_THRESHOLD
+        and not s.get(
+            'weekly_alert'
+        )
+    ):
 
-def send_combined_alert(name, symbol, alert_list, analysis_text=None, interval_result=None):
-    """V2.10.0：把跌幅/一週/15分鐘警報與完整綜合評估合併成一則 LINE。"""
-    if not alert_list and not (interval_result and interval_result.get('alert')):
-        return False
+        send_line(
+            f'🔴 一週跌幅通知\n\n'
+            f'標的：{name}\n'
+            f'目前價格：{cur:,.2f}\n'
+            f'過去7日高點：{wh:,.2f}\n'
+            f'距7日高點跌幅：{week:.2%}'
+        )
 
-    header=[]
-    for a in alert_list or []:
-        if a.get('type')=='daily': header.append('🔴 單日跌幅達警戒')
-        elif a.get('type')=='weekly': header.append('🔴 一週跌幅達警戒')
-    if interval_result and interval_result.get('alert'):
-        header.append('🔴 15分鐘區間跌幅達警戒')
+        s['weekly_alert'] = True
 
-    msg='\n'.join(header)+f'\n\n標的：{name}\n'
-    for a in alert_list or []:
-        if a.get('type')=='daily':
-            msg += (f'目前價格：{a["current_price"]:,.2f}\n'
-                    f'前一交易日收盤：{a["previous_close"]:,.2f}\n'
-                    f'單日跌幅：{a["drop"]:.2%}\n')
-        elif a.get('type')=='weekly':
-            msg += (f'目前價格：{a["current_price"]:,.2f}\n'
-                    f'過去7日高點：{a["week_high"]:,.2f}\n'
-                    f'距7日高點跌幅：{a["drop"]:.2%}\n')
+    elif (
+        week is not None
+        and week > WEEK_THRESHOLD
+    ):
 
-    if interval_result and interval_result.get('alert'):
-        try: st=datetime.fromisoformat(interval_result.get('start')).strftime('%H:%M:%S')
-        except Exception: st='N/A'
-        try: en=datetime.fromisoformat(interval_result.get('end')).strftime('%H:%M:%S')
-        except Exception: en='N/A'
-        msg += ('\n【15分鐘區間】\n'
-                f'上次執行：{st}\n'
-                f'本次執行：{en}\n'
-                f'期間最低：{fmt(interval_result.get("interval_low"))}\n'
-                f'目前價格：{fmt(get_latest_price(symbol))}\n'
-                f'區間跌幅：{pct(interval_result.get("drop"))}\n')
+        s['weekly_alert'] = False
 
-    if analysis_text:
-        msg += '\n━━━━━━━━━━━━\n📊 完整綜合評估\n━━━━━━━━━━━━\n\n' + analysis_text
-    else:
-        msg += '\n⚠️ 完整綜合評估暫時無法取得，請稍後使用 Bot 查詢。'
-    return send_line(msg)
 
 # ============================================================
 # Valuation
@@ -3068,7 +3210,7 @@ def institutional(
     days=20
 ):
     """
-    V2.10.0 法人資料：
+    V2.9.9 法人資料：
     - TWSE T86 timeout 由 4 秒提高至 10 秒
     - 暫時性失敗允許 1 次重試
     - 先抓最近 20 個交易日，若不足 20 日，再自動往前補抓 10 日
@@ -3092,7 +3234,7 @@ def institutional(
             d -= timedelta(days=1)
         return out
 
-    # V2.10.0：把今天也納入候選；若 T86 尚未發布，該日會自然失敗，
+    # V2.9.9：把今天也納入候選；若 T86 尚未發布，該日會自然失敗，
     # 程式會繼續使用前一交易日資料。
     dates = weekday_dates(today, days)
 
@@ -4220,7 +4362,7 @@ def analysis(
     )
 
     # --------------------------------------------------------
-    # V2.10.0
+    # V2.9.8
     # 動態次產業 Top 10
     # --------------------------------------------------------
 
@@ -4489,7 +4631,7 @@ def analysis(
     # --------------------------------------------------------
 
     return (
-        f'📊 股票加碼分析 V2.10.0\n\n'
+        f'📊 股票加碼分析 V2.9.9\n\n'
         f'標的：{name}（{code}）\n'
         f'市場：{market}\n'
         f'產業：{industry}\n'
@@ -4575,33 +4717,136 @@ def analysis(
 
 
 # ============================================================
-# Webhook
+# Webhook / LINE 即時查詢 V2.10.1
 # ============================================================
 
-def handle_event(e, u):
 
-    if (
-        e.get('type')
-        != 'message'
-        or
-        e.get(
-            'message',
-            {}
-        ).get(
-            'type'
+def verify_line_signature(body, signature):
+    """使用 LINE Channel Secret 驗證原始 webhook body。"""
+    if not LINE_CHANNEL_SECRET or not signature:
+        return False
+
+    digest = hmac.new(
+        LINE_CHANNEL_SECRET.encode('utf-8'),
+        body,
+        hashlib.sha256
+    ).digest()
+
+    expected = base64.b64encode(digest).decode('ascii')
+    return hmac.compare_digest(expected, signature)
+
+
+def _line_text_messages(msg):
+    """LINE 單則文字最多 5000 字；超過時切成多則。"""
+    text = str(msg or '')
+    if not text:
+        return ['']
+    return [text[i:i + 5000] for i in range(0, len(text), 5000)]
+
+
+def _line_headers():
+    return {
+        'Authorization': f'Bearer {LINE_TOKEN}',
+        'Content-Type': 'application/json'
+    }
+
+
+def push_line(to, msg):
+    """背景分析完成後，使用 Push API 回傳給原本的聊天室。"""
+    if not LINE_TOKEN or not to:
+        print('LINE Push 略過：缺少 LINE token 或聊天室 ID')
+        return False
+
+    try:
+        messages = [
+            {'type': 'text', 'text': x}
+            for x in _line_text_messages(msg)[:5]
+        ]
+
+        r = requests.post(
+            LINE_PUSH_URL,
+            headers=_line_headers(),
+            json={
+                'to': to,
+                'messages': messages
+            },
+            timeout=20
         )
-        != 'text'
+
+        if r.status_code != 200:
+            print(
+                f'LINE Push失敗：{r.status_code} '
+                f'{r.text[:500]}'
+            )
+            return False
+
+        print(f'LINE Push成功：{to[:12]}...')
+        return True
+
+    except Exception as e:
+        print('LINE Push例外：', e)
+        return False
+
+
+def line_target_from_event(e):
+    """取得 Push API 的聊天室目標：userId / groupId / roomId。"""
+    source = e.get('source') or {}
+    source_type = source.get('type')
+
+    if source_type == 'user':
+        return source.get('userId')
+    if source_type == 'group':
+        return source.get('groupId')
+    if source_type == 'room':
+        return source.get('roomId')
+
+    return None
+
+
+def _background_line_analysis(text, target, u):
+    """LINE 收到訊息後在背景執行完整分析，避免 replyToken 過期。"""
+    try:
+        print(
+            f'LINE背景分析開始：{text} -> '
+            f'{str(target)[:12]}...'
+        )
+
+        # analysis() 會使用全域 RUN_CACHE / 其他快取；
+        # 同時進來的多個查詢序列化，避免彼此覆蓋快取狀態。
+        with LINE_ANALYSIS_LOCK:
+            result = analysis(
+                text,
+                u,
+                True
+            )
+
+        if not push_line(target, result):
+            print(f'LINE背景分析完成，但 Push 失敗：{text}')
+        else:
+            print(f'LINE背景分析完成：{text}')
+
+    except Exception as e:
+        traceback.print_exc()
+        push_line(
+            target,
+            f'❌ {text} 分析失敗：{e}'
+        )
+
+
+def handle_event(e, u):
+    """處理 LINE 訊息；查詢型訊息採「立即回覆 + 背景 Push」。"""
+    if (
+        e.get('type') != 'message'
+        or e.get('message', {}).get('type') != 'text'
     ):
         return
 
-    text = (
-        e['message']['text']
-        .strip()
-    )
+    text = e.get('message', {}).get('text', '').strip()
+    token = e.get('replyToken')
+    target = line_target_from_event(e)
 
-    token = e.get(
-        'replyToken'
-    )
+    if not text:
+        return
 
     if text.lower() in {
         'help',
@@ -4609,85 +4854,102 @@ def handle_event(e, u):
         '功能',
         '股票'
     }:
-
         reply_line(
             token,
-            '📈 股票加碼分析 Bot V2.10.0\n\n'
-            '輸入股票代號或名稱即可。\n'
+            '📈 股票加碼分析 Bot V2.10.1\n\n'
+            '輸入股票代號或名稱即可查詢。\n'
             '例如：2330、台積電、3711、日月光投控\n\n'
-            '模型：基本面40 + 技術30 + 籌碼20 + 風險10。\n\n'
-            '同業估值已改為：\n'
-            '「動態次產業 Top 10」'
+            '模型：基本面40 + 技術30 + 籌碼20 + 風險10。\n'
+            '同業估值：動態次產業 Top 10。\n\n'
+            '查詢後會先回覆「分析中」，完成後再把完整結果推送回本聊天室。'
         )
-
         return
 
-    try:
-
-        r = analysis(
-            text,
-            u,
-            True
+    if not target:
+        reply_line(
+            token,
+            '❌ 無法取得 LINE 聊天室 ID，請確認 webhook source。'
         )
+        return
 
-    except Exception as e:
-
-        traceback.print_exc()
-
-        r = (
-            f'❌ 分析失敗：{e}'
-        )
-
-    reply_line(
+    # 重要：replyToken 有效時間很短，因此只做極快的確認回覆。
+    # 完整分析移到背景 thread，完成後改用 Push API。
+    ok = reply_line(
         token,
-        r
+        f'🔎 收到「{text}」\n\n'
+        '⏳ 正在進行完整分析……\n'
+        '會計算基本面、次產業估值、技術、籌碼、風險與綜合評分。\n\n'
+        '分析完成後會自動回傳結果。'
     )
+
+    if not ok:
+        print('LINE 即時確認回覆失敗，但仍嘗試背景分析。')
+
+    thread = threading.Thread(
+        target=_background_line_analysis,
+        args=(text, target, u),
+        daemon=True
+    )
+    thread.start()
 
 
 def run_webhook_server():
-
-    from flask import (
-        Flask,
-        request
-    )
+    from flask import Flask, request
 
     app = Flask(__name__)
 
+    print('================================')
+    print('LINE Webhook Server V2.10.1')
+    print('模式：立即回覆 + 背景完整分析 + Push')
+    print('================================')
+
+    if not LINE_TOKEN:
+        print('⚠️ 未設定 LINE_CHANNEL_ACCESS_TOKEN')
+    if not LINE_CHANNEL_SECRET:
+        print('⚠️ 未設定 LINE_CHANNEL_SECRET')
+
+    # 啟動時建立一次動態市場股票池；後續 LINE 查詢沿用。
     u = get_market_universe()
 
-    @app.route(
-        '/callback',
-        methods=['POST']
-    )
+    @app.get('/')
+    def health():
+        return 'stock_alert V2.10.1 OK', 200
+
+    @app.get('/health')
+    def health2():
+        return 'OK', 200
+
+    @app.post('/callback')
     def cb():
+        # LINE 官方要求：必須用「未解析、未修改」的原始 body 驗證簽章。
+        raw_body = request.get_data(cache=True)
+        signature = request.headers.get('X-Line-Signature', '')
 
-        body = (
-            request.get_json(
-                silent=True
-            )
-            or {}
-        )
+        if not verify_line_signature(raw_body, signature):
+            print('❌ LINE webhook signature 驗證失敗')
+            return 'Invalid signature', 400
 
-        for e in body.get(
-            'events',
-            []
-        ):
+        try:
+            body = json.loads(raw_body.decode('utf-8'))
+        except Exception as e:
+            print('❌ LINE webhook JSON 解析失敗：', e)
+            return 'Bad Request', 400
 
-            handle_event(
-                e,
-                u
-            )
+        events = body.get('events', [])
+        for e in events:
+            try:
+                handle_event(e, u)
+            except Exception as e2:
+                traceback.print_exc()
+                print('Webhook事件處理錯誤：', e2)
 
         return 'OK', 200
 
+    port = int(os.environ.get('PORT', '8080'))
     app.run(
         host='0.0.0.0',
-        port=int(
-            os.environ.get(
-                'PORT',
-                '8080'
-            )
-        )
+        port=port,
+        threaded=True
     )
 
 
@@ -4711,7 +4973,7 @@ def run_alerts():
     print(
         '================================\n'
         '股票跌幅 + 15分鐘區間最低價 + '
-        'V2.10.0自動估值 + 技術 + 籌碼\n'
+        'V2.9.9自動估值 + 技術 + 籌碼\n'
         '================================'
     )
 
@@ -4728,7 +4990,7 @@ def run_alerts():
     )
 
     # --------------------------------------------------------
-    # 顯示 V2.10.0 次產業狀態
+    # 顯示 V2.9.9 次產業狀態
     # --------------------------------------------------------
 
     sub_count = sum(
@@ -4836,11 +5098,9 @@ def run_alerts():
             clean_code(symbol)
         )
 
-        alert_list = []
-
         try:
 
-            alert_list = check_drop_alert(
+            check_drop_alert(
                 name,
                 symbol,
                 state
@@ -4910,25 +5170,14 @@ def run_alerts():
 
             elif item:
 
-                analysis_text = analysis(
-                    name,
-                    u,
-                    False,
-                    interval_result
-                )
-
                 print(
                     '\n'
-                    + analysis_text
-                )
-
-                # V2.10.0：警報觸發後，與完整100分綜合評估一次送出。
-                send_combined_alert(
-                    name,
-                    symbol,
-                    alert_list,
-                    analysis_text,
-                    interval_result
+                    + analysis(
+                        name,
+                        u,
+                        False,
+                        interval_result
+                    )
                 )
 
             else:
@@ -4947,16 +5196,6 @@ def run_alerts():
             )
 
             traceback.print_exc()
-
-            # V2.10.0：完整分析失敗時仍保留警報，
-            # 避免因單一估值/API錯誤而完全收不到跌幅通知。
-            send_combined_alert(
-                name,
-                symbol,
-                alert_list,
-                None,
-                interval_result
-            )
 
     save_json(
         STATE_FILE,
