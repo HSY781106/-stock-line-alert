@@ -1,4 +1,4 @@
-# stock_alert.py V2.10.4
+# stock_alert.py V2.10.5
 # 效能修正版：
 # 1. 全市場資料批次化
 # 2. 單次執行快取
@@ -27,7 +27,7 @@
 # - 保留原本基本面 / 技術 / 籌碼 / 風險 / LINE 功能
 #
 # 股票跌幅 + 15分鐘區間最低價 + 動態估值 + 技術 + 籌碼 + 100分制加碼決策
-# V2.10.4：以 V2.10.3 為底修正 LINE 查詢完整分析上下文
+# V2.10.5：以 V2.10.3 為底修正 LINE 查詢完整分析上下文
 #          + LINE webhook HMAC-SHA256 簽章驗證 + 群組/聊天室支援
 
 import os
@@ -1684,7 +1684,7 @@ def get_subindustry_display(
 
 
 def ensure_subindustry_for_query(code, item=None):
-    """V2.10.4：LINE 查詢時若目標股次產業缺失，立即補抓一次。"""
+    """V2.10.5：LINE 查詢時若目標股次產業缺失，立即補抓一次。"""
     c = clean_code(code)
     current = get_subindustries_for_stock(c, item)
     if current:
@@ -1736,7 +1736,7 @@ def build_universe():
 
     print(
         '\n========== '
-        '建立動態市場股票池 V2.10.4 '
+        '建立動態市場股票池 V2.10.5 '
         '=========='
     )
 
@@ -4397,14 +4397,14 @@ def analysis(
         )
     )
 
-    # V2.10.4：LINE/Render 不依賴既有次產業快取。
+    # V2.10.5：LINE/Render 不依賴既有次產業快取。
     if not subindustries:
         subindustries = ensure_subindustry_for_query(
             code,
             item
         )
 
-    # V2.10.4 修正：ensure_subindustry_for_query() 成功後，
+    # V2.10.5 修正：ensure_subindustry_for_query() 成功後，
     # 立即把最新次產業同步回 LINE 查詢使用的市場股票池。
     if subindustries:
         item['subindustries'] = list(dict.fromkeys(
@@ -4746,7 +4746,7 @@ def analysis(
     # --------------------------------------------------------
 
     return (
-        f'📊 股票加碼分析 V2.10.4\n\n'
+        f'📊 股票加碼分析 V2.10.5\n\n'
         f'標的：{name}（{code}）\n'
         f'市場：{market}\n'
         f'產業：{industry}\n'
@@ -4820,7 +4820,7 @@ def analysis(
 
 
 # ============================================================
-# Webhook / LINE 即時查詢 V2.10.4
+# Webhook / LINE 即時查詢 V2.10.5
 # ============================================================
 
 
@@ -4959,7 +4959,7 @@ def handle_event(e, u):
     }:
         reply_line(
             token,
-            '📈 股票加碼分析 Bot V2.10.4\n\n'
+            '📈 股票加碼分析 Bot V2.10.5\n\n'
             '輸入股票代號或名稱即可查詢。\n'
             '例如：2330、台積電、3711、日月光投控\n\n'
             '模型：基本面40 + 技術30 + 籌碼20 + 風險10。\n'
@@ -5002,7 +5002,7 @@ def run_webhook_server():
     app = Flask(__name__)
 
     print('================================')
-    print('LINE Webhook Server V2.10.4')
+    print('LINE Webhook Server V2.10.5')
     print('模式：立即回覆 + 背景完整分析 + Push')
     print('================================')
 
@@ -5011,7 +5011,7 @@ def run_webhook_server():
     if not LINE_CHANNEL_SECRET:
         print('⚠️ 未設定 LINE_CHANNEL_SECRET')
 
-    # V2.10.4 修正版：Render/LINE 啟動時強制確認次產業資料已掛載。
+    # V2.10.5 修正版：Render/LINE 啟動時強制確認次產業資料已掛載。
     # 不再只依賴 GitHub Actions 執行後留下的本地快取；Render 重新部署
     # 或睡眠喚醒後沒有 subindustry_cache.json 時，也會自行建立。
     u = get_market_universe(force_refresh=True)
@@ -5059,7 +5059,7 @@ def run_webhook_server():
 
     @app.get('/')
     def health():
-        return 'stock_alert V2.10.4 OK', 200
+        return 'stock_alert V2.10.5 OK', 200
 
     @app.get('/health')
     def health2():
@@ -5119,7 +5119,7 @@ def run_alerts():
     print(
         '================================\n'
         '股票跌幅 + 15分鐘區間最低價 + '
-        'V2.10.4自動估值 + 技術 + 籌碼\n'
+        'V2.10.5自動估值 + 技術 + 籌碼\n'
         '================================'
     )
 
