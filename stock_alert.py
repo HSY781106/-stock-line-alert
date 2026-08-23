@@ -1,4 +1,4 @@
-# stock_alert.py V2.10.5
+# stock_alert.py V2.10.6
 # 效能修正版：
 # 1. 全市場資料批次化
 # 2. 單次執行快取
@@ -27,7 +27,7 @@
 # - 保留原本基本面 / 技術 / 籌碼 / 風險 / LINE 功能
 #
 # 股票跌幅 + 15分鐘區間最低價 + 動態估值 + 技術 + 籌碼 + 100分制加碼決策
-# V2.10.5：以 V2.10.3 為底修正 LINE 查詢完整分析上下文
+# V2.10.6：LINE 穩定查詢修正版；保留 V2.10.5 全部分析功能
 #          + LINE webhook HMAC-SHA256 簽章驗證 + 群組/聊天室支援
 
 import os
@@ -109,6 +109,20 @@ SUBINDUSTRY_CACHE = {}
 
 # V2.10.1：LINE 查詢分析鎖，避免多個訊息同時改寫全域快取。
 LINE_ANALYSIS_LOCK = threading.Lock()
+
+# V2.10.6：使用非 daemon 的 ThreadPoolExecutor 執行 LINE 背景分析。
+# 不再用 daemon=True 的裸 Thread，降低 Render request 結束後背景工作
+# 被直接終止的風險。完整分析仍在獨立工作執行緒中，不會讓 replyToken 過期。
+from concurrent.futures import ThreadPoolExecutor
+LINE_ANALYSIS_EXECUTOR = ThreadPoolExecutor(
+    max_workers=1,
+    thread_name_prefix='line-analysis'
+)
+
+# LINE webhook 可能因網路重試而重送同一事件；避免同一個 event 被分析兩次。
+LINE_EVENT_LOCK = threading.Lock()
+LINE_SEEN_EVENTS = set()
+LINE_SEEN_EVENT_MAX = 500
 
 
 # ============================================================
@@ -609,34 +623,43 @@ def send_line(msg):
 
 
 def reply_line(token, msg):
-
+    """LINE Reply API。回覆失敗時完整印出 HTTP 狀態與 API 訊息。"""
     if not LINE_TOKEN or not token:
+        print('LINE Reply略過：缺少 LINE token 或 replyToken')
         return False
 
     try:
+        messages = [
+            {'type': 'text', 'text': x}
+            for x in _line_text_messages(msg)[:5]
+        ]
 
         r = requests.post(
             LINE_REPLY_URL,
             headers={
-                'Authorization':
-                    f'Bearer {LINE_TOKEN}',
-                'Content-Type':
-                    'application/json'
+                'Authorization': f'Bearer {LINE_TOKEN}',
+                'Content-Type': 'application/json'
             },
             json={
                 'replyToken': token,
-                'messages': [{
-                    'type': 'text',
-                    'text': str(msg)[:5000]
-                }]
+                'messages': messages
             },
-            timeout=20
+            timeout=15
         )
 
-        return r.status_code == 200
+        if r.status_code != 200:
+            print(
+                f'❌ LINE Reply失敗：HTTP {r.status_code} | '
+                f'{r.text[:1000]}'
+            )
+            return False
 
-    except Exception:
+        print('✅ LINE Reply成功')
+        return True
 
+    except Exception as e:
+        print(f'❌ LINE Reply例外：{type(e).__name__}: {e}')
+        traceback.print_exc()
         return False
 
 
@@ -1736,7 +1759,7 @@ def build_universe():
 
     print(
         '\n========== '
-        '建立動態市場股票池 V2.10.5 '
+        '建立動態市場股票池 V2.10.6 '
         '=========='
     )
 
@@ -4746,7 +4769,7 @@ def analysis(
     # --------------------------------------------------------
 
     return (
-        f'📊 股票加碼分析 V2.10.5\n\n'
+        f'📊 股票加碼分析 V2.10.6\n\n'
         f'標的：{name}（{code}）\n'
         f'市場：{market}\n'
         f'產業：{industry}\n'
@@ -4906,38 +4929,56 @@ def line_target_from_event(e):
     return None
 
 
-def _background_line_analysis(text, target, u):
-    """LINE 收到訊息後在背景執行完整分析，避免 replyToken 過期。"""
+def _background_line_analysis(text, target, u, event_id=None):
+    """V2.10.6：背景完整分析。
+
+    使用 ThreadPoolExecutor（非 daemon）而非裸 daemon Thread，並在分析前後
+    明確記錄狀態；完成後用 Push API 回原聊天室。
+    """
     try:
         print(
             f'LINE背景分析開始：{text} -> '
             f'{str(target)[:12]}...'
         )
 
-        # analysis() 會使用全域 RUN_CACHE / 其他快取；
-        # 同時進來的多個查詢序列化，避免彼此覆蓋快取狀態。
         with LINE_ANALYSIS_LOCK:
-            result = analysis(
-                text,
-                u,
-                True
-            )
+            result = analysis(text, u, True)
+
+        if not result:
+            result = f'❌ {text} 分析沒有產生結果。'
 
         if not push_line(target, result):
-            print(f'LINE背景分析完成，但 Push 失敗：{text}')
+            print(f'❌ LINE背景分析完成，但 Push 失敗：{text}')
         else:
-            print(f'LINE背景分析完成：{text}')
+            print(f'✅ LINE背景分析完成：{text}')
 
     except Exception as e:
         traceback.print_exc()
+        print(f'❌ LINE背景分析例外：{type(e).__name__}: {e}')
         push_line(
             target,
             f'❌ {text} 分析失敗：{e}'
         )
 
 
+def _mark_line_event_seen(event_id):
+    """避免 LINE webhook 重試造成同一事件重複分析。"""
+    if not event_id:
+        return True
+
+    with LINE_EVENT_LOCK:
+        if event_id in LINE_SEEN_EVENTS:
+            return False
+        LINE_SEEN_EVENTS.add(event_id)
+        if len(LINE_SEEN_EVENTS) > LINE_SEEN_EVENT_MAX:
+            # set 沒有順序；超過上限時清空即可，目的只是短期去重。
+            LINE_SEEN_EVENTS.clear()
+            LINE_SEEN_EVENTS.add(event_id)
+        return True
+
+
 def handle_event(e, u):
-    """處理 LINE 訊息；查詢型訊息採「立即回覆 + 背景 Push」。"""
+    """V2.10.6：立即 Reply 確認，再用非 daemon executor 背景分析並 Push。"""
     if (
         e.get('type') != 'message'
         or e.get('message', {}).get('type') != 'text'
@@ -4947,25 +4988,27 @@ def handle_event(e, u):
     text = e.get('message', {}).get('text', '').strip()
     token = e.get('replyToken')
     target = line_target_from_event(e)
+    event_id = e.get('webhookEventId') or e.get('eventId')
 
     if not text:
         return
 
-    if text.lower() in {
-        'help',
-        '說明',
-        '功能',
-        '股票'
-    }:
-        reply_line(
+    if not _mark_line_event_seen(event_id):
+        print(f'LINE事件重複，略過：{event_id}')
+        return
+
+    if text.lower() in {'help', '說明', '功能', '股票'}:
+        ok = reply_line(
             token,
-            '📈 股票加碼分析 Bot V2.10.5\n\n'
+            '📈 股票加碼分析 Bot V2.10.6\n\n'
             '輸入股票代號或名稱即可查詢。\n'
             '例如：2330、台積電、3711、日月光投控\n\n'
             '模型：基本面40 + 技術30 + 籌碼20 + 風險10。\n'
             '同業估值：動態次產業 Top 10。\n\n'
             '查詢後會先回覆「分析中」，完成後再把完整結果推送回本聊天室。'
         )
+        if not ok:
+            print('❌ LINE Help Reply失敗')
         return
 
     if not target:
@@ -4975,8 +5018,7 @@ def handle_event(e, u):
         )
         return
 
-    # 重要：replyToken 有效時間很短，因此只做極快的確認回覆。
-    # 完整分析移到背景 thread，完成後改用 Push API。
+    # 只做極短的立即回覆，避免 replyToken 因完整分析耗時而失效。
     ok = reply_line(
         token,
         f'🔎 收到「{text}」\n\n'
@@ -4986,15 +5028,20 @@ def handle_event(e, u):
     )
 
     if not ok:
-        print('LINE 即時確認回覆失敗，但仍嘗試背景分析。')
+        print('⚠️ LINE 即時確認回覆失敗；仍會嘗試背景 Push。')
 
-    thread = threading.Thread(
-        target=_background_line_analysis,
-        args=(text, target, u),
-        daemon=True
-    )
-    thread.start()
-
+    try:
+        future = LINE_ANALYSIS_EXECUTOR.submit(
+            _background_line_analysis,
+            text,
+            target,
+            u,
+            event_id
+        )
+        print(f'LINE背景工作已排入：{text} | future={future}')
+    except Exception as e:        
+        print(f'❌ LINE背景工作排程失敗：{type(e).__name__}: {e}')
+        push_line(target, f'❌ {text} 無法啟動分析工作：{e}')
 
 def run_webhook_server():
     from flask import Flask, request
@@ -5002,8 +5049,8 @@ def run_webhook_server():
     app = Flask(__name__)
 
     print('================================')
-    print('LINE Webhook Server V2.10.5')
-    print('模式：立即回覆 + 背景完整分析 + Push')
+    print('LINE Webhook Server V2.10.6')
+    print('模式：立即 Reply + 穩定背景分析 + Push')
     print('================================')
 
     if not LINE_TOKEN:
@@ -5059,7 +5106,7 @@ def run_webhook_server():
 
     @app.get('/')
     def health():
-        return 'stock_alert V2.10.5 OK', 200
+        return 'stock_alert V2.10.6 OK', 200
 
     @app.get('/health')
     def health2():
@@ -5082,12 +5129,20 @@ def run_webhook_server():
             return 'Bad Request', 400
 
         events = body.get('events', [])
+        print(f'LINE Webhook收到事件：{len(events)}')
+
         for e in events:
             try:
+                print(
+                    'LINE事件：'
+                    f"type={e.get('type')} "
+                    f"eventId={e.get('webhookEventId', e.get('eventId', 'N/A'))} "
+                    f"messageType={(e.get('message') or {}).get('type', 'N/A')}"
+                )
                 handle_event(e, u)
             except Exception as e2:
                 traceback.print_exc()
-                print('Webhook事件處理錯誤：', e2)
+                print('❌ Webhook事件處理錯誤：', e2)
 
         return 'OK', 200
 
