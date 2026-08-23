@@ -1,4 +1,4 @@
-# stock_alert.py V2.10.3
+# stock_alert.py V2.10.4
 # 效能修正版：
 # 1. 全市場資料批次化
 # 2. 單次執行快取
@@ -27,7 +27,7 @@
 # - 保留原本基本面 / 技術 / 籌碼 / 風險 / LINE 功能
 #
 # 股票跌幅 + 15分鐘區間最低價 + 動態估值 + 技術 + 籌碼 + 100分制加碼決策
-# V2.10.2：以 V2.10.1 為底修正 PE 歷史回補 + 15 分鐘目前價格 + LINE 輸出
+# V2.10.4：以 V2.10.3 為底修正 LINE 查詢完整分析上下文
 #          + LINE webhook HMAC-SHA256 簽章驗證 + 群組/聊天室支援
 
 import os
@@ -424,7 +424,7 @@ def http_json(
     last = None
 
     base_headers = {
-        'User-Agent': 'Mozilla/5.0 stock-alert/2.10.2'
+        'User-Agent': 'Mozilla/5.0 stock-alert/2.10.4'
     }
 
     if headers:
@@ -478,7 +478,7 @@ def http_text(
                 timeout=timeout,
                 headers={
                     'User-Agent':
-                        'Mozilla/5.0 stock-alert/2.10.2'
+                        'Mozilla/5.0 stock-alert/2.10.4'
                 }
             )
 
@@ -1179,7 +1179,7 @@ def fetch_value_chain_for_stock(code):
             timeout=VALUE_CHAIN_TIMEOUT,
             headers={
                 'User-Agent':
-                    'Mozilla/5.0 stock-alert/2.10.2',
+                    'Mozilla/5.0 stock-alert/2.10.4',
                 'Accept-Language': 'zh-TW,zh;q=0.9,en;q=0.8'
             }
         )
@@ -1342,10 +1342,20 @@ def get_public_subindustry(u):
     # 30 天快取仍有效：只補缺少的股票。
     # --------------------------------------------------------
 
+    def valid_cached_chain(code):
+        info = cached_data.get(code)
+        if not isinstance(info, dict):
+            return False
+        subs = info.get('subindustries', [])
+        if not isinstance(subs, list):
+            return False
+        return any(normalize_subindustry(x) for x in subs)
+
     if cache_fresh:
+        # 空的失敗快取不能視為有效，否則 LINE 查詢會永久顯示 N/A。
         missing = [
             code for code in candidate_codes
-            if code not in cached_data
+            if not valid_cached_chain(code)
         ]
     else:
         # 超過 30 天：重新驗證本次目標產業的全部候選股票。
@@ -1591,6 +1601,20 @@ def get_dynamic_subindustry_peers(
     )
 
     if not target_subs:
+        if isinstance(subindustry, list):
+            target_subs = [
+                normalize_subindustry(x)
+                for x in subindustry
+                if normalize_subindustry(x)
+            ]
+        elif subindustry:
+            target_subs = [
+                normalize_subindustry(x)
+                for x in re.split(r'[、,，/|]+', str(subindustry))
+                if normalize_subindustry(x)
+            ]
+
+    if not target_subs:
         return []
 
     candidates = []
@@ -1659,6 +1683,51 @@ def get_subindustry_display(
     return '、'.join(normalize_subindustry(x) for x in subs)
 
 
+def ensure_subindustry_for_query(code, item=None):
+    """V2.10.4：LINE 查詢時若目標股次產業缺失，立即補抓一次。"""
+    c = clean_code(code)
+    current = get_subindustries_for_stock(c, item)
+    if current:
+        return current
+
+    data = fetch_value_chain_for_stock(c)
+    if not data:
+        return []
+
+    subs = list(dict.fromkeys(
+        normalize_subindustry(x)
+        for x in data.get('subindustries', [])
+        if normalize_subindustry(x)
+    ))
+    if not subs:
+        return []
+
+    SUBINDUSTRY_CACHE[c] = data
+
+    cache = load_json(SUBINDUSTRY_CACHE_FILE)
+    cached_data = cache.get('data', {})
+    if not isinstance(cached_data, dict):
+        cached_data = {}
+    cached_data[c] = data
+
+    save_json(
+        SUBINDUSTRY_CACHE_FILE,
+        {
+            '_cached_at': cache.get('_cached_at', time.time()),
+            'source': 'TPEx/TWSE Industry Value Chain',
+            'source_url': VALUE_CHAIN_BASE,
+            'cache_days': SUBINDUSTRY_CACHE_DAYS,
+            'data': cached_data
+        }
+    )
+
+    if isinstance(item, dict):
+        item['subindustries'] = subs
+        item['subindustry'] = subs[0]
+
+    return subs
+
+
 # ============================================================
 # Build universe
 # ============================================================
@@ -1667,7 +1736,7 @@ def build_universe():
 
     print(
         '\n========== '
-        '建立動態市場股票池 V2.10.2 '
+        '建立動態市場股票池 V2.10.4 '
         '=========='
     )
 
@@ -4328,6 +4397,13 @@ def analysis(
         )
     )
 
+    # V2.10.4：LINE/Render 不依賴既有次產業快取。
+    if not subindustries:
+        subindustries = ensure_subindustry_for_query(
+            code,
+            item
+        )
+
     subindustry_display = (
         '、'.join(
             normalize_subindustry(x)
@@ -4398,32 +4474,32 @@ def analysis(
     peers = get_dynamic_subindustry_peers(
         code,
         industry,
-        subindustry_display,
+        subindustries,
         u,
         10
     )
 
-    vals = [
-        pe_data
-        .get(
-            x['code'],
-            {}
+    vals = []
+    for peer_item in peers:
+        peer_pe = (
+            pe_data
+            .get(peer_item['code'], {})
+            .get('pe')
         )
-        .get(
-            'pe'
-        )
-        for x in peers
-    ]
 
-    vals = [
-        x
-        for x in vals
+        if not (
+            peer_pe
+            and 0 < peer_pe <= PE_MAX_VALID
+        ):
+            # LINE/Render 若官方 PE API 暫時失敗，使用 Yahoo PE 作備援。
+            peer_f = yahoo_fund(peer_item['symbol'])
+            peer_pe = peer_f.get('pe')
+
         if (
-            x
-            and 0 < x
-            <= PE_MAX_VALID
-        )
-    ]
+            peer_pe is not None
+            and 0 < peer_pe <= PE_MAX_VALID
+        ):
+            vals.append(peer_pe)
 
     peer_mean = (
         sum(vals) / len(vals)
@@ -4660,7 +4736,7 @@ def analysis(
     # --------------------------------------------------------
 
     return (
-        f'📊 股票加碼分析 V2.10.2\n\n'
+        f'📊 股票加碼分析 V2.10.4\n\n'
         f'標的：{name}（{code}）\n'
         f'市場：{market}\n'
         f'產業：{industry}\n'
@@ -4734,7 +4810,7 @@ def analysis(
 
 
 # ============================================================
-# Webhook / LINE 即時查詢 V2.10.2
+# Webhook / LINE 即時查詢 V2.10.4
 # ============================================================
 
 
@@ -4873,7 +4949,7 @@ def handle_event(e, u):
     }:
         reply_line(
             token,
-            '📈 股票加碼分析 Bot V2.10.2\n\n'
+            '📈 股票加碼分析 Bot V2.10.4\n\n'
             '輸入股票代號或名稱即可查詢。\n'
             '例如：2330、台積電、3711、日月光投控\n\n'
             '模型：基本面40 + 技術30 + 籌碼20 + 風險10。\n'
@@ -4916,7 +4992,7 @@ def run_webhook_server():
     app = Flask(__name__)
 
     print('================================')
-    print('LINE Webhook Server V2.10.2')
+    print('LINE Webhook Server V2.10.4')
     print('模式：立即回覆 + 背景完整分析 + Push')
     print('================================')
 
@@ -4930,7 +5006,7 @@ def run_webhook_server():
 
     @app.get('/')
     def health():
-        return 'stock_alert V2.10.2 OK', 200
+        return 'stock_alert V2.10.4 OK', 200
 
     @app.get('/health')
     def health2():
@@ -4990,7 +5066,7 @@ def run_alerts():
     print(
         '================================\n'
         '股票跌幅 + 15分鐘區間最低價 + '
-        'V2.10.2自動估值 + 技術 + 籌碼\n'
+        'V2.10.4自動估值 + 技術 + 籌碼\n'
         '================================'
     )
 
