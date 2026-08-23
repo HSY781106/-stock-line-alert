@@ -4404,6 +4404,16 @@ def analysis(
             item
         )
 
+    # V2.10.4 修正：ensure_subindustry_for_query() 成功後，
+    # 立即把最新次產業同步回 LINE 查詢使用的市場股票池。
+    if subindustries:
+        item['subindustries'] = list(dict.fromkeys(
+            normalize_subindustry(x)
+            for x in subindustries
+            if normalize_subindustry(x)
+        ))
+        item['subindustry'] = item['subindustries'][0]
+
     subindustry_display = (
         '、'.join(
             normalize_subindustry(x)
@@ -5001,8 +5011,51 @@ def run_webhook_server():
     if not LINE_CHANNEL_SECRET:
         print('⚠️ 未設定 LINE_CHANNEL_SECRET')
 
-    # 啟動時建立一次動態市場股票池；後續 LINE 查詢沿用。
-    u = get_market_universe()
+    # V2.10.4 修正版：Render/LINE 啟動時強制確認次產業資料已掛載。
+    # 不再只依賴 GitHub Actions 執行後留下的本地快取；Render 重新部署
+    # 或睡眠喚醒後沒有 subindustry_cache.json 時，也會自行建立。
+    u = get_market_universe(force_refresh=True)
+
+    # 再做一次明確驗證。若股票池建立成功但次產業仍缺失，
+    # 立即重新抓取公開產業價值鏈並重新掛載，確保 LINE 查詢與
+    # GitHub Actions 使用完全相同的動態次產業資料。
+    try:
+        target_missing = []
+        for _label, _symbol in STOCKS.items():
+            _code = clean_code(_symbol)
+            if _code.isdigit() and _code in u:
+                if not get_subindustries_for_stock(_code, u[_code]):
+                    target_missing.append(_code)
+
+        if target_missing:
+            print(
+                '⚠️ LINE 啟動檢查：目標股缺少次產業：'
+                + ', '.join(target_missing)
+            )
+            _sub_data = get_public_subindustry(u)
+            u = attach_subindustries(u, _sub_data)
+
+            # 最後逐檔直接補抓，避免公開資料批次流程因快取/暫時失敗
+            # 導致 2330、3711 在 LINE 中顯示 N/A。
+            for _code in target_missing:
+                if not get_subindustries_for_stock(_code, u.get(_code, {})):
+                    _item = u.get(_code)
+                    _one = ensure_subindustry_for_query(_code, _item)
+                    if _one and isinstance(_item, dict):
+                        _item['subindustries'] = _one
+                        _item['subindustry'] = _one[0]
+
+        print(
+            'LINE 次產業啟動檢查：'
+            + ', '.join(
+                f'{clean_code(_symbol)}='
+                f'{",".join(get_subindustries_for_stock(clean_code(_symbol), u.get(clean_code(_symbol), {}))) or "N/A"}'
+                for _label, _symbol in STOCKS.items()
+                if clean_code(_symbol).isdigit() and clean_code(_symbol) in u
+            )
+        )
+    except Exception as _sub_e:
+        print(f'⚠️ LINE 次產業啟動檢查失敗：{_sub_e}')
 
     @app.get('/')
     def health():
@@ -5369,9 +5422,3 @@ def main():
         )
 
     else:
-
-        run_alerts()
-
-
-if __name__ == '__main__':
-    main()
