@@ -1,4 +1,4 @@
-# stock_alert.py V2.10.21
+# stock_alert.py V2.10.23
 # 效能修正版：
 # 1. 全市場資料批次化
 # 2. 單次執行快取
@@ -27,7 +27,7 @@
 # - 保留原本基本面 / 技術 / 籌碼 / 風險 / LINE 功能
 #
 # 股票跌幅 + 15分鐘區間最低價 + 動態估值 + 技術 + 籌碼 + 100分制加碼決策
-# V2.10.21：1985檔全市場技術快取版 + LINE 輕量查詢專用分析路徑；保留 V2.10.19 全部分析功能
+# V2.10.23：1985檔全市場技術快取版 + LINE 輕量查詢專用分析路徑；保留 V2.10.19 全部分析功能
 #          + LINE webhook HMAC-SHA256 簽章驗證 + 群組/聊天室支援
 #          + Actions 批次建立全市場技術快取；Render LINE 優先只讀快取，避免 Yahoo/TWSE 即時限流
 
@@ -72,7 +72,7 @@ LINE_CHIP_CACHE_FILE = 'line_chip_cache.json'
 LINE_MARGIN_CACHE_FILE = 'line_margin_cache.json'
 LINE_CHIP_SUMMARY_CACHE_FILE = 'line_chip_summary_cache.json'
 LINE_PE_CACHE_FILE = 'line_pe_cache.json'
-# V2.10.21：LINE 查詢用的輕量快取；Actions 每日批次建立全市場技術資料，Render 優先讀 GitHub 快取。
+# V2.10.23：LINE 查詢用的輕量快取；Actions 每日批次建立全市場技術資料，Render 優先讀 GitHub 快取。
 LINE_FUND_CACHE_FILE = 'line_fund_cache.json'
 LINE_TECH_CACHE_FILE = 'line_technical_cache.json'
 
@@ -108,7 +108,7 @@ PE_DATE_CACHE = {}
 YF_TIMEOUT = 10
 MAX_HISTORY_DAYS_PER_RUN = 75
 
-# V2.10.21：全市場技術快取設定。
+# V2.10.23：全市場技術快取設定。
 # Actions 只在快取缺少/過期時更新，避免每天重抓 1985 檔造成不必要的 Yahoo 流量。
 TECH_CACHE_MAX_AGE = 36 * 3600
 TECH_BATCH_CHUNK = 80
@@ -116,7 +116,7 @@ TECH_BATCH_TIMEOUT = 30
 TECH_BATCH_PERIOD = '6mo'
 TECH_BATCH_INTERVAL = '1d'
 
-# V2.10.21：LINE Free 查詢的硬性網路預算。快取不存在時也必須快速結束，
+# V2.10.23：LINE Free 查詢的硬性網路預算。快取不存在時也必須快速結束，
 # 不允許因單一 TWSE/TPEX/Yahoo timeout 把 LINE 卡住數分鐘。
 LINE_FAST_TIMEOUT = 3.0
 LINE_REMOTE_CACHE_TIMEOUT = 3.0
@@ -3577,7 +3577,7 @@ def _extract_batch_ticker_frame(batch, ticker):
 
 
 def _yahoo_batch_download(tickers):
-    """V2.10.21：Actions 用少量批次請求取得多檔 6 個月日線。"""
+    """V2.10.23：Actions 用少量批次請求取得多檔 6 個月日線。"""
     if not tickers:
         return None
     try:
@@ -3602,7 +3602,7 @@ def _yahoo_batch_download(tickers):
 
 
 def refresh_all_technical_cache(u, force=False):
-    """V2.10.21：GitHub Actions 全市場技術快取建立器。
+    """V2.10.23：GitHub Actions 全市場技術快取建立器。
 
     - 目標：動態市場股票池內全部 TWSE/TPEX 股票，另含 0050、QQQ、^TWII。
     - 先保留新鮮快取；只更新缺少或超過 36 小時的標的。
@@ -3648,7 +3648,7 @@ def refresh_all_technical_cache(u, force=False):
         if clean_code(code).isdigit() and (item or {}).get('market') in ('TWSE', 'TPEX')
     )
     print(
-        f'========== V2.10.21 全市場技術快取 ==========',
+        f'========== V2.10.23 全市場技術快取 ==========',
         flush=True
     )
     print(
@@ -3704,7 +3704,7 @@ def refresh_all_technical_cache(u, force=False):
 
 
 def technical(symbol):
-    """V2.10.21 技術面。
+    """V2.10.23 技術面。
 
     LINE 路徑：本機快取 -> GitHub 全市場快取 -> 不再主動打 Yahoo/TWSE。
     Actions 批次：若快取缺少/過期，先由 refresh_all_technical_cache() 建立；
@@ -4577,7 +4577,7 @@ def _line_chip_fast(code, market, days=20):
 
 
 def _line_margin_fast(code, market):
-    """V2.10.21：LINE 融資融券快取優先，避免 Render 即時打全市場 API。"""
+    """V2.10.23：LINE 融資融券快取優先，避免 Render 即時打全市場 API。"""
     code = clean_code(code)
     cache = _load_line_small_cache(LINE_MARGIN_CACHE_FILE)
     market_data = cache.get(market, {}) if isinstance(cache, dict) else {}
@@ -5499,7 +5499,7 @@ def analysis(
     # --------------------------------------------------------
 
     return (
-        f'📊 股票加碼分析 V2.10.19\n\n'
+        f'📊 股票加碼分析 V2.10.23\n\n'
         f'標的：{name}（{code}）\n'
         f'市場：{market}\n'
         f'產業：{industry}\n'
@@ -5660,7 +5660,7 @@ def line_target_from_event(e):
 
 
 def _background_line_analysis(text, target, u, event_id=None):
-    """V2.10.21：低記憶體背景完整分析；技術面改用全市場 GitHub 快取。
+    """V2.10.23：低記憶體背景完整分析；技術面改用全市場 GitHub 快取。
 
     使用 ThreadPoolExecutor（非 daemon）而非裸 daemon Thread，並在分析前後
     明確記錄狀態；完成後用 Push API 回原聊天室。
@@ -5806,7 +5806,7 @@ def prepare_line_subindustries(u, query):
 
 
 def build_line_query_universe(query):
-    """V2.10.21：LINE 查詢專用市場資料。
+    """V2.10.23：LINE 查詢專用市場資料。
 
     不在 Render 啟動時建立完整股票池；只有真正收到股票查詢時才建立一次
     市場 metadata。這保留動態次產業/Top10 所需的 code、industry、market_cap，
@@ -5822,7 +5822,7 @@ def build_line_query_universe(query):
     except Exception as e:
         print(f'LINE股票池快取讀取失敗：{e}')
 
-    # V2.10.21：Render 冷啟動優先讀 Actions 提交的 GitHub 市場快取。
+    # V2.10.23：Render 冷啟動優先讀 Actions 提交的 GitHub 市場快取。
     # 只有遠端快取也不存在時，才建立 1985 檔 metadata。
     remote = load_remote_json_cache(UNIVERSE_CACHE_FILE, timeout=LINE_REMOTE_CACHE_TIMEOUT)
     rd = remote.get('data') if isinstance(remote, dict) else None
@@ -5854,7 +5854,7 @@ def release_line_memory():
 
 
 def handle_event(e, u):
-    """V2.10.21：立即 Reply 確認，再用低記憶體背景分析並 Push。"""
+    """V2.10.23：立即 Reply 確認，再用低記憶體背景分析並 Push。"""
     if (
         e.get('type') != 'message'
         or e.get('message', {}).get('type') != 'text'
@@ -5876,7 +5876,7 @@ def handle_event(e, u):
     if text.lower() in {'help', '說明', '功能', '股票'}:
         ok = reply_line(
             token,
-            '📈 股票加碼分析 Bot V2.10.21\n\n'
+            '📈 股票加碼分析 Bot V2.10.23\n\n'
             '輸入股票代號或名稱即可查詢。\n'
             '例如：2330、台積電、3711、日月光投控\n\n'
             '模型：基本面40 + 技術30 + 籌碼20 + 風險10。\n'
@@ -5931,7 +5931,7 @@ def run_webhook_server():
     app = Flask(__name__)
 
     print('================================')
-    print('LINE Webhook Server V2.10.21')
+    print('LINE Webhook Server V2.10.23')
     print('模式：立即 Reply + Render Free 穩定背景 Thread + Push')
     print('================================')
 
@@ -5950,7 +5950,7 @@ def run_webhook_server():
 
     @app.get('/')
     def health():
-        return 'stock_alert V2.10.19 OK', 200
+        return 'stock_alert V2.10.23 OK', 200
 
     @app.get('/health')
     def health2():
@@ -6000,73 +6000,246 @@ def run_webhook_server():
 
 
 def build_line_caches_for_actions():
-    """V2.10.21：Actions 將已取得的 PE/法人/融資資料轉成 LINE 小快取。
+    """V2.10.23：建立 LINE 專用小型快取。
 
-    不新增外部 API 請求；直接利用 run_alerts 已經抓到的資料。Render 因此不需要
-    在查詢時再補 20 天 T86 或全市場融資資料。
+    重要修正：
+    1. 法人摘要不再重新讀 CHIP_HISTORY_FILE。
+    2. 直接使用本次 Actions 已經由 institutional() 取得的
+       INSTITUTIONAL_CACHE。
+    3. institutional() 的 T86 每日資料本身就是全市場資料，
+       因此可在記憶體中直接壓成「每檔一筆 latest/5d/20d」。
+    4. 這樣可以確保 Actions 一定產生 line_chip_summary_cache.json，
+       LINE Render 不必重新抓 T86。
     """
-    # PE：只保存本次執行已取得的完整市場資料。
+    # --------------------------------------------------------
+    # PE
+    # --------------------------------------------------------
     try:
         pe = RUN_CACHE.get('current_pe', {})
-        if isinstance(pe, dict) and pe:
-            _save_line_small_cache(LINE_PE_CACHE_FILE, {
-                '_cached_at': time.time(), 'data': pe
-            })
-            print(f'LINE PE 快取完成：{len(pe)} 檔', flush=True)
-    except Exception as e:
-        print(f'LINE PE 快取建立失敗：{e}', flush=True)
+        if not isinstance(pe, dict) or not pe:
+            pe = get_current_pe_data()
 
-    # Margin：RUN_CACHE 以 ('margin', market) 為 key。
+        if isinstance(pe, dict) and pe:
+            _save_line_small_cache(
+                LINE_PE_CACHE_FILE,
+                {
+                    '_cached_at': time.time(),
+                    'data': pe
+                }
+            )
+            print(
+                f'LINE PE 快取完成：{len(pe)} 檔',
+                flush=True
+            )
+    except Exception as e:
+        print(
+            f'LINE PE 快取建立失敗：{type(e).__name__}: {e}',
+            flush=True
+        )
+
+    # --------------------------------------------------------
+    # Margin
+    # --------------------------------------------------------
     try:
         md = {}
-        for key, value in MARGIN_CACHE.items():
-            if isinstance(key, tuple) and len(key) >= 2 and key[0] == 'margin':
-                md[str(key[1])] = value if isinstance(value, dict) else {}
-        if md:
-            _save_line_small_cache(LINE_MARGIN_CACHE_FILE, md)
-            print('LINE 融資快取完成：' + ', '.join(
-                f'{m} {len(v)} 檔' for m, v in md.items()
-            ), flush=True)
-    except Exception as e:
-        print(f'LINE 融資快取建立失敗：{e}', flush=True)
 
-    # Institutional：把 20 日全市場 T86 壓縮成每檔一筆摘要。
-    # Render Free 絕不需要下載完整 CHIP_HISTORY。
+        for key, value in MARGIN_CACHE.items():
+            if (
+                isinstance(key, tuple)
+                and len(key) >= 2
+                and key[0] == 'margin'
+            ):
+                market = str(key[1])
+                md[market] = (
+                    value
+                    if isinstance(value, dict)
+                    else {}
+                )
+
+        if md:
+            _save_line_small_cache(
+                LINE_MARGIN_CACHE_FILE,
+                md
+            )
+
+            print(
+                'LINE 融資快取完成：'
+                + ', '.join(
+                    f'{m} {len(v)} 檔'
+                    for m, v in md.items()
+                ),
+                flush=True
+            )
+        else:
+            print(
+                'LINE 融資快取：本次沒有可用資料',
+                flush=True
+            )
+
+    except Exception as e:
+        print(
+            f'LINE 融資快取建立失敗：'
+            f'{type(e).__name__}: {e}',
+            flush=True
+        )
+
+    # --------------------------------------------------------
+    # Institutional
+    # --------------------------------------------------------
+    # V2.10.23 核心修正：
+    # 不再 load_json(CHIP_HISTORY_FILE)。
+    #
+    # institutional() 已經把最近 20 個交易日的「全市場 T86」
+    # 放進 INSTITUTIONAL_CACHE。
+    #
+    # key:
+    #   ('inst', 'TWSE', 20)
+    #   ('inst', 'TPEX', 20)
+    #
+    # value:
+    #   [
+    #       {'date': 'YYYYMMDD',
+    #        'data': {股票代號: {'total': ...}, ...}},
+    #       ...
+    #   ]
+    #
+    # 直接從這裡壓縮成：
+    #   {
+    #       'TWSE': {
+    #           '2330': {
+    #               'latest': ...,
+    #               '5d': ...,
+    #               '20d': ...
+    #           }
+    #       }
+    #   }
     try:
-        full = load_json(CHIP_HISTORY_FILE)
         summary = {}
-        for market, market_hist in full.items():
-            if not isinstance(market_hist, dict):
+
+        for key, rows in INSTITUTIONAL_CACHE.items():
+
+            if not (
+                isinstance(key, tuple)
+                and len(key) >= 3
+                and key[0] == 'inst'
+            ):
                 continue
-            dates = sorted(market_hist.keys(), reverse=True)
-            vals = {}
-            for ds in dates:
-                day = market_hist.get(ds)
-                if not isinstance(day, dict):
+
+            market = str(key[1])
+
+            if not isinstance(rows, list) or not rows:
+                continue
+
+            # 只保留真正有 data 的交易日，並按照日期由新到舊。
+            valid_rows = []
+
+            for row in rows:
+                if not isinstance(row, dict):
                     continue
-                for code, row in day.items():
-                    if not isinstance(row, dict):
+
+                data = row.get('data')
+
+                if not isinstance(data, dict) or not data:
+                    continue
+
+                valid_rows.append(row)
+
+            valid_rows.sort(
+                key=lambda x: str(x.get('date', '')),
+                reverse=True
+            )
+
+            values = {}
+
+            for row in valid_rows:
+                data = row.get('data', {})
+
+                for raw_code, item in data.items():
+
+                    code = clean_code(raw_code)
+
+                    if not code:
                         continue
-                    total = row.get('total')
+
+                    if not isinstance(item, dict):
+                        continue
+
+                    total = item.get('total')
+
                     if total is None:
                         continue
-                    vals.setdefault(str(code), []).append(float(total))
-            out = {}
-            for code, arr in vals.items():
-                if arr:
-                    out[code] = {
-                        'latest': arr[0],
-                        '5d': sum(arr[:5]) if len(arr) >= 5 else None,
-                        '20d': sum(arr[:20]) if len(arr) >= 20 else None
-                    }
-            if out:
-                summary[market] = out
+
+                    try:
+                        total = float(total)
+                    except (TypeError, ValueError):
+                        continue
+
+                    values.setdefault(code, []).append(total)
+
+            market_summary = {}
+
+            for code, arr in values.items():
+
+                if not arr:
+                    continue
+
+                market_summary[code] = {
+                    'latest': arr[0],
+                    '5d': (
+                        sum(arr[:5])
+                        if len(arr) >= 5
+                        else None
+                    ),
+                    '20d': (
+                        sum(arr[:20])
+                        if len(arr) >= 20
+                        else None
+                    )
+                }
+
+            if market_summary:
+                summary[market] = market_summary
+
         if summary:
-            _save_line_small_cache(LINE_CHIP_SUMMARY_CACHE_FILE, summary)
-            total = sum(len(v) for v in summary.values())
-            print(f'LINE 法人摘要快取完成：{total} 檔', flush=True)
+
+            _save_line_small_cache(
+                LINE_CHIP_SUMMARY_CACHE_FILE,
+                summary
+            )
+
+            total = sum(
+                len(v)
+                for v in summary.values()
+                if isinstance(v, dict)
+            )
+
+            print(
+                f'LINE 法人摘要快取完成：'
+                f'{total} 檔',
+                flush=True
+            )
+
+            for market, data in summary.items():
+                print(
+                    f'LINE 法人摘要：'
+                    f'{market} {len(data)} 檔',
+                    flush=True
+                )
+
+        else:
+            print(
+                '⚠️ LINE 法人摘要快取：'
+                'INSTITUTIONAL_CACHE 沒有可用資料',
+                flush=True
+            )
+
     except Exception as e:
-        print(f'LINE 法人摘要快取建立失敗：{e}', flush=True)
+        print(
+            f'LINE 法人摘要快取建立失敗：'
+            f'{type(e).__name__}: {e}',
+            flush=True
+        )
+        traceback.print_exc()
 
 
 # ============================================================
@@ -6106,7 +6279,7 @@ def run_alerts():
     )
 
     # --------------------------------------------------------
-    # V2.10.21 全市場技術快取
+    # V2.10.23 全市場技術快取
     # GitHub Actions 負責重工作；Render LINE 不再即時碰 Yahoo/TWSE。
     # --------------------------------------------------------
     try:
@@ -6226,7 +6399,7 @@ def run_alerts():
                 m
             )
 
-    # V2.10.21：把本次 Actions 已取得資料整理成 Render 可直接讀取的小快取。
+    # V2.10.23：把本次 Actions 已取得資料整理成 Render 可直接讀取的小快取。
     try:
         get_current_pe_data()
     except Exception as e:
