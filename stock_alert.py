@@ -1,4 +1,4 @@
-# stock_alert.py V2.10.7
+# stock_alert.py V2.10.8
 # 效能修正版：
 # 1. 全市場資料批次化
 # 2. 單次執行快取
@@ -27,7 +27,7 @@
 # - 保留原本基本面 / 技術 / 籌碼 / 風險 / LINE 功能
 #
 # 股票跌幅 + 15分鐘區間最低價 + 動態估值 + 技術 + 籌碼 + 100分制加碼決策
-# V2.10.7：LINE 穩定查詢修正版；保留 V2.10.5 全部分析功能
+# V2.10.8：LINE 低記憶體穩定查詢版；保留 V2.10.7 全部分析功能
 #          + LINE webhook HMAC-SHA256 簽章驗證 + 群組/聊天室支援
 
 import os
@@ -66,6 +66,7 @@ TW_TZ = ZoneInfo('Asia/Taipei')
 STATE_FILE = 'alert_state.json'
 PE_HISTORY_FILE = 'pe_history.json'
 CHIP_HISTORY_FILE = 'chip_history.json'
+LINE_CHIP_CACHE_FILE = 'line_chip_cache.json'
 
 UNIVERSE_CACHE_FILE = 'market_universe_cache.json'
 TWSE_PROFILE_CACHE_FILE = 'twse_profile_cache.json'
@@ -120,6 +121,8 @@ LINE_ANALYSIS_EXECUTOR = ThreadPoolExecutor(
 )
 
 # LINE webhook 可能因網路重試而重送同一事件；避免同一個 event 被分析兩次。
+LINE_MODE_ACTIVE = False
+
 LINE_EVENT_LOCK = threading.Lock()
 LINE_SEEN_EVENTS = set()
 LINE_SEEN_EVENT_MAX = 500
@@ -1718,7 +1721,7 @@ def build_universe():
 
     print(
         '\n========== '
-        '建立動態市場股票池 V2.10.7 '
+        '建立動態市場股票池 V2.10.8 '
         '=========='
     )
 
@@ -3275,8 +3278,16 @@ def institutional(
     if key in INSTITUTIONAL_CACHE:
         return INSTITUTIONAL_CACHE[key]
 
-    history = load_json(CHIP_HISTORY_FILE)
-    market_hist = history.setdefault(market, {})
+    # V2.10.8：LINE 查詢絕不載入完整 chip_history.json。
+    # T86 每日回傳全市場資料，若把 20 天全部留在 Render 記憶體會很容易
+    # 超過 512MB。LINE 模式改用只保存「查詢股票」的精簡快取。
+    if LINE_MODE_ACTIVE:
+        line_history = load_json(LINE_CHIP_CACHE_FILE)
+        history = {'LINE': line_history if isinstance(line_history, dict) else {}}
+        market_hist = history['LINE'].setdefault(market, {})
+    else:
+        history = load_json(CHIP_HISTORY_FILE)
+        market_hist = history.setdefault(market, {})
     today = datetime.now(TW_TZ).date()
 
     def weekday_dates(start_date, count):
@@ -3300,19 +3311,26 @@ def institutional(
                 '/tpex_3insti_daily_trading',
                 {'date': ds}
             )
-            return ds, parse_tpex_inst(x) if x else {}
+            parsed = parse_tpex_inst(x) if x else {}
+        else:
+            x = http_json(
+                TWSE_WEB_BASE + '/fund/T86',
+                {
+                    'date': ds,
+                    'selectType': 'ALL',
+                    'response': 'json'
+                },
+                timeout=10,
+                retries=1
+            )
+            parsed = parse_t86(x) if x else {}
 
-        x = http_json(
-            TWSE_WEB_BASE + '/fund/T86',
-            {
-                'date': ds,
-                'selectType': 'ALL',
-                'response': 'json'
-            },
-            timeout=10,
-            retries=1
-        )
-        return ds, parse_t86(x) if x else {}
+        # LINE 模式：解析後立刻只留下目標股票，不能把整個市場資料留在 memory。
+        if LINE_MODE_ACTIVE:
+            one = parsed.get(code) if isinstance(parsed, dict) else None
+            return ds, ({code: one} if one else {})
+
+        return ds, parsed
 
     def fetch_missing(target_dates):
         missing = [
@@ -3341,7 +3359,13 @@ def institutional(
                 except Exception as e:
                     print('法人批次失敗：', e)
 
-        save_json(CHIP_HISTORY_FILE, history)
+        if LINE_MODE_ACTIVE:
+            save_json(
+                LINE_CHIP_CACHE_FILE,
+                history.get('LINE', {})
+            )
+        else:
+            save_json(CHIP_HISTORY_FILE, history)
 
     fetch_missing(dates)
 
@@ -4702,7 +4726,7 @@ def analysis(
     # --------------------------------------------------------
 
     return (
-        f'📊 股票加碼分析 V2.10.7\n\n'
+        f'📊 股票加碼分析 V2.10.8\n\n'
         f'標的：{name}（{code}）\n'
         f'市場：{market}\n'
         f'產業：{industry}\n'
@@ -4863,11 +4887,13 @@ def line_target_from_event(e):
 
 
 def _background_line_analysis(text, target, u, event_id=None):
-    """V2.10.7：背景完整分析。
+    """V2.10.8：低記憶體背景完整分析。
 
     使用 ThreadPoolExecutor（非 daemon）而非裸 daemon Thread，並在分析前後
     明確記錄狀態；完成後用 Push API 回原聊天室。
     """
+    global LINE_MODE_ACTIVE
+    LINE_MODE_ACTIVE = True
     try:
         print(
             f'LINE背景分析開始：{text} -> '
@@ -4875,7 +4901,8 @@ def _background_line_analysis(text, target, u, event_id=None):
         )
 
         with LINE_ANALYSIS_LOCK:
-            result = analysis(text, u, True)
+            query_u = u if isinstance(u, dict) and u else build_line_query_universe(text)
+            result = analysis(text, query_u, True)
 
         if not result:
             result = f'❌ {text} 分析沒有產生結果。'
@@ -4892,6 +4919,9 @@ def _background_line_analysis(text, target, u, event_id=None):
             target,
             f'❌ {text} 分析失敗：{e}'
         )
+    finally:
+        LINE_MODE_ACTIVE = False
+        release_line_memory()
 
 
 def _mark_line_event_seen(event_id):
@@ -4910,8 +4940,48 @@ def _mark_line_event_seen(event_id):
         return True
 
 
+def build_line_query_universe(query):
+    """V2.10.8：LINE 查詢專用市場資料。
+
+    不在 Render 啟動時建立完整股票池；只有真正收到股票查詢時才建立一次
+    市場 metadata。這保留動態次產業/Top10 所需的 code、industry、market_cap，
+    但避免 Web Service 啟動時同時載入次產業與大量快取。
+    """
+    # 若本機已有近期股票池快取，直接使用；不強制刷新。
+    try:
+        c = load_json(UNIVERSE_CACHE_FILE)
+        d = c.get('data') if isinstance(c, dict) else None
+        t = c.get('_cached_at', 0) if isinstance(c, dict) else 0
+        if isinstance(d, dict) and d and time.time() - t < UNIVERSE_CACHE_HOURS * 3600:
+            return d
+    except Exception as e:
+        print(f'LINE股票池快取讀取失敗：{e}')
+
+    # Render 沒有快取時才建立；這裡不呼叫 get_public_subindustry，避免啟動
+    # 時一次平行抓 200+ 網頁。目標股次產業與同業缺資料時由 query 流程補抓。
+    print('LINE查詢：建立市場 metadata（不預先抓次產業）')
+    u = build_universe()
+    return u or {}
+
+
+def release_line_memory():
+    """V2.10.8：清除 LINE 查詢期間的大型一次性快取。"""
+    # 分析完成後整個 RUN_CACHE 都不再需要；尤其 Yahoo DataFrame / info
+    # 若留在全域 dict，Render 長時間運作後會逐次累積。
+    RUN_CACHE.clear()
+    PE_DATE_CACHE.clear()
+    INSTITUTIONAL_CACHE.clear()
+    MARGIN_CACHE.clear()
+    SUBINDUSTRY_CACHE.clear()
+    try:
+        import gc
+        gc.collect()
+    except Exception:
+        pass
+
+
 def handle_event(e, u):
-    """V2.10.7：立即 Reply 確認，再用非 daemon executor 背景分析並 Push。"""
+    """V2.10.8：立即 Reply 確認，再用低記憶體背景分析並 Push。"""
     if (
         e.get('type') != 'message'
         or e.get('message', {}).get('type') != 'text'
@@ -4933,7 +5003,7 @@ def handle_event(e, u):
     if text.lower() in {'help', '說明', '功能', '股票'}:
         ok = reply_line(
             token,
-            '📈 股票加碼分析 Bot V2.10.7\n\n'
+            '📈 股票加碼分析 Bot V2.10.8\n\n'
             '輸入股票代號或名稱即可查詢。\n'
             '例如：2330、台積電、3711、日月光投控\n\n'
             '模型：基本面40 + 技術30 + 籌碼20 + 風險10。\n'
@@ -4982,8 +5052,8 @@ def run_webhook_server():
     app = Flask(__name__)
 
     print('================================')
-    print('LINE Webhook Server V2.10.7')
-    print('模式：立即 Reply + 穩定背景分析 + Push')
+    print('LINE Webhook Server V2.10.8')
+    print('模式：立即 Reply + 低記憶體背景分析 + Push')
     print('================================')
 
     if not LINE_TOKEN:
@@ -4991,55 +5061,17 @@ def run_webhook_server():
     if not LINE_CHANNEL_SECRET:
         print('⚠️ 未設定 LINE_CHANNEL_SECRET')
 
-    # V2.10.5 修正版：Render/LINE 啟動時強制確認次產業資料已掛載。
-    # 不再只依賴 GitHub Actions 執行後留下的本地快取；Render 重新部署
-    # 或睡眠喚醒後沒有 subindustry_cache.json 時，也會自行建立。
-    u = get_market_universe(force_refresh=True)
-
-    # 再做一次明確驗證。若股票池建立成功但次產業仍缺失，
-    # 立即重新抓取公開產業價值鏈並重新掛載，確保 LINE 查詢與
-    # GitHub Actions 使用完全相同的動態次產業資料。
-    try:
-        target_missing = []
-        for _label, _symbol in STOCKS.items():
-            _code = clean_code(_symbol)
-            if _code.isdigit() and _code in u:
-                if not get_subindustries_for_stock(_code, u[_code]):
-                    target_missing.append(_code)
-
-        if target_missing:
-            print(
-                '⚠️ LINE 啟動檢查：目標股缺少次產業：'
-                + ', '.join(target_missing)
-            )
-            _sub_data = get_public_subindustry(u)
-            u = attach_subindustries(u, _sub_data)
-
-            # 最後逐檔直接補抓，避免公開資料批次流程因快取/暫時失敗
-            # 導致 2330、3711 在 LINE 中顯示 N/A。
-            for _code in target_missing:
-                if not get_subindustries_for_stock(_code, u.get(_code, {})):
-                    _item = u.get(_code)
-                    _one = ensure_subindustry_for_query(_code, _item)
-                    if _one and isinstance(_item, dict):
-                        _item['subindustries'] = _one
-                        _item['subindustry'] = _one[0]
-
-        print(
-            'LINE 次產業啟動檢查：'
-            + ', '.join(
-                f'{clean_code(_symbol)}='
-                f'{",".join(get_subindustries_for_stock(clean_code(_symbol), u.get(clean_code(_symbol), {}))) or "N/A"}'
-                for _label, _symbol in STOCKS.items()
-                if clean_code(_symbol).isdigit() and clean_code(_symbol) in u
-            )
-        )
-    except Exception as _sub_e:
-        print(f'⚠️ LINE 次產業啟動檢查失敗：{_sub_e}')
+    # V2.10.8：LINE/Render 啟動時不建立 1985 檔完整市場股票池。
+    # V2.10.7 原本在 Web Service 啟動時 force_refresh=True，會同時抓
+    # TWSE/TPEx 股票池、次產業公開資料並保留大量快取，Render Free 512MB
+    # 容易 OOM。LINE 查詢改為「收到查詢後才建立必要資料」，並在分析完成
+    # 後釋放大型物件。
+    u = {}
+    print('LINE 啟動：跳過完整 1985 檔市場股票池，採查詢時載入模式')
 
     @app.get('/')
     def health():
-        return 'stock_alert V2.10.7 OK', 200
+        return 'stock_alert V2.10.8 OK', 200
 
     @app.get('/health')
     def health2():
