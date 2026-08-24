@@ -1,4 +1,4 @@
-# stock_alert.py V2.10.17
+# stock_alert.py V2.10.19
 # 效能修正版：
 # 1. 全市場資料批次化
 # 2. 單次執行快取
@@ -27,7 +27,7 @@
 # - 保留原本基本面 / 技術 / 籌碼 / 風險 / LINE 功能
 #
 # 股票跌幅 + 15分鐘區間最低價 + 動態估值 + 技術 + 籌碼 + 100分制加碼決策
-# V2.10.17：次產業修正版 + LINE 輕量查詢專用分析路徑；保留 V2.10.17 全部分析功能
+# V2.10.19：次產業修正版 + LINE 輕量查詢專用分析路徑；保留 V2.10.19 全部分析功能
 #          + LINE webhook HMAC-SHA256 簽章驗證 + 群組/聊天室支援
 
 import os
@@ -68,7 +68,7 @@ STATE_FILE = 'alert_state.json'
 PE_HISTORY_FILE = 'pe_history.json'
 CHIP_HISTORY_FILE = 'chip_history.json'
 LINE_CHIP_CACHE_FILE = 'line_chip_cache.json'
-# V2.10.17：LINE 查詢用的輕量快取，避免 Render Free 反覆打 Yahoo。
+# V2.10.19：LINE 查詢用的輕量快取，避免 Render Free 反覆打 Yahoo。
 LINE_FUND_CACHE_FILE = 'line_fund_cache.json'
 LINE_TECH_CACHE_FILE = 'line_technical_cache.json'
 
@@ -115,7 +115,7 @@ SUBINDUSTRY_CACHE = {}
 # V2.10.1：LINE 查詢分析鎖，避免多個訊息同時改寫全域快取。
 LINE_ANALYSIS_LOCK = threading.Lock()
 
-# V2.10.17：使用非 daemon 的 ThreadPoolExecutor 執行 LINE 背景分析。
+# V2.10.19：使用非 daemon 的 ThreadPoolExecutor 執行 LINE 背景分析。
 # 不再用 daemon=True 的裸 Thread，降低 Render request 結束後背景工作
 # 被直接終止的風險。完整分析仍在獨立工作執行緒中，不會讓 replyToken 過期。
 from concurrent.futures import ThreadPoolExecutor
@@ -596,7 +596,7 @@ def save_json(f, d):
 
 
 def load_remote_subindustry_cache():
-    """V2.10.17：Render Free 的免費遠端次產業快取備援。
+    """V2.10.19：Render Free 的免費遠端次產業快取備援。
 
     GitHub Actions 可將成功取得的 subindustry_cache.json 提交到公開 repo，
     Render 查詢時直接讀 raw.githubusercontent.com，不需 API token。
@@ -621,7 +621,7 @@ def load_remote_subindustry_cache():
     return {}
 
 def load_remote_json_cache(filename, timeout=5):
-    """V2.10.17：Render Free 遠端 GitHub 快取備援。
+    """V2.10.19：Render Free 遠端 GitHub 快取備援。
 
     只在本機快取缺失時使用；不需要 GitHub token。
     失敗直接回傳空 dict，不阻塞 LINE 分析。
@@ -1173,7 +1173,7 @@ class _TextExtractor(__import__('html.parser', fromlist=['HTMLParser']).HTMLPars
 def parse_value_chain_html(text, code):
     """解析 TPEx/TWSE 產業價值鏈公司頁面。
 
-    V2.10.17：保留 V2.10.9 已驗證可用的解析方式，並兼容
+    V2.10.19：保留 V2.10.9 已驗證可用的解析方式，並兼容
     HTML / Markdown / Reader 純文字格式。只接受「所屬產業鏈」附近
     的「大產業 > 次產業」，避免誤抓導覽列。
     """
@@ -1257,10 +1257,10 @@ def parse_value_chain_html(text, code):
     return out
 
 def fetch_value_chain_for_stock(code, allow_jina=True):
-    """V2.10.17：免費次產業抓取修正版。
+    """V2.10.19：免費次產業抓取修正版。
 
     修正：
-    1. 補上標準庫 html import；V2.10.17 的 parse_value_chain_html 會呼叫
+    1. 補上標準庫 html import；V2.10.19 的 parse_value_chain_html 會呼叫
        html.unescape，但沒有 import html，導致所有股票都報 name 'html' is not defined。
     2. 批次建立次產業快取時，不再讓 8 個 worker 同時轟 Jina Reader，避免 429。
     3. 批次模式只打官方 TPEx 產業價值鏈頁面；Jina 僅留給 LINE 單股查詢的備援。
@@ -1337,7 +1337,7 @@ def fetch_value_chain_for_stock(code, allow_jina=True):
     return None
 
 def _fetch_missing_value_chains(codes):
-    """V2.10.17：批次抓取官方次產業資料，避免 Jina 429 與過度併發。
+    """V2.10.19：批次抓取官方次產業資料，避免 Jina 429 與過度併發。
 
     批次只使用官方 TPEx 產業價值鏈頁面；成功資料會寫入
     subindustry_cache.json，後續 30 天不再重抓。
@@ -1685,7 +1685,7 @@ def get_dynamic_subindustry_peers(
     u,
     limit=10
 ):
-    """V2.10.17：動態次產業 Top 10。
+    """V2.10.19：動態次產業 Top 10。
 
     LINE/Render 若啟動時沒有完整次產業快取，查詢時會對
     「同大產業且市值最大的候選股」補抓次產業，直到找到足夠
@@ -1720,7 +1720,7 @@ def get_dynamic_subindustry_peers(
         else:
             missing.append(x)
 
-    # V2.10.17：只對同大產業中市值最大的候選補抓，避免 LINE 查詢時
+    # V2.10.19：只對同大產業中市值最大的候選補抓，避免 LINE 查詢時
     # 對整個市場 1985 檔逐一請求。最多嘗試 60 檔，找到 Top 10 即停止。
     missing.sort(key=lambda x: to_float(x.get('market_cap')) or 0, reverse=True)
     for x in missing[:60]:
@@ -1804,7 +1804,7 @@ def build_universe():
 
     print(
         '\n========== '
-        '建立動態市場股票池 V2.10.17 '
+        '建立動態市場股票池 V2.10.19 '
         '=========='
     )
 
@@ -2971,7 +2971,7 @@ def one_year_pe(
 
 
 def yahoo_timeseries_fund(symbol):
-    """V2.10.17：不依賴 Yahoo quoteSummary/info 的免費基本面備援。
+    """V2.10.19：不依賴 Yahoo quoteSummary/info 的免費基本面備援。
 
     Render 上 yfinance 的 Ticker.info 偶爾會因 Yahoo quoteSummary/crumb
     限制而拿不到 EPS 成長、ROE、PEG。這裡直接使用 Yahoo 公開的
@@ -3062,9 +3062,9 @@ def yahoo_timeseries_fund(symbol):
 
 
 def yahoo_fund(symbol):
-    """V2.10.17：Yahoo 基本面多層同步。
+    """V2.10.19：Yahoo 基本面多層同步。
 
-    第一層仍使用 Ticker.info（維持 V2.10.17 行為）。
+    第一層仍使用 Ticker.info（維持 V2.10.19 行為）。
     若 Render 的 Yahoo info 缺少 EPS 成長/ROE/PEG，第二層改讀
     financial statements 計算可取得的指標，避免 LINE 環境全部 N/A。
     """
@@ -3131,7 +3131,7 @@ def yahoo_fund(symbol):
     except Exception as e:
         print('Yahoo fundamentals失敗', symbol, e)
 
-    # V2.10.17：直接 Yahoo fundamentals-timeseries 最終備援。
+    # V2.10.19：直接 Yahoo fundamentals-timeseries 最終備援。
     # 只補缺欄位，不覆蓋原本已成功取得的 Yahoo info 數值。
     try:
         ts = yahoo_timeseries_fund(symbol)
@@ -3252,73 +3252,276 @@ def kd(d):
 
 
 def _twse_history_fallback(code, months=3):
-    """V2.10.17：LINE 技術面快速官方備援。"""
-    frames=[]; today=datetime.now(TW_TZ).date(); first_month=today.replace(day=1)
-    headers={'User-Agent':'Mozilla/5.0 stock-alert/2.10.17'}
-    for i in range(months):
-        y=first_month.year; m=first_month.month-i
-        while m<=0: y-=1; m+=12
-        ds=f'{y:04d}{m:02d}01'
+    """V2.10.19：TWSE 官方日線最後備援。
+
+    Render Free 不應把多個 TWSE 月份請求串行等待；因此改成最多 3 個月份
+    平行抓取、短 timeout。正常情況 LINE 不會走到這裡，因為 GitHub Actions
+    會在批次執行時建立 line_technical_cache.json。
+    """
+    from concurrent.futures import ThreadPoolExecutor, as_completed
+
+    code = clean_code(code)
+    if not code or not code.isdigit():
+        return None
+
+    today = datetime.now(TW_TZ).date()
+    first_month = today.replace(day=1)
+    headers = {
+        'User-Agent': 'Mozilla/5.0 stock-alert/2.10.19',
+        'Accept': 'application/json,text/plain,*/*'
+    }
+
+    dates = []
+    for i in range(max(1, min(int(months), 3))):
+        y = first_month.year
+        m = first_month.month - i
+        while m <= 0:
+            y -= 1
+            m += 12
+        dates.append(f'{y:04d}{m:02d}01')
+
+    def fetch(ds):
+        url = f'{TWSE_WEB_BASE}/afterTrading/STOCK_DAY'
         try:
-            r=requests.get(f'{TWSE_WEB_BASE}/afterTrading/STOCK_DAY',params={'response':'json','date':ds,'stockNo':clean_code(code)},headers=headers,timeout=3)
-            r.raise_for_status(); data=r.json()
+            r = requests.get(
+                url,
+                params={
+                    'response': 'json',
+                    'date': ds,
+                    'stockNo': code
+                },
+                headers=headers,
+                timeout=2.5
+            )
+            r.raise_for_status()
+            data = r.json()
+            return ds, data
         except Exception as e:
-            print(f'LINE技術面：TWSE {ds} 取得失敗 {code}：{type(e).__name__}',flush=True); continue
-        for row in (data.get('data',[]) if isinstance(data,dict) else []):
-            if not isinstance(row,list) or len(row)<7: continue
-            try:
-                close=to_float(str(row[6]).replace(',',''))
-                if close is not None: frames.append({'date':str(row[0]),'Open':to_float(str(row[3]).replace(',','')),'High':to_float(str(row[4]).replace(',','')),'Low':to_float(str(row[5]).replace(',','')),'Close':close})
-            except Exception: continue
-    if not frames: return None
-    df=pd.DataFrame(frames).drop_duplicates('date').sort_values('date')
-    for c in ['Open','High','Low','Close']: df[c]=pd.to_numeric(df[c],errors='coerce')
-    df=df.dropna(subset=['Close'])
-    return df.reset_index(drop=True) if len(df)>=14 else None
+            print(
+                f'LINE技術面：TWSE {ds} 取得失敗 {code}：'
+                f'{type(e).__name__}',
+                flush=True
+            )
+            return ds, None
+
+    frames = []
+    workers = min(3, len(dates))
+    with ThreadPoolExecutor(max_workers=workers) as ex:
+        futures = [ex.submit(fetch, ds) for ds in dates]
+        for fut in as_completed(futures):
+            ds, data = fut.result()
+            rows = data.get('data', []) if isinstance(data, dict) else []
+            for row in rows:
+                if not isinstance(row, list) or len(row) < 7:
+                    continue
+                try:
+                    def num(v):
+                        return to_float(str(v).replace(',', ''))
+
+                    close = num(row[6])
+                    if close is None:
+                        continue
+                    frames.append({
+                        'date': str(row[0]),
+                        'Open': num(row[3]),
+                        'High': num(row[4]),
+                        'Low': num(row[5]),
+                        'Close': close
+                    })
+                except Exception:
+                    continue
+
+    if not frames:
+        return None
+
+    df = (
+        pd.DataFrame(frames)
+        .drop_duplicates('date')
+        .sort_values('date')
+    )
+    for col in ['Open', 'High', 'Low', 'Close']:
+        df[col] = pd.to_numeric(df[col], errors='coerce')
+    df = df.dropna(subset=['Close'])
+
+    return df.reset_index(drop=True) if len(df) >= 20 else None
+
+
+def _technical_from_df(d):
+    """統一技術指標計算，避免 Yahoo/TWSE/快取三條路徑口徑不同。"""
+    o = {
+        'k': None,
+        'd': None,
+        'rsi': None,
+        'ma20': None,
+        'ma60': None,
+        'trend': None,
+        'distance_low': None,
+        'price': None,
+        'recent_low': None
+    }
+
+    if d is None or d.empty or 'Close' not in d.columns:
+        return o
+
+    c = pd.to_numeric(d['Close'], errors='coerce').dropna()
+    if c.empty:
+        return o
+
+    try:
+        if all(x in d.columns for x in ['High', 'Low', 'Close']):
+            k, dd = kd(d)
+        else:
+            k, dd = None, None
+    except Exception:
+        k, dd = None, None
+
+    o.update({
+        'k': k,
+        'd': dd,
+        'rsi': rsi(c),
+        'ma20': float(c.tail(20).mean()) if len(c) >= 20 else None,
+        'ma60': float(c.tail(60).mean()) if len(c) >= 60 else None,
+        'price': float(c.iloc[-1])
+    })
+
+    if o['ma20'] is not None and o['ma60'] is not None:
+        if o['price'] > o['ma20'] > o['ma60']:
+            o['trend'] = '多頭'
+        elif o['price'] < o['ma20'] < o['ma60']:
+            o['trend'] = '空頭'
+        else:
+            o['trend'] = '震盪'
+    else:
+        o['trend'] = '震盪'
+
+    lo = c.tail(20).min() if len(c) >= 20 else c.min()
+    if lo is not None and not pd.isna(lo):
+        o['recent_low'] = float(lo)
+        o['distance_low'] = o['price'] / float(lo) - 1 if float(lo) else None
+
+    return o
+
+
+def _load_technical_cache_entry(cache, key, max_age=72 * 3600):
+    """讀取技術快取；週末/Render 冷啟動允許最多 72 小時。"""
+    if not isinstance(cache, dict):
+        return None
+    x = cache.get(key)
+    if not isinstance(x, dict) or not x.get('_cached_at'):
+        return None
+    try:
+        age = time.time() - float(x.get('_cached_at', 0))
+        if age < 0 or age >= max_age:
+            return None
+    except Exception:
+        return None
+
+    out = {}
+    for k in ['k', 'd', 'rsi', 'ma20', 'ma60', 'trend', 'distance_low', 'price', 'recent_low']:
+        if k == 'trend':
+            out[k] = x.get(k)
+        else:
+            out[k] = to_float(x.get(k))
+    return out
+
+
+def _save_technical_cache_entry(cache, key, value):
+    try:
+        cache[key] = dict(value)
+        cache[key]['_cached_at'] = time.time()
+        save_json(LINE_TECH_CACHE_FILE, cache)
+        print(f'技術快取已保存：{key}', flush=True)
+        return True
+    except Exception as e:
+        print(f'技術快取保存失敗 {key}：{e}', flush=True)
+        return False
 
 
 def technical(symbol):
-    """V2.10.17：LINE 技術面快速免費備援。"""
-    cache_key=clean_code(str(symbol).split('.')[0]) or str(symbol); cache=load_json(LINE_TECH_CACHE_FILE)
-    if not isinstance(cache,dict): cache={}
-    def from_cached(x):
-        if not isinstance(x,dict) or not x.get('_cached_at'): return None
-        try:
-            if time.time()-float(x.get('_cached_at',0))>=86400: return None
-        except Exception: return None
-        return {k:to_float(x.get(k)) if k not in ('trend',) else x.get(k) for k in ['k','d','rsi','ma20','ma60','trend','distance_low','price','recent_low']}
+    """V2.10.19 技術面：批次建立 GitHub 快取，LINE 冷啟動優先讀快取。
+
+    路徑順序：
+      1. LINE 模式：本機快取 -> GitHub line_technical_cache.json
+      2. Yahoo 日線
+      3. TWSE 官方日線（只作最後備援）
+      4. 無資料才回傳 N/A
+
+    批次模式也會保存成功的技術結果，讓下一次 Render Free 查詢不需要
+    再碰 Yahoo/TWSE。
+    """
+    cache_key = clean_code(str(symbol).split('.')[0]) or str(symbol)
+    cache = load_json(LINE_TECH_CACHE_FILE)
+    if not isinstance(cache, dict):
+        cache = {}
+
     if LINE_MODE_ACTIVE:
-        z=from_cached(cache.get(cache_key))
-        if z: print(f'LINE技術面：使用本機快取 {cache_key}',flush=True); return z
-        remote=load_remote_json_cache(LINE_TECH_CACHE_FILE,timeout=3); z=from_cached(remote.get(cache_key)) if isinstance(remote,dict) else None
-        if z: print(f'LINE技術面：使用 GitHub 快取 {cache_key}',flush=True); return z
-    o={'k':None,'d':None,'rsi':None,'ma20':None,'ma60':None,'trend':None,'distance_low':None,'price':None,'recent_low':None}; d=None
-    try: d=yf_download(symbol,'3mo','1d')
-    except Exception as e:
-        if LINE_MODE_ACTIVE: print(f'LINE技術面：Yahoo 失敗 {cache_key}：{type(e).__name__}',flush=True)
-    if d is not None and not d.empty:
-        try: c=pd.to_numeric(d['Close'],errors='coerce').dropna()
-        except Exception: c=None
-    else: c=None
-    if (c is None or len(c)<20) and LINE_MODE_ACTIVE and clean_code(symbol).isdigit():
-        print(f'LINE技術面：Yahoo 無有效資料，改用 TWSE 快速日線 {cache_key}',flush=True)
-        try:
-            tw=_twse_history_fallback(cache_key,2)
-            if tw is not None and not tw.empty: d=tw; c=pd.to_numeric(d['Close'],errors='coerce').dropna()
-        except Exception as e: print(f'LINE技術面：TWSE 快速備援失敗 {cache_key}：{type(e).__name__}',flush=True); c=None
-    if c is None or c.empty:
-        if LINE_MODE_ACTIVE: print(f'LINE技術面：無資料，使用 N/A {cache_key}',flush=True)
-        return o
-    k=dd=None
+        z = _load_technical_cache_entry(cache, cache_key)
+        if z:
+            print(f'LINE技術面：使用本機快取 {cache_key}', flush=True)
+            return z
+
+        remote = load_remote_json_cache(LINE_TECH_CACHE_FILE, timeout=3)
+        z = _load_technical_cache_entry(remote, cache_key)
+        if z:
+            # 輕量地同步到本機；不依賴成功與否。
+            try:
+                cache[cache_key] = remote[cache_key]
+                save_json(LINE_TECH_CACHE_FILE, cache)
+            except Exception:
+                pass
+            print(f'LINE技術面：使用 GitHub 快取 {cache_key}', flush=True)
+            return z
+
+    d = None
     try:
-        if isinstance(d,pd.DataFrame) and all(x in d.columns for x in ['High','Low','Close']): k,dd=kd(d)
-    except Exception: pass
-    o.update({'k':k,'d':dd,'rsi':rsi(c),'ma20':float(c.tail(20).mean()) if len(c)>=20 else None,'ma60':float(c.tail(60).mean()) if len(c)>=60 else None,'price':float(c.iloc[-1])})
-    o['trend']='多頭' if (o['ma20'] and o['ma60'] and o['price']>o['ma20']>o['ma60']) else ('空頭' if (o['ma20'] and o['ma60'] and o['price']<o['ma20']<o['ma60']) else '震盪')
-    lo=c.tail(20).min() if len(c)>=20 else c.min(); o['recent_low']=float(lo) if lo is not None else None; o['distance_low']=o['price']/lo-1 if lo else None
-    if LINE_MODE_ACTIVE:
-        try: cache[cache_key]=dict(o); cache[cache_key]['_cached_at']=time.time(); save_json(LINE_TECH_CACHE_FILE,cache); print(f'LINE技術面：快取保存 {cache_key}',flush=True)
-        except Exception as e: print(f'LINE技術面快取保存失敗 {cache_key}: {e}',flush=True)
+        d = yf_download(symbol, '6mo', '1d')
+    except Exception as e:
+        if LINE_MODE_ACTIVE:
+            print(
+                f'LINE技術面：Yahoo 失敗 {cache_key}：'
+                f'{type(e).__name__}',
+                flush=True
+            )
+
+    if d is not None and not d.empty:
+        try:
+            c = pd.to_numeric(d['Close'], errors='coerce').dropna()
+        except Exception:
+            c = None
+    else:
+        c = None
+
+    # LINE 才需要快速備援；批次若 Yahoo 失敗也走同一官方備援，確保快取能建立。
+    if c is None or len(c) < 60:
+        if LINE_MODE_ACTIVE:
+            print(
+                f'LINE技術面：Yahoo 無有效資料，改用 TWSE 快速日線 {cache_key}',
+                flush=True
+            )
+        try:
+            tw = _twse_history_fallback(cache_key, 3)
+            if tw is not None and not tw.empty:
+                d = tw
+                c = pd.to_numeric(d['Close'], errors='coerce').dropna()
+        except Exception as e:
+            if LINE_MODE_ACTIVE:
+                print(
+                    f'LINE技術面：TWSE 快速備援失敗 {cache_key}：'
+                    f'{type(e).__name__}',
+                    flush=True
+                )
+
+    o = _technical_from_df(d)
+
+    if o.get('price') is None:
+        if LINE_MODE_ACTIVE:
+            print(f'LINE技術面：無資料，使用 N/A {cache_key}', flush=True)
+        return o
+
+    # 核心修正：不論是 GitHub Actions 批次或 LINE 模式，只要成功取得
+    # 技術資料就保存。GitHub Actions 的 git add -A 會把這個檔案提交，
+    # Render 下一次直接讀 raw GitHub，不再重打 Yahoo/TWSE。
+    _save_technical_cache_entry(cache, cache_key, o)
     return o
 
 
@@ -3429,7 +3632,7 @@ def institutional(
     if key in INSTITUTIONAL_CACHE:
         return INSTITUTIONAL_CACHE[key]
 
-    # V2.10.17：LINE 查詢絕不載入完整 chip_history.json。
+    # V2.10.19：LINE 查詢絕不載入完整 chip_history.json。
     # T86 每日回傳全市場資料，若把 20 天全部留在 Render 記憶體會很容易
     # 超過 512MB。LINE 模式改用只保存「查詢股票」的精簡快取。
     if LINE_MODE_ACTIVE:
@@ -4501,7 +4704,7 @@ def score_risk(
 
 
 def yahoo_light_fund(symbol, official=None):
-    """V2.10.17 Render Free 輕量基本面。
+    """V2.10.19 Render Free 輕量基本面。
 
     優先使用本機 LINE 基本面快取；只有快取缺欄位才詢問 Yahoo。
     Yahoo 被限流/SSL/網路失敗時，直接保留既有值，不讓整個 LINE 分析失敗。
@@ -4561,7 +4764,7 @@ def yahoo_light_fund(symbol, official=None):
                 flush=True
             )
 
-    # V2.10.17：免費 PE/PB fallback。ROE 缺失時，用同口徑 PB/PE 推導；
+    # V2.10.19：免費 PE/PB fallback。ROE 缺失時，用同口徑 PB/PE 推導；
     # 若 Yahoo 正式 ROE 已存在，絕不覆蓋。
     if o.get('roe') is None:
         pe_for_roe=to_float(o.get('pe')); pb_for_roe=to_float(o.get('pb'))
@@ -4681,7 +4884,7 @@ def analysis(
         )
 
     # 官方 PE/PB/殖利率資料先取出，再交給 LINE 輕量基本面路徑。
-    # V2.10.17 修正：原本 off 在 yahoo_light_fund() 呼叫後才建立，
+    # V2.10.19 修正：原本 off 在 yahoo_light_fund() 呼叫後才建立，
     # 導致 LINE 查詢出現 UnboundLocalError。
     off = pe_data.get(
         code,
@@ -4989,7 +5192,7 @@ def analysis(
     # --------------------------------------------------------
 
     return (
-        f'📊 股票加碼分析 V2.10.17\n\n'
+        f'📊 股票加碼分析 V2.10.19\n\n'
         f'標的：{name}（{code}）\n'
         f'市場：{market}\n'
         f'產業：{industry}\n'
@@ -5150,7 +5353,7 @@ def line_target_from_event(e):
 
 
 def _background_line_analysis(text, target, u, event_id=None):
-    """V2.10.17：低記憶體背景完整分析。
+    """V2.10.19：低記憶體背景完整分析。
 
     使用 ThreadPoolExecutor（非 daemon）而非裸 daemon Thread，並在分析前後
     明確記錄狀態；完成後用 Push API 回原聊天室。
@@ -5212,7 +5415,7 @@ def _mark_line_event_seen(event_id):
 
 
 def prepare_line_subindustries(u, query):
-    """V2.10.17：LINE 查詢前只同步「目標大產業」的必要次產業。
+    """V2.10.19：LINE 查詢前只同步「目標大產業」的必要次產業。
 
     Render Free 不建立完整 1985 檔次產業快取；收到 2330/3711 後，
     只找出該股票的大產業，先補目標股，再補同大產業市值前 80 檔。
@@ -5296,7 +5499,7 @@ def prepare_line_subindustries(u, query):
 
 
 def build_line_query_universe(query):
-    """V2.10.17：LINE 查詢專用市場資料。
+    """V2.10.19：LINE 查詢專用市場資料。
 
     不在 Render 啟動時建立完整股票池；只有真正收到股票查詢時才建立一次
     市場 metadata。這保留動態次產業/Top10 所需的 code、industry、market_cap，
@@ -5320,7 +5523,7 @@ def build_line_query_universe(query):
 
 
 def release_line_memory():
-    """V2.10.17：清除 LINE 查詢期間的大型一次性快取。"""
+    """V2.10.19：清除 LINE 查詢期間的大型一次性快取。"""
     # 分析完成後整個 RUN_CACHE 都不再需要；尤其 Yahoo DataFrame / info
     # 若留在全域 dict，Render 長時間運作後會逐次累積。
     RUN_CACHE.clear()
@@ -5336,7 +5539,7 @@ def release_line_memory():
 
 
 def handle_event(e, u):
-    """V2.10.17：立即 Reply 確認，再用低記憶體背景分析並 Push。"""
+    """V2.10.19：立即 Reply 確認，再用低記憶體背景分析並 Push。"""
     if (
         e.get('type') != 'message'
         or e.get('message', {}).get('type') != 'text'
@@ -5358,7 +5561,7 @@ def handle_event(e, u):
     if text.lower() in {'help', '說明', '功能', '股票'}:
         ok = reply_line(
             token,
-            '📈 股票加碼分析 Bot V2.10.17\n\n'
+            '📈 股票加碼分析 Bot V2.10.19\n\n'
             '輸入股票代號或名稱即可查詢。\n'
             '例如：2330、台積電、3711、日月光投控\n\n'
             '模型：基本面40 + 技術30 + 籌碼20 + 風險10。\n'
@@ -5388,7 +5591,7 @@ def handle_event(e, u):
     if not ok:
         print('⚠️ LINE 即時確認回覆失敗；仍會嘗試背景 Push。')
 
-    # V2.10.17：使用單一非 daemon Executor，避免同一 Render instance
+    # V2.10.19：使用單一非 daemon Executor，避免同一 Render instance
     # 同時跑多個查詢造成記憶體暴增；/callback 仍立即 HTTP 200。
     try:
         future = LINE_ANALYSIS_EXECUTOR.submit(
@@ -5413,7 +5616,7 @@ def run_webhook_server():
     app = Flask(__name__)
 
     print('================================')
-    print('LINE Webhook Server V2.10.17')
+    print('LINE Webhook Server V2.10.19')
     print('模式：立即 Reply + Render Free 穩定背景 Thread + Push')
     print('================================')
 
@@ -5422,8 +5625,8 @@ def run_webhook_server():
     if not LINE_CHANNEL_SECRET:
         print('⚠️ 未設定 LINE_CHANNEL_SECRET')
 
-    # V2.10.17：LINE/Render 啟動時不建立 1985 檔完整市場股票池。
-    # V2.10.17 原本在 Web Service 啟動時 force_refresh=True，會同時抓
+    # V2.10.19：LINE/Render 啟動時不建立 1985 檔完整市場股票池。
+    # V2.10.19 原本在 Web Service 啟動時 force_refresh=True，會同時抓
     # TWSE/TPEx 股票池、次產業公開資料並保留大量快取，Render Free 512MB
     # 容易 OOM。LINE 查詢改為「收到查詢後才建立必要資料」，並在分析完成
     # 後釋放大型物件。
@@ -5432,7 +5635,7 @@ def run_webhook_server():
 
     @app.get('/')
     def health():
-        return 'stock_alert V2.10.17 OK', 200
+        return 'stock_alert V2.10.19 OK', 200
 
     @app.get('/health')
     def health2():
