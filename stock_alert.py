@@ -70,6 +70,7 @@ PE_HISTORY_FILE = 'pe_history.json'
 CHIP_HISTORY_FILE = 'chip_history.json'
 LINE_CHIP_CACHE_FILE = 'line_chip_cache.json'
 LINE_MARGIN_CACHE_FILE = 'line_margin_cache.json'
+LINE_CHIP_SUMMARY_CACHE_FILE = 'line_chip_summary_cache.json'
 LINE_PE_CACHE_FILE = 'line_pe_cache.json'
 # V2.10.21：LINE 查詢用的輕量快取；Actions 每日批次建立全市場技術資料，Render 優先讀 GitHub 快取。
 LINE_FUND_CACHE_FILE = 'line_fund_cache.json'
@@ -4552,63 +4553,26 @@ def margin_data(
 
 
 def _line_chip_fast(code, market, days=20):
-    """V2.10.21：LINE 完全快取優先的法人資料。
+    """V2.10.22：LINE 只讀小型法人摘要快取。
 
-    優先讀 Actions 產生的 line_chip_cache.json。快取不足時不再自動補抓
-    20 個 T86 日期；最多只打一個 3 秒、零重試的最新日請求，避免 Render Free
-    被 TWSE timeout 卡住。
+    Render Free 絕對不下載完整 20 日、1985 檔 T86 JSON。
+    Actions 端會把 CHIP_HISTORY 壓縮成每檔股票一筆：latest/5d/20d。
+    快取不存在時直接回傳空資料，不打 TWSE、不等待、不重試。
     """
     code = clean_code(code)
-    cache = _load_line_small_cache(LINE_CHIP_CACHE_FILE)
-    market_hist = cache.get(market, {}) if isinstance(cache, dict) else {}
-    if not isinstance(market_hist, dict):
-        market_hist = {}
-
-    dates = sorted(
-        [ds for ds, data in market_hist.items()
-         if isinstance(data, dict) and code in data],
-        reverse=True
-    )[:days]
-    if dates:
-        result = [
-            {'date': ds, 'data': {code: market_hist[ds].get(code)}}
-            for ds in dates
-        ]
-        print(f'LINE籌碼：使用快取 {code} {len(result)}/{days} 日', flush=True)
-        return result
-
-    # 快取真的不存在時，只取最新一天；成功就寫入本機，下一次直接使用。
-    today = datetime.now(TW_TZ).date()
-    for back in range(0, 4):
-        dt = today - timedelta(days=back)
-        if dt.weekday() >= 5:
-            continue
-        ds = dt.strftime('%Y%m%d')
-        try:
-            if market == 'TPEX':
-                data = http_json(
-                    TPEX_BASE + '/tpex_3insti_daily_trading',
-                    {'date': ds}, timeout=LINE_FAST_TIMEOUT, retries=0
-                )
-                parsed = parse_tpex_inst(data) if data else {}
-            else:
-                data = http_json(
-                    TWSE_WEB_BASE + '/fund/T86',
-                    {'date': ds, 'selectType': 'ALL', 'response': 'json'},
-                    timeout=LINE_FAST_TIMEOUT, retries=0
-                )
-                parsed = parse_t86(data) if data else {}
-            one = parsed.get(code) if isinstance(parsed, dict) else None
-            if one:
-                market_hist[ds] = {code: one}
-                cache[market] = market_hist
-                _save_line_small_cache(LINE_CHIP_CACHE_FILE, cache)
-                print(f'LINE籌碼：快速取得最新日 {code}', flush=True)
-                return [{'date': ds, 'data': {code: one}}]
-        except Exception as e:
-            print(f'LINE籌碼：快速取得失敗 {code}/{ds}：{type(e).__name__}', flush=True)
-            break
-    print(f'LINE籌碼：無快取且快速 API 無資料 {code}，不再等待', flush=True)
+    cache = load_json(LINE_CHIP_SUMMARY_CACHE_FILE)
+    if not isinstance(cache, dict) or not cache:
+        # 僅嘗試一次極小的遠端摘要檔；不再碰 chip_history.json。
+        cache = load_remote_json_cache(LINE_CHIP_SUMMARY_CACHE_FILE, timeout=2)
+    market_data = cache.get(market, {}) if isinstance(cache, dict) else {}
+    item = market_data.get(code) if isinstance(market_data, dict) else None
+    if isinstance(item, dict):
+        print(f"LINE籌碼：使用摘要快取 {code} latest={item.get('latest')} 5d={item.get('5d')} 20d={item.get('20d')}", flush=True)
+        return [{
+            'date': 'summary',
+            'data': {code: {'total': item.get('latest')}}
+        }]
+    print(f'LINE籌碼：摘要快取無 {code}，直接使用 N/A，不打 TWSE', flush=True)
     return []
 
 
@@ -5322,7 +5286,19 @@ def analysis(
 
     print(f'LINE輕量分析：籌碼面 {code}', flush=True) if line_light else None
     if line_light:
-        inst = chip_sums(code, _line_chip_fast(code, market, 20))
+        _chip_rows = _line_chip_fast(code, market, 20)
+        if _chip_rows:
+            _chip_item = _chip_rows[0].get('data', {}).get(code, {})
+            _chip_cache = load_json(LINE_CHIP_SUMMARY_CACHE_FILE)
+            _chip_summary = (_chip_cache.get(market, {}).get(code, {})
+                             if isinstance(_chip_cache, dict) else {})
+            inst = {
+                'latest': _chip_summary.get('latest'),
+                '5d': _chip_summary.get('5d'),
+                '20d': _chip_summary.get('20d')
+            }
+        else:
+            inst = {'latest': None, '5d': None, '20d': None}
         margin = _line_margin_fast(code, market)
     else:
         inst = chip_sums(code, institutional(code, market, 20))
@@ -6054,28 +6030,43 @@ def build_line_caches_for_actions():
     except Exception as e:
         print(f'LINE 融資快取建立失敗：{e}', flush=True)
 
-    # Institutional：CHIP_HISTORY 已在 Actions 取得 20 日資料；抽取所有股票。
+    # Institutional：把 20 日全市場 T86 壓縮成每檔一筆摘要。
+    # Render Free 絕不需要下載完整 CHIP_HISTORY。
     try:
         full = load_json(CHIP_HISTORY_FILE)
-        light = {}
+        summary = {}
         for market, market_hist in full.items():
             if not isinstance(market_hist, dict):
                 continue
-            out = {}
-            # 最多保留最近 20 個有資料日期。
-            dates = sorted(market_hist.keys(), reverse=True)[:20]
+            dates = sorted(market_hist.keys(), reverse=True)
+            vals = {}
             for ds in dates:
                 day = market_hist.get(ds)
-                if isinstance(day, dict):
-                    out[ds] = day
+                if not isinstance(day, dict):
+                    continue
+                for code, row in day.items():
+                    if not isinstance(row, dict):
+                        continue
+                    total = row.get('total')
+                    if total is None:
+                        continue
+                    vals.setdefault(str(code), []).append(float(total))
+            out = {}
+            for code, arr in vals.items():
+                if arr:
+                    out[code] = {
+                        'latest': arr[0],
+                        '5d': sum(arr[:5]) if len(arr) >= 5 else None,
+                        '20d': sum(arr[:20]) if len(arr) >= 20 else None
+                    }
             if out:
-                light[market] = out
-        if light:
-            _save_line_small_cache(LINE_CHIP_CACHE_FILE, light)
-            total = sum(len(v) for v in light.values())
-            print(f'LINE 法人快取完成：{total} 日資料', flush=True)
+                summary[market] = out
+        if summary:
+            _save_line_small_cache(LINE_CHIP_SUMMARY_CACHE_FILE, summary)
+            total = sum(len(v) for v in summary.values())
+            print(f'LINE 法人摘要快取完成：{total} 檔', flush=True)
     except Exception as e:
-        print(f'LINE 法人快取建立失敗：{e}', flush=True)
+        print(f'LINE 法人摘要快取建立失敗：{e}', flush=True)
 
 
 # ============================================================
