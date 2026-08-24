@@ -1,4 +1,4 @@
-# stock_alert.py V2.10.30
+# stock_alert.py V2.10.31
 # 效能修正版：
 # 1. 全市場資料批次化
 # 2. 單次執行快取
@@ -27,7 +27,7 @@
 # - 保留原本基本面 / 技術 / 籌碼 / 風險 / LINE 功能
 #
 # 股票跌幅 + 15分鐘區間最低價 + 動態估值 + 技術 + 籌碼 + 100分制加碼決策
-# V2.10.30：逐欄位基本面雙向 Fallback + 缺資料不懲罰；保留 V2.10.28 全部功能
+# V2.10.31：逐欄位基本面雙向 Fallback + 缺資料不懲罰；保留 V2.10.28 全部功能
 #          + LINE webhook HMAC-SHA256 簽章驗證 + 群組/聊天室支援
 #          + Actions 批次建立全市場技術快取；Render LINE 優先只讀快取，避免 Yahoo/TWSE 即時限流
 
@@ -3173,7 +3173,7 @@ def one_year_pe(
 
 
 def yahoo_quote_summary_fund(symbol):
-    """V2.10.30：單股 Yahoo quoteSummary 補洞。
+    """V2.10.31：單股 Yahoo quoteSummary 補洞。
 
     只在其他來源缺欄位時使用；一次請求多個 module，避免免費版產生大量 API 呼叫。
     任何失敗都視為「該來源沒有資料」，不阻塞整份分析。
@@ -3220,7 +3220,7 @@ def yahoo_quote_summary_fund(symbol):
 
 
 def yahoo_timeseries_fund(symbol):
-    """V2.10.30：免費基本面多源資料層。
+    """V2.10.31：免費基本面多源資料層。
 
     fundamentals-timeseries 一次取得多種資料；EPS Growth 不再硬性要求 5 季，
     會依「季對季、同季年增、年度淨利」可取得程度逐層計算。
@@ -4825,7 +4825,7 @@ def _line_margin_fast(code, market):
 # ============================================================
 
 def score_fund(pe, one, peer, peg, roe, eps, pb, yld, model):
-    """V2.10.30：產業化基本面評分；缺資料不扣分，但限制少數欄位過度放大。
+    """V2.10.31：產業化基本面評分；缺資料不扣分，但限制少數欄位過度放大。
 
     完整資料：最高 40。可用權重越少，仍不直接扣分，但會依資料完整度設定
     合理上限，避免只剩 PB/殖利率時被放大成接近滿分。
@@ -5108,7 +5108,7 @@ def score_risk(
 
 
 def yahoo_light_fund(symbol, official=None, current_price=None):
-    """V2.10.30 LINE Free：真正逐欄位多源 fallback。
+    """V2.10.31 LINE Free：真正逐欄位多源 fallback。
 
     順序：官方/快取 → Yahoo quoteSummary → Yahoo timeseries → yfinance info/報表
     → 數學互補。每欄獨立，不因一個來源失敗而清空其他欄位。
@@ -5640,7 +5640,7 @@ def analysis(
     # --------------------------------------------------------
 
     return (
-        f'📊 股票加碼分析 V2.10.30\n\n'
+        f'📊 股票加碼分析 V2.10.31\n\n'
         f'標的：{name}（{code}）\n'
         f'市場：{market}\n'
         f'產業：{industry}\n'
