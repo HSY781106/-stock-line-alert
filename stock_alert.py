@@ -1,4 +1,4 @@
-# stock_alert.py V2.10.20
+# stock_alert.py V2.10.21
 # 效能修正版：
 # 1. 全市場資料批次化
 # 2. 單次執行快取
@@ -27,7 +27,7 @@
 # - 保留原本基本面 / 技術 / 籌碼 / 風險 / LINE 功能
 #
 # 股票跌幅 + 15分鐘區間最低價 + 動態估值 + 技術 + 籌碼 + 100分制加碼決策
-# V2.10.20：1985檔全市場技術快取版 + LINE 輕量查詢專用分析路徑；保留 V2.10.19 全部分析功能
+# V2.10.21：1985檔全市場技術快取版 + LINE 輕量查詢專用分析路徑；保留 V2.10.19 全部分析功能
 #          + LINE webhook HMAC-SHA256 簽章驗證 + 群組/聊天室支援
 #          + Actions 批次建立全市場技術快取；Render LINE 優先只讀快取，避免 Yahoo/TWSE 即時限流
 
@@ -69,7 +69,9 @@ STATE_FILE = 'alert_state.json'
 PE_HISTORY_FILE = 'pe_history.json'
 CHIP_HISTORY_FILE = 'chip_history.json'
 LINE_CHIP_CACHE_FILE = 'line_chip_cache.json'
-# V2.10.20：LINE 查詢用的輕量快取；Actions 每日批次建立全市場技術資料，Render 優先讀 GitHub 快取。
+LINE_MARGIN_CACHE_FILE = 'line_margin_cache.json'
+LINE_PE_CACHE_FILE = 'line_pe_cache.json'
+# V2.10.21：LINE 查詢用的輕量快取；Actions 每日批次建立全市場技術資料，Render 優先讀 GitHub 快取。
 LINE_FUND_CACHE_FILE = 'line_fund_cache.json'
 LINE_TECH_CACHE_FILE = 'line_technical_cache.json'
 
@@ -105,13 +107,18 @@ PE_DATE_CACHE = {}
 YF_TIMEOUT = 10
 MAX_HISTORY_DAYS_PER_RUN = 75
 
-# V2.10.20：全市場技術快取設定。
+# V2.10.21：全市場技術快取設定。
 # Actions 只在快取缺少/過期時更新，避免每天重抓 1985 檔造成不必要的 Yahoo 流量。
 TECH_CACHE_MAX_AGE = 36 * 3600
 TECH_BATCH_CHUNK = 80
 TECH_BATCH_TIMEOUT = 30
 TECH_BATCH_PERIOD = '6mo'
 TECH_BATCH_INTERVAL = '1d'
+
+# V2.10.21：LINE Free 查詢的硬性網路預算。快取不存在時也必須快速結束，
+# 不允許因單一 TWSE/TPEX/Yahoo timeout 把 LINE 卡住數分鐘。
+LINE_FAST_TIMEOUT = 3.0
+LINE_REMOTE_CACHE_TIMEOUT = 3.0
 
 # 次產業快取時間（實際以天數控制）
 SUBINDUSTRY_CACHE_DAYS = 30
@@ -2759,6 +2766,50 @@ def parse_pe(data):
     return out
 
 
+def _load_line_small_cache(filename):
+    """LINE 專用小快取：本機 -> GitHub raw；只讀一次。"""
+    local = load_json(filename)
+    if isinstance(local, dict) and local:
+        return local
+    remote = load_remote_json_cache(filename, timeout=LINE_REMOTE_CACHE_TIMEOUT)
+    return remote if isinstance(remote, dict) else {}
+
+
+def _save_line_small_cache(filename, data):
+    try:
+        save_json(filename, data if isinstance(data, dict) else {})
+        return True
+    except Exception as e:
+        print(f'LINE小快取保存失敗 {filename}：{e}', flush=True)
+        return False
+
+
+def _line_current_pe_data():
+    cache = _load_line_small_cache(LINE_PE_CACHE_FILE)
+    if cache:
+        data = cache.get('data', cache) if isinstance(cache, dict) else {}
+        if isinstance(data, dict) and data:
+            print(f'LINE PE：使用快取 {len(data)} 檔', flush=True)
+            return data
+    # 最後備援：只允許一次短 timeout、零重試的官方查詢。
+    out = {}
+    try:
+        out.update(parse_pe(http_json(
+            TWSE_BASE + '/exchangeReport/BWIBBU_ALL',
+            timeout=LINE_FAST_TIMEOUT, retries=0
+        )))
+    except Exception as e:
+        print(f'LINE PE：TWSE 快速取得失敗：{type(e).__name__}', flush=True)
+    try:
+        out.update(parse_pe(http_json(
+            TPEX_BASE + '/tpex_mainboard_peratio_analysis',
+            timeout=LINE_FAST_TIMEOUT, retries=0
+        )))
+    except Exception as e:
+        print(f'LINE PE：TPEX 快速取得失敗：{type(e).__name__}', flush=True)
+    return out
+
+
 def get_current_pe_data():
 
     key = 'current_pe'
@@ -2766,18 +2817,21 @@ def get_current_pe_data():
     if key in RUN_CACHE:
         return RUN_CACHE[key]
 
-    out = {
-        **parse_pe(
-            twse_get(
-                '/exchangeReport/BWIBBU_ALL'
+    if LINE_MODE_ACTIVE:
+        out = _line_current_pe_data()
+    else:
+        out = {
+            **parse_pe(
+                twse_get(
+                    '/exchangeReport/BWIBBU_ALL'
+                )
+            ),
+            **parse_pe(
+                tpex_get(
+                    '/tpex_mainboard_peratio_analysis'
+                )
             )
-        ),
-        **parse_pe(
-            tpex_get(
-                '/tpex_mainboard_peratio_analysis'
-            )
-        )
-    }
+        }
 
     RUN_CACHE[key] = out
 
@@ -3522,7 +3576,7 @@ def _extract_batch_ticker_frame(batch, ticker):
 
 
 def _yahoo_batch_download(tickers):
-    """V2.10.20：Actions 用少量批次請求取得多檔 6 個月日線。"""
+    """V2.10.21：Actions 用少量批次請求取得多檔 6 個月日線。"""
     if not tickers:
         return None
     try:
@@ -3547,7 +3601,7 @@ def _yahoo_batch_download(tickers):
 
 
 def refresh_all_technical_cache(u, force=False):
-    """V2.10.20：GitHub Actions 全市場技術快取建立器。
+    """V2.10.21：GitHub Actions 全市場技術快取建立器。
 
     - 目標：動態市場股票池內全部 TWSE/TPEX 股票，另含 0050、QQQ、^TWII。
     - 先保留新鮮快取；只更新缺少或超過 36 小時的標的。
@@ -3593,7 +3647,7 @@ def refresh_all_technical_cache(u, force=False):
         if clean_code(code).isdigit() and (item or {}).get('market') in ('TWSE', 'TPEX')
     )
     print(
-        f'========== V2.10.20 全市場技術快取 ==========',
+        f'========== V2.10.21 全市場技術快取 ==========',
         flush=True
     )
     print(
@@ -3649,7 +3703,7 @@ def refresh_all_technical_cache(u, force=False):
 
 
 def technical(symbol):
-    """V2.10.20 技術面。
+    """V2.10.21 技術面。
 
     LINE 路徑：本機快取 -> GitHub 全市場快取 -> 不再主動打 Yahoo/TWSE。
     Actions 批次：若快取缺少/過期，先由 refresh_all_technical_cache() 建立；
@@ -4497,6 +4551,97 @@ def margin_data(
     )
 
 
+def _line_chip_fast(code, market, days=20):
+    """V2.10.21：LINE 完全快取優先的法人資料。
+
+    優先讀 Actions 產生的 line_chip_cache.json。快取不足時不再自動補抓
+    20 個 T86 日期；最多只打一個 3 秒、零重試的最新日請求，避免 Render Free
+    被 TWSE timeout 卡住。
+    """
+    code = clean_code(code)
+    cache = _load_line_small_cache(LINE_CHIP_CACHE_FILE)
+    market_hist = cache.get(market, {}) if isinstance(cache, dict) else {}
+    if not isinstance(market_hist, dict):
+        market_hist = {}
+
+    dates = sorted(
+        [ds for ds, data in market_hist.items()
+         if isinstance(data, dict) and code in data],
+        reverse=True
+    )[:days]
+    if dates:
+        result = [
+            {'date': ds, 'data': {code: market_hist[ds].get(code)}}
+            for ds in dates
+        ]
+        print(f'LINE籌碼：使用快取 {code} {len(result)}/{days} 日', flush=True)
+        return result
+
+    # 快取真的不存在時，只取最新一天；成功就寫入本機，下一次直接使用。
+    today = datetime.now(TW_TZ).date()
+    for back in range(0, 4):
+        dt = today - timedelta(days=back)
+        if dt.weekday() >= 5:
+            continue
+        ds = dt.strftime('%Y%m%d')
+        try:
+            if market == 'TPEX':
+                data = http_json(
+                    TPEX_BASE + '/tpex_3insti_daily_trading',
+                    {'date': ds}, timeout=LINE_FAST_TIMEOUT, retries=0
+                )
+                parsed = parse_tpex_inst(data) if data else {}
+            else:
+                data = http_json(
+                    TWSE_WEB_BASE + '/fund/T86',
+                    {'date': ds, 'selectType': 'ALL', 'response': 'json'},
+                    timeout=LINE_FAST_TIMEOUT, retries=0
+                )
+                parsed = parse_t86(data) if data else {}
+            one = parsed.get(code) if isinstance(parsed, dict) else None
+            if one:
+                market_hist[ds] = {code: one}
+                cache[market] = market_hist
+                _save_line_small_cache(LINE_CHIP_CACHE_FILE, cache)
+                print(f'LINE籌碼：快速取得最新日 {code}', flush=True)
+                return [{'date': ds, 'data': {code: one}}]
+        except Exception as e:
+            print(f'LINE籌碼：快速取得失敗 {code}/{ds}：{type(e).__name__}', flush=True)
+            break
+    print(f'LINE籌碼：無快取且快速 API 無資料 {code}，不再等待', flush=True)
+    return []
+
+
+def _line_margin_fast(code, market):
+    """V2.10.21：LINE 融資融券快取優先，避免 Render 即時打全市場 API。"""
+    code = clean_code(code)
+    cache = _load_line_small_cache(LINE_MARGIN_CACHE_FILE)
+    market_data = cache.get(market, {}) if isinstance(cache, dict) else {}
+    if isinstance(market_data, dict) and isinstance(market_data.get(code), dict):
+        print(f'LINE籌碼：使用融資快取 {code}', flush=True)
+        return market_data[code]
+
+    # 快取缺失時，只做一次短 timeout 的官方全市場查詢。
+    try:
+        if market == 'TPEX':
+            data = http_json(TPEX_BASE + '/tpex_mainboard_margin_balance',
+                             timeout=LINE_FAST_TIMEOUT, retries=0)
+        else:
+            data = http_json(TWSE_BASE + '/exchangeReport/MI_MARGN',
+                             timeout=LINE_FAST_TIMEOUT, retries=0)
+        parsed = _parse_margin_payload(data)
+        one = parsed.get(code)
+        if one:
+            cache.setdefault(market, {})[code] = one
+            _save_line_small_cache(LINE_MARGIN_CACHE_FILE, cache)
+            print(f'LINE籌碼：快速取得融資資料 {code}', flush=True)
+            return one
+    except Exception as e:
+        print(f'LINE籌碼：快速融資取得失敗 {code}：{type(e).__name__}', flush=True)
+    return {'margin_change': None, 'margin_balance': None,
+            'short_change': None, 'short_balance': None}
+
+
 # ============================================================
 # Scoring
 # ============================================================
@@ -5176,19 +5321,12 @@ def analysis(
     # --------------------------------------------------------
 
     print(f'LINE輕量分析：籌碼面 {code}', flush=True) if line_light else None
-    inst = chip_sums(
-        code,
-        institutional(
-            code,
-            market,
-            20
-        )
-    )
-
-    margin = margin_data(
-        code,
-        market
-    )
+    if line_light:
+        inst = chip_sums(code, _line_chip_fast(code, market, 20))
+        margin = _line_margin_fast(code, market)
+    else:
+        inst = chip_sums(code, institutional(code, market, 20))
+        margin = margin_data(code, market)
 
     # --------------------------------------------------------
     # Score
@@ -5546,7 +5684,7 @@ def line_target_from_event(e):
 
 
 def _background_line_analysis(text, target, u, event_id=None):
-    """V2.10.20：低記憶體背景完整分析；技術面改用全市場 GitHub 快取。
+    """V2.10.21：低記憶體背景完整分析；技術面改用全市場 GitHub 快取。
 
     使用 ThreadPoolExecutor（非 daemon）而非裸 daemon Thread，並在分析前後
     明確記錄狀態；完成後用 Push API 回原聊天室。
@@ -5692,7 +5830,7 @@ def prepare_line_subindustries(u, query):
 
 
 def build_line_query_universe(query):
-    """V2.10.20：LINE 查詢專用市場資料。
+    """V2.10.21：LINE 查詢專用市場資料。
 
     不在 Render 啟動時建立完整股票池；只有真正收到股票查詢時才建立一次
     市場 metadata。這保留動態次產業/Top10 所需的 code、industry、market_cap，
@@ -5708,9 +5846,17 @@ def build_line_query_universe(query):
     except Exception as e:
         print(f'LINE股票池快取讀取失敗：{e}')
 
-    # Render 沒有快取時才建立；這裡不呼叫 get_public_subindustry，避免啟動
-    # 時一次平行抓 200+ 網頁。目標股次產業與同業缺資料時由 query 流程補抓。
-    print('LINE查詢：建立市場 metadata（不預先抓次產業）')
+    # V2.10.21：Render 冷啟動優先讀 Actions 提交的 GitHub 市場快取。
+    # 只有遠端快取也不存在時，才建立 1985 檔 metadata。
+    remote = load_remote_json_cache(UNIVERSE_CACHE_FILE, timeout=LINE_REMOTE_CACHE_TIMEOUT)
+    rd = remote.get('data') if isinstance(remote, dict) else None
+    rt = remote.get('_cached_at', 0) if isinstance(remote, dict) else 0
+    if isinstance(rd, dict) and rd:
+        if not rt or time.time() - float(rt) < (UNIVERSE_CACHE_HOURS + 24) * 3600:
+            print(f'LINE查詢：使用 GitHub 市場快取 {len(rd)} 檔', flush=True)
+            return rd
+
+    print('LINE查詢：GitHub 市場快取不可用，建立市場 metadata', flush=True)
     u = build_universe()
     return u or {}
 
@@ -5732,7 +5878,7 @@ def release_line_memory():
 
 
 def handle_event(e, u):
-    """V2.10.20：立即 Reply 確認，再用低記憶體背景分析並 Push。"""
+    """V2.10.21：立即 Reply 確認，再用低記憶體背景分析並 Push。"""
     if (
         e.get('type') != 'message'
         or e.get('message', {}).get('type') != 'text'
@@ -5754,7 +5900,7 @@ def handle_event(e, u):
     if text.lower() in {'help', '說明', '功能', '股票'}:
         ok = reply_line(
             token,
-            '📈 股票加碼分析 Bot V2.10.20\n\n'
+            '📈 股票加碼分析 Bot V2.10.21\n\n'
             '輸入股票代號或名稱即可查詢。\n'
             '例如：2330、台積電、3711、日月光投控\n\n'
             '模型：基本面40 + 技術30 + 籌碼20 + 風險10。\n'
@@ -5809,7 +5955,7 @@ def run_webhook_server():
     app = Flask(__name__)
 
     print('================================')
-    print('LINE Webhook Server V2.10.20')
+    print('LINE Webhook Server V2.10.21')
     print('模式：立即 Reply + Render Free 穩定背景 Thread + Push')
     print('================================')
 
@@ -5877,6 +6023,61 @@ def run_webhook_server():
     )
 
 
+def build_line_caches_for_actions():
+    """V2.10.21：Actions 將已取得的 PE/法人/融資資料轉成 LINE 小快取。
+
+    不新增外部 API 請求；直接利用 run_alerts 已經抓到的資料。Render 因此不需要
+    在查詢時再補 20 天 T86 或全市場融資資料。
+    """
+    # PE：只保存本次執行已取得的完整市場資料。
+    try:
+        pe = RUN_CACHE.get('current_pe', {})
+        if isinstance(pe, dict) and pe:
+            _save_line_small_cache(LINE_PE_CACHE_FILE, {
+                '_cached_at': time.time(), 'data': pe
+            })
+            print(f'LINE PE 快取完成：{len(pe)} 檔', flush=True)
+    except Exception as e:
+        print(f'LINE PE 快取建立失敗：{e}', flush=True)
+
+    # Margin：RUN_CACHE 以 ('margin', market) 為 key。
+    try:
+        md = {}
+        for key, value in MARGIN_CACHE.items():
+            if isinstance(key, tuple) and len(key) >= 2 and key[0] == 'margin':
+                md[str(key[1])] = value if isinstance(value, dict) else {}
+        if md:
+            _save_line_small_cache(LINE_MARGIN_CACHE_FILE, md)
+            print('LINE 融資快取完成：' + ', '.join(
+                f'{m} {len(v)} 檔' for m, v in md.items()
+            ), flush=True)
+    except Exception as e:
+        print(f'LINE 融資快取建立失敗：{e}', flush=True)
+
+    # Institutional：CHIP_HISTORY 已在 Actions 取得 20 日資料；抽取所有股票。
+    try:
+        full = load_json(CHIP_HISTORY_FILE)
+        light = {}
+        for market, market_hist in full.items():
+            if not isinstance(market_hist, dict):
+                continue
+            out = {}
+            # 最多保留最近 20 個有資料日期。
+            dates = sorted(market_hist.keys(), reverse=True)[:20]
+            for ds in dates:
+                day = market_hist.get(ds)
+                if isinstance(day, dict):
+                    out[ds] = day
+            if out:
+                light[market] = out
+        if light:
+            _save_line_small_cache(LINE_CHIP_CACHE_FILE, light)
+            total = sum(len(v) for v in light.values())
+            print(f'LINE 法人快取完成：{total} 日資料', flush=True)
+    except Exception as e:
+        print(f'LINE 法人快取建立失敗：{e}', flush=True)
+
+
 # ============================================================
 # Alerts
 # ============================================================
@@ -5914,7 +6115,7 @@ def run_alerts():
     )
 
     # --------------------------------------------------------
-    # V2.10.20 全市場技術快取
+    # V2.10.21 全市場技術快取
     # GitHub Actions 負責重工作；Render LINE 不再即時碰 Yahoo/TWSE。
     # --------------------------------------------------------
     try:
@@ -6033,6 +6234,13 @@ def run_alerts():
                 dummy,
                 m
             )
+
+    # V2.10.21：把本次 Actions 已取得資料整理成 Render 可直接讀取的小快取。
+    try:
+        get_current_pe_data()
+    except Exception as e:
+        print(f'LINE PE 預建失敗：{e}', flush=True)
+    build_line_caches_for_actions()
 
     print(
         f'[耗時 '
