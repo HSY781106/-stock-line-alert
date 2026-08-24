@@ -1,8 +1,4068 @@
 {
-  "_cache_version": 1,
-  "_cached_at": 1787541158.3190506,
+  "_cached_at": 1787542555.4454515,
   "source": "TPEx/TWSE Industry Value Chain",
   "source_url": "https://ic.tpex.org.tw/company_chain.php",
   "cache_days": 30,
-  "data": {}
+  "data": {
+    "2302": {
+      "subindustries": [
+        "其他IC/二極體製造"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "其他IC/二極體製造",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "2303": {
+      "subindustries": [
+        "晶圓製造"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "晶圓製造",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "2330": {
+      "subindustries": [
+        "晶圓製造"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "晶圓製造",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "2329": {
+      "subindustries": [
+        "IC封裝測試"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "IC封裝測試",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "2337": {
+      "subindustries": [
+        "IC封裝測試",
+        "記憶體IC",
+        "晶圓製造"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "IC封裝測試",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "記憶體IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "晶圓製造",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "2338": {
+      "subindustries": [
+        "光罩"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "光罩",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "2340": {
+      "subindustries": [
+        "IC封裝測試",
+        "ITO導電基板",
+        "擴散膜、增亮膜、導光板",
+        "車燈",
+        "其他",
+        "感測裝置",
+        "晶圓製造",
+        "其他IC/二極體製造",
+        "環境感知",
+        "深度感測",
+        "SLAM",
+        "使用者感知",
+        "視覺",
+        "手勢/動作",
+        "光源/磊晶"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "IC封裝測試",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "平面顯示器",
+          "sub_industry": "ITO導電基板",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "平面顯示器",
+          "sub_industry": "擴散膜、增亮膜、導光板",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "汽車",
+          "sub_industry": "車燈",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "汽車",
+          "sub_industry": "其他",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "運動科技",
+          "sub_industry": "感測裝置",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "晶圓製造",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "其他IC/二極體製造",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "體驗科技",
+          "sub_industry": "環境感知",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "體驗科技",
+          "sub_industry": "深度感測",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "體驗科技",
+          "sub_industry": "SLAM",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "體驗科技",
+          "sub_industry": "其他",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "體驗科技",
+          "sub_industry": "使用者感知",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "體驗科技",
+          "sub_industry": "視覺",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "體驗科技",
+          "sub_industry": "手勢/動作",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "LED照明產業",
+          "sub_industry": "光源/磊晶",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "2342": {
+      "subindustries": [
+        "其他IC/二極體製造"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "其他IC/二極體製造",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "2351": {
+      "subindustries": [
+        "導線架",
+        "塑膠製品",
+        "金屬製品",
+        "模具"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "導線架",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "石化及塑橡膠",
+          "sub_industry": "塑膠製品",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "金屬製品",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "模具",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "2344": {
+      "subindustries": [
+        "記憶體",
+        "記憶體IC",
+        "晶圓製造",
+        "DRAM製造"
+      ],
+      "records": [
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "記憶體",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "通信網路",
+          "sub_industry": "記憶體",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "記憶體IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "晶圓製造",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "DRAM製造",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "2369": {
+      "subindustries": [
+        "IC封裝測試"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "IC封裝測試",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "2363": {
+      "subindustries": [
+        "IC設計"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "IC設計",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "2379": {
+      "subindustries": [
+        "網路通訊IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "網路通訊IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "2401": {
+      "subindustries": [
+        "IP設計/IC設計代工服務",
+        "消費性IC",
+        "磁碟儲存控制器IC",
+        "輸出入介面IC",
+        "光儲存控制IC",
+        "影像感測IC",
+        "大功率鋰電池芯/模組、電池管理系統、動力馬達等零組件"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "IP設計/IC設計代工服務",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "消費性IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "磁碟儲存控制器IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "輸出入介面IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "光儲存控制IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "影像感測IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "電動車輛產業",
+          "sub_industry": "大功率鋰電池芯/模組、電池管理系統、動力馬達等零組件",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "2388": {
+      "subindustries": [
+        "中央處理器",
+        "晶片組",
+        "主機板",
+        "領域解決方案",
+        "機器學習",
+        "電腦視覺"
+      ],
+      "records": [
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "中央處理器",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "晶片組",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "主機板",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "人工智慧",
+          "sub_industry": "領域解決方案",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "人工智慧",
+          "sub_industry": "機器學習",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "人工智慧",
+          "sub_industry": "電腦視覺",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "2408": {
+      "subindustries": [
+        "記憶體",
+        "記憶體IC",
+        "晶圓製造",
+        "DRAM製造"
+      ],
+      "records": [
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "記憶體",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "通信網路",
+          "sub_industry": "記憶體",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "記憶體IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "晶圓製造",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "DRAM製造",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "2434": {
+      "subindustries": [
+        "晶圓製造",
+        "其他IC/二極體製造",
+        "矽晶圓/矽晶片"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "晶圓製造",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "其他IC/二極體製造",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "太陽能產業",
+          "sub_industry": "矽晶圓/矽晶片",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "2441": {
+      "subindustries": [
+        "IC封裝測試"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "IC封裝測試",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "2436": {
+      "subindustries": [
+        "消費性IC",
+        "微控制器IC",
+        "電源管理IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "消費性IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "微控制器IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "電源管理IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "2449": {
+      "subindustries": [
+        "IC封裝測試"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "IC封裝測試",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "2451": {
+      "subindustries": [
+        "IC模組",
+        "記憶體",
+        "隨身碟、記憶卡讀卡機"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "IC模組",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "記憶體",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "隨身碟、記憶卡讀卡機",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "2454": {
+      "subindustries": [
+        "消費性IC",
+        "電源管理IC",
+        "網路通訊IC",
+        "平面顯示器控制IC",
+        "光儲存控制IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "消費性IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "電源管理IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "網路通訊IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "平面顯示器控制IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "光儲存控制IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "2458": {
+      "subindustries": [
+        "其他電腦及週邊設備之零組件",
+        "控制IC",
+        "消費性IC",
+        "微控制器IC"
+      ],
+      "records": [
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "其他電腦及週邊設備之零組件",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "觸控面板",
+          "sub_industry": "控制IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "消費性IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "微控制器IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "2481": {
+      "subindustries": [
+        "其他IC/二極體製造"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "其他IC/二極體製造",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "3006": {
+      "subindustries": [
+        "記憶體IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "記憶體IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "3014": {
+      "subindustries": [
+        "LED驅動IC",
+        "消費性IC",
+        "微控制器IC",
+        "輸出入介面IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "LED驅動IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "消費性IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "微控制器IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "輸出入介面IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "3016": {
+      "subindustries": [
+        "晶圓製造"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "晶圓製造",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "3034": {
+      "subindustries": [
+        "消費性IC",
+        "微控制器IC",
+        "電源管理IC",
+        "平面顯示器控制IC",
+        "平面顯示器驅動IC",
+        "影像感測IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "消費性IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "微控制器IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "電源管理IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "平面顯示器控制IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "平面顯示器驅動IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "影像感測IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "3035": {
+      "subindustries": [
+        "IP設計/IC設計代工服務"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "IP設計/IC設計代工服務",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "3094": {
+      "subindustries": [
+        "網路通訊IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "網路通訊IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "3041": {
+      "subindustries": [
+        "消費性IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "消費性IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "3135": {
+      "subindustries": [
+        "IC模組",
+        "記憶體",
+        "運算元件與設備"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "IC模組",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "記憶體",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "大數據",
+          "sub_industry": "運算元件與設備",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "3150": {
+      "subindustries": [
+        "IC模組",
+        "消費性IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "IC模組",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "消費性IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "3189": {
+      "subindustries": [
+        "基板"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "基板",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "3257": {
+      "subindustries": [
+        "電源管理IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "電源管理IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "3413": {
+      "subindustries": [
+        "生產製程及檢測設備",
+        "燈具/應用"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "生產製程及檢測設備",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "LED照明產業",
+          "sub_industry": "燈具/應用",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "3443": {
+      "subindustries": [
+        "IP設計/IC設計代工服務"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "IP設計/IC設計代工服務",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "3450": {
+      "subindustries": [
+        "IC封裝測試",
+        "主/被動元件"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "IC封裝測試",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "通信網路",
+          "sub_industry": "主/被動元件",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "3530": {
+      "subindustries": [
+        "消費性IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "消費性IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "3532": {
+      "subindustries": [
+        "晶圓製造"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "晶圓製造",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "3545": {
+      "subindustries": [
+        "平面顯示器驅動IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "平面顯示器驅動IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "3583": {
+      "subindustries": [
+        "生產製程及檢測設備",
+        "生產製程、檢測設備及原物料",
+        "太陽能發電設備/系統及系統工程"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "生產製程及檢測設備",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "平面顯示器",
+          "sub_industry": "生產製程及檢測設備",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "LED照明產業",
+          "sub_industry": "生產製程、檢測設備及原物料",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "太陽能產業",
+          "sub_industry": "太陽能發電設備/系統及系統工程",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "3588": {
+      "subindustries": [
+        "電源管理IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "電源管理IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "3592": {
+      "subindustries": [
+        "電源管理IC",
+        "平面顯示器驅動IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "電源管理IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "平面顯示器驅動IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "3661": {
+      "subindustries": [
+        "IP設計/IC設計代工服務"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "IP設計/IC設計代工服務",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "3686": {
+      "subindustries": [
+        "矽晶圓/矽晶片"
+      ],
+      "records": [
+        {
+          "industry": "太陽能產業",
+          "sub_industry": "矽晶圓/矽晶片",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "3711": {
+      "subindustries": [
+        "IC封裝測試"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "IC封裝測試",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "4919": {
+      "subindustries": [
+        "消費性IC",
+        "晶圓製造"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "消費性IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "晶圓製造",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "4952": {
+      "subindustries": [
+        "機器學習",
+        "電腦視覺",
+        "消費性IC",
+        "微控制器IC",
+        "電源管理IC",
+        "平面顯示器控制IC",
+        "電動汽車、電動機車、電動自行車"
+      ],
+      "records": [
+        {
+          "industry": "人工智慧",
+          "sub_industry": "機器學習",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "人工智慧",
+          "sub_industry": "電腦視覺",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "消費性IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "微控制器IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "電源管理IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "平面顯示器控制IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "電動車輛產業",
+          "sub_industry": "電動汽車、電動機車、電動自行車",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "4961": {
+      "subindustries": [
+        "LED驅動IC",
+        "電源管理IC",
+        "平面顯示器驅動IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "LED驅動IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "電源管理IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "平面顯示器驅動IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "4967": {
+      "subindustries": [
+        "記憶體",
+        "隨身碟、記憶卡讀卡機"
+      ],
+      "records": [
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "記憶體",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "隨身碟、記憶卡讀卡機",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "4968": {
+      "subindustries": [
+        "網路通訊IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "網路通訊IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "5222": {
+      "subindustries": [
+        "生產製程及檢測設備",
+        "IC模組",
+        "IP設計/IC設計代工服務",
+        "晶圓製造"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "生產製程及檢測設備",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "IC模組",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "IP設計/IC設計代工服務",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "晶圓製造",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "5269": {
+      "subindustries": [
+        "輸出入介面IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "輸出入介面IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "5236": {
+      "subindustries": [
+        "機器學習",
+        "電腦視覺",
+        "消費性IC",
+        "微控制器IC"
+      ],
+      "records": [
+        {
+          "industry": "人工智慧",
+          "sub_industry": "機器學習",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "人工智慧",
+          "sub_industry": "電腦視覺",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "消費性IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "微控制器IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "5285": {
+      "subindustries": [
+        "導線架"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "導線架",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "5471": {
+      "subindustries": [
+        "微控制器IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "微控制器IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "6202": {
+      "subindustries": [
+        "微控制器IC",
+        "大功率鋰電池芯/模組、電池管理系統、動力馬達等零組件",
+        "電動汽車、電動機車、電動自行車"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "微控制器IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "電動車輛產業",
+          "sub_industry": "大功率鋰電池芯/模組、電池管理系統、動力馬達等零組件",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "電動車輛產業",
+          "sub_industry": "電動汽車、電動機車、電動自行車",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "6239": {
+      "subindustries": [
+        "IC封裝測試"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "IC封裝測試",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "6243": {
+      "subindustries": [
+        "輸出入介面IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "輸出入介面IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "6257": {
+      "subindustries": [
+        "IC封裝測試"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "IC封裝測試",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "6271": {
+      "subindustries": [
+        "基板",
+        "IC封裝測試",
+        "IC模組",
+        "硬板、軟板、IC載板製造",
+        "天線/射頻基頻",
+        "環境感知",
+        "生產製程、檢測設備及原物料",
+        "光源/磊晶",
+        "封裝/模組"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "基板",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "IC封裝測試",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "IC模組",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "印刷電路板",
+          "sub_industry": "硬板、軟板、IC載板製造",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "太空衛星科技",
+          "sub_industry": "天線/射頻基頻",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "體驗科技",
+          "sub_industry": "環境感知",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "LED照明產業",
+          "sub_industry": "生產製程、檢測設備及原物料",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "LED照明產業",
+          "sub_industry": "光源/磊晶",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "LED照明產業",
+          "sub_industry": "封裝/模組",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "6415": {
+      "subindustries": [
+        "LED驅動IC",
+        "光源管理IC",
+        "電源管理IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "LED驅動IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "光源管理IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "電源管理IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "6451": {
+      "subindustries": [
+        "產業鏈簡介"
+      ],
+      "records": [
+        {
+          "industry": "產業價值鏈資訊平台",
+          "sub_industry": "產業鏈簡介",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "6515": {
+      "subindustries": [
+        "生產製程及檢測設備"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "生產製程及檢測設備",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "6525": {
+      "subindustries": [
+        "產業鏈簡介"
+      ],
+      "records": [
+        {
+          "industry": "產業價值鏈資訊平台",
+          "sub_industry": "產業鏈簡介",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "6526": {
+      "subindustries": [
+        "網路通訊IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "網路通訊IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "6531": {
+      "subindustries": [
+        "記憶體IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "記憶體IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "6533": {
+      "subindustries": [
+        "IP設計/IC設計代工服務"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "IP設計/IC設計代工服務",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "6552": {
+      "subindustries": [
+        "基板"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "基板",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "6573": {
+      "subindustries": [
+        "產業鏈簡介"
+      ],
+      "records": [
+        {
+          "industry": "產業價值鏈資訊平台",
+          "sub_industry": "產業鏈簡介",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "6695": {
+      "subindustries": [
+        "IP設計/IC設計代工服務",
+        "機器學習",
+        "電腦視覺",
+        "消費性IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "IP設計/IC設計代工服務",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "人工智慧",
+          "sub_industry": "機器學習",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "人工智慧",
+          "sub_industry": "電腦視覺",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "消費性IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "6756": {
+      "subindustries": [
+        "消費性IC",
+        "電源管理IC",
+        "輸出入介面IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "消費性IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "電源管理IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "輸出入介面IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "6719": {
+      "subindustries": [
+        "電源管理IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "電源管理IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "6770": {
+      "subindustries": [
+        "晶圓製造",
+        "DRAM製造"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "晶圓製造",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "DRAM製造",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "6789": {
+      "subindustries": [
+        "生產製程及檢測設備"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "生產製程及檢測設備",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "6799": {
+      "subindustries": [
+        "電源管理IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "電源管理IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "6854": {
+      "subindustries": [
+        "產業鏈簡介"
+      ],
+      "records": [
+        {
+          "industry": "產業價值鏈資訊平台",
+          "sub_industry": "產業鏈簡介",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "6909": {
+      "subindustries": [
+        "生產製程及檢測設備"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "生產製程及檢測設備",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "6937": {
+      "subindustries": [
+        "生產製程及檢測設備"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "生產製程及檢測設備",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "平面顯示器",
+          "sub_industry": "生產製程及檢測設備",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "6921": {
+      "subindustries": [
+        "產業鏈簡介"
+      ],
+      "records": [
+        {
+          "industry": "產業價值鏈資訊平台",
+          "sub_industry": "產業鏈簡介",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "6962": {
+      "subindustries": [
+        "產業鏈簡介"
+      ],
+      "records": [
+        {
+          "industry": "產業價值鏈資訊平台",
+          "sub_industry": "產業鏈簡介",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "7730": {
+      "subindustries": [
+        "生產製程及檢測設備"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "生產製程及檢測設備",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "平面顯示器",
+          "sub_industry": "生產製程及檢測設備",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "印刷電路板",
+          "sub_industry": "生產製程及檢測設備",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "7749": {
+      "subindustries": [
+        "產業鏈簡介"
+      ],
+      "records": [
+        {
+          "industry": "產業價值鏈資訊平台",
+          "sub_industry": "產業鏈簡介",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "7768": {
+      "subindustries": [
+        "生產製程及檢測設備",
+        "其他"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "生產製程及檢測設備",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "醫療器材",
+          "sub_industry": "其他",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "7769": {
+      "subindustries": [
+        "生產製程及檢測設備"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "生產製程及檢測設備",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "7822": {
+      "subindustries": [
+        "生產製程及檢測設備",
+        "應用/系統軟體設計開發",
+        "系統整合服務",
+        "領域解決方案",
+        "智慧設備",
+        "機器學習",
+        "電腦視覺",
+        "資料庫",
+        "分析工具",
+        "應用軟體"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "生產製程及檢測設備",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "軟體服務",
+          "sub_industry": "應用/系統軟體設計開發",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "軟體服務",
+          "sub_industry": "系統整合服務",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "人工智慧",
+          "sub_industry": "領域解決方案",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "人工智慧",
+          "sub_industry": "智慧設備",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "人工智慧",
+          "sub_industry": "機器學習",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "人工智慧",
+          "sub_industry": "電腦視覺",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "大數據",
+          "sub_industry": "資料庫",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "大數據",
+          "sub_industry": "分析工具",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "大數據",
+          "sub_industry": "應用軟體",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "8016": {
+      "subindustries": [
+        "光源管理IC",
+        "消費性IC",
+        "電源管理IC",
+        "平面顯示器驅動IC",
+        "影像感測IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "光源管理IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "消費性IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "電源管理IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "平面顯示器驅動IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "影像感測IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "8028": {
+      "subindustries": [
+        "晶圓製造"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "晶圓製造",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "8081": {
+      "subindustries": [
+        "電源管理IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "電源管理IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "8110": {
+      "subindustries": [
+        "IC封裝測試"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "IC封裝測試",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "8131": {
+      "subindustries": [
+        "IC封裝測試",
+        "IC模組"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "IC封裝測試",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "IC模組",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "8150": {
+      "subindustries": [
+        "IC封裝測試"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "IC封裝測試",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "8162": {
+      "subindustries": [
+        "IC封裝測試"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "IC封裝測試",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "8261": {
+      "subindustries": [
+        "電源管理IC",
+        "電動汽車、電動機車、電動自行車",
+        "原材料"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "電源管理IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "電動車輛產業",
+          "sub_industry": "電動汽車、電動機車、電動自行車",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "能源元件",
+          "sub_industry": "原材料",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "8271": {
+      "subindustries": [
+        "IC模組",
+        "記憶體",
+        "隨身碟、記憶卡讀卡機"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "IC模組",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "記憶體",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "隨身碟、記憶卡讀卡機",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "1595": {
+      "subindustries": [
+        "生產製程及檢測設備"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "生產製程及檢測設備",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "平面顯示器",
+          "sub_industry": "生產製程及檢測設備",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "印刷電路板",
+          "sub_industry": "生產製程及檢測設備",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "3105": {
+      "subindustries": [
+        "晶圓製造",
+        "天線/射頻基頻"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "晶圓製造",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "太空衛星科技",
+          "sub_industry": "天線/射頻基頻",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "3122": {
+      "subindustries": [
+        "消費性IC",
+        "微控制器IC",
+        "電源管理IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "消費性IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "微控制器IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "電源管理IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "3141": {
+      "subindustries": [
+        "平面顯示器驅動IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "平面顯示器驅動IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "3131": {
+      "subindustries": [
+        "生產製程及檢測設備"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "生產製程及檢測設備",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "3169": {
+      "subindustries": [
+        "網路卡",
+        "網路IC",
+        "網路通訊IC"
+      ],
+      "records": [
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "網路卡",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "通信網路",
+          "sub_industry": "網路IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "網路通訊IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "3178": {
+      "subindustries": [
+        "生產製程及檢測設備",
+        "金屬/燃料"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "生產製程及檢測設備",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "太空衛星科技",
+          "sub_industry": "金屬/燃料",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "3227": {
+      "subindustries": [
+        "其他電腦及週邊設備之零組件",
+        "控制IC",
+        "其他",
+        "機器學習",
+        "電腦視覺",
+        "移動控制",
+        "感測裝置",
+        "影像感測IC",
+        "感測器",
+        "IC",
+        "環境感知",
+        "深度感測",
+        "SLAM",
+        "使用者感知",
+        "視覺",
+        "手勢/動作",
+        "觸覺"
+      ],
+      "records": [
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "其他電腦及週邊設備之零組件",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "觸控面板",
+          "sub_industry": "控制IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "汽車",
+          "sub_industry": "其他",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "人工智慧",
+          "sub_industry": "機器學習",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "人工智慧",
+          "sub_industry": "電腦視覺",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "人工智慧",
+          "sub_industry": "移動控制",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "運動科技",
+          "sub_industry": "感測裝置",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "影像感測IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "太空衛星科技",
+          "sub_industry": "感測器",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "體驗科技",
+          "sub_industry": "IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "體驗科技",
+          "sub_industry": "環境感知",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "體驗科技",
+          "sub_industry": "深度感測",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "體驗科技",
+          "sub_industry": "SLAM",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "體驗科技",
+          "sub_industry": "其他",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "體驗科技",
+          "sub_industry": "使用者感知",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "體驗科技",
+          "sub_industry": "視覺",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "體驗科技",
+          "sub_industry": "手勢/動作",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "體驗科技",
+          "sub_industry": "觸覺",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "3228": {
+      "subindustries": [
+        "微控制器IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "微控制器IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "3259": {
+      "subindustries": [
+        "記憶體控制IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "記憶體控制IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "3260": {
+      "subindustries": [
+        "IC模組",
+        "記憶體",
+        "隨身碟、記憶卡讀卡機",
+        "燈具/應用"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "IC模組",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "記憶體",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "隨身碟、記憶卡讀卡機",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "通信網路",
+          "sub_industry": "記憶體",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "LED照明產業",
+          "sub_industry": "燈具/應用",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "3264": {
+      "subindustries": [
+        "IC封裝測試"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "IC封裝測試",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "3265": {
+      "subindustries": [
+        "IC封裝測試"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "IC封裝測試",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "3268": {
+      "subindustries": [
+        "消費性IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "消費性IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "3372": {
+      "subindustries": [
+        "IC封裝測試"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "IC封裝測試",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "3317": {
+      "subindustries": [
+        "電源管理IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "電源管理IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "3374": {
+      "subindustries": [
+        "IC封裝測試"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "IC封裝測試",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "3438": {
+      "subindustries": [
+        "電源管理IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "電源管理IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "3467": {
+      "subindustries": [
+        "生產製程及檢測設備"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "生產製程及檢測設備",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "3527": {
+      "subindustries": [
+        "LED驅動IC",
+        "消費性IC",
+        "電源管理IC",
+        "平面顯示器控制IC",
+        "平面顯示器驅動IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "LED驅動IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "消費性IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "電源管理IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "平面顯示器控制IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "平面顯示器驅動IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "3529": {
+      "subindustries": [
+        "IP設計/IC設計代工服務"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "IP設計/IC設計代工服務",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "3555": {
+      "subindustries": [
+        "IC通路",
+        "保健食品代理銷售及通路"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "IC通路",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "食品生技",
+          "sub_industry": "保健食品代理銷售及通路",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "3556": {
+      "subindustries": [
+        "控制IC",
+        "觸控面板",
+        "消費性IC"
+      ],
+      "records": [
+        {
+          "industry": "觸控面板",
+          "sub_industry": "控制IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "觸控面板",
+          "sub_industry": "觸控面板",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "消費性IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "3567": {
+      "subindustries": [
+        "IC封裝測試"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "IC封裝測試",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "3581": {
+      "subindustries": [
+        "生產製程及檢測設備"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "生產製程及檢測設備",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "3675": {
+      "subindustries": [
+        "其他IC/二極體製造"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "其他IC/二極體製造",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "3680": {
+      "subindustries": [
+        "生產製程及檢測設備"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "生產製程及檢測設備",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "3707": {
+      "subindustries": [
+        "IC/晶圓製造",
+        "晶圓製造",
+        "DRAM製造",
+        "其他IC/二極體製造"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "IC/晶圓製造",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "晶圓製造",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "DRAM製造",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "其他IC/二極體製造",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "4749": {
+      "subindustries": [
+        "化學品",
+        "化學品(如光阻劑、靶材等)",
+        "生產製程、檢測設備及原物料"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "化學品",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "平面顯示器",
+          "sub_industry": "化學品(如光阻劑、靶材等)",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "LED照明產業",
+          "sub_industry": "生產製程、檢測設備及原物料",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "4923": {
+      "subindustries": [
+        "電源管理IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "電源管理IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "4951": {
+      "subindustries": [
+        "輸出入介面IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "輸出入介面IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "4966": {
+      "subindustries": [
+        "平面顯示器驅動IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "平面顯示器驅動IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "4971": {
+      "subindustries": [
+        "其他IC/二極體製造"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "其他IC/二極體製造",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "4991": {
+      "subindustries": [
+        "晶圓製造",
+        "其他IC/二極體製造"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "晶圓製造",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "其他IC/二極體製造",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "4973": {
+      "subindustries": [
+        "IC模組",
+        "記憶體",
+        "隨身碟、記憶卡讀卡機"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "IC模組",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "記憶體",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "隨身碟、記憶卡讀卡機",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "通信網路",
+          "sub_industry": "記憶體",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "5272": {
+      "subindustries": [
+        "消費性IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "消費性IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "5274": {
+      "subindustries": [
+        "網路通訊IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "網路通訊IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "5299": {
+      "subindustries": [
+        "電源管理IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "電源管理IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "5302": {
+      "subindustries": [
+        "消費性IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "消費性IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "5344": {
+      "subindustries": [
+        "IC封裝測試",
+        "燈具/應用"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "IC封裝測試",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "LED照明產業",
+          "sub_industry": "燈具/應用",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "5351": {
+      "subindustries": [
+        "系統整合",
+        "領域解決方案",
+        "電腦視覺",
+        "處理器/IC",
+        "感測器/模組",
+        "頭顯裝置品牌廠",
+        "記憶體IC",
+        "CPU",
+        "GPU",
+        "HPU",
+        "SoC",
+        "IC",
+        "環境感知",
+        "深度感測",
+        "SLAM",
+        "其他",
+        "使用者感知",
+        "視覺",
+        "語音",
+        "手勢/動作",
+        "觸覺",
+        "VRHeadset",
+        "ARSmartGlasses",
+        "MRHeadset&SG"
+      ],
+      "records": [
+        {
+          "industry": "人工智慧",
+          "sub_industry": "系統整合",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "人工智慧",
+          "sub_industry": "領域解決方案",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "人工智慧",
+          "sub_industry": "電腦視覺",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "體驗科技",
+          "sub_industry": "處理器/IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "體驗科技",
+          "sub_industry": "感測器/模組",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "體驗科技",
+          "sub_industry": "頭顯裝置品牌廠",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "記憶體IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "體驗科技",
+          "sub_industry": "CPU",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "體驗科技",
+          "sub_industry": "GPU",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "體驗科技",
+          "sub_industry": "HPU",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "體驗科技",
+          "sub_industry": "SoC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "體驗科技",
+          "sub_industry": "IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "體驗科技",
+          "sub_industry": "環境感知",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "體驗科技",
+          "sub_industry": "深度感測",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "體驗科技",
+          "sub_industry": "SLAM",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "體驗科技",
+          "sub_industry": "其他",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "體驗科技",
+          "sub_industry": "使用者感知",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "體驗科技",
+          "sub_industry": "視覺",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "體驗科技",
+          "sub_industry": "語音",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "體驗科技",
+          "sub_industry": "手勢/動作",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "體驗科技",
+          "sub_industry": "觸覺",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "體驗科技",
+          "sub_industry": "VRHeadset",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "體驗科技",
+          "sub_industry": "ARSmartGlasses",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "體驗科技",
+          "sub_industry": "MRHeadset&SG",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "5347": {
+      "subindustries": [
+        "晶圓製造"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "晶圓製造",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "5425": {
+      "subindustries": [
+        "其他IC/二極體製造"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "其他IC/二極體製造",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "5443": {
+      "subindustries": [
+        "生產製程及檢測設備"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "生產製程及檢測設備",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "平面顯示器",
+          "sub_industry": "生產製程及檢測設備",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "5483": {
+      "subindustries": [
+        "化學品",
+        "車用機械傳動設備及零配件",
+        "晶圓製造",
+        "矽晶圓/矽晶片",
+        "太陽能電池",
+        "太陽能電池模組",
+        "能源管理服務",
+        "電力零售業"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "化學品",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "電機機械",
+          "sub_industry": "車用機械傳動設備及零配件",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "晶圓製造",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "太陽能產業",
+          "sub_industry": "矽晶圓/矽晶片",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "太陽能產業",
+          "sub_industry": "太陽能電池",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "太陽能產業",
+          "sub_industry": "太陽能電池模組",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "智慧電網",
+          "sub_industry": "能源管理服務",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "智慧電網",
+          "sub_industry": "電力零售業",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "5468": {
+      "subindustries": [
+        "光通訊IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "光通訊IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "5487": {
+      "subindustries": [
+        "消費性IC",
+        "微控制器IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "消費性IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "微控制器IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "6103": {
+      "subindustries": [
+        "消費性IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "消費性IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "6104": {
+      "subindustries": [
+        "輸出入介面IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "輸出入介面IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "6129": {
+      "subindustries": [
+        "LED驅動IC",
+        "消費性IC",
+        "微控制器IC",
+        "電源管理IC",
+        "平面顯示器控制IC",
+        "平面顯示器驅動IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "LED驅動IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "消費性IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "微控制器IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "電源管理IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "平面顯示器控制IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "平面顯示器驅動IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "6138": {
+      "subindustries": [
+        "LED驅動IC",
+        "電源管理IC",
+        "網路通訊IC",
+        "大功率鋰電池芯/模組、電池管理系統、動力馬達等零組件"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "LED驅動IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "電源管理IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "網路通訊IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "電動車輛產業",
+          "sub_industry": "大功率鋰電池芯/模組、電池管理系統、動力馬達等零組件",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "6182": {
+      "subindustries": [
+        "晶圓製造"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "晶圓製造",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "6147": {
+      "subindustries": [
+        "IC封裝測試",
+        "驅動IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "IC封裝測試",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "平面顯示器",
+          "sub_industry": "驅動IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "6208": {
+      "subindustries": [
+        "生產製程及檢測設備"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "生產製程及檢測設備",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "6187": {
+      "subindustries": [
+        "其他電子產品及電子服務產業"
+      ],
+      "records": [
+        {
+          "industry": "其他",
+          "sub_industry": "其他電子產品及電子服務產業",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "6223": {
+      "subindustries": [
+        "生產製程及檢測設備",
+        "生產製程、檢測設備及原物料"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "生產製程及檢測設備",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "LED照明產業",
+          "sub_industry": "生產製程、檢測設備及原物料",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "6229": {
+      "subindustries": [
+        "微控制器IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "微控制器IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "6233": {
+      "subindustries": [
+        "晶片組",
+        "輸出入介面IC"
+      ],
+      "records": [
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "晶片組",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "輸出入介面IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "6237": {
+      "subindustries": [
+        "消費性IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "消費性IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "6261": {
+      "subindustries": [
+        "生產製程及檢測設備",
+        "IC封裝測試",
+        "生產製程、檢測設備及原物料",
+        "封裝/模組"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "生產製程及檢測設備",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "IC封裝測試",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "LED照明產業",
+          "sub_industry": "生產製程、檢測設備及原物料",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "LED照明產業",
+          "sub_industry": "封裝/模組",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "6291": {
+      "subindustries": [
+        "電源管理IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "電源管理IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "6411": {
+      "subindustries": [
+        "輸出入介面IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "輸出入介面IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "6423": {
+      "subindustries": [
+        "IP設計/IC設計代工服務"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "IP設計/IC設計代工服務",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "6435": {
+      "subindustries": [
+        "電源管理IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "電源管理IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "6462": {
+      "subindustries": [
+        "應用/系統軟體設計開發",
+        "端點安全防護",
+        "身分認證與訪問管理",
+        "消費性IC"
+      ],
+      "records": [
+        {
+          "industry": "軟體服務",
+          "sub_industry": "應用/系統軟體設計開發",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "資通訊安全",
+          "sub_industry": "端點安全防護",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "資通訊安全",
+          "sub_industry": "身分認證與訪問管理",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "消費性IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "6485": {
+      "subindustries": [
+        "記憶體控制IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "記憶體控制IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "6488": {
+      "subindustries": [
+        "晶圓製造"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "晶圓製造",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "6494": {
+      "subindustries": [
+        "消費性IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "消費性IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "6510": {
+      "subindustries": [
+        "生產製程及檢測設備"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "生產製程及檢測設備",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "6548": {
+      "subindustries": [
+        "導線架"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "導線架",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "6532": {
+      "subindustries": [
+        "生產製程及檢測設備"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "生產製程及檢測設備",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "6640": {
+      "subindustries": [
+        "生產製程及檢測設備"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "生產製程及檢測設備",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "6568": {
+      "subindustries": [
+        "光通訊IC",
+        "消費性IC",
+        "網路通訊IC",
+        "輸出入介面IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "光通訊IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "消費性IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "網路通訊IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "輸出入介面IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "6651": {
+      "subindustries": [
+        "電源管理IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "電源管理IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "6643": {
+      "subindustries": [
+        "IP設計/IC設計代工服務"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "IP設計/IC設計代工服務",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "6683": {
+      "subindustries": [
+        "生產製程及檢測設備"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "生產製程及檢測設備",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "6679": {
+      "subindustries": [
+        "感測裝置",
+        "微控制器IC",
+        "電源管理IC",
+        "輸出入介面IC"
+      ],
+      "records": [
+        {
+          "industry": "運動科技",
+          "sub_industry": "感測裝置",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "微控制器IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "電源管理IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "輸出入介面IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "6693": {
+      "subindustries": [
+        "電源管理IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "電源管理IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "6684": {
+      "subindustries": [
+        "消費性IC",
+        "輸出入介面IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "消費性IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "輸出入介面IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "6708": {
+      "subindustries": [
+        "網路通訊IC",
+        "PaaS",
+        "SaaS"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "網路通訊IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "雲端運算",
+          "sub_industry": "PaaS",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "雲端運算",
+          "sub_industry": "SaaS",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "6716": {
+      "subindustries": [
+        "微控制器IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "微控制器IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "6720": {
+      "subindustries": [
+        "消費性IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "消費性IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "6732": {
+      "subindustries": [
+        "光源管理IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "光源管理IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "6788": {
+      "subindustries": [
+        "生產製程及檢測設備"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "生產製程及檢測設備",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "6823": {
+      "subindustries": [
+        "生產製程及檢測設備"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "生產製程及檢測設備",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "6829": {
+      "subindustries": [
+        "生產製程及檢測設備",
+        "其他零組件",
+        "金屬加工處理"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "生產製程及檢測設備",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "平面顯示器",
+          "sub_industry": "其他零組件",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "電機機械",
+          "sub_industry": "金屬加工處理",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "6895": {
+      "subindustries": [
+        "生產製程及檢測設備"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "生產製程及檢測設備",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "6907": {
+      "subindustries": [
+        "微控制器IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "微控制器IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "6953": {
+      "subindustries": [
+        "生產製程及檢測設備"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "生產製程及檢測設備",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "6996": {
+      "subindustries": [
+        "平面顯示器驅動IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "平面顯示器驅動IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "7556": {
+      "subindustries": [
+        "生產製程及檢測設備"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "生產製程及檢測設備",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "7704": {
+      "subindustries": [
+        "生產製程及檢測設備"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "生產製程及檢測設備",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "7712": {
+      "subindustries": [
+        "電源管理IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "電源管理IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "7734": {
+      "subindustries": [
+        "生產製程及檢測設備"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "生產製程及檢測設備",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "7751": {
+      "subindustries": [
+        "生產製程及檢測設備",
+        "IC封裝測試"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "生產製程及檢測設備",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "IC封裝測試",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "7770": {
+      "subindustries": [
+        "消費性IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "消費性IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "7772": {
+      "subindustries": [
+        "生產製程及檢測設備"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "生產製程及檢測設備",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "7810": {
+      "subindustries": [
+        "生產製程及檢測設備",
+        "IC封裝測試"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "生產製程及檢測設備",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "IC封裝測試",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "7828": {
+      "subindustries": [
+        "生產製程及檢測設備"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "生產製程及檢測設備",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "8024": {
+      "subindustries": [
+        "消費性IC",
+        "微控制器IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "消費性IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "微控制器IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "8040": {
+      "subindustries": [
+        "網路通訊IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "網路通訊IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "8054": {
+      "subindustries": [
+        "IC模組",
+        "IP設計/IC設計代工服務",
+        "儲存處理",
+        "消費性IC",
+        "輸出入介面IC",
+        "儲存"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "IC模組",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "IP設計/IC設計代工服務",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "大數據",
+          "sub_industry": "儲存處理",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "消費性IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "輸出入介面IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "雲端運算",
+          "sub_industry": "儲存",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "8086": {
+      "subindustries": [
+        "晶圓製造"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "晶圓製造",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "8088": {
+      "subindustries": [
+        "IC模組",
+        "記憶體",
+        "隨身碟、記憶卡讀卡機"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "IC模組",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "記憶體",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "隨身碟、記憶卡讀卡機",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "通信網路",
+          "sub_industry": "記憶體",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "8091": {
+      "subindustries": [
+        "生產製程及檢測設備",
+        "生產製程、檢測設備及原物料"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "生產製程及檢測設備",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "LED照明產業",
+          "sub_industry": "生產製程、檢測設備及原物料",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "8227": {
+      "subindustries": [
+        "IP設計/IC設計代工服務"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "IP設計/IC設計代工服務",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "8102": {
+      "subindustries": [
+        "消費性IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "消費性IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "8299": {
+      "subindustries": [
+        "IC模組",
+        "IC通路",
+        "IP設計/IC設計代工服務",
+        "記憶體",
+        "隨身碟、記憶卡讀卡機",
+        "其他電腦及週邊設備之零組件",
+        "記憶體控制IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "IC模組",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "IC通路",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "IP設計/IC設計代工服務",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "記憶體",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "隨身碟、記憶卡讀卡機",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "其他電腦及週邊設備之零組件",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "記憶體控制IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "8277": {
+      "subindustries": [
+        "IC模組",
+        "記憶體",
+        "電腦設備",
+        "資料安全",
+        "網頁內容安全",
+        "雲端安全",
+        "身分認證與訪問管理",
+        "伺服器",
+        "儲存",
+        "網路"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "IC模組",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "記憶體",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "雲端運算",
+          "sub_industry": "電腦設備",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "資通訊安全",
+          "sub_industry": "資料安全",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "資通訊安全",
+          "sub_industry": "網頁內容安全",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "資通訊安全",
+          "sub_industry": "雲端安全",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "資通訊安全",
+          "sub_industry": "身分認證與訪問管理",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "雲端運算",
+          "sub_industry": "伺服器",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "雲端運算",
+          "sub_industry": "儲存",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "雲端運算",
+          "sub_industry": "網路",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "8383": {
+      "subindustries": [
+        "生產製程及檢測設備",
+        "其他零組件",
+        "機電系統工程",
+        "金屬加工處理",
+        "機電工程",
+        "工程設計",
+        "工程承攬",
+        "其他"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "生產製程及檢測設備",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "平面顯示器",
+          "sub_industry": "其他零組件",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "電機機械",
+          "sub_industry": "機電系統工程",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "電機機械",
+          "sub_industry": "金屬加工處理",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "建材營造",
+          "sub_industry": "機電工程",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "建材營造",
+          "sub_industry": "工程設計",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "建材營造",
+          "sub_industry": "工程承攬",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "其他",
+          "sub_industry": "其他",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "0050": {
+      "subindustries": [
+        "產業鏈簡介"
+      ],
+      "records": [
+        {
+          "industry": "產業價值鏈資訊平台",
+          "sub_industry": "產業鏈簡介",
+          "date": "2026-08-24"
+        }
+      ]
+    }
+  }
 }
