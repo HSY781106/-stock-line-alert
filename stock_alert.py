@@ -5680,3 +5680,6 @@ def main():
 
         run_alerts()
 
+
+if __name__ == '__main__':
+    main()
