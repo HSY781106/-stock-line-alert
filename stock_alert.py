@@ -1,4 +1,4 @@
-# stock_alert.py V2.10.13
+# stock_alert.py V2.10.14
 # 效能修正版：
 # 1. 全市場資料批次化
 # 2. 單次執行快取
@@ -27,7 +27,7 @@
 # - 保留原本基本面 / 技術 / 籌碼 / 風險 / LINE 功能
 #
 # 股票跌幅 + 15分鐘區間最低價 + 動態估值 + 技術 + 籌碼 + 100分制加碼決策
-# V2.10.13：次產業修正版 + LINE 低記憶體穩定查詢版；保留 V2.10.13 全部分析功能
+# V2.10.14：次產業修正版 + LINE 輕量查詢專用分析路徑；保留 V2.10.13 全部分析功能
 #          + LINE webhook HMAC-SHA256 簽章驗證 + 群組/聊天室支援
 
 import os
@@ -4491,6 +4491,37 @@ def score_risk(
     )
 
 
+def yahoo_light_fund(symbol, official=None):
+    """V2.10.14 LINE 專用輕量基本面。
+
+    不呼叫 yfinance Ticker.info / income statement / balance sheet，避免
+    Render Free 在背景查詢時產生大量 Yahoo quoteSummary 資料與 DataFrame。
+    EPS 成長、ROE、PEG 使用既有免費 fundamentals-timeseries；PE/PB/殖利率
+    優先沿用 TWSE/TPEx 官方 PE 資料。若官方資料缺欄位，才保留 N/A，
+    不再為了補一個欄位啟動重量級 yfinance fallback。
+    """
+    o = {
+        'eps_growth': None,
+        'roe': None,
+        'peg': None,
+        'pb': None,
+        'yield': None,
+        'pe': None
+    }
+    if isinstance(official, dict):
+        o['pe'] = to_float(official.get('pe'))
+        o['pb'] = to_float(official.get('pb'))
+        o['yield'] = to_float(official.get('yield'))
+    try:
+        ts = yahoo_timeseries_fund(symbol)
+        for k in ('eps_growth', 'roe', 'peg'):
+            if ts.get(k) is not None:
+                o[k] = ts[k]
+    except Exception as e:
+        print(f'LINE輕量基本面 Yahoo timeseries失敗 {symbol}: {e}', flush=True)
+    return o
+
+
 # ============================================================
 # Analysis
 # ============================================================
@@ -4499,7 +4530,8 @@ def analysis(
     query,
     u,
     backfill=True,
-    interval_result=None
+    interval_result=None,
+    line_light=False
 ):
 
     item = resolve_stock(
@@ -4565,6 +4597,7 @@ def analysis(
     # PE
     # --------------------------------------------------------
 
+    print(f'LINE輕量分析：取得目前PE {code}' if line_light else '取得目前PE', flush=True)
     pe_data = get_current_pe_data()
 
     h = load_json(
@@ -4573,6 +4606,7 @@ def analysis(
 
     if backfill:
 
+        print(f'LINE輕量分析：PE歷史 {code}', flush=True) if line_light else None
         h = backfill_pe(
             code,
             h,
@@ -4584,9 +4618,13 @@ def analysis(
             h
         )
 
-    yf_f = yahoo_fund(
-        symbol
-    )
+    if line_light:
+        print(f'LINE輕量分析：基本面資料 {code}', flush=True)
+        yf_f = yahoo_light_fund(symbol, off)
+    else:
+        yf_f = yahoo_fund(
+            symbol
+        )
 
     off = pe_data.get(
         code,
@@ -4618,6 +4656,7 @@ def analysis(
     # 動態次產業 Top 10
     # --------------------------------------------------------
 
+    print(f'LINE輕量分析：建立同次產業 Top10 {code}', flush=True) if line_light else None
     peers = get_dynamic_subindustry_peers(
         code,
         industry,
@@ -4634,11 +4673,11 @@ def analysis(
             .get('pe')
         )
 
-        if not (
-            peer_pe
-            and 0 < peer_pe <= PE_MAX_VALID
+        if (
+            not peer_pe
+            and not line_light
         ):
-            # LINE/Render 若官方 PE API 暫時失敗，使用 Yahoo PE 作備援。
+            # 一般批次模式才對同業使用 Yahoo 備援。
             peer_f = yahoo_fund(peer_item['symbol'])
             peer_pe = peer_f.get('pe')
 
@@ -4666,6 +4705,7 @@ def analysis(
     # Technical
     # --------------------------------------------------------
 
+    print(f'LINE輕量分析：技術面 {code}', flush=True) if line_light else None
     tech = technical(
         symbol
     )
@@ -4674,6 +4714,7 @@ def analysis(
     # Chips
     # --------------------------------------------------------
 
+    print(f'LINE輕量分析：籌碼面 {code}', flush=True) if line_light else None
     inst = chip_sums(
         code,
         institutional(
@@ -4883,7 +4924,7 @@ def analysis(
     # --------------------------------------------------------
 
     return (
-        f'📊 股票加碼分析 V2.10.13\n\n'
+        f'📊 股票加碼分析 V2.10.14\n\n'
         f'標的：{name}（{code}）\n'
         f'市場：{market}\n'
         f'產業：{industry}\n'
@@ -5065,8 +5106,9 @@ def _background_line_analysis(text, target, u, event_id=None):
             print(f'LINE背景分析：市場資料完成 {len(query_u)} 檔', flush=True)
             print('LINE背景分析：同步次產業', flush=True)
             query_u = prepare_line_subindustries(query_u, text)
-            print('LINE背景分析：開始完整分析', flush=True)
-            result = analysis(text, query_u, True)
+            print('LINE背景分析：開始 LINE 輕量查詢專用分析', flush=True)
+            result = analysis(text, query_u, True, line_light=True)
+            print('LINE背景分析：輕量分析完成', flush=True)
 
         if not result:
             result = f'❌ {text} 分析沒有產生結果。'
@@ -5302,7 +5344,7 @@ def run_webhook_server():
     app = Flask(__name__)
 
     print('================================')
-    print('LINE Webhook Server V2.10.13')
+    print('LINE Webhook Server V2.10.14')
     print('模式：立即 Reply + Render Free 穩定背景 Thread + Push')
     print('================================')
 
