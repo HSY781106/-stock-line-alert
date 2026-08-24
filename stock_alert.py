@@ -27,7 +27,7 @@
 # - 保留原本基本面 / 技術 / 籌碼 / 風險 / LINE 功能
 #
 # 股票跌幅 + 15分鐘區間最低價 + 動態估值 + 技術 + 籌碼 + 100分制加碼決策
-# V2.10.11：LINE 低記憶體穩定查詢版；保留 V2.10.11 全部分析功能
+# V2.10.11：LINE 低記憶體穩定查詢版 + 次產業持久化同步修正版；保留 V2.10.10 全部分析功能
 #          + LINE webhook HMAC-SHA256 簽章驗證 + 群組/聊天室支援
 
 import os
@@ -74,6 +74,7 @@ TWSE_QUOTES_CACHE_FILE = 'twse_quotes_cache.json'
 
 # V2.9.8 新增
 SUBINDUSTRY_CACHE_FILE = 'subindustry_cache.json'
+SUBINDUSTRY_CACHE_VERSION = 1
 
 LINE_REPLY_URL = 'https://api.line.me/v2/bot/message/reply'
 LINE_PUSH_URL = 'https://api.line.me/v2/bot/message/push'
@@ -111,7 +112,7 @@ SUBINDUSTRY_CACHE = {}
 # V2.10.1：LINE 查詢分析鎖，避免多個訊息同時改寫全域快取。
 LINE_ANALYSIS_LOCK = threading.Lock()
 
-# V2.10.11：使用非 daemon 的 ThreadPoolExecutor 執行 LINE 背景分析。
+# V2.10.10：使用非 daemon 的 ThreadPoolExecutor 執行 LINE 背景分析。
 # 不再用 daemon=True 的裸 Thread，降低 Render request 結束後背景工作
 # 被直接終止的風險。完整分析仍在獨立工作執行緒中，不會讓 replyToken 過期。
 from concurrent.futures import ThreadPoolExecutor
@@ -589,32 +590,6 @@ def save_json(f, d):
 # ============================================================
 # LINE
 # ============================================================
-
-
-def load_remote_subindustry_cache():
-    """V2.10.11：Render Free 的免費遠端次產業快取備援。
-
-    GitHub Actions 可將成功取得的 subindustry_cache.json 提交到公開 repo，
-    Render 查詢時直接讀 raw.githubusercontent.com，不需 API token。
-    若遠端檔不存在或網路失敗，回傳空 dict，完全不影響原流程。
-    """
-    url = (
-        'https://raw.githubusercontent.com/HSY781106/-stock-line-alert/'
-        'main/subindustry_cache.json'
-    )
-    try:
-        r = requests.get(
-            url,
-            timeout=6,
-            headers={'User-Agent': 'stock-alert/2.10.11'}
-        )
-        r.raise_for_status()
-        data = r.json()
-        if isinstance(data, dict) and isinstance(data.get('data'), dict):
-            return _repair_json_strings(data)
-    except Exception as e:
-        print(f'遠端次產業快取讀取失敗：{e}')
-    return {}
 
 def send_line(msg):
 
@@ -1143,15 +1118,22 @@ class _TextExtractor(__import__('html.parser', fromlist=['HTMLParser']).HTMLPars
 def parse_value_chain_html(text, code):
     """解析 TPEx/TWSE 產業價值鏈公司頁面。
 
-    V2.10.11：保留 V2.10.9 已驗證可用的解析方式，並兼容
-    HTML / Markdown / Reader 純文字格式。只接受「所屬產業鏈」附近
-    的「大產業 > 次產業」，避免誤抓導覽列。
+    V2.10.10：針對 Render/Jina Reader 回傳格式增加多層解析。
+    官方頁面目前可呈現為：
+        ► 半導體 > 晶圓製造
+    但不同網路環境可能變成 HTML entity、Markdown、換行或 HTML tag
+    夾在箭頭/產業名稱之間，因此不能只依賴單一 regex。
     """
     out = {'subindustries': [], 'records': []}
     if not text:
         return out
 
-    raw = html.unescape(str(text))
+    try:
+        raw = html.unescape(str(text))
+    except Exception:
+        raw = str(text)
+
+    # 1) 保留 raw HTML 前先轉成純文字，處理 tag / entity / 空白。
     parser = _TextExtractor()
     try:
         parser.feed(raw)
@@ -1183,37 +1165,37 @@ def parse_value_chain_html(text, code):
         if key not in pairs:
             pairs.append(key)
 
-    # 官方頁面 / V2.10.9 已驗證格式：► 半導體 > 晶圓製造
-    pattern = r'[►▸▶]\s*([^>\n]{1,80}?)\s*>\s*([^►▸▶\n]{1,160})'
-    for m in re.findall(pattern, plain):
-        add_pair(m[0], m[1])
-
-    # Jina Reader 有時會移除箭頭，改成單行 Markdown/純文字。
-    if not pairs:
-        line_pattern = r'^\s*(?:►|▸|▶)?\s*([^>\n]{1,80}?)\s*>\s*([^>\n]{1,160})\s*$'
-        for line in plain.split('\n'):
-            m = re.search(line_pattern, line)
-            if m:
-                add_pair(m.group(1), m.group(2))
-
-    # 只在「所屬產業鏈如下」附近做較寬鬆掃描。
-    if not pairs:
-        marker = plain.find('所屬產業鏈如下')
-        if marker >= 0:
-            section = plain[marker:marker + 6000]
-            for m in re.findall(
-                r'(?:►|▸|▶)?\s*([^>\n]{1,80})\s*>\s*([^>\n]{1,160})',
-                section
-            ):
-                add_pair(m[0], m[1])
-
-    # Raw HTML 去 tag 後再試一次。
-    if not pairs:
-        raw_no_tag = re.sub(r'<[^>]+>', ' ', raw)
-        raw_no_tag = html.unescape(raw_no_tag)
-        raw_no_tag = re.sub(r'[ \t\u00a0]+', ' ', raw_no_tag)
-        for m in re.findall(pattern, raw_no_tag):
+    # 2) 標準 HTMLParser 後的文字。
+    patterns = [
+        r'[►▸▶]\s*([^>\n]{1,80}?)\s*>\s*([^►▸▶\n]{1,160})',
+        r'(?m)^\s*[►▸▶]?\s*([^>\n]{1,80}?)\s*>\s*([^>\n]{1,160})\s*$',
+        r'(?m)^\s*([^>\n]{1,80}?)\s*>\s*([^>\n]{1,160})\s*$',
+    ]
+    for pat in patterns:
+        for m in re.findall(pat, plain):
             add_pair(m[0], m[1])
+
+    # 3) 有些 Reader 會把箭頭獨立成一行；只在「所屬產業鏈」區段附近
+    #    掃描，避免把導覽列中的 A > B 誤判成產業鏈。
+    marker = plain.find('所屬產業鏈如下')
+    if marker >= 0:
+        section = plain[marker:marker + 6000]
+        for m in re.findall(
+            r'(?:►|▸|▶)?\s*([^>\n]{1,80})\s*>\s*([^>\n]{1,160})',
+            section
+        ):
+            add_pair(m[0], m[1])
+
+    # 4) 最後直接掃描 raw HTML：若箭頭/大於符號被 HTML tag 包住，
+    #    去 tag 後再解析一次。
+    raw_no_tag = re.sub(r'<[^>]+>', ' ', raw)
+    raw_no_tag = html.unescape(raw_no_tag)
+    raw_no_tag = re.sub(r'[ \t\u00a0]+', ' ', raw_no_tag)
+    for m in re.findall(
+        r'[►▸▶]\s*([^>\n]{1,80}?)\s*>\s*([^►▸▶\n]{1,160})',
+        raw_no_tag
+    ):
+        add_pair(m[0], m[1])
 
     for industry, node in pairs:
         out['records'].append({
@@ -1226,80 +1208,68 @@ def parse_value_chain_html(text, code):
 
     return out
 
-def fetch_value_chain_for_stock(code):
-    """V2.10.11：沿用 V2.10.9 已驗證的免費次產業抓取流程。
 
-    優先直接讀 TPEx/TWSE 產業價值鏈官方頁面；不同網路環境重試。
-    最後才使用 Jina Reader 讀取「同一個官方頁面」。
+def fetch_value_chain_for_stock(code):
+    """V2.10.10：LINE/Render 次產業多重免費備援。
+
+    優先直接讀證交所/櫃買中心產業價值鏈官方頁面；
+    若 Render 對官方網域連線失敗，再透過 Jina Reader 讀取「同一個官方頁面」。
     不使用付費 API、不使用股票代碼硬編碼。
     """
     code = clean_code(code)
     if not code or not code.isdigit():
         return None
 
-    urls = [
-        f'{VALUE_CHAIN_BASE}?stk_code={code}',
+    official_urls = [
         f'https://ic.tpex.org.tw/company_chain.php?stk_code={code}',
+        f'http://ic.tpex.org.tw/company_chain.php?stk_code={code}',
     ]
-    headers_list = [
-        {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/126 Safari/537.36',
-            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-            'Accept-Language': 'zh-TW,zh;q=0.9,en;q=0.8',
-            'Referer': 'https://ic.tpex.org.tw/'
-        },
-        {
-            'User-Agent': 'stock-alert/2.10.11',
-            'Accept-Language': 'zh-TW,zh;q=0.9,en;q=0.8'
-        }
-    ]
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/126 Safari/537.36',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+        'Accept-Language': 'zh-TW,zh;q=0.9,en;q=0.8',
+        'Referer': 'https://ic.tpex.org.tw/'
+    }
 
     last_error = None
-    for attempt in range(3):
-        for url, headers in zip(urls, headers_list):
-            try:
-                r = requests.get(
-                    url,
-                    timeout=VALUE_CHAIN_TIMEOUT,
-                    headers=headers,
-                    allow_redirects=True
-                )
-                r.raise_for_status()
-                raw = r.content
-                page_text = None
-                for enc in ('utf-8-sig', 'utf-8', 'cp950', 'big5'):
-                    try:
-                        page_text = raw.decode(enc)
-                        break
-                    except UnicodeDecodeError:
-                        pass
-                if page_text is None:
-                    page_text = raw.decode('utf-8', errors='replace')
-                parsed = parse_value_chain_html(page_text, code)
-                if parsed.get('subindustries'):
-                    print(f'次產業取得成功：{code}（官方平台）')
-                    return parsed
-            except Exception as e:
-                last_error = e
-        if attempt < 2:
-            time.sleep(0.5 * (attempt + 1))
 
-    # 免費備援：Jina Reader 讀取同一個官方頁面。
-    proxy_urls = [
+    # A. 官方頁面：最多 2 次，不做長時間重試。
+    for url in official_urls:
+        try:
+            r = requests.get(url, timeout=8, headers=headers, allow_redirects=True)
+            r.raise_for_status()
+            raw = r.content
+            for enc in ('utf-8-sig', 'utf-8', 'cp950', 'big5'):
+                try:
+                    page_text = raw.decode(enc)
+                    break
+                except UnicodeDecodeError:
+                    page_text = None
+            if page_text is None:
+                page_text = raw.decode('utf-8', errors='replace')
+            parsed = parse_value_chain_html(page_text, code)
+            if parsed.get('subindustries'):
+                print(f'次產業取得成功：{code}（官方平台）')
+                return parsed
+        except Exception as e:
+            last_error = e
+
+    # B. Jina Reader：同一個官方 URL，不是另一套分類資料。
+    reader_urls = [
         f'https://r.jina.ai/https://ic.tpex.org.tw/company_chain.php?stk_code={code}',
-        f'https://r.jina.ai/http://ic.tpex.org.tw/company_chain.php?stk_code={code}'
+        f'https://r.jina.ai/http://ic.tpex.org.tw/company_chain.php?stk_code={code}',
     ]
-    for proxy_url in proxy_urls:
+    for proxy_url in reader_urls:
         try:
             r = requests.get(
                 proxy_url,
                 timeout=12,
-                headers={'User-Agent': 'stock-alert/2.10.11'}
+                headers={'User-Agent': 'Mozilla/5.0 stock-alert/2.10.10'}
             )
             r.raise_for_status()
             parsed = parse_value_chain_html(r.text, code)
             if parsed.get('subindustries'):
-                print(f'次產業備援成功：{code}（官方頁面 Reader）')
+                print(f'次產業取得成功：{code}（官方頁面 Reader）')
                 return parsed
         except Exception as e:
             last_error = e
@@ -1478,6 +1448,7 @@ def get_public_subindustry(u):
         f'需更新：{len(missing)} 檔'
     )
 
+    fetched = {}
     if missing:
         fetched = _fetch_missing_value_chains(
             missing
@@ -1498,20 +1469,32 @@ def get_public_subindustry(u):
     # --------------------------------------------------------
     # 保存快取
     # --------------------------------------------------------
+    # V2.10.11：不論本次取得幾筆，都一定建立/更新快取檔。
+    # 舊版只有 cached_data 非空才 save_json，當 API 暫時全部失敗時
+    # GitHub Actions 會沒有 subindustry_cache.json，後續 LINE/Render
+    # 就永遠拿不到可持久化的次產業資料。
+    # 只有本次真的取得新資料時才刷新 _cached_at，避免一次 API 故障
+    # 把原本有效的 30 天快取壽命重新計算。
+    saved_at = (now if fetched else cached_at) if 'fetched' in locals() else cached_at
+    if not saved_at:
+        saved_at = now
 
-    if cached_data:
-        saved_at = now if missing else cached_at
-        save_json(
-            SUBINDUSTRY_CACHE_FILE,
-            {
-                '_cached_at': saved_at,
-                'source':
-                    'TPEx/TWSE Industry Value Chain',
-                'source_url': VALUE_CHAIN_BASE,
-                'cache_days': SUBINDUSTRY_CACHE_DAYS,
-                'data': cached_data
-            }
-        )
+    save_json(
+        SUBINDUSTRY_CACHE_FILE,
+        {
+            '_cache_version': SUBINDUSTRY_CACHE_VERSION,
+            '_cached_at': saved_at,
+            'source':
+                'TPEx/TWSE Industry Value Chain',
+            'source_url': VALUE_CHAIN_BASE,
+            'cache_days': SUBINDUSTRY_CACHE_DAYS,
+            'data': cached_data
+        }
+    )
+
+    print(
+        f'次產業快取已保存：{SUBINDUSTRY_CACHE_FILE}，{len(cached_data)} 檔'
+    )
 
     SUBINDUSTRY_CACHE = cached_data
 
@@ -1668,7 +1651,7 @@ def get_dynamic_subindustry_peers(
     u,
     limit=10
 ):
-    """V2.10.11：動態次產業 Top 10。
+    """V2.10.10：動態次產業 Top 10。
 
     LINE/Render 若啟動時沒有完整次產業快取，查詢時會對
     「同大產業且市值最大的候選股」補抓次產業，直到找到足夠
@@ -1703,7 +1686,7 @@ def get_dynamic_subindustry_peers(
         else:
             missing.append(x)
 
-    # V2.10.11：只對同大產業中市值最大的候選補抓，避免 LINE 查詢時
+    # V2.10.10：只對同大產業中市值最大的候選補抓，避免 LINE 查詢時
     # 對整個市場 1985 檔逐一請求。最多嘗試 60 檔，找到 Top 10 即停止。
     missing.sort(key=lambda x: to_float(x.get('market_cap')) or 0, reverse=True)
     for x in missing[:60]:
@@ -1787,7 +1770,7 @@ def build_universe():
 
     print(
         '\n========== '
-        '建立動態市場股票池 V2.10.11 '
+        '建立動態市場股票池 V2.10.10 '
         '=========='
     )
 
@@ -2954,7 +2937,7 @@ def one_year_pe(
 
 
 def yahoo_timeseries_fund(symbol):
-    """V2.10.11：不依賴 Yahoo quoteSummary/info 的免費基本面備援。
+    """V2.10.10：不依賴 Yahoo quoteSummary/info 的免費基本面備援。
 
     Render 上 yfinance 的 Ticker.info 偶爾會因 Yahoo quoteSummary/crumb
     限制而拿不到 EPS 成長、ROE、PEG。這裡直接使用 Yahoo 公開的
@@ -3045,9 +3028,9 @@ def yahoo_timeseries_fund(symbol):
 
 
 def yahoo_fund(symbol):
-    """V2.10.11：Yahoo 基本面多層同步。
+    """V2.10.10：Yahoo 基本面多層同步。
 
-    第一層仍使用 Ticker.info（維持 V2.10.11 行為）。
+    第一層仍使用 Ticker.info（維持 V2.10.10 行為）。
     若 Render 的 Yahoo info 缺少 EPS 成長/ROE/PEG，第二層改讀
     financial statements 計算可取得的指標，避免 LINE 環境全部 N/A。
     """
@@ -3114,7 +3097,7 @@ def yahoo_fund(symbol):
     except Exception as e:
         print('Yahoo fundamentals失敗', symbol, e)
 
-    # V2.10.11：直接 Yahoo fundamentals-timeseries 最終備援。
+    # V2.10.10：直接 Yahoo fundamentals-timeseries 最終備援。
     # 只補缺欄位，不覆蓋原本已成功取得的 Yahoo info 數值。
     try:
         ts = yahoo_timeseries_fund(symbol)
@@ -3445,7 +3428,7 @@ def institutional(
     if key in INSTITUTIONAL_CACHE:
         return INSTITUTIONAL_CACHE[key]
 
-    # V2.10.11：LINE 查詢絕不載入完整 chip_history.json。
+    # V2.10.10：LINE 查詢絕不載入完整 chip_history.json。
     # T86 每日回傳全市場資料，若把 20 天全部留在 Render 記憶體會很容易
     # 超過 512MB。LINE 模式改用只保存「查詢股票」的精簡快取。
     if LINE_MODE_ACTIVE:
@@ -4893,7 +4876,7 @@ def analysis(
     # --------------------------------------------------------
 
     return (
-        f'📊 股票加碼分析 V2.10.11\n\n'
+        f'📊 股票加碼分析 V2.10.10\n\n'
         f'標的：{name}（{code}）\n'
         f'市場：{market}\n'
         f'產業：{industry}\n'
@@ -5054,7 +5037,7 @@ def line_target_from_event(e):
 
 
 def _background_line_analysis(text, target, u, event_id=None):
-    """V2.10.11：低記憶體背景完整分析。
+    """V2.10.10：低記憶體背景完整分析。
 
     使用 ThreadPoolExecutor（非 daemon）而非裸 daemon Thread，並在分析前後
     明確記錄狀態；完成後用 Push API 回原聊天室。
@@ -5110,7 +5093,7 @@ def _mark_line_event_seen(event_id):
 
 
 def prepare_line_subindustries(u, query):
-    """V2.10.11：LINE 查詢前只同步「目標大產業」的必要次產業。
+    """V2.10.10：LINE 查詢前只同步「目標大產業」的必要次產業。
 
     Render Free 不建立完整 1985 檔次產業快取；收到 2330/3711 後，
     只找出該股票的大產業，先補目標股，再補同大產業市值前 80 檔。
@@ -5145,14 +5128,6 @@ def prepare_line_subindustries(u, query):
     if not isinstance(data, dict):
         data = {}
 
-    # Render Free 本機檔案在重新部署後可能不存在；優先合併 GitHub Actions
-    # 已成功取得的公開次產業快取，避免 LINE 再次依賴 TPEx 網路。
-    if not data:
-        remote_cache = load_remote_subindustry_cache()
-        remote_data = remote_cache.get('data', {}) if isinstance(remote_cache, dict) else {}
-        if isinstance(remote_data, dict):
-            data.update(remote_data)
-
     missing = []
     for code in targets:
         info = data.get(code)
@@ -5165,20 +5140,24 @@ def prepare_line_subindustries(u, query):
         f'需補={len(missing)}'
     )
 
+    fetched = {}
     if missing:
         fetched = _fetch_missing_value_chains(missing)
         data.update(fetched)
-        if fetched:
-            save_json(
-                SUBINDUSTRY_CACHE_FILE,
-                {
-                    '_cached_at': cache.get('_cached_at', time.time()),
-                    'source': 'TPEx/TWSE Industry Value Chain',
-                    'source_url': VALUE_CHAIN_BASE,
-                    'cache_days': SUBINDUSTRY_CACHE_DAYS,
-                    'data': data
-                }
-            )
+
+    # V2.10.11：即使這次沒有抓到新資料，也把現有資料寫回，
+    # 確保 Render 查詢過程產生的快取可以被 GitHub Actions 保存。
+    save_json(
+        SUBINDUSTRY_CACHE_FILE,
+        {
+            '_cache_version': SUBINDUSTRY_CACHE_VERSION,
+            '_cached_at': cache.get('_cached_at', time.time()),
+            'source': 'TPEx/TWSE Industry Value Chain',
+            'source_url': VALUE_CHAIN_BASE,
+            'cache_days': SUBINDUSTRY_CACHE_DAYS,
+            'data': data
+        }
+    )
 
     global SUBINDUSTRY_CACHE
     SUBINDUSTRY_CACHE = data
@@ -5186,7 +5165,9 @@ def prepare_line_subindustries(u, query):
 
 
 def build_line_query_universe(query):
-    """V2.10.11：LINE 查詢專用市場資料。
+    global SUBINDUSTRY_CACHE
+
+    """V2.10.10：LINE 查詢專用市場資料。
 
     不在 Render 啟動時建立完整股票池；只有真正收到股票查詢時才建立一次
     市場 metadata。這保留動態次產業/Top10 所需的 code、industry、market_cap，
@@ -5198,19 +5179,37 @@ def build_line_query_universe(query):
         d = c.get('data') if isinstance(c, dict) else None
         t = c.get('_cached_at', 0) if isinstance(c, dict) else 0
         if isinstance(d, dict) and d and time.time() - t < UNIVERSE_CACHE_HOURS * 3600:
+            # V2.10.11：Render/LINE 優先使用 GitHub 隨部署帶進來的
+            # subindustry_cache.json；不在啟動時抓整個 1985 檔。
+            cache = load_json(SUBINDUSTRY_CACHE_FILE)
+            data = cache.get('data', {}) if isinstance(cache, dict) else {}
+            if isinstance(data, dict) and data:
+                global SUBINDUSTRY_CACHE
+                SUBINDUSTRY_CACHE = data
+                d = attach_subindustries(d, data)
             return d
     except Exception as e:
         print(f'LINE股票池快取讀取失敗：{e}')
 
     # Render 沒有快取時才建立；這裡不呼叫 get_public_subindustry，避免啟動
     # 時一次平行抓 200+ 網頁。目標股次產業與同業缺資料時由 query 流程補抓。
-    print('LINE查詢：建立市場 metadata（不預先抓次產業）')
+    print('LINE查詢：建立市場 metadata（使用持久化次產業快取，不預先全抓）')
     u = build_universe()
-    return u or {}
+    if not u:
+        return {}
+
+    # V2.10.11：先載入 GitHub/部署包內已有的次產業快取。
+    cache = load_json(SUBINDUSTRY_CACHE_FILE)
+    data = cache.get('data', {}) if isinstance(cache, dict) else {}
+    if isinstance(data, dict) and data:
+        SUBINDUSTRY_CACHE = data
+        u = attach_subindustries(u, data)
+
+    return u
 
 
 def release_line_memory():
-    """V2.10.11：清除 LINE 查詢期間的大型一次性快取。"""
+    """V2.10.10：清除 LINE 查詢期間的大型一次性快取。"""
     # 分析完成後整個 RUN_CACHE 都不再需要；尤其 Yahoo DataFrame / info
     # 若留在全域 dict，Render 長時間運作後會逐次累積。
     RUN_CACHE.clear()
@@ -5248,7 +5247,7 @@ def handle_event(e, u):
     if text.lower() in {'help', '說明', '功能', '股票'}:
         ok = reply_line(
             token,
-            '📈 股票加碼分析 Bot V2.10.11\n\n'
+            '📈 股票加碼分析 Bot V2.10.10\n\n'
             '輸入股票代號或名稱即可查詢。\n'
             '例如：2330、台積電、3711、日月光投控\n\n'
             '模型：基本面40 + 技術30 + 籌碼20 + 風險10。\n'
@@ -5306,8 +5305,8 @@ def run_webhook_server():
     if not LINE_CHANNEL_SECRET:
         print('⚠️ 未設定 LINE_CHANNEL_SECRET')
 
-    # V2.10.11：LINE/Render 啟動時不建立 1985 檔完整市場股票池。
-    # V2.10.11 原本在 Web Service 啟動時 force_refresh=True，會同時抓
+    # V2.10.10：LINE/Render 啟動時不建立 1985 檔完整市場股票池。
+    # V2.10.10 原本在 Web Service 啟動時 force_refresh=True，會同時抓
     # TWSE/TPEx 股票池、次產業公開資料並保留大量快取，Render Free 512MB
     # 容易 OOM。LINE 查詢改為「收到查詢後才建立必要資料」，並在分析完成
     # 後釋放大型物件。
