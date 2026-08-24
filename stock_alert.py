@@ -1,4 +1,4 @@
-# stock_alert.py V2.10.28
+# stock_alert.py V2.10.29
 # 效能修正版：
 # 1. 全市場資料批次化
 # 2. 單次執行快取
@@ -27,7 +27,7 @@
 # - 保留原本基本面 / 技術 / 籌碼 / 風險 / LINE 功能
 #
 # 股票跌幅 + 15分鐘區間最低價 + 動態估值 + 技術 + 籌碼 + 100分制加碼決策
-# V2.10.28：全市場估值/法人/次產業修正版；保留 V2.10.27 全部分析功能
+# V2.10.29：逐欄位基本面雙向 Fallback + 缺資料不懲罰；保留 V2.10.28 全部功能
 #          + LINE webhook HMAC-SHA256 簽章驗證 + 群組/聊天室支援
 #          + Actions 批次建立全市場技術快取；Render LINE 優先只讀快取，避免 Yahoo/TWSE 即時限流
 
@@ -3173,38 +3173,38 @@ def one_year_pe(
 
 
 def yahoo_timeseries_fund(symbol):
-    """V2.10.19：不依賴 Yahoo quoteSummary/info 的免費基本面備援。
+    """V2.10.29：免費基本面逐欄位雙向 fallback。
 
-    Render 上 yfinance 的 Ticker.info 偶爾會因 Yahoo quoteSummary/crumb
-    限制而拿不到 EPS 成長、ROE、PEG。這裡直接使用 Yahoo 公開的
-    fundamentals-timeseries endpoint，不需要 API key，也不需要 crumb。
-
-    - EPS 成長：最近季度 diluted EPS 對四季前同季度 EPS
-    - ROE：trailing net income / trailing stockholders equity
-    - PEG：trailingPegRatio；若沒有則用 PE / EPS 成長率作估算
+    優先直接使用 Yahoo fundamentals-timeseries，不依賴 quoteSummary/crumb。
+    除 EPS Growth / ROE / PEG 外，再取得：
+      - trailingDilutedEPS：可配合股價推導 PE
+      - trailingMarketCap + trailingStockholdersEquity：可推導 PB
+      - trailingDividendRate / trailingCashDividendsPerShare：可推導殖利率
+    所有欄位獨立，缺一欄不會阻塞其他欄位。
     """
-    key = ('yf_ts_fund', symbol)
+    key = ('yf_ts_fund_v21029', symbol)
     if key in RUN_CACHE:
         return RUN_CACHE[key]
 
     out = {
-        'eps_growth': None,
-        'roe': None,
-        'peg': None,
-        'pe': None,
-        'pb': None,
-        'yield': None
+        'eps_growth': None, 'roe': None, 'peg': None,
+        'pe': None, 'pb': None, 'yield': None,
+        'trailing_eps': None, 'market_cap': None,
+        'equity': None, 'dividend_rate': None
     }
 
     now = datetime.now(TW_TZ)
-    period1 = int((now - timedelta(days=900)).timestamp())
+    period1 = int((now - timedelta(days=1100)).timestamp())
     period2 = int((now + timedelta(days=2)).timestamp())
     types = ','.join([
         'quarterlyDilutedEPS',
         'trailingDilutedEPS',
         'trailingNetIncome',
         'trailingStockholdersEquity',
-        'trailingPegRatio'
+        'trailingMarketCap',
+        'trailingPegRatio',
+        'trailingDividendRate',
+        'trailingCashDividendsPerShare'
     ])
     url = (
         'https://query1.finance.yahoo.com/ws/fundamentals-timeseries/v1/'
@@ -3220,48 +3220,68 @@ def yahoo_timeseries_fund(symbol):
 
     try:
         r = requests.get(
-            url,
-            params=params,
-            timeout=8,
-            headers={'User-Agent': 'Mozilla/5.0 stock-alert/2.10.9'}
+            url, params=params, timeout=6,
+            headers={'User-Agent': 'Mozilla/5.0 stock-alert/2.10.29'}
         )
         r.raise_for_status()
         data = r.json()
         result = (data.get('timeseries') or {}).get('result') or []
 
         def values_for(name):
-            vals = []
+            vals=[]
             for row in result:
                 if name in row:
                     vals.extend(row.get(name) or [])
-            vals.sort(key=lambda x: x.get('asOfDate', '') if isinstance(x, dict) else '')
-            return [
-                to_float(x.get('reportedValue', {}).get('raw'))
-                for x in vals
-                if isinstance(x, dict)
-            ]
+            vals.sort(key=lambda x: x.get('asOfDate','') if isinstance(x,dict) else '')
+            outvals=[]
+            for x in vals:
+                if isinstance(x,dict):
+                    rv=x.get('reportedValue')
+                    raw=rv.get('raw') if isinstance(rv,dict) else rv
+                    v=to_float(raw)
+                    if v is not None:
+                        outvals.append(v)
+            return outvals
 
-        eps_q = values_for('quarterlyDilutedEPS')
-        if len(eps_q) >= 5:
-            latest = eps_q[-1]
-            prior_yoy = eps_q[-5]
-            if latest is not None and prior_yoy not in (None, 0):
-                out['eps_growth'] = (latest / prior_yoy - 1) * 100
+        eps_q=values_for('quarterlyDilutedEPS')
+        if len(eps_q)>=5:
+            latest, prior=eps_q[-1], eps_q[-5]
+            if latest is not None and prior not in (None,0):
+                out['eps_growth']=(latest/prior-1)*100
 
-        ni = values_for('trailingNetIncome')
-        eq = values_for('trailingStockholdersEquity')
-        if ni and eq and ni[-1] is not None and eq[-1] not in (None, 0):
-            out['roe'] = ni[-1] / eq[-1] * 100
+        trailing_eps=values_for('trailingDilutedEPS')
+        if trailing_eps:
+            out['trailing_eps']=trailing_eps[-1]
 
-        peg = values_for('trailingPegRatio')
+        ni=values_for('trailingNetIncome')
+        eq=values_for('trailingStockholdersEquity')
+        if eq:
+            out['equity']=eq[-1]
+        if ni and eq and ni[-1] is not None and eq[-1] not in (None,0):
+            out['roe']=ni[-1]/eq[-1]*100
+
+        mc=values_for('trailingMarketCap')
+        if mc:
+            out['market_cap']=mc[-1]
+        if out['market_cap'] is not None and out['equity'] not in (None,0):
+            out['pb']=out['market_cap']/out['equity']
+
+        peg=values_for('trailingPegRatio')
         if peg:
-            out['peg'] = peg[-1]
+            out['peg']=peg[-1]
+
+        divrate=values_for('trailingDividendRate')
+        if divrate:
+            out['dividend_rate']=divrate[-1]
+        if out['dividend_rate'] is None:
+            divs=values_for('trailingCashDividendsPerShare')
+            if divs:
+                out['dividend_rate']=divs[-1]
     except Exception as e:
-        print(f'Yahoo timeseries fundamentals失敗 {symbol}: {e}')
+        print(f'Yahoo timeseries fundamentals失敗 {symbol}: {type(e).__name__}: {e}', flush=True)
 
-    RUN_CACHE[key] = out
+    RUN_CACHE[key]=out
     return out
-
 
 def yahoo_fund(symbol):
     """V2.10.19：Yahoo 基本面多層同步。
@@ -4781,56 +4801,55 @@ def _line_margin_fast(code, market):
 # ============================================================
 
 def score_fund(pe, one, peer, peg, roe, eps, pb, yld, model):
-    """V2.10.27：依產業模型重新分配基本面 40 分。
+    """V2.10.29：產業化基本面評分 + 缺資料不懲罰。
 
-    N/A 不補成 0；只對實際存在的指標計分。
-    各產業仍維持 40 分上限，但核心指標不同。
+    每一個有權重且有有效資料的指標才進入分母；最後把「已取得的指標分數」
+    按可用權重比例重新標準化到 40 分。缺資料不會被當成 0 分，也不會因
+    免費 API 缺一欄而直接扣分。只有實際有資料且評價偏弱，才拿到較低分。
     """
-    model = model if isinstance(model, dict) else DEFAULT_MODEL
-    w = model.get('weights', DEFAULT_MODEL['weights'])
-    s = 0.0
-    why = []
+    model=model if isinstance(model,dict) else DEFAULT_MODEL
+    w=model.get('weights',DEFAULT_MODEL['weights'])
+    s=0.0; available=0.0; why=[]
 
-    def add(key, ratio, reason=None):
-        nonlocal s
-        if key not in w or not w.get(key) or ratio is None:
+    def add(key,ratio,reason=None):
+        nonlocal s,available
+        weight=float(w.get(key,0) or 0)
+        if weight<=0 or ratio is None:
             return
-        pts = float(w[key]) * max(0.0, min(1.0, ratio))
+        available += weight
+        pts=weight*max(0.0,min(1.0,ratio))
         s += pts
-        if reason and pts >= float(w[key]) * 0.65:
+        if reason and pts >= weight*0.65:
             why.append(reason)
 
-    # PE：同時看自身一年均值與同業中位數；若沒有歷史均值，仍可用同業比較。
-    if pe is not None:
-        pe_ratio = None
-        peer_ratio = None
-        if one is not None and one > 0 and pe > 0:
-            r = pe / one
-            pe_ratio = 1.0 if r <= .9 else .75 if r <= 1.05 else .45 if r <= 1.15 else .1 if r <= 1.3 else 0
-        if peer is not None and peer > 0 and pe > 0:
-            r = pe / peer
-            peer_ratio = 1.0 if r < .85 else .75 if r <= 1.05 else .4 if r <= 1.15 else .1 if r <= 1.3 else 0
-        if pe_ratio is not None or peer_ratio is not None:
-            ratios=[x for x in (pe_ratio,peer_ratio) if x is not None]
-            add('pe', max(ratios), '低於自身/同業合理估值')
+    if pe is not None and pe>0:
+        pe_ratio=None; peer_ratio=None
+        if one is not None and one>0:
+            r=pe/one
+            pe_ratio=1.0 if r<=.9 else .75 if r<=1.05 else .45 if r<=1.15 else .1 if r<=1.3 else 0
+        if peer is not None and peer>0:
+            r=pe/peer
+            peer_ratio=1.0 if r<.85 else .75 if r<=1.05 else .4 if r<=1.15 else .1 if r<=1.3 else 0
+        ratios=[x for x in (pe_ratio,peer_ratio) if x is not None]
+        if ratios:
+            add('pe',max(ratios),'低於自身/同業合理估值')
 
-    if peg is not None and peg > 0:
-        add('peg', 1.0 if peg < .8 else .85 if peg < 1 else .6 if peg < 1.2 else .2 if peg < 1.5 else 0, 'PEG具吸引力')
-
-    if pb is not None and pb > 0:
-        add('pb', 1.0 if pb < 1.5 else .75 if pb < 2 else .5 if pb < 4 else .15 if pb < 6 else 0, 'PB合理')
-
-    if yld is not None and yld >= 0:
-        add('yield', 1.0 if yld >= 5 else .75 if yld >= 3 else .45 if yld >= 2 else .15 if yld >= 1 else 0, '殖利率具吸引力')
-
+    if peg is not None and peg>0:
+        add('peg',1.0 if peg<.8 else .85 if peg<1 else .6 if peg<1.2 else .2 if peg<1.5 else 0,'PEG具吸引力')
+    if pb is not None and pb>0:
+        add('pb',1.0 if pb<1.5 else .75 if pb<2 else .5 if pb<4 else .15 if pb<6 else 0,'PB合理')
+    if yld is not None and yld>=0:
+        add('yield',1.0 if yld>=5 else .75 if yld>=3 else .45 if yld>=2 else .15 if yld>=1 else 0,'殖利率具吸引力')
     if roe is not None:
-        add('roe', 1.0 if roe >= 30 else .8 if roe >= 20 else .6 if roe >= 15 else .4 if roe >= 10 else .15 if roe > 0 else 0, 'ROE良好')
-
+        add('roe',1.0 if roe>=30 else .8 if roe>=20 else .6 if roe>=15 else .4 if roe>=10 else .15 if roe>0 else 0,'ROE良好')
     if eps is not None:
-        add('growth', 1.0 if eps >= 50 else .85 if eps >= 30 else .7 if eps >= 20 else .5 if eps > 10 else .25 if eps > 0 else 0, '獲利成長')
+        add('growth',1.0 if eps>=50 else .85 if eps>=30 else .7 if eps>=20 else .5 if eps>10 else .25 if eps>0 else 0,'獲利成長')
 
-    return min(40, int(round(s))), why
-
+    # 缺資料不懲罰：只用可用權重重新標準化到 40 分。
+    if available<=0:
+        return 0,why
+    normalized=s/available*40.0
+    return min(40,int(round(normalized))),why
 
 def score_tech(t):
 
@@ -5082,116 +5101,109 @@ def score_risk(
     )
 
 
-def yahoo_light_fund(symbol, official=None):
-    """V2.10.26 Render Free 輕量基本面。
+def yahoo_light_fund(symbol, official=None, current_price=None):
+    """V2.10.29 LINE Free 基本面逐欄位、雙向 fallback。
 
-    五條資料管線彼此獨立：
-    1. PE/PB/殖利率優先使用 TWSE/TPEx 官方資料。
-    2. EPS Growth / ROE / PEG 優先讀 Actions/LINE 快取，再用一次 Yahoo
-       fundamentals-timeseries 補缺。
-    3. 若 PEG 與 PE 都有效而 EPS Growth 缺失，依 PEG 定義
-       growth = PE / PEG 補出 EPS Growth，避免 2317 出現
-       「PE 有、PEG 有、EPS Growth 卻 N/A」的不一致。
-    4. ROE 缺失時再用 PB/PE 推導。
-    5. 所有 Yahoo 失敗都不能阻塞 LINE。
+    每個欄位獨立補洞：官方 → 小快取 → Yahoo timeseries → 數學推導。
+    不因某一個 API 欄位失敗而把整份基本面清空。
     """
-    o = {
-        'eps_growth': None,
-        'roe': None,
-        'peg': None,
-        'pb': None,
-        'yield': None,
-        'pe': None
-    }
+    o={'eps_growth':None,'roe':None,'peg':None,'pb':None,'yield':None,'pe':None}
+    if isinstance(official,dict):
+        for k in ('pe','pb','yield'):
+            o[k]=to_float(official.get(k))
 
-    if isinstance(official, dict):
-        o['pe'] = to_float(official.get('pe'))
-        o['pb'] = to_float(official.get('pb'))
-        o['yield'] = to_float(official.get('yield'))
-
-    code = clean_code(symbol)
+    code=clean_code(symbol)
     try:
-        # symbol 通常是 2330.TW / 3711.TW；快取鍵統一去掉市場尾碼。
-        code = clean_code(str(symbol).split('.')[0]) or code
+        code=clean_code(str(symbol).split('.')[0]) or code
     except Exception:
         pass
 
-    cache = load_json(LINE_FUND_CACHE_FILE)
-    if not isinstance(cache, dict):
-        cache = {}
-    if not cache:
-        remote = load_remote_json_cache(LINE_FUND_CACHE_FILE, timeout=4)
-        if isinstance(remote, dict):
-            cache = remote
-
-    cached = cache.get(code, {})
-    if isinstance(cached, dict):
-        for k in ('eps_growth', 'roe', 'peg'):
-            v = to_float(cached.get(k))
+    cache=load_json(LINE_FUND_CACHE_FILE)
+    if not isinstance(cache,dict) or not cache:
+        remote=load_remote_json_cache(LINE_FUND_CACHE_FILE,timeout=3)
+        cache=remote if isinstance(remote,dict) else {}
+    cached=cache.get(code,{})
+    if isinstance(cached,dict):
+        for k in ('eps_growth','roe','peg','pe','pb','yield'):
+            v=to_float(cached.get(k))
             if v is not None:
-                o[k] = v
+                o[k]=v
 
-    missing = [
-        k for k in ('eps_growth', 'roe', 'peg')
-        if o.get(k) is None
-    ]
-
-    # LINE 查詢只允許一次輕量 Yahoo fundamentals-timeseries。
+    # 一次 timeseries，補所有缺欄位。
+    ts={}
+    missing=[k for k in ('pe','pb','yield','eps_growth','roe','peg') if o.get(k) is None]
     if missing:
         try:
-            ts = yahoo_timeseries_fund(symbol)
-            for k in missing:
-                if ts.get(k) is not None:
-                    o[k] = ts[k]
+            ts=yahoo_timeseries_fund(symbol) or {}
         except Exception as e:
-            print(
-                f'LINE輕量基本面 Yahoo timeseries失敗 {symbol}: '
-                f'{type(e).__name__}: {e}',
-                flush=True
-            )
+            print(f'LINE輕量基本面 Yahoo timeseries失敗 {symbol}: {type(e).__name__}',flush=True)
+            ts={}
 
-    # V2.10.26：若 PE、PEG 都有效，但 EPS Growth 缺失，使用
-    # PEG = PE / Growth 的定義反推 Growth。
-    # 這只在 PE > 0、PEG > 0 時啟用；因此 1101 這類 PE 不適用的股票
-    # 不會被硬算出虛假的 EPS 成長率。
+    # PE：trailing EPS + 當前股價；避免 EPS <= 0 時硬算。
+    if o.get('pe') is None:
+        eps_t=to_float(ts.get('trailing_eps'))
+        px=to_float(current_price)
+        if eps_t is not None and eps_t>0 and px is not None and px>0:
+            o['pe']=px/eps_t
+            print(f'LINE基本面：PE 使用股價/TTM EPS 推導 {code} = {o["pe"]:.2f}',flush=True)
+
+    # PB：Yahoo 市值/股東權益；若仍缺而 PE、ROE 都有效，再用 PB=PE*ROE。
+    if o.get('pb') is None:
+        v=to_float(ts.get('pb'))
+        if v is not None and v>0:
+            o['pb']=v
+            print(f'LINE基本面：PB 使用 Yahoo 市值/淨值推導 {code} = {v:.2f}',flush=True)
+    if o.get('pb') is None:
+        pe=to_float(o.get('pe')); roe=to_float(o.get('roe'))
+        if pe is not None and pe>0 and roe is not None and roe>0:
+            o['pb']=pe*roe/100
+            print(f'LINE基本面：PB 使用 PE×ROE 推導 {code} = {o["pb"]:.2f}',flush=True)
+
+    # 殖利率：trailing dividend rate / 股價；若 API 給的是每股股利，除以股價。
+    if o.get('yield') is None:
+        div=to_float(ts.get('dividend_rate')); px=to_float(current_price)
+        if div is not None and px is not None and px>0:
+            o['yield']=div/px*100
+            print(f'LINE基本面：殖利率使用股利/股價推導 {code} = {o["yield"]:.2f}%',flush=True)
+
+    # PEG 雙向 fallback。
+    if o.get('peg') is None:
+        pe=to_float(o.get('pe')); growth=to_float(o.get('eps_growth'))
+        if pe is not None and pe>0 and growth is not None and growth>0:
+            o['peg']=pe/growth
+            print(f'LINE基本面：PEG 使用 PE/EPS成長推導 {code} = {o["peg"]:.2f}',flush=True)
+
+    # EPS Growth 反向 fallback。
     if o.get('eps_growth') is None:
-        pe_for_growth = to_float(o.get('pe'))
-        peg_for_growth = to_float(o.get('peg'))
-        if (pe_for_growth is not None and pe_for_growth > 0
-                and peg_for_growth is not None and peg_for_growth > 0):
-            o['eps_growth'] = pe_for_growth / peg_for_growth
-            print(
-                f'LINE基本面：EPS成長使用 PE/PEG 推導 {code} = '
-                f'{o["eps_growth"]:.2f}%',
-                flush=True
-            )
+        pe=to_float(o.get('pe')); peg=to_float(o.get('peg'))
+        if pe is not None and pe>0 and peg is not None and peg>0:
+            o['eps_growth']=pe/peg
+            print(f'LINE基本面：EPS成長使用 PE/PEG 推導 {code} = {o["eps_growth"]:.2f}%',flush=True)
 
-    # V2.10.19：免費 PE/PB fallback。ROE 缺失時，用同口徑 PB/PE 推導；
-    # 若 Yahoo 正式 ROE 已存在，絕不覆蓋。
+    # ROE fallback：優先正式 timeseries；最後才用 PB/PE。
     if o.get('roe') is None:
-        pe_for_roe=to_float(o.get('pe')); pb_for_roe=to_float(o.get('pb'))
-        if pe_for_roe and pb_for_roe and pe_for_roe>0 and pb_for_roe>0:
-            o['roe']=pb_for_roe/pe_for_roe*100
-            print(f'LINE基本面：ROE 使用 PE/PB 推導 {code} = {o["roe"]:.2f}%',flush=True)
+        roe_ts=to_float(ts.get('roe'))
+        if roe_ts is not None:
+            o['roe']=roe_ts
+    if o.get('roe') is None:
+        pe=to_float(o.get('pe')); pb=to_float(o.get('pb'))
+        if pe is not None and pe>0 and pb is not None and pb>0:
+            o['roe']=pb/pe*100
+            print(f'LINE基本面：ROE 使用 PB/PE 推導 {code} = {o["roe"]:.2f}%',flush=True)
 
-    # 只保存單一標的的少量數字，不保存 Yahoo DataFrame / info.
+    # 最後若 timeseries 本身有 PEG，而 PE 又已經補出來，仍可補 EPS Growth。
+    if o.get('eps_growth') is None and o.get('pe') is not None and o.get('peg') is not None:
+        pe=to_float(o.get('pe')); peg=to_float(o.get('peg'))
+        if pe and pe>0 and peg and peg>0:
+            o['eps_growth']=pe/peg
+
     try:
-        cache[code] = {
-            'eps_growth': o.get('eps_growth'),
-            'roe': o.get('roe'),
-            'peg': o.get('peg'),
-            '_cached_at': time.time()
-        }
-        save_json(LINE_FUND_CACHE_FILE, cache)
+        cache[code]={k:o.get(k) for k in ('pe','pb','yield','eps_growth','roe','peg')}
+        cache[code]['_cached_at']=time.time()
+        save_json(LINE_FUND_CACHE_FILE,cache)
     except Exception as e:
-        print(f'LINE基本面快取保存失敗 {code}: {e}', flush=True)
-
+        print(f'LINE基本面快取保存失敗 {code}: {e}',flush=True)
     return o
-
-
-# ============================================================
-# Analysis
-# ============================================================
 
 def analysis(
     query,
@@ -5335,7 +5347,7 @@ def analysis(
 
     if line_light:
         print(f'LINE輕量分析：基本面資料 {code}', flush=True)
-        yf_f = yahoo_light_fund(symbol, off)
+        yf_f = yahoo_light_fund(symbol, off, current_price=to_float(u.get(code, {}).get('price')))
     else:
         yf_f = yahoo_fund(
             symbol
@@ -5652,7 +5664,7 @@ def analysis(
     # --------------------------------------------------------
 
     return (
-        f'📊 股票加碼分析 V2.10.27\n\n'
+        f'📊 股票加碼分析 V2.10.29\n\n'
         f'標的：{name}（{code}）\n'
         f'市場：{market}\n'
         f'產業：{industry}\n'
