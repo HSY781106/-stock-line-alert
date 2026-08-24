@@ -1,0 +1,8765 @@
+{
+  "cached_at": 1787539874.4140754,
+  "data": [
+    {
+      "code": "1101",
+      "name": "台泥",
+      "industry": "水泥工業",
+      "market": "TWSE",
+      "symbol": "1101.TW",
+      "capital": 77231817420.0
+    },
+    {
+      "code": "1102",
+      "name": "亞泥",
+      "industry": "水泥工業",
+      "market": "TWSE",
+      "symbol": "1102.TW",
+      "capital": 35465628810.0
+    },
+    {
+      "code": "1103",
+      "name": "嘉泥",
+      "industry": "水泥工業",
+      "market": "TWSE",
+      "symbol": "1103.TW",
+      "capital": 8328745530.0
+    },
+    {
+      "code": "1104",
+      "name": "環泥",
+      "industry": "水泥工業",
+      "market": "TWSE",
+      "symbol": "1104.TW",
+      "capital": 6866818160.0
+    },
+    {
+      "code": "1108",
+      "name": "幸福",
+      "industry": "水泥工業",
+      "market": "TWSE",
+      "symbol": "1108.TW",
+      "capital": 4047380490.0
+    },
+    {
+      "code": "1109",
+      "name": "信大",
+      "industry": "水泥工業",
+      "market": "TWSE",
+      "symbol": "1109.TW",
+      "capital": 3411588680.0
+    },
+    {
+      "code": "1110",
+      "name": "東泥",
+      "industry": "水泥工業",
+      "market": "TWSE",
+      "symbol": "1110.TW",
+      "capital": 5720007970.0
+    },
+    {
+      "code": "1201",
+      "name": "味全",
+      "industry": "食品工業",
+      "market": "TWSE",
+      "symbol": "1201.TW",
+      "capital": 5060629140.0
+    },
+    {
+      "code": "1203",
+      "name": "味王",
+      "industry": "食品工業",
+      "market": "TWSE",
+      "symbol": "1203.TW",
+      "capital": 2400000000.0
+    },
+    {
+      "code": "1210",
+      "name": "大成",
+      "industry": "食品工業",
+      "market": "TWSE",
+      "symbol": "1210.TW",
+      "capital": 8947672220.0
+    },
+    {
+      "code": "1213",
+      "name": "大飲",
+      "industry": "食品工業",
+      "market": "TWSE",
+      "symbol": "1213.TW",
+      "capital": 566226270.0
+    },
+    {
+      "code": "1215",
+      "name": "卜蜂",
+      "industry": "食品工業",
+      "market": "TWSE",
+      "symbol": "1215.TW",
+      "capital": 2947900980.0
+    },
+    {
+      "code": "1216",
+      "name": "統一",
+      "industry": "食品工業",
+      "market": "TWSE",
+      "symbol": "1216.TW",
+      "capital": 56820154210.0
+    },
+    {
+      "code": "1217",
+      "name": "愛之味",
+      "industry": "食品工業",
+      "market": "TWSE",
+      "symbol": "1217.TW",
+      "capital": 4945133360.0
+    },
+    {
+      "code": "1218",
+      "name": "泰山",
+      "industry": "食品工業",
+      "market": "TWSE",
+      "symbol": "1218.TW",
+      "capital": 4999990380.0
+    },
+    {
+      "code": "1219",
+      "name": "福壽",
+      "industry": "食品工業",
+      "market": "TWSE",
+      "symbol": "1219.TW",
+      "capital": 3412383640.0
+    },
+    {
+      "code": "1220",
+      "name": "台榮",
+      "industry": "食品工業",
+      "market": "TWSE",
+      "symbol": "1220.TW",
+      "capital": 1770779440.0
+    },
+    {
+      "code": "1225",
+      "name": "福懋油",
+      "industry": "食品工業",
+      "market": "TWSE",
+      "symbol": "1225.TW",
+      "capital": 2422683060.0
+    },
+    {
+      "code": "1227",
+      "name": "佳格",
+      "industry": "食品工業",
+      "market": "TWSE",
+      "symbol": "1227.TW",
+      "capital": 9150895910.0
+    },
+    {
+      "code": "1229",
+      "name": "聯華",
+      "industry": "食品工業",
+      "market": "TWSE",
+      "symbol": "1229.TW",
+      "capital": 17959606680.0
+    },
+    {
+      "code": "1231",
+      "name": "聯華食",
+      "industry": "食品工業",
+      "market": "TWSE",
+      "symbol": "1231.TW",
+      "capital": 3282999220.0
+    },
+    {
+      "code": "1232",
+      "name": "大統益",
+      "industry": "食品工業",
+      "market": "TWSE",
+      "symbol": "1232.TW",
+      "capital": 1599749150.0
+    },
+    {
+      "code": "1233",
+      "name": "天仁",
+      "industry": "食品工業",
+      "market": "TWSE",
+      "symbol": "1233.TW",
+      "capital": 905919480.0
+    },
+    {
+      "code": "1234",
+      "name": "黑松",
+      "industry": "食品工業",
+      "market": "TWSE",
+      "symbol": "1234.TW",
+      "capital": 4018710940.0
+    },
+    {
+      "code": "1235",
+      "name": "興泰",
+      "industry": "食品工業",
+      "market": "TWSE",
+      "symbol": "1235.TW",
+      "capital": 1885778360.0
+    },
+    {
+      "code": "1236",
+      "name": "宏亞",
+      "industry": "食品工業",
+      "market": "TWSE",
+      "symbol": "1236.TW",
+      "capital": 866740080.0
+    },
+    {
+      "code": "1256",
+      "name": "鮮活果汁-KY",
+      "industry": "食品工業",
+      "market": "TWSE",
+      "symbol": "1256.TW",
+      "capital": 357813780.0
+    },
+    {
+      "code": "1301",
+      "name": "台塑",
+      "industry": "塑膠工業",
+      "market": "TWSE",
+      "symbol": "1301.TW",
+      "capital": 63657407810.0
+    },
+    {
+      "code": "1303",
+      "name": "南亞",
+      "industry": "塑膠工業",
+      "market": "TWSE",
+      "symbol": "1303.TW",
+      "capital": 79308215890.0
+    },
+    {
+      "code": "1304",
+      "name": "台聚",
+      "industry": "塑膠工業",
+      "market": "TWSE",
+      "symbol": "1304.TW",
+      "capital": 11887635000.0
+    },
+    {
+      "code": "1305",
+      "name": "華夏",
+      "industry": "塑膠工業",
+      "market": "TWSE",
+      "symbol": "1305.TW",
+      "capital": 5810504940.0
+    },
+    {
+      "code": "1307",
+      "name": "三芳",
+      "industry": "塑膠工業",
+      "market": "TWSE",
+      "symbol": "1307.TW",
+      "capital": 3978181260.0
+    },
+    {
+      "code": "1308",
+      "name": "亞聚",
+      "industry": "塑膠工業",
+      "market": "TWSE",
+      "symbol": "1308.TW",
+      "capital": 5937439190.0
+    },
+    {
+      "code": "1309",
+      "name": "台達化",
+      "industry": "塑膠工業",
+      "market": "TWSE",
+      "symbol": "1309.TW",
+      "capital": 3975868480.0
+    },
+    {
+      "code": "1310",
+      "name": "台苯",
+      "industry": "塑膠工業",
+      "market": "TWSE",
+      "symbol": "1310.TW",
+      "capital": 5278697640.0
+    },
+    {
+      "code": "1312",
+      "name": "國喬",
+      "industry": "塑膠工業",
+      "market": "TWSE",
+      "symbol": "1312.TW",
+      "capital": 15266203280.0
+    },
+    {
+      "code": "1313",
+      "name": "聯成",
+      "industry": "塑膠工業",
+      "market": "TWSE",
+      "symbol": "1313.TW",
+      "capital": 13308461070.0
+    },
+    {
+      "code": "1314",
+      "name": "中石化",
+      "industry": "塑膠工業",
+      "market": "TWSE",
+      "symbol": "1314.TW",
+      "capital": 37848501300.0
+    },
+    {
+      "code": "1315",
+      "name": "達新",
+      "industry": "塑膠工業",
+      "market": "TWSE",
+      "symbol": "1315.TW",
+      "capital": 990990000.0
+    },
+    {
+      "code": "1316",
+      "name": "上曜",
+      "industry": "建材營造",
+      "market": "TWSE",
+      "symbol": "1316.TW",
+      "capital": 4016461500.0
+    },
+    {
+      "code": "1319",
+      "name": "東陽",
+      "industry": "汽車工業",
+      "market": "TWSE",
+      "symbol": "1319.TW",
+      "capital": 5914770680.0
+    },
+    {
+      "code": "1321",
+      "name": "大洋",
+      "industry": "塑膠工業",
+      "market": "TWSE",
+      "symbol": "1321.TW",
+      "capital": 2272282680.0
+    },
+    {
+      "code": "1323",
+      "name": "永裕",
+      "industry": "塑膠工業",
+      "market": "TWSE",
+      "symbol": "1323.TW",
+      "capital": 912745540.0
+    },
+    {
+      "code": "1324",
+      "name": "地球",
+      "industry": "塑膠工業",
+      "market": "TWSE",
+      "symbol": "1324.TW",
+      "capital": 751218820.0
+    },
+    {
+      "code": "1325",
+      "name": "恆大",
+      "industry": "塑膠工業",
+      "market": "TWSE",
+      "symbol": "1325.TW",
+      "capital": 852811980.0
+    },
+    {
+      "code": "1326",
+      "name": "台化",
+      "industry": "塑膠工業",
+      "market": "TWSE",
+      "symbol": "1326.TW",
+      "capital": 58611862910.0
+    },
+    {
+      "code": "1337",
+      "name": "再生-KY",
+      "industry": "塑膠工業",
+      "market": "TWSE",
+      "symbol": "1337.TW",
+      "capital": 2689547290.0
+    },
+    {
+      "code": "1338",
+      "name": "廣華-KY",
+      "industry": "汽車工業",
+      "market": "TWSE",
+      "symbol": "1338.TW",
+      "capital": 838400000.0
+    },
+    {
+      "code": "1339",
+      "name": "昭輝",
+      "industry": "汽車工業",
+      "market": "TWSE",
+      "symbol": "1339.TW",
+      "capital": 741238750.0
+    },
+    {
+      "code": "1340",
+      "name": "勝悅-KY",
+      "industry": "塑膠工業",
+      "market": "TWSE",
+      "symbol": "1340.TW",
+      "capital": 1529228550.0
+    },
+    {
+      "code": "1341",
+      "name": "富林-KY",
+      "industry": "塑膠工業",
+      "market": "TWSE",
+      "symbol": "1341.TW",
+      "capital": 528506340.0
+    },
+    {
+      "code": "1342",
+      "name": "八貫",
+      "industry": "其他",
+      "market": "TWSE",
+      "symbol": "1342.TW",
+      "capital": 780009020.0
+    },
+    {
+      "code": "1402",
+      "name": "遠東新",
+      "industry": "紡織纖維",
+      "market": "TWSE",
+      "symbol": "1402.TW",
+      "capital": 53528752270.0
+    },
+    {
+      "code": "1409",
+      "name": "新纖",
+      "industry": "紡織纖維",
+      "market": "TWSE",
+      "symbol": "1409.TW",
+      "capital": 16184092860.0
+    },
+    {
+      "code": "1410",
+      "name": "南染",
+      "industry": "紡織纖維",
+      "market": "TWSE",
+      "symbol": "1410.TW",
+      "capital": 620000000.0
+    },
+    {
+      "code": "1413",
+      "name": "宏洲",
+      "industry": "紡織纖維",
+      "market": "TWSE",
+      "symbol": "1413.TW",
+      "capital": 1321124540.0
+    },
+    {
+      "code": "1414",
+      "name": "東和",
+      "industry": "紡織纖維",
+      "market": "TWSE",
+      "symbol": "1414.TW",
+      "capital": 1980000000.0
+    },
+    {
+      "code": "1416",
+      "name": "廣豐",
+      "industry": "其他",
+      "market": "TWSE",
+      "symbol": "1416.TW",
+      "capital": 1853421680.0
+    },
+    {
+      "code": "1417",
+      "name": "嘉裕",
+      "industry": "紡織纖維",
+      "market": "TWSE",
+      "symbol": "1417.TW",
+      "capital": 1899418400.0
+    },
+    {
+      "code": "1418",
+      "name": "東華",
+      "industry": "紡織纖維",
+      "market": "TWSE",
+      "symbol": "1418.TW",
+      "capital": 568343090.0
+    },
+    {
+      "code": "1419",
+      "name": "新紡",
+      "industry": "紡織纖維",
+      "market": "TWSE",
+      "symbol": "1419.TW",
+      "capital": 3000412800.0
+    },
+    {
+      "code": "1423",
+      "name": "利華",
+      "industry": "紡織纖維",
+      "market": "TWSE",
+      "symbol": "1423.TW",
+      "capital": 996480000.0
+    },
+    {
+      "code": "1432",
+      "name": "大魯閣",
+      "industry": "居家生活",
+      "market": "TWSE",
+      "symbol": "1432.TW",
+      "capital": 1080000000.0
+    },
+    {
+      "code": "1434",
+      "name": "福懋",
+      "industry": "紡織纖維",
+      "market": "TWSE",
+      "symbol": "1434.TW",
+      "capital": 16846646370.0
+    },
+    {
+      "code": "1435",
+      "name": "中福",
+      "industry": "其他",
+      "market": "TWSE",
+      "symbol": "1435.TW",
+      "capital": 1397800800.0
+    },
+    {
+      "code": "1436",
+      "name": "華友聯",
+      "industry": "建材營造",
+      "market": "TWSE",
+      "symbol": "1436.TW",
+      "capital": 1941517950.0
+    },
+    {
+      "code": "1437",
+      "name": "勤益控",
+      "industry": "其他",
+      "market": "TWSE",
+      "symbol": "1437.TW",
+      "capital": 2018712840.0
+    },
+    {
+      "code": "1438",
+      "name": "三地開發",
+      "industry": "建材營造",
+      "market": "TWSE",
+      "symbol": "1438.TW",
+      "capital": 1112057590.0
+    },
+    {
+      "code": "1439",
+      "name": "雋揚",
+      "industry": "建材營造",
+      "market": "TWSE",
+      "symbol": "1439.TW",
+      "capital": 920000000.0
+    },
+    {
+      "code": "1440",
+      "name": "南紡",
+      "industry": "紡織纖維",
+      "market": "TWSE",
+      "symbol": "1440.TW",
+      "capital": 16568158570.0
+    },
+    {
+      "code": "1441",
+      "name": "大東",
+      "industry": "紡織纖維",
+      "market": "TWSE",
+      "symbol": "1441.TW",
+      "capital": 617443870.0
+    },
+    {
+      "code": "1442",
+      "name": "名軒",
+      "industry": "建材營造",
+      "market": "TWSE",
+      "symbol": "1442.TW",
+      "capital": 3662113580.0
+    },
+    {
+      "code": "1443",
+      "name": "立益物流",
+      "industry": "其他",
+      "market": "TWSE",
+      "symbol": "1443.TW",
+      "capital": 1353430110.0
+    },
+    {
+      "code": "1444",
+      "name": "力麗",
+      "industry": "紡織纖維",
+      "market": "TWSE",
+      "symbol": "1444.TW",
+      "capital": 9955950590.0
+    },
+    {
+      "code": "1445",
+      "name": "大宇",
+      "industry": "紡織纖維",
+      "market": "TWSE",
+      "symbol": "1445.TW",
+      "capital": 1306660340.0
+    },
+    {
+      "code": "1446",
+      "name": "宏和",
+      "industry": "紡織纖維",
+      "market": "TWSE",
+      "symbol": "1446.TW",
+      "capital": 1377095130.0
+    },
+    {
+      "code": "1447",
+      "name": "力鵬",
+      "industry": "紡織纖維",
+      "market": "TWSE",
+      "symbol": "1447.TW",
+      "capital": 9100712420.0
+    },
+    {
+      "code": "1449",
+      "name": "佳和",
+      "industry": "紡織纖維",
+      "market": "TWSE",
+      "symbol": "1449.TW",
+      "capital": 1271145720.0
+    },
+    {
+      "code": "1451",
+      "name": "年興",
+      "industry": "紡織纖維",
+      "market": "TWSE",
+      "symbol": "1451.TW",
+      "capital": 1980000000.0
+    },
+    {
+      "code": "1452",
+      "name": "宏益",
+      "industry": "紡織纖維",
+      "market": "TWSE",
+      "symbol": "1452.TW",
+      "capital": 1326414000.0
+    },
+    {
+      "code": "1453",
+      "name": "大將",
+      "industry": "建材營造",
+      "market": "TWSE",
+      "symbol": "1453.TW",
+      "capital": 1132430480.0
+    },
+    {
+      "code": "1454",
+      "name": "台富",
+      "industry": "紡織纖維",
+      "market": "TWSE",
+      "symbol": "1454.TW",
+      "capital": 1298338480.0
+    },
+    {
+      "code": "1455",
+      "name": "集盛",
+      "industry": "紡織纖維",
+      "market": "TWSE",
+      "symbol": "1455.TW",
+      "capital": 5316883800.0
+    },
+    {
+      "code": "1456",
+      "name": "怡華",
+      "industry": "建材營造",
+      "market": "TWSE",
+      "symbol": "1456.TW",
+      "capital": 937200000.0
+    },
+    {
+      "code": "1457",
+      "name": "宜進",
+      "industry": "紡織纖維",
+      "market": "TWSE",
+      "symbol": "1457.TW",
+      "capital": 3167300220.0
+    },
+    {
+      "code": "1459",
+      "name": "聯發",
+      "industry": "紡織纖維",
+      "market": "TWSE",
+      "symbol": "1459.TW",
+      "capital": 2689716800.0
+    },
+    {
+      "code": "1460",
+      "name": "宏遠",
+      "industry": "紡織纖維",
+      "market": "TWSE",
+      "symbol": "1460.TW",
+      "capital": 6946434840.0
+    },
+    {
+      "code": "1463",
+      "name": "強盛新",
+      "industry": "紡織纖維",
+      "market": "TWSE",
+      "symbol": "1463.TW",
+      "capital": 1732683810.0
+    },
+    {
+      "code": "1464",
+      "name": "得力",
+      "industry": "紡織纖維",
+      "market": "TWSE",
+      "symbol": "1464.TW",
+      "capital": 4255757330.0
+    },
+    {
+      "code": "1465",
+      "name": "偉全",
+      "industry": "紡織纖維",
+      "market": "TWSE",
+      "symbol": "1465.TW",
+      "capital": 1036072670.0
+    },
+    {
+      "code": "1466",
+      "name": "聚隆",
+      "industry": "紡織纖維",
+      "market": "TWSE",
+      "symbol": "1466.TW",
+      "capital": 1111573200.0
+    },
+    {
+      "code": "1467",
+      "name": "南緯",
+      "industry": "紡織纖維",
+      "market": "TWSE",
+      "symbol": "1467.TW",
+      "capital": 2336246670.0
+    },
+    {
+      "code": "1468",
+      "name": "昶和",
+      "industry": "紡織纖維",
+      "market": "TWSE",
+      "symbol": "1468.TW",
+      "capital": 1604052440.0
+    },
+    {
+      "code": "1470",
+      "name": "大統新創",
+      "industry": "紡織纖維",
+      "market": "TWSE",
+      "symbol": "1470.TW",
+      "capital": 857670000.0
+    },
+    {
+      "code": "1471",
+      "name": "首利",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "1471.TW",
+      "capital": 1504145360.0
+    },
+    {
+      "code": "1472",
+      "name": "三洋實業",
+      "industry": "建材營造",
+      "market": "TWSE",
+      "symbol": "1472.TW",
+      "capital": 524880820.0
+    },
+    {
+      "code": "1473",
+      "name": "台南",
+      "industry": "紡織纖維",
+      "market": "TWSE",
+      "symbol": "1473.TW",
+      "capital": 1461535340.0
+    },
+    {
+      "code": "1474",
+      "name": "弘裕",
+      "industry": "紡織纖維",
+      "market": "TWSE",
+      "symbol": "1474.TW",
+      "capital": 1298969690.0
+    },
+    {
+      "code": "1475",
+      "name": "業旺",
+      "industry": "紡織纖維",
+      "market": "TWSE",
+      "symbol": "1475.TW",
+      "capital": 660167490.0
+    },
+    {
+      "code": "1476",
+      "name": "儒鴻",
+      "industry": "紡織纖維",
+      "market": "TWSE",
+      "symbol": "1476.TW",
+      "capital": 2743671110.0
+    },
+    {
+      "code": "1477",
+      "name": "聚陽",
+      "industry": "紡織纖維",
+      "market": "TWSE",
+      "symbol": "1477.TW",
+      "capital": 2466937130.0
+    },
+    {
+      "code": "1503",
+      "name": "士電",
+      "industry": "電機機械",
+      "market": "TWSE",
+      "symbol": "1503.TW",
+      "capital": 5209722230.0
+    },
+    {
+      "code": "1504",
+      "name": "東元",
+      "industry": "電機機械",
+      "market": "TWSE",
+      "symbol": "1504.TW",
+      "capital": 23764406840.0
+    },
+    {
+      "code": "1506",
+      "name": "正道",
+      "industry": "電機機械",
+      "market": "TWSE",
+      "symbol": "1506.TW",
+      "capital": 3003885010.0
+    },
+    {
+      "code": "1512",
+      "name": "瑞利",
+      "industry": "汽車工業",
+      "market": "TWSE",
+      "symbol": "1512.TW",
+      "capital": 981834980.0
+    },
+    {
+      "code": "1513",
+      "name": "中興電",
+      "industry": "電機機械",
+      "market": "TWSE",
+      "symbol": "1513.TW",
+      "capital": 5031125150.0
+    },
+    {
+      "code": "1514",
+      "name": "亞力",
+      "industry": "電機機械",
+      "market": "TWSE",
+      "symbol": "1514.TW",
+      "capital": 2785706420.0
+    },
+    {
+      "code": "1515",
+      "name": "力山",
+      "industry": "電機機械",
+      "market": "TWSE",
+      "symbol": "1515.TW",
+      "capital": 1814735000.0
+    },
+    {
+      "code": "1516",
+      "name": "川飛",
+      "industry": "其他",
+      "market": "TWSE",
+      "symbol": "1516.TW",
+      "capital": 400081950.0
+    },
+    {
+      "code": "1517",
+      "name": "利奇",
+      "industry": "電機機械",
+      "market": "TWSE",
+      "symbol": "1517.TW",
+      "capital": 2200000070.0
+    },
+    {
+      "code": "1519",
+      "name": "華城",
+      "industry": "電機機械",
+      "market": "TWSE",
+      "symbol": "1519.TW",
+      "capital": 3158808440.0
+    },
+    {
+      "code": "1521",
+      "name": "大億",
+      "industry": "汽車工業",
+      "market": "TWSE",
+      "symbol": "1521.TW",
+      "capital": 762300000.0
+    },
+    {
+      "code": "1522",
+      "name": "堤維西",
+      "industry": "汽車工業",
+      "market": "TWSE",
+      "symbol": "1522.TW",
+      "capital": 3428978810.0
+    },
+    {
+      "code": "1524",
+      "name": "耿鼎",
+      "industry": "汽車工業",
+      "market": "TWSE",
+      "symbol": "1524.TW",
+      "capital": 1653103970.0
+    },
+    {
+      "code": "1525",
+      "name": "江申",
+      "industry": "汽車工業",
+      "market": "TWSE",
+      "symbol": "1525.TW",
+      "capital": 734001350.0
+    },
+    {
+      "code": "1526",
+      "name": "日馳",
+      "industry": "電機機械",
+      "market": "TWSE",
+      "symbol": "1526.TW",
+      "capital": 600000000.0
+    },
+    {
+      "code": "1527",
+      "name": "鑽全",
+      "industry": "電機機械",
+      "market": "TWSE",
+      "symbol": "1527.TW",
+      "capital": 1385706400.0
+    },
+    {
+      "code": "1528",
+      "name": "恩德",
+      "industry": "電機機械",
+      "market": "TWSE",
+      "symbol": "1528.TW",
+      "capital": 1913310000.0
+    },
+    {
+      "code": "1529",
+      "name": "樂事綠能",
+      "industry": "電機機械",
+      "market": "TWSE",
+      "symbol": "1529.TW",
+      "capital": 1550950740.0
+    },
+    {
+      "code": "1530",
+      "name": "亞崴",
+      "industry": "電機機械",
+      "market": "TWSE",
+      "symbol": "1530.TW",
+      "capital": 945941710.0
+    },
+    {
+      "code": "1531",
+      "name": "高林股",
+      "industry": "電機機械",
+      "market": "TWSE",
+      "symbol": "1531.TW",
+      "capital": 1821080800.0
+    },
+    {
+      "code": "1532",
+      "name": "勤美",
+      "industry": "電機機械",
+      "market": "TWSE",
+      "symbol": "1532.TW",
+      "capital": 4226042710.0
+    },
+    {
+      "code": "1533",
+      "name": "車王電",
+      "industry": "汽車工業",
+      "market": "TWSE",
+      "symbol": "1533.TW",
+      "capital": 985474860.0
+    },
+    {
+      "code": "1535",
+      "name": "中宇",
+      "industry": "電機機械",
+      "market": "TWSE",
+      "symbol": "1535.TW",
+      "capital": 1237425520.0
+    },
+    {
+      "code": "1536",
+      "name": "和大",
+      "industry": "汽車工業",
+      "market": "TWSE",
+      "symbol": "1536.TW",
+      "capital": 2789595130.0
+    },
+    {
+      "code": "1537",
+      "name": "廣隆",
+      "industry": "電機機械",
+      "market": "TWSE",
+      "symbol": "1537.TW",
+      "capital": 820627940.0
+    },
+    {
+      "code": "1538",
+      "name": "正峰",
+      "industry": "電機機械",
+      "market": "TWSE",
+      "symbol": "1538.TW",
+      "capital": 323000000.0
+    },
+    {
+      "code": "1539",
+      "name": "巨庭",
+      "industry": "電機機械",
+      "market": "TWSE",
+      "symbol": "1539.TW",
+      "capital": 653700000.0
+    },
+    {
+      "code": "1540",
+      "name": "喬福",
+      "industry": "電機機械",
+      "market": "TWSE",
+      "symbol": "1540.TW",
+      "capital": 854736120.0
+    },
+    {
+      "code": "1541",
+      "name": "錩泰",
+      "industry": "電機機械",
+      "market": "TWSE",
+      "symbol": "1541.TW",
+      "capital": 788000000.0
+    },
+    {
+      "code": "1558",
+      "name": "伸興",
+      "industry": "電機機械",
+      "market": "TWSE",
+      "symbol": "1558.TW",
+      "capital": 645356310.0
+    },
+    {
+      "code": "1560",
+      "name": "中砂",
+      "industry": "電機機械",
+      "market": "TWSE",
+      "symbol": "1560.TW",
+      "capital": 1489252710.0
+    },
+    {
+      "code": "1563",
+      "name": "巧新",
+      "industry": "汽車工業",
+      "market": "TWSE",
+      "symbol": "1563.TW",
+      "capital": 2256081400.0
+    },
+    {
+      "code": "1568",
+      "name": "倉佑",
+      "industry": "汽車工業",
+      "market": "TWSE",
+      "symbol": "1568.TW",
+      "capital": 1030865590.0
+    },
+    {
+      "code": "1582",
+      "name": "信錦",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "1582.TW",
+      "capital": 1442686040.0
+    },
+    {
+      "code": "1583",
+      "name": "程泰",
+      "industry": "電機機械",
+      "market": "TWSE",
+      "symbol": "1583.TW",
+      "capital": 1094003720.0
+    },
+    {
+      "code": "1587",
+      "name": "吉茂",
+      "industry": "汽車工業",
+      "market": "TWSE",
+      "symbol": "1587.TW",
+      "capital": 800556720.0
+    },
+    {
+      "code": "1589",
+      "name": "永冠-KY",
+      "industry": "電機機械",
+      "market": "TWSE",
+      "symbol": "1589.TW",
+      "capital": 1531359410.0
+    },
+    {
+      "code": "1590",
+      "name": "亞德客-KY",
+      "industry": "電機機械",
+      "market": "TWSE",
+      "symbol": "1590.TW",
+      "capital": 1999999980.0
+    },
+    {
+      "code": "1597",
+      "name": "直得",
+      "industry": "電機機械",
+      "market": "TWSE",
+      "symbol": "1597.TW",
+      "capital": 892618040.0
+    },
+    {
+      "code": "1598",
+      "name": "岱宇",
+      "industry": "居家生活",
+      "market": "TWSE",
+      "symbol": "1598.TW",
+      "capital": 1791420920.0
+    },
+    {
+      "code": "1603",
+      "name": "華電",
+      "industry": "電器電纜",
+      "market": "TWSE",
+      "symbol": "1603.TW",
+      "capital": 1916880000.0
+    },
+    {
+      "code": "1604",
+      "name": "聲寶",
+      "industry": "電器電纜",
+      "market": "TWSE",
+      "symbol": "1604.TW",
+      "capital": 3842000000.0
+    },
+    {
+      "code": "1605",
+      "name": "華新",
+      "industry": "電器電纜",
+      "market": "TWSE",
+      "symbol": "1605.TW",
+      "capital": 44313329480.0
+    },
+    {
+      "code": "1608",
+      "name": "華榮",
+      "industry": "電器電纜",
+      "market": "TWSE",
+      "symbol": "1608.TW",
+      "capital": 6327735060.0
+    },
+    {
+      "code": "1609",
+      "name": "大亞",
+      "industry": "電器電纜",
+      "market": "TWSE",
+      "symbol": "1609.TW",
+      "capital": 7852619440.0
+    },
+    {
+      "code": "1611",
+      "name": "中電",
+      "industry": "電器電纜",
+      "market": "TWSE",
+      "symbol": "1611.TW",
+      "capital": 3227357420.0
+    },
+    {
+      "code": "1612",
+      "name": "宏泰",
+      "industry": "電器電纜",
+      "market": "TWSE",
+      "symbol": "1612.TW",
+      "capital": 3160800630.0
+    },
+    {
+      "code": "1614",
+      "name": "三洋電",
+      "industry": "電器電纜",
+      "market": "TWSE",
+      "symbol": "1614.TW",
+      "capital": 2691134060.0
+    },
+    {
+      "code": "1615",
+      "name": "大山",
+      "industry": "電器電纜",
+      "market": "TWSE",
+      "symbol": "1615.TW",
+      "capital": 1966637020.0
+    },
+    {
+      "code": "1616",
+      "name": "億泰",
+      "industry": "電器電纜",
+      "market": "TWSE",
+      "symbol": "1616.TW",
+      "capital": 1941485150.0
+    },
+    {
+      "code": "1617",
+      "name": "榮星",
+      "industry": "電器電纜",
+      "market": "TWSE",
+      "symbol": "1617.TW",
+      "capital": 1695147000.0
+    },
+    {
+      "code": "1618",
+      "name": "合機",
+      "industry": "電器電纜",
+      "market": "TWSE",
+      "symbol": "1618.TW",
+      "capital": 1926917470.0
+    },
+    {
+      "code": "1623",
+      "name": "大東電",
+      "industry": "電器電纜",
+      "market": "TWSE",
+      "symbol": "1623.TW",
+      "capital": 660000000.0
+    },
+    {
+      "code": "1626",
+      "name": "艾美特-KY",
+      "industry": "電器電纜",
+      "market": "TWSE",
+      "symbol": "1626.TW",
+      "capital": 1498217210.0
+    },
+    {
+      "code": "1702",
+      "name": "南僑",
+      "industry": "食品工業",
+      "market": "TWSE",
+      "symbol": "1702.TW",
+      "capital": 2941329620.0
+    },
+    {
+      "code": "1707",
+      "name": "葡萄王",
+      "industry": "生技醫療",
+      "market": "TWSE",
+      "symbol": "1707.TW",
+      "capital": 1481373730.0
+    },
+    {
+      "code": "1708",
+      "name": "東鹼",
+      "industry": "化學工業",
+      "market": "TWSE",
+      "symbol": "1708.TW",
+      "capital": 2490016510.0
+    },
+    {
+      "code": "1709",
+      "name": "和益",
+      "industry": "化學工業",
+      "market": "TWSE",
+      "symbol": "1709.TW",
+      "capital": 4770162720.0
+    },
+    {
+      "code": "1710",
+      "name": "東聯",
+      "industry": "化學工業",
+      "market": "TWSE",
+      "symbol": "1710.TW",
+      "capital": 8857030290.0
+    },
+    {
+      "code": "1711",
+      "name": "永光",
+      "industry": "化學工業",
+      "market": "TWSE",
+      "symbol": "1711.TW",
+      "capital": 5477522260.0
+    },
+    {
+      "code": "1712",
+      "name": "興農",
+      "industry": "化學工業",
+      "market": "TWSE",
+      "symbol": "1712.TW",
+      "capital": 4204925850.0
+    },
+    {
+      "code": "1713",
+      "name": "國化",
+      "industry": "化學工業",
+      "market": "TWSE",
+      "symbol": "1713.TW",
+      "capital": 1509517000.0
+    },
+    {
+      "code": "1714",
+      "name": "和桐",
+      "industry": "化學工業",
+      "market": "TWSE",
+      "symbol": "1714.TW",
+      "capital": 9918248080.0
+    },
+    {
+      "code": "1717",
+      "name": "長興",
+      "industry": "化學工業",
+      "market": "TWSE",
+      "symbol": "1717.TW",
+      "capital": 11722454830.0
+    },
+    {
+      "code": "1718",
+      "name": "中纖",
+      "industry": "化學工業",
+      "market": "TWSE",
+      "symbol": "1718.TW",
+      "capital": 16859057450.0
+    },
+    {
+      "code": "1720",
+      "name": "生達",
+      "industry": "生技醫療",
+      "market": "TWSE",
+      "symbol": "1720.TW",
+      "capital": 1786960890.0
+    },
+    {
+      "code": "1721",
+      "name": "三晃",
+      "industry": "化學工業",
+      "market": "TWSE",
+      "symbol": "1721.TW",
+      "capital": 1848840920.0
+    },
+    {
+      "code": "1722",
+      "name": "台肥",
+      "industry": "化學工業",
+      "market": "TWSE",
+      "symbol": "1722.TW",
+      "capital": 9800000000.0
+    },
+    {
+      "code": "1723",
+      "name": "中碳",
+      "industry": "化學工業",
+      "market": "TWSE",
+      "symbol": "1723.TW",
+      "capital": 2369044800.0
+    },
+    {
+      "code": "1725",
+      "name": "元禎",
+      "industry": "化學工業",
+      "market": "TWSE",
+      "symbol": "1725.TW",
+      "capital": 1818299780.0
+    },
+    {
+      "code": "1726",
+      "name": "永記",
+      "industry": "化學工業",
+      "market": "TWSE",
+      "symbol": "1726.TW",
+      "capital": 1620000000.0
+    },
+    {
+      "code": "1727",
+      "name": "中華化",
+      "industry": "化學工業",
+      "market": "TWSE",
+      "symbol": "1727.TW",
+      "capital": 1280195590.0
+    },
+    {
+      "code": "1730",
+      "name": "花仙子",
+      "industry": "化學工業",
+      "market": "TWSE",
+      "symbol": "1730.TW",
+      "capital": 632338510.0
+    },
+    {
+      "code": "1731",
+      "name": "美吾華",
+      "industry": "生技醫療",
+      "market": "TWSE",
+      "symbol": "1731.TW",
+      "capital": 1329152440.0
+    },
+    {
+      "code": "1732",
+      "name": "毛寶",
+      "industry": "化學工業",
+      "market": "TWSE",
+      "symbol": "1732.TW",
+      "capital": 424439570.0
+    },
+    {
+      "code": "1733",
+      "name": "五鼎",
+      "industry": "生技醫療",
+      "market": "TWSE",
+      "symbol": "1733.TW",
+      "capital": 999501920.0
+    },
+    {
+      "code": "1734",
+      "name": "杏輝",
+      "industry": "生技醫療",
+      "market": "TWSE",
+      "symbol": "1734.TW",
+      "capital": 1901967740.0
+    },
+    {
+      "code": "1735",
+      "name": "日勝化",
+      "industry": "化學工業",
+      "market": "TWSE",
+      "symbol": "1735.TW",
+      "capital": 993880000.0
+    },
+    {
+      "code": "1736",
+      "name": "喬山",
+      "industry": "居家生活",
+      "market": "TWSE",
+      "symbol": "1736.TW",
+      "capital": 3033946170.0
+    },
+    {
+      "code": "1737",
+      "name": "臺鹽",
+      "industry": "食品工業",
+      "market": "TWSE",
+      "symbol": "1737.TW",
+      "capital": 2000000000.0
+    },
+    {
+      "code": "1752",
+      "name": "南光",
+      "industry": "生技醫療",
+      "market": "TWSE",
+      "symbol": "1752.TW",
+      "capital": 1009884720.0
+    },
+    {
+      "code": "1760",
+      "name": "寶齡富錦",
+      "industry": "生技醫療",
+      "market": "TWSE",
+      "symbol": "1760.TW",
+      "capital": 857390130.0
+    },
+    {
+      "code": "1762",
+      "name": "中化生",
+      "industry": "生技醫療",
+      "market": "TWSE",
+      "symbol": "1762.TW",
+      "capital": 769180000.0
+    },
+    {
+      "code": "1773",
+      "name": "勝一",
+      "industry": "化學工業",
+      "market": "TWSE",
+      "symbol": "1773.TW",
+      "capital": 3000000000.0
+    },
+    {
+      "code": "1776",
+      "name": "展宇",
+      "industry": "化學工業",
+      "market": "TWSE",
+      "symbol": "1776.TW",
+      "capital": 601069520.0
+    },
+    {
+      "code": "1783",
+      "name": "和康生",
+      "industry": "生技醫療",
+      "market": "TWSE",
+      "symbol": "1783.TW",
+      "capital": 896981150.0
+    },
+    {
+      "code": "1786",
+      "name": "科妍",
+      "industry": "生技醫療",
+      "market": "TWSE",
+      "symbol": "1786.TW",
+      "capital": 748276410.0
+    },
+    {
+      "code": "1789",
+      "name": "神隆",
+      "industry": "生技醫療",
+      "market": "TWSE",
+      "symbol": "1789.TW",
+      "capital": 7907392220.0
+    },
+    {
+      "code": "1795",
+      "name": "美時",
+      "industry": "生技醫療",
+      "market": "TWSE",
+      "symbol": "1795.TW",
+      "capital": 2668738120.0
+    },
+    {
+      "code": "1802",
+      "name": "台玻",
+      "industry": "玻璃陶瓷",
+      "market": "TWSE",
+      "symbol": "1802.TW",
+      "capital": 29080608000.0
+    },
+    {
+      "code": "1805",
+      "name": "寶徠",
+      "industry": "建材營造",
+      "market": "TWSE",
+      "symbol": "1805.TW",
+      "capital": 1349704550.0
+    },
+    {
+      "code": "1806",
+      "name": "冠軍",
+      "industry": "玻璃陶瓷",
+      "market": "TWSE",
+      "symbol": "1806.TW",
+      "capital": 3904038700.0
+    },
+    {
+      "code": "1808",
+      "name": "潤隆",
+      "industry": "建材營造",
+      "market": "TWSE",
+      "symbol": "1808.TW",
+      "capital": 8930317430.0
+    },
+    {
+      "code": "1809",
+      "name": "中釉",
+      "industry": "玻璃陶瓷",
+      "market": "TWSE",
+      "symbol": "1809.TW",
+      "capital": 1670419370.0
+    },
+    {
+      "code": "1810",
+      "name": "和成",
+      "industry": "玻璃陶瓷",
+      "market": "TWSE",
+      "symbol": "1810.TW",
+      "capital": 3023037190.0
+    },
+    {
+      "code": "1817",
+      "name": "凱撒衛",
+      "industry": "玻璃陶瓷",
+      "market": "TWSE",
+      "symbol": "1817.TW",
+      "capital": 726000000.0
+    },
+    {
+      "code": "1903",
+      "name": "士紙",
+      "industry": "造紙工業",
+      "market": "TWSE",
+      "symbol": "1903.TW",
+      "capital": 2600391210.0
+    },
+    {
+      "code": "1904",
+      "name": "正隆",
+      "industry": "造紙工業",
+      "market": "TWSE",
+      "symbol": "1904.TW",
+      "capital": 11082745220.0
+    },
+    {
+      "code": "1905",
+      "name": "華紙",
+      "industry": "造紙工業",
+      "market": "TWSE",
+      "symbol": "1905.TW",
+      "capital": 11028353160.0
+    },
+    {
+      "code": "1906",
+      "name": "寶隆",
+      "industry": "造紙工業",
+      "market": "TWSE",
+      "symbol": "1906.TW",
+      "capital": 1510000000.0
+    },
+    {
+      "code": "1907",
+      "name": "永豐餘",
+      "industry": "造紙工業",
+      "market": "TWSE",
+      "symbol": "1907.TW",
+      "capital": 16603714950.0
+    },
+    {
+      "code": "1909",
+      "name": "榮成",
+      "industry": "造紙工業",
+      "market": "TWSE",
+      "symbol": "1909.TW",
+      "capital": 13276857270.0
+    },
+    {
+      "code": "2002",
+      "name": "中鋼",
+      "industry": "鋼鐵工業",
+      "market": "TWSE",
+      "symbol": "2002.TW",
+      "capital": 157731289960.0
+    },
+    {
+      "code": "2006",
+      "name": "東和鋼鐵",
+      "industry": "鋼鐵工業",
+      "market": "TWSE",
+      "symbol": "2006.TW",
+      "capital": 7302138180.0
+    },
+    {
+      "code": "2007",
+      "name": "燁興",
+      "industry": "鋼鐵工業",
+      "market": "TWSE",
+      "symbol": "2007.TW",
+      "capital": 5306516130.0
+    },
+    {
+      "code": "2008",
+      "name": "高興昌",
+      "industry": "鋼鐵工業",
+      "market": "TWSE",
+      "symbol": "2008.TW",
+      "capital": 1908522930.0
+    },
+    {
+      "code": "2009",
+      "name": "第一銅",
+      "industry": "鋼鐵工業",
+      "market": "TWSE",
+      "symbol": "2009.TW",
+      "capital": 3596221650.0
+    },
+    {
+      "code": "2010",
+      "name": "春源",
+      "industry": "鋼鐵工業",
+      "market": "TWSE",
+      "symbol": "2010.TW",
+      "capital": 6476553900.0
+    },
+    {
+      "code": "2012",
+      "name": "春雨",
+      "industry": "鋼鐵工業",
+      "market": "TWSE",
+      "symbol": "2012.TW",
+      "capital": 3021627000.0
+    },
+    {
+      "code": "2013",
+      "name": "中鋼構",
+      "industry": "鋼鐵工業",
+      "market": "TWSE",
+      "symbol": "2013.TW",
+      "capital": 2000000000.0
+    },
+    {
+      "code": "2014",
+      "name": "中鴻",
+      "industry": "鋼鐵工業",
+      "market": "TWSE",
+      "symbol": "2014.TW",
+      "capital": 14355444460.0
+    },
+    {
+      "code": "2015",
+      "name": "豐興",
+      "industry": "鋼鐵工業",
+      "market": "TWSE",
+      "symbol": "2015.TW",
+      "capital": 5815994240.0
+    },
+    {
+      "code": "2017",
+      "name": "官田鋼",
+      "industry": "鋼鐵工業",
+      "market": "TWSE",
+      "symbol": "2017.TW",
+      "capital": 4468746910.0
+    },
+    {
+      "code": "2020",
+      "name": "美亞",
+      "industry": "鋼鐵工業",
+      "market": "TWSE",
+      "symbol": "2020.TW",
+      "capital": 2670313200.0
+    },
+    {
+      "code": "2022",
+      "name": "聚亨",
+      "industry": "鋼鐵工業",
+      "market": "TWSE",
+      "symbol": "2022.TW",
+      "capital": 3371681380.0
+    },
+    {
+      "code": "2023",
+      "name": "燁輝",
+      "industry": "鋼鐵工業",
+      "market": "TWSE",
+      "symbol": "2023.TW",
+      "capital": 18212402140.0
+    },
+    {
+      "code": "2024",
+      "name": "志聯",
+      "industry": "鋼鐵工業",
+      "market": "TWSE",
+      "symbol": "2024.TW",
+      "capital": 975000000.0
+    },
+    {
+      "code": "2025",
+      "name": "千興",
+      "industry": "鋼鐵工業",
+      "market": "TWSE",
+      "symbol": "2025.TW",
+      "capital": 1726605360.0
+    },
+    {
+      "code": "2027",
+      "name": "大成鋼",
+      "industry": "鋼鐵工業",
+      "market": "TWSE",
+      "symbol": "2027.TW",
+      "capital": 25842606150.0
+    },
+    {
+      "code": "2028",
+      "name": "威致",
+      "industry": "鋼鐵工業",
+      "market": "TWSE",
+      "symbol": "2028.TW",
+      "capital": 3257148000.0
+    },
+    {
+      "code": "2029",
+      "name": "盛餘",
+      "industry": "鋼鐵工業",
+      "market": "TWSE",
+      "symbol": "2029.TW",
+      "capital": 3211800000.0
+    },
+    {
+      "code": "2030",
+      "name": "彰源",
+      "industry": "鋼鐵工業",
+      "market": "TWSE",
+      "symbol": "2030.TW",
+      "capital": 2805260270.0
+    },
+    {
+      "code": "2031",
+      "name": "新光鋼",
+      "industry": "鋼鐵工業",
+      "market": "TWSE",
+      "symbol": "2031.TW",
+      "capital": 3211463410.0
+    },
+    {
+      "code": "2032",
+      "name": "新鋼",
+      "industry": "鋼鐵工業",
+      "market": "TWSE",
+      "symbol": "2032.TW",
+      "capital": 1305215450.0
+    },
+    {
+      "code": "2033",
+      "name": "佳大",
+      "industry": "鋼鐵工業",
+      "market": "TWSE",
+      "symbol": "2033.TW",
+      "capital": 806945360.0
+    },
+    {
+      "code": "2034",
+      "name": "允強",
+      "industry": "鋼鐵工業",
+      "market": "TWSE",
+      "symbol": "2034.TW",
+      "capital": 5289955890.0
+    },
+    {
+      "code": "2038",
+      "name": "海光",
+      "industry": "鋼鐵工業",
+      "market": "TWSE",
+      "symbol": "2038.TW",
+      "capital": 1941343030.0
+    },
+    {
+      "code": "2049",
+      "name": "上銀",
+      "industry": "電機機械",
+      "market": "TWSE",
+      "symbol": "2049.TW",
+      "capital": 3537922400.0
+    },
+    {
+      "code": "2059",
+      "name": "川湖",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "2059.TW",
+      "capital": 952970720.0
+    },
+    {
+      "code": "2062",
+      "name": "橋椿",
+      "industry": "綠能環保",
+      "market": "TWSE",
+      "symbol": "2062.TW",
+      "capital": 1999941520.0
+    },
+    {
+      "code": "2069",
+      "name": "運錩",
+      "industry": "鋼鐵工業",
+      "market": "TWSE",
+      "symbol": "2069.TW",
+      "capital": 1663868360.0
+    },
+    {
+      "code": "2072",
+      "name": "世紀風電",
+      "industry": "數位雲端",
+      "market": "TWSE",
+      "symbol": "2072.TW",
+      "capital": 1920000000.0
+    },
+    {
+      "code": "2101",
+      "name": "南港",
+      "industry": "橡膠工業",
+      "market": "TWSE",
+      "symbol": "2101.TW",
+      "capital": 7339349040.0
+    },
+    {
+      "code": "2102",
+      "name": "泰豐",
+      "industry": "橡膠工業",
+      "market": "TWSE",
+      "symbol": "2102.TW",
+      "capital": 4733292070.0
+    },
+    {
+      "code": "2103",
+      "name": "台橡",
+      "industry": "橡膠工業",
+      "market": "TWSE",
+      "symbol": "2103.TW",
+      "capital": 8257099780.0
+    },
+    {
+      "code": "2104",
+      "name": "國際中橡",
+      "industry": "橡膠工業",
+      "market": "TWSE",
+      "symbol": "2104.TW",
+      "capital": 9847336250.0
+    },
+    {
+      "code": "2105",
+      "name": "正新",
+      "industry": "橡膠工業",
+      "market": "TWSE",
+      "symbol": "2105.TW",
+      "capital": 32414155360.0
+    },
+    {
+      "code": "2106",
+      "name": "建大",
+      "industry": "橡膠工業",
+      "market": "TWSE",
+      "symbol": "2106.TW",
+      "capital": 9548900000.0
+    },
+    {
+      "code": "2107",
+      "name": "厚生",
+      "industry": "橡膠工業",
+      "market": "TWSE",
+      "symbol": "2107.TW",
+      "capital": 3035934000.0
+    },
+    {
+      "code": "2108",
+      "name": "南帝",
+      "industry": "橡膠工業",
+      "market": "TWSE",
+      "symbol": "2108.TW",
+      "capital": 4924166590.0
+    },
+    {
+      "code": "2109",
+      "name": "華豐",
+      "industry": "橡膠工業",
+      "market": "TWSE",
+      "symbol": "2109.TW",
+      "capital": 2793491340.0
+    },
+    {
+      "code": "2114",
+      "name": "鑫永銓",
+      "industry": "橡膠工業",
+      "market": "TWSE",
+      "symbol": "2114.TW",
+      "capital": 779917070.0
+    },
+    {
+      "code": "2115",
+      "name": "六暉-KY",
+      "industry": "汽車工業",
+      "market": "TWSE",
+      "symbol": "2115.TW",
+      "capital": 1043731630.0
+    },
+    {
+      "code": "2201",
+      "name": "裕隆",
+      "industry": "汽車工業",
+      "market": "TWSE",
+      "symbol": "2201.TW",
+      "capital": 10700012510.0
+    },
+    {
+      "code": "2204",
+      "name": "中華",
+      "industry": "汽車工業",
+      "market": "TWSE",
+      "symbol": "2204.TW",
+      "capital": 5536203420.0
+    },
+    {
+      "code": "2206",
+      "name": "三陽工業",
+      "industry": "汽車工業",
+      "market": "TWSE",
+      "symbol": "2206.TW",
+      "capital": 7736756040.0
+    },
+    {
+      "code": "2207",
+      "name": "和泰車",
+      "industry": "汽車工業",
+      "market": "TWSE",
+      "symbol": "2207.TW",
+      "capital": 5571027680.0
+    },
+    {
+      "code": "2208",
+      "name": "台船",
+      "industry": "航運業",
+      "market": "TWSE",
+      "symbol": "2208.TW",
+      "capital": 12745394490.0
+    },
+    {
+      "code": "2211",
+      "name": "長榮鋼",
+      "industry": "鋼鐵工業",
+      "market": "TWSE",
+      "symbol": "2211.TW",
+      "capital": 4170914630.0
+    },
+    {
+      "code": "2227",
+      "name": "裕日車",
+      "industry": "汽車工業",
+      "market": "TWSE",
+      "symbol": "2227.TW",
+      "capital": 3000000000.0
+    },
+    {
+      "code": "2228",
+      "name": "劍麟",
+      "industry": "汽車工業",
+      "market": "TWSE",
+      "symbol": "2228.TW",
+      "capital": 797796920.0
+    },
+    {
+      "code": "2231",
+      "name": "為升",
+      "industry": "汽車工業",
+      "market": "TWSE",
+      "symbol": "2231.TW",
+      "capital": 1359318700.0
+    },
+    {
+      "code": "2233",
+      "name": "宇隆",
+      "industry": "汽車工業",
+      "market": "TWSE",
+      "symbol": "2233.TW",
+      "capital": 602888890.0
+    },
+    {
+      "code": "2236",
+      "name": "百達-KY",
+      "industry": "汽車工業",
+      "market": "TWSE",
+      "symbol": "2236.TW",
+      "capital": 631309350.0
+    },
+    {
+      "code": "2237",
+      "name": "華德動能-創",
+      "industry": "汽車工業",
+      "market": "TWSE",
+      "symbol": "2237.TW",
+      "capital": 1289379010.0
+    },
+    {
+      "code": "2239",
+      "name": "英利-KY",
+      "industry": "汽車工業",
+      "market": "TWSE",
+      "symbol": "2239.TW",
+      "capital": 1177125930.0
+    },
+    {
+      "code": "2241",
+      "name": "艾姆勒",
+      "industry": "汽車工業",
+      "market": "TWSE",
+      "symbol": "2241.TW",
+      "capital": 1046023060.0
+    },
+    {
+      "code": "2243",
+      "name": "宏旭-KY",
+      "industry": "汽車工業",
+      "market": "TWSE",
+      "symbol": "2243.TW",
+      "capital": 773735960.0
+    },
+    {
+      "code": "2247",
+      "name": "汎德永業",
+      "industry": "汽車工業",
+      "market": "TWSE",
+      "symbol": "2247.TW",
+      "capital": 807087350.0
+    },
+    {
+      "code": "2248",
+      "name": "華勝-KY",
+      "industry": "汽車工業",
+      "market": "TWSE",
+      "symbol": "2248.TW",
+      "capital": 476000000.0
+    },
+    {
+      "code": "2250",
+      "name": "IKKA-KY",
+      "industry": "汽車工業",
+      "market": "TWSE",
+      "symbol": "2250.TW",
+      "capital": 363882260.0
+    },
+    {
+      "code": "2254",
+      "name": "巨鎧精密-創",
+      "industry": "汽車工業",
+      "market": "TWSE",
+      "symbol": "2254.TW",
+      "capital": 639076800.0
+    },
+    {
+      "code": "2258",
+      "name": "鴻華先進-創",
+      "industry": "汽車工業",
+      "market": "TWSE",
+      "symbol": "2258.TW",
+      "capital": 17510768000.0
+    },
+    {
+      "code": "2301",
+      "name": "光寶科",
+      "industry": "電腦及週邊設備業",
+      "market": "TWSE",
+      "symbol": "2301.TW",
+      "capital": 23161077630.0
+    },
+    {
+      "code": "2302",
+      "name": "麗正",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "2302.TW",
+      "capital": 1663028810.0
+    },
+    {
+      "code": "2303",
+      "name": "聯電",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "2303.TW",
+      "capital": 125700938990.0
+    },
+    {
+      "code": "2305",
+      "name": "全友",
+      "industry": "電腦及週邊設備業",
+      "market": "TWSE",
+      "symbol": "2305.TW",
+      "capital": 2056608270.0
+    },
+    {
+      "code": "2308",
+      "name": "台達電",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "2308.TW",
+      "capital": 25975433290.0
+    },
+    {
+      "code": "2312",
+      "name": "金寶",
+      "industry": "其他電子業",
+      "market": "TWSE",
+      "symbol": "2312.TW",
+      "capital": 15057812110.0
+    },
+    {
+      "code": "2313",
+      "name": "華通",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "2313.TW",
+      "capital": 12338205890.0
+    },
+    {
+      "code": "2314",
+      "name": "台揚",
+      "industry": "通信網路業",
+      "market": "TWSE",
+      "symbol": "2314.TW",
+      "capital": 1085964220.0
+    },
+    {
+      "code": "2316",
+      "name": "楠梓電",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "2316.TW",
+      "capital": 1827405360.0
+    },
+    {
+      "code": "2317",
+      "name": "鴻海",
+      "industry": "其他電子業",
+      "market": "TWSE",
+      "symbol": "2317.TW",
+      "capital": 140286486260.0
+    },
+    {
+      "code": "2321",
+      "name": "東訊",
+      "industry": "通信網路業",
+      "market": "TWSE",
+      "symbol": "2321.TW",
+      "capital": 165550600.0
+    },
+    {
+      "code": "2323",
+      "name": "中環",
+      "industry": "光電業",
+      "market": "TWSE",
+      "symbol": "2323.TW",
+      "capital": 9804134950.0
+    },
+    {
+      "code": "2324",
+      "name": "仁寶",
+      "industry": "電腦及週邊設備業",
+      "market": "TWSE",
+      "symbol": "2324.TW",
+      "capital": 44071466250.0
+    },
+    {
+      "code": "2327",
+      "name": "國巨*",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "2327.TW",
+      "capital": 5146826720.0
+    },
+    {
+      "code": "2328",
+      "name": "廣宇",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "2328.TW",
+      "capital": 5183462820.0
+    },
+    {
+      "code": "2329",
+      "name": "華泰",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "2329.TW",
+      "capital": 6589483330.0
+    },
+    {
+      "code": "2330",
+      "name": "台積電",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "2330.TW",
+      "capital": 259323700670.0
+    },
+    {
+      "code": "2331",
+      "name": "精英",
+      "industry": "電腦及週邊設備業",
+      "market": "TWSE",
+      "symbol": "2331.TW",
+      "capital": 5574029680.0
+    },
+    {
+      "code": "2332",
+      "name": "友訊",
+      "industry": "通信網路業",
+      "market": "TWSE",
+      "symbol": "2332.TW",
+      "capital": 6021703730.0
+    },
+    {
+      "code": "2337",
+      "name": "旺宏",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "2337.TW",
+      "capital": 19818566380.0
+    },
+    {
+      "code": "2338",
+      "name": "光罩",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "2338.TW",
+      "capital": 3668491830.0
+    },
+    {
+      "code": "2340",
+      "name": "台亞",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "2340.TW",
+      "capital": 4386228460.0
+    },
+    {
+      "code": "2342",
+      "name": "茂矽",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "2342.TW",
+      "capital": 1573352440.0
+    },
+    {
+      "code": "2344",
+      "name": "華邦電",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "2344.TW",
+      "capital": 45000001930.0
+    },
+    {
+      "code": "2345",
+      "name": "智邦",
+      "industry": "通信網路業",
+      "market": "TWSE",
+      "symbol": "2345.TW",
+      "capital": 5611178970.0
+    },
+    {
+      "code": "2347",
+      "name": "聯強",
+      "industry": "電子通路業",
+      "market": "TWSE",
+      "symbol": "2347.TW",
+      "capital": 16679469680.0
+    },
+    {
+      "code": "2348",
+      "name": "海悅",
+      "industry": "其他",
+      "market": "TWSE",
+      "symbol": "2348.TW",
+      "capital": 1894855960.0
+    },
+    {
+      "code": "2349",
+      "name": "錸德",
+      "industry": "光電業",
+      "market": "TWSE",
+      "symbol": "2349.TW",
+      "capital": 6936796630.0
+    },
+    {
+      "code": "2351",
+      "name": "順德",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "2351.TW",
+      "capital": 1937340610.0
+    },
+    {
+      "code": "2352",
+      "name": "佳世達",
+      "industry": "電腦及週邊設備業",
+      "market": "TWSE",
+      "symbol": "2352.TW",
+      "capital": 15805065050.0
+    },
+    {
+      "code": "2353",
+      "name": "宏碁",
+      "industry": "電腦及週邊設備業",
+      "market": "TWSE",
+      "symbol": "2353.TW",
+      "capital": 30478538280.0
+    },
+    {
+      "code": "2354",
+      "name": "鴻準",
+      "industry": "其他電子業",
+      "market": "TWSE",
+      "symbol": "2354.TW",
+      "capital": 14144851920.0
+    },
+    {
+      "code": "2355",
+      "name": "敬鵬",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "2355.TW",
+      "capital": 3974954200.0
+    },
+    {
+      "code": "2356",
+      "name": "英業達",
+      "industry": "電腦及週邊設備業",
+      "market": "TWSE",
+      "symbol": "2356.TW",
+      "capital": 35874750660.0
+    },
+    {
+      "code": "2357",
+      "name": "華碩",
+      "industry": "電腦及週邊設備業",
+      "market": "TWSE",
+      "symbol": "2357.TW",
+      "capital": 7427602800.0
+    },
+    {
+      "code": "2359",
+      "name": "所羅門",
+      "industry": "其他電子業",
+      "market": "TWSE",
+      "symbol": "2359.TW",
+      "capital": 1714710520.0
+    },
+    {
+      "code": "2360",
+      "name": "致茂",
+      "industry": "其他電子業",
+      "market": "TWSE",
+      "symbol": "2360.TW",
+      "capital": 4252457420.0
+    },
+    {
+      "code": "2362",
+      "name": "藍天",
+      "industry": "電腦及週邊設備業",
+      "market": "TWSE",
+      "symbol": "2362.TW",
+      "capital": 6222630000.0
+    },
+    {
+      "code": "2363",
+      "name": "矽統",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "2363.TW",
+      "capital": 5149881610.0
+    },
+    {
+      "code": "2364",
+      "name": "倫飛",
+      "industry": "電腦及週邊設備業",
+      "market": "TWSE",
+      "symbol": "2364.TW",
+      "capital": 523897100.0
+    },
+    {
+      "code": "2365",
+      "name": "昆盈",
+      "industry": "電腦及週邊設備業",
+      "market": "TWSE",
+      "symbol": "2365.TW",
+      "capital": 2215284960.0
+    },
+    {
+      "code": "2367",
+      "name": "燿華",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "2367.TW",
+      "capital": 7062531750.0
+    },
+    {
+      "code": "2368",
+      "name": "金像電",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "2368.TW",
+      "capital": 5229329730.0
+    },
+    {
+      "code": "2369",
+      "name": "菱生",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "2369.TW",
+      "capital": 3801023440.0
+    },
+    {
+      "code": "2371",
+      "name": "大同",
+      "industry": "電機機械",
+      "market": "TWSE",
+      "symbol": "2371.TW",
+      "capital": 21508348510.0
+    },
+    {
+      "code": "2373",
+      "name": "震旦行",
+      "industry": "其他電子業",
+      "market": "TWSE",
+      "symbol": "2373.TW",
+      "capital": 2362025180.0
+    },
+    {
+      "code": "2374",
+      "name": "佳能",
+      "industry": "光電業",
+      "market": "TWSE",
+      "symbol": "2374.TW",
+      "capital": 3379921330.0
+    },
+    {
+      "code": "2375",
+      "name": "凱美",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "2375.TW",
+      "capital": 1086753340.0
+    },
+    {
+      "code": "2376",
+      "name": "技嘉",
+      "industry": "電腦及週邊設備業",
+      "market": "TWSE",
+      "symbol": "2376.TW",
+      "capital": 6698888860.0
+    },
+    {
+      "code": "2377",
+      "name": "微星",
+      "industry": "電腦及週邊設備業",
+      "market": "TWSE",
+      "symbol": "2377.TW",
+      "capital": 8448561990.0
+    },
+    {
+      "code": "2379",
+      "name": "瑞昱",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "2379.TW",
+      "capital": 5155126410.0
+    },
+    {
+      "code": "2380",
+      "name": "虹光",
+      "industry": "電腦及週邊設備業",
+      "market": "TWSE",
+      "symbol": "2380.TW",
+      "capital": 600000000.0
+    },
+    {
+      "code": "2382",
+      "name": "廣達",
+      "industry": "電腦及週邊設備業",
+      "market": "TWSE",
+      "symbol": "2382.TW",
+      "capital": 38626274320.0
+    },
+    {
+      "code": "2383",
+      "name": "台光電",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "2383.TW",
+      "capital": 3583211140.0
+    },
+    {
+      "code": "2385",
+      "name": "群光",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "2385.TW",
+      "capital": 7657211880.0
+    },
+    {
+      "code": "2387",
+      "name": "精元",
+      "industry": "電腦及週邊設備業",
+      "market": "TWSE",
+      "symbol": "2387.TW",
+      "capital": 1952510510.0
+    },
+    {
+      "code": "2388",
+      "name": "威盛",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "2388.TW",
+      "capital": 5559359410.0
+    },
+    {
+      "code": "2390",
+      "name": "云辰",
+      "industry": "其他電子業",
+      "market": "TWSE",
+      "symbol": "2390.TW",
+      "capital": 1926194420.0
+    },
+    {
+      "code": "2392",
+      "name": "正崴",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "2392.TW",
+      "capital": 5123269400.0
+    },
+    {
+      "code": "2393",
+      "name": "億光",
+      "industry": "光電業",
+      "market": "TWSE",
+      "symbol": "2393.TW",
+      "capital": 4433930860.0
+    },
+    {
+      "code": "2395",
+      "name": "研華",
+      "industry": "電腦及週邊設備業",
+      "market": "TWSE",
+      "symbol": "2395.TW",
+      "capital": 8682544870.0
+    },
+    {
+      "code": "2397",
+      "name": "友通",
+      "industry": "電腦及週邊設備業",
+      "market": "TWSE",
+      "symbol": "2397.TW",
+      "capital": 1144888570.0
+    },
+    {
+      "code": "2399",
+      "name": "映泰",
+      "industry": "電腦及週邊設備業",
+      "market": "TWSE",
+      "symbol": "2399.TW",
+      "capital": 1781000000.0
+    },
+    {
+      "code": "2401",
+      "name": "凌陽",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "2401.TW",
+      "capital": 5919949190.0
+    },
+    {
+      "code": "2402",
+      "name": "毅嘉",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "2402.TW",
+      "capital": 3075365330.0
+    },
+    {
+      "code": "2404",
+      "name": "漢唐",
+      "industry": "其他電子業",
+      "market": "TWSE",
+      "symbol": "2404.TW",
+      "capital": 1905866980.0
+    },
+    {
+      "code": "2405",
+      "name": "輔信",
+      "industry": "電腦及週邊設備業",
+      "market": "TWSE",
+      "symbol": "2405.TW",
+      "capital": 3434273030.0
+    },
+    {
+      "code": "2406",
+      "name": "國碩",
+      "industry": "光電業",
+      "market": "TWSE",
+      "symbol": "2406.TW",
+      "capital": 3509056890.0
+    },
+    {
+      "code": "2408",
+      "name": "南亞科",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "2408.TW",
+      "capital": 34502058940.0
+    },
+    {
+      "code": "2409",
+      "name": "友達",
+      "industry": "光電業",
+      "market": "TWSE",
+      "symbol": "2409.TW",
+      "capital": 75470989720.0
+    },
+    {
+      "code": "2412",
+      "name": "中華電",
+      "industry": "通信網路業",
+      "market": "TWSE",
+      "symbol": "2412.TW",
+      "capital": 77574465450.0
+    },
+    {
+      "code": "2413",
+      "name": "環科",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "2413.TW",
+      "capital": 1273592000.0
+    },
+    {
+      "code": "2414",
+      "name": "精技",
+      "industry": "電子通路業",
+      "market": "TWSE",
+      "symbol": "2414.TW",
+      "capital": 1617358460.0
+    },
+    {
+      "code": "2415",
+      "name": "錩新",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "2415.TW",
+      "capital": 900000000.0
+    },
+    {
+      "code": "2417",
+      "name": "圓剛",
+      "industry": "電腦及週邊設備業",
+      "market": "TWSE",
+      "symbol": "2417.TW",
+      "capital": 1572188640.0
+    },
+    {
+      "code": "2419",
+      "name": "仲琦",
+      "industry": "通信網路業",
+      "market": "TWSE",
+      "symbol": "2419.TW",
+      "capital": 3213172290.0
+    },
+    {
+      "code": "2420",
+      "name": "新巨",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "2420.TW",
+      "capital": 1526486880.0
+    },
+    {
+      "code": "2421",
+      "name": "建準",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "2421.TW",
+      "capital": 2869436690.0
+    },
+    {
+      "code": "2423",
+      "name": "固緯",
+      "industry": "其他電子業",
+      "market": "TWSE",
+      "symbol": "2423.TW",
+      "capital": 1450472890.0
+    },
+    {
+      "code": "2424",
+      "name": "隴華",
+      "industry": "通信網路業",
+      "market": "TWSE",
+      "symbol": "2424.TW",
+      "capital": 595850000.0
+    },
+    {
+      "code": "2425",
+      "name": "承啟",
+      "industry": "電腦及週邊設備業",
+      "market": "TWSE",
+      "symbol": "2425.TW",
+      "capital": 964988310.0
+    },
+    {
+      "code": "2426",
+      "name": "鼎元",
+      "industry": "光電業",
+      "market": "TWSE",
+      "symbol": "2426.TW",
+      "capital": 3006222520.0
+    },
+    {
+      "code": "2427",
+      "name": "三商電",
+      "industry": "資訊服務業",
+      "market": "TWSE",
+      "symbol": "2427.TW",
+      "capital": 1979995730.0
+    },
+    {
+      "code": "2428",
+      "name": "興勤",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "2428.TW",
+      "capital": 1281127260.0
+    },
+    {
+      "code": "2429",
+      "name": "銘旺科",
+      "industry": "光電業",
+      "market": "TWSE",
+      "symbol": "2429.TW",
+      "capital": 855000000.0
+    },
+    {
+      "code": "2430",
+      "name": "燦坤",
+      "industry": "電子通路業",
+      "market": "TWSE",
+      "symbol": "2430.TW",
+      "capital": 1168000000.0
+    },
+    {
+      "code": "2431",
+      "name": "聯昌",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "2431.TW",
+      "capital": 1109270140.0
+    },
+    {
+      "code": "2432",
+      "name": "倚天酷碁-創",
+      "industry": "電腦及週邊設備業",
+      "market": "TWSE",
+      "symbol": "2432.TW",
+      "capital": 618600000.0
+    },
+    {
+      "code": "2433",
+      "name": "互盛電",
+      "industry": "其他電子業",
+      "market": "TWSE",
+      "symbol": "2433.TW",
+      "capital": 1444960110.0
+    },
+    {
+      "code": "2434",
+      "name": "統懋",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "2434.TW",
+      "capital": 370000000.0
+    },
+    {
+      "code": "2436",
+      "name": "偉詮電",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "2436.TW",
+      "capital": 2041775610.0
+    },
+    {
+      "code": "2438",
+      "name": "翔耀",
+      "industry": "光電業",
+      "market": "TWSE",
+      "symbol": "2438.TW",
+      "capital": 711956410.0
+    },
+    {
+      "code": "2439",
+      "name": "美律",
+      "industry": "通信網路業",
+      "market": "TWSE",
+      "symbol": "2439.TW",
+      "capital": 2536449140.0
+    },
+    {
+      "code": "2440",
+      "name": "太空梭",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "2440.TW",
+      "capital": 1391172710.0
+    },
+    {
+      "code": "2441",
+      "name": "超豐",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "2441.TW",
+      "capital": 5688459210.0
+    },
+    {
+      "code": "2442",
+      "name": "新美齊",
+      "industry": "建材營造",
+      "market": "TWSE",
+      "symbol": "2442.TW",
+      "capital": 3252320210.0
+    },
+    {
+      "code": "2444",
+      "name": "兆勁",
+      "industry": "通信網路業",
+      "market": "TWSE",
+      "symbol": "2444.TW",
+      "capital": 1015695730.0
+    },
+    {
+      "code": "2449",
+      "name": "京元電子",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "2449.TW",
+      "capital": 12838823180.0
+    },
+    {
+      "code": "2450",
+      "name": "神腦",
+      "industry": "通信網路業",
+      "market": "TWSE",
+      "symbol": "2450.TW",
+      "capital": 2582526570.0
+    },
+    {
+      "code": "2451",
+      "name": "創見",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "2451.TW",
+      "capital": 4313456750.0
+    },
+    {
+      "code": "2453",
+      "name": "凌群",
+      "industry": "資訊服務業",
+      "market": "TWSE",
+      "symbol": "2453.TW",
+      "capital": 1000000000.0
+    },
+    {
+      "code": "2454",
+      "name": "聯發科",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "2454.TW",
+      "capital": 16038954070.0
+    },
+    {
+      "code": "2455",
+      "name": "全新",
+      "industry": "通信網路業",
+      "market": "TWSE",
+      "symbol": "2455.TW",
+      "capital": 1849059180.0
+    },
+    {
+      "code": "2457",
+      "name": "飛宏",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "2457.TW",
+      "capital": 4247724160.0
+    },
+    {
+      "code": "2458",
+      "name": "義隆",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "2458.TW",
+      "capital": 3038803920.0
+    },
+    {
+      "code": "2459",
+      "name": "敦吉",
+      "industry": "其他電子業",
+      "market": "TWSE",
+      "symbol": "2459.TW",
+      "capital": 1055956150.0
+    },
+    {
+      "code": "2460",
+      "name": "建通",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "2460.TW",
+      "capital": 1692000000.0
+    },
+    {
+      "code": "2461",
+      "name": "光群雷",
+      "industry": "其他電子業",
+      "market": "TWSE",
+      "symbol": "2461.TW",
+      "capital": 1918879630.0
+    },
+    {
+      "code": "2462",
+      "name": "良得電",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "2462.TW",
+      "capital": 1507844820.0
+    },
+    {
+      "code": "2464",
+      "name": "盟立",
+      "industry": "其他電子業",
+      "market": "TWSE",
+      "symbol": "2464.TW",
+      "capital": 2166804340.0
+    },
+    {
+      "code": "2465",
+      "name": "麗臺",
+      "industry": "電腦及週邊設備業",
+      "market": "TWSE",
+      "symbol": "2465.TW",
+      "capital": 939460310.0
+    },
+    {
+      "code": "2466",
+      "name": "冠西電",
+      "industry": "光電業",
+      "market": "TWSE",
+      "symbol": "2466.TW",
+      "capital": 1734586970.0
+    },
+    {
+      "code": "2467",
+      "name": "志聖",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "2467.TW",
+      "capital": 1568553480.0
+    },
+    {
+      "code": "2468",
+      "name": "華經",
+      "industry": "資訊服務業",
+      "market": "TWSE",
+      "symbol": "2468.TW",
+      "capital": 699612490.0
+    },
+    {
+      "code": "2471",
+      "name": "資通",
+      "industry": "資訊服務業",
+      "market": "TWSE",
+      "symbol": "2471.TW",
+      "capital": 472538900.0
+    },
+    {
+      "code": "2472",
+      "name": "立隆電",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "2472.TW",
+      "capital": 1647351370.0
+    },
+    {
+      "code": "2474",
+      "name": "可成",
+      "industry": "其他電子業",
+      "market": "TWSE",
+      "symbol": "2474.TW",
+      "capital": 5388210680.0
+    },
+    {
+      "code": "2476",
+      "name": "鉅祥",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "2476.TW",
+      "capital": 2180809980.0
+    },
+    {
+      "code": "2477",
+      "name": "美隆電",
+      "industry": "其他電子業",
+      "market": "TWSE",
+      "symbol": "2477.TW",
+      "capital": 1585732440.0
+    },
+    {
+      "code": "2478",
+      "name": "大毅",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "2478.TW",
+      "capital": 1447313390.0
+    },
+    {
+      "code": "2480",
+      "name": "敦陽科",
+      "industry": "資訊服務業",
+      "market": "TWSE",
+      "symbol": "2480.TW",
+      "capital": 1063602910.0
+    },
+    {
+      "code": "2481",
+      "name": "強茂",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "2481.TW",
+      "capital": 3821149270.0
+    },
+    {
+      "code": "2482",
+      "name": "連宇",
+      "industry": "其他電子業",
+      "market": "TWSE",
+      "symbol": "2482.TW",
+      "capital": 778827110.0
+    },
+    {
+      "code": "2483",
+      "name": "百容",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "2483.TW",
+      "capital": 1078898070.0
+    },
+    {
+      "code": "2484",
+      "name": "希華",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "2484.TW",
+      "capital": 1594210220.0
+    },
+    {
+      "code": "2485",
+      "name": "兆赫",
+      "industry": "通信網路業",
+      "market": "TWSE",
+      "symbol": "2485.TW",
+      "capital": 3176890370.0
+    },
+    {
+      "code": "2486",
+      "name": "一詮",
+      "industry": "光電業",
+      "market": "TWSE",
+      "symbol": "2486.TW",
+      "capital": 2339585790.0
+    },
+    {
+      "code": "2488",
+      "name": "漢平",
+      "industry": "其他電子業",
+      "market": "TWSE",
+      "symbol": "2488.TW",
+      "capital": 799994330.0
+    },
+    {
+      "code": "2489",
+      "name": "瑞軒",
+      "industry": "光電業",
+      "market": "TWSE",
+      "symbol": "2489.TW",
+      "capital": 6100000000.0
+    },
+    {
+      "code": "2491",
+      "name": "吉祥全",
+      "industry": "光電業",
+      "market": "TWSE",
+      "symbol": "2491.TW",
+      "capital": 820080000.0
+    },
+    {
+      "code": "2492",
+      "name": "華新科",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "2492.TW",
+      "capital": 4852047740.0
+    },
+    {
+      "code": "2493",
+      "name": "揚博",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "2493.TW",
+      "capital": 1267966290.0
+    },
+    {
+      "code": "2495",
+      "name": "普安",
+      "industry": "電腦及週邊設備業",
+      "market": "TWSE",
+      "symbol": "2495.TW",
+      "capital": 2735515380.0
+    },
+    {
+      "code": "2496",
+      "name": "卓越",
+      "industry": "其他",
+      "market": "TWSE",
+      "symbol": "2496.TW",
+      "capital": 191004400.0
+    },
+    {
+      "code": "2497",
+      "name": "怡利電",
+      "industry": "汽車工業",
+      "market": "TWSE",
+      "symbol": "2497.TW",
+      "capital": 1308876760.0
+    },
+    {
+      "code": "2498",
+      "name": "宏達電",
+      "industry": "通信網路業",
+      "market": "TWSE",
+      "symbol": "2498.TW",
+      "capital": 8360650860.0
+    },
+    {
+      "code": "2501",
+      "name": "國建",
+      "industry": "建材營造",
+      "market": "TWSE",
+      "symbol": "2501.TW",
+      "capital": 11595610590.0
+    },
+    {
+      "code": "2504",
+      "name": "國產",
+      "industry": "建材營造",
+      "market": "TWSE",
+      "symbol": "2504.TW",
+      "capital": 11800000000.0
+    },
+    {
+      "code": "2505",
+      "name": "國揚",
+      "industry": "建材營造",
+      "market": "TWSE",
+      "symbol": "2505.TW",
+      "capital": 3800000000.0
+    },
+    {
+      "code": "2506",
+      "name": "太設",
+      "industry": "建材營造",
+      "market": "TWSE",
+      "symbol": "2506.TW",
+      "capital": 3870000000.0
+    },
+    {
+      "code": "2509",
+      "name": "全坤建",
+      "industry": "建材營造",
+      "market": "TWSE",
+      "symbol": "2509.TW",
+      "capital": 2245505300.0
+    },
+    {
+      "code": "2511",
+      "name": "太子",
+      "industry": "建材營造",
+      "market": "TWSE",
+      "symbol": "2511.TW",
+      "capital": 16233261470.0
+    },
+    {
+      "code": "2514",
+      "name": "龍邦",
+      "industry": "其他",
+      "market": "TWSE",
+      "symbol": "2514.TW",
+      "capital": 3947292780.0
+    },
+    {
+      "code": "2515",
+      "name": "中工",
+      "industry": "建材營造",
+      "market": "TWSE",
+      "symbol": "2515.TW",
+      "capital": 16079040840.0
+    },
+    {
+      "code": "2516",
+      "name": "新建",
+      "industry": "建材營造",
+      "market": "TWSE",
+      "symbol": "2516.TW",
+      "capital": 2262784570.0
+    },
+    {
+      "code": "2520",
+      "name": "冠德",
+      "industry": "建材營造",
+      "market": "TWSE",
+      "symbol": "2520.TW",
+      "capital": 6094871100.0
+    },
+    {
+      "code": "2524",
+      "name": "京城",
+      "industry": "建材營造",
+      "market": "TWSE",
+      "symbol": "2524.TW",
+      "capital": 3659835450.0
+    },
+    {
+      "code": "2527",
+      "name": "宏璟",
+      "industry": "建材營造",
+      "market": "TWSE",
+      "symbol": "2527.TW",
+      "capital": 2703060000.0
+    },
+    {
+      "code": "2528",
+      "name": "皇普",
+      "industry": "建材營造",
+      "market": "TWSE",
+      "symbol": "2528.TW",
+      "capital": 4359964670.0
+    },
+    {
+      "code": "2530",
+      "name": "華建",
+      "industry": "建材營造",
+      "market": "TWSE",
+      "symbol": "2530.TW",
+      "capital": 8412557310.0
+    },
+    {
+      "code": "2534",
+      "name": "宏盛",
+      "industry": "建材營造",
+      "market": "TWSE",
+      "symbol": "2534.TW",
+      "capital": 4742279700.0
+    },
+    {
+      "code": "2535",
+      "name": "達欣工",
+      "industry": "建材營造",
+      "market": "TWSE",
+      "symbol": "2535.TW",
+      "capital": 2707939670.0
+    },
+    {
+      "code": "2536",
+      "name": "宏普",
+      "industry": "建材營造",
+      "market": "TWSE",
+      "symbol": "2536.TW",
+      "capital": 3328086520.0
+    },
+    {
+      "code": "2537",
+      "name": "聯上發",
+      "industry": "建材營造",
+      "market": "TWSE",
+      "symbol": "2537.TW",
+      "capital": 3005577950.0
+    },
+    {
+      "code": "2538",
+      "name": "基泰",
+      "industry": "建材營造",
+      "market": "TWSE",
+      "symbol": "2538.TW",
+      "capital": 4450254950.0
+    },
+    {
+      "code": "2539",
+      "name": "櫻花建",
+      "industry": "建材營造",
+      "market": "TWSE",
+      "symbol": "2539.TW",
+      "capital": 11931025810.0
+    },
+    {
+      "code": "2540",
+      "name": "愛山林",
+      "industry": "建材營造",
+      "market": "TWSE",
+      "symbol": "2540.TW",
+      "capital": 9448739650.0
+    },
+    {
+      "code": "2542",
+      "name": "興富發",
+      "industry": "建材營造",
+      "market": "TWSE",
+      "symbol": "2542.TW",
+      "capital": 21530835390.0
+    },
+    {
+      "code": "2543",
+      "name": "皇昌",
+      "industry": "建材營造",
+      "market": "TWSE",
+      "symbol": "2543.TW",
+      "capital": 5285419610.0
+    },
+    {
+      "code": "2545",
+      "name": "皇翔",
+      "industry": "建材營造",
+      "market": "TWSE",
+      "symbol": "2545.TW",
+      "capital": 3797348080.0
+    },
+    {
+      "code": "2546",
+      "name": "根基",
+      "industry": "建材營造",
+      "market": "TWSE",
+      "symbol": "2546.TW",
+      "capital": 1305241930.0
+    },
+    {
+      "code": "2547",
+      "name": "日勝生",
+      "industry": "建材營造",
+      "market": "TWSE",
+      "symbol": "2547.TW",
+      "capital": 10350946490.0
+    },
+    {
+      "code": "2548",
+      "name": "華固",
+      "industry": "建材營造",
+      "market": "TWSE",
+      "symbol": "2548.TW",
+      "capital": 3357046310.0
+    },
+    {
+      "code": "2597",
+      "name": "潤弘",
+      "industry": "建材營造",
+      "market": "TWSE",
+      "symbol": "2597.TW",
+      "capital": 3107160000.0
+    },
+    {
+      "code": "2601",
+      "name": "益航",
+      "industry": "航運業",
+      "market": "TWSE",
+      "symbol": "2601.TW",
+      "capital": 8247760670.0
+    },
+    {
+      "code": "2603",
+      "name": "長榮",
+      "industry": "航運業",
+      "market": "TWSE",
+      "symbol": "2603.TW",
+      "capital": 21650429960.0
+    },
+    {
+      "code": "2605",
+      "name": "新興",
+      "industry": "航運業",
+      "market": "TWSE",
+      "symbol": "2605.TW",
+      "capital": 5853532970.0
+    },
+    {
+      "code": "2606",
+      "name": "裕民",
+      "industry": "航運業",
+      "market": "TWSE",
+      "symbol": "2606.TW",
+      "capital": 8450557120.0
+    },
+    {
+      "code": "2607",
+      "name": "榮運",
+      "industry": "航運業",
+      "market": "TWSE",
+      "symbol": "2607.TW",
+      "capital": 5335705470.0
+    },
+    {
+      "code": "2608",
+      "name": "嘉里大榮",
+      "industry": "航運業",
+      "market": "TWSE",
+      "symbol": "2608.TW",
+      "capital": 4670004980.0
+    },
+    {
+      "code": "2609",
+      "name": "陽明",
+      "industry": "航運業",
+      "market": "TWSE",
+      "symbol": "2609.TW",
+      "capital": 34921042700.0
+    },
+    {
+      "code": "2610",
+      "name": "華航",
+      "industry": "航運業",
+      "market": "TWSE",
+      "symbol": "2610.TW",
+      "capital": 61199649370.0
+    },
+    {
+      "code": "2611",
+      "name": "志信",
+      "industry": "航運業",
+      "market": "TWSE",
+      "symbol": "2611.TW",
+      "capital": 1890022720.0
+    },
+    {
+      "code": "2612",
+      "name": "中航",
+      "industry": "航運業",
+      "market": "TWSE",
+      "symbol": "2612.TW",
+      "capital": 1974845930.0
+    },
+    {
+      "code": "2613",
+      "name": "中櫃",
+      "industry": "航運業",
+      "market": "TWSE",
+      "symbol": "2613.TW",
+      "capital": 1484234580.0
+    },
+    {
+      "code": "2614",
+      "name": "東森",
+      "industry": "其他",
+      "market": "TWSE",
+      "symbol": "2614.TW",
+      "capital": 3272649460.0
+    },
+    {
+      "code": "2615",
+      "name": "萬海",
+      "industry": "航運業",
+      "market": "TWSE",
+      "symbol": "2615.TW",
+      "capital": 28061462930.0
+    },
+    {
+      "code": "2616",
+      "name": "山隆",
+      "industry": "油電燃氣業",
+      "market": "TWSE",
+      "symbol": "2616.TW",
+      "capital": 1372818270.0
+    },
+    {
+      "code": "2617",
+      "name": "台航",
+      "industry": "航運業",
+      "market": "TWSE",
+      "symbol": "2617.TW",
+      "capital": 4172944870.0
+    },
+    {
+      "code": "2618",
+      "name": "長榮航",
+      "industry": "航運業",
+      "market": "TWSE",
+      "symbol": "2618.TW",
+      "capital": 54004443350.0
+    },
+    {
+      "code": "2630",
+      "name": "亞航",
+      "industry": "航運業",
+      "market": "TWSE",
+      "symbol": "2630.TW",
+      "capital": 2094382040.0
+    },
+    {
+      "code": "2633",
+      "name": "台灣高鐵",
+      "industry": "航運業",
+      "market": "TWSE",
+      "symbol": "2633.TW",
+      "capital": 56282930580.0
+    },
+    {
+      "code": "2634",
+      "name": "漢翔",
+      "industry": "航運業",
+      "market": "TWSE",
+      "symbol": "2634.TW",
+      "capital": 9418671010.0
+    },
+    {
+      "code": "2636",
+      "name": "台驊控股",
+      "industry": "航運業",
+      "market": "TWSE",
+      "symbol": "2636.TW",
+      "capital": 1418352300.0
+    },
+    {
+      "code": "2637",
+      "name": "慧洋-KY",
+      "industry": "航運業",
+      "market": "TWSE",
+      "symbol": "2637.TW",
+      "capital": 7464091990.0
+    },
+    {
+      "code": "2642",
+      "name": "宅配通",
+      "industry": "航運業",
+      "market": "TWSE",
+      "symbol": "2642.TW",
+      "capital": 954670000.0
+    },
+    {
+      "code": "2645",
+      "name": "長榮航太",
+      "industry": "航運業",
+      "market": "TWSE",
+      "symbol": "2645.TW",
+      "capital": 3745709620.0
+    },
+    {
+      "code": "2646",
+      "name": "星宇航空",
+      "industry": "航運業",
+      "market": "TWSE",
+      "symbol": "2646.TW",
+      "capital": 30087350000.0
+    },
+    {
+      "code": "2701",
+      "name": "萬企",
+      "industry": "觀光餐旅",
+      "market": "TWSE",
+      "symbol": "2701.TW",
+      "capital": 4499678380.0
+    },
+    {
+      "code": "2702",
+      "name": "華園",
+      "industry": "觀光餐旅",
+      "market": "TWSE",
+      "symbol": "2702.TW",
+      "capital": 1566132490.0
+    },
+    {
+      "code": "2704",
+      "name": "國賓",
+      "industry": "觀光餐旅",
+      "market": "TWSE",
+      "symbol": "2704.TW",
+      "capital": 3669233430.0
+    },
+    {
+      "code": "2705",
+      "name": "六福",
+      "industry": "觀光餐旅",
+      "market": "TWSE",
+      "symbol": "2705.TW",
+      "capital": 1913128300.0
+    },
+    {
+      "code": "2706",
+      "name": "第一店",
+      "industry": "觀光餐旅",
+      "market": "TWSE",
+      "symbol": "2706.TW",
+      "capital": 4999983460.0
+    },
+    {
+      "code": "2707",
+      "name": "晶華",
+      "industry": "觀光餐旅",
+      "market": "TWSE",
+      "symbol": "2707.TW",
+      "capital": 1274032380.0
+    },
+    {
+      "code": "2712",
+      "name": "遠雄來",
+      "industry": "觀光餐旅",
+      "market": "TWSE",
+      "symbol": "2712.TW",
+      "capital": 1050000000.0
+    },
+    {
+      "code": "2722",
+      "name": "夏都",
+      "industry": "觀光餐旅",
+      "market": "TWSE",
+      "symbol": "2722.TW",
+      "capital": 1431696960.0
+    },
+    {
+      "code": "2723",
+      "name": "美食-KY",
+      "industry": "觀光餐旅",
+      "market": "TWSE",
+      "symbol": "2723.TW",
+      "capital": 1800000000.0
+    },
+    {
+      "code": "2727",
+      "name": "王品",
+      "industry": "觀光餐旅",
+      "market": "TWSE",
+      "symbol": "2727.TW",
+      "capital": 829401090.0
+    },
+    {
+      "code": "2731",
+      "name": "雄獅",
+      "industry": "觀光餐旅",
+      "market": "TWSE",
+      "symbol": "2731.TW",
+      "capital": 932777390.0
+    },
+    {
+      "code": "2739",
+      "name": "寒舍",
+      "industry": "觀光餐旅",
+      "market": "TWSE",
+      "symbol": "2739.TW",
+      "capital": 915260000.0
+    },
+    {
+      "code": "2748",
+      "name": "雲品",
+      "industry": "觀光餐旅",
+      "market": "TWSE",
+      "symbol": "2748.TW",
+      "capital": 1057787400.0
+    },
+    {
+      "code": "2753",
+      "name": "八方雲集",
+      "industry": "觀光餐旅",
+      "market": "TWSE",
+      "symbol": "2753.TW",
+      "capital": 666447960.0
+    },
+    {
+      "code": "2762",
+      "name": "世界健身-KY",
+      "industry": "居家生活",
+      "market": "TWSE",
+      "symbol": "2762.TW",
+      "capital": 1125000000.0
+    },
+    {
+      "code": "2801",
+      "name": "彰銀",
+      "industry": "金融業",
+      "market": "TWSE",
+      "symbol": "2801.TW",
+      "capital": 117660462530.0
+    },
+    {
+      "code": "2812",
+      "name": "台中銀",
+      "industry": "金融業",
+      "market": "TWSE",
+      "symbol": "2812.TW",
+      "capital": 60216259210.0
+    },
+    {
+      "code": "2816",
+      "name": "旺旺保",
+      "industry": "金融業",
+      "market": "TWSE",
+      "symbol": "2816.TW",
+      "capital": 2236080000.0
+    },
+    {
+      "code": "2820",
+      "name": "華票",
+      "industry": "金融業",
+      "market": "TWSE",
+      "symbol": "2820.TW",
+      "capital": 13429600000.0
+    },
+    {
+      "code": "2832",
+      "name": "台產",
+      "industry": "金融業",
+      "market": "TWSE",
+      "symbol": "2832.TW",
+      "capital": 2535402800.0
+    },
+    {
+      "code": "2834",
+      "name": "臺企銀",
+      "industry": "金融業",
+      "market": "TWSE",
+      "symbol": "2834.TW",
+      "capital": 97180618490.0
+    },
+    {
+      "code": "2836",
+      "name": "高雄銀",
+      "industry": "金融業",
+      "market": "TWSE",
+      "symbol": "2836.TW",
+      "capital": 18983161530.0
+    },
+    {
+      "code": "2838",
+      "name": "聯邦銀",
+      "industry": "金融業",
+      "market": "TWSE",
+      "symbol": "2838.TW",
+      "capital": 45405517790.0
+    },
+    {
+      "code": "2845",
+      "name": "遠東銀",
+      "industry": "金融業",
+      "market": "TWSE",
+      "symbol": "2845.TW",
+      "capital": 48652847310.0
+    },
+    {
+      "code": "2849",
+      "name": "安泰銀",
+      "industry": "金融業",
+      "market": "TWSE",
+      "symbol": "2849.TW",
+      "capital": 19576093490.0
+    },
+    {
+      "code": "2850",
+      "name": "新產",
+      "industry": "金融業",
+      "market": "TWSE",
+      "symbol": "2850.TW",
+      "capital": 3159633000.0
+    },
+    {
+      "code": "2851",
+      "name": "中再保",
+      "industry": "金融業",
+      "market": "TWSE",
+      "symbol": "2851.TW",
+      "capital": 8003887500.0
+    },
+    {
+      "code": "2852",
+      "name": "第一保",
+      "industry": "金融業",
+      "market": "TWSE",
+      "symbol": "2852.TW",
+      "capital": 3011637840.0
+    },
+    {
+      "code": "2855",
+      "name": "統一證",
+      "industry": "金融業",
+      "market": "TWSE",
+      "symbol": "2855.TW",
+      "capital": 16014144780.0
+    },
+    {
+      "code": "2867",
+      "name": "三商壽",
+      "industry": "金融業",
+      "market": "TWSE",
+      "symbol": "2867.TW",
+      "capital": 58995010440.0
+    },
+    {
+      "code": "2880",
+      "name": "華南金",
+      "industry": "金融業",
+      "market": "TWSE",
+      "symbol": "2880.TW",
+      "capital": 139169650890.0
+    },
+    {
+      "code": "2881",
+      "name": "富邦金",
+      "industry": "金融業",
+      "market": "TWSE",
+      "symbol": "2881.TW",
+      "capital": 156073549520.0
+    },
+    {
+      "code": "2882",
+      "name": "國泰金",
+      "industry": "金融業",
+      "market": "TWSE",
+      "symbol": "2882.TW",
+      "capital": 162025101280.0
+    },
+    {
+      "code": "2883",
+      "name": "凱基金",
+      "industry": "金融業",
+      "market": "TWSE",
+      "symbol": "2883.TW",
+      "capital": 185569894140.0
+    },
+    {
+      "code": "2884",
+      "name": "玉山金",
+      "industry": "金融業",
+      "market": "TWSE",
+      "symbol": "2884.TW",
+      "capital": 161920000000.0
+    },
+    {
+      "code": "2885",
+      "name": "元大金",
+      "industry": "金融業",
+      "market": "TWSE",
+      "symbol": "2885.TW",
+      "capital": 133311499460.0
+    },
+    {
+      "code": "2886",
+      "name": "兆豐金",
+      "industry": "金融業",
+      "market": "TWSE",
+      "symbol": "2886.TW",
+      "capital": 148333782820.0
+    },
+    {
+      "code": "2887",
+      "name": "台新新光金",
+      "industry": "金融業",
+      "market": "TWSE",
+      "symbol": "2887.TW",
+      "capital": 296061505490.0
+    },
+    {
+      "code": "2889",
+      "name": "國票金",
+      "industry": "金融業",
+      "market": "TWSE",
+      "symbol": "2889.TW",
+      "capital": 36335634710.0
+    },
+    {
+      "code": "2890",
+      "name": "永豐金",
+      "industry": "金融業",
+      "market": "TWSE",
+      "symbol": "2890.TW",
+      "capital": 147921687210.0
+    },
+    {
+      "code": "2891",
+      "name": "中信金",
+      "industry": "金融業",
+      "market": "TWSE",
+      "symbol": "2891.TW",
+      "capital": 201759228060.0
+    },
+    {
+      "code": "2892",
+      "name": "第一金",
+      "industry": "金融業",
+      "market": "TWSE",
+      "symbol": "2892.TW",
+      "capital": 143794686500.0
+    },
+    {
+      "code": "2897",
+      "name": "王道銀行",
+      "industry": "金融業",
+      "market": "TWSE",
+      "symbol": "2897.TW",
+      "capital": 30553578780.0
+    },
+    {
+      "code": "2901",
+      "name": "欣欣",
+      "industry": "貿易百貨",
+      "market": "TWSE",
+      "symbol": "2901.TW",
+      "capital": 730432830.0
+    },
+    {
+      "code": "2903",
+      "name": "遠百",
+      "industry": "貿易百貨",
+      "market": "TWSE",
+      "symbol": "2903.TW",
+      "capital": 14169405890.0
+    },
+    {
+      "code": "2904",
+      "name": "匯僑",
+      "industry": "其他",
+      "market": "TWSE",
+      "symbol": "2904.TW",
+      "capital": 778344320.0
+    },
+    {
+      "code": "2905",
+      "name": "三商",
+      "industry": "貿易百貨",
+      "market": "TWSE",
+      "symbol": "2905.TW",
+      "capital": 11103717030.0
+    },
+    {
+      "code": "2906",
+      "name": "高林",
+      "industry": "貿易百貨",
+      "market": "TWSE",
+      "symbol": "2906.TW",
+      "capital": 2091166480.0
+    },
+    {
+      "code": "2908",
+      "name": "特力",
+      "industry": "貿易百貨",
+      "market": "TWSE",
+      "symbol": "2908.TW",
+      "capital": 5098875580.0
+    },
+    {
+      "code": "2910",
+      "name": "統領",
+      "industry": "貿易百貨",
+      "market": "TWSE",
+      "symbol": "2910.TW",
+      "capital": 1754030000.0
+    },
+    {
+      "code": "2911",
+      "name": "麗嬰房",
+      "industry": "貿易百貨",
+      "market": "TWSE",
+      "symbol": "2911.TW",
+      "capital": 1051259990.0
+    },
+    {
+      "code": "2912",
+      "name": "統一超",
+      "industry": "貿易百貨",
+      "market": "TWSE",
+      "symbol": "2912.TW",
+      "capital": 10396222550.0
+    },
+    {
+      "code": "2913",
+      "name": "農林",
+      "industry": "貿易百貨",
+      "market": "TWSE",
+      "symbol": "2913.TW",
+      "capital": 7900000000.0
+    },
+    {
+      "code": "2915",
+      "name": "潤泰全",
+      "industry": "貿易百貨",
+      "market": "TWSE",
+      "symbol": "2915.TW",
+      "capital": 11043187720.0
+    },
+    {
+      "code": "2923",
+      "name": "鼎固-KY",
+      "industry": "建材營造",
+      "market": "TWSE",
+      "symbol": "2923.TW",
+      "capital": 17402969820.0
+    },
+    {
+      "code": "2929",
+      "name": "淘帝-KY",
+      "industry": "貿易百貨",
+      "market": "TWSE",
+      "symbol": "2929.TW",
+      "capital": 1094938380.0
+    },
+    {
+      "code": "2939",
+      "name": "永邑-KY",
+      "industry": "貿易百貨",
+      "market": "TWSE",
+      "symbol": "2939.TW",
+      "capital": 455486650.0
+    },
+    {
+      "code": "2945",
+      "name": "三商家購",
+      "industry": "貿易百貨",
+      "market": "TWSE",
+      "symbol": "2945.TW",
+      "capital": 675000000.0
+    },
+    {
+      "code": "3002",
+      "name": "歐格",
+      "industry": "電腦及週邊設備業",
+      "market": "TWSE",
+      "symbol": "3002.TW",
+      "capital": 1020000000.0
+    },
+    {
+      "code": "3003",
+      "name": "健和興",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "3003.TW",
+      "capital": 1556548900.0
+    },
+    {
+      "code": "3004",
+      "name": "豐達科",
+      "industry": "鋼鐵工業",
+      "market": "TWSE",
+      "symbol": "3004.TW",
+      "capital": 643650550.0
+    },
+    {
+      "code": "3005",
+      "name": "神基",
+      "industry": "電腦及週邊設備業",
+      "market": "TWSE",
+      "symbol": "3005.TW",
+      "capital": 6243101500.0
+    },
+    {
+      "code": "3006",
+      "name": "晶豪科",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "3006.TW",
+      "capital": 2981278410.0
+    },
+    {
+      "code": "3008",
+      "name": "大立光",
+      "industry": "光電業",
+      "market": "TWSE",
+      "symbol": "3008.TW",
+      "capital": 1307981970.0
+    },
+    {
+      "code": "3010",
+      "name": "華立",
+      "industry": "電子通路業",
+      "market": "TWSE",
+      "symbol": "3010.TW",
+      "capital": 2594368170.0
+    },
+    {
+      "code": "3011",
+      "name": "今皓",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "3011.TW",
+      "capital": 1296008510.0
+    },
+    {
+      "code": "3013",
+      "name": "晟銘電",
+      "industry": "電腦及週邊設備業",
+      "market": "TWSE",
+      "symbol": "3013.TW",
+      "capital": 2051389300.0
+    },
+    {
+      "code": "3014",
+      "name": "聯陽",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "3014.TW",
+      "capital": 1659541240.0
+    },
+    {
+      "code": "3015",
+      "name": "全漢",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "3015.TW",
+      "capital": 1872619500.0
+    },
+    {
+      "code": "3016",
+      "name": "嘉晶",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "3016.TW",
+      "capital": 2903569030.0
+    },
+    {
+      "code": "3017",
+      "name": "奇鋐",
+      "industry": "電腦及週邊設備業",
+      "market": "TWSE",
+      "symbol": "3017.TW",
+      "capital": 3925430070.0
+    },
+    {
+      "code": "3018",
+      "name": "隆銘綠能",
+      "industry": "其他電子業",
+      "market": "TWSE",
+      "symbol": "3018.TW",
+      "capital": 753777150.0
+    },
+    {
+      "code": "3019",
+      "name": "亞光",
+      "industry": "光電業",
+      "market": "TWSE",
+      "symbol": "3019.TW",
+      "capital": 2792439010.0
+    },
+    {
+      "code": "3021",
+      "name": "鴻名",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "3021.TW",
+      "capital": 948900000.0
+    },
+    {
+      "code": "3022",
+      "name": "威強電",
+      "industry": "電腦及週邊設備業",
+      "market": "TWSE",
+      "symbol": "3022.TW",
+      "capital": 1765977900.0
+    },
+    {
+      "code": "3023",
+      "name": "信邦",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "3023.TW",
+      "capital": 2400690140.0
+    },
+    {
+      "code": "3024",
+      "name": "憶聲",
+      "industry": "光電業",
+      "market": "TWSE",
+      "symbol": "3024.TW",
+      "capital": 2771574960.0
+    },
+    {
+      "code": "3025",
+      "name": "星通",
+      "industry": "通信網路業",
+      "market": "TWSE",
+      "symbol": "3025.TW",
+      "capital": 567364400.0
+    },
+    {
+      "code": "3026",
+      "name": "禾伸堂",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "3026.TW",
+      "capital": 1658903180.0
+    },
+    {
+      "code": "3027",
+      "name": "盛達",
+      "industry": "通信網路業",
+      "market": "TWSE",
+      "symbol": "3027.TW",
+      "capital": 1299602990.0
+    },
+    {
+      "code": "3028",
+      "name": "增你強",
+      "industry": "電子通路業",
+      "market": "TWSE",
+      "symbol": "3028.TW",
+      "capital": 2372411930.0
+    },
+    {
+      "code": "3029",
+      "name": "零壹",
+      "industry": "資訊服務業",
+      "market": "TWSE",
+      "symbol": "3029.TW",
+      "capital": 1670052120.0
+    },
+    {
+      "code": "3030",
+      "name": "德律",
+      "industry": "其他電子業",
+      "market": "TWSE",
+      "symbol": "3030.TW",
+      "capital": 2362160000.0
+    },
+    {
+      "code": "3031",
+      "name": "佰鴻",
+      "industry": "光電業",
+      "market": "TWSE",
+      "symbol": "3031.TW",
+      "capital": 1732032240.0
+    },
+    {
+      "code": "3032",
+      "name": "偉訓",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "3032.TW",
+      "capital": 1132856260.0
+    },
+    {
+      "code": "3033",
+      "name": "威健",
+      "industry": "電子通路業",
+      "market": "TWSE",
+      "symbol": "3033.TW",
+      "capital": 5165594480.0
+    },
+    {
+      "code": "3034",
+      "name": "聯詠",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "3034.TW",
+      "capital": 6085114690.0
+    },
+    {
+      "code": "3035",
+      "name": "智原",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "3035.TW",
+      "capital": 2605503130.0
+    },
+    {
+      "code": "3036",
+      "name": "文曄",
+      "industry": "電子通路業",
+      "market": "TWSE",
+      "symbol": "3036.TW",
+      "capital": 12691483010.0
+    },
+    {
+      "code": "3037",
+      "name": "欣興",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "3037.TW",
+      "capital": 15888729560.0
+    },
+    {
+      "code": "3038",
+      "name": "全台",
+      "industry": "光電業",
+      "market": "TWSE",
+      "symbol": "3038.TW",
+      "capital": 1574076030.0
+    },
+    {
+      "code": "3040",
+      "name": "遠見",
+      "industry": "其他",
+      "market": "TWSE",
+      "symbol": "3040.TW",
+      "capital": 662245380.0
+    },
+    {
+      "code": "3041",
+      "name": "揚智",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "3041.TW",
+      "capital": 1402236470.0
+    },
+    {
+      "code": "3042",
+      "name": "晶技",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "3042.TW",
+      "capital": 3429929710.0
+    },
+    {
+      "code": "3043",
+      "name": "科風",
+      "industry": "其他電子業",
+      "market": "TWSE",
+      "symbol": "3043.TW",
+      "capital": 389756340.0
+    },
+    {
+      "code": "3044",
+      "name": "健鼎",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "3044.TW",
+      "capital": 5256058980.0
+    },
+    {
+      "code": "3045",
+      "name": "台灣大",
+      "industry": "通信網路業",
+      "market": "TWSE",
+      "symbol": "3045.TW",
+      "capital": 37232618110.0
+    },
+    {
+      "code": "3046",
+      "name": "建碁",
+      "industry": "電腦及週邊設備業",
+      "market": "TWSE",
+      "symbol": "3046.TW",
+      "capital": 784480130.0
+    },
+    {
+      "code": "3047",
+      "name": "訊舟",
+      "industry": "通信網路業",
+      "market": "TWSE",
+      "symbol": "3047.TW",
+      "capital": 2247616080.0
+    },
+    {
+      "code": "3048",
+      "name": "益登",
+      "industry": "電子通路業",
+      "market": "TWSE",
+      "symbol": "3048.TW",
+      "capital": 2698297940.0
+    },
+    {
+      "code": "3049",
+      "name": "精金",
+      "industry": "光電業",
+      "market": "TWSE",
+      "symbol": "3049.TW",
+      "capital": 8020105290.0
+    },
+    {
+      "code": "3050",
+      "name": "鈺德",
+      "industry": "光電業",
+      "market": "TWSE",
+      "symbol": "3050.TW",
+      "capital": 1549844500.0
+    },
+    {
+      "code": "3051",
+      "name": "力特",
+      "industry": "光電業",
+      "market": "TWSE",
+      "symbol": "3051.TW",
+      "capital": 1670000000.0
+    },
+    {
+      "code": "3052",
+      "name": "夆典",
+      "industry": "建材營造",
+      "market": "TWSE",
+      "symbol": "3052.TW",
+      "capital": 2332457710.0
+    },
+    {
+      "code": "3054",
+      "name": "立萬利",
+      "industry": "食品工業",
+      "market": "TWSE",
+      "symbol": "3054.TW",
+      "capital": 806510410.0
+    },
+    {
+      "code": "3055",
+      "name": "蔚華科",
+      "industry": "電子通路業",
+      "market": "TWSE",
+      "symbol": "3055.TW",
+      "capital": 1149749180.0
+    },
+    {
+      "code": "3056",
+      "name": "富華新",
+      "industry": "建材營造",
+      "market": "TWSE",
+      "symbol": "3056.TW",
+      "capital": 4805550510.0
+    },
+    {
+      "code": "3057",
+      "name": "喬鼎",
+      "industry": "電腦及週邊設備業",
+      "market": "TWSE",
+      "symbol": "3057.TW",
+      "capital": 678646290.0
+    },
+    {
+      "code": "3058",
+      "name": "立德",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "3058.TW",
+      "capital": 2017227790.0
+    },
+    {
+      "code": "3059",
+      "name": "華晶科",
+      "industry": "光電業",
+      "market": "TWSE",
+      "symbol": "3059.TW",
+      "capital": 3077020250.0
+    },
+    {
+      "code": "3060",
+      "name": "銘異",
+      "industry": "電腦及週邊設備業",
+      "market": "TWSE",
+      "symbol": "3060.TW",
+      "capital": 1375631900.0
+    },
+    {
+      "code": "3062",
+      "name": "建漢",
+      "industry": "通信網路業",
+      "market": "TWSE",
+      "symbol": "3062.TW",
+      "capital": 3300918180.0
+    },
+    {
+      "code": "3090",
+      "name": "日電貿",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "3090.TW",
+      "capital": 2875671500.0
+    },
+    {
+      "code": "3092",
+      "name": "鴻碩",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "3092.TW",
+      "capital": 1066492500.0
+    },
+    {
+      "code": "3094",
+      "name": "聯傑",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "3094.TW",
+      "capital": 831170890.0
+    },
+    {
+      "code": "3130",
+      "name": "一零四",
+      "industry": "運動休閒",
+      "market": "TWSE",
+      "symbol": "3130.TW",
+      "capital": 331907000.0
+    },
+    {
+      "code": "3135",
+      "name": "凌航",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "3135.TW",
+      "capital": 900714910.0
+    },
+    {
+      "code": "3138",
+      "name": "耀登",
+      "industry": "通信網路業",
+      "market": "TWSE",
+      "symbol": "3138.TW",
+      "capital": 517324260.0
+    },
+    {
+      "code": "3149",
+      "name": "正達",
+      "industry": "光電業",
+      "market": "TWSE",
+      "symbol": "3149.TW",
+      "capital": 2262336040.0
+    },
+    {
+      "code": "3150",
+      "name": "鈺寶-創",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "3150.TW",
+      "capital": 443770010.0
+    },
+    {
+      "code": "3164",
+      "name": "景岳",
+      "industry": "生技醫療",
+      "market": "TWSE",
+      "symbol": "3164.TW",
+      "capital": 860103640.0
+    },
+    {
+      "code": "3167",
+      "name": "大量",
+      "industry": "電機機械",
+      "market": "TWSE",
+      "symbol": "3167.TW",
+      "capital": 895134910.0
+    },
+    {
+      "code": "3168",
+      "name": "眾福科",
+      "industry": "光電業",
+      "market": "TWSE",
+      "symbol": "3168.TW",
+      "capital": 750996490.0
+    },
+    {
+      "code": "3189",
+      "name": "景碩",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "3189.TW",
+      "capital": 5269103600.0
+    },
+    {
+      "code": "3209",
+      "name": "全科",
+      "industry": "電子通路業",
+      "market": "TWSE",
+      "symbol": "3209.TW",
+      "capital": 2353911890.0
+    },
+    {
+      "code": "3229",
+      "name": "晟鈦",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "3229.TW",
+      "capital": 642630000.0
+    },
+    {
+      "code": "3231",
+      "name": "緯創",
+      "industry": "電腦及週邊設備業",
+      "market": "TWSE",
+      "symbol": "3231.TW",
+      "capital": 31800522500.0
+    },
+    {
+      "code": "3257",
+      "name": "虹冠電",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "3257.TW",
+      "capital": 798235900.0
+    },
+    {
+      "code": "3266",
+      "name": "昇陽",
+      "industry": "建材營造",
+      "market": "TWSE",
+      "symbol": "3266.TW",
+      "capital": 3523143090.0
+    },
+    {
+      "code": "3296",
+      "name": "勝德",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "3296.TW",
+      "capital": 967244500.0
+    },
+    {
+      "code": "3305",
+      "name": "昇貿",
+      "industry": "其他電子業",
+      "market": "TWSE",
+      "symbol": "3305.TW",
+      "capital": 1433739740.0
+    },
+    {
+      "code": "3308",
+      "name": "聯德",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "3308.TW",
+      "capital": 600000000.0
+    },
+    {
+      "code": "3311",
+      "name": "閎暉",
+      "industry": "通信網路業",
+      "market": "TWSE",
+      "symbol": "3311.TW",
+      "capital": 1000000000.0
+    },
+    {
+      "code": "3312",
+      "name": "弘憶股",
+      "industry": "電子通路業",
+      "market": "TWSE",
+      "symbol": "3312.TW",
+      "capital": 1826268150.0
+    },
+    {
+      "code": "3321",
+      "name": "同泰",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "3321.TW",
+      "capital": 861137690.0
+    },
+    {
+      "code": "3338",
+      "name": "泰碩",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "3338.TW",
+      "capital": 879081410.0
+    },
+    {
+      "code": "3346",
+      "name": "麗清",
+      "industry": "汽車工業",
+      "market": "TWSE",
+      "symbol": "3346.TW",
+      "capital": 1212283520.0
+    },
+    {
+      "code": "3356",
+      "name": "奇偶",
+      "industry": "光電業",
+      "market": "TWSE",
+      "symbol": "3356.TW",
+      "capital": 685504220.0
+    },
+    {
+      "code": "3376",
+      "name": "新日興",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "3376.TW",
+      "capital": 1957638220.0
+    },
+    {
+      "code": "3380",
+      "name": "明泰",
+      "industry": "通信網路業",
+      "market": "TWSE",
+      "symbol": "3380.TW",
+      "capital": 5417184600.0
+    },
+    {
+      "code": "3406",
+      "name": "玉晶光",
+      "industry": "光電業",
+      "market": "TWSE",
+      "symbol": "3406.TW",
+      "capital": 1127430630.0
+    },
+    {
+      "code": "3413",
+      "name": "京鼎",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "3413.TW",
+      "capital": 1107622800.0
+    },
+    {
+      "code": "3416",
+      "name": "融程電",
+      "industry": "電腦及週邊設備業",
+      "market": "TWSE",
+      "symbol": "3416.TW",
+      "capital": 804937690.0
+    },
+    {
+      "code": "3419",
+      "name": "譁裕",
+      "industry": "通信網路業",
+      "market": "TWSE",
+      "symbol": "3419.TW",
+      "capital": 1204804170.0
+    },
+    {
+      "code": "3432",
+      "name": "台端",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "3432.TW",
+      "capital": 422300000.0
+    },
+    {
+      "code": "3437",
+      "name": "榮創",
+      "industry": "光電業",
+      "market": "TWSE",
+      "symbol": "3437.TW",
+      "capital": 1445480000.0
+    },
+    {
+      "code": "3443",
+      "name": "創意",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "3443.TW",
+      "capital": 1340119110.0
+    },
+    {
+      "code": "3447",
+      "name": "展達",
+      "industry": "通信網路業",
+      "market": "TWSE",
+      "symbol": "3447.TW",
+      "capital": 774491200.0
+    },
+    {
+      "code": "3450",
+      "name": "聯鈞",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "3450.TW",
+      "capital": 1456813820.0
+    },
+    {
+      "code": "3481",
+      "name": "群創",
+      "industry": "光電業",
+      "market": "TWSE",
+      "symbol": "3481.TW",
+      "capital": 79891973370.0
+    },
+    {
+      "code": "3494",
+      "name": "誠研",
+      "industry": "電腦及週邊設備業",
+      "market": "TWSE",
+      "symbol": "3494.TW",
+      "capital": 948000000.0
+    },
+    {
+      "code": "3501",
+      "name": "維熹",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "3501.TW",
+      "capital": 1182579270.0
+    },
+    {
+      "code": "3504",
+      "name": "揚明光",
+      "industry": "光電業",
+      "market": "TWSE",
+      "symbol": "3504.TW",
+      "capital": 1140597850.0
+    },
+    {
+      "code": "3515",
+      "name": "華擎",
+      "industry": "電腦及週邊設備業",
+      "market": "TWSE",
+      "symbol": "3515.TW",
+      "capital": 1235440490.0
+    },
+    {
+      "code": "3518",
+      "name": "柏騰",
+      "industry": "其他電子業",
+      "market": "TWSE",
+      "symbol": "3518.TW",
+      "capital": 1024672300.0
+    },
+    {
+      "code": "3528",
+      "name": "安馳",
+      "industry": "電子通路業",
+      "market": "TWSE",
+      "symbol": "3528.TW",
+      "capital": 666392160.0
+    },
+    {
+      "code": "3530",
+      "name": "晶相光",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "3530.TW",
+      "capital": 774759000.0
+    },
+    {
+      "code": "3532",
+      "name": "台勝科",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "3532.TW",
+      "capital": 3878483000.0
+    },
+    {
+      "code": "3533",
+      "name": "嘉澤",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "3533.TW",
+      "capital": 1125346910.0
+    },
+    {
+      "code": "3535",
+      "name": "晶彩科",
+      "industry": "光電業",
+      "market": "TWSE",
+      "symbol": "3535.TW",
+      "capital": 790523560.0
+    },
+    {
+      "code": "3543",
+      "name": "州巧",
+      "industry": "光電業",
+      "market": "TWSE",
+      "symbol": "3543.TW",
+      "capital": 1102631500.0
+    },
+    {
+      "code": "3545",
+      "name": "敦泰",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "3545.TW",
+      "capital": 2224560160.0
+    },
+    {
+      "code": "3550",
+      "name": "聯穎",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "3550.TW",
+      "capital": 1075500000.0
+    },
+    {
+      "code": "3557",
+      "name": "嘉威",
+      "industry": "綠能環保",
+      "market": "TWSE",
+      "symbol": "3557.TW",
+      "capital": 843154350.0
+    },
+    {
+      "code": "3563",
+      "name": "牧德",
+      "industry": "光電業",
+      "market": "TWSE",
+      "symbol": "3563.TW",
+      "capital": 639608580.0
+    },
+    {
+      "code": "3576",
+      "name": "聯合再生",
+      "industry": "光電業",
+      "market": "TWSE",
+      "symbol": "3576.TW",
+      "capital": 16277953750.0
+    },
+    {
+      "code": "3583",
+      "name": "辛耘",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "3583.TW",
+      "capital": 838586440.0
+    },
+    {
+      "code": "3588",
+      "name": "通嘉",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "3588.TW",
+      "capital": 619931820.0
+    },
+    {
+      "code": "3591",
+      "name": "艾笛森",
+      "industry": "光電業",
+      "market": "TWSE",
+      "symbol": "3591.TW",
+      "capital": 1303868350.0
+    },
+    {
+      "code": "3592",
+      "name": "瑞鼎",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "3592.TW",
+      "capital": 758552260.0
+    },
+    {
+      "code": "3593",
+      "name": "力銘",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "3593.TW",
+      "capital": 608254490.0
+    },
+    {
+      "code": "3596",
+      "name": "智易",
+      "industry": "通信網路業",
+      "market": "TWSE",
+      "symbol": "3596.TW",
+      "capital": 2203543210.0
+    },
+    {
+      "code": "3605",
+      "name": "宏致",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "3605.TW",
+      "capital": 1746974410.0
+    },
+    {
+      "code": "3607",
+      "name": "谷崧",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "3607.TW",
+      "capital": 1216622390.0
+    },
+    {
+      "code": "3617",
+      "name": "碩天",
+      "industry": "其他電子業",
+      "market": "TWSE",
+      "symbol": "3617.TW",
+      "capital": 947660490.0
+    },
+    {
+      "code": "3622",
+      "name": "洋華",
+      "industry": "光電業",
+      "market": "TWSE",
+      "symbol": "3622.TW",
+      "capital": 1513276000.0
+    },
+    {
+      "code": "3645",
+      "name": "達邁",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "3645.TW",
+      "capital": 1367542070.0
+    },
+    {
+      "code": "3652",
+      "name": "精聯",
+      "industry": "電腦及週邊設備業",
+      "market": "TWSE",
+      "symbol": "3652.TW",
+      "capital": 750975000.0
+    },
+    {
+      "code": "3653",
+      "name": "健策",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "3653.TW",
+      "capital": 1467328030.0
+    },
+    {
+      "code": "3661",
+      "name": "世芯-KY",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "3661.TW",
+      "capital": 862702390.0
+    },
+    {
+      "code": "3665",
+      "name": "貿聯-KY",
+      "industry": "其他電子業",
+      "market": "TWSE",
+      "symbol": "3665.TW",
+      "capital": 1995784050.0
+    },
+    {
+      "code": "3669",
+      "name": "圓展",
+      "industry": "通信網路業",
+      "market": "TWSE",
+      "symbol": "3669.TW",
+      "capital": 929199500.0
+    },
+    {
+      "code": "3673",
+      "name": "TPK-KY",
+      "industry": "光電業",
+      "market": "TWSE",
+      "symbol": "3673.TW",
+      "capital": 4066637590.0
+    },
+    {
+      "code": "3679",
+      "name": "新至陞",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "3679.TW",
+      "capital": 630222290.0
+    },
+    {
+      "code": "3686",
+      "name": "達能",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "3686.TW",
+      "capital": 764951180.0
+    },
+    {
+      "code": "3694",
+      "name": "海華",
+      "industry": "通信網路業",
+      "market": "TWSE",
+      "symbol": "3694.TW",
+      "capital": 1549292080.0
+    },
+    {
+      "code": "3701",
+      "name": "大眾控",
+      "industry": "電腦及週邊設備業",
+      "market": "TWSE",
+      "symbol": "3701.TW",
+      "capital": 2366376160.0
+    },
+    {
+      "code": "3702",
+      "name": "大聯大",
+      "industry": "電子通路業",
+      "market": "TWSE",
+      "symbol": "3702.TW",
+      "capital": 16836206990.0
+    },
+    {
+      "code": "3703",
+      "name": "欣陸",
+      "industry": "建材營造",
+      "market": "TWSE",
+      "symbol": "3703.TW",
+      "capital": 8232159800.0
+    },
+    {
+      "code": "3704",
+      "name": "合勤控",
+      "industry": "通信網路業",
+      "market": "TWSE",
+      "symbol": "3704.TW",
+      "capital": 4154449700.0
+    },
+    {
+      "code": "3705",
+      "name": "永信",
+      "industry": "生技醫療",
+      "market": "TWSE",
+      "symbol": "3705.TW",
+      "capital": 2664229830.0
+    },
+    {
+      "code": "3706",
+      "name": "神達",
+      "industry": "電腦及週邊設備業",
+      "market": "TWSE",
+      "symbol": "3706.TW",
+      "capital": 13272124680.0
+    },
+    {
+      "code": "3708",
+      "name": "上緯投控",
+      "industry": "數位雲端",
+      "market": "TWSE",
+      "symbol": "3708.TW",
+      "capital": 921053840.0
+    },
+    {
+      "code": "3711",
+      "name": "日月光投控",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "3711.TW",
+      "capital": 44705722820.0
+    },
+    {
+      "code": "3712",
+      "name": "永崴投控",
+      "industry": "電腦及週邊設備業",
+      "market": "TWSE",
+      "symbol": "3712.TW",
+      "capital": 2462421460.0
+    },
+    {
+      "code": "3714",
+      "name": "富采",
+      "industry": "光電業",
+      "market": "TWSE",
+      "symbol": "3714.TW",
+      "capital": 7379404600.0
+    },
+    {
+      "code": "3715",
+      "name": "定穎投控",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "3715.TW",
+      "capital": 2835745840.0
+    },
+    {
+      "code": "3716",
+      "name": "中化控股",
+      "industry": "生技醫療",
+      "market": "TWSE",
+      "symbol": "3716.TW",
+      "capital": 1505792110.0
+    },
+    {
+      "code": "3717",
+      "name": "聯嘉投控",
+      "industry": "汽車工業",
+      "market": "TWSE",
+      "symbol": "3717.TW",
+      "capital": 2078454450.0
+    },
+    {
+      "code": "4104",
+      "name": "佳醫",
+      "industry": "生技醫療",
+      "market": "TWSE",
+      "symbol": "4104.TW",
+      "capital": 1883674560.0
+    },
+    {
+      "code": "4106",
+      "name": "雃博",
+      "industry": "生技醫療",
+      "market": "TWSE",
+      "symbol": "4106.TW",
+      "capital": 1009115570.0
+    },
+    {
+      "code": "4108",
+      "name": "懷特",
+      "industry": "生技醫療",
+      "market": "TWSE",
+      "symbol": "4108.TW",
+      "capital": 1986188790.0
+    },
+    {
+      "code": "4119",
+      "name": "旭富",
+      "industry": "生技醫療",
+      "market": "TWSE",
+      "symbol": "4119.TW",
+      "capital": 1195086340.0
+    },
+    {
+      "code": "4133",
+      "name": "亞諾法",
+      "industry": "生技醫療",
+      "market": "TWSE",
+      "symbol": "4133.TW",
+      "capital": 605535940.0
+    },
+    {
+      "code": "4137",
+      "name": "麗豐-KY",
+      "industry": "生技醫療",
+      "market": "TWSE",
+      "symbol": "4137.TW",
+      "capital": 824923500.0
+    },
+    {
+      "code": "4142",
+      "name": "國光生",
+      "industry": "生技醫療",
+      "market": "TWSE",
+      "symbol": "4142.TW",
+      "capital": 4295077500.0
+    },
+    {
+      "code": "4148",
+      "name": "全宇生技-KY",
+      "industry": "生技醫療",
+      "market": "TWSE",
+      "symbol": "4148.TW",
+      "capital": 672357010.0
+    },
+    {
+      "code": "4155",
+      "name": "訊映",
+      "industry": "生技醫療",
+      "market": "TWSE",
+      "symbol": "4155.TW",
+      "capital": 1446841640.0
+    },
+    {
+      "code": "4164",
+      "name": "承業醫",
+      "industry": "生技醫療",
+      "market": "TWSE",
+      "symbol": "4164.TW",
+      "capital": 1953109890.0
+    },
+    {
+      "code": "4169",
+      "name": "泰宗",
+      "industry": "生技醫療",
+      "market": "TWSE",
+      "symbol": "4169.TW",
+      "capital": 664316120.0
+    },
+    {
+      "code": "4178",
+      "name": "永笙-KY",
+      "industry": "生技醫療",
+      "market": "TWSE",
+      "symbol": "4178.TW",
+      "capital": 2158669810.0
+    },
+    {
+      "code": "4190",
+      "name": "佐登-KY",
+      "industry": "生技醫療",
+      "market": "TWSE",
+      "symbol": "4190.TW",
+      "capital": 614459570.0
+    },
+    {
+      "code": "4195",
+      "name": "基米-創",
+      "industry": "生技醫療",
+      "market": "TWSE",
+      "symbol": "4195.TW",
+      "capital": 800000570.0
+    },
+    {
+      "code": "4306",
+      "name": "炎洲",
+      "industry": "塑膠工業",
+      "market": "TWSE",
+      "symbol": "4306.TW",
+      "capital": 6767572160.0
+    },
+    {
+      "code": "4414",
+      "name": "如興",
+      "industry": "紡織纖維",
+      "market": "TWSE",
+      "symbol": "4414.TW",
+      "capital": 2637957730.0
+    },
+    {
+      "code": "4426",
+      "name": "利勤",
+      "industry": "紡織纖維",
+      "market": "TWSE",
+      "symbol": "4426.TW",
+      "capital": 1726771980.0
+    },
+    {
+      "code": "4438",
+      "name": "廣越",
+      "industry": "紡織纖維",
+      "market": "TWSE",
+      "symbol": "4438.TW",
+      "capital": 1134254550.0
+    },
+    {
+      "code": "4439",
+      "name": "冠星-KY",
+      "industry": "紡織纖維",
+      "market": "TWSE",
+      "symbol": "4439.TW",
+      "capital": 381162010.0
+    },
+    {
+      "code": "4440",
+      "name": "宜新實業",
+      "industry": "紡織纖維",
+      "market": "TWSE",
+      "symbol": "4440.TW",
+      "capital": 675980000.0
+    },
+    {
+      "code": "4441",
+      "name": "振大環球",
+      "industry": "紡織纖維",
+      "market": "TWSE",
+      "symbol": "4441.TW",
+      "capital": 681755780.0
+    },
+    {
+      "code": "4526",
+      "name": "東台",
+      "industry": "電機機械",
+      "market": "TWSE",
+      "symbol": "4526.TW",
+      "capital": 2548264610.0
+    },
+    {
+      "code": "4532",
+      "name": "瑞智",
+      "industry": "電機機械",
+      "market": "TWSE",
+      "symbol": "4532.TW",
+      "capital": 4948951050.0
+    },
+    {
+      "code": "4536",
+      "name": "拓凱",
+      "industry": "居家生活",
+      "market": "TWSE",
+      "symbol": "4536.TW",
+      "capital": 908200000.0
+    },
+    {
+      "code": "4540",
+      "name": "全球傳動",
+      "industry": "電機機械",
+      "market": "TWSE",
+      "symbol": "4540.TW",
+      "capital": 1151867240.0
+    },
+    {
+      "code": "4545",
+      "name": "銘鈺",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "4545.TW",
+      "capital": 770000000.0
+    },
+    {
+      "code": "4551",
+      "name": "智伸科",
+      "industry": "汽車工業",
+      "market": "TWSE",
+      "symbol": "4551.TW",
+      "capital": 1152224980.0
+    },
+    {
+      "code": "4552",
+      "name": "力達-KY",
+      "industry": "電機機械",
+      "market": "TWSE",
+      "symbol": "4552.TW",
+      "capital": 1160000000.0
+    },
+    {
+      "code": "4555",
+      "name": "氣立",
+      "industry": "電機機械",
+      "market": "TWSE",
+      "symbol": "4555.TW",
+      "capital": 699876530.0
+    },
+    {
+      "code": "4557",
+      "name": "永新-KY",
+      "industry": "汽車工業",
+      "market": "TWSE",
+      "symbol": "4557.TW",
+      "capital": 479718400.0
+    },
+    {
+      "code": "4560",
+      "name": "強信-KY",
+      "industry": "電機機械",
+      "market": "TWSE",
+      "symbol": "4560.TW",
+      "capital": 680972400.0
+    },
+    {
+      "code": "4562",
+      "name": "穎漢",
+      "industry": "電機機械",
+      "market": "TWSE",
+      "symbol": "4562.TW",
+      "capital": 875460000.0
+    },
+    {
+      "code": "4564",
+      "name": "元翎",
+      "industry": "電機機械",
+      "market": "TWSE",
+      "symbol": "4564.TW",
+      "capital": 2327883030.0
+    },
+    {
+      "code": "4566",
+      "name": "時碩工業",
+      "industry": "電機機械",
+      "market": "TWSE",
+      "symbol": "4566.TW",
+      "capital": 1102830470.0
+    },
+    {
+      "code": "4569",
+      "name": "六方科-KY",
+      "industry": "汽車工業",
+      "market": "TWSE",
+      "symbol": "4569.TW",
+      "capital": 306000000.0
+    },
+    {
+      "code": "4571",
+      "name": "鈞興-KY",
+      "industry": "電機機械",
+      "market": "TWSE",
+      "symbol": "4571.TW",
+      "capital": 530171150.0
+    },
+    {
+      "code": "4572",
+      "name": "駐龍",
+      "industry": "電機機械",
+      "market": "TWSE",
+      "symbol": "4572.TW",
+      "capital": 400186790.0
+    },
+    {
+      "code": "4576",
+      "name": "大銀微系統",
+      "industry": "電機機械",
+      "market": "TWSE",
+      "symbol": "4576.TW",
+      "capital": 1198018480.0
+    },
+    {
+      "code": "4581",
+      "name": "光隆精密-KY",
+      "industry": "汽車工業",
+      "market": "TWSE",
+      "symbol": "4581.TW",
+      "capital": 338990000.0
+    },
+    {
+      "code": "4582",
+      "name": "聚恆-創",
+      "industry": "數位雲端",
+      "market": "TWSE",
+      "symbol": "4582.TW",
+      "capital": 754800000.0
+    },
+    {
+      "code": "4583",
+      "name": "台灣精銳",
+      "industry": "電機機械",
+      "market": "TWSE",
+      "symbol": "4583.TW",
+      "capital": 801713510.0
+    },
+    {
+      "code": "4585",
+      "name": "達明",
+      "industry": "其他電子業",
+      "market": "TWSE",
+      "symbol": "4585.TW",
+      "capital": 1046090000.0
+    },
+    {
+      "code": "4588",
+      "name": "玖鼎電力",
+      "industry": "其他電子業",
+      "market": "TWSE",
+      "symbol": "4588.TW",
+      "capital": 429850000.0
+    },
+    {
+      "code": "4590",
+      "name": "富田-創",
+      "industry": "電機機械",
+      "market": "TWSE",
+      "symbol": "4590.TW",
+      "capital": 548384000.0
+    },
+    {
+      "code": "4720",
+      "name": "德淵",
+      "industry": "化學工業",
+      "market": "TWSE",
+      "symbol": "4720.TW",
+      "capital": 1145160370.0
+    },
+    {
+      "code": "4722",
+      "name": "國精化",
+      "industry": "化學工業",
+      "market": "TWSE",
+      "symbol": "4722.TW",
+      "capital": 1027849140.0
+    },
+    {
+      "code": "4736",
+      "name": "泰博",
+      "industry": "生技醫療",
+      "market": "TWSE",
+      "symbol": "4736.TW",
+      "capital": 953744690.0
+    },
+    {
+      "code": "4737",
+      "name": "華廣",
+      "industry": "生技醫療",
+      "market": "TWSE",
+      "symbol": "4737.TW",
+      "capital": 773280530.0
+    },
+    {
+      "code": "4739",
+      "name": "康普",
+      "industry": "化學工業",
+      "market": "TWSE",
+      "symbol": "4739.TW",
+      "capital": 1246492690.0
+    },
+    {
+      "code": "4746",
+      "name": "台耀",
+      "industry": "生技醫療",
+      "market": "TWSE",
+      "symbol": "4746.TW",
+      "capital": 1202559630.0
+    },
+    {
+      "code": "4755",
+      "name": "三福化",
+      "industry": "化學工業",
+      "market": "TWSE",
+      "symbol": "4755.TW",
+      "capital": 1007060000.0
+    },
+    {
+      "code": "4763",
+      "name": "材料*-KY",
+      "industry": "化學工業",
+      "market": "TWSE",
+      "symbol": "4763.TW",
+      "capital": 989146670.0
+    },
+    {
+      "code": "4764",
+      "name": "雙鍵",
+      "industry": "化學工業",
+      "market": "TWSE",
+      "symbol": "4764.TW",
+      "capital": 855420620.0
+    },
+    {
+      "code": "4766",
+      "name": "南寶",
+      "industry": "化學工業",
+      "market": "TWSE",
+      "symbol": "4766.TW",
+      "capital": 1205707800.0
+    },
+    {
+      "code": "4770",
+      "name": "上品",
+      "industry": "化學工業",
+      "market": "TWSE",
+      "symbol": "4770.TW",
+      "capital": 799760000.0
+    },
+    {
+      "code": "4771",
+      "name": "望隼",
+      "industry": "生技醫療",
+      "market": "TWSE",
+      "symbol": "4771.TW",
+      "capital": 587087000.0
+    },
+    {
+      "code": "4807",
+      "name": "日成-KY",
+      "industry": "貿易百貨",
+      "market": "TWSE",
+      "symbol": "4807.TW",
+      "capital": 489960320.0
+    },
+    {
+      "code": "4904",
+      "name": "遠傳",
+      "industry": "通信網路業",
+      "market": "TWSE",
+      "symbol": "4904.TW",
+      "capital": 36077053570.0
+    },
+    {
+      "code": "4906",
+      "name": "正文",
+      "industry": "通信網路業",
+      "market": "TWSE",
+      "symbol": "4906.TW",
+      "capital": 4363534710.0
+    },
+    {
+      "code": "4912",
+      "name": "聯德控股-KY",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "4912.TW",
+      "capital": 669930990.0
+    },
+    {
+      "code": "4915",
+      "name": "致伸",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "4915.TW",
+      "capital": 4718808240.0
+    },
+    {
+      "code": "4916",
+      "name": "事欣科",
+      "industry": "電腦及週邊設備業",
+      "market": "TWSE",
+      "symbol": "4916.TW",
+      "capital": 1237140730.0
+    },
+    {
+      "code": "4919",
+      "name": "新唐",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "4919.TW",
+      "capital": 4197652680.0
+    },
+    {
+      "code": "4927",
+      "name": "泰鼎-KY",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "4927.TW",
+      "capital": 2649379880.0
+    },
+    {
+      "code": "4930",
+      "name": "燦星網",
+      "industry": "電器電纜",
+      "market": "TWSE",
+      "symbol": "4930.TW",
+      "capital": 800000000.0
+    },
+    {
+      "code": "4934",
+      "name": "太極",
+      "industry": "光電業",
+      "market": "TWSE",
+      "symbol": "4934.TW",
+      "capital": 2250000000.0
+    },
+    {
+      "code": "4935",
+      "name": "茂林-KY",
+      "industry": "光電業",
+      "market": "TWSE",
+      "symbol": "4935.TW",
+      "capital": 1288640910.0
+    },
+    {
+      "code": "4938",
+      "name": "和碩",
+      "industry": "電腦及週邊設備業",
+      "market": "TWSE",
+      "symbol": "4938.TW",
+      "capital": 26820441030.0
+    },
+    {
+      "code": "4942",
+      "name": "嘉彰",
+      "industry": "光電業",
+      "market": "TWSE",
+      "symbol": "4942.TW",
+      "capital": 1423676130.0
+    },
+    {
+      "code": "4943",
+      "name": "康控-KY",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "4943.TW",
+      "capital": 1266943530.0
+    },
+    {
+      "code": "4949",
+      "name": "有成精密",
+      "industry": "光電業",
+      "market": "TWSE",
+      "symbol": "4949.TW",
+      "capital": 677031430.0
+    },
+    {
+      "code": "4952",
+      "name": "凌通",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "4952.TW",
+      "capital": 1088158160.0
+    },
+    {
+      "code": "4956",
+      "name": "光鋐",
+      "industry": "光電業",
+      "market": "TWSE",
+      "symbol": "4956.TW",
+      "capital": 1004082360.0
+    },
+    {
+      "code": "4958",
+      "name": "臻鼎-KY",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "4958.TW",
+      "capital": 11172741650.0
+    },
+    {
+      "code": "4960",
+      "name": "誠美材",
+      "industry": "光電業",
+      "market": "TWSE",
+      "symbol": "4960.TW",
+      "capital": 5717053880.0
+    },
+    {
+      "code": "4961",
+      "name": "天鈺",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "4961.TW",
+      "capital": 1212536030.0
+    },
+    {
+      "code": "4967",
+      "name": "十銓",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "4967.TW",
+      "capital": 849632880.0
+    },
+    {
+      "code": "4968",
+      "name": "立積",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "4968.TW",
+      "capital": 922098980.0
+    },
+    {
+      "code": "4976",
+      "name": "佳凌",
+      "industry": "光電業",
+      "market": "TWSE",
+      "symbol": "4976.TW",
+      "capital": 1412180000.0
+    },
+    {
+      "code": "4977",
+      "name": "眾達-KY",
+      "industry": "通信網路業",
+      "market": "TWSE",
+      "symbol": "4977.TW",
+      "capital": 826898410.0
+    },
+    {
+      "code": "4989",
+      "name": "榮科",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "4989.TW",
+      "capital": 1377765000.0
+    },
+    {
+      "code": "4994",
+      "name": "傳奇",
+      "industry": "資訊服務業",
+      "market": "TWSE",
+      "symbol": "4994.TW",
+      "capital": 663834000.0
+    },
+    {
+      "code": "4999",
+      "name": "鑫禾",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "4999.TW",
+      "capital": 744172000.0
+    },
+    {
+      "code": "5007",
+      "name": "三星",
+      "industry": "鋼鐵工業",
+      "market": "TWSE",
+      "symbol": "5007.TW",
+      "capital": 2949401540.0
+    },
+    {
+      "code": "5203",
+      "name": "訊連",
+      "industry": "資訊服務業",
+      "market": "TWSE",
+      "symbol": "5203.TW",
+      "capital": 793425500.0
+    },
+    {
+      "code": "5215",
+      "name": "科嘉-KY",
+      "industry": "電腦及週邊設備業",
+      "market": "TWSE",
+      "symbol": "5215.TW",
+      "capital": 643375000.0
+    },
+    {
+      "code": "5222",
+      "name": "全訊",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "5222.TW",
+      "capital": 910949680.0
+    },
+    {
+      "code": "5225",
+      "name": "東科-KY",
+      "industry": "其他電子業",
+      "market": "TWSE",
+      "symbol": "5225.TW",
+      "capital": 791364990.0
+    },
+    {
+      "code": "5234",
+      "name": "達興材料",
+      "industry": "光電業",
+      "market": "TWSE",
+      "symbol": "5234.TW",
+      "capital": 1027159110.0
+    },
+    {
+      "code": "5236",
+      "name": "凌陽創新",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "5236.TW",
+      "capital": 600040380.0
+    },
+    {
+      "code": "5243",
+      "name": "乙盛-KY",
+      "industry": "光電業",
+      "market": "TWSE",
+      "symbol": "5243.TW",
+      "capital": 1685289150.0
+    },
+    {
+      "code": "5244",
+      "name": "弘凱",
+      "industry": "光電業",
+      "market": "TWSE",
+      "symbol": "5244.TW",
+      "capital": 682418990.0
+    },
+    {
+      "code": "5258",
+      "name": "虹堡",
+      "industry": "電腦及週邊設備業",
+      "market": "TWSE",
+      "symbol": "5258.TW",
+      "capital": 1103648940.0
+    },
+    {
+      "code": "5269",
+      "name": "祥碩",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "5269.TW",
+      "capital": 741566790.0
+    },
+    {
+      "code": "5283",
+      "name": "禾聯碩",
+      "industry": "電器電纜",
+      "market": "TWSE",
+      "symbol": "5283.TW",
+      "capital": 876005100.0
+    },
+    {
+      "code": "5284",
+      "name": "jpp-KY",
+      "industry": "其他",
+      "market": "TWSE",
+      "symbol": "5284.TW",
+      "capital": 528926830.0
+    },
+    {
+      "code": "5285",
+      "name": "界霖",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "5285.TW",
+      "capital": 1020409260.0
+    },
+    {
+      "code": "5288",
+      "name": "豐祥-KY",
+      "industry": "電機機械",
+      "market": "TWSE",
+      "symbol": "5288.TW",
+      "capital": 696987220.0
+    },
+    {
+      "code": "5292",
+      "name": "華懋",
+      "industry": "數位雲端",
+      "market": "TWSE",
+      "symbol": "5292.TW",
+      "capital": 463188000.0
+    },
+    {
+      "code": "5306",
+      "name": "桂盟",
+      "industry": "居家生活",
+      "market": "TWSE",
+      "symbol": "5306.TW",
+      "capital": 1260007720.0
+    },
+    {
+      "code": "5388",
+      "name": "中磊",
+      "industry": "通信網路業",
+      "market": "TWSE",
+      "symbol": "5388.TW",
+      "capital": 3043425420.0
+    },
+    {
+      "code": "5434",
+      "name": "崇越",
+      "industry": "電子通路業",
+      "market": "TWSE",
+      "symbol": "5434.TW",
+      "capital": 1936576550.0
+    },
+    {
+      "code": "5469",
+      "name": "瀚宇博",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "5469.TW",
+      "capital": 4861660000.0
+    },
+    {
+      "code": "5471",
+      "name": "松翰",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "5471.TW",
+      "capital": 1678770620.0
+    },
+    {
+      "code": "5484",
+      "name": "慧友",
+      "industry": "光電業",
+      "market": "TWSE",
+      "symbol": "5484.TW",
+      "capital": 668010000.0
+    },
+    {
+      "code": "5515",
+      "name": "建國",
+      "industry": "建材營造",
+      "market": "TWSE",
+      "symbol": "5515.TW",
+      "capital": 2016000840.0
+    },
+    {
+      "code": "5519",
+      "name": "隆大",
+      "industry": "建材營造",
+      "market": "TWSE",
+      "symbol": "5519.TW",
+      "capital": 2191971800.0
+    },
+    {
+      "code": "5521",
+      "name": "工信",
+      "industry": "建材營造",
+      "market": "TWSE",
+      "symbol": "5521.TW",
+      "capital": 4922801550.0
+    },
+    {
+      "code": "5522",
+      "name": "遠雄",
+      "industry": "建材營造",
+      "market": "TWSE",
+      "symbol": "5522.TW",
+      "capital": 7815962410.0
+    },
+    {
+      "code": "5525",
+      "name": "順天",
+      "industry": "建材營造",
+      "market": "TWSE",
+      "symbol": "5525.TW",
+      "capital": 3181053780.0
+    },
+    {
+      "code": "5531",
+      "name": "鄉林",
+      "industry": "建材營造",
+      "market": "TWSE",
+      "symbol": "5531.TW",
+      "capital": 10775892450.0
+    },
+    {
+      "code": "5533",
+      "name": "皇鼎",
+      "industry": "建材營造",
+      "market": "TWSE",
+      "symbol": "5533.TW",
+      "capital": 2852449440.0
+    },
+    {
+      "code": "5534",
+      "name": "長虹",
+      "industry": "建材營造",
+      "market": "TWSE",
+      "symbol": "5534.TW",
+      "capital": 3153259600.0
+    },
+    {
+      "code": "5538",
+      "name": "東明-KY",
+      "industry": "鋼鐵工業",
+      "market": "TWSE",
+      "symbol": "5538.TW",
+      "capital": 2012033330.0
+    },
+    {
+      "code": "5546",
+      "name": "永固-KY",
+      "industry": "建材營造",
+      "market": "TWSE",
+      "symbol": "5546.TW",
+      "capital": 823534020.0
+    },
+    {
+      "code": "5607",
+      "name": "遠雄港",
+      "industry": "航運業",
+      "market": "TWSE",
+      "symbol": "5607.TW",
+      "capital": 3705529130.0
+    },
+    {
+      "code": "5608",
+      "name": "四維航",
+      "industry": "航運業",
+      "market": "TWSE",
+      "symbol": "5608.TW",
+      "capital": 3892761380.0
+    },
+    {
+      "code": "5706",
+      "name": "鳳凰",
+      "industry": "觀光餐旅",
+      "market": "TWSE",
+      "symbol": "5706.TW",
+      "capital": 837679200.0
+    },
+    {
+      "code": "5871",
+      "name": "中租-KY",
+      "industry": "其他",
+      "market": "TWSE",
+      "symbol": "5871.TW",
+      "capital": 18614211610.0
+    },
+    {
+      "code": "5876",
+      "name": "上海商銀",
+      "industry": "金融業",
+      "market": "TWSE",
+      "symbol": "5876.TW",
+      "capital": 48616031400.0
+    },
+    {
+      "code": "5880",
+      "name": "合庫金",
+      "industry": "金融業",
+      "market": "TWSE",
+      "symbol": "5880.TW",
+      "capital": 156809369140.0
+    },
+    {
+      "code": "5906",
+      "name": "台南-KY",
+      "industry": "貿易百貨",
+      "market": "TWSE",
+      "symbol": "5906.TW",
+      "capital": 357414120.0
+    },
+    {
+      "code": "5907",
+      "name": "大洋-KY",
+      "industry": "貿易百貨",
+      "market": "TWSE",
+      "symbol": "5907.TW",
+      "capital": 1955310000.0
+    },
+    {
+      "code": "6005",
+      "name": "群益證",
+      "industry": "金融業",
+      "market": "TWSE",
+      "symbol": "6005.TW",
+      "capital": 21709080970.0
+    },
+    {
+      "code": "6024",
+      "name": "群益期",
+      "industry": "金融業",
+      "market": "TWSE",
+      "symbol": "6024.TW",
+      "capital": 2666834030.0
+    },
+    {
+      "code": "6108",
+      "name": "競國",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "6108.TW",
+      "capital": 1544943110.0
+    },
+    {
+      "code": "6112",
+      "name": "邁達特",
+      "industry": "資訊服務業",
+      "market": "TWSE",
+      "symbol": "6112.TW",
+      "capital": 1883573360.0
+    },
+    {
+      "code": "6115",
+      "name": "鎰勝",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "6115.TW",
+      "capital": 1876621540.0
+    },
+    {
+      "code": "6116",
+      "name": "彩晶",
+      "industry": "光電業",
+      "market": "TWSE",
+      "symbol": "6116.TW",
+      "capital": 28586548510.0
+    },
+    {
+      "code": "6117",
+      "name": "迎廣",
+      "industry": "電腦及週邊設備業",
+      "market": "TWSE",
+      "symbol": "6117.TW",
+      "capital": 925454080.0
+    },
+    {
+      "code": "6120",
+      "name": "達運",
+      "industry": "光電業",
+      "market": "TWSE",
+      "symbol": "6120.TW",
+      "capital": 5989996020.0
+    },
+    {
+      "code": "6128",
+      "name": "上福",
+      "industry": "電腦及週邊設備業",
+      "market": "TWSE",
+      "symbol": "6128.TW",
+      "capital": 1275887400.0
+    },
+    {
+      "code": "6133",
+      "name": "金橋",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "6133.TW",
+      "capital": 1170062940.0
+    },
+    {
+      "code": "6136",
+      "name": "富爾特",
+      "industry": "通信網路業",
+      "market": "TWSE",
+      "symbol": "6136.TW",
+      "capital": 1155364120.0
+    },
+    {
+      "code": "6139",
+      "name": "亞翔",
+      "industry": "其他電子業",
+      "market": "TWSE",
+      "symbol": "6139.TW",
+      "capital": 2355757240.0
+    },
+    {
+      "code": "6141",
+      "name": "柏承",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "6141.TW",
+      "capital": 1133540050.0
+    },
+    {
+      "code": "6142",
+      "name": "友勁",
+      "industry": "通信網路業",
+      "market": "TWSE",
+      "symbol": "6142.TW",
+      "capital": 3307792150.0
+    },
+    {
+      "code": "6152",
+      "name": "百一",
+      "industry": "通信網路業",
+      "market": "TWSE",
+      "symbol": "6152.TW",
+      "capital": 1677384630.0
+    },
+    {
+      "code": "6153",
+      "name": "嘉聯益",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "6153.TW",
+      "capital": 6361776940.0
+    },
+    {
+      "code": "6155",
+      "name": "鈞寶",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "6155.TW",
+      "capital": 880239880.0
+    },
+    {
+      "code": "6164",
+      "name": "華興",
+      "industry": "光電業",
+      "market": "TWSE",
+      "symbol": "6164.TW",
+      "capital": 800000000.0
+    },
+    {
+      "code": "6165",
+      "name": "浪凡",
+      "industry": "運動休閒",
+      "market": "TWSE",
+      "symbol": "6165.TW",
+      "capital": 777526230.0
+    },
+    {
+      "code": "6166",
+      "name": "凌華",
+      "industry": "電腦及週邊設備業",
+      "market": "TWSE",
+      "symbol": "6166.TW",
+      "capital": 2177692570.0
+    },
+    {
+      "code": "6168",
+      "name": "宏齊",
+      "industry": "光電業",
+      "market": "TWSE",
+      "symbol": "6168.TW",
+      "capital": 2057618010.0
+    },
+    {
+      "code": "6176",
+      "name": "瑞儀",
+      "industry": "光電業",
+      "market": "TWSE",
+      "symbol": "6176.TW",
+      "capital": 3487704470.0
+    },
+    {
+      "code": "6177",
+      "name": "達麗",
+      "industry": "建材營造",
+      "market": "TWSE",
+      "symbol": "6177.TW",
+      "capital": 4718914260.0
+    },
+    {
+      "code": "6183",
+      "name": "關貿",
+      "industry": "資訊服務業",
+      "market": "TWSE",
+      "symbol": "6183.TW",
+      "capital": 1500000000.0
+    },
+    {
+      "code": "6184",
+      "name": "大豐電",
+      "industry": "其他",
+      "market": "TWSE",
+      "symbol": "6184.TW",
+      "capital": 1582306570.0
+    },
+    {
+      "code": "6189",
+      "name": "豐藝",
+      "industry": "電子通路業",
+      "market": "TWSE",
+      "symbol": "6189.TW",
+      "capital": 2637796570.0
+    },
+    {
+      "code": "6191",
+      "name": "精成科",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "6191.TW",
+      "capital": 4993030000.0
+    },
+    {
+      "code": "6192",
+      "name": "巨路",
+      "industry": "其他電子業",
+      "market": "TWSE",
+      "symbol": "6192.TW",
+      "capital": 961557700.0
+    },
+    {
+      "code": "6196",
+      "name": "帆宣",
+      "industry": "其他電子業",
+      "market": "TWSE",
+      "symbol": "6196.TW",
+      "capital": 2203295290.0
+    },
+    {
+      "code": "6197",
+      "name": "佳必琪",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "6197.TW",
+      "capital": 1220858820.0
+    },
+    {
+      "code": "6201",
+      "name": "亞弘電",
+      "industry": "其他電子業",
+      "market": "TWSE",
+      "symbol": "6201.TW",
+      "capital": 892000000.0
+    },
+    {
+      "code": "6202",
+      "name": "盛群",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "6202.TW",
+      "capital": 2303882000.0
+    },
+    {
+      "code": "6205",
+      "name": "詮欣",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "6205.TW",
+      "capital": 822359070.0
+    },
+    {
+      "code": "6206",
+      "name": "飛捷",
+      "industry": "電腦及週邊設備業",
+      "market": "TWSE",
+      "symbol": "6206.TW",
+      "capital": 1430623240.0
+    },
+    {
+      "code": "6209",
+      "name": "今國光",
+      "industry": "光電業",
+      "market": "TWSE",
+      "symbol": "6209.TW",
+      "capital": 1804627020.0
+    },
+    {
+      "code": "6213",
+      "name": "聯茂",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "6213.TW",
+      "capital": 3635622180.0
+    },
+    {
+      "code": "6214",
+      "name": "精誠",
+      "industry": "資訊服務業",
+      "market": "TWSE",
+      "symbol": "6214.TW",
+      "capital": 2722430660.0
+    },
+    {
+      "code": "6215",
+      "name": "和椿",
+      "industry": "其他電子業",
+      "market": "TWSE",
+      "symbol": "6215.TW",
+      "capital": 827896930.0
+    },
+    {
+      "code": "6216",
+      "name": "居易",
+      "industry": "通信網路業",
+      "market": "TWSE",
+      "symbol": "6216.TW",
+      "capital": 972961370.0
+    },
+    {
+      "code": "6224",
+      "name": "聚鼎",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "6224.TW",
+      "capital": 856453610.0
+    },
+    {
+      "code": "6225",
+      "name": "天瀚",
+      "industry": "光電業",
+      "market": "TWSE",
+      "symbol": "6225.TW",
+      "capital": 278000000.0
+    },
+    {
+      "code": "6226",
+      "name": "光鼎",
+      "industry": "光電業",
+      "market": "TWSE",
+      "symbol": "6226.TW",
+      "capital": 1155347890.0
+    },
+    {
+      "code": "6230",
+      "name": "尼得科超眾",
+      "industry": "電腦及週邊設備業",
+      "market": "TWSE",
+      "symbol": "6230.TW",
+      "capital": 863433960.0
+    },
+    {
+      "code": "6235",
+      "name": "華孚",
+      "industry": "電腦及週邊設備業",
+      "market": "TWSE",
+      "symbol": "6235.TW",
+      "capital": 1999063060.0
+    },
+    {
+      "code": "6239",
+      "name": "力成",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "6239.TW",
+      "capital": 7591466340.0
+    },
+    {
+      "code": "6243",
+      "name": "迅杰",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "6243.TW",
+      "capital": 452688410.0
+    },
+    {
+      "code": "6257",
+      "name": "矽格",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "6257.TW",
+      "capital": 4839123250.0
+    },
+    {
+      "code": "6269",
+      "name": "台郡",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "6269.TW",
+      "capital": 3238314810.0
+    },
+    {
+      "code": "6271",
+      "name": "同欣電",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "6271.TW",
+      "capital": 2090580240.0
+    },
+    {
+      "code": "6272",
+      "name": "驊陞",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "6272.TW",
+      "capital": 817639480.0
+    },
+    {
+      "code": "6277",
+      "name": "宏正",
+      "industry": "電腦及週邊設備業",
+      "market": "TWSE",
+      "symbol": "6277.TW",
+      "capital": 1194711660.0
+    },
+    {
+      "code": "6278",
+      "name": "台表科",
+      "industry": "光電業",
+      "market": "TWSE",
+      "symbol": "6278.TW",
+      "capital": 2923983530.0
+    },
+    {
+      "code": "6281",
+      "name": "全國電",
+      "industry": "電子通路業",
+      "market": "TWSE",
+      "symbol": "6281.TW",
+      "capital": 991729450.0
+    },
+    {
+      "code": "6282",
+      "name": "康舒",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "6282.TW",
+      "capital": 8560312940.0
+    },
+    {
+      "code": "6283",
+      "name": "淳安",
+      "industry": "其他電子業",
+      "market": "TWSE",
+      "symbol": "6283.TW",
+      "capital": 1489813430.0
+    },
+    {
+      "code": "6285",
+      "name": "啟碁",
+      "industry": "通信網路業",
+      "market": "TWSE",
+      "symbol": "6285.TW",
+      "capital": 4834413590.0
+    },
+    {
+      "code": "6405",
+      "name": "悅城",
+      "industry": "光電業",
+      "market": "TWSE",
+      "symbol": "6405.TW",
+      "capital": 658000000.0
+    },
+    {
+      "code": "6409",
+      "name": "旭隼",
+      "industry": "其他電子業",
+      "market": "TWSE",
+      "symbol": "6409.TW",
+      "capital": 882535660.0
+    },
+    {
+      "code": "6412",
+      "name": "群電",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "6412.TW",
+      "capital": 4007691260.0
+    },
+    {
+      "code": "6414",
+      "name": "樺漢",
+      "industry": "電腦及週邊設備業",
+      "market": "TWSE",
+      "symbol": "6414.TW",
+      "capital": 1458863970.0
+    },
+    {
+      "code": "6415",
+      "name": "矽力*-KY",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "6415.TW",
+      "capital": 973632132.0
+    },
+    {
+      "code": "6416",
+      "name": "瑞祺電通",
+      "industry": "通信網路業",
+      "market": "TWSE",
+      "symbol": "6416.TW",
+      "capital": 733484600.0
+    },
+    {
+      "code": "6426",
+      "name": "統新",
+      "industry": "通信網路業",
+      "market": "TWSE",
+      "symbol": "6426.TW",
+      "capital": 385090000.0
+    },
+    {
+      "code": "6431",
+      "name": "光麗-KY",
+      "industry": "生技醫療",
+      "market": "TWSE",
+      "symbol": "6431.TW",
+      "capital": 973988350.0
+    },
+    {
+      "code": "6438",
+      "name": "迅得",
+      "industry": "其他電子業",
+      "market": "TWSE",
+      "symbol": "6438.TW",
+      "capital": 822063250.0
+    },
+    {
+      "code": "6442",
+      "name": "光聖",
+      "industry": "通信網路業",
+      "market": "TWSE",
+      "symbol": "6442.TW",
+      "capital": 804501550.0
+    },
+    {
+      "code": "6443",
+      "name": "元晶",
+      "industry": "光電業",
+      "market": "TWSE",
+      "symbol": "6443.TW",
+      "capital": 5386914660.0
+    },
+    {
+      "code": "6446",
+      "name": "藥華藥",
+      "industry": "生技醫療",
+      "market": "TWSE",
+      "symbol": "6446.TW",
+      "capital": 4224333030.0
+    },
+    {
+      "code": "6449",
+      "name": "鈺邦",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "6449.TW",
+      "capital": 918860140.0
+    },
+    {
+      "code": "6451",
+      "name": "訊芯-KY",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "6451.TW",
+      "capital": 1147256070.0
+    },
+    {
+      "code": "6456",
+      "name": "GIS-KY",
+      "industry": "光電業",
+      "market": "TWSE",
+      "symbol": "6456.TW",
+      "capital": 3379398000.0
+    },
+    {
+      "code": "6464",
+      "name": "台數科",
+      "industry": "其他",
+      "market": "TWSE",
+      "symbol": "6464.TW",
+      "capital": 1339327930.0
+    },
+    {
+      "code": "6472",
+      "name": "保瑞",
+      "industry": "生技醫療",
+      "market": "TWSE",
+      "symbol": "6472.TW",
+      "capital": 1277560590.0
+    },
+    {
+      "code": "6477",
+      "name": "安集",
+      "industry": "光電業",
+      "market": "TWSE",
+      "symbol": "6477.TW",
+      "capital": 1237871960.0
+    },
+    {
+      "code": "6491",
+      "name": "晶碩",
+      "industry": "生技醫療",
+      "market": "TWSE",
+      "symbol": "6491.TW",
+      "capital": 780000000.0
+    },
+    {
+      "code": "6504",
+      "name": "南六",
+      "industry": "其他",
+      "market": "TWSE",
+      "symbol": "6504.TW",
+      "capital": 726000000.0
+    },
+    {
+      "code": "6505",
+      "name": "台塑化",
+      "industry": "油電燃氣業",
+      "market": "TWSE",
+      "symbol": "6505.TW",
+      "capital": 95259596520.0
+    },
+    {
+      "code": "6515",
+      "name": "穎崴",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "6515.TW",
+      "capital": 360380420.0
+    },
+    {
+      "code": "6525",
+      "name": "捷敏-KY",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "6525.TW",
+      "capital": 1290473840.0
+    },
+    {
+      "code": "6526",
+      "name": "達發",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "6526.TW",
+      "capital": 1675055540.0
+    },
+    {
+      "code": "6531",
+      "name": "愛普*",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "6531.TW",
+      "capital": 814232700.0
+    },
+    {
+      "code": "6533",
+      "name": "晶心科",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "6533.TW",
+      "capital": 506509110.0
+    },
+    {
+      "code": "6534",
+      "name": "正瀚-創",
+      "industry": "生技醫療",
+      "market": "TWSE",
+      "symbol": "6534.TW",
+      "capital": 1028000000.0
+    },
+    {
+      "code": "6541",
+      "name": "泰福-KY",
+      "industry": "生技醫療",
+      "market": "TWSE",
+      "symbol": "6541.TW",
+      "capital": 2651253670.0
+    },
+    {
+      "code": "6550",
+      "name": "北極星藥業-KY",
+      "industry": "生技醫療",
+      "market": "TWSE",
+      "symbol": "6550.TW",
+      "capital": 8947926880.0
+    },
+    {
+      "code": "6552",
+      "name": "易華電",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "6552.TW",
+      "capital": 830000000.0
+    },
+    {
+      "code": "6558",
+      "name": "興能高",
+      "industry": "其他電子業",
+      "market": "TWSE",
+      "symbol": "6558.TW",
+      "capital": 937888750.0
+    },
+    {
+      "code": "6573",
+      "name": "虹揚-KY",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "6573.TW",
+      "capital": 804993450.0
+    },
+    {
+      "code": "6579",
+      "name": "研揚",
+      "industry": "電腦及週邊設備業",
+      "market": "TWSE",
+      "symbol": "6579.TW",
+      "capital": 1694512210.0
+    },
+    {
+      "code": "6581",
+      "name": "鋼聯",
+      "industry": "數位雲端",
+      "market": "TWSE",
+      "symbol": "6581.TW",
+      "capital": 1112708870.0
+    },
+    {
+      "code": "6582",
+      "name": "申豐",
+      "industry": "橡膠工業",
+      "market": "TWSE",
+      "symbol": "6582.TW",
+      "capital": 1061741410.0
+    },
+    {
+      "code": "6585",
+      "name": "鼎基",
+      "industry": "其他",
+      "market": "TWSE",
+      "symbol": "6585.TW",
+      "capital": 721335870.0
+    },
+    {
+      "code": "6589",
+      "name": "台康生技",
+      "industry": "生技醫療",
+      "market": "TWSE",
+      "symbol": "6589.TW",
+      "capital": 3068711740.0
+    },
+    {
+      "code": "6591",
+      "name": "動力-KY",
+      "industry": "電腦及週邊設備業",
+      "market": "TWSE",
+      "symbol": "6591.TW",
+      "capital": 411224650.0
+    },
+    {
+      "code": "6592",
+      "name": "和潤企業",
+      "industry": "其他",
+      "market": "TWSE",
+      "symbol": "6592.TW",
+      "capital": 7418450080.0
+    },
+    {
+      "code": "6598",
+      "name": "ABC-KY",
+      "industry": "生技醫療",
+      "market": "TWSE",
+      "symbol": "6598.TW",
+      "capital": 1028190610.0
+    },
+    {
+      "code": "6605",
+      "name": "帝寶",
+      "industry": "汽車工業",
+      "market": "TWSE",
+      "symbol": "6605.TW",
+      "capital": 1658163970.0
+    },
+    {
+      "code": "6606",
+      "name": "建德工業",
+      "industry": "電機機械",
+      "market": "TWSE",
+      "symbol": "6606.TW",
+      "capital": 1103037830.0
+    },
+    {
+      "code": "6614",
+      "name": "資拓宏宇",
+      "industry": "運動休閒",
+      "market": "TWSE",
+      "symbol": "6614.TW",
+      "capital": 806605210.0
+    },
+    {
+      "code": "6625",
+      "name": "必應",
+      "industry": "其他",
+      "market": "TWSE",
+      "symbol": "6625.TW",
+      "capital": 579724880.0
+    },
+    {
+      "code": "6641",
+      "name": "基士德-KY",
+      "industry": "數位雲端",
+      "market": "TWSE",
+      "symbol": "6641.TW",
+      "capital": 365000000.0
+    },
+    {
+      "code": "6645",
+      "name": "金萬林-創",
+      "industry": "生技醫療",
+      "market": "TWSE",
+      "symbol": "6645.TW",
+      "capital": 608640500.0
+    },
+    {
+      "code": "6655",
+      "name": "科定",
+      "industry": "其他",
+      "market": "TWSE",
+      "symbol": "6655.TW",
+      "capital": 805718170.0
+    },
+    {
+      "code": "6657",
+      "name": "華安",
+      "industry": "生技醫療",
+      "market": "TWSE",
+      "symbol": "6657.TW",
+      "capital": 888080000.0
+    },
+    {
+      "code": "6658",
+      "name": "聯策",
+      "industry": "其他電子業",
+      "market": "TWSE",
+      "symbol": "6658.TW",
+      "capital": 363700000.0
+    },
+    {
+      "code": "6666",
+      "name": "羅麗芬-KY",
+      "industry": "生技醫療",
+      "market": "TWSE",
+      "symbol": "6666.TW",
+      "capital": 473880000.0
+    },
+    {
+      "code": "6668",
+      "name": "中揚光",
+      "industry": "光電業",
+      "market": "TWSE",
+      "symbol": "6668.TW",
+      "capital": 1071160870.0
+    },
+    {
+      "code": "6669",
+      "name": "緯穎",
+      "industry": "電腦及週邊設備業",
+      "market": "TWSE",
+      "symbol": "6669.TW",
+      "capital": 1858407910.0
+    },
+    {
+      "code": "6670",
+      "name": "復盛應用",
+      "industry": "居家生活",
+      "market": "TWSE",
+      "symbol": "6670.TW",
+      "capital": 1393869730.0
+    },
+    {
+      "code": "6671",
+      "name": "三能-KY",
+      "industry": "綠能環保",
+      "market": "TWSE",
+      "symbol": "6671.TW",
+      "capital": 607500000.0
+    },
+    {
+      "code": "6672",
+      "name": "騰輝電子-KY",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "6672.TW",
+      "capital": 816202120.0
+    },
+    {
+      "code": "6674",
+      "name": "鋐寶科技",
+      "industry": "通信網路業",
+      "market": "TWSE",
+      "symbol": "6674.TW",
+      "capital": 685506590.0
+    },
+    {
+      "code": "6689",
+      "name": "伊雲谷",
+      "industry": "運動休閒",
+      "market": "TWSE",
+      "symbol": "6689.TW",
+      "capital": 680000000.0
+    },
+    {
+      "code": "6691",
+      "name": "洋基工程",
+      "industry": "其他電子業",
+      "market": "TWSE",
+      "symbol": "6691.TW",
+      "capital": 1214872090.0
+    },
+    {
+      "code": "6695",
+      "name": "芯鼎",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "6695.TW",
+      "capital": 1064776500.0
+    },
+    {
+      "code": "6698",
+      "name": "旭暉應材",
+      "industry": "其他電子業",
+      "market": "TWSE",
+      "symbol": "6698.TW",
+      "capital": 663897530.0
+    },
+    {
+      "code": "6706",
+      "name": "惠特",
+      "industry": "光電業",
+      "market": "TWSE",
+      "symbol": "6706.TW",
+      "capital": 785488650.0
+    },
+    {
+      "code": "6715",
+      "name": "嘉基",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "6715.TW",
+      "capital": 682740260.0
+    },
+    {
+      "code": "6719",
+      "name": "力智",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "6719.TW",
+      "capital": 1054839890.0
+    },
+    {
+      "code": "6722",
+      "name": "輝創",
+      "industry": "其他電子業",
+      "market": "TWSE",
+      "symbol": "6722.TW",
+      "capital": 884000000.0
+    },
+    {
+      "code": "6742",
+      "name": "澤米",
+      "industry": "光電業",
+      "market": "TWSE",
+      "symbol": "6742.TW",
+      "capital": 712679480.0
+    },
+    {
+      "code": "6743",
+      "name": "安普新",
+      "industry": "其他電子業",
+      "market": "TWSE",
+      "symbol": "6743.TW",
+      "capital": 1500000000.0
+    },
+    {
+      "code": "6753",
+      "name": "龍德造船",
+      "industry": "航運業",
+      "market": "TWSE",
+      "symbol": "6753.TW",
+      "capital": 1172532240.0
+    },
+    {
+      "code": "6754",
+      "name": "匯僑設計",
+      "industry": "綠能環保",
+      "market": "TWSE",
+      "symbol": "6754.TW",
+      "capital": 660000000.0
+    },
+    {
+      "code": "6756",
+      "name": "威鋒電子",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "6756.TW",
+      "capital": 699900000.0
+    },
+    {
+      "code": "6757",
+      "name": "台灣虎航",
+      "industry": "航運業",
+      "market": "TWSE",
+      "symbol": "6757.TW",
+      "capital": 4595300000.0
+    },
+    {
+      "code": "6768",
+      "name": "志強-KY",
+      "industry": "居家生活",
+      "market": "TWSE",
+      "symbol": "6768.TW",
+      "capital": 2000950610.0
+    },
+    {
+      "code": "6770",
+      "name": "力積電",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "6770.TW",
+      "capital": 47120808560.0
+    },
+    {
+      "code": "6771",
+      "name": "平和環保-創",
+      "industry": "數位雲端",
+      "market": "TWSE",
+      "symbol": "6771.TW",
+      "capital": 311795000.0
+    },
+    {
+      "code": "6776",
+      "name": "展碁國際",
+      "industry": "電子通路業",
+      "market": "TWSE",
+      "symbol": "6776.TW",
+      "capital": 915814300.0
+    },
+    {
+      "code": "6781",
+      "name": "AES-KY",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "6781.TW",
+      "capital": 854187800.0
+    },
+    {
+      "code": "6782",
+      "name": "視陽",
+      "industry": "生技醫療",
+      "market": "TWSE",
+      "symbol": "6782.TW",
+      "capital": 630000000.0
+    },
+    {
+      "code": "6789",
+      "name": "采鈺",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "6789.TW",
+      "capital": 3182991190.0
+    },
+    {
+      "code": "6790",
+      "name": "永豐實",
+      "industry": "造紙工業",
+      "market": "TWSE",
+      "symbol": "6790.TW",
+      "capital": 2671290210.0
+    },
+    {
+      "code": "6792",
+      "name": "詠業",
+      "industry": "通信網路業",
+      "market": "TWSE",
+      "symbol": "6792.TW",
+      "capital": 478753250.0
+    },
+    {
+      "code": "6794",
+      "name": "向榮生技",
+      "industry": "生技醫療",
+      "market": "TWSE",
+      "symbol": "6794.TW",
+      "capital": 636370000.0
+    },
+    {
+      "code": "6796",
+      "name": "晉弘",
+      "industry": "生技醫療",
+      "market": "TWSE",
+      "symbol": "6796.TW",
+      "capital": 402339700.0
+    },
+    {
+      "code": "6799",
+      "name": "來頡",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "6799.TW",
+      "capital": 436521930.0
+    },
+    {
+      "code": "6805",
+      "name": "富世達",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "6805.TW",
+      "capital": 685538960.0
+    },
+    {
+      "code": "6807",
+      "name": "峰源-KY",
+      "industry": "綠能環保",
+      "market": "TWSE",
+      "symbol": "6807.TW",
+      "capital": 540000000.0
+    },
+    {
+      "code": "6830",
+      "name": "汎銓",
+      "industry": "其他電子業",
+      "market": "TWSE",
+      "symbol": "6830.TW",
+      "capital": 544136150.0
+    },
+    {
+      "code": "6831",
+      "name": "邁科",
+      "industry": "電腦及週邊設備業",
+      "market": "TWSE",
+      "symbol": "6831.TW",
+      "capital": 675000000.0
+    },
+    {
+      "code": "6834",
+      "name": "天二科技",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "6834.TW",
+      "capital": 884710820.0
+    },
+    {
+      "code": "6835",
+      "name": "圓裕",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "6835.TW",
+      "capital": 661722970.0
+    },
+    {
+      "code": "6838",
+      "name": "台新藥",
+      "industry": "生技醫療",
+      "market": "TWSE",
+      "symbol": "6838.TW",
+      "capital": 1509771000.0
+    },
+    {
+      "code": "6854",
+      "name": "錼創科技-KY創",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "6854.TW",
+      "capital": 1176786220.0
+    },
+    {
+      "code": "6861",
+      "name": "睿生光電",
+      "industry": "生技醫療",
+      "market": "TWSE",
+      "symbol": "6861.TW",
+      "capital": 415992500.0
+    },
+    {
+      "code": "6862",
+      "name": "三集瑞-KY",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "6862.TW",
+      "capital": 500000000.0
+    },
+    {
+      "code": "6863",
+      "name": "永道-KY",
+      "industry": "通信網路業",
+      "market": "TWSE",
+      "symbol": "6863.TW",
+      "capital": 748880000.0
+    },
+    {
+      "code": "6869",
+      "name": "雲豹能源",
+      "industry": "數位雲端",
+      "market": "TWSE",
+      "symbol": "6869.TW",
+      "capital": 1378300410.0
+    },
+    {
+      "code": "6873",
+      "name": "泓德能源",
+      "industry": "數位雲端",
+      "market": "TWSE",
+      "symbol": "6873.TW",
+      "capital": 1426490990.0
+    },
+    {
+      "code": "6885",
+      "name": "全福生技",
+      "industry": "生技醫療",
+      "market": "TWSE",
+      "symbol": "6885.TW",
+      "capital": 1330610000.0
+    },
+    {
+      "code": "6887",
+      "name": "寶綠特-KY",
+      "industry": "數位雲端",
+      "market": "TWSE",
+      "symbol": "6887.TW",
+      "capital": 742055120.0
+    },
+    {
+      "code": "6890",
+      "name": "來億-KY",
+      "industry": "居家生活",
+      "market": "TWSE",
+      "symbol": "6890.TW",
+      "capital": 2502958040.0
+    },
+    {
+      "code": "6901",
+      "name": "鑽石投資",
+      "industry": "其他",
+      "market": "TWSE",
+      "symbol": "6901.TW",
+      "capital": 8533600000.0
+    },
+    {
+      "code": "6902",
+      "name": "GOGOLOOK",
+      "industry": "運動休閒",
+      "market": "TWSE",
+      "symbol": "6902.TW",
+      "capital": 355299480.0
+    },
+    {
+      "code": "6906",
+      "name": "現觀科",
+      "industry": "運動休閒",
+      "market": "TWSE",
+      "symbol": "6906.TW",
+      "capital": 335374000.0
+    },
+    {
+      "code": "6908",
+      "name": "宏碁遊戲-創",
+      "industry": "電子通路業",
+      "market": "TWSE",
+      "symbol": "6908.TW",
+      "capital": 371800000.0
+    },
+    {
+      "code": "6909",
+      "name": "創控",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "6909.TW",
+      "capital": 672126000.0
+    },
+    {
+      "code": "6914",
+      "name": "阜爾運通",
+      "industry": "其他",
+      "market": "TWSE",
+      "symbol": "6914.TW",
+      "capital": 662260000.0
+    },
+    {
+      "code": "6916",
+      "name": "華凌",
+      "industry": "光電業",
+      "market": "TWSE",
+      "symbol": "6916.TW",
+      "capital": 675000000.0
+    },
+    {
+      "code": "6918",
+      "name": "愛派司",
+      "industry": "生技醫療",
+      "market": "TWSE",
+      "symbol": "6918.TW",
+      "capital": 345710000.0
+    },
+    {
+      "code": "6919",
+      "name": "康霈*",
+      "industry": "生技醫療",
+      "market": "TWSE",
+      "symbol": "6919.TW",
+      "capital": 778600430.0
+    },
+    {
+      "code": "6921",
+      "name": "嘉雨思-創",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "6921.TW",
+      "capital": 318369410.0
+    },
+    {
+      "code": "6923",
+      "name": "中台",
+      "industry": "數位雲端",
+      "market": "TWSE",
+      "symbol": "6923.TW",
+      "capital": 914880000.0
+    },
+    {
+      "code": "6924",
+      "name": "榮惠-KY創",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "6924.TW",
+      "capital": 206240000.0
+    },
+    {
+      "code": "6928",
+      "name": "攸泰科技",
+      "industry": "電腦及週邊設備業",
+      "market": "TWSE",
+      "symbol": "6928.TW",
+      "capital": 860000000.0
+    },
+    {
+      "code": "6931",
+      "name": "青松健康",
+      "industry": "生技醫療",
+      "market": "TWSE",
+      "symbol": "6931.TW",
+      "capital": 661521600.0
+    },
+    {
+      "code": "6933",
+      "name": "AMAX-KY",
+      "industry": "電腦及週邊設備業",
+      "market": "TWSE",
+      "symbol": "6933.TW",
+      "capital": 424428000.0
+    },
+    {
+      "code": "6934",
+      "name": "心誠鎂",
+      "industry": "生技醫療",
+      "market": "TWSE",
+      "symbol": "6934.TW",
+      "capital": 361303040.0
+    },
+    {
+      "code": "6936",
+      "name": "永鴻生技",
+      "industry": "生技醫療",
+      "market": "TWSE",
+      "symbol": "6936.TW",
+      "capital": 728040000.0
+    },
+    {
+      "code": "6937",
+      "name": "天虹",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "6937.TW",
+      "capital": 676552630.0
+    },
+    {
+      "code": "6944",
+      "name": "兆聯實業",
+      "industry": "數位雲端",
+      "market": "TWSE",
+      "symbol": "6944.TW",
+      "capital": 996942860.0
+    },
+    {
+      "code": "6947",
+      "name": "台鎔科技",
+      "industry": "數位雲端",
+      "market": "TWSE",
+      "symbol": "6947.TW",
+      "capital": 1061263340.0
+    },
+    {
+      "code": "6949",
+      "name": "沛爾生醫-創",
+      "industry": "生技醫療",
+      "market": "TWSE",
+      "symbol": "6949.TW",
+      "capital": 655800500.0
+    },
+    {
+      "code": "6951",
+      "name": "青新-創",
+      "industry": "數位雲端",
+      "market": "TWSE",
+      "symbol": "6951.TW",
+      "capital": 520000000.0
+    },
+    {
+      "code": "6952",
+      "name": "大武山",
+      "industry": "其他",
+      "market": "TWSE",
+      "symbol": "6952.TW",
+      "capital": 683450000.0
+    },
+    {
+      "code": "6955",
+      "name": "邦睿生技-創",
+      "industry": "生技醫療",
+      "market": "TWSE",
+      "symbol": "6955.TW",
+      "capital": 248007850.0
+    },
+    {
+      "code": "6957",
+      "name": "裕慶-KY",
+      "industry": "其他",
+      "market": "TWSE",
+      "symbol": "6957.TW",
+      "capital": 555129500.0
+    },
+    {
+      "code": "6958",
+      "name": "日盛台駿",
+      "industry": "其他",
+      "market": "TWSE",
+      "symbol": "6958.TW",
+      "capital": 4412893600.0
+    },
+    {
+      "code": "6962",
+      "name": "奕力-KY",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "6962.TW",
+      "capital": 4923965650.0
+    },
+    {
+      "code": "6965",
+      "name": "中傑-KY",
+      "industry": "居家生活",
+      "market": "TWSE",
+      "symbol": "6965.TW",
+      "capital": 1563360000.0
+    },
+    {
+      "code": "6969",
+      "name": "成信實業*-創",
+      "industry": "數位雲端",
+      "market": "TWSE",
+      "symbol": "6969.TW",
+      "capital": 709197208.0
+    },
+    {
+      "code": "6988",
+      "name": "威力暘-創",
+      "industry": "汽車工業",
+      "market": "TWSE",
+      "symbol": "6988.TW",
+      "capital": 476000000.0
+    },
+    {
+      "code": "6994",
+      "name": "富威電力",
+      "industry": "數位雲端",
+      "market": "TWSE",
+      "symbol": "6994.TW",
+      "capital": 741620710.0
+    },
+    {
+      "code": "7610",
+      "name": "聯友金屬-創",
+      "industry": "數位雲端",
+      "market": "TWSE",
+      "symbol": "7610.TW",
+      "capital": 583054560.0
+    },
+    {
+      "code": "7631",
+      "name": "聚賢研發-創",
+      "industry": "其他電子業",
+      "market": "TWSE",
+      "symbol": "7631.TW",
+      "capital": 201420000.0
+    },
+    {
+      "code": "7689",
+      "name": "大鵬科CLMX",
+      "industry": "通信網路業",
+      "market": "TWSE",
+      "symbol": "7689.TW",
+      "capital": 585072500.0
+    },
+    {
+      "code": "7705",
+      "name": "三商餐飲",
+      "industry": "觀光餐旅",
+      "market": "TWSE",
+      "symbol": "7705.TW",
+      "capital": 660673040.0
+    },
+    {
+      "code": "7711",
+      "name": "永擎",
+      "industry": "電腦及週邊設備業",
+      "market": "TWSE",
+      "symbol": "7711.TW",
+      "capital": 717004450.0
+    },
+    {
+      "code": "7721",
+      "name": "微程式",
+      "industry": "運動休閒",
+      "market": "TWSE",
+      "symbol": "7721.TW",
+      "capital": 553700000.0
+    },
+    {
+      "code": "7722",
+      "name": "LINEPAY",
+      "industry": "運動休閒",
+      "market": "TWSE",
+      "symbol": "7722.TW",
+      "capital": 714000000.0
+    },
+    {
+      "code": "7730",
+      "name": "暉盛-創",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "7730.TW",
+      "capital": 367967310.0
+    },
+    {
+      "code": "7732",
+      "name": "金興精密",
+      "industry": "汽車工業",
+      "market": "TWSE",
+      "symbol": "7732.TW",
+      "capital": 646800000.0
+    },
+    {
+      "code": "7736",
+      "name": "虎山",
+      "industry": "汽車工業",
+      "market": "TWSE",
+      "symbol": "7736.TW",
+      "capital": 760000000.0
+    },
+    {
+      "code": "7740",
+      "name": "熙特爾-創",
+      "industry": "數位雲端",
+      "market": "TWSE",
+      "symbol": "7740.TW",
+      "capital": 532000000.0
+    },
+    {
+      "code": "7749",
+      "name": "意騰-KY",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "7749.TW",
+      "capital": 464857280.0
+    },
+    {
+      "code": "7750",
+      "name": "新代",
+      "industry": "電機機械",
+      "market": "TWSE",
+      "symbol": "7750.TW",
+      "capital": 718430000.0
+    },
+    {
+      "code": "7760",
+      "name": "享溫馨",
+      "industry": "觀光餐旅",
+      "market": "TWSE",
+      "symbol": "7760.TW",
+      "capital": 660480000.0
+    },
+    {
+      "code": "7765",
+      "name": "中華資安",
+      "industry": "運動休閒",
+      "market": "TWSE",
+      "symbol": "7765.TW",
+      "capital": 406810000.0
+    },
+    {
+      "code": "7768",
+      "name": "頌勝科技",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "7768.TW",
+      "capital": 700650000.0
+    },
+    {
+      "code": "7769",
+      "name": "鴻勁",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "7769.TW",
+      "capital": 1799300000.0
+    },
+    {
+      "code": "7780",
+      "name": "大研生醫*",
+      "industry": "食品工業",
+      "market": "TWSE",
+      "symbol": "7780.TW",
+      "capital": 810024170.0
+    },
+    {
+      "code": "7786",
+      "name": "東方風能",
+      "industry": "數位雲端",
+      "market": "TWSE",
+      "symbol": "7786.TW",
+      "capital": 1759539440.0
+    },
+    {
+      "code": "7788",
+      "name": "松川精密",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "7788.TW",
+      "capital": 797459930.0
+    },
+    {
+      "code": "7791",
+      "name": "皇家可口",
+      "industry": "食品工業",
+      "market": "TWSE",
+      "symbol": "7791.TW",
+      "capital": 800000000.0
+    },
+    {
+      "code": "7795",
+      "name": "長廣",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "7795.TW",
+      "capital": 788285000.0
+    },
+    {
+      "code": "7799",
+      "name": "禾榮科",
+      "industry": "生技醫療",
+      "market": "TWSE",
+      "symbol": "7799.TW",
+      "capital": 1582450000.0
+    },
+    {
+      "code": "7803",
+      "name": "雲象科技-創",
+      "industry": "生技醫療",
+      "market": "TWSE",
+      "symbol": "7803.TW",
+      "capital": 944128880.0
+    },
+    {
+      "code": "7818",
+      "name": "溢泰實業",
+      "industry": "數位雲端",
+      "market": "TWSE",
+      "symbol": "7818.TW",
+      "capital": 1679460000.0
+    },
+    {
+      "code": "7821",
+      "name": "神數",
+      "industry": "汽車工業",
+      "market": "TWSE",
+      "symbol": "7821.TW",
+      "capital": 1219133000.0
+    },
+    {
+      "code": "7822",
+      "name": "倍利科",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "7822.TW",
+      "capital": 455607630.0
+    },
+    {
+      "code": "7823",
+      "name": "奧義賽博-KY創",
+      "industry": "運動休閒",
+      "market": "TWSE",
+      "symbol": "7823.TW",
+      "capital": 334908900.0
+    },
+    {
+      "code": "7827",
+      "name": "漢康-KY創",
+      "industry": "生技醫療",
+      "market": "TWSE",
+      "symbol": "7827.TW",
+      "capital": 1399722620.0
+    },
+    {
+      "code": "7835",
+      "name": "永悅健康-創",
+      "industry": "運動休閒",
+      "market": "TWSE",
+      "symbol": "7835.TW",
+      "capital": 465443670.0
+    },
+    {
+      "code": "7855",
+      "name": "和運租車",
+      "industry": "其他",
+      "market": "TWSE",
+      "symbol": "7855.TW",
+      "capital": 1925279280.0
+    },
+    {
+      "code": "8011",
+      "name": "台通",
+      "industry": "通信網路業",
+      "market": "TWSE",
+      "symbol": "8011.TW",
+      "capital": 1659218910.0
+    },
+    {
+      "code": "8016",
+      "name": "矽創",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "8016.TW",
+      "capital": 1201368760.0
+    },
+    {
+      "code": "8021",
+      "name": "尖點",
+      "industry": "其他電子業",
+      "market": "TWSE",
+      "symbol": "8021.TW",
+      "capital": 1450424670.0
+    },
+    {
+      "code": "8028",
+      "name": "昇陽半導體",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "8028.TW",
+      "capital": 1794917290.0
+    },
+    {
+      "code": "8033",
+      "name": "雷虎",
+      "industry": "其他",
+      "market": "TWSE",
+      "symbol": "8033.TW",
+      "capital": 1646297750.0
+    },
+    {
+      "code": "8039",
+      "name": "台虹",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "8039.TW",
+      "capital": 2636689940.0
+    },
+    {
+      "code": "8045",
+      "name": "達運光電",
+      "industry": "通信網路業",
+      "market": "TWSE",
+      "symbol": "8045.TW",
+      "capital": 950418150.0
+    },
+    {
+      "code": "8046",
+      "name": "南電",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "8046.TW",
+      "capital": 6461654870.0
+    },
+    {
+      "code": "8070",
+      "name": "長華*",
+      "industry": "電子通路業",
+      "market": "TWSE",
+      "symbol": "8070.TW",
+      "capital": 725648455.0
+    },
+    {
+      "code": "8072",
+      "name": "陞泰",
+      "industry": "電子通路業",
+      "market": "TWSE",
+      "symbol": "8072.TW",
+      "capital": 800000000.0
+    },
+    {
+      "code": "8081",
+      "name": "致新",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "8081.TW",
+      "capital": 861720720.0
+    },
+    {
+      "code": "8101",
+      "name": "華冠",
+      "industry": "通信網路業",
+      "market": "TWSE",
+      "symbol": "8101.TW",
+      "capital": 521662160.0
+    },
+    {
+      "code": "8103",
+      "name": "瀚荃",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "8103.TW",
+      "capital": 784366710.0
+    },
+    {
+      "code": "8104",
+      "name": "錸寶",
+      "industry": "光電業",
+      "market": "TWSE",
+      "symbol": "8104.TW",
+      "capital": 1040581920.0
+    },
+    {
+      "code": "8105",
+      "name": "凌巨",
+      "industry": "光電業",
+      "market": "TWSE",
+      "symbol": "8105.TW",
+      "capital": 4415448510.0
+    },
+    {
+      "code": "8110",
+      "name": "華東",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "8110.TW",
+      "capital": 5177398760.0
+    },
+    {
+      "code": "8112",
+      "name": "至上",
+      "industry": "電子通路業",
+      "market": "TWSE",
+      "symbol": "8112.TW",
+      "capital": 5552916980.0
+    },
+    {
+      "code": "8114",
+      "name": "振樺電",
+      "industry": "電腦及週邊設備業",
+      "market": "TWSE",
+      "symbol": "8114.TW",
+      "capital": 1076409190.0
+    },
+    {
+      "code": "8131",
+      "name": "福懋科",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "8131.TW",
+      "capital": 4422222230.0
+    },
+    {
+      "code": "8150",
+      "name": "南茂",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "8150.TW",
+      "capital": 7045231260.0
+    },
+    {
+      "code": "8162",
+      "name": "微矽電子-創",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "8162.TW",
+      "capital": 687020000.0
+    },
+    {
+      "code": "8163",
+      "name": "達方",
+      "industry": "電腦及週邊設備業",
+      "market": "TWSE",
+      "symbol": "8163.TW",
+      "capital": 2800000010.0
+    },
+    {
+      "code": "8201",
+      "name": "無敵",
+      "industry": "其他電子業",
+      "market": "TWSE",
+      "symbol": "8201.TW",
+      "capital": 623662750.0
+    },
+    {
+      "code": "8210",
+      "name": "勤誠",
+      "industry": "電腦及週邊設備業",
+      "market": "TWSE",
+      "symbol": "8210.TW",
+      "capital": 1253191460.0
+    },
+    {
+      "code": "8213",
+      "name": "志超",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "8213.TW",
+      "capital": 2712424880.0
+    },
+    {
+      "code": "8215",
+      "name": "明基材",
+      "industry": "光電業",
+      "market": "TWSE",
+      "symbol": "8215.TW",
+      "capital": 3206745140.0
+    },
+    {
+      "code": "8222",
+      "name": "寶一",
+      "industry": "電機機械",
+      "market": "TWSE",
+      "symbol": "8222.TW",
+      "capital": 685735000.0
+    },
+    {
+      "code": "8249",
+      "name": "菱光",
+      "industry": "電子零組件業",
+      "market": "TWSE",
+      "symbol": "8249.TW",
+      "capital": 1378245000.0
+    },
+    {
+      "code": "8261",
+      "name": "富鼎",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "8261.TW",
+      "capital": 1188783930.0
+    },
+    {
+      "code": "8271",
+      "name": "宇瞻",
+      "industry": "半導體業",
+      "market": "TWSE",
+      "symbol": "8271.TW",
+      "capital": 1296142660.0
+    },
+    {
+      "code": "8341",
+      "name": "日友",
+      "industry": "數位雲端",
+      "market": "TWSE",
+      "symbol": "8341.TW",
+      "capital": 1300000000.0
+    },
+    {
+      "code": "8367",
+      "name": "建新國際",
+      "industry": "航運業",
+      "market": "TWSE",
+      "symbol": "8367.TW",
+      "capital": 921720310.0
+    },
+    {
+      "code": "8374",
+      "name": "羅昇",
+      "industry": "電機機械",
+      "market": "TWSE",
+      "symbol": "8374.TW",
+      "capital": 1122504870.0
+    },
+    {
+      "code": "8404",
+      "name": "百和興業-KY",
+      "industry": "其他",
+      "market": "TWSE",
+      "symbol": "8404.TW",
+      "capital": 4199338840.0
+    },
+    {
+      "code": "8411",
+      "name": "福貞-KY",
+      "industry": "其他",
+      "market": "TWSE",
+      "symbol": "8411.TW",
+      "capital": 2184043190.0
+    },
+    {
+      "code": "8422",
+      "name": "可寧衛*",
+      "industry": "數位雲端",
+      "market": "TWSE",
+      "symbol": "8422.TW",
+      "capital": 1357391830.0
+    },
+    {
+      "code": "8429",
+      "name": "金麗-KY",
+      "industry": "貿易百貨",
+      "market": "TWSE",
+      "symbol": "8429.TW",
+      "capital": 1857471510.0
+    },
+    {
+      "code": "8438",
+      "name": "昶昕",
+      "industry": "數位雲端",
+      "market": "TWSE",
+      "symbol": "8438.TW",
+      "capital": 699430000.0
+    },
+    {
+      "code": "8442",
+      "name": "威宏-KY",
+      "industry": "其他",
+      "market": "TWSE",
+      "symbol": "8442.TW",
+      "capital": 701697640.0
+    },
+    {
+      "code": "8443",
+      "name": "阿瘦",
+      "industry": "貿易百貨",
+      "market": "TWSE",
+      "symbol": "8443.TW",
+      "capital": 668000000.0
+    },
+    {
+      "code": "8454",
+      "name": "富邦媒",
+      "industry": "運動休閒",
+      "market": "TWSE",
+      "symbol": "8454.TW",
+      "capital": 2649752750.0
+    },
+    {
+      "code": "8462",
+      "name": "柏文",
+      "industry": "居家生活",
+      "market": "TWSE",
+      "symbol": "8462.TW",
+      "capital": 803866160.0
+    },
+    {
+      "code": "8463",
+      "name": "潤泰材",
+      "industry": "其他",
+      "market": "TWSE",
+      "symbol": "8463.TW",
+      "capital": 1500000000.0
+    },
+    {
+      "code": "8464",
+      "name": "億豐",
+      "industry": "綠能環保",
+      "market": "TWSE",
+      "symbol": "8464.TW",
+      "capital": 2930202000.0
+    },
+    {
+      "code": "8466",
+      "name": "美吉吉-KY",
+      "industry": "其他",
+      "market": "TWSE",
+      "symbol": "8466.TW",
+      "capital": 794456280.0
+    },
+    {
+      "code": "8467",
+      "name": "波力-KY",
+      "industry": "居家生活",
+      "market": "TWSE",
+      "symbol": "8467.TW",
+      "capital": 483735750.0
+    },
+    {
+      "code": "8473",
+      "name": "山林水",
+      "industry": "數位雲端",
+      "market": "TWSE",
+      "symbol": "8473.TW",
+      "capital": 1823069220.0
+    },
+    {
+      "code": "8476",
+      "name": "台境*",
+      "industry": "數位雲端",
+      "market": "TWSE",
+      "symbol": "8476.TW",
+      "capital": 831131790.0
+    },
+    {
+      "code": "8478",
+      "name": "東哥遊艇",
+      "industry": "居家生活",
+      "market": "TWSE",
+      "symbol": "8478.TW",
+      "capital": 939722760.0
+    },
+    {
+      "code": "8481",
+      "name": "政伸",
+      "industry": "其他",
+      "market": "TWSE",
+      "symbol": "8481.TW",
+      "capital": 666018660.0
+    },
+    {
+      "code": "8482",
+      "name": "商億-KY",
+      "industry": "綠能環保",
+      "market": "TWSE",
+      "symbol": "8482.TW",
+      "capital": 1074440000.0
+    },
+    {
+      "code": "8487",
+      "name": "愛爾達-創",
+      "industry": "運動休閒",
+      "market": "TWSE",
+      "symbol": "8487.TW",
+      "capital": 265350000.0
+    },
+    {
+      "code": "8488",
+      "name": "吉源-KY",
+      "industry": "其他",
+      "market": "TWSE",
+      "symbol": "8488.TW",
+      "capital": 735000000.0
+    },
+    {
+      "code": "8499",
+      "name": "鼎炫-KY",
+      "industry": "其他電子業",
+      "market": "TWSE",
+      "symbol": "8499.TW",
+      "capital": 411655570.0
+    },
+    {
+      "code": "8926",
+      "name": "台汽電",
+      "industry": "油電燃氣業",
+      "market": "TWSE",
+      "symbol": "8926.TW",
+      "capital": 8302820000.0
+    },
+    {
+      "code": "8940",
+      "name": "新天地",
+      "industry": "觀光餐旅",
+      "market": "TWSE",
+      "symbol": "8940.TW",
+      "capital": 674910320.0
+    },
+    {
+      "code": "8996",
+      "name": "高力",
+      "industry": "電機機械",
+      "market": "TWSE",
+      "symbol": "8996.TW",
+      "capital": 935015370.0
+    },
+    {
+      "code": "9103",
+      "name": "美德醫療-DR",
+      "industry": "91",
+      "market": "TWSE",
+      "symbol": "9103.TW",
+      "capital": 827042000.0
+    },
+    {
+      "code": "910322",
+      "name": "康師傅-DR",
+      "industry": "91",
+      "market": "TWSE",
+      "symbol": "910322.TW",
+      "capital": 916513457.0
+    },
+    {
+      "code": "9105",
+      "name": "泰金寶-DR",
+      "industry": "91",
+      "market": "TWSE",
+      "symbol": "9105.TW",
+      "capital": 9383139832.0
+    },
+    {
+      "code": "910861",
+      "name": "神州-DR",
+      "industry": "91",
+      "market": "TWSE",
+      "symbol": "910861.TW",
+      "capital": 644726418.0
+    },
+    {
+      "code": "9110",
+      "name": "越南控-DR",
+      "industry": "91",
+      "market": "TWSE",
+      "symbol": "9110.TW",
+      "capital": 38168000.0
+    },
+    {
+      "code": "911608",
+      "name": "明輝-DR",
+      "industry": "91",
+      "market": "TWSE",
+      "symbol": "911608.TW",
+      "capital": 526896000.0
+    },
+    {
+      "code": "911622",
+      "name": "泰聚亨-DR",
+      "industry": "91",
+      "market": "TWSE",
+      "symbol": "911622.TW",
+      "capital": 3714761903.0
+    },
+    {
+      "code": "911868",
+      "name": "同方友友-DR",
+      "industry": "91",
+      "market": "TWSE",
+      "symbol": "911868.TW",
+      "capital": 209446542.0
+    },
+    {
+      "code": "912000",
+      "name": "晨訊科-DR",
+      "industry": "91",
+      "market": "TWSE",
+      "symbol": "912000.TW",
+      "capital": 1063575000.0
+    },
+    {
+      "code": "9136",
+      "name": "巨騰-DR",
+      "industry": "91",
+      "market": "TWSE",
+      "symbol": "9136.TW",
+      "capital": 440764000.0
+    },
+    {
+      "code": "9802",
+      "name": "鈺齊-KY",
+      "industry": "居家生活",
+      "market": "TWSE",
+      "symbol": "9802.TW",
+      "capital": 2009916730.0
+    },
+    {
+      "code": "9902",
+      "name": "台火",
+      "industry": "其他",
+      "market": "TWSE",
+      "symbol": "9902.TW",
+      "capital": 980496000.0
+    },
+    {
+      "code": "9904",
+      "name": "寶成",
+      "industry": "居家生活",
+      "market": "TWSE",
+      "symbol": "9904.TW",
+      "capital": 29467872130.0
+    },
+    {
+      "code": "9905",
+      "name": "大華",
+      "industry": "其他",
+      "market": "TWSE",
+      "symbol": "9905.TW",
+      "capital": 3050000000.0
+    },
+    {
+      "code": "9906",
+      "name": "欣巴巴",
+      "industry": "建材營造",
+      "market": "TWSE",
+      "symbol": "9906.TW",
+      "capital": 903763580.0
+    },
+    {
+      "code": "9907",
+      "name": "統一實",
+      "industry": "其他",
+      "market": "TWSE",
+      "symbol": "9907.TW",
+      "capital": 15791453420.0
+    },
+    {
+      "code": "9908",
+      "name": "大台北",
+      "industry": "油電燃氣業",
+      "market": "TWSE",
+      "symbol": "9908.TW",
+      "capital": 5163580000.0
+    },
+    {
+      "code": "9910",
+      "name": "豐泰",
+      "industry": "居家生活",
+      "market": "TWSE",
+      "symbol": "9910.TW",
+      "capital": 9874828310.0
+    },
+    {
+      "code": "9911",
+      "name": "櫻花",
+      "industry": "綠能環保",
+      "market": "TWSE",
+      "symbol": "9911.TW",
+      "capital": 2223895840.0
+    },
+    {
+      "code": "9912",
+      "name": "偉聯",
+      "industry": "電腦及週邊設備業",
+      "market": "TWSE",
+      "symbol": "9912.TW",
+      "capital": 537925690.0
+    },
+    {
+      "code": "9914",
+      "name": "美利達",
+      "industry": "居家生活",
+      "market": "TWSE",
+      "symbol": "9914.TW",
+      "capital": 2989838000.0
+    },
+    {
+      "code": "9917",
+      "name": "中保科",
+      "industry": "其他",
+      "market": "TWSE",
+      "symbol": "9917.TW",
+      "capital": 4511970930.0
+    },
+    {
+      "code": "9918",
+      "name": "欣天然",
+      "industry": "油電燃氣業",
+      "market": "TWSE",
+      "symbol": "9918.TW",
+      "capital": 1805374530.0
+    },
+    {
+      "code": "9919",
+      "name": "康那香",
+      "industry": "其他",
+      "market": "TWSE",
+      "symbol": "9919.TW",
+      "capital": 1953627500.0
+    },
+    {
+      "code": "9921",
+      "name": "巨大",
+      "industry": "居家生活",
+      "market": "TWSE",
+      "symbol": "9921.TW",
+      "capital": 3920653950.0
+    },
+    {
+      "code": "9924",
+      "name": "福興",
+      "industry": "綠能環保",
+      "market": "TWSE",
+      "symbol": "9924.TW",
+      "capital": 1507617360.0
+    },
+    {
+      "code": "9925",
+      "name": "新保",
+      "industry": "其他",
+      "market": "TWSE",
+      "symbol": "9925.TW",
+      "capital": 3874896050.0
+    },
+    {
+      "code": "9926",
+      "name": "新海",
+      "industry": "油電燃氣業",
+      "market": "TWSE",
+      "symbol": "9926.TW",
+      "capital": 1795040750.0
+    },
+    {
+      "code": "9927",
+      "name": "泰銘",
+      "industry": "其他",
+      "market": "TWSE",
+      "symbol": "9927.TW",
+      "capital": 1200000000.0
+    },
+    {
+      "code": "9928",
+      "name": "中視",
+      "industry": "其他",
+      "market": "TWSE",
+      "symbol": "9928.TW",
+      "capital": 707245830.0
+    },
+    {
+      "code": "9929",
+      "name": "秋雨",
+      "industry": "其他",
+      "market": "TWSE",
+      "symbol": "9929.TW",
+      "capital": 1012800000.0
+    },
+    {
+      "code": "9930",
+      "name": "中聯資源",
+      "industry": "數位雲端",
+      "market": "TWSE",
+      "symbol": "9930.TW",
+      "capital": 2485403680.0
+    },
+    {
+      "code": "9931",
+      "name": "欣高",
+      "industry": "油電燃氣業",
+      "market": "TWSE",
+      "symbol": "9931.TW",
+      "capital": 1203693030.0
+    },
+    {
+      "code": "9933",
+      "name": "中鼎",
+      "industry": "其他",
+      "market": "TWSE",
+      "symbol": "9933.TW",
+      "capital": 9444370340.0
+    },
+    {
+      "code": "9934",
+      "name": "成霖",
+      "industry": "綠能環保",
+      "market": "TWSE",
+      "symbol": "9934.TW",
+      "capital": 4110169620.0
+    },
+    {
+      "code": "9935",
+      "name": "慶豐富",
+      "industry": "綠能環保",
+      "market": "TWSE",
+      "symbol": "9935.TW",
+      "capital": 1778389260.0
+    },
+    {
+      "code": "9937",
+      "name": "全國",
+      "industry": "油電燃氣業",
+      "market": "TWSE",
+      "symbol": "9937.TW",
+      "capital": 3090430000.0
+    },
+    {
+      "code": "9938",
+      "name": "百和",
+      "industry": "其他",
+      "market": "TWSE",
+      "symbol": "9938.TW",
+      "capital": 2979639020.0
+    },
+    {
+      "code": "9939",
+      "name": "宏全",
+      "industry": "其他",
+      "market": "TWSE",
+      "symbol": "9939.TW",
+      "capital": 2957864750.0
+    },
+    {
+      "code": "9940",
+      "name": "信義",
+      "industry": "其他",
+      "market": "TWSE",
+      "symbol": "9940.TW",
+      "capital": 7368465000.0
+    },
+    {
+      "code": "9941",
+      "name": "裕融",
+      "industry": "其他",
+      "market": "TWSE",
+      "symbol": "9941.TW",
+      "capital": 6756363460.0
+    },
+    {
+      "code": "9942",
+      "name": "茂順",
+      "industry": "其他",
+      "market": "TWSE",
+      "symbol": "9942.TW",
+      "capital": 831613200.0
+    },
+    {
+      "code": "9943",
+      "name": "好樂迪",
+      "industry": "觀光餐旅",
+      "market": "TWSE",
+      "symbol": "9943.TW",
+      "capital": 1251715100.0
+    },
+    {
+      "code": "9944",
+      "name": "新麗",
+      "industry": "其他",
+      "market": "TWSE",
+      "symbol": "9944.TW",
+      "capital": 1059081000.0
+    },
+    {
+      "code": "9945",
+      "name": "潤泰新",
+      "industry": "其他",
+      "market": "TWSE",
+      "symbol": "9945.TW",
+      "capital": 28442250860.0
+    },
+    {
+      "code": "9946",
+      "name": "三發地產",
+      "industry": "建材營造",
+      "market": "TWSE",
+      "symbol": "9946.TW",
+      "capital": 3265541500.0
+    },
+    {
+      "code": "9955",
+      "name": "佳龍",
+      "industry": "數位雲端",
+      "market": "TWSE",
+      "symbol": "9955.TW",
+      "capital": 1044246290.0
+    },
+    {
+      "code": "9958",
+      "name": "世紀鋼",
+      "industry": "鋼鐵工業",
+      "market": "TWSE",
+      "symbol": "9958.TW",
+      "capital": 2468966650.0
+    }
+  ]
+}
