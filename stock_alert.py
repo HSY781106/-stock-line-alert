@@ -1,4 +1,4 @@
-# stock_alert.py V2.10.8
+# stock_alert.py V2.10.9
 # 效能修正版：
 # 1. 全市場資料批次化
 # 2. 單次執行快取
@@ -27,7 +27,7 @@
 # - 保留原本基本面 / 技術 / 籌碼 / 風險 / LINE 功能
 #
 # 股票跌幅 + 15分鐘區間最低價 + 動態估值 + 技術 + 籌碼 + 100分制加碼決策
-# V2.10.8：LINE 低記憶體穩定查詢版；保留 V2.10.7 全部分析功能
+# V2.10.9：LINE 低記憶體穩定查詢版；保留 V2.10.9 全部分析功能
 #          + LINE webhook HMAC-SHA256 簽章驗證 + 群組/聊天室支援
 
 import os
@@ -111,7 +111,7 @@ SUBINDUSTRY_CACHE = {}
 # V2.10.1：LINE 查詢分析鎖，避免多個訊息同時改寫全域快取。
 LINE_ANALYSIS_LOCK = threading.Lock()
 
-# V2.10.7：使用非 daemon 的 ThreadPoolExecutor 執行 LINE 背景分析。
+# V2.10.9：使用非 daemon 的 ThreadPoolExecutor 執行 LINE 背景分析。
 # 不再用 daemon=True 的裸 Thread，降低 Render request 結束後背景工作
 # 被直接終止的風險。完整分析仍在獨立工作執行緒中，不會讓 replyToken 過期。
 from concurrent.futures import ThreadPoolExecutor
@@ -1153,6 +1153,17 @@ def parse_value_chain_html(text, code):
     pattern = r'[►▸]\s*([^>]{1,80}?)\s*>\s*([^►▸]{1,160})'
     matches = re.findall(pattern, plain)
 
+    # Jina Reader 可能把官方 HTML 轉成 Markdown/純文字，箭頭可能
+    # 被移除；在第一種 HTML 文字解析沒有命中時，再接受「產業 > 次產業」
+    # 的單行格式。這只在沒有第一組結果時啟用，避免誤抓頁面其他文字。
+    if not matches:
+        plain_lines = plain.replace('\r', '\n').split('\n')
+        line_pattern = r'^\s*(?:►|▸)?\s*([^>\n]{1,80}?)\s*>\s*([^>\n]{1,160})\s*$'
+        for line in plain_lines:
+            m = re.search(line_pattern, line)
+            if m:
+                matches.append((m.group(1), m.group(2)))
+
     # 第二個 pattern 太寬，只接受合理的產業鏈文字。
     for industry, node in matches:
         industry = normalize_subindustry(industry)
@@ -1192,7 +1203,7 @@ def parse_value_chain_html(text, code):
 
 
 def fetch_value_chain_for_stock(code):
-    """V2.10.7：LINE/Render 次產業同步的多重備援。
+    """V2.10.9：LINE/Render 次產業同步的多重備援。
 
     先使用原本公開平台，再用不同 URL/headers 重試；
     Render 與 GitHub Actions 的網路環境不同，因此不能只依賴單一路徑。
@@ -1237,6 +1248,28 @@ def fetch_value_chain_for_stock(code):
                 last_error = e
         if attempt < 2:
             time.sleep(0.5 * (attempt + 1))
+
+    # V2.10.9 最後免費備援：透過 Jina Reader 讀取同一個官方
+    # TPEx/TWSE 產業價值鏈公開頁面。這不是另一套分類資料，仍然是
+    # ic.tpex.org.tw 官方頁面，只是避免 Render 對 ic.tpex.org.tw 直接
+    # 連線失敗時，LINE 查詢永久顯示「次產業資料不可用」。
+    proxy_url = (
+        'https://r.jina.ai/https://ic.tpex.org.tw/'
+        f'company_chain.php?stk_code={code}'
+    )
+    try:
+        r = requests.get(
+            proxy_url,
+            timeout=12,
+            headers={'User-Agent': 'stock-alert/2.10.9'}
+        )
+        r.raise_for_status()
+        parsed = parse_value_chain_html(r.text, code)
+        if parsed.get('subindustries'):
+            print(f'次產業備援成功：{code}（官方頁面 Reader）')
+            return parsed
+    except Exception as e:
+        last_error = e
 
     print(f'次產業 API失敗：{code} / {last_error}')
     return None
@@ -1602,7 +1635,7 @@ def get_dynamic_subindustry_peers(
     u,
     limit=10
 ):
-    """V2.10.7：動態次產業 Top 10。
+    """V2.10.9：動態次產業 Top 10。
 
     LINE/Render 若啟動時沒有完整次產業快取，查詢時會對
     「同大產業且市值最大的候選股」補抓次產業，直到找到足夠
@@ -1637,7 +1670,7 @@ def get_dynamic_subindustry_peers(
         else:
             missing.append(x)
 
-    # V2.10.7：只對同大產業中市值最大的候選補抓，避免 LINE 查詢時
+    # V2.10.9：只對同大產業中市值最大的候選補抓，避免 LINE 查詢時
     # 對整個市場 1985 檔逐一請求。最多嘗試 60 檔，找到 Top 10 即停止。
     missing.sort(key=lambda x: to_float(x.get('market_cap')) or 0, reverse=True)
     for x in missing[:60]:
@@ -1721,7 +1754,7 @@ def build_universe():
 
     print(
         '\n========== '
-        '建立動態市場股票池 V2.10.8 '
+        '建立動態市場股票池 V2.10.9 '
         '=========='
     )
 
@@ -2887,10 +2920,101 @@ def one_year_pe(
     return sum(x for _, x in v) / len(v), len(v)
 
 
-def yahoo_fund(symbol):
-    """V2.10.7：Yahoo 基本面多層同步。
+def yahoo_timeseries_fund(symbol):
+    """V2.10.9：不依賴 Yahoo quoteSummary/info 的免費基本面備援。
 
-    第一層仍使用 Ticker.info（維持 V2.10.7 行為）。
+    Render 上 yfinance 的 Ticker.info 偶爾會因 Yahoo quoteSummary/crumb
+    限制而拿不到 EPS 成長、ROE、PEG。這裡直接使用 Yahoo 公開的
+    fundamentals-timeseries endpoint，不需要 API key，也不需要 crumb。
+
+    - EPS 成長：最近季度 diluted EPS 對四季前同季度 EPS
+    - ROE：trailing net income / trailing stockholders equity
+    - PEG：trailingPegRatio；若沒有則用 PE / EPS 成長率作估算
+    """
+    key = ('yf_ts_fund', symbol)
+    if key in RUN_CACHE:
+        return RUN_CACHE[key]
+
+    out = {
+        'eps_growth': None,
+        'roe': None,
+        'peg': None,
+        'pe': None,
+        'pb': None,
+        'yield': None
+    }
+
+    now = datetime.now(TW_TZ)
+    period1 = int((now - timedelta(days=900)).timestamp())
+    period2 = int((now + timedelta(days=2)).timestamp())
+    types = ','.join([
+        'quarterlyDilutedEPS',
+        'trailingDilutedEPS',
+        'trailingNetIncome',
+        'trailingStockholdersEquity',
+        'trailingPegRatio'
+    ])
+    url = (
+        'https://query1.finance.yahoo.com/ws/fundamentals-timeseries/v1/'
+        f'finance/timeseries/{symbol}'
+    )
+    params = {
+        'symbol': symbol,
+        'type': types,
+        'period1': period1,
+        'period2': period2,
+        'padTimeSeries': 'true'
+    }
+
+    try:
+        r = requests.get(
+            url,
+            params=params,
+            timeout=8,
+            headers={'User-Agent': 'Mozilla/5.0 stock-alert/2.10.9'}
+        )
+        r.raise_for_status()
+        data = r.json()
+        result = (data.get('timeseries') or {}).get('result') or []
+
+        def values_for(name):
+            vals = []
+            for row in result:
+                if name in row:
+                    vals.extend(row.get(name) or [])
+            vals.sort(key=lambda x: x.get('asOfDate', '') if isinstance(x, dict) else '')
+            return [
+                to_float(x.get('reportedValue', {}).get('raw'))
+                for x in vals
+                if isinstance(x, dict)
+            ]
+
+        eps_q = values_for('quarterlyDilutedEPS')
+        if len(eps_q) >= 5:
+            latest = eps_q[-1]
+            prior_yoy = eps_q[-5]
+            if latest is not None and prior_yoy not in (None, 0):
+                out['eps_growth'] = (latest / prior_yoy - 1) * 100
+
+        ni = values_for('trailingNetIncome')
+        eq = values_for('trailingStockholdersEquity')
+        if ni and eq and ni[-1] is not None and eq[-1] not in (None, 0):
+            out['roe'] = ni[-1] / eq[-1] * 100
+
+        peg = values_for('trailingPegRatio')
+        if peg:
+            out['peg'] = peg[-1]
+    except Exception as e:
+        print(f'Yahoo timeseries fundamentals失敗 {symbol}: {e}')
+
+    RUN_CACHE[key] = out
+    return out
+
+
+def yahoo_fund(symbol):
+    """V2.10.9：Yahoo 基本面多層同步。
+
+    第一層仍使用 Ticker.info（維持 V2.10.9 行為）。
     若 Render 的 Yahoo info 缺少 EPS 成長/ROE/PEG，第二層改讀
     financial statements 計算可取得的指標，避免 LINE 環境全部 N/A。
     """
@@ -2956,6 +3080,16 @@ def yahoo_fund(symbol):
                     break
     except Exception as e:
         print('Yahoo fundamentals失敗', symbol, e)
+
+    # V2.10.9：直接 Yahoo fundamentals-timeseries 最終備援。
+    # 只補缺欄位，不覆蓋原本已成功取得的 Yahoo info 數值。
+    try:
+        ts = yahoo_timeseries_fund(symbol)
+        for k in ('eps_growth', 'roe', 'peg'):
+            if o.get(k) is None and ts.get(k) is not None:
+                o[k] = ts[k]
+    except Exception as e:
+        print(f'Yahoo timeseries補值失敗 {symbol}: {e}')
 
     RUN_CACHE[key] = o
     return o
@@ -3278,7 +3412,7 @@ def institutional(
     if key in INSTITUTIONAL_CACHE:
         return INSTITUTIONAL_CACHE[key]
 
-    # V2.10.8：LINE 查詢絕不載入完整 chip_history.json。
+    # V2.10.9：LINE 查詢絕不載入完整 chip_history.json。
     # T86 每日回傳全市場資料，若把 20 天全部留在 Render 記憶體會很容易
     # 超過 512MB。LINE 模式改用只保存「查詢股票」的精簡快取。
     if LINE_MODE_ACTIVE:
@@ -4726,7 +4860,7 @@ def analysis(
     # --------------------------------------------------------
 
     return (
-        f'📊 股票加碼分析 V2.10.8\n\n'
+        f'📊 股票加碼分析 V2.10.9\n\n'
         f'標的：{name}（{code}）\n'
         f'市場：{market}\n'
         f'產業：{industry}\n'
@@ -4887,7 +5021,7 @@ def line_target_from_event(e):
 
 
 def _background_line_analysis(text, target, u, event_id=None):
-    """V2.10.8：低記憶體背景完整分析。
+    """V2.10.9：低記憶體背景完整分析。
 
     使用 ThreadPoolExecutor（非 daemon）而非裸 daemon Thread，並在分析前後
     明確記錄狀態；完成後用 Push API 回原聊天室。
@@ -4901,7 +5035,9 @@ def _background_line_analysis(text, target, u, event_id=None):
         )
 
         with LINE_ANALYSIS_LOCK:
+            RUN_CACHE['line_mode'] = True
             query_u = u if isinstance(u, dict) and u else build_line_query_universe(text)
+            query_u = prepare_line_subindustries(query_u, text)
             result = analysis(text, query_u, True)
 
         if not result:
@@ -4940,8 +5076,76 @@ def _mark_line_event_seen(event_id):
         return True
 
 
+def prepare_line_subindustries(u, query):
+    """V2.10.9：LINE 查詢前只同步「目標大產業」的必要次產業。
+
+    Render Free 不建立完整 1985 檔次產業快取；收到 2330/3711 後，
+    只找出該股票的大產業，先補目標股，再補同大產業市值前 80 檔。
+    這樣可以保留動態 Top 10，又避免啟動時 OOM。
+    """
+    if not isinstance(u, dict) or not u:
+        return u
+
+    item = resolve_stock(query, u)
+    if not item:
+        return u
+
+    target_code = clean_code(item.get('code'))
+    target_industry = canonical_industry(item.get('industry'))
+
+    targets = [target_code]
+    candidates = []
+    for code, x in u.items():
+        if clean_code(code) == target_code:
+            continue
+        if canonical_industry(x.get('industry')) != target_industry:
+            continue
+        cap = to_float(x.get('market_cap'))
+        if cap is not None:
+            candidates.append((cap, clean_code(code)))
+    candidates.sort(reverse=True)
+    targets.extend(c for _, c in candidates[:80])
+    targets = list(dict.fromkeys(targets))
+
+    cache = load_json(SUBINDUSTRY_CACHE_FILE)
+    data = cache.get('data', {}) if isinstance(cache, dict) else {}
+    if not isinstance(data, dict):
+        data = {}
+
+    missing = []
+    for code in targets:
+        info = data.get(code)
+        subs = info.get('subindustries', []) if isinstance(info, dict) else []
+        if not any(normalize_subindustry(x) for x in subs if normalize_subindustry(x)):
+            missing.append(code)
+
+    print(
+        f'LINE次產業同步：目標={target_code}、同大產業候選={len(candidates)}、'
+        f'需補={len(missing)}'
+    )
+
+    if missing:
+        fetched = _fetch_missing_value_chains(missing)
+        data.update(fetched)
+        if fetched:
+            save_json(
+                SUBINDUSTRY_CACHE_FILE,
+                {
+                    '_cached_at': cache.get('_cached_at', time.time()),
+                    'source': 'TPEx/TWSE Industry Value Chain',
+                    'source_url': VALUE_CHAIN_BASE,
+                    'cache_days': SUBINDUSTRY_CACHE_DAYS,
+                    'data': data
+                }
+            )
+
+    global SUBINDUSTRY_CACHE
+    SUBINDUSTRY_CACHE = data
+    return attach_subindustries(u, data)
+
+
 def build_line_query_universe(query):
-    """V2.10.8：LINE 查詢專用市場資料。
+    """V2.10.9：LINE 查詢專用市場資料。
 
     不在 Render 啟動時建立完整股票池；只有真正收到股票查詢時才建立一次
     市場 metadata。這保留動態次產業/Top10 所需的 code、industry、market_cap，
@@ -4965,7 +5169,7 @@ def build_line_query_universe(query):
 
 
 def release_line_memory():
-    """V2.10.8：清除 LINE 查詢期間的大型一次性快取。"""
+    """V2.10.9：清除 LINE 查詢期間的大型一次性快取。"""
     # 分析完成後整個 RUN_CACHE 都不再需要；尤其 Yahoo DataFrame / info
     # 若留在全域 dict，Render 長時間運作後會逐次累積。
     RUN_CACHE.clear()
@@ -4981,7 +5185,7 @@ def release_line_memory():
 
 
 def handle_event(e, u):
-    """V2.10.8：立即 Reply 確認，再用低記憶體背景分析並 Push。"""
+    """V2.10.9：立即 Reply 確認，再用低記憶體背景分析並 Push。"""
     if (
         e.get('type') != 'message'
         or e.get('message', {}).get('type') != 'text'
@@ -5003,7 +5207,7 @@ def handle_event(e, u):
     if text.lower() in {'help', '說明', '功能', '股票'}:
         ok = reply_line(
             token,
-            '📈 股票加碼分析 Bot V2.10.8\n\n'
+            '📈 股票加碼分析 Bot V2.10.9\n\n'
             '輸入股票代號或名稱即可查詢。\n'
             '例如：2330、台積電、3711、日月光投控\n\n'
             '模型：基本面40 + 技術30 + 籌碼20 + 風險10。\n'
@@ -5052,7 +5256,7 @@ def run_webhook_server():
     app = Flask(__name__)
 
     print('================================')
-    print('LINE Webhook Server V2.10.8')
+    print('LINE Webhook Server V2.10.9')
     print('模式：立即 Reply + 低記憶體背景分析 + Push')
     print('================================')
 
@@ -5061,8 +5265,8 @@ def run_webhook_server():
     if not LINE_CHANNEL_SECRET:
         print('⚠️ 未設定 LINE_CHANNEL_SECRET')
 
-    # V2.10.8：LINE/Render 啟動時不建立 1985 檔完整市場股票池。
-    # V2.10.7 原本在 Web Service 啟動時 force_refresh=True，會同時抓
+    # V2.10.9：LINE/Render 啟動時不建立 1985 檔完整市場股票池。
+    # V2.10.9 原本在 Web Service 啟動時 force_refresh=True，會同時抓
     # TWSE/TPEx 股票池、次產業公開資料並保留大量快取，Render Free 512MB
     # 容易 OOM。LINE 查詢改為「收到查詢後才建立必要資料」，並在分析完成
     # 後釋放大型物件。
@@ -5071,7 +5275,7 @@ def run_webhook_server():
 
     @app.get('/')
     def health():
-        return 'stock_alert V2.10.8 OK', 200
+        return 'stock_alert V2.10.9 OK', 200
 
     @app.get('/health')
     def health2():
