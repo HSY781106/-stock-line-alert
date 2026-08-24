@@ -4618,6 +4618,14 @@ def analysis(
             h
         )
 
+    # 官方 PE/PB/殖利率資料先取出，再交給 LINE 輕量基本面路徑。
+    # V2.10.14 修正：原本 off 在 yahoo_light_fund() 呼叫後才建立，
+    # 導致 LINE 查詢出現 UnboundLocalError。
+    off = pe_data.get(
+        code,
+        {}
+    )
+
     if line_light:
         print(f'LINE輕量分析：基本面資料 {code}', flush=True)
         yf_f = yahoo_light_fund(symbol, off)
@@ -4625,11 +4633,6 @@ def analysis(
         yf_f = yahoo_fund(
             symbol
         )
-
-    off = pe_data.get(
-        code,
-        {}
-    )
 
     pe = (
         off.get('pe')
