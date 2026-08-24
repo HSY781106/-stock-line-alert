@@ -29,13 +29,14 @@ jobs:
           LINE_CHANNEL_ACCESS_TOKEN: ${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }}
         run: python stock_alert.py
 
-      - name: Save alert state and PE history
+      - name: Save alert state, PE history and subindustry cache
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git add alert_state.json pe_history.json
+          git add alert_state.json pe_history.json subindustry_cache.json
 
-          git diff --cached --quiet || git commit -m "Update alert state and PE history"
+          git diff --cached --quiet || git commit -m "Update alert state, PE history and subindustry cache"
 
+          git pull --rebase origin main
           git push
