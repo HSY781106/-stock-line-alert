@@ -1,4 +1,4 @@
-# stock_alert.py V2.10.23
+# stock_alert.py V2.10.24
 # 效能修正版：
 # 1. 全市場資料批次化
 # 2. 單次執行快取
@@ -27,7 +27,7 @@
 # - 保留原本基本面 / 技術 / 籌碼 / 風險 / LINE 功能
 #
 # 股票跌幅 + 15分鐘區間最低價 + 動態估值 + 技術 + 籌碼 + 100分制加碼決策
-# V2.10.23：1985檔全市場技術快取版 + LINE 輕量查詢專用分析路徑；保留 V2.10.19 全部分析功能
+# V2.10.24：LINE 任意股票穩定查詢版 + 1985檔全市場技術快取；保留 V2.10.19 全部分析功能
 #          + LINE webhook HMAC-SHA256 簽章驗證 + 群組/聊天室支援
 #          + Actions 批次建立全市場技術快取；Render LINE 優先只讀快取，避免 Yahoo/TWSE 即時限流
 
@@ -1763,7 +1763,7 @@ def get_subindustry_display(
     )
 
     if not subs:
-        return '次產業資料不可用'
+        return '次產業資料未快取'
 
     return '、'.join(normalize_subindustry(x) for x in subs)
 
@@ -5133,8 +5133,10 @@ def analysis(
         )
     )
 
-    # V2.10.5：LINE/Render 不依賴既有次產業快取。
-    if not subindustries:
+    # V2.10.24：LINE Free 絕對不因次產業缺快取而呼叫 ic.tpex.org.tw。
+    # 任意股票（例如 1101）若不在 Actions 已同步的次產業快取中，
+    # 直接走「同大產業 Top10」備援，不等待外部次產業 API。
+    if (not subindustries) and (not line_light):
         subindustries = ensure_subindustry_for_query(
             code,
             item
@@ -5157,7 +5159,7 @@ def analysis(
             if normalize_subindustry(x)
         )
         if subindustries
-        else '次產業資料不可用'
+        else '次產業資料未快取（LINE不即時查詢）'
     )
 
     # --------------------------------------------------------
@@ -5171,9 +5173,8 @@ def analysis(
         PE_HISTORY_FILE
     )
 
-    if backfill:
+    if backfill and not line_light:
 
-        print(f'LINE輕量分析：PE歷史 {code}', flush=True) if line_light else None
         h = backfill_pe(
             code,
             h,
@@ -5183,6 +5184,18 @@ def analysis(
         save_json(
             PE_HISTORY_FILE,
             h
+        )
+    elif backfill and line_light:
+        # V2.10.24：Render Free 不對「沒有歷史 PE 快取」的任意股票
+        # 往前逐日呼叫 TWSE/TPEX。否則 1101 這類首次查詢會卡在
+        # PE歷史回補，最多搜尋 370 個曆日。只使用 Actions 已存在的歷史資料。
+        cached_valid = sum(
+            1 for v in h.get(code, {}).values()
+            if to_float(v) is not None and 0 < to_float(v) <= PE_MAX_VALID
+        )
+        print(
+            f'LINE PE歷史：只讀快取 {code}，有效 {cached_valid} 筆，不進行即時回補',
+            flush=True
         )
 
     # 官方 PE/PB/殖利率資料先取出，再交給 LINE 輕量基本面路徑。
@@ -5227,13 +5240,30 @@ def analysis(
     # --------------------------------------------------------
 
     print(f'LINE輕量分析：建立同次產業 Top10 {code}', flush=True) if line_light else None
-    peers = get_dynamic_subindustry_peers(
-        code,
-        industry,
-        subindustries,
-        u,
-        10
-    )
+    if line_light and not subindustries:
+        # V2.10.24：次產業未快取時，完全禁止即時補抓。
+        # 改用同大產業、市值 Top10，讓 1101 等任意股票仍可完成分析。
+        peers = []
+        for c, x in u.items():
+            if clean_code(c) == code:
+                continue
+            if canonical_industry(x.get('industry')) != canonical_industry(industry):
+                continue
+            if to_float(x.get('market_cap')) is None:
+                continue
+            peers.append(x)
+        peers.sort(key=lambda x: to_float(x.get('market_cap')) or 0, reverse=True)
+        peers = peers[:10]
+        peer_mode = '同大產業 Top 10（次產業快取不足）'
+    else:
+        peers = get_dynamic_subindustry_peers(
+            code,
+            industry,
+            subindustries,
+            u,
+            10
+        )
+        peer_mode = '動態次產業 Top 10'
 
     vals = []
     for peer_item in peers:
@@ -5484,8 +5514,7 @@ def analysis(
     elif not subindustries:
 
         peer_text = (
-            '⚠️ 無次產業資料，'
-            '本次不進行同次產業排名'
+            '⚠️ 無次產業快取，已改用同大產業市值 Top 10'
         )
 
     else:
@@ -5499,7 +5528,7 @@ def analysis(
     # --------------------------------------------------------
 
     return (
-        f'📊 股票加碼分析 V2.10.23\n\n'
+        f'📊 股票加碼分析 V2.10.24\n\n'
         f'標的：{name}（{code}）\n'
         f'市場：{market}\n'
         f'產業：{industry}\n'
@@ -5509,9 +5538,9 @@ def analysis(
         f'PE：{fmt(pe)}\n'
         f'一年平均PE：{fmt(one)}'
         f'（樣本 {sample}）\n'
-        f'同次產業Top10平均PE：'
+        f'{"同次產業" if subindustries else "同大產業"}Top10平均PE：'
         f'{fmt(peer_mean)}\n'
-        f'同次產業Top10中位數PE：'
+        f'{"同次產業" if subindustries else "同大產業"}Top10中位數PE：'
         f'{fmt(peer_med)}'
         f'（有效 {len(vals)}/10）\n'
         f'PB：{fmt(pb)}\n'
@@ -5522,7 +5551,7 @@ def analysis(
         f'ROE：{fmt(yf_f["roe"])}%\n'
         f'基本面得分：{fs}/40\n\n'
 
-        f'【動態次產業 Top 10】\n'
+        f'【{peer_mode}】\n'
         f'{peer_text}\n\n'
 
         f'【技術面 30分】\n'
@@ -5724,9 +5753,9 @@ def _mark_line_event_seen(event_id):
 def prepare_line_subindustries(u, query):
     """V2.10.19：LINE 查詢前只同步「目標大產業」的必要次產業。
 
-    Render Free 不建立完整 1985 檔次產業快取；收到 2330/3711 後，
-    只找出該股票的大產業，先補目標股，再補同大產業市值前 80 檔。
-    這樣可以保留動態 Top 10，又避免啟動時 OOM。
+    Render Free 不建立完整 1985 檔次產業快取；只讀 Actions 已發布的
+    次產業快取。缺少時不呼叫 TPEx/TWSE，避免任意股票查詢被外部
+    SSL/timeout 卡住；analysis() 會改用同大產業市值 Top 10。
     """
     if not isinstance(u, dict) or not u:
         return u
@@ -5774,31 +5803,19 @@ def prepare_line_subindustries(u, query):
 
     print(
         f'LINE次產業同步：目標={target_code}、同大產業候選={len(candidates)}、'
-        f'需補={len(missing)}'
+        f'快取缺少={len(missing)}'
     )
 
+    # V2.10.24 核心修正：Render Free 絕不補抓次產業。
+    # 1101 這類不在目前 Actions 目標大產業快取的股票，若在這裡
+    # 呼叫 ic.tpex.org.tw，SSL/timeout 會把整個背景工作卡住。
+    # Actions 負責慢速建立快取；LINE 只讀既有快取，缺少時交給
+    # analysis() 使用「同大產業 Top10」備援。
     if missing:
-        # Render Free / LINE 查詢不允許一次補數百檔；只補目標與少量最相關股票。
-        fetch_targets = missing[:20]
-        if len(missing) > len(fetch_targets):
-            print(
-                f'LINE次產業同步：缺少 {len(missing)} 檔，只補前 {len(fetch_targets)} 檔，'
-                '其餘等待 GitHub Actions 公開快取',
-                flush=True
-            )
-        fetched = _fetch_missing_value_chains(fetch_targets)
-        data.update(fetched)
-        if fetched:
-            save_json(
-                SUBINDUSTRY_CACHE_FILE,
-                {
-                    '_cached_at': cache.get('_cached_at', time.time()),
-                    'source': 'TPEx/TWSE Industry Value Chain',
-                    'source_url': VALUE_CHAIN_BASE,
-                    'cache_days': SUBINDUSTRY_CACHE_DAYS,
-                    'data': data
-                }
-            )
+        print(
+            'LINE次產業同步：缺少資料不即時補抓，交由 LINE 輕量分析走同大產業備援',
+            flush=True
+        )
 
     global SUBINDUSTRY_CACHE
     SUBINDUSTRY_CACHE = data
@@ -5876,11 +5893,11 @@ def handle_event(e, u):
     if text.lower() in {'help', '說明', '功能', '股票'}:
         ok = reply_line(
             token,
-            '📈 股票加碼分析 Bot V2.10.23\n\n'
+            '📈 股票加碼分析 Bot V2.10.24\n\n'
             '輸入股票代號或名稱即可查詢。\n'
             '例如：2330、台積電、3711、日月光投控\n\n'
             '模型：基本面40 + 技術30 + 籌碼20 + 風險10。\n'
-            '同業估值：動態次產業 Top 10。\n\n'
+            '同業估值：動態次產業 Top 10；若次產業快取不足則自動改用同大產業 Top 10。\n\n'
             '查詢後會先回覆「分析中」，完成後再把完整結果推送回本聊天室。'
         )
         if not ok:
