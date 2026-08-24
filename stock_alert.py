@@ -1,4 +1,4 @@
-# stock_alert.py V2.10.9
+# stock_alert.py V2.10.10
 # 效能修正版：
 # 1. 全市場資料批次化
 # 2. 單次執行快取
@@ -27,7 +27,7 @@
 # - 保留原本基本面 / 技術 / 籌碼 / 風險 / LINE 功能
 #
 # 股票跌幅 + 15分鐘區間最低價 + 動態估值 + 技術 + 籌碼 + 100分制加碼決策
-# V2.10.9：LINE 低記憶體穩定查詢版；保留 V2.10.9 全部分析功能
+# V2.10.10：LINE 低記憶體穩定查詢版；保留 V2.10.10 全部分析功能
 #          + LINE webhook HMAC-SHA256 簽章驗證 + 群組/聊天室支援
 
 import os
@@ -111,7 +111,7 @@ SUBINDUSTRY_CACHE = {}
 # V2.10.1：LINE 查詢分析鎖，避免多個訊息同時改寫全域快取。
 LINE_ANALYSIS_LOCK = threading.Lock()
 
-# V2.10.9：使用非 daemon 的 ThreadPoolExecutor 執行 LINE 背景分析。
+# V2.10.10：使用非 daemon 的 ThreadPoolExecutor 執行 LINE 背景分析。
 # 不再用 daemon=True 的裸 Thread，降低 Render request 結束後背景工作
 # 被直接終止的風險。完整分析仍在獨立工作執行緒中，不會讓 replyToken 過期。
 from concurrent.futures import ThreadPoolExecutor
@@ -1115,87 +1115,93 @@ class _TextExtractor(__import__('html.parser', fromlist=['HTMLParser']).HTMLPars
 
 
 def parse_value_chain_html(text, code):
-    """
-    解析 TPEx/TWSE 產業價值鏈資訊平台的公司頁面。
+    """解析 TPEx/TWSE 產業價值鏈公司頁面。
 
-    頁面格式例如：
+    V2.10.10：針對 Render/Jina Reader 回傳格式增加多層解析。
+    官方頁面目前可呈現為：
         ► 半導體 > 晶圓製造
-        ► 半導體 > IC封裝測試
-
-    回傳與舊版 FinMind 結構相容的資料：
-        {
-            '2330': {
-                'subindustries': ['晶圓製造'],
-                'records': [...]
-            }
-        }
+    但不同網路環境可能變成 HTML entity、Markdown、換行或 HTML tag
+    夾在箭頭/產業名稱之間，因此不能只依賴單一 regex。
     """
-
-    out = {
-        'subindustries': [],
-        'records': []
-    }
-
+    out = {'subindustries': [], 'records': []}
     if not text:
         return out
 
+    try:
+        raw = html.unescape(str(text))
+    except Exception:
+        raw = str(text)
+
+    # 1) 保留 raw HTML 前先轉成純文字，處理 tag / entity / 空白。
     parser = _TextExtractor()
     try:
-        parser.feed(text)
+        parser.feed(raw)
         plain = parser.text()
     except Exception:
-        plain = text
+        plain = raw
 
-    # HTML 轉文字後，箭頭與 > 之間可能有空白或換行。
-    plain = plain.replace('\r', ' ')
-    plain = re.sub(r'[ \t\n\u00a0]+', ' ', plain)
+    plain = html.unescape(plain)
+    plain = plain.replace('\r', '\n')
+    plain = re.sub(r'[ \t\u00a0]+', ' ', plain)
+    plain = re.sub(r'\n{2,}', '\n', plain)
 
-    pattern = r'[►▸]\s*([^>]{1,80}?)\s*>\s*([^►▸]{1,160})'
-    matches = re.findall(pattern, plain)
+    pairs = []
 
-    # Jina Reader 可能把官方 HTML 轉成 Markdown/純文字，箭頭可能
-    # 被移除；在第一種 HTML 文字解析沒有命中時，再接受「產業 > 次產業」
-    # 的單行格式。這只在沒有第一組結果時啟用，避免誤抓頁面其他文字。
-    if not matches:
-        plain_lines = plain.replace('\r', '\n').split('\n')
-        line_pattern = r'^\s*(?:►|▸)?\s*([^>\n]{1,80}?)\s*>\s*([^>\n]{1,160})\s*$'
-        for line in plain_lines:
-            m = re.search(line_pattern, line)
-            if m:
-                matches.append((m.group(1), m.group(2)))
-
-    # 第二個 pattern 太寬，只接受合理的產業鏈文字。
-    for industry, node in matches:
+    def add_pair(industry, node):
         industry = normalize_subindustry(industry)
         node = normalize_subindustry(node)
-
         if not industry or not node:
-            continue
-
-        # 過濾導覽列 / URL / 非產業鏈內容。
+            return
         if len(industry) > 60 or len(node) > 180:
-            continue
-        if industry in {'個體公司所屬產業鏈如下', '產業鏈簡介'}:
-            continue
+            return
         if 'http' in industry.lower() or 'http' in node.lower():
-            continue
+            return
+        if industry in {'個體公司所屬產業鏈如下', '產業鏈簡介'}:
+            return
         if node.startswith('使用條款') or node.startswith('隱私權'):
-            continue
-
-        # 避免同一條產業鏈重複。
+            return
         key = (industry, node)
-        if key in {
-            (r.get('industry', ''), r.get('sub_industry', ''))
-            for r in out['records']
-        }:
-            continue
+        if key not in pairs:
+            pairs.append(key)
 
+    # 2) 標準 HTMLParser 後的文字。
+    patterns = [
+        r'[►▸▶]\s*([^>\n]{1,80}?)\s*>\s*([^►▸▶\n]{1,160})',
+        r'(?m)^\s*[►▸▶]?\s*([^>\n]{1,80}?)\s*>\s*([^>\n]{1,160})\s*$',
+        r'(?m)^\s*([^>\n]{1,80}?)\s*>\s*([^>\n]{1,160})\s*$',
+    ]
+    for pat in patterns:
+        for m in re.findall(pat, plain):
+            add_pair(m[0], m[1])
+
+    # 3) 有些 Reader 會把箭頭獨立成一行；只在「所屬產業鏈」區段附近
+    #    掃描，避免把導覽列中的 A > B 誤判成產業鏈。
+    marker = plain.find('所屬產業鏈如下')
+    if marker >= 0:
+        section = plain[marker:marker + 6000]
+        for m in re.findall(
+            r'(?:►|▸|▶)?\s*([^>\n]{1,80})\s*>\s*([^>\n]{1,160})',
+            section
+        ):
+            add_pair(m[0], m[1])
+
+    # 4) 最後直接掃描 raw HTML：若箭頭/大於符號被 HTML tag 包住，
+    #    去 tag 後再解析一次。
+    raw_no_tag = re.sub(r'<[^>]+>', ' ', raw)
+    raw_no_tag = html.unescape(raw_no_tag)
+    raw_no_tag = re.sub(r'[ \t\u00a0]+', ' ', raw_no_tag)
+    for m in re.findall(
+        r'[►▸▶]\s*([^>\n]{1,80}?)\s*>\s*([^►▸▶\n]{1,160})',
+        raw_no_tag
+    ):
+        add_pair(m[0], m[1])
+
+    for industry, node in pairs:
         out['records'].append({
             'industry': industry,
             'sub_industry': node,
             'date': datetime.now(TW_TZ).strftime('%Y-%m-%d')
         })
-
         if node not in out['subindustries']:
             out['subindustries'].append(node)
 
@@ -1203,73 +1209,69 @@ def parse_value_chain_html(text, code):
 
 
 def fetch_value_chain_for_stock(code):
-    """V2.10.9：LINE/Render 次產業同步的多重備援。
+    """V2.10.10：LINE/Render 次產業多重免費備援。
 
-    先使用原本公開平台，再用不同 URL/headers 重試；
-    Render 與 GitHub Actions 的網路環境不同，因此不能只依賴單一路徑。
+    優先直接讀證交所/櫃買中心產業價值鏈官方頁面；
+    若 Render 對官方網域連線失敗，再透過 Jina Reader 讀取「同一個官方頁面」。
+    不使用付費 API、不使用股票代碼硬編碼。
     """
     code = clean_code(code)
     if not code or not code.isdigit():
         return None
 
-    urls = [
-        f'{VALUE_CHAIN_BASE}?stk_code={code}',
+    official_urls = [
         f'https://ic.tpex.org.tw/company_chain.php?stk_code={code}',
+        f'http://ic.tpex.org.tw/company_chain.php?stk_code={code}',
     ]
-    headers_list = [
-        {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/126 Safari/537.36',
-            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-            'Accept-Language': 'zh-TW,zh;q=0.9,en;q=0.8',
-            'Referer': 'https://ic.tpex.org.tw/'
-        },
-        {
-            'User-Agent': 'stock-alert/2.10.7',
-            'Accept-Language': 'zh-TW,zh;q=0.9,en;q=0.8'
-        }
-    ]
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/126 Safari/537.36',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+        'Accept-Language': 'zh-TW,zh;q=0.9,en;q=0.8',
+        'Referer': 'https://ic.tpex.org.tw/'
+    }
 
     last_error = None
-    for attempt in range(3):
-        for url, headers in zip(urls, headers_list):
-            try:
-                r = requests.get(url, timeout=VALUE_CHAIN_TIMEOUT, headers=headers)
-                r.raise_for_status()
-                raw = r.content
-                # 官方頁面目前為 UTF-8；保留 BOM/替代解碼，避免 Render 編碼差異。
-                try:
-                    page_text = raw.decode('utf-8-sig')
-                except UnicodeDecodeError:
-                    page_text = raw.decode('cp950', errors='replace')
-                parsed = parse_value_chain_html(page_text, code)
-                if parsed.get('subindustries'):
-                    return parsed
-            except Exception as e:
-                last_error = e
-        if attempt < 2:
-            time.sleep(0.5 * (attempt + 1))
 
-    # V2.10.9 最後免費備援：透過 Jina Reader 讀取同一個官方
-    # TPEx/TWSE 產業價值鏈公開頁面。這不是另一套分類資料，仍然是
-    # ic.tpex.org.tw 官方頁面，只是避免 Render 對 ic.tpex.org.tw 直接
-    # 連線失敗時，LINE 查詢永久顯示「次產業資料不可用」。
-    proxy_url = (
-        'https://r.jina.ai/https://ic.tpex.org.tw/'
-        f'company_chain.php?stk_code={code}'
-    )
-    try:
-        r = requests.get(
-            proxy_url,
-            timeout=12,
-            headers={'User-Agent': 'stock-alert/2.10.9'}
-        )
-        r.raise_for_status()
-        parsed = parse_value_chain_html(r.text, code)
-        if parsed.get('subindustries'):
-            print(f'次產業備援成功：{code}（官方頁面 Reader）')
-            return parsed
-    except Exception as e:
-        last_error = e
+    # A. 官方頁面：最多 2 次，不做長時間重試。
+    for url in official_urls:
+        try:
+            r = requests.get(url, timeout=8, headers=headers, allow_redirects=True)
+            r.raise_for_status()
+            raw = r.content
+            for enc in ('utf-8-sig', 'utf-8', 'cp950', 'big5'):
+                try:
+                    page_text = raw.decode(enc)
+                    break
+                except UnicodeDecodeError:
+                    page_text = None
+            if page_text is None:
+                page_text = raw.decode('utf-8', errors='replace')
+            parsed = parse_value_chain_html(page_text, code)
+            if parsed.get('subindustries'):
+                print(f'次產業取得成功：{code}（官方平台）')
+                return parsed
+        except Exception as e:
+            last_error = e
+
+    # B. Jina Reader：同一個官方 URL，不是另一套分類資料。
+    reader_urls = [
+        f'https://r.jina.ai/https://ic.tpex.org.tw/company_chain.php?stk_code={code}',
+        f'https://r.jina.ai/http://ic.tpex.org.tw/company_chain.php?stk_code={code}',
+    ]
+    for proxy_url in reader_urls:
+        try:
+            r = requests.get(
+                proxy_url,
+                timeout=12,
+                headers={'User-Agent': 'Mozilla/5.0 stock-alert/2.10.10'}
+            )
+            r.raise_for_status()
+            parsed = parse_value_chain_html(r.text, code)
+            if parsed.get('subindustries'):
+                print(f'次產業取得成功：{code}（官方頁面 Reader）')
+                return parsed
+        except Exception as e:
+            last_error = e
 
     print(f'次產業 API失敗：{code} / {last_error}')
     return None
@@ -1635,7 +1637,7 @@ def get_dynamic_subindustry_peers(
     u,
     limit=10
 ):
-    """V2.10.9：動態次產業 Top 10。
+    """V2.10.10：動態次產業 Top 10。
 
     LINE/Render 若啟動時沒有完整次產業快取，查詢時會對
     「同大產業且市值最大的候選股」補抓次產業，直到找到足夠
@@ -1670,7 +1672,7 @@ def get_dynamic_subindustry_peers(
         else:
             missing.append(x)
 
-    # V2.10.9：只對同大產業中市值最大的候選補抓，避免 LINE 查詢時
+    # V2.10.10：只對同大產業中市值最大的候選補抓，避免 LINE 查詢時
     # 對整個市場 1985 檔逐一請求。最多嘗試 60 檔，找到 Top 10 即停止。
     missing.sort(key=lambda x: to_float(x.get('market_cap')) or 0, reverse=True)
     for x in missing[:60]:
@@ -1754,7 +1756,7 @@ def build_universe():
 
     print(
         '\n========== '
-        '建立動態市場股票池 V2.10.9 '
+        '建立動態市場股票池 V2.10.10 '
         '=========='
     )
 
@@ -2921,7 +2923,7 @@ def one_year_pe(
 
 
 def yahoo_timeseries_fund(symbol):
-    """V2.10.9：不依賴 Yahoo quoteSummary/info 的免費基本面備援。
+    """V2.10.10：不依賴 Yahoo quoteSummary/info 的免費基本面備援。
 
     Render 上 yfinance 的 Ticker.info 偶爾會因 Yahoo quoteSummary/crumb
     限制而拿不到 EPS 成長、ROE、PEG。這裡直接使用 Yahoo 公開的
@@ -3012,9 +3014,9 @@ def yahoo_timeseries_fund(symbol):
 
 
 def yahoo_fund(symbol):
-    """V2.10.9：Yahoo 基本面多層同步。
+    """V2.10.10：Yahoo 基本面多層同步。
 
-    第一層仍使用 Ticker.info（維持 V2.10.9 行為）。
+    第一層仍使用 Ticker.info（維持 V2.10.10 行為）。
     若 Render 的 Yahoo info 缺少 EPS 成長/ROE/PEG，第二層改讀
     financial statements 計算可取得的指標，避免 LINE 環境全部 N/A。
     """
@@ -3081,7 +3083,7 @@ def yahoo_fund(symbol):
     except Exception as e:
         print('Yahoo fundamentals失敗', symbol, e)
 
-    # V2.10.9：直接 Yahoo fundamentals-timeseries 最終備援。
+    # V2.10.10：直接 Yahoo fundamentals-timeseries 最終備援。
     # 只補缺欄位，不覆蓋原本已成功取得的 Yahoo info 數值。
     try:
         ts = yahoo_timeseries_fund(symbol)
@@ -3412,7 +3414,7 @@ def institutional(
     if key in INSTITUTIONAL_CACHE:
         return INSTITUTIONAL_CACHE[key]
 
-    # V2.10.9：LINE 查詢絕不載入完整 chip_history.json。
+    # V2.10.10：LINE 查詢絕不載入完整 chip_history.json。
     # T86 每日回傳全市場資料，若把 20 天全部留在 Render 記憶體會很容易
     # 超過 512MB。LINE 模式改用只保存「查詢股票」的精簡快取。
     if LINE_MODE_ACTIVE:
@@ -4860,7 +4862,7 @@ def analysis(
     # --------------------------------------------------------
 
     return (
-        f'📊 股票加碼分析 V2.10.9\n\n'
+        f'📊 股票加碼分析 V2.10.10\n\n'
         f'標的：{name}（{code}）\n'
         f'市場：{market}\n'
         f'產業：{industry}\n'
@@ -5021,7 +5023,7 @@ def line_target_from_event(e):
 
 
 def _background_line_analysis(text, target, u, event_id=None):
-    """V2.10.9：低記憶體背景完整分析。
+    """V2.10.10：低記憶體背景完整分析。
 
     使用 ThreadPoolExecutor（非 daemon）而非裸 daemon Thread，並在分析前後
     明確記錄狀態；完成後用 Push API 回原聊天室。
@@ -5077,7 +5079,7 @@ def _mark_line_event_seen(event_id):
 
 
 def prepare_line_subindustries(u, query):
-    """V2.10.9：LINE 查詢前只同步「目標大產業」的必要次產業。
+    """V2.10.10：LINE 查詢前只同步「目標大產業」的必要次產業。
 
     Render Free 不建立完整 1985 檔次產業快取；收到 2330/3711 後，
     只找出該股票的大產業，先補目標股，再補同大產業市值前 80 檔。
@@ -5145,7 +5147,7 @@ def prepare_line_subindustries(u, query):
 
 
 def build_line_query_universe(query):
-    """V2.10.9：LINE 查詢專用市場資料。
+    """V2.10.10：LINE 查詢專用市場資料。
 
     不在 Render 啟動時建立完整股票池；只有真正收到股票查詢時才建立一次
     市場 metadata。這保留動態次產業/Top10 所需的 code、industry、market_cap，
@@ -5169,7 +5171,7 @@ def build_line_query_universe(query):
 
 
 def release_line_memory():
-    """V2.10.9：清除 LINE 查詢期間的大型一次性快取。"""
+    """V2.10.10：清除 LINE 查詢期間的大型一次性快取。"""
     # 分析完成後整個 RUN_CACHE 都不再需要；尤其 Yahoo DataFrame / info
     # 若留在全域 dict，Render 長時間運作後會逐次累積。
     RUN_CACHE.clear()
@@ -5185,7 +5187,7 @@ def release_line_memory():
 
 
 def handle_event(e, u):
-    """V2.10.9：立即 Reply 確認，再用低記憶體背景分析並 Push。"""
+    """V2.10.10：立即 Reply 確認，再用低記憶體背景分析並 Push。"""
     if (
         e.get('type') != 'message'
         or e.get('message', {}).get('type') != 'text'
@@ -5207,7 +5209,7 @@ def handle_event(e, u):
     if text.lower() in {'help', '說明', '功能', '股票'}:
         ok = reply_line(
             token,
-            '📈 股票加碼分析 Bot V2.10.9\n\n'
+            '📈 股票加碼分析 Bot V2.10.10\n\n'
             '輸入股票代號或名稱即可查詢。\n'
             '例如：2330、台積電、3711、日月光投控\n\n'
             '模型：基本面40 + 技術30 + 籌碼20 + 風險10。\n'
@@ -5256,7 +5258,7 @@ def run_webhook_server():
     app = Flask(__name__)
 
     print('================================')
-    print('LINE Webhook Server V2.10.9')
+    print('LINE Webhook Server V2.10.10')
     print('模式：立即 Reply + 低記憶體背景分析 + Push')
     print('================================')
 
@@ -5265,8 +5267,8 @@ def run_webhook_server():
     if not LINE_CHANNEL_SECRET:
         print('⚠️ 未設定 LINE_CHANNEL_SECRET')
 
-    # V2.10.9：LINE/Render 啟動時不建立 1985 檔完整市場股票池。
-    # V2.10.9 原本在 Web Service 啟動時 force_refresh=True，會同時抓
+    # V2.10.10：LINE/Render 啟動時不建立 1985 檔完整市場股票池。
+    # V2.10.10 原本在 Web Service 啟動時 force_refresh=True，會同時抓
     # TWSE/TPEx 股票池、次產業公開資料並保留大量快取，Render Free 512MB
     # 容易 OOM。LINE 查詢改為「收到查詢後才建立必要資料」，並在分析完成
     # 後釋放大型物件。
@@ -5275,7 +5277,7 @@ def run_webhook_server():
 
     @app.get('/')
     def health():
-        return 'stock_alert V2.10.9 OK', 200
+        return 'stock_alert V2.10.10 OK', 200
 
     @app.get('/health')
     def health2():
