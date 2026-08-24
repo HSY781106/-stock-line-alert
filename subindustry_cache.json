@@ -1,25 +1,9 @@
 {
-<<<<<<< Updated upstream
-  "_cached_at": 1787542555.4454515,
-=======
-  "_cached_at": 1787542656.3040068,
->>>>>>> Stashed changes
+  "_cached_at": 1787543286.672712,
   "source": "TPEx/TWSE Industry Value Chain",
   "source_url": "https://ic.tpex.org.tw/company_chain.php",
   "cache_days": 30,
   "data": {
-    "2302": {
-      "subindustries": [
-        "其他IC/二極體製造"
-      ],
-      "records": [
-        {
-          "industry": "半導體",
-          "sub_industry": "其他IC/二極體製造",
-          "date": "2026-08-24"
-        }
-      ]
-    },
     "2303": {
       "subindustries": [
         "晶圓製造"
@@ -32,21 +16,18 @@
         }
       ]
     },
-<<<<<<< Updated upstream
-    "2330": {
+    "2302": {
       "subindustries": [
-        "晶圓製造"
+        "其他IC/二極體製造"
       ],
       "records": [
         {
           "industry": "半導體",
-          "sub_industry": "晶圓製造",
+          "sub_industry": "其他IC/二極體製造",
           "date": "2026-08-24"
         }
       ]
     },
-=======
->>>>>>> Stashed changes
     "2329": {
       "subindustries": [
         "IC封裝測試"
@@ -59,8 +40,6 @@
         }
       ]
     },
-<<<<<<< Updated upstream
-=======
     "2330": {
       "subindustries": [
         "晶圓製造"
@@ -73,7 +52,6 @@
         }
       ]
     },
->>>>>>> Stashed changes
     "2337": {
       "subindustries": [
         "IC封裝測試",
@@ -223,51 +201,6 @@
         }
       ]
     },
-    "2351": {
-      "subindustries": [
-        "導線架",
-        "塑膠製品",
-        "金屬製品",
-        "模具"
-      ],
-      "records": [
-        {
-          "industry": "半導體",
-          "sub_industry": "導線架",
-          "date": "2026-08-24"
-        },
-        {
-          "industry": "石化及塑橡膠",
-          "sub_industry": "塑膠製品",
-          "date": "2026-08-24"
-        },
-        {
-          "industry": "鋼鐵",
-          "sub_industry": "金屬製品",
-          "date": "2026-08-24"
-        },
-        {
-          "industry": "鋼鐵",
-          "sub_industry": "模具",
-          "date": "2026-08-24"
-        }
-      ]
-    },
-<<<<<<< Updated upstream
-=======
-    "2363": {
-      "subindustries": [
-        "IC設計"
-      ],
-      "records": [
-        {
-          "industry": "半導體",
-          "sub_industry": "IC設計",
-          "date": "2026-08-24"
-        }
-      ]
-    },
->>>>>>> Stashed changes
     "2344": {
       "subindustries": [
         "記憶體",
@@ -303,19 +236,6 @@
         }
       ]
     },
-<<<<<<< Updated upstream
-    "2369": {
-      "subindustries": [
-        "IC封裝測試"
-      ],
-      "records": [
-        {
-          "industry": "半導體",
-          "sub_industry": "IC封裝測試",
-          "date": "2026-08-24"
-        }
-      ]
-    },
     "2363": {
       "subindustries": [
         "IC設計"
@@ -328,74 +248,44 @@
         }
       ]
     },
-=======
->>>>>>> Stashed changes
-    "2379": {
+    "2369": {
       "subindustries": [
-        "網路通訊IC"
+        "IC封裝測試"
       ],
       "records": [
         {
           "industry": "半導體",
-          "sub_industry": "網路通訊IC",
+          "sub_industry": "IC封裝測試",
           "date": "2026-08-24"
         }
       ]
     },
-<<<<<<< Updated upstream
-    "2401": {
+    "2351": {
       "subindustries": [
-        "IP設計/IC設計代工服務",
-        "消費性IC",
-        "磁碟儲存控制器IC",
-        "輸出入介面IC",
-        "光儲存控制IC",
-        "影像感測IC",
-        "大功率鋰電池芯/模組、電池管理系統、動力馬達等零組件"
-=======
-    "2369": {
-      "subindustries": [
-        "IC封裝測試"
->>>>>>> Stashed changes
+        "導線架",
+        "塑膠製品",
+        "金屬製品",
+        "模具"
       ],
       "records": [
         {
           "industry": "半導體",
-<<<<<<< Updated upstream
-          "sub_industry": "IP設計/IC設計代工服務",
+          "sub_industry": "導線架",
           "date": "2026-08-24"
         },
         {
-          "industry": "半導體",
-          "sub_industry": "消費性IC",
+          "industry": "石化及塑橡膠",
+          "sub_industry": "塑膠製品",
           "date": "2026-08-24"
         },
         {
-          "industry": "半導體",
-          "sub_industry": "磁碟儲存控制器IC",
+          "industry": "鋼鐵",
+          "sub_industry": "金屬製品",
           "date": "2026-08-24"
         },
         {
-          "industry": "半導體",
-          "sub_industry": "輸出入介面IC",
-          "date": "2026-08-24"
-        },
-        {
-          "industry": "半導體",
-          "sub_industry": "光儲存控制IC",
-          "date": "2026-08-24"
-        },
-        {
-          "industry": "半導體",
-          "sub_industry": "影像感測IC",
-          "date": "2026-08-24"
-        },
-        {
-          "industry": "電動車輛產業",
-          "sub_industry": "大功率鋰電池芯/模組、電池管理系統、動力馬達等零組件",
-=======
-          "sub_industry": "IC封裝測試",
->>>>>>> Stashed changes
+          "industry": "鋼鐵",
+          "sub_industry": "模具",
           "date": "2026-08-24"
         }
       ]
@@ -442,43 +332,18 @@
         }
       ]
     },
-    "2408": {
+    "2379": {
       "subindustries": [
-        "記憶體",
-        "記憶體IC",
-        "晶圓製造",
-        "DRAM製造"
+        "網路通訊IC"
       ],
       "records": [
         {
-          "industry": "電腦及週邊設備",
-          "sub_industry": "記憶體",
-          "date": "2026-08-24"
-        },
-        {
-          "industry": "通信網路",
-          "sub_industry": "記憶體",
-          "date": "2026-08-24"
-        },
-        {
           "industry": "半導體",
-          "sub_industry": "記憶體IC",
-          "date": "2026-08-24"
-        },
-        {
-          "industry": "半導體",
-          "sub_industry": "晶圓製造",
-          "date": "2026-08-24"
-        },
-        {
-          "industry": "半導體",
-          "sub_industry": "DRAM製造",
+          "sub_industry": "網路通訊IC",
           "date": "2026-08-24"
         }
       ]
     },
-<<<<<<< Updated upstream
-=======
     "2401": {
       "subindustries": [
         "IP設計/IC設計代工服務",
@@ -527,31 +392,6 @@
         }
       ]
     },
-    "2436": {
-      "subindustries": [
-        "消費性IC",
-        "微控制器IC",
-        "電源管理IC"
-      ],
-      "records": [
-        {
-          "industry": "半導體",
-          "sub_industry": "消費性IC",
-          "date": "2026-08-24"
-        },
-        {
-          "industry": "半導體",
-          "sub_industry": "微控制器IC",
-          "date": "2026-08-24"
-        },
-        {
-          "industry": "半導體",
-          "sub_industry": "電源管理IC",
-          "date": "2026-08-24"
-        }
-      ]
-    },
->>>>>>> Stashed changes
     "2434": {
       "subindustries": [
         "晶圓製造",
@@ -576,19 +416,6 @@
         }
       ]
     },
-    "2441": {
-      "subindustries": [
-        "IC封裝測試"
-      ],
-      "records": [
-        {
-          "industry": "半導體",
-          "sub_industry": "IC封裝測試",
-          "date": "2026-08-24"
-        }
-      ]
-    },
-<<<<<<< Updated upstream
     "2436": {
       "subindustries": [
         "消費性IC",
@@ -613,6 +440,53 @@
         }
       ]
     },
+    "2408": {
+      "subindustries": [
+        "記憶體",
+        "記憶體IC",
+        "晶圓製造",
+        "DRAM製造"
+      ],
+      "records": [
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "記憶體",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "通信網路",
+          "sub_industry": "記憶體",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "記憶體IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "晶圓製造",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "DRAM製造",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "2441": {
+      "subindustries": [
+        "IC封裝測試"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "IC封裝測試",
+          "date": "2026-08-24"
+        }
+      ]
+    },
     "2449": {
       "subindustries": [
         "IC封裝測試"
@@ -625,8 +499,6 @@
         }
       ]
     },
-=======
->>>>>>> Stashed changes
     "2451": {
       "subindustries": [
         "IC模組",
@@ -651,21 +523,6 @@
         }
       ]
     },
-<<<<<<< Updated upstream
-=======
-    "2449": {
-      "subindustries": [
-        "IC封裝測試"
-      ],
-      "records": [
-        {
-          "industry": "半導體",
-          "sub_industry": "IC封裝測試",
-          "date": "2026-08-24"
-        }
-      ]
-    },
->>>>>>> Stashed changes
     "2454": {
       "subindustries": [
         "消費性IC",
@@ -732,21 +589,6 @@
         }
       ]
     },
-<<<<<<< Updated upstream
-    "2481": {
-      "subindustries": [
-        "其他IC/二極體製造"
-      ],
-      "records": [
-        {
-          "industry": "半導體",
-          "sub_industry": "其他IC/二極體製造",
-          "date": "2026-08-24"
-        }
-      ]
-    },
-=======
->>>>>>> Stashed changes
     "3006": {
       "subindustries": [
         "記憶體IC"
@@ -759,21 +601,6 @@
         }
       ]
     },
-<<<<<<< Updated upstream
-=======
-    "2481": {
-      "subindustries": [
-        "其他IC/二極體製造"
-      ],
-      "records": [
-        {
-          "industry": "半導體",
-          "sub_industry": "其他IC/二極體製造",
-          "date": "2026-08-24"
-        }
-      ]
-    },
->>>>>>> Stashed changes
     "3014": {
       "subindustries": [
         "LED驅動IC",
@@ -804,14 +631,14 @@
         }
       ]
     },
-    "3016": {
+    "2481": {
       "subindustries": [
-        "晶圓製造"
+        "其他IC/二極體製造"
       ],
       "records": [
         {
           "industry": "半導體",
-          "sub_industry": "晶圓製造",
+          "sub_industry": "其他IC/二極體製造",
           "date": "2026-08-24"
         }
       ]
@@ -870,7 +697,18 @@
         }
       ]
     },
-<<<<<<< Updated upstream
+    "3016": {
+      "subindustries": [
+        "晶圓製造"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "晶圓製造",
+          "date": "2026-08-24"
+        }
+      ]
+    },
     "3094": {
       "subindustries": [
         "網路通訊IC"
@@ -883,8 +721,6 @@
         }
       ]
     },
-=======
->>>>>>> Stashed changes
     "3041": {
       "subindustries": [
         "消費性IC"
@@ -921,33 +757,6 @@
         }
       ]
     },
-<<<<<<< Updated upstream
-=======
-    "3094": {
-      "subindustries": [
-        "網路通訊IC"
-      ],
-      "records": [
-        {
-          "industry": "半導體",
-          "sub_industry": "網路通訊IC",
-          "date": "2026-08-24"
-        }
-      ]
-    },
-    "3189": {
-      "subindustries": [
-        "基板"
-      ],
-      "records": [
-        {
-          "industry": "半導體",
-          "sub_industry": "基板",
-          "date": "2026-08-24"
-        }
-      ]
-    },
->>>>>>> Stashed changes
     "3150": {
       "subindustries": [
         "IC模組",
@@ -966,21 +775,6 @@
         }
       ]
     },
-<<<<<<< Updated upstream
-    "3189": {
-      "subindustries": [
-        "基板"
-      ],
-      "records": [
-        {
-          "industry": "半導體",
-          "sub_industry": "基板",
-          "date": "2026-08-24"
-        }
-      ]
-    },
-=======
->>>>>>> Stashed changes
     "3257": {
       "subindustries": [
         "電源管理IC"
@@ -989,6 +783,18 @@
         {
           "industry": "半導體",
           "sub_industry": "電源管理IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "3189": {
+      "subindustries": [
+        "基板"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "基板",
           "date": "2026-08-24"
         }
       ]
@@ -1023,6 +829,18 @@
         }
       ]
     },
+    "3530": {
+      "subindustries": [
+        "消費性IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "消費性IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
     "3450": {
       "subindustries": [
         "IC封裝測試",
@@ -1041,14 +859,14 @@
         }
       ]
     },
-    "3530": {
+    "3545": {
       "subindustries": [
-        "消費性IC"
+        "平面顯示器驅動IC"
       ],
       "records": [
         {
           "industry": "半導體",
-          "sub_industry": "消費性IC",
+          "sub_industry": "平面顯示器驅動IC",
           "date": "2026-08-24"
         }
       ]
@@ -1065,14 +883,14 @@
         }
       ]
     },
-    "3545": {
+    "3588": {
       "subindustries": [
-        "平面顯示器驅動IC"
+        "電源管理IC"
       ],
       "records": [
         {
           "industry": "半導體",
-          "sub_industry": "平面顯示器驅動IC",
+          "sub_industry": "電源管理IC",
           "date": "2026-08-24"
         }
       ]
@@ -1106,18 +924,6 @@
         }
       ]
     },
-    "3588": {
-      "subindustries": [
-        "電源管理IC"
-      ],
-      "records": [
-        {
-          "industry": "半導體",
-          "sub_industry": "電源管理IC",
-          "date": "2026-08-24"
-        }
-      ]
-    },
     "3592": {
       "subindustries": [
         "電源管理IC",
@@ -1136,19 +942,6 @@
         }
       ]
     },
-    "3661": {
-      "subindustries": [
-        "IP設計/IC設計代工服務"
-      ],
-      "records": [
-        {
-          "industry": "半導體",
-          "sub_industry": "IP設計/IC設計代工服務",
-          "date": "2026-08-24"
-        }
-      ]
-    },
-<<<<<<< Updated upstream
     "3686": {
       "subindustries": [
         "矽晶圓/矽晶片"
@@ -1161,8 +954,6 @@
         }
       ]
     },
-=======
->>>>>>> Stashed changes
     "3711": {
       "subindustries": [
         "IC封裝測試"
@@ -1175,21 +966,18 @@
         }
       ]
     },
-<<<<<<< Updated upstream
-=======
-    "3686": {
+    "3661": {
       "subindustries": [
-        "矽晶圓/矽晶片"
+        "IP設計/IC設計代工服務"
       ],
       "records": [
         {
-          "industry": "太陽能產業",
-          "sub_industry": "矽晶圓/矽晶片",
+          "industry": "半導體",
+          "sub_industry": "IP設計/IC設計代工服務",
           "date": "2026-08-24"
         }
       ]
     },
->>>>>>> Stashed changes
     "4919": {
       "subindustries": [
         "消費性IC",
@@ -1204,6 +992,30 @@
         {
           "industry": "半導體",
           "sub_industry": "晶圓製造",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "4961": {
+      "subindustries": [
+        "LED驅動IC",
+        "電源管理IC",
+        "平面顯示器驅動IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "LED驅動IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "電源管理IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "平面顯示器驅動IC",
           "date": "2026-08-24"
         }
       ]
@@ -1256,30 +1068,6 @@
         }
       ]
     },
-    "4961": {
-      "subindustries": [
-        "LED驅動IC",
-        "電源管理IC",
-        "平面顯示器驅動IC"
-      ],
-      "records": [
-        {
-          "industry": "半導體",
-          "sub_industry": "LED驅動IC",
-          "date": "2026-08-24"
-        },
-        {
-          "industry": "半導體",
-          "sub_industry": "電源管理IC",
-          "date": "2026-08-24"
-        },
-        {
-          "industry": "半導體",
-          "sub_industry": "平面顯示器驅動IC",
-          "date": "2026-08-24"
-        }
-      ]
-    },
     "4967": {
       "subindustries": [
         "記憶體",
@@ -1298,7 +1086,6 @@
         }
       ]
     },
-<<<<<<< Updated upstream
     "4968": {
       "subindustries": [
         "網路通訊IC"
@@ -1311,8 +1098,6 @@
         }
       ]
     },
-=======
->>>>>>> Stashed changes
     "5222": {
       "subindustries": [
         "生產製程及檢測設備",
@@ -1339,28 +1124,6 @@
         {
           "industry": "半導體",
           "sub_industry": "晶圓製造",
-          "date": "2026-08-24"
-        }
-      ]
-    },
-<<<<<<< Updated upstream
-    "5269": {
-      "subindustries": [
-        "輸出入介面IC"
-=======
-    "4968": {
-      "subindustries": [
-        "網路通訊IC"
->>>>>>> Stashed changes
-      ],
-      "records": [
-        {
-          "industry": "半導體",
-<<<<<<< Updated upstream
-          "sub_industry": "輸出入介面IC",
-=======
-          "sub_industry": "網路通訊IC",
->>>>>>> Stashed changes
           "date": "2026-08-24"
         }
       ]
@@ -1395,8 +1158,6 @@
         }
       ]
     },
-<<<<<<< Updated upstream
-=======
     "5269": {
       "subindustries": [
         "輸出入介面IC"
@@ -1409,7 +1170,6 @@
         }
       ]
     },
->>>>>>> Stashed changes
     "5285": {
       "subindustries": [
         "導線架"
@@ -1422,7 +1182,6 @@
         }
       ]
     },
-<<<<<<< Updated upstream
     "5471": {
       "subindustries": [
         "微控制器IC"
@@ -1435,8 +1194,6 @@
         }
       ]
     },
-=======
->>>>>>> Stashed changes
     "6202": {
       "subindustries": [
         "微控制器IC",
@@ -1473,21 +1230,6 @@
         }
       ]
     },
-<<<<<<< Updated upstream
-=======
-    "5471": {
-      "subindustries": [
-        "微控制器IC"
-      ],
-      "records": [
-        {
-          "industry": "半導體",
-          "sub_industry": "微控制器IC",
-          "date": "2026-08-24"
-        }
-      ]
-    },
->>>>>>> Stashed changes
     "6243": {
       "subindustries": [
         "輸出入介面IC"
@@ -1508,6 +1250,30 @@
         {
           "industry": "半導體",
           "sub_industry": "IC封裝測試",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "6415": {
+      "subindustries": [
+        "LED驅動IC",
+        "光源管理IC",
+        "電源管理IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "LED驅動IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "光源管理IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "電源管理IC",
           "date": "2026-08-24"
         }
       ]
@@ -1572,31 +1338,6 @@
         }
       ]
     },
-    "6415": {
-      "subindustries": [
-        "LED驅動IC",
-        "光源管理IC",
-        "電源管理IC"
-      ],
-      "records": [
-        {
-          "industry": "半導體",
-          "sub_industry": "LED驅動IC",
-          "date": "2026-08-24"
-        },
-        {
-          "industry": "半導體",
-          "sub_industry": "光源管理IC",
-          "date": "2026-08-24"
-        },
-        {
-          "industry": "半導體",
-          "sub_industry": "電源管理IC",
-          "date": "2026-08-24"
-        }
-      ]
-    },
-<<<<<<< Updated upstream
     "6451": {
       "subindustries": [
         "產業鏈簡介"
@@ -1609,8 +1350,6 @@
         }
       ]
     },
-=======
->>>>>>> Stashed changes
     "6515": {
       "subindustries": [
         "生產製程及檢測設備"
@@ -1623,21 +1362,6 @@
         }
       ]
     },
-<<<<<<< Updated upstream
-=======
-    "6451": {
-      "subindustries": [
-        "產業鏈簡介"
-      ],
-      "records": [
-        {
-          "industry": "產業價值鏈資訊平台",
-          "sub_industry": "產業鏈簡介",
-          "date": "2026-08-24"
-        }
-      ]
-    },
->>>>>>> Stashed changes
     "6525": {
       "subindustries": [
         "產業鏈簡介"
@@ -1686,18 +1410,6 @@
         }
       ]
     },
-    "6552": {
-      "subindustries": [
-        "基板"
-      ],
-      "records": [
-        {
-          "industry": "半導體",
-          "sub_industry": "基板",
-          "date": "2026-08-24"
-        }
-      ]
-    },
     "6573": {
       "subindustries": [
         "產業鏈簡介"
@@ -1706,6 +1418,18 @@
         {
           "industry": "產業價值鏈資訊平台",
           "sub_industry": "產業鏈簡介",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "6552": {
+      "subindustries": [
+        "基板"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "基板",
           "date": "2026-08-24"
         }
       ]
@@ -1740,8 +1464,6 @@
         }
       ]
     },
-<<<<<<< Updated upstream
-=======
     "6719": {
       "subindustries": [
         "電源管理IC"
@@ -1754,7 +1476,6 @@
         }
       ]
     },
->>>>>>> Stashed changes
     "6756": {
       "subindustries": [
         "消費性IC",
@@ -1779,21 +1500,6 @@
         }
       ]
     },
-<<<<<<< Updated upstream
-    "6719": {
-      "subindustries": [
-        "電源管理IC"
-      ],
-      "records": [
-        {
-          "industry": "半導體",
-          "sub_industry": "電源管理IC",
-          "date": "2026-08-24"
-        }
-      ]
-    },
-=======
->>>>>>> Stashed changes
     "6770": {
       "subindustries": [
         "晶圓製造",
@@ -1812,7 +1518,6 @@
         }
       ]
     },
-<<<<<<< Updated upstream
     "6789": {
       "subindustries": [
         "生產製程及檢測設備"
@@ -1825,8 +1530,6 @@
         }
       ]
     },
-=======
->>>>>>> Stashed changes
     "6799": {
       "subindustries": [
         "電源管理IC"
@@ -1851,9 +1554,7 @@
         }
       ]
     },
-<<<<<<< Updated upstream
-=======
-    "6789": {
+    "6909": {
       "subindustries": [
         "生產製程及檢測設備"
       ],
@@ -1873,19 +1574,6 @@
         {
           "industry": "產業價值鏈資訊平台",
           "sub_industry": "產業鏈簡介",
-          "date": "2026-08-24"
-        }
-      ]
-    },
->>>>>>> Stashed changes
-    "6909": {
-      "subindustries": [
-        "生產製程及檢測設備"
-      ],
-      "records": [
-        {
-          "industry": "半導體",
-          "sub_industry": "生產製程及檢測設備",
           "date": "2026-08-24"
         }
       ]
@@ -1903,33 +1591,6 @@
         {
           "industry": "平面顯示器",
           "sub_industry": "生產製程及檢測設備",
-          "date": "2026-08-24"
-        }
-      ]
-    },
-<<<<<<< Updated upstream
-    "6921": {
-      "subindustries": [
-        "產業鏈簡介"
-      ],
-      "records": [
-        {
-          "industry": "產業價值鏈資訊平台",
-          "sub_industry": "產業鏈簡介",
-          "date": "2026-08-24"
-        }
-      ]
-    },
-=======
->>>>>>> Stashed changes
-    "6962": {
-      "subindustries": [
-        "產業鏈簡介"
-      ],
-      "records": [
-        {
-          "industry": "產業價值鏈資訊平台",
-          "sub_industry": "產業鏈簡介",
           "date": "2026-08-24"
         }
       ]
@@ -1956,8 +1617,7 @@
         }
       ]
     },
-<<<<<<< Updated upstream
-    "7749": {
+    "6962": {
       "subindustries": [
         "產業鏈簡介"
       ],
@@ -1969,8 +1629,6 @@
         }
       ]
     },
-=======
->>>>>>> Stashed changes
     "7768": {
       "subindustries": [
         "生產製程及檢測設備",
@@ -1989,8 +1647,6 @@
         }
       ]
     },
-<<<<<<< Updated upstream
-=======
     "7749": {
       "subindustries": [
         "產業鏈簡介"
@@ -2003,7 +1659,6 @@
         }
       ]
     },
->>>>>>> Stashed changes
     "7769": {
       "subindustries": [
         "生產製程及檢測設備"
@@ -2154,21 +1809,6 @@
         }
       ]
     },
-<<<<<<< Updated upstream
-=======
-    "8150": {
-      "subindustries": [
-        "IC封裝測試"
-      ],
-      "records": [
-        {
-          "industry": "半導體",
-          "sub_industry": "IC封裝測試",
-          "date": "2026-08-24"
-        }
-      ]
-    },
->>>>>>> Stashed changes
     "8131": {
       "subindustries": [
         "IC封裝測試",
@@ -2187,7 +1827,6 @@
         }
       ]
     },
-<<<<<<< Updated upstream
     "8150": {
       "subindustries": [
         "IC封裝測試"
@@ -2212,47 +1851,6 @@
         }
       ]
     },
-=======
->>>>>>> Stashed changes
-    "8261": {
-      "subindustries": [
-        "電源管理IC",
-        "電動汽車、電動機車、電動自行車",
-        "原材料"
-      ],
-      "records": [
-        {
-          "industry": "半導體",
-          "sub_industry": "電源管理IC",
-          "date": "2026-08-24"
-        },
-        {
-          "industry": "電動車輛產業",
-          "sub_industry": "電動汽車、電動機車、電動自行車",
-          "date": "2026-08-24"
-        },
-        {
-          "industry": "能源元件",
-          "sub_industry": "原材料",
-          "date": "2026-08-24"
-        }
-      ]
-    },
-<<<<<<< Updated upstream
-=======
-    "8162": {
-      "subindustries": [
-        "IC封裝測試"
-      ],
-      "records": [
-        {
-          "industry": "半導體",
-          "sub_industry": "IC封裝測試",
-          "date": "2026-08-24"
-        }
-      ]
-    },
->>>>>>> Stashed changes
     "8271": {
       "subindustries": [
         "IC模組",
@@ -2273,6 +1871,30 @@
         {
           "industry": "電腦及週邊設備",
           "sub_industry": "隨身碟、記憶卡讀卡機",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "8261": {
+      "subindustries": [
+        "電源管理IC",
+        "電動汽車、電動機車、電動自行車",
+        "原材料"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "電源管理IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "電動車輛產業",
+          "sub_industry": "電動汽車、電動機車、電動自行車",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "能源元件",
+          "sub_industry": "原材料",
           "date": "2026-08-24"
         }
       ]
@@ -2341,18 +1963,6 @@
         }
       ]
     },
-    "3141": {
-      "subindustries": [
-        "平面顯示器驅動IC"
-      ],
-      "records": [
-        {
-          "industry": "半導體",
-          "sub_industry": "平面顯示器驅動IC",
-          "date": "2026-08-24"
-        }
-      ]
-    },
     "3131": {
       "subindustries": [
         "生產製程及檢測設備"
@@ -2365,27 +1975,18 @@
         }
       ]
     },
-<<<<<<< Updated upstream
-=======
-    "3178": {
+    "3141": {
       "subindustries": [
-        "生產製程及檢測設備",
-        "金屬/燃料"
+        "平面顯示器驅動IC"
       ],
       "records": [
         {
           "industry": "半導體",
-          "sub_industry": "生產製程及檢測設備",
-          "date": "2026-08-24"
-        },
-        {
-          "industry": "太空衛星科技",
-          "sub_industry": "金屬/燃料",
+          "sub_industry": "平面顯示器驅動IC",
           "date": "2026-08-24"
         }
       ]
     },
->>>>>>> Stashed changes
     "3169": {
       "subindustries": [
         "網路卡",
@@ -2410,30 +2011,32 @@
         }
       ]
     },
-<<<<<<< Updated upstream
     "3178": {
       "subindustries": [
         "生產製程及檢測設備",
         "金屬/燃料"
-=======
-    "3228": {
-      "subindustries": [
-        "微控制器IC"
->>>>>>> Stashed changes
       ],
       "records": [
         {
           "industry": "半導體",
-<<<<<<< Updated upstream
           "sub_industry": "生產製程及檢測設備",
           "date": "2026-08-24"
         },
         {
           "industry": "太空衛星科技",
           "sub_industry": "金屬/燃料",
-=======
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "3228": {
+      "subindustries": [
+        "微控制器IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
           "sub_industry": "微控制器IC",
->>>>>>> Stashed changes
           "date": "2026-08-24"
         }
       ]
@@ -2551,21 +2154,6 @@
         }
       ]
     },
-<<<<<<< Updated upstream
-    "3228": {
-      "subindustries": [
-        "微控制器IC"
-      ],
-      "records": [
-        {
-          "industry": "半導體",
-          "sub_industry": "微控制器IC",
-          "date": "2026-08-24"
-        }
-      ]
-    },
-=======
->>>>>>> Stashed changes
     "3259": {
       "subindustries": [
         "記憶體控制IC"
@@ -2613,18 +2201,6 @@
         }
       ]
     },
-    "3264": {
-      "subindustries": [
-        "IC封裝測試"
-      ],
-      "records": [
-        {
-          "industry": "半導體",
-          "sub_industry": "IC封裝測試",
-          "date": "2026-08-24"
-        }
-      ]
-    },
     "3265": {
       "subindustries": [
         "IC封裝測試"
@@ -2637,7 +2213,6 @@
         }
       ]
     },
-<<<<<<< Updated upstream
     "3268": {
       "subindustries": [
         "消費性IC"
@@ -2650,20 +2225,6 @@
         }
       ]
     },
-    "3372": {
-      "subindustries": [
-        "IC封裝測試"
-      ],
-      "records": [
-        {
-          "industry": "半導體",
-          "sub_industry": "IC封裝測試",
-          "date": "2026-08-24"
-        }
-      ]
-    },
-=======
->>>>>>> Stashed changes
     "3317": {
       "subindustries": [
         "電源管理IC"
@@ -2676,35 +2237,6 @@
         }
       ]
     },
-<<<<<<< Updated upstream
-=======
-    "3268": {
-      "subindustries": [
-        "消費性IC"
-      ],
-      "records": [
-        {
-          "industry": "半導體",
-          "sub_industry": "消費性IC",
-          "date": "2026-08-24"
-        }
-      ]
-    },
->>>>>>> Stashed changes
-    "3374": {
-      "subindustries": [
-        "IC封裝測試"
-      ],
-      "records": [
-        {
-          "industry": "半導體",
-          "sub_industry": "IC封裝測試",
-          "date": "2026-08-24"
-        }
-      ]
-    },
-<<<<<<< Updated upstream
-=======
     "3372": {
       "subindustries": [
         "IC封裝測試"
@@ -2717,7 +2249,18 @@
         }
       ]
     },
->>>>>>> Stashed changes
+    "3374": {
+      "subindustries": [
+        "IC封裝測試"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "IC封裝測試",
+          "date": "2026-08-24"
+        }
+      ]
+    },
     "3438": {
       "subindustries": [
         "電源管理IC"
@@ -2730,14 +2273,14 @@
         }
       ]
     },
-    "3467": {
+    "3264": {
       "subindustries": [
-        "生產製程及檢測設備"
+        "IC封裝測試"
       ],
       "records": [
         {
           "industry": "半導體",
-          "sub_industry": "生產製程及檢測設備",
+          "sub_industry": "IC封裝測試",
           "date": "2026-08-24"
         }
       ]
@@ -2790,7 +2333,18 @@
         }
       ]
     },
-<<<<<<< Updated upstream
+    "3467": {
+      "subindustries": [
+        "生產製程及檢測設備"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "生產製程及檢測設備",
+          "date": "2026-08-24"
+        }
+      ]
+    },
     "3555": {
       "subindustries": [
         "IC通路",
@@ -2809,8 +2363,6 @@
         }
       ]
     },
-=======
->>>>>>> Stashed changes
     "3556": {
       "subindustries": [
         "控制IC",
@@ -2847,27 +2399,6 @@
         }
       ]
     },
-<<<<<<< Updated upstream
-=======
-    "3555": {
-      "subindustries": [
-        "IC通路",
-        "保健食品代理銷售及通路"
-      ],
-      "records": [
-        {
-          "industry": "半導體",
-          "sub_industry": "IC通路",
-          "date": "2026-08-24"
-        },
-        {
-          "industry": "食品生技",
-          "sub_industry": "保健食品代理銷售及通路",
-          "date": "2026-08-24"
-        }
-      ]
-    },
->>>>>>> Stashed changes
     "3581": {
       "subindustries": [
         "生產製程及檢測設備"
@@ -2880,21 +2411,6 @@
         }
       ]
     },
-<<<<<<< Updated upstream
-    "3675": {
-      "subindustries": [
-        "其他IC/二極體製造"
-      ],
-      "records": [
-        {
-          "industry": "半導體",
-          "sub_industry": "其他IC/二極體製造",
-          "date": "2026-08-24"
-        }
-      ]
-    },
-=======
->>>>>>> Stashed changes
     "3680": {
       "subindustries": [
         "生產製程及檢測設備"
@@ -2937,8 +2453,6 @@
         }
       ]
     },
-<<<<<<< Updated upstream
-=======
     "3675": {
       "subindustries": [
         "其他IC/二極體製造"
@@ -2951,7 +2465,6 @@
         }
       ]
     },
->>>>>>> Stashed changes
     "4749": {
       "subindustries": [
         "化學品",
@@ -2988,18 +2501,6 @@
         }
       ]
     },
-    "4951": {
-      "subindustries": [
-        "輸出入介面IC"
-      ],
-      "records": [
-        {
-          "industry": "半導體",
-          "sub_industry": "輸出入介面IC",
-          "date": "2026-08-24"
-        }
-      ]
-    },
     "4966": {
       "subindustries": [
         "平面顯示器驅動IC"
@@ -3008,6 +2509,18 @@
         {
           "industry": "半導體",
           "sub_industry": "平面顯示器驅動IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "4951": {
+      "subindustries": [
+        "輸出入介面IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "輸出入介面IC",
           "date": "2026-08-24"
         }
       ]
@@ -3024,27 +2537,6 @@
         }
       ]
     },
-<<<<<<< Updated upstream
-    "4991": {
-      "subindustries": [
-        "晶圓製造",
-        "其他IC/二極體製造"
-      ],
-      "records": [
-        {
-          "industry": "半導體",
-          "sub_industry": "晶圓製造",
-          "date": "2026-08-24"
-        },
-        {
-          "industry": "半導體",
-          "sub_industry": "其他IC/二極體製造",
-          "date": "2026-08-24"
-        }
-      ]
-    },
-=======
->>>>>>> Stashed changes
     "4973": {
       "subindustries": [
         "IC模組",
@@ -3074,8 +2566,6 @@
         }
       ]
     },
-<<<<<<< Updated upstream
-=======
     "4991": {
       "subindustries": [
         "晶圓製造",
@@ -3094,7 +2584,6 @@
         }
       ]
     },
->>>>>>> Stashed changes
     "5272": {
       "subindustries": [
         "消費性IC"
@@ -3119,19 +2608,6 @@
         }
       ]
     },
-    "5299": {
-      "subindustries": [
-        "電源管理IC"
-      ],
-      "records": [
-        {
-          "industry": "半導體",
-          "sub_industry": "電源管理IC",
-          "date": "2026-08-24"
-        }
-      ]
-    },
-<<<<<<< Updated upstream
     "5302": {
       "subindustries": [
         "消費性IC"
@@ -3144,8 +2620,6 @@
         }
       ]
     },
-=======
->>>>>>> Stashed changes
     "5344": {
       "subindustries": [
         "IC封裝測試",
@@ -3164,33 +2638,18 @@
         }
       ]
     },
-<<<<<<< Updated upstream
-=======
-    "5302": {
+    "5299": {
       "subindustries": [
-        "消費性IC"
+        "電源管理IC"
       ],
       "records": [
         {
           "industry": "半導體",
-          "sub_industry": "消費性IC",
+          "sub_industry": "電源管理IC",
           "date": "2026-08-24"
         }
       ]
     },
-    "5347": {
-      "subindustries": [
-        "晶圓製造"
-      ],
-      "records": [
-        {
-          "industry": "半導體",
-          "sub_industry": "晶圓製造",
-          "date": "2026-08-24"
-        }
-      ]
-    },
->>>>>>> Stashed changes
     "5351": {
       "subindustries": [
         "系統整合",
@@ -3341,33 +2800,6 @@
         }
       ]
     },
-<<<<<<< Updated upstream
-    "5347": {
-      "subindustries": [
-        "晶圓製造"
-=======
-    "5443": {
-      "subindustries": [
-        "生產製程及檢測設備"
->>>>>>> Stashed changes
-      ],
-      "records": [
-        {
-          "industry": "半導體",
-<<<<<<< Updated upstream
-          "sub_industry": "晶圓製造",
-=======
-          "sub_industry": "生產製程及檢測設備",
-          "date": "2026-08-24"
-        },
-        {
-          "industry": "平面顯示器",
-          "sub_industry": "生產製程及檢測設備",
->>>>>>> Stashed changes
-          "date": "2026-08-24"
-        }
-      ]
-    },
     "5425": {
       "subindustries": [
         "其他IC/二極體製造"
@@ -3380,29 +2812,43 @@
         }
       ]
     },
-<<<<<<< Updated upstream
     "5443": {
       "subindustries": [
         "生產製程及檢測設備"
-=======
-    "5468": {
-      "subindustries": [
-        "光通訊IC"
->>>>>>> Stashed changes
       ],
       "records": [
         {
           "industry": "半導體",
-<<<<<<< Updated upstream
           "sub_industry": "生產製程及檢測設備",
           "date": "2026-08-24"
         },
         {
           "industry": "平面顯示器",
           "sub_industry": "生產製程及檢測設備",
-=======
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "5347": {
+      "subindustries": [
+        "晶圓製造"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "晶圓製造",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "5468": {
+      "subindustries": [
+        "光通訊IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
           "sub_industry": "光通訊IC",
->>>>>>> Stashed changes
           "date": "2026-08-24"
         }
       ]
@@ -3461,21 +2907,6 @@
         }
       ]
     },
-<<<<<<< Updated upstream
-    "5468": {
-      "subindustries": [
-        "光通訊IC"
-      ],
-      "records": [
-        {
-          "industry": "半導體",
-          "sub_industry": "光通訊IC",
-          "date": "2026-08-24"
-        }
-      ]
-    },
-=======
->>>>>>> Stashed changes
     "5487": {
       "subindustries": [
         "消費性IC",
@@ -3514,6 +2945,36 @@
         {
           "industry": "半導體",
           "sub_industry": "輸出入介面IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "6138": {
+      "subindustries": [
+        "LED驅動IC",
+        "電源管理IC",
+        "網路通訊IC",
+        "大功率鋰電池芯/模組、電池管理系統、動力馬達等零組件"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "LED驅動IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "電源管理IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "網路通訊IC",
+          "date": "2026-08-24"
+        },
+        {
+          "industry": "電動車輛產業",
+          "sub_industry": "大功率鋰電池芯/模組、電池管理系統、動力馬達等零組件",
           "date": "2026-08-24"
         }
       ]
@@ -3560,51 +3021,6 @@
         }
       ]
     },
-    "6138": {
-      "subindustries": [
-        "LED驅動IC",
-        "電源管理IC",
-        "網路通訊IC",
-        "大功率鋰電池芯/模組、電池管理系統、動力馬達等零組件"
-      ],
-      "records": [
-        {
-          "industry": "半導體",
-          "sub_industry": "LED驅動IC",
-          "date": "2026-08-24"
-        },
-        {
-          "industry": "半導體",
-          "sub_industry": "電源管理IC",
-          "date": "2026-08-24"
-        },
-        {
-          "industry": "半導體",
-          "sub_industry": "網路通訊IC",
-          "date": "2026-08-24"
-        },
-        {
-          "industry": "電動車輛產業",
-          "sub_industry": "大功率鋰電池芯/模組、電池管理系統、動力馬達等零組件",
-          "date": "2026-08-24"
-        }
-      ]
-    },
-<<<<<<< Updated upstream
-    "6182": {
-      "subindustries": [
-        "晶圓製造"
-      ],
-      "records": [
-        {
-          "industry": "半導體",
-          "sub_industry": "晶圓製造",
-          "date": "2026-08-24"
-        }
-      ]
-    },
-=======
->>>>>>> Stashed changes
     "6147": {
       "subindustries": [
         "IC封裝測試",
@@ -3623,28 +3039,6 @@
         }
       ]
     },
-<<<<<<< Updated upstream
-    "6208": {
-      "subindustries": [
-        "生產製程及檢測設備"
-=======
-    "6182": {
-      "subindustries": [
-        "晶圓製造"
->>>>>>> Stashed changes
-      ],
-      "records": [
-        {
-          "industry": "半導體",
-<<<<<<< Updated upstream
-          "sub_industry": "生產製程及檢測設備",
-=======
-          "sub_industry": "晶圓製造",
->>>>>>> Stashed changes
-          "date": "2026-08-24"
-        }
-      ]
-    },
     "6187": {
       "subindustries": [
         "其他電子產品及電子服務產業"
@@ -3653,6 +3047,18 @@
         {
           "industry": "其他",
           "sub_industry": "其他電子產品及電子服務產業",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "6182": {
+      "subindustries": [
+        "晶圓製造"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "晶圓製造",
           "date": "2026-08-24"
         }
       ]
@@ -3675,24 +3081,26 @@
         }
       ]
     },
-<<<<<<< Updated upstream
-    "6229": {
-      "subindustries": [
-        "微控制器IC"
-=======
     "6208": {
       "subindustries": [
         "生產製程及檢測設備"
->>>>>>> Stashed changes
       ],
       "records": [
         {
           "industry": "半導體",
-<<<<<<< Updated upstream
-          "sub_industry": "微控制器IC",
-=======
           "sub_industry": "生產製程及檢測設備",
->>>>>>> Stashed changes
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "6229": {
+      "subindustries": [
+        "微控制器IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "微控制器IC",
           "date": "2026-08-24"
         }
       ]
@@ -3715,24 +3123,26 @@
         }
       ]
     },
-<<<<<<< Updated upstream
     "6237": {
       "subindustries": [
         "消費性IC"
-=======
-    "6229": {
-      "subindustries": [
-        "微控制器IC"
->>>>>>> Stashed changes
       ],
       "records": [
         {
           "industry": "半導體",
-<<<<<<< Updated upstream
           "sub_industry": "消費性IC",
-=======
-          "sub_industry": "微控制器IC",
->>>>>>> Stashed changes
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "6291": {
+      "subindustries": [
+        "電源管理IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "電源管理IC",
           "date": "2026-08-24"
         }
       ]
@@ -3763,33 +3173,6 @@
         {
           "industry": "LED照明產業",
           "sub_industry": "封裝/模組",
-          "date": "2026-08-24"
-        }
-      ]
-    },
-<<<<<<< Updated upstream
-=======
-    "6237": {
-      "subindustries": [
-        "消費性IC"
-      ],
-      "records": [
-        {
-          "industry": "半導體",
-          "sub_industry": "消費性IC",
-          "date": "2026-08-24"
-        }
-      ]
-    },
->>>>>>> Stashed changes
-    "6291": {
-      "subindustries": [
-        "電源管理IC"
-      ],
-      "records": [
-        {
-          "industry": "半導體",
-          "sub_industry": "電源管理IC",
           "date": "2026-08-24"
         }
       ]
@@ -3872,7 +3255,6 @@
         }
       ]
     },
-<<<<<<< Updated upstream
     "6488": {
       "subindustries": [
         "晶圓製造"
@@ -3881,20 +3263,6 @@
         {
           "industry": "半導體",
           "sub_industry": "晶圓製造",
-          "date": "2026-08-24"
-        }
-      ]
-    },
-=======
->>>>>>> Stashed changes
-    "6494": {
-      "subindustries": [
-        "消費性IC"
-      ],
-      "records": [
-        {
-          "industry": "半導體",
-          "sub_industry": "消費性IC",
           "date": "2026-08-24"
         }
       ]
@@ -3911,58 +3279,26 @@
         }
       ]
     },
-<<<<<<< Updated upstream
-    "6548": {
+    "6494": {
       "subindustries": [
-        "導線架"
-=======
-    "6488": {
-      "subindustries": [
-        "晶圓製造"
->>>>>>> Stashed changes
+        "消費性IC"
       ],
       "records": [
         {
           "industry": "半導體",
-<<<<<<< Updated upstream
-          "sub_industry": "導線架",
-=======
-          "sub_industry": "晶圓製造",
->>>>>>> Stashed changes
+          "sub_industry": "消費性IC",
           "date": "2026-08-24"
         }
       ]
     },
-    "6532": {
-      "subindustries": [
-        "生產製程及檢測設備"
-      ],
-      "records": [
-        {
-          "industry": "半導體",
-          "sub_industry": "生產製程及檢測設備",
-          "date": "2026-08-24"
-        }
-      ]
-    },
-<<<<<<< Updated upstream
-    "6640": {
-      "subindustries": [
-        "生產製程及檢測設備"
-=======
     "6548": {
       "subindustries": [
         "導線架"
->>>>>>> Stashed changes
       ],
       "records": [
         {
           "industry": "半導體",
-<<<<<<< Updated upstream
-          "sub_industry": "生產製程及檢測設備",
-=======
           "sub_industry": "導線架",
->>>>>>> Stashed changes
           "date": "2026-08-24"
         }
       ]
@@ -3997,7 +3333,30 @@
         }
       ]
     },
-<<<<<<< Updated upstream
+    "6640": {
+      "subindustries": [
+        "生產製程及檢測設備"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "生產製程及檢測設備",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "6532": {
+      "subindustries": [
+        "生產製程及檢測設備"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "生產製程及檢測設備",
+          "date": "2026-08-24"
+        }
+      ]
+    },
     "6651": {
       "subindustries": [
         "電源管理IC"
@@ -4010,8 +3369,6 @@
         }
       ]
     },
-=======
->>>>>>> Stashed changes
     "6643": {
       "subindustries": [
         "IP設計/IC設計代工服務"
@@ -4024,11 +3381,7 @@
         }
       ]
     },
-<<<<<<< Updated upstream
     "6683": {
-=======
-    "6640": {
->>>>>>> Stashed changes
       "subindustries": [
         "生產製程及檢測設備"
       ],
@@ -4040,21 +3393,6 @@
         }
       ]
     },
-<<<<<<< Updated upstream
-=======
-    "6651": {
-      "subindustries": [
-        "電源管理IC"
-      ],
-      "records": [
-        {
-          "industry": "半導體",
-          "sub_industry": "電源管理IC",
-          "date": "2026-08-24"
-        }
-      ]
-    },
->>>>>>> Stashed changes
     "6679": {
       "subindustries": [
         "感測裝置",
@@ -4085,28 +3423,6 @@
         }
       ]
     },
-<<<<<<< Updated upstream
-    "6693": {
-      "subindustries": [
-        "電源管理IC"
-=======
-    "6683": {
-      "subindustries": [
-        "生產製程及檢測設備"
->>>>>>> Stashed changes
-      ],
-      "records": [
-        {
-          "industry": "半導體",
-<<<<<<< Updated upstream
-          "sub_industry": "電源管理IC",
-=======
-          "sub_industry": "生產製程及檢測設備",
->>>>>>> Stashed changes
-          "date": "2026-08-24"
-        }
-      ]
-    },
     "6684": {
       "subindustries": [
         "消費性IC",
@@ -4125,21 +3441,6 @@
         }
       ]
     },
-<<<<<<< Updated upstream
-=======
-    "6693": {
-      "subindustries": [
-        "電源管理IC"
-      ],
-      "records": [
-        {
-          "industry": "半導體",
-          "sub_industry": "電源管理IC",
-          "date": "2026-08-24"
-        }
-      ]
-    },
->>>>>>> Stashed changes
     "6708": {
       "subindustries": [
         "網路通訊IC",
@@ -4160,6 +3461,18 @@
         {
           "industry": "雲端運算",
           "sub_industry": "SaaS",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "6693": {
+      "subindustries": [
+        "電源管理IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "電源管理IC",
           "date": "2026-08-24"
         }
       ]
@@ -4188,18 +3501,6 @@
         }
       ]
     },
-    "6732": {
-      "subindustries": [
-        "光源管理IC"
-      ],
-      "records": [
-        {
-          "industry": "半導體",
-          "sub_industry": "光源管理IC",
-          "date": "2026-08-24"
-        }
-      ]
-    },
     "6788": {
       "subindustries": [
         "生產製程及檢測設備"
@@ -4212,7 +3513,31 @@
         }
       ]
     },
+    "6732": {
+      "subindustries": [
+        "光源管理IC"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "光源管理IC",
+          "date": "2026-08-24"
+        }
+      ]
+    },
     "6823": {
+      "subindustries": [
+        "生產製程及檢測設備"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "生產製程及檢測設備",
+          "date": "2026-08-24"
+        }
+      ]
+    },
+    "6895": {
       "subindustries": [
         "生產製程及檢測設備"
       ],
@@ -4244,18 +3569,6 @@
         {
           "industry": "電機機械",
           "sub_industry": "金屬加工處理",
-          "date": "2026-08-24"
-        }
-      ]
-    },
-    "6895": {
-      "subindustries": [
-        "生產製程及檢測設備"
-      ],
-      "records": [
-        {
-          "industry": "半導體",
-          "sub_industry": "生產製程及檢測設備",
           "date": "2026-08-24"
         }
       ]
@@ -4296,11 +3609,7 @@
         }
       ]
     },
-<<<<<<< Updated upstream
     "7556": {
-=======
-    "7704": {
->>>>>>> Stashed changes
       "subindustries": [
         "生產製程及檢測設備"
       ],
@@ -4312,11 +3621,7 @@
         }
       ]
     },
-<<<<<<< Updated upstream
     "7704": {
-=======
-    "7556": {
->>>>>>> Stashed changes
       "subindustries": [
         "生產製程及檢測設備"
       ],
@@ -4370,21 +3675,6 @@
         }
       ]
     },
-<<<<<<< Updated upstream
-=======
-    "7772": {
-      "subindustries": [
-        "生產製程及檢測設備"
-      ],
-      "records": [
-        {
-          "industry": "半導體",
-          "sub_industry": "生產製程及檢測設備",
-          "date": "2026-08-24"
-        }
-      ]
-    },
->>>>>>> Stashed changes
     "7770": {
       "subindustries": [
         "消費性IC"
@@ -4397,11 +3687,7 @@
         }
       ]
     },
-<<<<<<< Updated upstream
     "7772": {
-=======
-    "7828": {
->>>>>>> Stashed changes
       "subindustries": [
         "生產製程及檢測設備"
       ],
@@ -4431,7 +3717,6 @@
         }
       ]
     },
-<<<<<<< Updated upstream
     "7828": {
       "subindustries": [
         "生產製程及檢測設備"
@@ -4444,8 +3729,6 @@
         }
       ]
     },
-=======
->>>>>>> Stashed changes
     "8024": {
       "subindustries": [
         "消費性IC",
@@ -4530,27 +3813,6 @@
         }
       ]
     },
-<<<<<<< Updated upstream
-=======
-    "8091": {
-      "subindustries": [
-        "生產製程及檢測設備",
-        "生產製程、檢測設備及原物料"
-      ],
-      "records": [
-        {
-          "industry": "半導體",
-          "sub_industry": "生產製程及檢測設備",
-          "date": "2026-08-24"
-        },
-        {
-          "industry": "LED照明產業",
-          "sub_industry": "生產製程、檢測設備及原物料",
-          "date": "2026-08-24"
-        }
-      ]
-    },
->>>>>>> Stashed changes
     "8088": {
       "subindustries": [
         "IC模組",
@@ -4580,7 +3842,6 @@
         }
       ]
     },
-<<<<<<< Updated upstream
     "8091": {
       "subindustries": [
         "生產製程及檢測設備",
@@ -4611,8 +3872,6 @@
         }
       ]
     },
-=======
->>>>>>> Stashed changes
     "8102": {
       "subindustries": [
         "消費性IC"
@@ -4622,65 +3881,6 @@
           "industry": "半導體",
           "sub_industry": "消費性IC",
           "date": "2026-08-24"
-        }
-      ]
-    },
-<<<<<<< Updated upstream
-    "8299": {
-      "subindustries": [
-        "IC模組",
-        "IC通路",
-        "IP設計/IC設計代工服務",
-        "記憶體",
-        "隨身碟、記憶卡讀卡機",
-        "其他電腦及週邊設備之零組件",
-        "記憶體控制IC"
-=======
-    "8227": {
-      "subindustries": [
-        "IP設計/IC設計代工服務"
->>>>>>> Stashed changes
-      ],
-      "records": [
-        {
-          "industry": "半導體",
-<<<<<<< Updated upstream
-          "sub_industry": "IC模組",
-          "date": "2026-08-24"
-        },
-        {
-          "industry": "半導體",
-          "sub_industry": "IC通路",
-          "date": "2026-08-24"
-        },
-        {
-          "industry": "半導體",
-          "sub_industry": "IP設計/IC設計代工服務",
-          "date": "2026-08-24"
-        },
-        {
-          "industry": "電腦及週邊設備",
-          "sub_industry": "記憶體",
-          "date": "2026-08-24"
-        },
-        {
-          "industry": "電腦及週邊設備",
-          "sub_industry": "隨身碟、記憶卡讀卡機",
-          "date": "2026-08-24"
-        },
-        {
-          "industry": "電腦及週邊設備",
-          "sub_industry": "其他電腦及週邊設備之零組件",
-          "date": "2026-08-24"
-        },
-        {
-          "industry": "半導體",
-          "sub_industry": "記憶體控制IC",
-          "date": "2026-08-24"
-=======
-          "sub_industry": "IP設計/IC設計代工服務",
-          "date": "2026-08-24"
->>>>>>> Stashed changes
         }
       ]
     },
@@ -4750,8 +3950,6 @@
         }
       ]
     },
-<<<<<<< Updated upstream
-=======
     "8299": {
       "subindustries": [
         "IC模組",
@@ -4800,7 +3998,6 @@
         }
       ]
     },
->>>>>>> Stashed changes
     "8383": {
       "subindustries": [
         "生產製程及檢測設備",

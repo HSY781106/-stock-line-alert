@@ -1,129 +1,4 @@
 {
-  "0050": {
-    "daily": false,
-    "weekly": false,
-    "last_date": "2026-08-18"
-  },
-  "2330": {
-    "daily": false,
-    "weekly": false,
-    "last_date": "2026-08-18"
-  },
-  "3711": {
-    "daily": false,
-    "weekly": false,
-    "last_date": "2026-08-18"
-  },
-  "QQQ": {
-    "daily": false,
-    "weekly": false,
-    "last_date": "2026-08-18",
-    "daily_alert": false,
-    "date": "2026-08-19",
-    "weekly_alert": false
-  },
-  "台灣加權指數": {
-    "daily": false,
-    "weekly": false,
-    "last_date": "2026-08-18",
-    "daily_alert": false,
-    "date": "2026-08-19",
-    "weekly_alert": false
-  },
-  "0050 元大台灣50": {
-    "daily_alert": false,
-    "weekly_alert": false,
-    "date": "2026-08-19"
-  },
-  "2330 台積電": {
-    "daily_alert": false,
-    "weekly_alert": false,
-    "date": "2026-08-19"
-  },
-  "3711 日月光投控": {
-    "daily_alert": false,
-    "weekly_alert": false,
-    "date": "2026-08-19"
-  },
-  "daily": {
-    "0050 元大台灣50": {
-      "daily_alert": false,
-      "weekly_alert": false,
-      "date": "2026-08-20"
-    },
-    "2330 台積電": {
-      "daily_alert": false,
-      "weekly_alert": false,
-      "date": "2026-08-20"
-    },
-    "3711 日月光投控": {
-      "daily_alert": false,
-      "weekly_alert": false,
-      "date": "2026-08-20"
-    },
-    "QQQ": {
-      "daily_alert": false,
-      "weekly_alert": false,
-      "date": "2026-08-20"
-    },
-    "台灣加權指數": {
-      "daily_alert": false,
-      "weekly_alert": false,
-      "date": "2026-08-20"
-    }
-  },
-  "valuation_v2": {
-    "2330": false,
-    "3711": false
-  },
-  "valuation_v21": {
-    "2330": false,
-    "3711": false
-  },
-  "intraday_detection": {
-    "0050 元大台灣50": {
-      "last_check": "2026-08-20T09:02:43.080816+08:00",
-      "last_period_low": 104.9000015258789
-    },
-    "2330 台積電": {
-      "last_check": "2026-08-20T09:02:43.440895+08:00",
-      "last_period_low": 2350.0
-    },
-    "3711 日月光投控": {
-      "last_check": "2026-08-20T09:02:43.895129+08:00",
-      "last_period_low": 588.0
-    },
-    "QQQ": {
-      "last_check": "2026-08-20T09:02:44.348719+08:00",
-      "last_period_low": 716.1099853515625
-    },
-    "台灣加權指數": {
-      "last_check": "2026-08-20T09:02:44.589830+08:00",
-      "last_period_low": 45308.6796875
-    }
-  },
-  "interval_alert": {
-    "0050 元大台灣50": {
-      "last_check_time": "2026-08-20T09:10:24.244136+08:00",
-      "last_check_price": 104.9000015258789
-    },
-    "2330 台積電": {
-      "last_check_time": "2026-08-20T09:10:25.035418+08:00",
-      "last_check_price": 2350.0
-    },
-    "3711 日月光投控": {
-      "last_check_time": "2026-08-20T09:10:25.623751+08:00",
-      "last_check_price": 588.0
-    },
-    "QQQ": {
-      "last_check_time": "2026-08-20T09:10:26.059674+08:00",
-      "last_check_price": 716.1099853515625
-    },
-    "台灣加權指數": {
-      "last_check_time": "2026-08-20T09:10:26.485690+08:00",
-      "last_check_price": 45308.6796875
-    }
-  },
   "drop_alert": {
     "0050 元大台灣50": {
       "date": "2026-08-24",
@@ -153,58 +28,24 @@
   },
   "interval_low": {
     "0050 元大台灣50": {
-<<<<<<< Updated upstream
-      "last_check": "2026-08-24T11:37:05.930149+08:00",
-      "last_price": 104.25,
-      "last_interval_low": 104.19999694824219,
-      "last_interval_source": "Yahoo-5m"
+      "last_check": "2026-08-24T11:49:45.179856+08:00",
+      "last_price": 104.0999984741211
     },
     "2330 台積電": {
-      "last_check": "2026-08-24T11:37:06.314310+08:00",
-=======
-      "last_check": "2026-08-24T11:39:30.566385+08:00",
-      "last_price": 104.19999694824219,
-      "last_interval_low": 104.1500015258789,
-      "last_interval_source": "Yahoo-5m"
-    },
-    "2330 台積電": {
-      "last_check": "2026-08-24T11:39:30.999080+08:00",
->>>>>>> Stashed changes
-      "last_price": 2410.0,
-      "last_interval_low": 2390.0,
-      "last_interval_source": "Yahoo-5m"
+      "last_check": "2026-08-24T11:49:45.610907+08:00",
+      "last_price": 2410.0
     },
     "3711 日月光投控": {
-<<<<<<< Updated upstream
-      "last_check": "2026-08-24T11:37:10.709040+08:00",
-=======
-      "last_check": "2026-08-24T11:39:35.829429+08:00",
->>>>>>> Stashed changes
-      "last_price": 587.0,
-      "last_interval_low": 595.0,
-      "last_interval_source": "Yahoo-5m"
+      "last_check": "2026-08-24T11:49:50.274841+08:00",
+      "last_price": 587.0
     },
     "QQQ": {
-<<<<<<< Updated upstream
-      "last_check": "2026-08-24T11:37:11.467274+08:00",
-=======
-      "last_check": "2026-08-24T11:39:36.644568+08:00",
->>>>>>> Stashed changes
-      "last_price": 713.4400024414062,
-      "last_interval_low": 712.9099731445312,
-      "last_interval_source": "Yahoo-5m"
+      "last_check": "2026-08-24T11:49:51.071123+08:00",
+      "last_price": 713.4400024414062
     },
     "台灣加權指數": {
-<<<<<<< Updated upstream
-      "last_check": "2026-08-24T11:37:11.880670+08:00",
-      "last_price": 45093.73828125,
-      "last_interval_low": 45055.8984375,
-=======
-      "last_check": "2026-08-24T11:39:37.409667+08:00",
-      "last_price": 45078.2890625,
-      "last_interval_low": 45039.3984375,
->>>>>>> Stashed changes
-      "last_interval_source": "Yahoo-5m"
+      "last_check": "2026-08-24T11:49:51.378426+08:00",
+      "last_price": 45012.03125
     }
   }
 }
