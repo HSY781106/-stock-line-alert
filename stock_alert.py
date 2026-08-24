@@ -1,4 +1,4 @@
-# stock_alert.py V2.10.24
+# stock_alert.py V2.10.25
 # 效能修正版：
 # 1. 全市場資料批次化
 # 2. 單次執行快取
@@ -27,7 +27,7 @@
 # - 保留原本基本面 / 技術 / 籌碼 / 風險 / LINE 功能
 #
 # 股票跌幅 + 15分鐘區間最低價 + 動態估值 + 技術 + 籌碼 + 100分制加碼決策
-# V2.10.24：LINE 任意股票穩定查詢版 + 1985檔全市場技術快取；保留 V2.10.19 全部分析功能
+# V2.10.25：LINE 任意股票穩定查詢版 + 1985檔全市場技術快取；保留 V2.10.19 全部分析功能
 #          + LINE webhook HMAC-SHA256 簽章驗證 + 群組/聊天室支援
 #          + Actions 批次建立全市場技術快取；Render LINE 優先只讀快取，避免 Yahoo/TWSE 即時限流
 
@@ -113,6 +113,11 @@ MAX_HISTORY_DAYS_PER_RUN = 75
 TECH_CACHE_MAX_AGE = 36 * 3600
 TECH_BATCH_CHUNK = 80
 TECH_BATCH_TIMEOUT = 30
+
+# V2.10.25：Actions 建立全市場 PE 歷史快取。TWSE/TPEx 每個日期的 PE API
+# 本身就是全市場資料，因此不需要逐股票查詢；約 100 個曆日即可涵蓋
+# 至少 60 個交易日，讓 LINE 任意股票都能取得一年平均 PE。
+PE_ALL_MARKET_CALENDAR_DAYS = 100
 TECH_BATCH_PERIOD = '6mo'
 TECH_BATCH_INTERVAL = '1d'
 
@@ -5006,10 +5011,17 @@ def score_risk(
 
 
 def yahoo_light_fund(symbol, official=None):
-    """V2.10.19 Render Free 輕量基本面。
+    """V2.10.25 Render Free 輕量基本面。
 
-    優先使用本機 LINE 基本面快取；只有快取缺欄位才詢問 Yahoo。
-    Yahoo 被限流/SSL/網路失敗時，直接保留既有值，不讓整個 LINE 分析失敗。
+    五條資料管線彼此獨立：
+    1. PE/PB/殖利率優先使用 TWSE/TPEx 官方資料。
+    2. EPS Growth / ROE / PEG 優先讀 Actions/LINE 快取，再用一次 Yahoo
+       fundamentals-timeseries 補缺。
+    3. 若 PEG 與 PE 都有效而 EPS Growth 缺失，依 PEG 定義
+       growth = PE / PEG 補出 EPS Growth，避免 2317 出現
+       「PE 有、PEG 有、EPS Growth 卻 N/A」的不一致。
+    4. ROE 缺失時再用 PB/PE 推導。
+    5. 所有 Yahoo 失敗都不能阻塞 LINE。
     """
     o = {
         'eps_growth': None,
@@ -5066,6 +5078,22 @@ def yahoo_light_fund(symbol, official=None):
                 flush=True
             )
 
+    # V2.10.25：若 PE、PEG 都有效，但 EPS Growth 缺失，使用
+    # PEG = PE / Growth 的定義反推 Growth。
+    # 這只在 PE > 0、PEG > 0 時啟用；因此 1101 這類 PE 不適用的股票
+    # 不會被硬算出虛假的 EPS 成長率。
+    if o.get('eps_growth') is None:
+        pe_for_growth = to_float(o.get('pe'))
+        peg_for_growth = to_float(o.get('peg'))
+        if (pe_for_growth is not None and pe_for_growth > 0
+                and peg_for_growth is not None and peg_for_growth > 0):
+            o['eps_growth'] = pe_for_growth / peg_for_growth
+            print(
+                f'LINE基本面：EPS成長使用 PE/PEG 推導 {code} = '
+                f'{o["eps_growth"]:.2f}%',
+                flush=True
+            )
+
     # V2.10.19：免費 PE/PB fallback。ROE 缺失時，用同口徑 PB/PE 推導；
     # 若 Yahoo 正式 ROE 已存在，絕不覆蓋。
     if o.get('roe') is None:
@@ -5074,7 +5102,7 @@ def yahoo_light_fund(symbol, official=None):
             o['roe']=pb_for_roe/pe_for_roe*100
             print(f'LINE基本面：ROE 使用 PE/PB 推導 {code} = {o["roe"]:.2f}%',flush=True)
 
-    # 只保存單一標的的少量數字，不保存 Yahoo DataFrame / info。
+    # 只保存單一標的的少量數字，不保存 Yahoo DataFrame / info.
     try:
         cache[code] = {
             'eps_growth': o.get('eps_growth'),
@@ -5133,7 +5161,7 @@ def analysis(
         )
     )
 
-    # V2.10.24：LINE Free 絕對不因次產業缺快取而呼叫 ic.tpex.org.tw。
+    # V2.10.25：LINE Free 絕對不因次產業缺快取而呼叫 ic.tpex.org.tw。
     # 任意股票（例如 1101）若不在 Actions 已同步的次產業快取中，
     # 直接走「同大產業 Top10」備援，不等待外部次產業 API。
     if (not subindustries) and (not line_light):
@@ -5173,6 +5201,17 @@ def analysis(
         PE_HISTORY_FILE
     )
 
+    # V2.10.25：Render 本機沒有 pe_history.json 時，改讀 GitHub Actions
+    # 已產生的遠端全市場 PE 歷史快取；仍然不對 TWSE/TPEx 逐日即時回補。
+    if line_light and (not isinstance(h, dict) or not h):
+        remote_pe = load_remote_json_cache(PE_HISTORY_FILE, timeout=4)
+        if isinstance(remote_pe, dict) and remote_pe:
+            h = remote_pe
+            print(
+                f'LINE PE歷史：使用 GitHub 全市場快取 {len(h)} 檔',
+                flush=True
+            )
+
     if backfill and not line_light:
 
         h = backfill_pe(
@@ -5186,7 +5225,7 @@ def analysis(
             h
         )
     elif backfill and line_light:
-        # V2.10.24：Render Free 不對「沒有歷史 PE 快取」的任意股票
+        # V2.10.25：Render Free 不對「沒有歷史 PE 快取」的任意股票
         # 往前逐日呼叫 TWSE/TPEX。否則 1101 這類首次查詢會卡在
         # PE歷史回補，最多搜尋 370 個曆日。只使用 Actions 已存在的歷史資料。
         cached_valid = sum(
@@ -5241,7 +5280,7 @@ def analysis(
 
     print(f'LINE輕量分析：建立同次產業 Top10 {code}', flush=True) if line_light else None
     if line_light and not subindustries:
-        # V2.10.24：次產業未快取時，完全禁止即時補抓。
+        # V2.10.25：次產業未快取時，完全禁止即時補抓。
         # 改用同大產業、市值 Top10，讓 1101 等任意股票仍可完成分析。
         peers = []
         for c, x in u.items():
@@ -5528,7 +5567,7 @@ def analysis(
     # --------------------------------------------------------
 
     return (
-        f'📊 股票加碼分析 V2.10.24\n\n'
+        f'📊 股票加碼分析 V2.10.25\n\n'
         f'標的：{name}（{code}）\n'
         f'市場：{market}\n'
         f'產業：{industry}\n'
@@ -5806,7 +5845,7 @@ def prepare_line_subindustries(u, query):
         f'快取缺少={len(missing)}'
     )
 
-    # V2.10.24 核心修正：Render Free 絕不補抓次產業。
+    # V2.10.25 核心修正：Render Free 絕不補抓次產業。
     # 1101 這類不在目前 Actions 目標大產業快取的股票，若在這裡
     # 呼叫 ic.tpex.org.tw，SSL/timeout 會把整個背景工作卡住。
     # Actions 負責慢速建立快取；LINE 只讀既有快取，缺少時交給
@@ -5893,7 +5932,7 @@ def handle_event(e, u):
     if text.lower() in {'help', '說明', '功能', '股票'}:
         ok = reply_line(
             token,
-            '📈 股票加碼分析 Bot V2.10.24\n\n'
+            '📈 股票加碼分析 Bot V2.10.25\n\n'
             '輸入股票代號或名稱即可查詢。\n'
             '例如：2330、台積電、3711、日月光投控\n\n'
             '模型：基本面40 + 技術30 + 籌碼20 + 風險10。\n'
@@ -6263,6 +6302,91 @@ def build_line_caches_for_actions():
 # Alerts
 # ============================================================
 
+def refresh_all_market_pe_history(pe_history):
+    """V2.10.25：Actions 用的全市場 PE 歷史快取。
+
+    TWSE/TPEx 的歷史 PE endpoint 一次回傳整個市場，因此只需要按「日期」
+    抓取，不需要 1985 檔逐股請求。Render LINE 永遠只讀這份 GitHub 快取。
+
+    目的：解決 2317 這類不在 STOCKS 目標清單中的股票，雖然目前 PE 有值，
+    但一年平均 PE 卻因 pe_history.json 沒有該股票而變成 N/A。
+    """
+    if not isinstance(pe_history, dict):
+        pe_history = {}
+
+    today = datetime.now(TW_TZ).date()
+    start = today - timedelta(days=PE_ALL_MARKET_CALENDAR_DAYS)
+    markets = ('TWSE', 'TPEX')
+
+    # 先統計現有有效樣本；已達標股票不需要再額外做任何事，但日期資料
+    # 仍需補齊到足夠的新鮮度，所以這裡最多掃描設定的曆日範圍。
+    scanned = 0
+    fetched = 0
+    meta = pe_history.setdefault('_meta', {})
+    coverage = meta.setdefault('coverage', {})
+
+    d = today
+    while d >= start:
+        if d.weekday() < 5:
+            ds = d.strftime('%Y%m%d')
+            for market in markets:
+                # get_pe_by_date() 自帶日期快取，因此同一日期不會重複請求。
+                try:
+                    data = get_pe_by_date(ds, market)
+                    fetched += 1
+                except Exception as e:
+                    print(
+                        f'全市場 PE 快取失敗：{market} {ds} / {type(e).__name__}: {e}',
+                        flush=True
+                    )
+                    data = {}
+
+                valid_count = 0
+                for code, row in (data or {}).items():
+                    code = clean_code(code)
+                    if not code or not isinstance(row, dict):
+                        continue
+                    pe = to_float(row.get('pe'))
+                    if pe is None or not (0 < pe <= PE_MAX_VALID):
+                        continue
+                    bucket = pe_history.setdefault(code, {})
+                    # 新資料優先；保留同日期舊值也沒有意義。
+                    bucket[ds] = pe
+                    valid_count += 1
+
+                coverage.setdefault(market, {})[ds] = valid_count
+
+            scanned += 1
+        d -= timedelta(days=1)
+
+    # 清掉一年以前的 PE 歷史，避免 GitHub 快取無限制膨脹。
+    cutoff = today - timedelta(days=370)
+    removed = 0
+    for code in list(pe_history.keys()):
+        if code == '_meta':
+            continue
+        bucket = pe_history.get(code)
+        if not isinstance(bucket, dict):
+            continue
+        for ds in list(bucket.keys()):
+            try:
+                dd = datetime.strptime(ds, '%Y%m%d').date()
+            except Exception:
+                continue
+            if dd < cutoff:
+                del bucket[ds]
+                removed += 1
+        if not bucket:
+            pe_history.pop(code, None)
+
+    print(
+        f'全市場 PE 歷史快取：{len(pe_history)} 檔，'
+        f'掃描 {scanned} 個交易日、API資料 {fetched} 次、清理 {removed} 筆',
+        flush=True
+    )
+    return pe_history
+
+
 def run_alerts():
 
     global RUN_CACHE
@@ -6347,6 +6471,18 @@ def run_alerts():
     # 只讀到 pe_history.json 裡少數舊資料。
     # --------------------------------------------------------
     pe_history = load_json(PE_HISTORY_FILE)
+
+    # V2.10.25：先建立全市場日期型 PE 快取，再補 STOCKS 目標股。
+    # 前者讓 LINE 可以查任意 1985 檔；後者仍保留原本目標股的至少 60 個
+    # 有效 PE 保證。
+    try:
+        pe_history = refresh_all_market_pe_history(pe_history)
+    except Exception as e:
+        print(
+            f'⚠️ 全市場 PE 歷史快取更新失敗：{type(e).__name__}: {e}',
+            flush=True
+        )
+
     for target_name, target_symbol in STOCKS.items():
         target_code = clean_code(target_symbol)
         target_item = u.get(target_code)
