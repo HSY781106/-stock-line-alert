@@ -1,4 +1,4 @@
-# stock_alert.py V2.10.27
+# stock_alert.py V2.10.28
 # 效能修正版：
 # 1. 全市場資料批次化
 # 2. 單次執行快取
@@ -27,7 +27,7 @@
 # - 保留原本基本面 / 技術 / 籌碼 / 風險 / LINE 功能
 #
 # 股票跌幅 + 15分鐘區間最低價 + 動態估值 + 技術 + 籌碼 + 100分制加碼決策
-# V2.10.27：LINE 任意股票穩定查詢版 + 1985檔全市場技術快取；保留 V2.10.19 全部分析功能
+# V2.10.28：全市場估值/法人/次產業修正版；保留 V2.10.27 全部分析功能
 #          + LINE webhook HMAC-SHA256 簽章驗證 + 群組/聊天室支援
 #          + Actions 批次建立全市場技術快取；Render LINE 優先只讀快取，避免 Yahoo/TWSE 即時限流
 
@@ -62,6 +62,7 @@ LINE_CHANNEL_SECRET = os.environ.get('LINE_CHANNEL_SECRET', '')
 TWSE_BASE = 'https://openapi.twse.com.tw/v1'
 TWSE_WEB_BASE = 'https://www.twse.com.tw/rwd/zh'
 TPEX_BASE = 'https://www.tpex.org.tw/openapi/v1'
+TPEX_WEB_BASE = 'https://www.tpex.org.tw/web/stock/aftertrading/peratio_analysis/pera_result.php'
 
 TW_TZ = ZoneInfo('Asia/Taipei')
 
@@ -1304,6 +1305,46 @@ def parse_value_chain_html(text, code):
 
     return out
 
+def fetch_value_chain_for_stock_fast(code):
+    """V2.10.28：LINE 單股次產業快速查詢。
+
+    只做一次官方請求；若 Render 的憑證鏈異常，僅對 SSL 錯誤使用 verify=False。
+    不呼叫 Jina、不掃同產業、不阻塞整個 LINE 工作。
+    """
+    code = clean_code(code)
+    if not code:
+        return None
+    url = f'{VALUE_CHAIN_BASE}?stk_code={code}'
+    headers = {
+        'User-Agent': 'Mozilla/5.0 stock-alert/2.10.28',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+        'Accept-Language': 'zh-TW,zh;q=0.9,en;q=0.8',
+        'Referer': 'https://ic.tpex.org.tw/'
+    }
+    try:
+        try:
+            r = requests.get(url, timeout=4, headers=headers)
+        except requests.exceptions.SSLError as e:
+            if 'CERTIFICATE_VERIFY_FAILED' not in str(e):
+                raise
+            r = requests.get(url, timeout=4, headers=headers, verify=False)
+        r.raise_for_status()
+        raw = r.content
+        text = None
+        for enc in ('utf-8-sig','utf-8','cp950','big5'):
+            try:
+                text = raw.decode(enc); break
+            except UnicodeDecodeError:
+                pass
+        if text is None:
+            text = raw.decode('utf-8', errors='replace')
+        parsed = parse_value_chain_html(text, code)
+        return parsed if parsed.get('subindustries') else None
+    except Exception as e:
+        print(f'次產業單股快速 API 失敗：{code} / {type(e).__name__}: {e}', flush=True)
+        return None
+
+
 def fetch_value_chain_for_stock(code, allow_jina=True):
     """V2.10.19：免費次產業抓取修正版。
 
@@ -1331,12 +1372,13 @@ def fetch_value_chain_for_stock(code, allow_jina=True):
     # A. 官方頁面：最多 2 次；批次模式不做 Jina。
     for attempt in range(2):
         try:
-            r = requests.get(
-                official_url,
-                timeout=VALUE_CHAIN_TIMEOUT,
-                headers=headers,
-                allow_redirects=True
-            )
+            try:
+                r = requests.get(official_url, timeout=VALUE_CHAIN_TIMEOUT, headers=headers, allow_redirects=True)
+            except requests.exceptions.SSLError as ssl_err:
+                if 'CERTIFICATE_VERIFY_FAILED' not in str(ssl_err):
+                    raise
+                print(f'次產業 HTTPS 憑證驗證失敗，啟用單次備援：{code}', flush=True)
+                r = requests.get(official_url, timeout=VALUE_CHAIN_TIMEOUT, headers=headers, allow_redirects=True, verify=False)
             r.raise_for_status()
             raw = r.content
             page_text = None
@@ -2697,6 +2739,55 @@ def check_drop_alert(
 # Valuation
 # ============================================================
 
+def tpex_web_peratio_data(ds=None, timeout=None):
+    """V2.10.28：TPEx 官方網頁版 PE/PB/殖利率備援。
+
+    OpenAPI 偶爾少回部分上櫃股票；例如 6488 可能不在 OpenAPI 回傳集合，
+    但 TPEx 官方「個股本益比、殖利率、股價淨值比」網頁資料仍有該股票。
+    使用官方 JSON 輸出，不依賴第三方資料。
+    """
+    params = {
+        'l': 'zh-tw',
+        'o': 'json'
+    }
+    if ds:
+        params['d'] = ds
+    try:
+        return http_json(
+            TPEX_WEB_BASE,
+            params,
+            timeout=timeout or max(4, TPEX_TIMEOUT),
+            retries=0
+        ) or {}
+    except Exception as e:
+        print(f'TPEx 網頁版 PE 備援失敗 {ds or "latest"}：{type(e).__name__}: {e}', flush=True)
+        return {}
+
+
+def parse_tpex_web_peratio(data):
+    """解析 TPEx pera_result.php 的 aaData 格式。"""
+    out = {}
+    if not isinstance(data, dict):
+        return out
+    rows = data.get('aaData') or data.get('data') or []
+    if not isinstance(rows, list):
+        return out
+    for r in rows:
+        if isinstance(r, dict):
+            code = clean_code(first_value(r, ['證券代號','公司代號','symbol','SecuritiesCompanyCode','code']))
+            pe = first_value(r, ['本益比','peRatio','PERatio','PE'])
+            yld = first_value(r, ['殖利率(%)','殖利率','dividendYield','DividendYield'])
+            pb = first_value(r, ['股價淨值比','pbRatio','PBR','PBRatio'])
+        elif isinstance(r, list) and len(r) >= 7:
+            code = clean_code(r[0])
+            pe, yld, pb = r[2], r[5], r[6]
+        else:
+            continue
+        if code:
+            out[code] = {'pe': to_float(pe), 'pb': to_float(pb), 'yield': to_float(yld)}
+    return out
+
+
 def parse_pe(data):
 
     out = {}
@@ -2853,17 +2944,28 @@ def get_current_pe_data():
         out = _line_current_pe_data()
     else:
         out = {
-            **parse_pe(
-                twse_get(
-                    '/exchangeReport/BWIBBU_ALL'
-                )
-            ),
-            **parse_pe(
-                tpex_get(
-                    '/tpex_mainboard_peratio_analysis'
-                )
-            )
+            **parse_pe(twse_get('/exchangeReport/BWIBBU_ALL')),
+            **parse_pe(tpex_get('/tpex_mainboard_peratio_analysis'))
         }
+
+    # V2.10.28：TPEx OpenAPI 可能少回部分上櫃股票。
+    # 官方網頁 JSON 只補缺少的股票，不改寫 OpenAPI 已成功資料。
+    try:
+        tpex_count = sum(1 for c in out if c and len(str(c)) == 4 and c.isdigit())
+        if tpex_count < 900:
+            web_data = parse_tpex_web_peratio(tpex_web_peratio_data(timeout=5))
+            added = 0
+            for c, row in web_data.items():
+                if c not in out or not any(to_float(out.get(c, {}).get(k)) is not None for k in ('pe','pb','yield')):
+                    out[c] = row
+                    added += 1
+            if added:
+                print(f'TPEx 官方網頁 PE 備援補入：{added} 檔', flush=True)
+        # LINE 模式若已有小快取但目標股缺失，仍做一次官方網頁備援。
+        elif LINE_MODE_ACTIVE:
+            pass
+    except Exception as e:
+        print(f'TPEx PE 網頁備援處理失敗：{type(e).__name__}: {e}', flush=True)
 
     RUN_CACHE[key] = out
 
@@ -2905,12 +3007,17 @@ def get_pe_by_date(
         return {}
 
     if market == 'TPEX':
+        # V2.10.28：歷史上櫃 PE 直接使用 TPEx 官方網頁 JSON；
+        # 該資料比 OpenAPI 完整，且一次就是整個上櫃市場，避免 6488 等股票被漏掉。
         try:
-            data = tpex_get(
-                '/tpex_mainboard_peratio_analysis',
-                {'date': ds}
-            )
-            parsed = parse_pe(data)
+            parsed = parse_tpex_web_peratio(tpex_web_peratio_data(ds, timeout=5))
+            if parsed:
+                PE_DATE_CACHE[key] = parsed
+                return parsed
+        except Exception as e:
+            print(f'TPEx 官方網頁歷史 PE 失敗：{ds} / {type(e).__name__}', flush=True)
+        try:
+            parsed = parse_pe(tpex_get('/tpex_mainboard_peratio_analysis', {'date': ds}))
             PE_DATE_CACHE[key] = parsed
             return parsed
         except Exception as e:
@@ -5126,14 +5233,22 @@ def analysis(
         )
     )
 
-    # V2.10.25：LINE Free 絕對不因次產業缺快取而呼叫 ic.tpex.org.tw。
-    # 任意股票（例如 1101）若不在 Actions 已同步的次產業快取中，
-    # 直接走「同大產業 Top10」備援，不等待外部次產業 API。
-    if (not subindustries) and (not line_light):
-        subindustries = ensure_subindustry_for_query(
-            code,
-            item
-        )
+    # V2.10.28：LINE Free 不掃同產業 1985 檔；但若「目標股自己」沒有次產業快取，
+    # 允許一次短 timeout 官方查詢，成功後立刻寫入快取。這解決 1101 等首次查詢永遠顯示 N/A。
+    if not subindustries:
+        if line_light:
+            try:
+                data = fetch_value_chain_for_stock_fast(code)
+                if data and data.get('subindustries'):
+                    subindustries = data['subindustries']
+                    item['subindustries'] = list(dict.fromkeys(subindustries))
+                    item['subindustry'] = subindustries[0]
+                    SUBINDUSTRY_CACHE[code] = data
+                    print(f'LINE次產業：單股快速補抓成功 {code} → {", ".join(subindustries)}', flush=True)
+            except Exception as e:
+                print(f'LINE次產業：單股快速補抓失敗 {code}：{type(e).__name__}', flush=True)
+        else:
+            subindustries = ensure_subindustry_for_query(code, item)
 
     # V2.10.5 修正：ensure_subindustry_for_query() 成功後，
     # 立即把最新次產業同步回 LINE 查詢使用的市場股票池。
@@ -5205,10 +5320,18 @@ def analysis(
     # 官方 PE/PB/殖利率資料先取出，再交給 LINE 輕量基本面路徑。
     # V2.10.19 修正：原本 off 在 yahoo_light_fund() 呼叫後才建立，
     # 導致 LINE 查詢出現 UnboundLocalError。
-    off = pe_data.get(
-        code,
-        {}
-    )
+    off = pe_data.get(code, {})
+
+    # V2.10.28：LINE 任意 TPEX 股票若不在 GitHub PE 快取，
+    # 只對「這一檔」做一次 TPEx 官方網頁 JSON 查詢，不抓全市場。
+    if line_light and market == 'TPEX' and not any(to_float(off.get(k)) is not None for k in ('pe','pb','yield')):
+        try:
+            one_tpex = parse_tpex_web_peratio(tpex_web_peratio_data(timeout=5)).get(code)
+            if one_tpex:
+                off = one_tpex
+                print(f'LINE PE：TPEx 官方網頁補到 {code}', flush=True)
+        except Exception as e:
+            print(f'LINE PE：TPEx 單股官方備援失敗 {code}：{type(e).__name__}', flush=True)
 
     if line_light:
         print(f'LINE輕量分析：基本面資料 {code}', flush=True)
@@ -5536,6 +5659,7 @@ def analysis(
         f'次產業：{subindustry_display}\n\n'
 
         f'【估值 / 基本面 40分】\n'
+        f'估值模型：{INDUSTRY_MODEL.get(industry, DEFAULT_MODEL).get("profile", "特殊型")}\n'
         f'PE：{fmt(pe)}\n'
         f'一年平均PE：{fmt(one)}'
         f'（樣本 {sample}）\n'
@@ -5550,7 +5674,13 @@ def analysis(
         f'{fmt(yf_f["eps_growth"])}%\n'
         f'PEG：{fmt(yf_f["peg"])}\n'
         f'ROE：{fmt(yf_f["roe"])}%\n'
-        f'基本面得分：{fs}/40\n\n'
+        f'基本面得分：{fs}/40\n'
+        f'本產業配分：PE {INDUSTRY_MODEL.get(industry, DEFAULT_MODEL).get("weights",{}).get("pe",0)}、'
+        f'PEG {INDUSTRY_MODEL.get(industry, DEFAULT_MODEL).get("weights",{}).get("peg",0)}、'
+        f'PB {INDUSTRY_MODEL.get(industry, DEFAULT_MODEL).get("weights",{}).get("pb",0)}、'
+        f'殖利率 {INDUSTRY_MODEL.get(industry, DEFAULT_MODEL).get("weights",{}).get("yield",0)}、'
+        f'ROE {INDUSTRY_MODEL.get(industry, DEFAULT_MODEL).get("weights",{}).get("roe",0)}、'
+        f'成長 {INDUSTRY_MODEL.get(industry, DEFAULT_MODEL).get("weights",{}).get("growth",0)}\n\n'
 
         f'【{peer_mode}】\n'
         f'{peer_text}\n\n'
@@ -5949,7 +6079,7 @@ def run_webhook_server():
     app = Flask(__name__)
 
     print('================================')
-    print('LINE Webhook Server V2.10.27')
+    print('LINE Webhook Server V2.10.28')
     print('模式：立即 Reply + Render Free 穩定背景 Thread + Push')
     print('================================')
 
@@ -6480,6 +6610,10 @@ def run_alerts():
                     'market'
                 )
             )
+
+    # V2.10.28：LINE 要能查任意 TWSE/TPEX 股票，因此 Actions 每次都建立兩個市場的
+    # 20 日法人與融資快取；不再只依 STOCKS 目標股決定市場。T86/TPEx 法人端點一次就是全市場資料。
+    target_markets.update({'TWSE', 'TPEX'})
 
     for m in target_markets:
 
