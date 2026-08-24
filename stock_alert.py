@@ -3251,7 +3251,7 @@ def kd(d):
     )
 
 
-def _twse_history_fallback(code, months=2):
+def _twse_history_fallback(code, months=3):
     """V2.10.17：LINE 技術面快速官方備援。"""
     frames=[]; today=datetime.now(TW_TZ).date(); first_month=today.replace(day=1)
     headers={'User-Agent':'Mozilla/5.0 stock-alert/2.10.17'}
@@ -3260,7 +3260,7 @@ def _twse_history_fallback(code, months=2):
         while m<=0: y-=1; m+=12
         ds=f'{y:04d}{m:02d}01'
         try:
-            r=requests.get(f'{TWSE_WEB_BASE}/exchangeReport/STOCK_DAY',params={'response':'json','date':ds,'stockNo':clean_code(code)},headers=headers,timeout=4)
+            r=requests.get(f'{TWSE_WEB_BASE}/afterTrading/STOCK_DAY',params={'response':'json','date':ds,'stockNo':clean_code(code)},headers=headers,timeout=3)
             r.raise_for_status(); data=r.json()
         except Exception as e:
             print(f'LINE技術面：TWSE {ds} 取得失敗 {code}：{type(e).__name__}',flush=True); continue
