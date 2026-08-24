@@ -5,6 +5,11 @@ on:
     - cron: "*/15 * * * *"
   workflow_dispatch:
 
+# 避免排程與手動執行同時寫入 main，造成 git push 衝突
+concurrency:
+  group: stock-alert-main
+  cancel-in-progress: false
+
 jobs:
   check-stock:
     runs-on: ubuntu-latest
@@ -15,6 +20,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -30,13 +37,43 @@ jobs:
         run: python stock_alert.py
 
       - name: Save alert state, PE history and subindustry cache
+        shell: bash
         run: |
+          set -e
+
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git add alert_state.json pe_history.json subindustry_cache.json
+          echo "========== 同步 GitHub 最新版本 =========="
+          git fetch origin main
 
-          git diff --cached --quiet || git commit -m "Update alert state, PE history and subindustry cache"
+          # 先把本次 Python 產生的檔案暫存起來，再同步遠端。
+          # 這樣即使遠端在執行期間有新的 commit，也不會因 non-fast-forward 直接失敗。
+          git stash push -u -m "stock-alert-generated-state" || true
+          git rebase origin/main
 
-          git pull --rebase origin main
-          git push
+          git stash pop || true
+
+          echo "========== 檢查狀態檔 =========="
+          for f in alert_state.json pe_history.json subindustry_cache.json; do
+            if [ -f "$f" ]; then
+              echo "存在：$f"
+            else
+              echo "不存在：$f（略過，不視為錯誤）"
+            fi
+          done
+
+          echo "========== 加入所有實際變更 =========="
+          # 不再直接 git add 不一定存在的檔案，徹底避免：
+          # fatal: pathspec 'subindustry_cache.json' did not match any files
+          git add -A
+
+          if git diff --cached --quiet; then
+            echo "沒有需要提交的資料"
+            exit 0
+          fi
+
+          git commit -m "Update alert state, PE history and subindustry cache"
+
+          echo "========== Push =========="
+          git push origin HEAD:main
