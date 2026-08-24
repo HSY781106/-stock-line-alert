@@ -1,4 +1,4 @@
-# stock_alert.py V2.10.25
+# stock_alert.py V2.10.26
 # 效能修正版：
 # 1. 全市場資料批次化
 # 2. 單次執行快取
@@ -476,12 +476,32 @@ def http_json(
     for i in range(retries + 1):
 
         try:
-            r = requests.get(
-                url,
-                params=params,
-                timeout=timeout,
-                headers=base_headers
-            )
+            try:
+                r = requests.get(
+                    url,
+                    params=params,
+                    timeout=timeout,
+                    headers=base_headers
+                )
+            except requests.exceptions.SSLError as ssl_err:
+                # V2.10.26：Render / GitHub Actions 偶發遇到
+                # TPEX 憑證缺少 Subject Key Identifier，導致
+                # SSLCertVerificationError。這不是 API 404/500，
+                # 而是遠端憑證鏈問題；只對 SSL 驗證錯誤做一次
+                # verify=False 備援，其他錯誤仍維持正常驗證。
+                if 'CERTIFICATE_VERIFY_FAILED' not in str(ssl_err):
+                    raise
+                print(
+                    f'HTTPS憑證驗證失敗，啟用單次安全備援：{url}',
+                    flush=True
+                )
+                r = requests.get(
+                    url,
+                    params=params,
+                    timeout=timeout,
+                    headers=base_headers,
+                    verify=False
+                )
 
             r.raise_for_status()
 
@@ -5011,7 +5031,7 @@ def score_risk(
 
 
 def yahoo_light_fund(symbol, official=None):
-    """V2.10.25 Render Free 輕量基本面。
+    """V2.10.26 Render Free 輕量基本面。
 
     五條資料管線彼此獨立：
     1. PE/PB/殖利率優先使用 TWSE/TPEx 官方資料。
@@ -5078,7 +5098,7 @@ def yahoo_light_fund(symbol, official=None):
                 flush=True
             )
 
-    # V2.10.25：若 PE、PEG 都有效，但 EPS Growth 缺失，使用
+    # V2.10.26：若 PE、PEG 都有效，但 EPS Growth 缺失，使用
     # PEG = PE / Growth 的定義反推 Growth。
     # 這只在 PE > 0、PEG > 0 時啟用；因此 1101 這類 PE 不適用的股票
     # 不會被硬算出虛假的 EPS 成長率。
@@ -5201,7 +5221,7 @@ def analysis(
         PE_HISTORY_FILE
     )
 
-    # V2.10.25：Render 本機沒有 pe_history.json 時，改讀 GitHub Actions
+    # V2.10.26：Render 本機沒有 pe_history.json 時，改讀 GitHub Actions
     # 已產生的遠端全市場 PE 歷史快取；仍然不對 TWSE/TPEx 逐日即時回補。
     if line_light and (not isinstance(h, dict) or not h):
         remote_pe = load_remote_json_cache(PE_HISTORY_FILE, timeout=4)
