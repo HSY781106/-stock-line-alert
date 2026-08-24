@@ -1,4 +1,4 @@
-# stock_alert.py V2.10.6
+# stock_alert.py V2.10.7
 # 效能修正版：
 # 1. 全市場資料批次化
 # 2. 單次執行快取
@@ -27,7 +27,7 @@
 # - 保留原本基本面 / 技術 / 籌碼 / 風險 / LINE 功能
 #
 # 股票跌幅 + 15分鐘區間最低價 + 動態估值 + 技術 + 籌碼 + 100分制加碼決策
-# V2.10.6：LINE 穩定查詢修正版；保留 V2.10.5 全部分析功能
+# V2.10.7：LINE 穩定查詢修正版；保留 V2.10.5 全部分析功能
 #          + LINE webhook HMAC-SHA256 簽章驗證 + 群組/聊天室支援
 
 import os
@@ -110,7 +110,7 @@ SUBINDUSTRY_CACHE = {}
 # V2.10.1：LINE 查詢分析鎖，避免多個訊息同時改寫全域快取。
 LINE_ANALYSIS_LOCK = threading.Lock()
 
-# V2.10.6：使用非 daemon 的 ThreadPoolExecutor 執行 LINE 背景分析。
+# V2.10.7：使用非 daemon 的 ThreadPoolExecutor 執行 LINE 背景分析。
 # 不再用 daemon=True 的裸 Thread，降低 Render request 結束後背景工作
 # 被直接終止的風險。完整分析仍在獨立工作執行緒中，不會讓 replyToken 過期。
 from concurrent.futures import ThreadPoolExecutor
@@ -438,7 +438,7 @@ def http_json(
     last = None
 
     base_headers = {
-        'User-Agent': 'Mozilla/5.0 stock-alert/2.10.4'
+        'User-Agent': 'Mozilla/5.0 stock-alert/2.10.7'
     }
 
     if headers:
@@ -492,7 +492,7 @@ def http_text(
                 timeout=timeout,
                 headers={
                     'User-Agent':
-                        'Mozilla/5.0 stock-alert/2.10.4'
+                        'Mozilla/5.0 stock-alert/2.10.7'
                 }
             )
 
@@ -1189,46 +1189,54 @@ def parse_value_chain_html(text, code):
 
 
 def fetch_value_chain_for_stock(code):
-    """從公開產業價值鏈平台取得單一股票的次產業。"""
+    """V2.10.7：LINE/Render 次產業同步的多重備援。
 
+    先使用原本公開平台，再用不同 URL/headers 重試；
+    Render 與 GitHub Actions 的網路環境不同，因此不能只依賴單一路徑。
+    """
     code = clean_code(code)
     if not code or not code.isdigit():
         return None
 
-    try:
-        r = requests.get(
-            VALUE_CHAIN_BASE,
-            params={'stk_code': code},
-            timeout=VALUE_CHAIN_TIMEOUT,
-            headers={
-                'User-Agent':
-                    'Mozilla/5.0 stock-alert/2.10.4',
-                'Accept-Language': 'zh-TW,zh;q=0.9,en;q=0.8'
-            }
-        )
-        r.raise_for_status()
+    urls = [
+        f'{VALUE_CHAIN_BASE}?stk_code={code}',
+        f'https://ic.tpex.org.tw/company_chain.php?stk_code={code}',
+    ]
+    headers_list = [
+        {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/126 Safari/537.36',
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+            'Accept-Language': 'zh-TW,zh;q=0.9,en;q=0.8',
+            'Referer': 'https://ic.tpex.org.tw/'
+        },
+        {
+            'User-Agent': 'stock-alert/2.10.7',
+            'Accept-Language': 'zh-TW,zh;q=0.9,en;q=0.8'
+        }
+    ]
 
-        # V2.9.9：產業價值鏈頁面也不使用 requests 猜測編碼。
-        try:
-            page_text = r.content.decode('utf-8-sig')
-        except Exception:
-            page_text = r.text
+    last_error = None
+    for attempt in range(3):
+        for url, headers in zip(urls, headers_list):
+            try:
+                r = requests.get(url, timeout=VALUE_CHAIN_TIMEOUT, headers=headers)
+                r.raise_for_status()
+                raw = r.content
+                # 官方頁面目前為 UTF-8；保留 BOM/替代解碼，避免 Render 編碼差異。
+                try:
+                    page_text = raw.decode('utf-8-sig')
+                except UnicodeDecodeError:
+                    page_text = raw.decode('cp950', errors='replace')
+                parsed = parse_value_chain_html(page_text, code)
+                if parsed.get('subindustries'):
+                    return parsed
+            except Exception as e:
+                last_error = e
+        if attempt < 2:
+            time.sleep(0.5 * (attempt + 1))
 
-        parsed = parse_value_chain_html(
-            page_text,
-            code
-        )
-
-        if parsed.get('subindustries'):
-            return parsed
-
-    except Exception as e:
-        print(
-            f'次產業 API失敗：{code} / {e}'
-        )
-
+    print(f'次產業 API失敗：{code} / {last_error}')
     return None
-
 
 def _fetch_missing_value_chains(codes):
     """平行取得缺少的產業價值鏈資料，避免 1985 檔逐檔慢速請求。"""
@@ -1591,104 +1599,55 @@ def get_dynamic_subindustry_peers(
     u,
     limit=10
 ):
+    """V2.10.7：動態次產業 Top 10。
 
+    LINE/Render 若啟動時沒有完整次產業快取，查詢時會對
+    「同大產業且市值最大的候選股」補抓次產業，直到找到足夠
+    的同次產業標的；不使用股票代碼硬編碼。
     """
-    V2.9.8 核心：
-
-    1. 先確認目標股的次產業
-    2. 同時要求官方產業相容
-    3. 只在相同次產業股票中排名
-    4. 依目前 market_cap 排序
-    5. 取 Top 10
-
-    次產業來源改為公開產業價值鏈資料，
-    PE / 技術 / 籌碼邏輯完全不變。
-    """
-
     code = clean_code(code)
-
     target = u.get(code)
-
     if not target:
         return []
 
-    target_industry = canonical_industry(
-        industry
-    )
-
-    target_subs = (
-        get_subindustries_for_stock(
-            code,
-            target
-        )
-    )
-
+    target_industry = canonical_industry(industry)
+    target_subs = get_subindustries_for_stock(code, target)
     if not target_subs:
-        if isinstance(subindustry, list):
-            target_subs = [
-                normalize_subindustry(x)
-                for x in subindustry
-                if normalize_subindustry(x)
-            ]
-        elif subindustry:
-            target_subs = [
-                normalize_subindustry(x)
-                for x in re.split(r'[、,，/|]+', str(subindustry))
-                if normalize_subindustry(x)
-            ]
-
+        target_subs = ensure_subindustry_for_query(code, target)
     if not target_subs:
         return []
 
     candidates = []
-
+    missing = []
     for c, x in u.items():
-
         if clean_code(c) == code:
             continue
-
-        if canonical_industry(
-            x.get('industry')
-        ) != target_industry:
+        if canonical_industry(x.get('industry')) != target_industry:
             continue
-
-        market_cap = to_float(
-            x.get('market_cap')
-        )
-
+        market_cap = to_float(x.get('market_cap'))
         if market_cap is None:
             continue
+        peer_subs = get_subindustries_for_stock(c, x)
+        if peer_subs:
+            if same_subindustry(target_subs, peer_subs):
+                candidates.append(x)
+        else:
+            missing.append(x)
 
-        peer_subs = (
-            get_subindustries_for_stock(
-                c,
-                x
-            )
-        )
+    # V2.10.7：只對同大產業中市值最大的候選補抓，避免 LINE 查詢時
+    # 對整個市場 1985 檔逐一請求。最多嘗試 60 檔，找到 Top 10 即停止。
+    missing.sort(key=lambda x: to_float(x.get('market_cap')) or 0, reverse=True)
+    for x in missing[:60]:
+        if len(candidates) >= limit:
+            break
+        c = clean_code(x.get('code'))
+        subs = ensure_subindustry_for_query(c, x)
+        if subs and same_subindustry(target_subs, subs):
+            candidates.append(x)
 
-        if not peer_subs:
-            continue
-
-        if not same_subindustry(
-            target_subs,
-            peer_subs
-        ):
-            continue
-
-        candidates.append(
-            x
-        )
-
-    candidates.sort(
-        key=lambda x:
-            to_float(
-                x.get('market_cap')
-            ) or 0,
-        reverse=True
-    )
-
+    candidates = [x for x in candidates if clean_code(x.get('code')) != code]
+    candidates.sort(key=lambda x: to_float(x.get('market_cap')) or 0, reverse=True)
     return candidates[:limit]
-
 
 def get_subindustry_display(
     code,
@@ -1759,7 +1718,7 @@ def build_universe():
 
     print(
         '\n========== '
-        '建立動態市場股票池 V2.10.6 '
+        '建立動態市場股票池 V2.10.7 '
         '=========='
     )
 
@@ -2926,102 +2885,76 @@ def one_year_pe(
 
 
 def yahoo_fund(symbol):
+    """V2.10.7：Yahoo 基本面多層同步。
 
-    key = (
-        'fund',
-        symbol
-    )
-
+    第一層仍使用 Ticker.info（維持 V2.10.7 行為）。
+    若 Render 的 Yahoo info 缺少 EPS 成長/ROE/PEG，第二層改讀
+    financial statements 計算可取得的指標，避免 LINE 環境全部 N/A。
+    """
+    key = ('fund', symbol)
     if key in RUN_CACHE:
         return RUN_CACHE[key]
 
-    o = {
-        'eps_growth': None,
-        'roe': None,
-        'peg': None,
-        'pb': None,
-        'yield': None,
-        'pe': None
-    }
-
+    o = {'eps_growth': None, 'roe': None, 'peg': None, 'pb': None, 'yield': None, 'pe': None}
     try:
+        ticker = yf.Ticker(symbol)
+        info = ticker.info or {}
+        o['pe'] = to_float(info.get('trailingPE')) or to_float(info.get('forwardPE'))
+        o['pb'] = to_float(info.get('priceToBook'))
+        if info.get('dividendYield') is not None:
+            o['yield'] = to_float(info.get('dividendYield')) * 100
+        if info.get('earningsGrowth') is not None:
+            o['eps_growth'] = to_float(info.get('earningsGrowth')) * 100
+        if info.get('returnOnEquity') is not None:
+            o['roe'] = to_float(info.get('returnOnEquity')) * 100
+        o['peg'] = to_float(info.get('pegRatio'))
 
-        i = yf.Ticker(
-            symbol
-        ).info
+        # 財務報表 fallback：Yahoo info 缺欄位時仍可取得。
+        if o['eps_growth'] is None or o['roe'] is None:
+            try:
+                inc = ticker.get_income_stmt(freq='yearly')
+                bs = ticker.get_balance_sheet(freq='yearly')
+                if isinstance(inc, pd.DataFrame) and not inc.empty:
+                    ni = None
+                    for row in ['NetIncome', 'Net Income', 'NetIncomeCommonStockholders']:
+                        if row in inc.index:
+                            ni = pd.to_numeric(inc.loc[row], errors='coerce').dropna()
+                            if len(ni):
+                                break
+                    if ni is not None and len(ni) >= 2 and o['eps_growth'] is None:
+                        latest = float(ni.iloc[0]); prev = float(ni.iloc[1])
+                        if prev != 0:
+                            o['eps_growth'] = (latest / prev - 1) * 100
+                    if o['roe'] is None and ni is not None and len(ni) >= 1 and isinstance(bs, pd.DataFrame) and not bs.empty:
+                        eq = None
+                        for row in ['StockholdersEquity', 'CommonStockholdersEquity', 'TotalEquityGrossMinorityInterest']:
+                            if row in bs.index:
+                                eq = pd.to_numeric(bs.loc[row], errors='coerce').dropna()
+                                if len(eq):
+                                    break
+                        if eq is not None and len(eq) >= 1:
+                            latest_ni = float(ni.iloc[0])
+                            latest_eq = float(eq.iloc[0])
+                            avg_eq = latest_eq
+                            if len(eq) >= 2:
+                                avg_eq = (latest_eq + float(eq.iloc[1])) / 2
+                            if avg_eq != 0:
+                                o['roe'] = latest_ni / avg_eq * 100
+            except Exception as e2:
+                print(f'Yahoo financial statement fallback失敗 {symbol}: {e2}')
 
-        o['pe'] = (
-            to_float(
-                i.get(
-                    'trailingPE'
-                )
-            )
-            or
-            to_float(
-                i.get(
-                    'forwardPE'
-                )
-            )
-        )
-
-        o['pb'] = to_float(
-            i.get(
-                'priceToBook'
-            )
-        )
-
-        o['yield'] = (
-            to_float(
-                i.get(
-                    'dividendYield'
-                )
-            ) * 100
-            if i.get(
-                'dividendYield'
-            ) is not None
-            else None
-        )
-
-        o['eps_growth'] = (
-            to_float(
-                i.get(
-                    'earningsGrowth'
-                )
-            ) * 100
-            if i.get(
-                'earningsGrowth'
-            ) is not None
-            else None
-        )
-
-        o['roe'] = (
-            to_float(
-                i.get(
-                    'returnOnEquity'
-                )
-            ) * 100
-            if i.get(
-                'returnOnEquity'
-            ) is not None
-            else None
-        )
-
-        o['peg'] = to_float(
-            i.get(
-                'pegRatio'
-            )
-        )
-
+        # PEG 優先使用 Yahoo；若 Yahoo 沒有，嘗試用 forward EPS growth 的合理 fallback。
+        # 不用粗暴以目前 PE / 歷史成長率取代 Yahoo PEG，避免改變既有評分口徑。
+        if o['peg'] is None:
+            for k in ('trailingPegRatio', 'pegRatio5Y', 'pegRatio'):
+                v = to_float(info.get(k))
+                if v is not None:
+                    o['peg'] = v
+                    break
     except Exception as e:
-
-        print(
-            'Yahoo fundamentals失敗',
-            symbol,
-            e
-        )
+        print('Yahoo fundamentals失敗', symbol, e)
 
     RUN_CACHE[key] = o
-
     return o
 
 
@@ -4769,7 +4702,7 @@ def analysis(
     # --------------------------------------------------------
 
     return (
-        f'📊 股票加碼分析 V2.10.6\n\n'
+        f'📊 股票加碼分析 V2.10.7\n\n'
         f'標的：{name}（{code}）\n'
         f'市場：{market}\n'
         f'產業：{industry}\n'
@@ -4930,7 +4863,7 @@ def line_target_from_event(e):
 
 
 def _background_line_analysis(text, target, u, event_id=None):
-    """V2.10.6：背景完整分析。
+    """V2.10.7：背景完整分析。
 
     使用 ThreadPoolExecutor（非 daemon）而非裸 daemon Thread，並在分析前後
     明確記錄狀態；完成後用 Push API 回原聊天室。
@@ -4978,7 +4911,7 @@ def _mark_line_event_seen(event_id):
 
 
 def handle_event(e, u):
-    """V2.10.6：立即 Reply 確認，再用非 daemon executor 背景分析並 Push。"""
+    """V2.10.7：立即 Reply 確認，再用非 daemon executor 背景分析並 Push。"""
     if (
         e.get('type') != 'message'
         or e.get('message', {}).get('type') != 'text'
@@ -5000,7 +4933,7 @@ def handle_event(e, u):
     if text.lower() in {'help', '說明', '功能', '股票'}:
         ok = reply_line(
             token,
-            '📈 股票加碼分析 Bot V2.10.6\n\n'
+            '📈 股票加碼分析 Bot V2.10.7\n\n'
             '輸入股票代號或名稱即可查詢。\n'
             '例如：2330、台積電、3711、日月光投控\n\n'
             '模型：基本面40 + 技術30 + 籌碼20 + 風險10。\n'
@@ -5049,7 +4982,7 @@ def run_webhook_server():
     app = Flask(__name__)
 
     print('================================')
-    print('LINE Webhook Server V2.10.6')
+    print('LINE Webhook Server V2.10.7')
     print('模式：立即 Reply + 穩定背景分析 + Push')
     print('================================')
 
@@ -5106,7 +5039,7 @@ def run_webhook_server():
 
     @app.get('/')
     def health():
-        return 'stock_alert V2.10.6 OK', 200
+        return 'stock_alert V2.10.7 OK', 200
 
     @app.get('/health')
     def health2():
