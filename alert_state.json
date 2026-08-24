@@ -1,59 +1,59 @@
 {
   "drop_alert": {
     "0050 元大台灣50": {
-      "date": "2026-08-24",
+      "date": "2026-08-25",
       "daily_alert": false,
       "weekly_alert": false
     },
     "2330 台積電": {
-      "date": "2026-08-24",
+      "date": "2026-08-25",
       "daily_alert": false,
       "weekly_alert": false
     },
     "3711 日月光投控": {
-      "date": "2026-08-24",
+      "date": "2026-08-25",
       "daily_alert": false,
       "weekly_alert": false
     },
     "QQQ": {
-      "date": "2026-08-24",
+      "date": "2026-08-25",
       "daily_alert": false,
       "weekly_alert": false
     },
     "台灣加權指數": {
-      "date": "2026-08-24",
+      "date": "2026-08-25",
       "daily_alert": false,
       "weekly_alert": false
     }
   },
   "interval_low": {
     "0050 元大台灣50": {
-      "last_check": "2026-08-24T23:18:34.659216+08:00",
+      "last_check": "2026-08-25T00:10:51.982765+08:00",
       "last_price": 103.80000305175781,
       "last_interval_low": 103.80000305175781,
       "last_interval_source": "Yahoo-5m"
     },
     "2330 台積電": {
-      "last_check": "2026-08-24T23:18:35.406608+08:00",
+      "last_check": "2026-08-25T00:10:52.415057+08:00",
       "last_price": 2410.0,
       "last_interval_low": 2375.0,
       "last_interval_source": "Yahoo-5m"
     },
     "3711 日月光投控": {
-      "last_check": "2026-08-24T23:18:37.681810+08:00",
+      "last_check": "2026-08-25T00:10:54.835330+08:00",
       "last_price": 587.0,
       "last_interval_low": 592.0,
       "last_interval_source": "Yahoo-5m"
     },
     "QQQ": {
-      "last_check": "2026-08-24T23:18:38.637946+08:00",
-      "last_price": 705.239990234375,
-      "last_interval_low": 704.9149780273438,
+      "last_check": "2026-08-25T00:10:55.796738+08:00",
+      "last_price": 707.739990234375,
+      "last_interval_low": 704.822021484375,
       "last_interval_source": "Yahoo-5m"
     },
     "台灣加權指數": {
-      "last_check": "2026-08-24T23:18:39.023353+08:00",
-      "last_price": 44762.3203125,
+      "last_check": "2026-08-25T00:10:56.150079+08:00",
+      "last_price": 45224.2890625,
       "last_interval_low": 44761.87890625,
       "last_interval_source": "Yahoo-5m"
     }
