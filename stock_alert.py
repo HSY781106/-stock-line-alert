@@ -1,4 +1,4 @@
-# stock_alert.py V2.10.26
+# stock_alert.py V2.10.27
 # 效能修正版：
 # 1. 全市場資料批次化
 # 2. 單次執行快取
@@ -27,7 +27,7 @@
 # - 保留原本基本面 / 技術 / 籌碼 / 風險 / LINE 功能
 #
 # 股票跌幅 + 15分鐘區間最低價 + 動態估值 + 技術 + 籌碼 + 100分制加碼決策
-# V2.10.25：LINE 任意股票穩定查詢版 + 1985檔全市場技術快取；保留 V2.10.19 全部分析功能
+# V2.10.27：LINE 任意股票穩定查詢版 + 1985檔全市場技術快取；保留 V2.10.19 全部分析功能
 #          + LINE webhook HMAC-SHA256 簽章驗證 + 群組/聊天室支援
 #          + Actions 批次建立全市場技術快取；Render LINE 優先只讀快取，避免 Yahoo/TWSE 即時限流
 
@@ -219,35 +219,41 @@ INDUSTRY_CODE_MAP = {
 # ============================================================
 
 INDUSTRY_MODEL = {
-    '金融業': {
-        'pe': False,
-        'peg': False,
-        'pb': True,
-        'yield': True,
-        'roe': True
-    },
-    '銀行業': {
-        'pe': False,
-        'peg': False,
-        'pb': True,
-        'yield': True,
-        'roe': True
-    },
-    '保險業': {
-        'pe': False,
-        'peg': False,
-        'pb': True,
-        'yield': True,
-        'roe': True
-    }
+    # 產業模型不是「開關」而已；weights 定義 40 分基本面中各指標的最大配分。
+    # PE / PEG / PB / 殖利率 / ROE / EPS 成長。
+    '金融業': {'profile':'資產型', 'weights': {'pe':4,'peg':0,'pb':12,'yield':8,'roe':10,'growth':6}},
+    '銀行業': {'profile':'資產型', 'weights': {'pe':4,'peg':0,'pb':12,'yield':8,'roe':10,'growth':6}},
+    '保險業': {'profile':'資產型', 'weights': {'pe':4,'peg':0,'pb':12,'yield':8,'roe':10,'growth':6}},
+    '半導體業': {'profile':'資本密集型', 'weights': {'pe':10,'peg':4,'pb':3,'yield':1,'roe':6,'growth':16}},
+    '通信網路業': {'profile':'現金流型', 'weights': {'pe':8,'peg':1,'pb':4,'yield':10,'roe':9,'growth':8}},
+    '水泥工業': {'profile':'特殊型', 'weights': {'pe':8,'peg':0,'pb':8,'yield':8,'roe':8,'growth':8}},
+    '食品工業': {'profile':'成熟獲利型', 'weights': {'pe':10,'peg':1,'pb':5,'yield':8,'roe':9,'growth':7}},
+    '塑膠工業': {'profile':'特殊型', 'weights': {'pe':9,'peg':1,'pb':6,'yield':7,'roe':8,'growth':9}},
+    '紡織纖維': {'profile':'特殊型', 'weights': {'pe':8,'peg':1,'pb':7,'yield':7,'roe':8,'growth':9}},
+    '電機機械': {'profile':'成熟獲利型', 'weights': {'pe':9,'peg':3,'pb':5,'yield':5,'roe':9,'growth':9}},
+    '電器電纜': {'profile':'成熟獲利型', 'weights': {'pe':9,'peg':2,'pb':6,'yield':7,'roe':8,'growth':8}},
+    '鋼鐵工業': {'profile':'特殊型', 'weights': {'pe':7,'peg':0,'pb':10,'yield':7,'roe':8,'growth':8}},
+    '橡膠工業': {'profile':'特殊型', 'weights': {'pe':8,'peg':1,'pb':7,'yield':7,'roe':8,'growth':9}},
+    '汽車工業': {'profile':'特殊型', 'weights': {'pe':8,'peg':2,'pb':6,'yield':6,'roe':9,'growth':9}},
+    '建材營造': {'profile':'資產型', 'weights': {'pe':5,'peg':0,'pb':12,'yield':8,'roe':9,'growth':6}},
+    '航運業': {'profile':'特殊型', 'weights': {'pe':7,'peg':0,'pb':9,'yield':6,'roe':8,'growth':10}},
+    '觀光餐旅': {'profile':'現金流型', 'weights': {'pe':8,'peg':2,'pb':5,'yield':8,'roe':9,'growth':8}},
+    '貿易百貨': {'profile':'成熟獲利型', 'weights': {'pe':10,'peg':2,'pb':5,'yield':8,'roe':8,'growth':7}},
+    '油電燃氣業': {'profile':'現金流型', 'weights': {'pe':8,'peg':0,'pb':5,'yield':11,'roe':9,'growth':7}},
+    '電腦及週邊設備業': {'profile':'高成長型', 'weights': {'pe':8,'peg':8,'pb':3,'yield':2,'roe':7,'growth':12}},
+    '光電業': {'profile':'特殊型', 'weights': {'pe':7,'peg':5,'pb':5,'yield':2,'roe':8,'growth':13}},
+    '電子零組件業': {'profile':'高成長型', 'weights': {'pe':8,'peg':7,'pb':4,'yield':3,'roe':7,'growth':11}},
+    '電子通路業': {'profile':'成熟獲利型', 'weights': {'pe':10,'peg':3,'pb':4,'yield':5,'roe':8,'growth':10}},
+    '資訊服務業': {'profile':'高成長型', 'weights': {'pe':8,'peg':9,'pb':3,'yield':1,'roe':8,'growth':11}},
+    '其他電子業': {'profile':'高成長型', 'weights': {'pe':8,'peg':7,'pb':4,'yield':3,'roe':7,'growth':11}},
+    '生技醫療': {'profile':'高成長型', 'weights': {'pe':4,'peg':9,'pb':5,'yield':0,'roe':8,'growth':14}},
+    '文化創意業': {'profile':'高成長型', 'weights': {'pe':6,'peg':8,'pb':4,'yield':2,'roe':8,'growth':12}},
+    '其他': {'profile':'特殊型', 'weights': {'pe':8,'peg':4,'pb':6,'yield':6,'roe':8,'growth':8}},
 }
 
 DEFAULT_MODEL = {
-    'pe': True,
-    'peg': True,
-    'pb': True,
-    'yield': True,
-    'roe': True
+    'profile':'特殊型',
+    'weights': {'pe':8,'peg':4,'pb':6,'yield':6,'roe':8,'growth':8}
 }
 
 
@@ -4597,7 +4603,39 @@ def _line_chip_fast(code, market, days=20):
             'date': 'summary',
             'data': {code: {'total': item.get('latest')}}
         }]
-    print(f'LINE籌碼：摘要快取無 {code}，直接使用 N/A，不打 TWSE', flush=True)
+    # V2.10.27：若摘要檔尚未部署，仍可從 Actions 的完整 chip_history
+    # 遠端快取只取「單一查詢股票」20日資料；Render 不抓全市場到記憶體。
+    try:
+        remote_full = load_remote_json_cache(CHIP_HISTORY_FILE, timeout=3)
+        market_hist = remote_full.get(market, {}) if isinstance(remote_full, dict) else {}
+        rows = []
+        if isinstance(market_hist, dict):
+            for ds, daydata in sorted(market_hist.items(), reverse=True):
+                if isinstance(daydata, dict) and code in daydata:
+                    rows.append({'date': ds, 'data': {code: daydata.get(code)}})
+                    if len(rows) >= days:
+                        break
+        if rows:
+            print(f'LINE籌碼：摘要缺失，使用 GitHub 完整法人快取單股擷取 {code} {len(rows)}日', flush=True)
+            vals=[]
+            for row in rows:
+                item=row.get('data',{}).get(code)
+                if isinstance(item,dict) and item.get('total') is not None:
+                    vals.append(float(item['total']))
+            summary={
+                'latest': vals[0] if vals else None,
+                '5d': sum(vals[:5]) if len(vals)>=5 else None,
+                '20d': sum(vals[:20]) if len(vals)>=20 else None
+            }
+            try:
+                cache.setdefault(market, {})[code] = summary
+                _save_line_small_cache(LINE_CHIP_SUMMARY_CACHE_FILE, cache)
+            except Exception:
+                pass
+            return [{'date':'summary','data':{code:{'total':summary['latest']}}}]
+    except Exception as e:
+        print(f'LINE籌碼：GitHub完整快取備援失敗 {code}：{type(e).__name__}', flush=True)
+    print(f'LINE籌碼：無法人快取 {code}，使用 N/A，不打 TWSE', flush=True)
     return []
 
 
@@ -4635,149 +4673,56 @@ def _line_margin_fast(code, market):
 # Scoring
 # ============================================================
 
-def score_fund(
-    pe,
-    one,
-    peer,
-    peg,
-    roe,
-    eps,
-    pb,
-    yld,
-    model
-):
+def score_fund(pe, one, peer, peg, roe, eps, pb, yld, model):
+    """V2.10.27：依產業模型重新分配基本面 40 分。
 
-    s = 0
+    N/A 不補成 0；只對實際存在的指標計分。
+    各產業仍維持 40 分上限，但核心指標不同。
+    """
+    model = model if isinstance(model, dict) else DEFAULT_MODEL
+    w = model.get('weights', DEFAULT_MODEL['weights'])
+    s = 0.0
     why = []
 
-    if model.get('pe'):
+    def add(key, ratio, reason=None):
+        nonlocal s
+        if key not in w or not w.get(key) or ratio is None:
+            return
+        pts = float(w[key]) * max(0.0, min(1.0, ratio))
+        s += pts
+        if reason and pts >= float(w[key]) * 0.65:
+            why.append(reason)
 
-        if (
-            pe is not None
-            and one is not None
-        ):
-
+    # PE：同時看自身一年均值與同業中位數；若沒有歷史均值，仍可用同業比較。
+    if pe is not None:
+        pe_ratio = None
+        peer_ratio = None
+        if one is not None and one > 0 and pe > 0:
             r = pe / one
-
-            if r <= .9:
-
-                s += 10
-
-                why.append(
-                    '低於自身歷史PE'
-                )
-
-            elif r <= 1.05:
-
-                s += 7
-
-                why.append(
-                    '接近自身歷史PE'
-                )
-
-            elif r <= 1.15:
-
-                s += 4
-
-        if (
-            pe is not None
-            and peer is not None
-        ):
-
+            pe_ratio = 1.0 if r <= .9 else .75 if r <= 1.05 else .45 if r <= 1.15 else .1 if r <= 1.3 else 0
+        if peer is not None and peer > 0 and pe > 0:
             r = pe / peer
+            peer_ratio = 1.0 if r < .85 else .75 if r <= 1.05 else .4 if r <= 1.15 else .1 if r <= 1.3 else 0
+        if pe_ratio is not None or peer_ratio is not None:
+            ratios=[x for x in (pe_ratio,peer_ratio) if x is not None]
+            add('pe', max(ratios), '低於自身/同業合理估值')
 
-            if r < .85:
+    if peg is not None and peg > 0:
+        add('peg', 1.0 if peg < .8 else .85 if peg < 1 else .6 if peg < 1.2 else .2 if peg < 1.5 else 0, 'PEG具吸引力')
 
-                s += 10
+    if pb is not None and pb > 0:
+        add('pb', 1.0 if pb < 1.5 else .75 if pb < 2 else .5 if pb < 4 else .15 if pb < 6 else 0, 'PB合理')
 
-                why.append(
-                    '低於同次產業中位數'
-                )
-
-            elif r <= 1.05:
-
-                s += 7
-
-                why.append(
-                    '接近同次產業中位數'
-                )
-
-            elif r <= 1.15:
-
-                s += 3
-
-    if peg is not None:
-
-        if peg < .8:
-
-            s += 6
-
-        elif peg < 1:
-
-            s += 5
-
-        elif peg < 1.2:
-
-            s += 3
+    if yld is not None and yld >= 0:
+        add('yield', 1.0 if yld >= 5 else .75 if yld >= 3 else .45 if yld >= 2 else .15 if yld >= 1 else 0, '殖利率具吸引力')
 
     if roe is not None:
-
-        if roe >= 30:
-
-            s += 6
-
-        elif roe >= 20:
-
-            s += 5
-
-        elif roe >= 10:
-
-            s += 3
+        add('roe', 1.0 if roe >= 30 else .8 if roe >= 20 else .6 if roe >= 15 else .4 if roe >= 10 else .15 if roe > 0 else 0, 'ROE良好')
 
     if eps is not None:
+        add('growth', 1.0 if eps >= 50 else .85 if eps >= 30 else .7 if eps >= 20 else .5 if eps > 10 else .25 if eps > 0 else 0, '獲利成長')
 
-        if eps >= 50:
-
-            s += 6
-
-        elif eps >= 20:
-
-            s += 5
-
-        elif eps > 0:
-
-            s += 3
-
-    if (
-        pb is not None
-        and model.get('pb')
-    ):
-
-        if pb < 2:
-
-            s += 4
-
-        elif pb < 4:
-
-            s += 2
-
-    if (
-        yld is not None
-        and model.get('yield')
-    ):
-
-        if yld >= 5:
-
-            s += 3
-
-        elif yld >= 3:
-
-            s += 2
-
-    return (
-        min(40, s),
-        why
-    )
+    return min(40, int(round(s))), why
 
 
 def score_tech(t):
@@ -5406,10 +5351,7 @@ def analysis(
         yf_f['eps_growth'],
         pb,
         yld,
-        INDUSTRY_MODEL.get(
-            industry,
-            DEFAULT_MODEL
-        )
+        INDUSTRY_MODEL.get(industry, DEFAULT_MODEL)
     )
 
     ts, tr = score_tech(
@@ -5587,7 +5529,7 @@ def analysis(
     # --------------------------------------------------------
 
     return (
-        f'📊 股票加碼分析 V2.10.25\n\n'
+        f'📊 股票加碼分析 V2.10.27\n\n'
         f'標的：{name}（{code}）\n'
         f'市場：{market}\n'
         f'產業：{industry}\n'
@@ -5955,7 +5897,7 @@ def handle_event(e, u):
             '📈 股票加碼分析 Bot V2.10.25\n\n'
             '輸入股票代號或名稱即可查詢。\n'
             '例如：2330、台積電、3711、日月光投控\n\n'
-            '模型：基本面40 + 技術30 + 籌碼20 + 風險10。\n'
+            '模型：依產業自動選擇估值模型；基本面40 + 技術30 + 籌碼20 + 風險10。\n'
             '同業估值：動態次產業 Top 10；若次產業快取不足則自動改用同大產業 Top 10。\n\n'
             '查詢後會先回覆「分析中」，完成後再把完整結果推送回本聊天室。'
         )
@@ -6007,7 +5949,7 @@ def run_webhook_server():
     app = Flask(__name__)
 
     print('================================')
-    print('LINE Webhook Server V2.10.23')
+    print('LINE Webhook Server V2.10.27')
     print('模式：立即 Reply + Render Free 穩定背景 Thread + Push')
     print('================================')
 
@@ -6026,7 +5968,7 @@ def run_webhook_server():
 
     @app.get('/')
     def health():
-        return 'stock_alert V2.10.23 OK', 200
+        return 'stock_alert V2.10.27 OK', 200
 
     @app.get('/health')
     def health2():
