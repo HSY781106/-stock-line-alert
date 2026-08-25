@@ -1,4 +1,4 @@
-# stock_alert.py V2.10.33
+# stock_alert.py V2.10.34
 # 效能修正版：
 # 1. 全市場資料批次化
 # 2. 單次執行快取
@@ -113,7 +113,13 @@ MAX_HISTORY_DAYS_PER_RUN = 75
 # Actions 只在快取缺少/過期時更新，避免每天重抓 1985 檔造成不必要的 Yahoo 流量。
 TECH_CACHE_MAX_AGE = 36 * 3600
 TECH_BATCH_CHUNK = 80
-TECH_BATCH_TIMEOUT = 30
+TECH_BATCH_TIMEOUT = 15
+# V2.10.34：Yahoo 對無資料/已失效代號可能反覆重試，導致整批卡住。
+# 這些代號不參與「股票池」技術快取；ETF 若需查詢，走 ETF 專用路徑。
+ETF_TECH_BATCH_SKIP = {
+    '00679B.TW',
+    '00887.TW',
+}
 
 # V2.10.25：Actions 建立全市場 PE 歷史快取。TWSE/TPEx 每個日期的 PE API
 # 本身就是全市場資料，因此不需要逐股票查詢；約 100 個曆日即可涵蓋
@@ -874,6 +880,12 @@ def normalize_profile(row, market):
     )
 
     if not code.isdigit():
+        return None
+
+    # V2.10.34：00 開頭代號以 ETF/基金/債券 ETF 為主，不能混進股票池。
+    # ETF 已有獨立 ETF_MAP / ETF 分析流程；混入全市場技術批次會讓 Yahoo
+    # 對部分無歷史資料的 ETF 反覆 retry，造成 Actions 長時間卡住。
+    if code.startswith('00'):
         return None
 
     return {
@@ -3838,9 +3850,17 @@ def _extract_batch_ticker_frame(batch, ticker):
 
 
 def _yahoo_batch_download(tickers):
-    """V2.10.23：Actions 用少量批次請求取得多檔 6 個月日線。"""
+    """V2.10.34：Actions 批次取得多檔日線，先排除已知 Yahoo 無資料代號。"""
     if not tickers:
         return None
+
+    tickers = [
+        t for t in tickers
+        if str(t).upper() not in ETF_TECH_BATCH_SKIP
+    ]
+    if not tickers:
+        return None
+
     try:
         print(
             f'技術批次：Yahoo 一次請求 {len(tickers)} 檔 '
@@ -3863,7 +3883,7 @@ def _yahoo_batch_download(tickers):
 
 
 def refresh_all_technical_cache(u, force=False):
-    """V2.10.23：GitHub Actions 全市場技術快取建立器。
+    """V2.10.34：GitHub Actions 全市場技術快取建立器。
 
     - 目標：動態市場股票池內全部 TWSE/TPEX 股票，另含 0050、QQQ、^TWII。
     - 先保留新鮮快取；只更新缺少或超過 36 小時的標的。
@@ -3889,6 +3909,8 @@ def refresh_all_technical_cache(u, force=False):
         if market not in ('TWSE', 'TPEX'):
             continue
         ticker = (item or {}).get('symbol') or symbol_for(code, market)
+        if str(ticker).upper() in ETF_TECH_BATCH_SKIP:
+            continue
         if force or not _technical_cache_is_fresh(cache, code):
             targets.append((code, ticker))
 
@@ -3899,9 +3921,14 @@ def refresh_all_technical_cache(u, force=False):
         if key and (force or not _technical_cache_is_fresh(cache, key)):
             extras.append((key, ticker))
     for etf in ETF_MAP.values():
-        ticker=etf['symbol']; key=clean_code(ticker)
+        ticker = etf['symbol']
+        # V2.10.34：已知 Yahoo 無資料/會觸發長時間 retry 的 ETF 不加入
+        # 全市場技術批次。ETF 本身仍可由 ETF 專用分析函式處理。
+        if ticker.upper() in ETF_TECH_BATCH_SKIP:
+            continue
+        key = clean_code(ticker)
         if key and (force or not _technical_cache_is_fresh(cache, key)):
-            extras.append((key,ticker))
+            extras.append((key, ticker))
 
     targets.extend(extras)
     # 去重但保留順序。
@@ -3913,7 +3940,7 @@ def refresh_all_technical_cache(u, force=False):
         if clean_code(code).isdigit() and (item or {}).get('market') in ('TWSE', 'TPEX')
     )
     print(
-        f'========== V2.10.23 全市場技術快取 ==========',
+        f'========== V2.10.34 全市場技術快取 ==========',
         flush=True
     )
     print(
