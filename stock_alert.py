@@ -1,4 +1,5 @@
-# stock_alert.py V2.10.41
+# stock_alert.py V2.10.42
+# V2.10.42：移除 ETF 費用率；跌幅通知整合即時加碼分析與 100 分綜合評分
 # V2.10.41：修正 line_fund_cache 覆蓋策略、ETF NAV/溢價、Beta、TPEX 資券與 ETF chart fallback
 # 效能修正版：
 # 1. 全市場資料批次化
@@ -2690,109 +2691,142 @@ def check_interval_low(
     return result
 
 
+def _drop_alert_analysis_message(name, symbol, u, day, week, cur, pc, wh, daily_triggered, weekly_triggered):
+    """V2.10.42：跌幅警報觸發後，直接沿用同一套股票加碼分析模型。
+
+    這裡使用 LINE 輕量路徑與 Actions 已建立的快取，避免警報時重新掃描全市場。
+    若分析失敗，仍會送出原本的跌幅通知，不讓分析故障影響警報。
+    """
+    try:
+        result = analysis(symbol, u, backfill=False, line_light=True)
+        if not result or result.startswith('❌'):
+            raise RuntimeError(result or 'analysis empty')
+
+        def grab(pattern, default='N/A'):
+            m = re.search(pattern, result, flags=re.I)
+            return m.group(1).strip() if m else default
+
+        total = grab(r'綜合評分：([^\n]+)')
+        verdict = grab(r'結論：([^\n]+)')
+        pe = grab(r'PE：([^\n]+)')
+        one = grab(r'一年平均PE：([^\n]+)')
+        pb = grab(r'PB：([^\n]+)')
+        yld = grab(r'殖利率：([^\n]+)')
+        growth = grab(r'EPS成長：([^\n]+)')
+        peg = grab(r'PEG：([^\n]+)')
+        roe = grab(r'ROE：([^\n]+)')
+        rsi = grab(r'RSI：([^\n]+)')
+        kd = grab(r'KD：([^\n]+)')
+        trend = grab(r'趨勢：([^\n]+)')
+        fs = grab(r'基本面得分：([^\n]+)')
+        ts = grab(r'技術得分：([^\n]+)')
+        cs = grab(r'籌碼得分：([^\n]+)')
+        inst5 = grab(r'法人5日：([^\n]+)')
+        inst20 = grab(r'法人20日：([^\n]+)')
+        factors = grab(r'加分因素：([^\n]+)')
+        chips = grab(r'籌碼訊號：([^\n]+)')
+        risks = grab(r'風險提醒：([^\n]+)')
+
+        triggers=[]
+        if daily_triggered:
+            triggers.append(f'當日跌幅 {day:.2%} ≤ {DAILY_THRESHOLD:.0%}')
+        if weekly_triggered and week is not None:
+            triggers.append(f'距7日高點 {week:.2%} ≤ {WEEK_THRESHOLD:.0%}')
+
+        msg=(
+            f'🔴 跌幅通知＋加碼評估\n\n'
+            f'標的：{name}\n'
+            f'目前價格：{cur:,.2f}\n'
+            f'前一交易日收盤：{pc:,.2f}\n'
+            f'過去7日高點：{wh:,.2f}\n'
+            f'觸發條件：{"、".join(triggers)}\n\n'
+            f'【當下加碼評估】\n'
+            f'綜合評分：{total}\n'
+            f'結論：{verdict}\n'
+            f'基本面：{fs}\n'
+            f'技術面：{ts}\n'
+            f'籌碼面：{cs}\n\n'
+            f'PE：{pe}｜一年平均PE：{one}\n'
+            f'PB：{pb}｜殖利率：{yld}\n'
+            f'EPS成長：{growth}｜PEG：{peg}\n'
+            f'ROE：{roe}\n'
+            f'RSI：{rsi}｜KD：{kd}\n'
+            f'趨勢：{trend}\n'
+            f'法人5日：{inst5}\n'
+            f'法人20日：{inst20}\n\n'
+            f'加分因素：{factors}\n'
+            f'籌碼訊號：{chips}\n'
+            f'風險提醒：{risks}'
+        )
+        return msg[:5000]
+    except Exception as e:
+        print(f'V2.10.42 跌幅通知加碼分析失敗 {name}: {type(e).__name__}: {e}', flush=True)
+        msg=(
+            f'🔴 跌幅通知\n\n'
+            f'標的：{name}\n'
+            f'目前價格：{cur:,.2f}\n'
+            f'前一交易日收盤：{pc:,.2f}\n'
+            f'單日跌幅：{day:.2%}\n'
+            f'距7日高點跌幅：{week:.2%}' if week is not None else
+            f'🔴 跌幅通知\n\n標的：{name}\n目前價格：{cur:,.2f}\n單日跌幅：{day:.2%}'
+        )
+        return msg
+
+
 def check_drop_alert(
     name,
     symbol,
-    state
+    state,
+    u=None
 ):
-
-    cur = get_latest_price(
-        symbol
-    )
-
-    pc = get_previous_close(
-        symbol
-    )
-
-    wh = get_week_high(
-        symbol
-    )
+    """V2.10.42：跌幅達標後，同一則 LINE 通知直接附上當下加碼評估。"""
+    cur = get_latest_price(symbol)
+    pc = get_previous_close(symbol)
+    wh = get_week_high(symbol)
 
     if cur is None or pc is None:
         return
 
     day = cur / pc - 1
+    week = cur / wh - 1 if wh else None
 
-    week = (
-        cur / wh - 1
-        if wh
-        else None
-    )
-
-    s = (
-        state
-        .setdefault(
-            'drop_alert',
-            {}
-        )
-        .setdefault(
-            name,
-            {}
-        )
-    )
-
-    today = datetime.now(
-        TW_TZ
-    ).strftime(
-        '%Y-%m-%d'
-    )
+    s = state.setdefault('drop_alert', {}).setdefault(name, {})
+    today = datetime.now(TW_TZ).strftime('%Y-%m-%d')
 
     if s.get('date') != today:
+        s.update({'date': today, 'daily_alert': False, 'weekly_alert': False})
 
-        s.update({
-            'date':
-                today,
-            'daily_alert':
-                False,
-            'weekly_alert':
-                False
-        })
+    daily_triggered = day <= DAILY_THRESHOLD and not s.get('daily_alert')
+    weekly_triggered = week is not None and week <= WEEK_THRESHOLD and not s.get('weekly_alert')
 
-    if (
-        day <= DAILY_THRESHOLD
-        and not s.get(
-            'daily_alert'
-        )
-    ):
-
-        send_line(
-            f'🔴 跌幅通知\n\n'
-            f'標的：{name}\n'
-            f'目前價格：{cur:,.2f}\n'
-            f'前一交易日收盤：{pc:,.2f}\n'
-            f'單日跌幅：{day:.2%}'
-        )
-
+    if daily_triggered:
         s['daily_alert'] = True
-
     elif day > DAILY_THRESHOLD:
-
         s['daily_alert'] = False
 
-    if (
-        week is not None
-        and week <= WEEK_THRESHOLD
-        and not s.get(
-            'weekly_alert'
-        )
-    ):
-
-        send_line(
-            f'🔴 一週跌幅通知\n\n'
-            f'標的：{name}\n'
-            f'目前價格：{cur:,.2f}\n'
-            f'過去7日高點：{wh:,.2f}\n'
-            f'距7日高點跌幅：{week:.2%}'
-        )
-
+    if weekly_triggered:
         s['weekly_alert'] = True
-
-    elif (
-        week is not None
-        and week > WEEK_THRESHOLD
-    ):
-
+    elif week is not None and week > WEEK_THRESHOLD:
         s['weekly_alert'] = False
+
+    # 同一次執行若同時達到單日/一週門檻，只發一則整合通知，避免 LINE 重複洗版。
+    if daily_triggered or weekly_triggered:
+        if isinstance(u, dict) and u:
+            msg = _drop_alert_analysis_message(
+                name, symbol, u, day, week, cur, pc, wh,
+                daily_triggered, weekly_triggered
+            )
+        else:
+            msg = (
+                f'🔴 跌幅通知\n\n'
+                f'標的：{name}\n'
+                f'目前價格：{cur:,.2f}\n'
+                f'前一交易日收盤：{pc:,.2f}\n'
+                f'單日跌幅：{day:.2%}\n'
+                f'距7日高點跌幅：{week:.2%}' if week is not None else
+                f'🔴 跌幅通知\n\n標的：{name}\n目前價格：{cur:,.2f}\n單日跌幅：{day:.2%}'
+            )
+        send_line(msg)
 
 
 # ============================================================
@@ -6012,8 +6046,6 @@ def score_etf(tech,p):
     if p.get('yield') is not None:
         avail+=12; y=p['yield']; score+=12 if y>=4 else 9 if y>=2 else 5
         if y>=4: reasons.append('殖利率具吸引力')
-    if p.get('expense') is not None:
-        avail+=10; e=p['expense']; score+=10 if e<=0.2 else 8 if e<=0.5 else 5 if e<=1 else 2
     if p.get('beta') is not None:
         avail+=8; b=p['beta']; score+=8 if b<=1 else 6 if b<=1.2 else 4
     if p.get('assets') is not None:
@@ -6040,8 +6072,8 @@ def etf_analysis(query):
         premium=x if -50<=x<=50 else None
     score,reasons=score_etf(tech,p)
     verdict='🟢 可分批配置' if score>=75 else '🟡 等待回檔/止跌' if score>=60 else '🟠 暫緩配置' if score>=40 else '🔴 不建議配置'
-    return (f'📊 ETF配置分析 V2.10.41\n\n標的：{info["name"]}（{code}）\n代號：{symbol}\n\n'
-            f'【ETF特性 40分】\nNAV：{fmt(nav)}\n溢價/折價：{fmt(premium)}%\n殖利率：{fmt(p.get("yield"))}%\n費用率：{fmt(p.get("expense"))}%{("（" + str(p.get("expense_source")) + "）") if p.get("expense_source") else ""}\nBeta：{fmt(p.get("beta"))}\n資產規模：{fmt(p.get("assets"),0)}\n\n'
+    return (f'📊 ETF配置分析 V2.10.42\n\n標的：{info["name"]}（{code}）\n代號：{symbol}\n\n'
+            f'【ETF特性 40分】\nNAV：{fmt(nav)}\n溢價/折價：{fmt(premium)}%\n殖利率：{fmt(p.get("yield"))}%\nBeta：{fmt(p.get("beta"))}\n資產規模：{fmt(p.get("assets"),0)}\n\n'
             f'【技術面 60分】\n價格：{fmt(price)}\nRSI：{fmt(tech.get("rsi"))}\nKD：K={fmt(tech.get("k"))} / D={fmt(tech.get("d"))}\nMA20：{fmt(tech.get("ma20"))}\nMA60：{fmt(tech.get("ma60"))}\n趨勢：{tech.get("trend") or "N/A"}\n\n'
             f'【ETF綜合評分】\n綜合評分：{score}/100\n結論：{verdict}\n加分因素：{"、".join(reasons) if reasons else "無"}')
 
@@ -6511,7 +6543,7 @@ def analysis(
     # --------------------------------------------------------
 
     return (
-        f'📊 股票加碼分析 V2.10.37\n\n'
+        f'📊 股票加碼分析 V2.10.42\n\n'
         f'標的：{name}（{code}）\n'
         f'市場：{market}\n'
         f'產業：{industry}\n'
@@ -7654,7 +7686,8 @@ def run_alerts():
             check_drop_alert(
                 name,
                 symbol,
-                state
+                state,
+                u
             )
 
             RUN_CACHE[
