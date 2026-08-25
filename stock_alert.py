@@ -5385,7 +5385,7 @@ def yahoo_light_fund(symbol, official=None, current_price=None):
     return o
 
 def yahoo_etf_profile(symbol):
-    """V2.10.33：ETF 多來源資料。\n\n    1) Yahoo quoteSummary / yfinance\n    2) Yahoo ETF profile 頁\n    3) 台灣 ETF 以管理費率 + 保管費率作「可取得費用率」備援\n    4) 不把缺少的欄位互相污染。\n    """
+    """V2.10.34：ETF 多來源資料與費用率單位防呆。\n\n    1) Yahoo quoteSummary / yfinance\n    2) Yahoo ETF profile 頁\n    3) 台灣 ETF 以管理費率 + 保管費率作「可取得費用率」備援\n    4) 不把缺少的欄位互相污染。\n    """
     key=('etf_profile_v21033',symbol)
     if key in RUN_CACHE: return RUN_CACHE[key]
     out={'price':None,'nav':None,'yield':None,'expense':None,'beta':None,'assets':None,'expense_source':None}
@@ -5438,19 +5438,47 @@ def yahoo_etf_profile(symbol):
         out['assets']=out['assets'] or to_float(info.get('totalAssets'))
     except Exception as e:
         print(f'ETF yfinance備援失敗 {symbol}: {type(e).__name__}',flush=True)
-    # 台灣 ETF Yahoo profile 常提供管理費率/保管費率，即使 quoteSummary 沒有 expense ratio。
+    # V2.10.34：ETF 費用率嚴格防呆。
+    # 任何 >5% 的 ETF expense ratio 一律視為解析/單位錯誤，不得送進評分。
+    if out['expense'] is not None and not (0 <= out['expense'] <= 5):
+        print(f'ETF費用率異常，丟棄 Yahoo 值 {symbol}: {out["expense"]}%',flush=True)
+        out['expense']=None; out['expense_source']=None
+
+    # 已知台灣 ETF：發行商公告的管理費 + 保管費，作為 Yahoo 失敗時的獨立安全備援。
+    # 00878：管理費 0.25%（基金規模超過50億元）+ 保管費 0.03% = 0.28%。
+    TW_ETF_FEE_FALLBACK = {
+        '00878.TW': 0.28,
+    }
+    if out['expense'] is None and str(symbol).upper() in TW_ETF_FEE_FALLBACK:
+        out['expense']=TW_ETF_FEE_FALLBACK[str(symbol).upper()]
+        out['expense_source']='發行商管理費+保管費'
+
+    # 台灣 ETF profile 備援：正確使用「百分比」單位，不允許錯誤放大。
     if out['expense'] is None and str(symbol).upper().endswith(('.TW','.TWO')):
         try:
             profile_url=f'https://tw.finance.yahoo.com/quote/{symbol}/profile'
-            r=requests.get(profile_url,timeout=4,headers={'User-Agent':'Mozilla/5.0 stock-alert/2.10.33'})
-            r.raise_for_status(); text=re.sub(r'\\s+',' ',r.text)
-            mm=re.search(r'管理費率.{0,120}?([0-9]+(?:\\.[0-9]+)?)%',text)
-            cm=re.search(r'保管費率.{0,120}?([0-9]+(?:\\.[0-9]+)?)%',text)
-            if mm or cm:
-                mval=float(mm.group(1)) if mm else 0.0; cval=float(cm.group(1)) if cm else 0.0
-                out['expense']=mval+cval; out['expense_source']='管理費率+保管費率'
+            r=requests.get(profile_url,timeout=4,headers={'User-Agent':'Mozilla/5.0 stock-alert/2.10.34'})
+            r.raise_for_status()
+            text=re.sub(r'\s+', ' ', r.text)
+
+            def _pct_after(label):
+                m=re.search(label + r'.{0,180}?([0-9]+(?:\.[0-9]+)?)\s*%', text, flags=re.I)
+                return float(m.group(1)) if m else None
+
+            mval=_pct_after(r'管理費率')
+            cval=_pct_after(r'保管費率')
+            if mval is not None or cval is not None:
+                total=(mval or 0.0)+(cval or 0.0)
+                if 0 <= total <= 5:
+                    out['expense']=total; out['expense_source']='管理費率+保管費率'
+                else:
+                    print(f'ETF profile費用率異常，忽略 {symbol}: {total}%',flush=True)
         except Exception as e:
             print(f'ETF台灣 profile 費用備援失敗 {symbol}: {type(e).__name__}',flush=True)
+
+    # 最後一道保護：任何不合理費用率都回到 N/A，而不是顯示錯誤數字。
+    if out['expense'] is not None and not (0 <= out['expense'] <= 5):
+        out['expense']=None; out['expense_source']=None
     RUN_CACHE[key]=out
     return out
 
@@ -5486,7 +5514,7 @@ def etf_analysis(query):
     premium=((price/nav)-1)*100 if price and nav and nav>0 else None
     score,reasons=score_etf(tech,p)
     verdict='🟢 可分批配置' if score>=75 else '🟡 等待回檔/止跌' if score>=60 else '🟠 暫緩配置' if score>=40 else '🔴 不建議配置'
-    return (f'📊 ETF配置分析 V2.10.33\n\n標的：{info["name"]}（{code}）\n代號：{symbol}\n\n'
+    return (f'📊 ETF配置分析 V2.10.34\n\n標的：{info["name"]}（{code}）\n代號：{symbol}\n\n'
             f'【ETF特性 40分】\nNAV：{fmt(nav)}\n溢價/折價：{fmt(premium)}%\n殖利率：{fmt(p.get("yield"))}%\n費用率：{fmt(p.get("expense"))}%{("（" + str(p.get("expense_source")) + "）") if p.get("expense_source") else ""}\nBeta：{fmt(p.get("beta"))}\n資產規模：{fmt(p.get("assets"),0)}\n\n'
             f'【技術面 60分】\n價格：{fmt(price)}\nRSI：{fmt(tech.get("rsi"))}\nKD：K={fmt(tech.get("k"))} / D={fmt(tech.get("d"))}\nMA20：{fmt(tech.get("ma20"))}\nMA60：{fmt(tech.get("ma60"))}\n趨勢：{tech.get("trend") or "N/A"}\n\n'
             f'【ETF綜合評分】\n綜合評分：{score}/100\n結論：{verdict}\n加分因素：{"、".join(reasons) if reasons else "無"}')
