@@ -669,7 +669,7 @@
     "00952": {
       "margin_change": 31.0,
       "margin_balance": 1505.0,
-      "short_change": null,
+      "short_change": 1.0,
       "short_balance": 1.0
     },
     "00954": {
@@ -687,7 +687,7 @@
     "00960": {
       "margin_change": 41.0,
       "margin_balance": 423.0,
-      "short_change": null,
+      "short_change": 1.0,
       "short_balance": 1.0
     },
     "00961": {
@@ -855,7 +855,7 @@
     "009829": {
       "margin_change": 2671.0,
       "margin_balance": 10156.0,
-      "short_change": null,
+      "short_change": 4.0,
       "short_balance": 4.0
     },
     "1101": {
@@ -1767,7 +1767,7 @@
     "1618": {
       "margin_change": 10.0,
       "margin_balance": 3205.0,
-      "short_change": null,
+      "short_change": -1.0,
       "short_balance": null
     },
     "1623": {
@@ -2007,7 +2007,7 @@
     "1806": {
       "margin_change": -10.0,
       "margin_balance": 2566.0,
-      "short_change": null,
+      "short_change": -85.0,
       "short_balance": null
     },
     "1808": {
@@ -2161,7 +2161,7 @@
       "short_balance": null
     },
     "2025": {
-      "margin_change": null,
+      "margin_change": 70.0,
       "margin_balance": 70.0,
       "short_change": null,
       "short_balance": null
@@ -2247,7 +2247,7 @@
     "2101": {
       "margin_change": -15.0,
       "margin_balance": 19527.0,
-      "short_change": null,
+      "short_change": -13.0,
       "short_balance": null
     },
     "2102": {
@@ -2403,7 +2403,7 @@
     "2250": {
       "margin_change": -2.0,
       "margin_balance": 1110.0,
-      "short_change": null,
+      "short_change": -2.0,
       "short_balance": null
     },
     "2254": {
@@ -2649,7 +2649,7 @@
     "2364": {
       "margin_change": -28.0,
       "margin_balance": 872.0,
-      "short_change": null,
+      "short_change": -1.0,
       "short_balance": null
     },
     "2365": {
@@ -2733,7 +2733,7 @@
     "2383": {
       "margin_change": -188.0,
       "margin_balance": 1686.0,
-      "short_change": null,
+      "short_change": -57.0,
       "short_balance": null
     },
     "2385": {
@@ -3093,7 +3093,7 @@
     "2468": {
       "margin_change": 16.0,
       "margin_balance": 3391.0,
-      "short_change": null,
+      "short_change": 6.0,
       "short_balance": 6.0
     },
     "2471": {
@@ -3159,7 +3159,7 @@
     "2484": {
       "margin_change": 652.0,
       "margin_balance": 14736.0,
-      "short_change": null,
+      "short_change": 79.0,
       "short_balance": 79.0
     },
     "2485": {
@@ -3369,7 +3369,7 @@
     "2545": {
       "margin_change": -5.0,
       "margin_balance": 2744.0,
-      "short_change": null,
+      "short_change": 2.0,
       "short_balance": 2.0
     },
     "2546": {
@@ -3585,7 +3585,7 @@
     "2722": {
       "margin_change": -1.0,
       "margin_balance": 354.0,
-      "short_change": null,
+      "short_change": 1.0,
       "short_balance": 1.0
     },
     "2723": {
@@ -3609,7 +3609,7 @@
     "2739": {
       "margin_change": -6.0,
       "margin_balance": 939.0,
-      "short_change": null,
+      "short_change": 1.0,
       "short_balance": 1.0
     },
     "2748": {
@@ -3645,7 +3645,7 @@
     "2816": {
       "margin_change": 168.0,
       "margin_balance": 1096.0,
-      "short_change": null,
+      "short_change": 5.0,
       "short_balance": 5.0
     },
     "2820": {
@@ -3849,7 +3849,7 @@
     "2912": {
       "margin_change": 0.0,
       "margin_balance": 569.0,
-      "short_change": null,
+      "short_change": 1.0,
       "short_balance": 1.0
     },
     "2913": {
@@ -4129,7 +4129,7 @@
       "short_balance": 34.0
     },
     "3049": {
-      "margin_change": null,
+      "margin_change": 669.0,
       "margin_balance": 669.0,
       "short_change": null,
       "short_balance": null
@@ -4279,7 +4279,7 @@
       "short_balance": 7.0
     },
     "3229": {
-      "margin_change": null,
+      "margin_change": 289.0,
       "margin_balance": 289.0,
       "short_change": null,
       "short_balance": null
@@ -4449,7 +4449,7 @@
     "3515": {
       "margin_change": -8.0,
       "margin_balance": 1538.0,
-      "short_change": null,
+      "short_change": -1.0,
       "short_balance": null
     },
     "3518": {
@@ -4479,7 +4479,7 @@
     "3533": {
       "margin_change": 15.0,
       "margin_balance": 1606.0,
-      "short_change": null,
+      "short_change": 1.0,
       "short_balance": 1.0
     },
     "3535": {
@@ -4617,7 +4617,7 @@
     "3669": {
       "margin_change": -6.0,
       "margin_balance": 779.0,
-      "short_change": null,
+      "short_change": -1.0,
       "short_balance": null
     },
     "3673": {
@@ -4965,7 +4965,7 @@
     "4720": {
       "margin_change": -3.0,
       "margin_balance": 3192.0,
-      "short_change": null,
+      "short_change": -1.0,
       "short_balance": null
     },
     "4722": {
@@ -5493,7 +5493,7 @@
     "6133": {
       "margin_change": -2.0,
       "margin_balance": 2909.0,
-      "short_change": null,
+      "short_change": 1.0,
       "short_balance": 1.0
     },
     "6136": {
@@ -5565,7 +5565,7 @@
     "6176": {
       "margin_change": -78.0,
       "margin_balance": 4304.0,
-      "short_change": null,
+      "short_change": 7.0,
       "short_balance": 7.0
     },
     "6177": {
@@ -6327,7 +6327,7 @@
     "6863": {
       "margin_change": 7.0,
       "margin_balance": 1293.0,
-      "short_change": null,
+      "short_change": -1.0,
       "short_balance": null
     },
     "6869": {
@@ -6537,7 +6537,7 @@
     "7730": {
       "margin_change": -23.0,
       "margin_balance": 468.0,
-      "short_change": null,
+      "short_change": -1.0,
       "short_balance": null
     },
     "7732": {
@@ -6579,7 +6579,7 @@
     "7769": {
       "margin_change": 5.0,
       "margin_balance": 320.0,
-      "short_change": null,
+      "short_change": -1.0,
       "short_balance": null
     },
     "7780": {
@@ -7005,7 +7005,7 @@
     "9136": {
       "margin_change": -286.0,
       "margin_balance": 11682.0,
-      "short_change": null,
+      "short_change": 50.0,
       "short_balance": 50.0
     },
     "9802": {
@@ -7125,7 +7125,7 @@
     "9928": {
       "margin_change": -25.0,
       "margin_balance": 482.0,
-      "short_change": null,
+      "short_change": 3.0,
       "short_balance": 3.0
     },
     "9929": {
@@ -7233,7 +7233,7 @@
     "9958": {
       "margin_change": 55.0,
       "margin_balance": 8423.0,
-      "short_change": null,
+      "short_change": 1535.0,
       "short_balance": 1535.0
     }
   },
