@@ -5380,15 +5380,17 @@ def score_risk(
 
 
 def yahoo_light_fund(symbol, official=None, current_price=None):
-    """V2.10.34 LINE Free：真正逐欄位多源 fallback。
+    """V2.10.38：股票基本面逐欄位獨立 fallback 強化版。
 
-    順序：官方/快取 → Yahoo quoteSummary → Yahoo timeseries → yfinance info/報表
-    → 數學互補。每欄獨立，不因一個來源失敗而清空其他欄位。
+    每一欄獨立處理：官方/快取 → Yahoo quoteSummary → Yahoo timeseries
+    → Yahoo Profile/Dividend HTML → yfinance → 數學推導。
+    不因 Yahoo 401/429 讓整組基本面變成 N/A。
     """
     o={'eps_growth':None,'roe':None,'peg':None,'pb':None,'yield':None,'pe':None}
     if isinstance(official,dict):
         for k in ('pe','pb','yield'):
-            o[k]=to_float(official.get(k))
+            v=to_float(official.get(k))
+            if v is not None: o[k]=v
     code=clean_code(str(symbol).split('.')[0])
     cache=load_json(LINE_FUND_CACHE_FILE)
     if not isinstance(cache,dict) or not cache:
@@ -5398,84 +5400,100 @@ def yahoo_light_fund(symbol, official=None, current_price=None):
     if isinstance(cached,dict):
         for k in ('eps_growth','roe','peg','pe','pb','yield'):
             v=to_float(cached.get(k))
-            if v is not None: o[k]=v
-    # Source A: Yahoo quoteSummary, only when needed.
-    qs={}
+            if v is not None and math.isfinite(v): o[k]=v
+
+    qs={}; ts={}; yfinfo={}; prof={}
+    # 1. Yahoo quoteSummary：一次多欄位，失敗不阻塞。
     if any(o.get(k) is None for k in o):
         try: qs=yahoo_quote_summary_fund(symbol) or {}
         except Exception as e: print(f'LINE基本面 Yahoo quoteSummary失敗 {code}: {type(e).__name__}',flush=True)
-    # Source B: fundamentals-timeseries, independent from quoteSummary.
-    ts={}
+    # 2. Yahoo fundamentals-timeseries：獨立於 quoteSummary。
     if any(o.get(k) is None for k in o):
         try: ts=yahoo_timeseries_fund(symbol) or {}
         except Exception as e: print(f'LINE基本面 Yahoo timeseries失敗 {code}: {type(e).__name__}',flush=True)
-    # Source C: yfinance info is deliberately last because it is more rate-limit sensitive.
-    yfinfo={}
+    # 3. 台股 Yahoo 公開 HTML：尤其補殖利率、ROE、PB、TTM EPS。
+    if str(symbol).upper().endswith(('.TW','.TWO')) and any(o.get(k) is None for k in ('yield','roe','pb','pe')):
+        try: prof=yahoo_tw_profile_fallback(symbol) or {}
+        except Exception as e: print(f'LINE基本面 Yahoo TW profile失敗 {code}: {type(e).__name__}',flush=True)
+    # 4. yfinance 最後才碰，降低 401/429 風險。
     if any(o.get(k) is None for k in o):
         try: yfinfo=yahoo_fund(symbol) or {}
         except Exception as e: print(f'LINE基本面 yfinance fallback失敗 {code}: {type(e).__name__}',flush=True)
-    # V2.10.37：最後一層只補缺欄位，尤其是 5487 這類 timeseries EPS 不完整股票。
-    if o.get('eps_growth') is None and yfinfo.get('eps_growth') is not None:
-        o['eps_growth']=to_float(yfinfo.get('eps_growth'))
+
     def first(*vals):
         for v in vals:
             v=to_float(v)
-            if v is not None: return v
+            if v is not None and math.isfinite(v): return v
         return None
-    for k in ('pe','pb','yield','eps_growth','roe','peg'):
-        # V2.10.34：EPS Growth 優先採 timeseries 的同季/TTM 演算法，
-        # Yahoo quoteSummary 的 earningsGrowth 只作備援；避免 6488 被低基期年度
-        # 數字放大成 125%+。殖利率則先做合理範圍清洗。
-        if k == 'eps_growth':
-            o[k]=first(o.get(k),ts.get(k),qs.get(k),yfinfo.get(k))
-            if ts.get('eps_growth') is not None:
-                # timeseries 是本程式自行選擇同季/TTM/年度算法的獨立來源，優先於
-                # quoteSummary 的單一 earningsGrowth 欄位。
-                o[k]=to_float(ts.get('eps_growth'))
-        else:
-            o[k]=first(o.get(k),qs.get(k),ts.get(k),yfinfo.get(k))
-    if o.get('yield') is not None and (not math.isfinite(o['yield']) or o['yield'] < 0 or o['yield'] > 20):
-        print(f'LINE基本面：捨棄異常殖利率 {code} = {o["yield"]}',flush=True)
-        o['yield']=None
+
+    # PE / PB / ROE / Yield 逐欄位補值。
+    o['pe']=first(o.get('pe'),qs.get('pe'),ts.get('pe'),prof.get('pe'),yfinfo.get('pe'))
+    o['pb']=first(o.get('pb'),qs.get('pb'),ts.get('pb'),yfinfo.get('pb'))
+    o['roe']=first(o.get('roe'),qs.get('roe'),ts.get('roe'),prof.get('roe'),yfinfo.get('roe'))
+    o['yield']=first(o.get('yield'),qs.get('yield'),ts.get('yield'),yfinfo.get('yield'))
+
+    # Profile 若有 TTM EPS / BVPS，可直接以現價反推 PE/PB。
     px=to_float(current_price)
-    # PE from TTM EPS.
-    if o['pe'] is None and px and px>0:
-        eps=first(qs.get('trailing_eps'),ts.get('trailing_eps'))
-        if eps and eps>0: o['pe']=px/eps; print(f'LINE基本面：PE 使用股價/TTM EPS 推導 {code} = {o["pe"]:.2f}',flush=True)
-    # PB from market cap/equity, then PE*ROE.
+    if px is None or px<=0: px=first(prof.get('price'),qs.get('price'),yfinfo.get('price'))
+    trailing_eps=first(qs.get('trailing_eps'),ts.get('trailing_eps'),prof.get('trailing_eps'),yfinfo.get('trailing_eps'))
+    bvps=first(prof.get('bvps'),yfinfo.get('bookValue'))
+    if o['pe'] is None and px and px>0 and trailing_eps and trailing_eps>0:
+        o['pe']=px/trailing_eps
+        print(f'LINE基本面：PE 使用股價/TTM EPS 推導 {code} = {o["pe"]:.2f}',flush=True)
+    if o['pb'] is None and px and px>0 and bvps and bvps>0:
+        o['pb']=px/bvps
+        print(f'LINE基本面：PB 使用股價/BVPS 推導 {code} = {o["pb"]:.2f}',flush=True)
+
+    # 市值/淨值推導 PB。
     if o['pb'] is None:
         mc=first(qs.get('market_cap'),ts.get('market_cap')); eq=first(qs.get('equity'),ts.get('equity'))
-        if mc and eq and eq>0: o['pb']=mc/eq; print(f'LINE基本面：PB 使用市值/淨值推導 {code} = {o["pb"]:.2f}',flush=True)
+        if mc and eq and eq>0:
+            o['pb']=mc/eq
+            print(f'LINE基本面：PB 使用市值/淨值推導 {code} = {o["pb"]:.2f}',flush=True)
+    # PE×ROE 與 PB/PE 雙向互補。
     if o['pb'] is None and o['pe'] and o['roe'] and o['pe']>0 and o['roe']>0:
-        o['pb']=o['pe']*o['roe']/100; print(f'LINE基本面：PB 使用 PE×ROE 推導 {code} = {o["pb"]:.2f}',flush=True)
-    # Yield from dividend amount / price.
+        o['pb']=o['pe']*o['roe']/100
+    if o['roe'] is None and o['pe'] and o['pb'] and o['pe']>0:
+        o['roe']=o['pb']/o['pe']*100
+
+    # 殖利率：先使用現金股利/價格；再讀 Yahoo 股利頁近一年資料。
     if o['yield'] is None and px and px>0:
-        div=first(qs.get('dividend_rate'),ts.get('dividend_rate'))
-        if div is not None:
-            calc_yield=div/px*100
-            if 0 <= calc_yield <= 20:
-                o['yield']=calc_yield
-                print(f'LINE基本面：殖利率使用股利/股價推導 {code} = {o["yield"]:.2f}%',flush=True)
-    # V2.10.34：只要 PE + EPS Growth 都有效，PEG 一律用本程式定義重算，
-    # 不讓 Yahoo 的 trailingPegRatio 覆蓋 PE/EPS Growth。
+        div=first(qs.get('dividend_rate'),ts.get('dividend_rate'),prof.get('dividend_rate'),yfinfo.get('dividendRate'))
+        if div is not None and 0<=div<=100:
+            calc=div/px*100
+            if 0<=calc<=20: o['yield']=calc
+    if o['yield'] is None and str(symbol).upper().endswith(('.TW','.TWO')) and px and px>0:
+        y=yahoo_tw_dividend_fallback(symbol,px)
+        if y is not None: o['yield']=y
+    if o['yield'] is not None and (not math.isfinite(o['yield']) or o['yield']<0 or o['yield']>20):
+        o['yield']=None
+
+    # EPS Growth：優先本程式 timeseries 演算法；quoteSummary/yfinance 僅作 fallback。
+    # 若基期 EPS <= 0，不製造失真的百分比成長率，維持 N/A。
+    g=first(ts.get('eps_growth'),qs.get('eps_growth'),yfinfo.get('eps_growth'))
+    if g is not None and math.isfinite(g) and -500<=g<=500:
+        o['eps_growth']=g
+    elif o['eps_growth'] is not None and not math.isfinite(o['eps_growth']):
+        o['eps_growth']=None
+
+    # PEG：只要 PE + 正 EPS Growth 存在，一律重新計算。
     if o['pe'] and o['eps_growth'] and o['pe']>0 and o['eps_growth']>0:
-        calc_peg=o['pe']/o['eps_growth']
-        if math.isfinite(calc_peg) and 0 < calc_peg < 100:
-            o['peg']=calc_peg
-            print(f'LINE基本面：PEG 強制使用 PE/EPS成長重算 {code} = {o["peg"]:.2f}',flush=True)
+        peg=o['pe']/o['eps_growth']
+        o['peg']=peg if math.isfinite(peg) and 0<peg<100 else None
+    elif o['peg'] is None:
+        pg=first(qs.get('peg'),ts.get('peg'),yfinfo.get('peg'))
+        if pg is not None and 0<pg<100: o['peg']=pg
     if o['eps_growth'] is None and o['pe'] and o['peg'] and o['pe']>0 and o['peg']>0:
-        o['eps_growth']=o['pe']/o['peg']; print(f'LINE基本面：EPS成長使用 PE/PEG 推導 {code} = {o["eps_growth"]:.2f}%',flush=True)
-    # ROE <-> PB/PE.
-    if o['roe'] is None and o['pe'] and o['pb'] and o['pe']>0 and o['pb']>0:
-        o['roe']=o['pb']/o['pe']*100; print(f'LINE基本面：ROE 使用 PB/PE 推導 {code} = {o["roe"]:.2f}%',flush=True)
-    # Second PEG pass after PE/Growth/ROE/PB have been filled.
-    if o['peg'] is None and o['pe'] and o['eps_growth'] and o['pe']>0 and o['eps_growth']>0:
-        o['peg']=o['pe']/o['eps_growth']
+        g=o['pe']/o['peg']
+        if math.isfinite(g) and -500<=g<=500: o['eps_growth']=g
+
     try:
         cache[code]={k:o.get(k) for k in ('pe','pb','yield','eps_growth','roe','peg')}
-        cache[code]['_cached_at']=time.time(); save_json(LINE_FUND_CACHE_FILE,cache)
+        cache[code]['_cached_at']=time.time()
+        save_json(LINE_FUND_CACHE_FILE,cache)
     except Exception as e: print(f'LINE基本面快取保存失敗 {code}: {e}',flush=True)
     return o
+
 
 def _parse_number_near(text, label, max_chars=180):
     """V2.10.37：從 Yahoo/投信 HTML 文字中找 label 後的第一個合理數字。"""
@@ -5570,84 +5588,112 @@ def yahoo_tw_dividend_fallback(symbol, price=None):
 
 
 def _official_yuanta_etf_fallback(symbol):
-    """V2.10.37：元大 ETF 官方頁補 NAV/AUM/費用率。"""
+    """V2.10.38：元大 ETF 官方資料強化版。
+
+    同時讀 ratio / Basic_information / PCF；欄位逐一補值，避免單一頁面改版造成
+    NAV、AUM、費用率全部 N/A。"""
     code=str(symbol or '').upper().replace('.TW','').replace('.TWO','')
     if not code: return {}
-    out={}; headers={'User-Agent':'Mozilla/5.0 stock-alert/2.10.37'}
-    try:
-        r=requests.get(f'https://www.yuantaetfs.com/product/detail/{code}/ratio',timeout=6,headers=headers); r.raise_for_status()
-        text=html.unescape(re.sub(r'\s+',' ',r.text))
-        m=re.search(r'基金資產總淨值\(新台幣\).*?NTD\s*\$?\s*([0-9,]+(?:\.[0-9]+)?)',text,re.I)
-        if m: out['assets']=to_float(m.group(1))
-        m=re.search(r'基金每單位淨值.*?NTD\s*\$?\s*([0-9]+(?:\.[0-9]+)?)',text,re.I)
-        if m: out['nav']=to_float(m.group(1))
-    except Exception as e:
-        print(f'元大 ETF ratio fallback失敗 {symbol}: {type(e).__name__}',flush=True)
-    try:
-        urls=[f'https://www.yuantaetfs.com/product/detail/{code}', 'https://www.yuantafunds.com/active/ETF0050/' if code=='0050' else '']
-        for url in urls:
-            if not url: continue
-            try:
-                r=requests.get(url,timeout=6,headers=headers); r.raise_for_status(); text=html.unescape(re.sub(r'\s+',' ',r.text))
-                nums=[to_float(x) for x in re.findall(r'([0-9]+(?:\.[0-9]+)?)\s*%',text)]
-                nums=[x for x in nums if x is not None and 0<x<=1]
-                if nums and out.get('management_fee') is None: out['management_fee']=nums[0]
-                m=re.search(r'保管費.{0,180}?([0-9]+(?:\.[0-9]+)?)\s*%',text,re.I)
-                if m:
-                    v=to_float(m.group(1))
-                    if v is not None and 0<v<=1: out['custodian_fee']=v
-                a=out.get('assets')
-                if out.get('custodian_fee') is None and a: out['custodian_fee']=0.03 if a<=1e12 else (0.03e12+0.025*(a-1e12))/a
-                if code=='0050' and a and a>1e12:
-                    rem=a; total=0.0
-                    for cap,rate in ((1e11,0.15),(4e11,0.10),(5e11,0.08)):
-                        take=min(rem,cap); total += take*rate/100; rem-=take
-                        if rem<=0: break
-                    if rem>0: total += rem*0.05/100
-                    out['management_fee']=total/a*100
-                if out.get('management_fee') is not None and out.get('custodian_fee') is not None:
-                    out['expense']=out['management_fee']+out['custodian_fee']; out['expense_source']='元大投信官方經理費+保管費'
-                for label,key in [('Cash Dividend Yield','yield'),('Beta','beta')]:
-                    m=re.search(re.escape(label)+r'.{0,120}?([0-9]+(?:\.[0-9]+)?)',text,re.I)
-                    if m: out[key]=to_float(m.group(1))
-                if out.get('nav') is not None or out.get('assets') is not None: break
-            except Exception: continue
-    except Exception as e:
-        print(f'元大 ETF 官方基本資料 fallback失敗 {symbol}: {type(e).__name__}',flush=True)
+    out={}
+    headers={'User-Agent':'Mozilla/5.0 stock-alert/2.10.38','Accept-Language':'zh-TW,zh;q=0.9,en;q=0.8'}
+    urls=[
+        f'https://www.yuantaetfs.com/product/detail/{code}/ratio',
+        f'https://www.yuantaetfs.com/product/detail/{code}/Basic_information',
+        f'https://www.yuantaetfs.com/tradeInfo/pcf/{code}'
+    ]
+    texts=[]
+    for url in urls:
+        try:
+            r=requests.get(url,timeout=7,headers=headers); r.raise_for_status()
+            texts.append(html.unescape(re.sub(r'\s+',' ',r.text)))
+        except Exception as e:
+            print(f'元大 ETF 官方頁失敗 {code}: {type(e).__name__}',flush=True)
+    alltext=' '.join(texts)
+    def pick(patterns):
+        for pat in patterns:
+            m=re.search(pat,alltext,re.I)
+            if m:
+                v=to_float(m.group(1))
+                if v is not None: return v
+        return None
+    out['assets']=pick([r'基金資產總淨值[^0-9]{0,100}(?:NTD|TWD)?\s*\$?\s*([0-9,]+(?:\.[0-9]+)?)',r'資產規模[^0-9]{0,80}([0-9,]+(?:\.[0-9]+)?)\s*億元'])
+    if out.get('assets') is not None and out['assets']<1e7: out['assets']*=1e8
+    out['nav']=pick([r'基金每單位淨值[^0-9]{0,100}(?:NTD|TWD)?\s*\$?\s*([0-9]+(?:\.[0-9]+)?)',r'每受益權單位淨資產價值[^0-9]{0,80}(?:NTD|TWD)?\s*([0-9]+(?:\.[0-9]+)?)'])
+    # 只接受合理的 ETF 費率，避免 3003% 類型解析錯誤。
+    mg=pick([r'經理費[^0-9]{0,100}([0-9]+(?:\.[0-9]+)?)\s*%',r'管理費率[^0-9]{0,100}([0-9]+(?:\.[0-9]+)?)\s*%'])
+    cg=pick([r'保管費[^0-9]{0,100}([0-9]+(?:\.[0-9]+)?)\s*%',r'保管費率[^0-9]{0,100}([0-9]+(?:\.[0-9]+)?)\s*%'])
+    if mg is not None and 0<=mg<=3: out['management_fee']=mg
+    if cg is not None and 0<=cg<=1: out['custodian_fee']=cg
+    if out.get('management_fee') is not None and out.get('custodian_fee') is not None:
+        out['expense']=out['management_fee']+out['custodian_fee']; out['expense_source']='元大投信官方經理費+保管費'
+    # 0050 等級距經理費：若只有 Basic_information 的級距，仍可用資產規模估算實際平均費率。
+    if code=='0050' and out.get('assets') and out.get('custodian_fee') is not None and out.get('management_fee') is None:
+        a=out['assets']
+        rem=a; total=0.0
+        for cap,rate in ((1e11,0.15),(4e11,0.10),(5e11,0.08)):
+            take=min(rem,cap); total += take*rate/100; rem-=take
+            if rem<=0: break
+        if rem>0: total += rem*0.05/100
+        out['management_fee']=total/a*100
+        out['expense']=out['management_fee']+out['custodian_fee']; out['expense_source']='元大投信官方級距估算'
     return out
 
 
 def _official_cathay_etf_fallback(symbol):
-    """V2.10.37：國泰 ETF 官方頁補 NAV/費用率。"""
+    """V2.10.38：國泰 ETF 官方頁強化版。"""
     code=str(symbol or '').upper().replace('.TW','').replace('.TWO','')
-    urls={'00878':'https://www.cathaysite.com.tw/fund-details/ECN?tab=basic_info','00881':'https://www.cathaysite.com.tw/fund-details/ECN?tab=basic_info','00922':'https://www.cathaysite.com.tw/fund-details/ECN?tab=basic_info'}
+    urls={
+        '00878':'https://www.cathaysite.com.tw/fund-details/ECN?tab=basic_info',
+        '00881':'https://www.cathaysite.com.tw/fund-details/ECN?tab=basic_info',
+        '00922':'https://www.cathaysite.com.tw/fund-details/ECN?tab=basic_info'
+    }
     url=urls.get(code)
     if not url: return {}
     out={}
     try:
-        r=requests.get(url,timeout=6,headers={'User-Agent':'Mozilla/5.0 stock-alert/2.10.37'}); r.raise_for_status(); text=html.unescape(re.sub(r'\s+',' ',r.text))
-        m=re.search(r'(?:最新)?淨值.{0,180}?([0-9]+(?:\.[0-9]+)?)\s*新台幣',text)
-        if m: out['nav']=to_float(m.group(1))
-        m=re.search(r'經理費.{0,180}?([0-9]+(?:\.[0-9]+)?)\s*%',text); mg=to_float(m.group(1)) if m else None
-        m=re.search(r'保管費.{0,180}?([0-9]+(?:\.[0-9]+)?)\s*%',text); cg=to_float(m.group(1)) if m else None
+        r=requests.get(url,timeout=7,headers={'User-Agent':'Mozilla/5.0 stock-alert/2.10.38','Accept-Language':'zh-TW,zh;q=0.9'}); r.raise_for_status()
+        text=html.unescape(re.sub(r'\s+',' ',r.text))
+        def pick(label):
+            m=re.search(re.escape(label)+r'.{0,220}?([0-9]+(?:\.[0-9]+)?)',text,re.I)
+            return to_float(m.group(1)) if m else None
+        nav=pick('最新淨值') or pick('淨值')
+        if nav is not None and 0<nav<10000: out['nav']=nav
+        mg=pick('經理費'); cg=pick('保管費')
         if mg is not None and 0<mg<=1: out['management_fee']=mg
         if cg is not None and 0<cg<=1: out['custodian_fee']=cg
         if out.get('management_fee') is not None and out.get('custodian_fee') is not None:
             out['expense']=out['management_fee']+out['custodian_fee']; out['expense_source']='國泰投信官方經理費+保管費'
+        # 官方頁的收盤價可作 ETF 現價與 Yahoo 圖表尺度校正。
+        close=pick('收盤價')
+        if close is not None and close>0: out['price']=close
+        # 若頁面有 12M 殖利率/配息率，優先採用。
+        for label in ('12M 殖利率','12M配息率','近一年殖利率','年化配息率'):
+            v=pick(label)
+            if v is not None and 0<=v<=20: out['yield']=v; break
     except Exception as e: print(f'國泰 ETF 官方 fallback失敗 {symbol}: {type(e).__name__}',flush=True)
     return out
 
 
 def _official_twse_etf_fallback(symbol):
-    """V2.10.37：TWSE ETF e添富補 AUM。"""
+    """V2.10.38：TWSE ETF 官方資料補 AUM/NAV/price。"""
     code=str(symbol or '').upper().replace('.TW','').replace('.TWO','')
     if not re.fullmatch(r'[0-9A-Z]{4,6}',code): return {}
     out={}
-    try:
-        r=requests.get(f'https://www.twse.com.tw/zh/ETFortune/etfInfo/{code}',timeout=6,headers={'User-Agent':'Mozilla/5.0 stock-alert/2.10.37'}); r.raise_for_status(); text=html.unescape(re.sub(r'\s+',' ',r.text))
-        m=re.search(r'資產規模.{0,120}?([0-9,]+(?:\.[0-9]+)?)\s*億元',text)
-        if m: out['assets']=to_float(m.group(1))*1e8
-    except Exception as e: print(f'TWSE ETF 官方 fallback失敗 {symbol}: {type(e).__name__}',flush=True)
+    headers={'User-Agent':'Mozilla/5.0 stock-alert/2.10.38','Accept-Language':'zh-TW,zh;q=0.9'}
+    urls=[f'https://www.twse.com.tw/zh/ETFortune/etfInfo/{code}',f'https://www.twse.com.tw/zh/ETFReport/ETFReport?response=html&date=&selectType=ALL']
+    for url in urls:
+        try:
+            r=requests.get(url,timeout=7,headers=headers); r.raise_for_status(); text=html.unescape(re.sub(r'\s+',' ',r.text))
+            for pat,key,scale in [
+                (r'資產規模.{0,150}?([0-9,]+(?:\.[0-9]+)?)\s*億元','assets',1e8),
+                (r'淨值.{0,100}?([0-9]+(?:\.[0-9]+)?)\s*元','nav',1),
+                (r'收盤價.{0,100}?([0-9]+(?:\.[0-9]+)?)','price',1)
+            ]:
+                m=re.search(pat,text,re.I)
+                if m and key not in out:
+                    v=to_float(m.group(1));
+                    if v is not None: out[key]=v*scale
+        except Exception: continue
     return out
 
 
@@ -5669,8 +5715,8 @@ def yahoo_chart_daily_fallback(symbol, period='6mo'):
 
 
 def yahoo_etf_profile(symbol):
-    """V2.10.37：ETF 多源；台股 ETF 官方資料優先覆蓋 Yahoo 異常值。"""
-    key=('etf_profile_v21037',symbol)
+    """V2.10.38：ETF 多源資料；官方資料優先，並校正錯誤費用率/價格尺度。"""
+    key=('etf_profile_v21038',symbol)
     if key in RUN_CACHE: return RUN_CACHE[key]
     out={'price':None,'nav':None,'yield':None,'expense':None,'beta':None,'assets':None,'expense_source':None}
     def raw(sec,k):
@@ -5679,7 +5725,7 @@ def yahoo_etf_profile(symbol):
         return to_float(x)
     try:
         url='https://query1.finance.yahoo.com/v10/finance/quoteSummary/'+str(symbol)
-        r=requests.get(url,params={'modules':'price,summaryDetail,defaultKeyStatistics,fundProfile'},timeout=5,headers={'User-Agent':'Mozilla/5.0 stock-alert/2.10.37'}); r.raise_for_status()
+        r=requests.get(url,params={'modules':'price,summaryDetail,defaultKeyStatistics,fundProfile'},timeout=5,headers={'User-Agent':'Mozilla/5.0 stock-alert/2.10.38'}); r.raise_for_status()
         q=((r.json().get('quoteSummary') or {}).get('result') or [{}])[0]
         out['price']=raw(q.get('price'),'regularMarketPrice'); out['nav']=raw(q.get('price'),'navPrice')
         y=raw(q.get('summaryDetail'),'dividendYield'); out['yield']=y*100 if y is not None and abs(y)<=1.5 else y
@@ -5693,30 +5739,44 @@ def yahoo_etf_profile(symbol):
                         if ev is not None and 0<=ev<=10: out['expense']=ev; out['expense_source']=k; break
             if out['expense'] is not None: break
     except Exception as e: print(f'ETF quoteSummary失敗 {symbol}: {type(e).__name__}',flush=True)
+    # 台股 ETF：官方先於 yfinance，避免 3003%/舊 split 價格污染。
+    if str(symbol).upper().endswith(('.TW','.TWO')):
+        for src in (_official_yuanta_etf_fallback(symbol),_official_cathay_etf_fallback(symbol),_official_twse_etf_fallback(symbol)):
+            for k in ('price','nav','assets','beta','yield','expense'):
+                v=to_float(src.get(k))
+                if v is not None:
+                    # 費用率絕對限制 0~10%，防止解析錯誤。
+                    if k=='expense' and not (0<=v<=10): continue
+                    out[k]=v
+            if src.get('expense_source'): out['expense_source']=src['expense_source']
+    # yfinance 只補仍缺少的欄位。
     try:
         info=(yf.Ticker(symbol).info or {})
-        out['price']=out['price'] or to_float(info.get('regularMarketPrice')); out['nav']=out['nav'] or to_float(info.get('navPrice'))
+        if out['price'] is None: out['price']=to_float(info.get('regularMarketPrice'))
+        if out['nav'] is None: out['nav']=to_float(info.get('navPrice'))
         if out['yield'] is None:
             y=to_float(info.get('dividendYield')); out['yield']=y*100 if y is not None and abs(y)<=1.5 else y
         if out['expense'] is None:
             for k in ('annualReportExpenseRatio','netExpenseRatio','grossExpenseRatio','totalExpenseRatio','feesExpensesInvestment'):
                 v=to_float(info.get(k)); ev=v*100 if v is not None and 0<=v<1 else v
                 if ev is not None and 0<=ev<=10: out['expense']=ev; out['expense_source']=k; break
-        out['beta']=out['beta'] or to_float(info.get('beta3Year')) or to_float(info.get('beta')); out['assets']=out['assets'] or to_float(info.get('totalAssets'))
+        if out['beta'] is None: out['beta']=to_float(info.get('beta3Year')) or to_float(info.get('beta'))
+        if out['assets'] is None: out['assets']=to_float(info.get('totalAssets'))
     except Exception as e: print(f'ETF yfinance備援失敗 {symbol}: {type(e).__name__}',flush=True)
     if str(symbol).upper().endswith(('.TW','.TWO')):
-        for src in (_official_yuanta_etf_fallback(symbol),_official_cathay_etf_fallback(symbol),_official_twse_etf_fallback(symbol)):
-            for k in ('nav','assets','beta','yield','expense'):
-                if src.get(k) is not None: out[k]=src[k]
-            if src.get('expense_source'): out['expense_source']=src['expense_source']
-    # Yahoo profile 只補 AUM/Beta，不再覆蓋 ETF 現價。
-    if str(symbol).upper().endswith(('.TW','.TWO')):
         prof=yahoo_tw_profile_fallback(symbol)
-        for k in ('assets','beta'):
+        for k in ('price','assets','beta'):
             if out.get(k) is None and prof.get(k) is not None: out[k]=prof[k]
-        if out['expense'] is None and prof.get('expense') is not None: out['expense']=prof['expense']; out['expense_source']=prof.get('expense_source')
-        if out['yield'] is None: out['yield']=yahoo_tw_dividend_fallback(symbol,out.get('price'))
+        if out['expense'] is None and prof.get('expense') is not None and 0<=prof['expense']<=10:
+            out['expense']=prof['expense']; out['expense_source']=prof.get('expense_source')
+        if out['yield'] is None:
+            y=yahoo_tw_dividend_fallback(symbol,out.get('price'))
+            if y is not None: out['yield']=y
+    # 最後做一致性清洗。
+    if out.get('expense') is not None and not (0<=out['expense']<=10): out['expense']=None; out['expense_source']=None
+    if out.get('yield') is not None and not (0<=out['yield']<=30): out['yield']=None
     RUN_CACHE[key]=out; return out
+
 
 def score_etf(tech,p):
     score=0.0; avail=0.0; reasons=[]
@@ -5745,21 +5805,31 @@ def etf_analysis(query):
     info=resolve_etf_query(query)
     if not info: return f'❌ 找不到 ETF：{query}'
     symbol=info['symbol']; code=next((k for k,v in ETF_MAP.items() if v is info), str(query).upper())
+    p=yahoo_etf_profile(symbol)
+    official_price=to_float(p.get('price'))
     tech=technical(symbol)
     tp=to_float(tech.get('price')); ma20=to_float(tech.get('ma20')); ma60=to_float(tech.get('ma60'))
-    bad_price=(tp is None) or (ma20 is not None and ma20>0 and abs(tp/ma20-1)>0.25) or (ma60 is not None and ma60>0 and abs(tp/ma60-1)>0.25)
+    bad_price=(tp is None) or (official_price is not None and tp>0 and abs(tp/official_price-1)>0.20) or (ma20 is not None and ma20>0 and abs(tp/ma20-1)>0.25) or (ma60 is not None and ma60>0 and abs(tp/ma60-1)>0.25)
     if bad_price:
         d=yahoo_chart_daily_fallback(symbol,'6mo')
-        if d is not None and not d.empty: tech=_technical_from_df(d)
-    p=yahoo_etf_profile(symbol)
-    price=to_float(tech.get('price')) or to_float(p.get('price')); nav=p.get('nav')
+        if d is not None and not d.empty:
+            # 若 Yahoo 歷史價格仍處於 split 前尺度，用官方現價比例校正整段 K 線。
+            last=to_float(d['Close'].dropna().iloc[-1]) if 'Close' in d.columns and not d['Close'].dropna().empty else None
+            if official_price and last and last>0 and abs(official_price/last-1)>0.20:
+                factor=official_price/last
+                d=d.copy(); d['Close']=pd.to_numeric(d['Close'],errors='coerce')*factor
+            tech=_technical_from_df(d)
+    # 官方現價優先，確保 ETF 分割後尺度一致。
+    if official_price is not None: tech['price']=official_price
+    price=official_price or to_float(tech.get('price')); nav=to_float(p.get('nav'))
     premium=((price/nav)-1)*100 if price and nav and nav>0 else None
     score,reasons=score_etf(tech,p)
     verdict='🟢 可分批配置' if score>=75 else '🟡 等待回檔/止跌' if score>=60 else '🟠 暫緩配置' if score>=40 else '🔴 不建議配置'
-    return (f'📊 ETF配置分析 V2.10.37\n\n標的：{info["name"]}（{code}）\n代號：{symbol}\n\n'
-            f'【ETF特性 40分】\nNAV：{fmt(nav)}\n溢價/折價：{fmt(premium)}%\n殖利率：{fmt(p.get("yield"))}%\n費用率：{fmt(p.get("expense"))}%{("（" + str(p.get("expense_source")) + "）") if p.get("expense_source") else ""}\nBeta：{fmt(p.get("beta"))}\n資產規模：{fmt(p.get("assets"),0)}\n\n'
+    return (f'📊 ETF配置分析 V2.10.38\n\n標的：{info["name"]}（{code}）\n代號：{symbol}\n\n'
+            f'【ETF特性 40分】\nNAV：{fmt(nav)}\n溢價/折價：{fmt(premium)}%\n殖利率：{fmt(p.get("yield"))}%\n費用率：{fmt(p.get("expense"))}%{("（" + str(p.get("expense_source")) + ")") if p.get("expense_source") else ""}\nBeta：{fmt(p.get("beta"))}\n資產規模：{fmt(p.get("assets"),0)}\n\n'
             f'【技術面 60分】\n價格：{fmt(price)}\nRSI：{fmt(tech.get("rsi"))}\nKD：K={fmt(tech.get("k"))} / D={fmt(tech.get("d"))}\nMA20：{fmt(tech.get("ma20"))}\nMA60：{fmt(tech.get("ma60"))}\n趨勢：{tech.get("trend") or "N/A"}\n\n'
             f'【ETF綜合評分】\n綜合評分：{score}/100\n結論：{verdict}\n加分因素：{"、".join(reasons) if reasons else "無"}')
+
 
 def analysis(
     query,
@@ -6740,7 +6810,7 @@ def run_webhook_server():
 
     @app.get('/')
     def health():
-        return 'stock_alert V2.10.37 OK', 200
+        return 'stock_alert V2.10.38 OK', 200
 
     @app.get('/health')
     def health2():
