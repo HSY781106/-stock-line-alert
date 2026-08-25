@@ -1,5 +1,5 @@
 {
-  "_cached_at": 1787645870.8863366,
+  "_cached_at": 1787653057.2924845,
   "data": {
     "1101": {
       "pe": null,
@@ -8172,6 +8172,11 @@
       "yield": null
     },
     "6240": {
+      "pe": null,
+      "pb": null,
+      "yield": null
+    },
+    "6241": {
       "pe": null,
       "pb": null,
       "yield": null
