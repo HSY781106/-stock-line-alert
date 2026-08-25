@@ -1,4 +1,4 @@
-# stock_alert.py V2.10.39
+# stock_alert.py V2.10.40
 # 效能修正版：
 # 1. 全市場資料批次化
 # 2. 單次執行快取
@@ -27,7 +27,7 @@
 # - 保留原本基本面 / 技術 / 籌碼 / 風險 / LINE 功能
 #
 # 股票跌幅 + 15分鐘區間最低價 + 動態估值 + 技術 + 籌碼 + 100分制加碼決策
-# V2.10.39：以正式 V2.10.37 實際檔案為基底；LINE 查詢改採 A 方案
+# V2.10.40：以正式 V2.10.37 實際檔案為基底；LINE 查詢改採 A 方案
 #          + 查詢結果不再使用 Push，不消耗每月 Push 額度
 #          + Reply 僅立即回覆「分析頁面網址」；背景分析完成後寫入 Render 結果頁
 #          + /line-result/<id> 顯示即時分析狀態與完整結果
@@ -157,7 +157,7 @@ LINE_EVENT_LOCK = threading.Lock()
 LINE_SEEN_EVENTS = set()
 LINE_SEEN_EVENT_MAX = 500
 
-# V2.10.39：LINE A 方案。使用者主動查詢不再 Push 完整結果。
+# V2.10.40：LINE A 方案。使用者主動查詢不再 Push 完整結果。
 # Reply 只回覆一個 Render 結果頁網址；背景分析完成後更新記憶體中的結果。
 # Reply 不計入方案訊息額度，Push 則會計入每月額度。
 LINE_RESULT_LOCK = threading.Lock()
@@ -4978,7 +4978,7 @@ def yahoo_margin_fast(code, market):
     return out
 
 def _tpex_margin_html_fallback(code):
-    """V2.10.39：TPEx 融資融券真正可用的多源 HTML fallback。
+    """V2.10.40：TPEx 融資融券真正可用的多源 HTML fallback。
 
     TPEx 官方表格的欄位固定為：
     代號、名稱、前資餘額、資買、資賣、現償、資餘額、...
@@ -5406,7 +5406,7 @@ def score_risk(
     )
 
 
-def yahoo_light_fund(symbol, official=None, current_price=None):
+def yahoo_light_fund(symbol, official=None, current_price=None, market=None):
     """V2.10.34 LINE Free：真正逐欄位多源 fallback。
 
     順序：官方/快取 → Yahoo quoteSummary → Yahoo timeseries → yfinance info/報表
@@ -5416,6 +5416,15 @@ def yahoo_light_fund(symbol, official=None, current_price=None):
     if isinstance(official,dict):
         for k in ('pe','pb','yield'):
             o[k]=to_float(official.get(k))
+    # V2.10.40：LINE 查詢不能只相信 GitHub PE 快取。快取可能只有 PE/PB，
+    # 但沒有殖利率；因此每個缺欄位都可獨立向交易所官方資料補值。
+    if isinstance(official,dict):
+        try:
+            for k in ('pe','pb','yield'):
+                if o.get(k) is None and to_float(official.get(k)) is not None:
+                    o[k]=to_float(official.get(k))
+        except Exception:
+            pass
     code=clean_code(str(symbol).split('.')[0])
     cache=load_json(LINE_FUND_CACHE_FILE)
     if not isinstance(cache,dict) or not cache:
@@ -5426,6 +5435,23 @@ def yahoo_light_fund(symbol, official=None, current_price=None):
         for k in ('eps_growth','roe','peg','pe','pb','yield'):
             v=to_float(cached.get(k))
             if v is not None: o[k]=v
+    # V2.10.40：交易所官方 peratio 逐欄位補洞；不因 Yahoo 401/429 讓 6488 殖利率變 N/A。
+    if any(o.get(k) is None for k in ('pe','pb','yield')):
+        try:
+            if market == 'TPEX':
+                rows=parse_pe(tpex_get('/tpex_mainboard_peratio_analysis'))
+            elif market == 'TWSE':
+                rows=parse_pe(twse_get('/exchangeReport/BWIBBU_ALL'))
+            else:
+                rows={}
+            rr=rows.get(code,{}) if isinstance(rows,dict) else {}
+            for k in ('pe','pb','yield'):
+                v=to_float(rr.get(k))
+                if o.get(k) is None and v is not None: o[k]=v
+            print(f'LINE基本面：交易所官方逐欄位 fallback {code} {rr}',flush=True)
+        except Exception as e:
+            print(f'LINE基本面：交易所官方 fallback失敗 {code}: {type(e).__name__}',flush=True)
+
     # Source A: Yahoo quoteSummary, only when needed.
     qs={}
     if any(o.get(k) is None for k in o):
@@ -5499,8 +5525,14 @@ def yahoo_light_fund(symbol, official=None, current_price=None):
     if o['peg'] is None and o['pe'] and o['eps_growth'] and o['pe']>0 and o['eps_growth']>0:
         o['peg']=o['pe']/o['eps_growth']
     try:
-        cache[code]={k:o.get(k) for k in ('pe','pb','yield','eps_growth','roe','peg')}
-        cache[code]['_cached_at']=time.time(); save_json(LINE_FUND_CACHE_FILE,cache)
+        prev=cache.get(code,{}) if isinstance(cache,dict) else {}
+        merged={}
+        for k in ('pe','pb','yield','eps_growth','roe','peg'):
+            nv=to_float(o.get(k)); pv=to_float(prev.get(k)) if isinstance(prev,dict) else None
+            merged[k]=nv if nv is not None else pv
+        merged['_cached_at']=time.time()
+        cache[code]=merged
+        save_json(LINE_FUND_CACHE_FILE,cache)
     except Exception as e: print(f'LINE基本面快取保存失敗 {code}: {e}',flush=True)
     return o
 
@@ -5596,8 +5628,106 @@ def yahoo_tw_dividend_fallback(symbol, price=None):
     return None
 
 
+
+def _twse_etf_nav_fallback(symbol):
+    """V2.10.40：TWSE MIS ETF 淨值/折溢價公開資料最後獨立備援。
+
+    Yahoo 的 ETF profile 在 Render 很容易回傳舊值或 N/A；TWSE 官方說明
+    明確提供 ETF 每日/盤中 NAV 與折溢價資料，因此這裡直接讀官方 all_etf
+    feed。解析同時支援 JSON msgArray 與純文字格式。
+    """
+    code=str(symbol or '').upper().replace('.TW','').replace('.TWO','')
+    if not code or not re.fullmatch(r'[0-9A-Z]{4,6}',code): return {}
+    out={}
+    headers={'User-Agent':'Mozilla/5.0 stock-alert/2.10.40',
+             'Referer':'https://mis.twse.com.tw/stock/etf_nav.jsp?ex=tse',
+             'Accept':'application/json,text/plain,*/*'}
+    urls=[
+        'https://mis.twse.com.tw/stock/data/all_etf.txt',
+        'https://mis.twse.com.tw/stock/etf_nav.jsp?ex=tse'
+    ]
+    for url in urls:
+        try:
+            r=requests.get(url,timeout=6,headers=headers,verify=False)
+            r.raise_for_status()
+            raw=r.text
+            parsed=None
+            try: parsed=r.json()
+            except Exception: parsed=None
+            rows=[]
+            if isinstance(parsed,dict):
+                a1=parsed.get('a1')
+                if isinstance(a1,list):
+                    for block in a1:
+                        ma=block.get('msgArray') if isinstance(block,dict) else None
+                        if isinstance(ma,list): rows.extend(ma)
+                ma=parsed.get('msgArray')
+                if isinstance(ma,list): rows.extend(ma)
+            # JSON row: locate code in values, then use the known TWSE ETF feed order.
+            for row in rows:
+                if not isinstance(row,dict): continue
+                vals=list(row.values())
+                if not any(str(v).strip().upper()==code for v in vals if v is not None): continue
+                idx=next((i for i,v in enumerate(vals) if str(v).strip().upper()==code),None)
+                if idx is not None and len(vals)>=idx+7:
+                    # Usually: code/name, units, delta, price, estimated NAV,
+                    # premium/discount, previous NAV, date, time.
+                    tail=vals[idx:]
+                    nums=[]
+                    for v in tail:
+                        fv=to_float(v)
+                        nums.append(fv)
+                    if len(tail)>=7:
+                        out['price']=to_float(tail[3])
+                        out['nav']=to_float(tail[4])
+                        out['premium']=to_float(tail[5])
+                        out['prev_nav']=to_float(tail[6])
+                        units=to_float(tail[1])
+                        if units and out.get('price'):
+                            out['assets']=units*out['price']
+                        break
+            if out.get('nav') is not None or out.get('price') is not None:
+                return out
+            # Text/HTML fallback: find the line containing the ETF code and parse tabs.
+            compact=raw.replace('\\r','\\n')
+            for line in compact.splitlines():
+                if re.search(r'(?<![A-Z0-9])'+re.escape(code)+r'(?![A-Z0-9])',line,re.I):
+                    parts=[x.strip() for x in re.split(r'\\t|,',line) if x.strip()]
+                    pos=next((i for i,x in enumerate(parts) if x.upper()==code),None)
+                    if pos is not None and len(parts)>=pos+7:
+                        out['price']=to_float(parts[pos+3]); out['nav']=to_float(parts[pos+4])
+                        out['premium']=to_float(parts[pos+5]); out['prev_nav']=to_float(parts[pos+6])
+                        units=to_float(parts[pos+1])
+                        if units and out.get('price'): out['assets']=units*out['price']
+                        if out.get('nav') is not None: return out
+        except Exception as e:
+            print(f'TWSE ETF NAV fallback失敗 {code}: {type(e).__name__}',flush=True)
+    return out
+
+
+def _official_expense_regex(text):
+    """V2.10.40：從投信頁面抓經理費/保管費，避免把費率級距誤當 3003%。"""
+    if not text: return {}
+    t=html.unescape(re.sub(r'\\s+',' ',text))
+    out={}
+    # Accept common labels and a short distance to the percentage.
+    for label,key in [('經理費','management_fee'),('管理費率','management_fee'),('保管費','custodian_fee'),('保管費率','custodian_fee')]:
+        ms=list(re.finditer(re.escape(label),t,re.I))
+        for m in ms:
+            sec=t[m.start():m.start()+260]
+            nums=re.findall(r'(?<![0-9])([0-9]+(?:\\.[0-9]+)?)\\s*%',sec)
+            for n in nums:
+                v=to_float(n)
+                if v is not None and 0 < v <= 5:
+                    out[key]=v; break
+            if key in out: break
+    if out.get('management_fee') is not None and out.get('custodian_fee') is not None:
+        out['expense']=out['management_fee']+out['custodian_fee']
+        out['expense_source']='投信官方頁：經理費+保管費'
+    return out
+
 def _official_yuanta_etf_fallback(symbol):
-    """V2.10.39：元大 ETF 官方 Basic/Ratio 雙頁 fallback。"""
+    """V2.10.40：元大 ETF 官方 Basic/Ratio 雙頁 fallback。"""
     code=str(symbol or '').upper().replace('.TW','').replace('.TWO','')
     if not code: return {}
     out={}; headers={'User-Agent':'Mozilla/5.0 stock-alert/2.10.39','Accept-Language':'zh-TW,zh;q=0.9'}
@@ -5631,11 +5761,18 @@ def _official_yuanta_etf_fallback(symbol):
                     out['expense_source']='元大投信官方級距：經理費+保管費'
         except Exception as e:
             print(f'元大 ETF 官方頁 fallback失敗 {symbol} {suffix}: {type(e).__name__}',flush=True)
+    if out.get('expense') is None:
+        try:
+            # Re-read one page with a generic parser only when the structured regex failed.
+            r=requests.get(base+'/Basic_information',timeout=6,headers=headers,verify=False); r.raise_for_status()
+            out.update({k:v for k,v in _official_expense_regex(r.text).items() if out.get(k) is None})
+        except Exception:
+            pass
     return out
 
 
 def _official_cathay_etf_fallback(symbol):
-    """V2.10.39：國泰 ETF 官方專屬頁 + 申購買回清單 fallback。"""
+    """V2.10.40：國泰 ETF 官方專屬頁 + 申購買回清單 fallback。"""
     code=str(symbol or '').upper().replace('.TW','').replace('.TWO','')
     if not code: return {}
     out={}; headers={'User-Agent':'Mozilla/5.0 stock-alert/2.10.39','Accept-Language':'zh-TW,zh;q=0.9'}
@@ -5665,11 +5802,19 @@ def _official_cathay_etf_fallback(symbol):
                 out['expense']=out['management_fee']+out['custodian_fee']; out['expense_source']='國泰投信官方經理費+保管費'
         except Exception as e:
             print(f'國泰 ETF 官方 fallback失敗 {symbol}: {type(e).__name__}',flush=True)
+    if out.get('expense') is None:
+        for url in urls:
+            try:
+                r=requests.get(url,timeout=6,headers=headers,verify=False); r.raise_for_status()
+                ex=_official_expense_regex(r.text)
+                if ex.get('expense') is not None: out.update(ex); break
+            except Exception:
+                pass
     return out
 
 
 def _official_twse_etf_fallback(symbol):
-    """V2.10.39：TWSE ETF e添富僅作 AUM/NAV 最後備援。"""
+    """V2.10.40：TWSE ETF e添富僅作 AUM/NAV 最後備援。"""
     code=str(symbol or '').upper().replace('.TW','').replace('.TWO','')
     if not re.fullmatch(r'[0-9A-Z]{4,6}',code): return {}
     out={}
@@ -5685,7 +5830,7 @@ def _official_twse_etf_fallback(symbol):
 
 
 def _etf_beta_from_history(symbol):
-    """V2.10.39：ETF Beta 最後獨立數學備援，對台股 ETF 以 ^TWII 計算。"""
+    """V2.10.40：ETF Beta 最後獨立數學備援，對台股 ETF 以 ^TWII 計算。"""
     try:
         hist=yf.download([symbol,'^TWII'],period='1y',interval='1d',auto_adjust=True,progress=False,threads=False)
         if hist is None or hist.empty: return None
@@ -5740,6 +5885,11 @@ def yahoo_etf_profile(symbol):
         out['beta']=out['beta'] or to_float(info.get('beta3Year')) or to_float(info.get('beta')); out['assets']=out['assets'] or to_float(info.get('totalAssets'))
     except Exception as e: print(f'ETF yfinance備援失敗 {symbol}: {type(e).__name__}',flush=True)
     if str(symbol).upper().endswith(('.TW','.TWO')):
+        # V2.10.40：先讀 TWSE 官方 ETF NAV feed；避免 Yahoo 對 0050/00878 回傳舊 NAV/資產。
+        twse_nav=_twse_etf_nav_fallback(symbol)
+        for k in ('nav','assets','price'):
+            if out.get(k) is None and twse_nav.get(k) is not None: out[k]=twse_nav[k]
+        if twse_nav.get('premium') is not None: out['premium']=twse_nav['premium']
         for src in (_official_yuanta_etf_fallback(symbol),_official_cathay_etf_fallback(symbol),_official_twse_etf_fallback(symbol)):
             for k in ('nav','assets','beta','yield','expense'):
                 if src.get(k) is not None: out[k]=src[k]
@@ -5751,7 +5901,7 @@ def yahoo_etf_profile(symbol):
             if out.get(k) is None and prof.get(k) is not None: out[k]=prof[k]
         if out['expense'] is None and prof.get('expense') is not None: out['expense']=prof['expense']; out['expense_source']=prof.get('expense_source')
         if out['yield'] is None: out['yield']=yahoo_tw_dividend_fallback(symbol,out.get('price'))
-    # V2.10.39：官方頁已失敗時再做 Beta 數學備援；避免永久 N/A。
+    # V2.10.40：官方頁已失敗時再做 Beta 數學備援；避免永久 N/A。
     if out.get('beta') is None:
         b=_etf_beta_from_history(symbol)
         if b is not None and math.isfinite(b): out['beta']=b
@@ -5934,18 +6084,20 @@ def analysis(
 
     # V2.10.28：LINE 任意 TPEX 股票若不在 GitHub PE 快取，
     # 只對「這一檔」做一次 TPEx 官方網頁 JSON 查詢，不抓全市場。
-    if line_light and market == 'TPEX' and not any(to_float(off.get(k)) is not None for k in ('pe','pb','yield')):
+    if line_light and market == 'TPEX' and any(to_float(off.get(k)) is None for k in ('pe','pb','yield')):
         try:
-            one_tpex = parse_tpex_web_peratio(tpex_web_peratio_data(timeout=5)).get(code)
+            one_tpex = parse_tpex_web_peratio(tpex_web_peratio_data(timeout=5)).get(code) or {}
+            for k in ('pe','pb','yield'):
+                if to_float(off.get(k)) is None and to_float(one_tpex.get(k)) is not None:
+                    off[k]=to_float(one_tpex.get(k))
             if one_tpex:
-                off = one_tpex
-                print(f'LINE PE：TPEx 官方網頁補到 {code}', flush=True)
+                print(f'LINE PE：TPEx 官方網頁逐欄位補到 {code} {off}', flush=True)
         except Exception as e:
             print(f'LINE PE：TPEx 單股官方備援失敗 {code}：{type(e).__name__}', flush=True)
 
     if line_light:
         print(f'LINE輕量分析：基本面資料 {code}', flush=True)
-        yf_f = yahoo_light_fund(symbol, off, current_price=to_float(u.get(code, {}).get('price')))
+        yf_f = yahoo_light_fund(symbol, off, current_price=to_float(u.get(code, {}).get('price')), market=market)
     else:
         yf_f = yahoo_fund(
             symbol
@@ -6403,7 +6555,7 @@ def push_line(to, msg):
                     print(f'LINE Push成功：{to[:12]}...（第{attempt}次）')
                     return True
                 last=f'{r.status_code} {r.text[:500]}'
-                # V2.10.39：月額度 429 不再重試；重試不可能解決額度問題。
+                # V2.10.40：月額度 429 不再重試；重試不可能解決額度問題。
                 if r.status_code == 429 and 'monthly limit' in r.text.lower():
                     print(f'LINE Push月額度已用完：{last}', flush=True)
                     return False
@@ -6495,7 +6647,7 @@ def line_target_from_event(e):
 
 
 def _background_line_analysis(text, target, u, event_id=None, result_id=None):
-    """V2.10.39：LINE A 方案背景分析。
+    """V2.10.40：LINE A 方案背景分析。
 
     完整結果不再 Push；分析完成後寫入 Render /line-result/<id>。
     使用者收到的 Reply 只包含結果頁網址，因此主動查詢不消耗 Push 月額度。
@@ -6683,7 +6835,7 @@ def release_line_memory():
 
 
 def handle_event(e, u):
-    """V2.10.39：LINE A 方案。Reply 只回覆結果頁網址，完整分析不上 Push。"""
+    """V2.10.40：LINE A 方案。Reply 只回覆結果頁網址，完整分析不上 Push。"""
     if (
         e.get('type') != 'message'
         or e.get('message', {}).get('type') != 'text'
@@ -6705,7 +6857,7 @@ def handle_event(e, u):
     if text.lower() in {'help', '說明', '功能', '股票'}:
         ok = reply_line(
             token,
-            '📈 股票加碼分析 Bot V2.10.39\n\n'
+            '📈 股票加碼分析 Bot V2.10.40\n\n'
             '輸入股票代號、股票名稱或 ETF 代號即可查詢。\n'
             '例如：2330、台積電、3711、日月光投控、0050、00878、QQQ\n\n'
             '股票：基本面40 + 技術30 + 籌碼20 + 風險10。\n'
@@ -6723,7 +6875,7 @@ def handle_event(e, u):
         )
         return
 
-    # V2.10.39：先建立結果頁，再用一次 Reply 回覆網址。
+    # V2.10.40：先建立結果頁，再用一次 Reply 回覆網址。
     # 完整分析在背景執行；完成後直接更新結果頁，不需要 Push。
     result_id, result_url = _create_line_result(text, event_id)
     ok = reply_line(
@@ -6790,7 +6942,7 @@ def run_webhook_server():
 
     @app.get('/line-result/<rid>')
     def line_result_page(rid):
-        # V2.10.39：LINE A 方案完整分析頁。Render instance 記憶體中的結果
+        # V2.10.40：LINE A 方案完整分析頁。Render instance 記憶體中的結果
         # 會在背景分析完成後更新；若服務重新部署，舊結果會失效。
         item = _get_line_result(rid)
         if not item:
@@ -6826,7 +6978,7 @@ def run_webhook_server():
         return (
             '<!doctype html><html><head><meta charset="utf-8">'
             '<meta name="viewport" content="width=device-width,initial-scale=1">'
-            '<title>Stock Alert V2.10.39</title>'
+            '<title>Stock Alert V2.10.40</title>'
             '<style>body{margin:0;padding:20px;background:#f6f7f9;color:#222}'
             '.card{max-width:900px;margin:auto;background:#fff;border-radius:14px;padding:20px;box-shadow:0 2px 12px #0001}'
             'a{word-break:break-all}</style></head><body><div class="card">'
