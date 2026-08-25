@@ -7281,10 +7281,10 @@
       "short_balance": null
     },
     "1240": {
-      "margin_change": null,
-      "margin_balance": null,
-      "short_change": null,
-      "short_balance": null
+      "margin_change": 0.0,
+      "margin_balance": 19.0,
+      "short_change": 0.0,
+      "short_balance": 0.0
     },
     "1259": {
       "margin_change": null,
