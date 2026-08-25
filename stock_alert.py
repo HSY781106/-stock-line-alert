@@ -1,4 +1,4 @@
-# stock_alert.py V2.10.31
+# stock_alert.py V2.10.32
 # 效能修正版：
 # 1. 全市場資料批次化
 # 2. 單次執行快取
@@ -27,7 +27,7 @@
 # - 保留原本基本面 / 技術 / 籌碼 / 風險 / LINE 功能
 #
 # 股票跌幅 + 15分鐘區間最低價 + 動態估值 + 技術 + 籌碼 + 100分制加碼決策
-# V2.10.31：逐欄位基本面雙向 Fallback + 缺資料不懲罰；保留 V2.10.28 全部功能
+# V2.10.32：逐欄位基本面雙向 Fallback + 缺資料不懲罰；保留 V2.10.28 全部功能
 #          + LINE webhook HMAC-SHA256 簽章驗證 + 群組/聊天室支援
 #          + Actions 批次建立全市場技術快取；Render LINE 優先只讀快取，避免 Yahoo/TWSE 即時限流
 
@@ -118,7 +118,7 @@ TECH_BATCH_TIMEOUT = 30
 # V2.10.25：Actions 建立全市場 PE 歷史快取。TWSE/TPEx 每個日期的 PE API
 # 本身就是全市場資料，因此不需要逐股票查詢；約 100 個曆日即可涵蓋
 # 至少 60 個交易日，讓 LINE 任意股票都能取得一年平均 PE。
-PE_ALL_MARKET_CALENDAR_DAYS = 100
+PE_ALL_MARKET_CALENDAR_DAYS = 370
 TECH_BATCH_PERIOD = '6mo'
 TECH_BATCH_INTERVAL = '1d'
 
@@ -166,6 +166,38 @@ STOCKS = {
     'QQQ': 'QQQ',
     '台灣加權指數': '^TWII'
 }
+
+# V2.10.32：ETF 獨立解析，不需要存在 1985 檔股票池。
+ETF_MAP = {
+    '0050': {'name':'元大台灣50','symbol':'0050.TW'},
+    '006208': {'name':'富邦台50','symbol':'006208.TW'},
+    '00878': {'name':'國泰永續高股息','symbol':'00878.TW'},
+    '00919': {'name':'群益台灣精選高息','symbol':'00919.TW'},
+    '00713': {'name':'元大台灣高息低波','symbol':'00713.TW'},
+    '00679B': {'name':'元大美債20年','symbol':'00679B.TW'},
+    '00887': {'name':'永豐中國科技50大','symbol':'00887.TW'},
+    'QQQ': {'name':'Invesco QQQ','symbol':'QQQ'},
+    'SPY': {'name':'SPDR S&P 500 ETF','symbol':'SPY'},
+    'VOO': {'name':'Vanguard S&P 500 ETF','symbol':'VOO'},
+    'VTI': {'name':'Vanguard Total Stock Market ETF','symbol':'VTI'},
+    'IVV': {'name':'iShares Core S&P 500 ETF','symbol':'IVV'},
+    'DIA': {'name':'SPDR Dow Jones Industrial Average ETF','symbol':'DIA'},
+    'IWM': {'name':'iShares Russell 2000 ETF','symbol':'IWM'},
+    'SMH': {'name':'VanEck Semiconductor ETF','symbol':'SMH'},
+    'SOXX': {'name':'iShares Semiconductor ETF','symbol':'SOXX'},
+    'XLK': {'name':'Technology Select Sector SPDR Fund','symbol':'XLK'},
+    'XLF': {'name':'Financial Select Sector SPDR Fund','symbol':'XLF'},
+    'ARKK': {'name':'ARK Innovation ETF','symbol':'ARKK'},
+}
+
+def resolve_etf_query(q):
+    q=str(q or '').strip()
+    nq=q.upper().replace('.TW','').replace('.US','')
+    nq=re.sub(r'^(?:ETF[:：]\s*)','',nq).strip()
+    if nq in ETF_MAP: return ETF_MAP[nq]
+    for info in ETF_MAP.values():
+        if normalize_name(q)==normalize_name(info['name']): return info
+    return None
 
 
 # ============================================================
@@ -3165,15 +3197,17 @@ def one_year_pe(
     if not v:
         return None, 0
 
-    # 只有至少 60 個有效樣本才產生一年平均 PE。
-    if len(v) < PE_MIN_HISTORY:
+    # V2.10.32：一年平均 PE 不再因不足 60 個有效樣本直接 N/A。
+    # 虧損/週期股部分交易日官方 PE 本來就可能 N/A；一年內有至少 20 個
+    # 有效正 PE 即採可取得樣本計算，樣本數照實顯示。
+    if len(v) < 20:
         return None, len(v)
 
     return sum(x for _, x in v) / len(v), len(v)
 
 
 def yahoo_quote_summary_fund(symbol):
-    """V2.10.31：單股 Yahoo quoteSummary 補洞。
+    """V2.10.32：單股 Yahoo quoteSummary 補洞。
 
     只在其他來源缺欄位時使用；一次請求多個 module，避免免費版產生大量 API 呼叫。
     任何失敗都視為「該來源沒有資料」，不阻塞整份分析。
@@ -3220,7 +3254,7 @@ def yahoo_quote_summary_fund(symbol):
 
 
 def yahoo_timeseries_fund(symbol):
-    """V2.10.31：免費基本面多源資料層。
+    """V2.10.32：免費基本面多源資料層。
 
     fundamentals-timeseries 一次取得多種資料；EPS Growth 不再硬性要求 5 季，
     會依「季對季、同季年增、年度淨利」可取得程度逐層計算。
@@ -3278,9 +3312,10 @@ def yahoo_timeseries_fund(symbol):
         if len(epsa)>=2 and epsa[-2][1]!=0:
             growths.append((epsa[-1][1]/epsa[-2][1]-1)*100)
         if growths:
-            # prefer the latest YoY-like estimate, but reject absurd accounting artifacts.
+            # V2.10.32：優先同季 YoY，其次 TTM YoY，最後才用年度 YoY，
+            # 避免低基期造成年度成長率被放大。
             valid=[g for g in growths if -500 <= g <= 500]
-            if valid: out['eps_growth']=valid[-1]
+            if valid: out['eps_growth']=valid[0]
         ni_t=rows_for('trailingNetIncome'); ni_a=rows_for('annualNetIncome')
         eq_t=rows_for('trailingStockholdersEquity'); eq_a=rows_for('annualStockholdersEquity')
         out['net_income_history']=[v for _,v in ni_a]
@@ -3819,6 +3854,10 @@ def refresh_all_technical_cache(u, force=False):
         key = clean_code(ticker)
         if key and (force or not _technical_cache_is_fresh(cache, key)):
             extras.append((key, ticker))
+    for etf in ETF_MAP.values():
+        ticker=etf['symbol']; key=clean_code(ticker)
+        if key and (force or not _technical_cache_is_fresh(cache, key)):
+            extras.append((key,ticker))
 
     targets.extend(extras)
     # 去重但保留順序。
@@ -4389,6 +4428,9 @@ def parse_margin_row(row):
         row,
         [
             '融資今日餘額',
+            '融資當日餘額',
+            '融資當日餘額(張)',
+            '融資今日餘額(張)',
             '今日融資餘額',
             'MarginTodayBalance',
             'MarginBalance',
@@ -4402,6 +4444,7 @@ def parse_margin_row(row):
         row,
         [
             '融資前日餘額',
+            '融資前日餘額(張)',
             '前日融資餘額',
             'MarginPreviousBalance',
             'PreviousMarginBalance',
@@ -4414,6 +4457,9 @@ def parse_margin_row(row):
         row,
         [
             '融券今日餘額',
+            '融券當日餘額',
+            '融券當日餘額(張)',
+            '融券今日餘額(張)',
             '今日融券餘額',
             'ShortTodayBalance',
             'ShortBalance',
@@ -4427,6 +4473,7 @@ def parse_margin_row(row):
         row,
         [
             '融券前日餘額',
+            '融券前日餘額(張)',
             '前日融券餘額',
             'ShortPreviousBalance',
             'PreviousShortBalance',
@@ -4470,6 +4517,20 @@ def parse_margin_row(row):
             ]
         )
     )
+
+    # V2.10.32：部分 TPEx 回傳只給買進/賣出/現金償還，沒有前日餘額。
+    if mc is None:
+        mbuy=find_value(row,['融資買進','融資買進(張)','MarginPurchaseBuy'])
+        msell=find_value(row,['融資賣出','融資賣出(張)','MarginPurchaseSell'])
+        mcash=find_value(row,['融資現金償還','融資現金償還(張)','MarginPurchaseCashRepayment'])
+        if mbuy is not None or msell is not None or mcash is not None:
+            mc=(mbuy or 0)-(msell or 0)-(mcash or 0)
+    if sc is None:
+        ssell=find_value(row,['融券賣出','融券賣出(張)','ShortSaleSell'])
+        sbuy=find_value(row,['融券買進','融券買進(張)','ShortSaleBuy'])
+        scash=find_value(row,['融券現券','融券現券(張)','ShortSaleCash'])
+        if ssell is not None or sbuy is not None or scash is not None:
+            sc=(ssell or 0)-(sbuy or 0)-(scash or 0)
 
     return {
         'margin_change':
@@ -4809,6 +4870,15 @@ def _line_margin_fast(code, market):
                              timeout=LINE_FAST_TIMEOUT, retries=0)
         parsed = _parse_margin_payload(data)
         one = parsed.get(code)
+        # V2.10.32：TPEx API 若只有部分欄位/格式改版，直接再用官方網頁 JSON
+        # 取得同一市場快照；不改用 FinMind，避免 token/限流問題。
+        if market == 'TPEX' and not one:
+            try:
+                web = http_json('https://www.tpex.org.tw/web/stock/margin_trading/margin_balance/margin_bal.php',
+                                params={'l':'zh-tw','response':'json'}, timeout=LINE_FAST_TIMEOUT, retries=0)
+                one = _parse_margin_payload(web).get(code)
+            except Exception as e:
+                print(f'LINE籌碼：TPEx官方網頁融資備援失敗 {code}：{type(e).__name__}',flush=True)
         if one:
             cache.setdefault(market, {})[code] = one
             _save_line_small_cache(LINE_MARGIN_CACHE_FILE, cache)
@@ -4825,7 +4895,7 @@ def _line_margin_fast(code, market):
 # ============================================================
 
 def score_fund(pe, one, peer, peg, roe, eps, pb, yld, model):
-    """V2.10.31：產業化基本面評分；缺資料不扣分，但限制少數欄位過度放大。
+    """V2.10.32：產業化基本面評分；缺資料不扣分，但限制少數欄位過度放大。
 
     完整資料：最高 40。可用權重越少，仍不直接扣分，但會依資料完整度設定
     合理上限，避免只剩 PB/殖利率時被放大成接近滿分。
@@ -5108,7 +5178,7 @@ def score_risk(
 
 
 def yahoo_light_fund(symbol, official=None, current_price=None):
-    """V2.10.31 LINE Free：真正逐欄位多源 fallback。
+    """V2.10.32 LINE Free：真正逐欄位多源 fallback。
 
     順序：官方/快取 → Yahoo quoteSummary → Yahoo timeseries → yfinance info/報表
     → 數學互補。每欄獨立，不因一個來源失敗而清空其他欄位。
@@ -5148,7 +5218,20 @@ def yahoo_light_fund(symbol, official=None, current_price=None):
             if v is not None: return v
         return None
     for k in ('pe','pb','yield','eps_growth','roe','peg'):
-        o[k]=first(o.get(k),qs.get(k),ts.get(k),yfinfo.get(k))
+        # V2.10.32：EPS Growth 優先採 timeseries 的同季/TTM 演算法，
+        # Yahoo quoteSummary 的 earningsGrowth 只作備援；避免 6488 被低基期年度
+        # 數字放大成 125%+。殖利率則先做合理範圍清洗。
+        if k == 'eps_growth':
+            o[k]=first(o.get(k),ts.get(k),qs.get(k),yfinfo.get(k))
+            if ts.get('eps_growth') is not None:
+                # timeseries 是本程式自行選擇同季/TTM/年度算法的獨立來源，優先於
+                # quoteSummary 的單一 earningsGrowth 欄位。
+                o[k]=to_float(ts.get('eps_growth'))
+        else:
+            o[k]=first(o.get(k),qs.get(k),ts.get(k),yfinfo.get(k))
+    if o.get('yield') is not None and (not math.isfinite(o['yield']) or o['yield'] < 0 or o['yield'] > 20):
+        print(f'LINE基本面：捨棄異常殖利率 {code} = {o["yield"]}',flush=True)
+        o['yield']=None
     px=to_float(current_price)
     # PE from TTM EPS.
     if o['pe'] is None and px and px>0:
@@ -5163,10 +5246,18 @@ def yahoo_light_fund(symbol, official=None, current_price=None):
     # Yield from dividend amount / price.
     if o['yield'] is None and px and px>0:
         div=first(qs.get('dividend_rate'),ts.get('dividend_rate'))
-        if div is not None: o['yield']=div/px*100; print(f'LINE基本面：殖利率使用股利/股價推導 {code} = {o["yield"]:.2f}%',flush=True)
-    # PEG <-> growth, but never fabricate from negative/zero growth.
-    if o['peg'] is None and o['pe'] and o['eps_growth'] and o['pe']>0 and o['eps_growth']>0:
-        o['peg']=o['pe']/o['eps_growth']; print(f'LINE基本面：PEG 使用 PE/EPS成長推導 {code} = {o["peg"]:.2f}',flush=True)
+        if div is not None:
+            calc_yield=div/px*100
+            if 0 <= calc_yield <= 20:
+                o['yield']=calc_yield
+                print(f'LINE基本面：殖利率使用股利/股價推導 {code} = {o["yield"]:.2f}%',flush=True)
+    # V2.10.32：只要 PE + EPS Growth 都有效，PEG 一律用本程式定義重算，
+    # 不讓 Yahoo 的 trailingPegRatio 覆蓋 PE/EPS Growth。
+    if o['pe'] and o['eps_growth'] and o['pe']>0 and o['eps_growth']>0:
+        calc_peg=o['pe']/o['eps_growth']
+        if math.isfinite(calc_peg) and 0 < calc_peg < 100:
+            o['peg']=calc_peg
+            print(f'LINE基本面：PEG 強制使用 PE/EPS成長重算 {code} = {o["peg"]:.2f}',flush=True)
     if o['eps_growth'] is None and o['pe'] and o['peg'] and o['pe']>0 and o['peg']>0:
         o['eps_growth']=o['pe']/o['peg']; print(f'LINE基本面：EPS成長使用 PE/PEG 推導 {code} = {o["eps_growth"]:.2f}%',flush=True)
     # ROE <-> PB/PE.
@@ -5180,6 +5271,82 @@ def yahoo_light_fund(symbol, official=None, current_price=None):
         cache[code]['_cached_at']=time.time(); save_json(LINE_FUND_CACHE_FILE,cache)
     except Exception as e: print(f'LINE基本面快取保存失敗 {code}: {e}',flush=True)
     return o
+
+def yahoo_etf_profile(symbol):
+    key=('etf_profile_v21032',symbol)
+    if key in RUN_CACHE: return RUN_CACHE[key]
+    out={'price':None,'nav':None,'yield':None,'expense':None,'beta':None,'assets':None}
+    try:
+        url='https://query1.finance.yahoo.com/v10/finance/quoteSummary/'+str(symbol)
+        r=requests.get(url,params={'modules':'price,summaryDetail,defaultKeyStatistics,fundProfile'},timeout=5,
+                       headers={'User-Agent':'Mozilla/5.0 stock-alert/2.10.32'})
+        r.raise_for_status()
+        q=((r.json().get('quoteSummary') or {}).get('result') or [{}])[0]
+        def raw(sec,k):
+            x=(sec or {}).get(k)
+            if isinstance(x,dict): x=x.get('raw',x.get('fmt'))
+            return to_float(x)
+        out['price']=raw(q.get('price'),'regularMarketPrice')
+        out['nav']=raw(q.get('price'),'navPrice')
+        y=raw(q.get('summaryDetail'),'dividendYield')
+        out['yield']=y*100 if y is not None and abs(y)<=1.5 else y
+        out['expense']=raw(q.get('summaryDetail'),'annualReportExpenseRatio')
+        out['beta']=raw(q.get('defaultKeyStatistics'),'beta') or raw(q.get('summaryDetail'),'beta')
+        fp=q.get('fundProfile') or {}
+        out['assets']=raw(fp,'totalAssets') or raw(fp,'totalNetAssets')
+    except Exception as e:
+        print(f'ETF資料取得失敗 {symbol}: {type(e).__name__}',flush=True)
+    try:
+        info=(yf.Ticker(symbol).info or {})
+        out['price']=out['price'] or to_float(info.get('regularMarketPrice'))
+        out['nav']=out['nav'] or to_float(info.get('navPrice'))
+        if out['yield'] is None:
+            y=to_float(info.get('dividendYield'))
+            out['yield']=y*100 if y is not None and abs(y)<=1.5 else y
+        out['expense']=out['expense'] or to_float(info.get('annualReportExpenseRatio'))
+        out['beta']=out['beta'] or to_float(info.get('beta3Year')) or to_float(info.get('beta'))
+        out['assets']=out['assets'] or to_float(info.get('totalAssets'))
+    except Exception as e:
+        print(f'ETF yfinance備援失敗 {symbol}: {type(e).__name__}',flush=True)
+    RUN_CACHE[key]=out
+    return out
+
+def score_etf(tech,p):
+    score=0.0; avail=0.0; reasons=[]
+    if tech.get('rsi') is not None:
+        avail+=20; r=tech['rsi']; score+=20 if 40<=r<=60 else 15 if 30<=r<40 or 60<r<=70 else 8 if 25<=r<30 or 70<r<=75 else 3
+    if tech.get('k') is not None and tech.get('d') is not None:
+        avail+=15; score+=15 if tech['k']>tech['d'] and tech['k']<80 else 10 if tech['k']>=tech['d'] else 5
+    if tech.get('ma20') is not None and tech.get('price') is not None:
+        avail+=12; score+=12 if tech['price']>=tech['ma20'] else 5
+    if tech.get('ma60') is not None and tech.get('price') is not None:
+        avail+=13; score+=13 if tech['price']>=tech['ma60'] else 5
+    if p.get('yield') is not None:
+        avail+=12; y=p['yield']; score+=12 if y>=4 else 9 if y>=2 else 5
+        if y>=4: reasons.append('殖利率具吸引力')
+    if p.get('expense') is not None:
+        avail+=10; e=p['expense']; score+=10 if e<=0.2 else 8 if e<=0.5 else 5 if e<=1 else 2
+    if p.get('beta') is not None:
+        avail+=8; b=p['beta']; score+=8 if b<=1 else 6 if b<=1.2 else 4
+    if p.get('assets') is not None:
+        avail+=10; score+=10 if p['assets']>=1e10 else 7 if p['assets']>=1e9 else 4
+    if avail<=0: return 0,reasons
+    raw=score/avail*100; cap=100 if avail>=80 else 85 if avail>=60 else 70
+    return int(round(min(raw,cap))),reasons
+
+def etf_analysis(query):
+    info=resolve_etf_query(query)
+    if not info: return f'❌ 找不到 ETF：{query}'
+    symbol=info['symbol']; code=next((k for k,v in ETF_MAP.items() if v is info), str(query).upper())
+    tech=technical(symbol); p=yahoo_etf_profile(symbol)
+    price=p.get('price') or tech.get('price'); nav=p.get('nav')
+    premium=((price/nav)-1)*100 if price and nav and nav>0 else None
+    score,reasons=score_etf(tech,p)
+    verdict='🟢 可分批配置' if score>=75 else '🟡 等待回檔/止跌' if score>=60 else '🟠 暫緩配置' if score>=40 else '🔴 不建議配置'
+    return (f'📊 ETF配置分析 V2.10.32\n\n標的：{info["name"]}（{code}）\n代號：{symbol}\n\n'
+            f'【ETF特性 40分】\nNAV：{fmt(nav)}\n溢價/折價：{fmt(premium)}%\n殖利率：{fmt(p.get("yield"))}%\n費用率：{fmt(p.get("expense"))}%\nBeta：{fmt(p.get("beta"))}\n資產規模：{fmt(p.get("assets"),0)}\n\n'
+            f'【技術面 60分】\n價格：{fmt(price)}\nRSI：{fmt(tech.get("rsi"))}\nKD：K={fmt(tech.get("k"))} / D={fmt(tech.get("d"))}\nMA20：{fmt(tech.get("ma20"))}\nMA60：{fmt(tech.get("ma60"))}\n趨勢：{tech.get("trend") or "N/A"}\n\n'
+            f'【ETF綜合評分】\n綜合評分：{score}/100\n結論：{verdict}\n加分因素：{"、".join(reasons) if reasons else "無"}')
 
 def analysis(
     query,
@@ -5640,7 +5807,7 @@ def analysis(
     # --------------------------------------------------------
 
     return (
-        f'📊 股票加碼分析 V2.10.31\n\n'
+        f'📊 股票加碼分析 V2.10.32\n\n'
         f'標的：{name}（{code}）\n'
         f'市場：{market}\n'
         f'產業：{industry}\n'
@@ -5825,12 +5992,17 @@ def _background_line_analysis(text, target, u, event_id=None):
         with LINE_ANALYSIS_LOCK:
             RUN_CACHE['line_mode'] = True
             print('LINE背景分析：建立/載入市場資料', flush=True)
-            query_u = u if isinstance(u, dict) and u else build_line_query_universe(text)
-            print(f'LINE背景分析：市場資料完成 {len(query_u)} 檔', flush=True)
-            print('LINE背景分析：同步次產業', flush=True)
-            query_u = prepare_line_subindustries(query_u, text)
-            print('LINE背景分析：開始 LINE 輕量查詢專用分析', flush=True)
-            result = analysis(text, query_u, True, line_light=True)
+            etf=resolve_etf_query(text)
+            if etf:
+                print(f'LINE背景分析：辨識為 ETF {etf["symbol"]}，跳過1985檔股票池', flush=True)
+                result=etf_analysis(text)
+            else:
+                query_u = u if isinstance(u, dict) and u else build_line_query_universe(text)
+                print(f'LINE背景分析：市場資料完成 {len(query_u)} 檔', flush=True)
+                print('LINE背景分析：同步次產業', flush=True)
+                query_u = prepare_line_subindustries(query_u, text)
+                print('LINE背景分析：開始 LINE 輕量查詢專用分析', flush=True)
+                result = analysis(text, query_u, True, line_light=True)
             print('LINE背景分析：輕量分析完成', flush=True)
 
         if not result:
@@ -6013,8 +6185,8 @@ def handle_event(e, u):
         ok = reply_line(
             token,
             '📈 股票加碼分析 Bot V2.10.25\n\n'
-            '輸入股票代號或名稱即可查詢。\n'
-            '例如：2330、台積電、3711、日月光投控\n\n'
+            '輸入股票代號、股票名稱或 ETF 代號即可查詢。\n'
+            '例如：2330、台積電、3711、日月光投控、0050、00878、QQQ\n\n'
             '模型：依產業自動選擇估值模型；基本面40 + 技術30 + 籌碼20 + 風險10。\n'
             '同業估值：動態次產業 Top 10；若次產業快取不足則自動改用同大產業 Top 10。\n\n'
             '查詢後會先回覆「分析中」，完成後再把完整結果推送回本聊天室。'
