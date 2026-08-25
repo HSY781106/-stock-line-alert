@@ -1,4 +1,4 @@
-# stock_alert.py V2.10.34
+# stock_alert.py V2.10.35
 # 效能修正版：
 # 1. 全市場資料批次化
 # 2. 單次執行快取
@@ -27,7 +27,7 @@
 # - 保留原本基本面 / 技術 / 籌碼 / 風險 / LINE 功能
 #
 # 股票跌幅 + 15分鐘區間最低價 + 動態估值 + 技術 + 籌碼 + 100分制加碼決策
-# V2.10.34：逐欄位基本面雙向 Fallback + 缺資料不懲罰；保留 V2.10.28 全部功能
+# V2.10.35：逐欄位基本面雙向 Fallback + 缺資料不懲罰；保留 V2.10.28 全部功能
 #          + LINE webhook HMAC-SHA256 簽章驗證 + 群組/聊天室支援
 #          + Actions 批次建立全市場技術快取；Render LINE 優先只讀快取，避免 Yahoo/TWSE 即時限流
 
@@ -167,7 +167,7 @@ STOCKS = {
     '台灣加權指數': '^TWII'
 }
 
-# V2.10.34：ETF 獨立解析，不需要存在 1985 檔股票池。
+# V2.10.35：ETF 獨立解析，不需要存在 1985 檔股票池。
 ETF_MAP = {
     '0050': {'name':'元大台灣50','symbol':'0050.TW'},
     '006208': {'name':'富邦台50','symbol':'006208.TW'},
@@ -191,7 +191,7 @@ ETF_MAP = {
 }
 
 def resolve_etf_query(q):
-    """V2.10.34：ETF 查詢加強。
+    """V2.10.35：ETF 查詢加強。
 
     除固定 ETF_MAP 外，接受「代號」「代號.TW/.TWO」「ETF:代號」以及
     「代號 名稱」。對 00 開頭台股 ETF 允許動態建立 Yahoo ticker，避免
@@ -3213,7 +3213,7 @@ def one_year_pe(
     if not v:
         return None, 0
 
-    # V2.10.34：一年平均 PE 不再因不足 60 個有效樣本直接 N/A。
+    # V2.10.35：一年平均 PE 不再因不足 60 個有效樣本直接 N/A。
     # 虧損/週期股部分交易日官方 PE 本來就可能 N/A；一年內有至少 20 個
     # 有效正 PE 即採可取得樣本計算，樣本數照實顯示。
     if len(v) < 20:
@@ -3222,8 +3222,38 @@ def one_year_pe(
     return sum(x for _, x in v) / len(v), len(v)
 
 
+def one_year_pe_from_ttm_eps(code, symbol):
+    """V2.10.35：一年平均 PE 第二種獨立 proxy。
+
+    當官方逐日 PE 沒有足夠樣本、但 Yahoo 能提供正的 TTM EPS 時，使用最近一年
+    歷史價格 / 最新 TTM EPS 建立一致口徑的 PE proxy。即使「目前 PE」欄位本身為
+    N/A，也可以先獨立取得 EPS 再建立歷史 proxy；若 TTM EPS <= 0 則保持 N/A，
+    不製造沒有經濟意義的 PE。
+    """
+    try:
+        ts=yahoo_timeseries_fund(symbol) or {}
+        eps=to_float(ts.get('trailing_eps'))
+        if eps is None or eps<=0:
+            qs=yahoo_quote_summary_fund(symbol) or {}
+            eps=to_float(qs.get('trailing_eps'))
+        if eps is None or eps<=0:
+            return None,0,''
+        d=yf_download(symbol,'1y','1d')
+        if d is None or d.empty or 'Close' not in d.columns:
+            return None,0,''
+        c=pd.to_numeric(d['Close'],errors='coerce').dropna()
+        vals=(c/eps).replace([np.inf,-np.inf],np.nan).dropna()
+        vals=vals[(vals>0)&(vals<=PE_MAX_VALID)]
+        if len(vals)<20:
+            return None,int(len(vals)),''
+        return float(vals.mean()),int(len(vals)),'價格/最新TTM EPS近似'
+    except Exception as e:
+        print(f'一年平均PE TTM EPS proxy失敗 {code}：{type(e).__name__}',flush=True)
+        return None,0,''
+
+
 def one_year_pe_proxy(code, current_pe, symbol):
-    """V2.10.34：一年平均 PE 的最後備援。\n\n    若官方逐日 PE 歷史沒有足夠有效樣本，使用「近一年價格 / 目前 TTM EPS」\n    的價格區間平均作為 proxy。這不是官方歷史 PE，因此回傳 (value, sample, label)。\n    只有在目前 PE 有效且能取得一年價格資料時啟用，避免憑空製造數字。\n    """
+    """V2.10.35：一年平均 PE 的最後備援。\n\n    若官方逐日 PE 歷史沒有足夠有效樣本，使用「近一年價格 / 目前 TTM EPS」\n    的價格區間平均作為 proxy。這不是官方歷史 PE，因此回傳 (value, sample, label)。\n    只有在目前 PE 有效且能取得一年價格資料時啟用，避免憑空製造數字。\n    """
     pe=to_float(current_pe)
     if pe is None or pe<=0 or pe>PE_MAX_VALID:
         return None,0,''
@@ -3251,7 +3281,7 @@ def one_year_pe_proxy(code, current_pe, symbol):
         return None,0,''
 
 def yahoo_quote_summary_fund(symbol):
-    """V2.10.34：單股 Yahoo quoteSummary 補洞。
+    """V2.10.35：單股 Yahoo quoteSummary 補洞。
 
     只在其他來源缺欄位時使用；一次請求多個 module，避免免費版產生大量 API 呼叫。
     任何失敗都視為「該來源沒有資料」，不阻塞整份分析。
@@ -3298,7 +3328,7 @@ def yahoo_quote_summary_fund(symbol):
 
 
 def yahoo_timeseries_fund(symbol):
-    """V2.10.34：免費基本面多源資料層。
+    """V2.10.35：免費基本面多源資料層。
 
     fundamentals-timeseries 一次取得多種資料；EPS Growth 不再硬性要求 5 季，
     會依「季對季、同季年增、年度淨利」可取得程度逐層計算。
@@ -3356,7 +3386,7 @@ def yahoo_timeseries_fund(symbol):
         if len(epsa)>=2 and epsa[-2][1]!=0:
             growths.append((epsa[-1][1]/epsa[-2][1]-1)*100)
         if growths:
-            # V2.10.34：優先同季 YoY，其次 TTM YoY，最後才用年度 YoY，
+            # V2.10.35：優先同季 YoY，其次 TTM YoY，最後才用年度 YoY，
             # 避免低基期造成年度成長率被放大。
             valid=[g for g in growths if -500 <= g <= 500]
             if valid: out['eps_growth']=valid[0]
@@ -4562,7 +4592,7 @@ def parse_margin_row(row):
         )
     )
 
-    # V2.10.34：部分 TPEx 回傳只給買進/賣出/現金償還，沒有前日餘額。
+    # V2.10.35：部分 TPEx 回傳只給買進/賣出/現金償還，沒有前日餘額。
     if mc is None:
         mbuy=find_value(row,['融資買進','融資買進(張)','MarginPurchaseBuy'])
         msell=find_value(row,['融資賣出','融資賣出(張)','MarginPurchaseSell'])
@@ -4751,6 +4781,69 @@ def _parse_margin_payload(
     return out
 
 
+def _tpex_margin_html_fallback(code):
+    """V2.10.35：TPEx 官方 HTML 融資融券最後備援。
+
+    某些版本的 TPEx OpenAPI 會漏掉個別股票，但官方「上櫃股票融資融券餘額」
+    HTML 明細仍有完整資料。只在指定 code 不在批次結果時呼叫一次，避免全市場
+    每檔重抓。欄位依官方表格：前日融資/今日融資、前日融券/今日融券。
+    """
+    code = clean_code(code)
+    if not code:
+        return None
+    try:
+        url='https://www.tpex.org.tw/web/stock/margin_trading/margin_balance/margin_bal_result.php'
+        r=requests.get(url, params={'l':'zh-tw','o':'htm'}, timeout=5,
+                       headers={'User-Agent':'Mozilla/5.0 stock-alert/2.10.35',
+                                'Accept-Language':'zh-TW,zh;q=0.9,en;q=0.8'})
+        r.raise_for_status()
+        text=r.content.decode('utf-8','ignore')
+        # 先逐列抓取，避免 pandas/HTML 結構變動造成整批失敗。
+        rows=re.findall(r'<tr[^>]*>(.*?)</tr>', text, flags=re.I|re.S)
+        for row in rows:
+            cells=re.findall(r'<t[dh][^>]*>(.*?)</t[dh]>', row, flags=re.I|re.S)
+            vals=[re.sub(r'<[^>]+>','',x) for x in cells]
+            vals=[html.unescape(re.sub(r'\\s+',' ',x).strip()) for x in vals]
+            if not vals:
+                continue
+            first=re.sub(r'[^0-9A-Za-z]','',vals[0])
+            if first != code:
+                continue
+            nums=[]
+            for x in vals:
+                z=x.replace(',','').replace(' ','')
+                try:
+                    nums.append(float(z))
+                except Exception:
+                    nums.append(None)
+            # [code,name,前資,資買,資賣,現償,資餘,...,前券,券賣,券買,券償,券餘,...]
+            if len(nums) >= 15:
+                prev_m=nums[2]; today_m=nums[6]
+                prev_s=nums[10]; today_s=nums[14]
+                if today_m is not None or prev_m is not None or today_s is not None or prev_s is not None:
+                    result={
+                        'margin_change': (today_m-prev_m) if today_m is not None and prev_m is not None else None,
+                        'margin_balance': today_m,
+                        'short_change': (today_s-prev_s) if today_s is not None and prev_s is not None else None,
+                        'short_balance': today_s
+                    }
+                    print(f'TPEx官方HTML融資備援成功：{code} {result}',flush=True)
+                    return result
+    except Exception as e:
+        print(f'TPEx官方HTML融資備援失敗 {code}：{type(e).__name__}: {e}',flush=True)
+    return None
+
+
+def _tpex_margin_refresh_missing(code, out):
+    """只補指定缺失股票，不重抓完整市場。"""
+    if code in out and any(v is not None for v in out.get(code, {}).values()):
+        return out
+    one=_tpex_margin_html_fallback(code)
+    if one:
+        out[clean_code(code)]=one
+    return out
+
+
 def margin_data(
     code,
     market
@@ -4762,67 +4855,28 @@ def margin_data(
     )
 
     if key not in MARGIN_CACHE:
-
         out = {}
-
         try:
-
             if market == 'TPEX':
-
-                data = tpex_get(
-                    '/tpex_mainboard_margin_balance'
-                )
-
-                out = (
-                    _parse_margin_payload(
-                        data
-                    )
-                )
-
+                data = tpex_get('/tpex_mainboard_margin_balance')
+                out = _parse_margin_payload(data)
             else:
-
-                data = twse_get(
-                    '/exchangeReport/MI_MARGN'
-                )
-
-                out = (
-                    _parse_margin_payload(
-                        data
-                    )
-                )
-
+                data = twse_get('/exchangeReport/MI_MARGN')
+                out = _parse_margin_payload(data)
                 if not out:
-
-                    data = twse_web_get(
-                        '/exchangeReport/MI_MARGN',
-                        {
-                            'response':
-                                'json',
-                            'selectType':
-                                'ALL'
-                        }
-                    )
-
-                    out = (
-                        _parse_margin_payload(
-                            data
-                        )
-                    )
-
+                    data = twse_web_get('/exchangeReport/MI_MARGN', {'response':'json','selectType':'ALL'})
+                    out = _parse_margin_payload(data)
         except Exception as e:
-
-            print(
-                '融資融券批次失敗：',
-                e
-            )
-
+            print('融資融券批次失敗：', e)
         MARGIN_CACHE[key] = out
+        print(f'融資融券資料完成：{market} {len(out)} 檔（只抓一次）')
 
-        print(
-            f'融資融券資料完成：'
-            f'{market} '
-            f'{len(out)} 檔（只抓一次）'
-        )
+    # V2.10.35：批次 API 有資料時也可能漏掉少數 TPEx 股票。
+    # 不接受「批次成功 = 目標股一定有資料」，指定股票缺失時才做官方 HTML 單股備援。
+    if market == 'TPEX':
+        current = MARGIN_CACHE[key].get(clean_code(code))
+        if not isinstance(current, dict) or not any(v is not None for v in current.values()):
+            MARGIN_CACHE[key] = _tpex_margin_refresh_missing(clean_code(code), MARGIN_CACHE[key])
 
     return MARGIN_CACHE[key].get(
         code,
@@ -4896,7 +4950,7 @@ def _line_chip_fast(code, market, days=20):
 
 
 def yahoo_margin_fast(code, market):
-    """V2.10.34：Yahoo 股市資券頁獨立備援。
+    """V2.10.35：Yahoo 股市資券頁獨立備援。
 
     TPEx 官方 API 偶爾因 SSL/欄位格式變動而無法在 Render 取得資料。
     Yahoo 股市的資券變化頁仍直接呈現融資/融券增減與餘額，因此作為
@@ -4905,7 +4959,7 @@ def yahoo_margin_fast(code, market):
     code=clean_code(code)
     if not code or not code.isdigit():
         return {'margin_change':None,'margin_balance':None,'short_change':None,'short_balance':None}
-    # V2.10.34：Yahoo 台股資券頁使用純股票代號路徑；
+    # V2.10.35：Yahoo 台股資券頁使用純股票代號路徑；
     # /quote/6488.TWO/margin 在部分情況會沒有資券資料，
     # 正確頁面為 /quote/6488/margin。TWSE/TPEX 都統一使用純代號。
     url=f'https://tw.stock.yahoo.com/quote/{code}/margin'
@@ -4971,7 +5025,7 @@ def _line_margin_fast(code, market):
     code = clean_code(code)
     cache = _load_line_small_cache(LINE_MARGIN_CACHE_FILE)
     market_data = cache.get(market, {}) if isinstance(cache, dict) else {}
-    # V2.10.34：不要讓歷史上的「全 N/A」快取永久鎖死。
+    # V2.10.35：不要讓歷史上的「全 N/A」快取永久鎖死。
     # 只有至少一個資券欄位真的有值時才直接採用快取；
     # 若四欄全部 None，視為失敗快取，重新走官方/Yahoo fallback。
     cached_item = market_data.get(code) if isinstance(market_data, dict) else None
@@ -4989,7 +5043,7 @@ def _line_margin_fast(code, market):
                              timeout=LINE_FAST_TIMEOUT, retries=0)
         parsed = _parse_margin_payload(data)
         one = parsed.get(code)
-        # V2.10.34：TPEx API 若只有部分欄位/格式改版，直接再用官方網頁 JSON
+        # V2.10.35：TPEx API 若只有部分欄位/格式改版，直接再用官方網頁 JSON
         # 取得同一市場快照；不改用 FinMind，避免 token/限流問題。
         if market == 'TPEX' and not one:
             try:
@@ -5006,7 +5060,7 @@ def _line_margin_fast(code, market):
     except Exception as e:
         print(f'LINE籌碼：快速融資取得失敗 {code}：{type(e).__name__}', flush=True)
 
-    # V2.10.34：TPEx 官方 API/網頁都失敗時，改走 Yahoo 單股資券頁。
+    # V2.10.35：TPEx 官方 API/網頁都失敗時，改走 Yahoo 單股資券頁。
     y= yahoo_margin_fast(code, market)
     if any(v is not None for v in y.values()):
         cache.setdefault(market,{})[code]=y
@@ -5021,7 +5075,7 @@ def _line_margin_fast(code, market):
 # ============================================================
 
 def score_fund(pe, one, peer, peg, roe, eps, pb, yld, model):
-    """V2.10.34：產業化基本面評分；缺資料不扣分，但限制少數欄位過度放大。
+    """V2.10.35：產業化基本面評分；缺資料不扣分，但限制少數欄位過度放大。
 
     完整資料：最高 40。可用權重越少，仍不直接扣分，但會依資料完整度設定
     合理上限，避免只剩 PB/殖利率時被放大成接近滿分。
@@ -5304,7 +5358,7 @@ def score_risk(
 
 
 def yahoo_light_fund(symbol, official=None, current_price=None):
-    """V2.10.34 LINE Free：真正逐欄位多源 fallback。
+    """V2.10.35 LINE Free：真正逐欄位多源 fallback。
 
     順序：官方/快取 → Yahoo quoteSummary → Yahoo timeseries → yfinance info/報表
     → 數學互補。每欄獨立，不因一個來源失敗而清空其他欄位。
@@ -5344,7 +5398,7 @@ def yahoo_light_fund(symbol, official=None, current_price=None):
             if v is not None: return v
         return None
     for k in ('pe','pb','yield','eps_growth','roe','peg'):
-        # V2.10.34：EPS Growth 優先採 timeseries 的同季/TTM 演算法，
+        # V2.10.35：EPS Growth 優先採 timeseries 的同季/TTM 演算法，
         # Yahoo quoteSummary 的 earningsGrowth 只作備援；避免 6488 被低基期年度
         # 數字放大成 125%+。殖利率則先做合理範圍清洗。
         if k == 'eps_growth':
@@ -5377,7 +5431,7 @@ def yahoo_light_fund(symbol, official=None, current_price=None):
             if 0 <= calc_yield <= 20:
                 o['yield']=calc_yield
                 print(f'LINE基本面：殖利率使用股利/股價推導 {code} = {o["yield"]:.2f}%',flush=True)
-    # V2.10.34：只要 PE + EPS Growth 都有效，PEG 一律用本程式定義重算，
+    # V2.10.35：只要 PE + EPS Growth 都有效，PEG 一律用本程式定義重算，
     # 不讓 Yahoo 的 trailingPegRatio 覆蓋 PE/EPS Growth。
     if o['pe'] and o['eps_growth'] and o['pe']>0 and o['eps_growth']>0:
         calc_peg=o['pe']/o['eps_growth']
@@ -5399,7 +5453,7 @@ def yahoo_light_fund(symbol, official=None, current_price=None):
     return o
 
 def yahoo_etf_profile(symbol):
-    """V2.10.34：ETF 多來源資料。\n\n    1) Yahoo quoteSummary / yfinance\n    2) Yahoo ETF profile 頁\n    3) 台灣 ETF 以管理費率 + 保管費率作「可取得費用率」備援\n    4) 不把缺少的欄位互相污染。\n    """
+    """V2.10.35：ETF 多來源資料。\n\n    1) Yahoo quoteSummary / yfinance\n    2) Yahoo ETF profile 頁\n    3) 台灣 ETF 以管理費率 + 保管費率作「可取得費用率」備援\n    4) 不把缺少的欄位互相污染。\n    """
     key=('etf_profile_v21033',symbol)
     if key in RUN_CACHE: return RUN_CACHE[key]
     out={'price':None,'nav':None,'yield':None,'expense':None,'beta':None,'assets':None,'expense_source':None}
@@ -5429,9 +5483,13 @@ def yahoo_etf_profile(symbol):
                         candidates.append((k,rv))
         for k,v in candidates:
             # Yahoo 常以小數保存比例，例如 0.0018 = 0.18%。
-            out['expense']=v*100 if 0<=v<1 else v
-            out['expense_source']=k
-            break
+            ev=v*100 if 0<=v<1 else v
+            # V2.10.35：費用率若超過 10% 視為欄位誤讀/單位錯置，
+            # 不讓 30.03 -> 3003% 這類異常數字進入評分。
+            if 0 <= ev <= 10:
+                out['expense']=ev
+                out['expense_source']=k
+                break
         out['beta']=raw(q.get('defaultKeyStatistics'),'beta') or raw(q.get('summaryDetail'),'beta')
         fp=q.get('fundProfile') or {}
         out['assets']=raw(fp,'totalAssets') or raw(fp,'totalNetAssets')
@@ -5447,7 +5505,9 @@ def yahoo_etf_profile(symbol):
             for k in ('annualReportExpenseRatio','netExpenseRatio','grossExpenseRatio','totalExpenseRatio','feesExpensesInvestment'):
                 v=to_float(info.get(k))
                 if v is not None:
-                    out['expense']=v*100 if 0<=v<1 else v; out['expense_source']=k; break
+                    ev=v*100 if 0<=v<1 else v
+                    if 0 <= ev <= 10:
+                        out['expense']=ev; out['expense_source']=k; break
         out['beta']=out['beta'] or to_float(info.get('beta3Year')) or to_float(info.get('beta'))
         out['assets']=out['assets'] or to_float(info.get('totalAssets'))
     except Exception as e:
@@ -5462,7 +5522,9 @@ def yahoo_etf_profile(symbol):
             cm=re.search(r'保管費率.{0,120}?([0-9]+(?:\\.[0-9]+)?)%',text)
             if mm or cm:
                 mval=float(mm.group(1)) if mm else 0.0; cval=float(cm.group(1)) if cm else 0.0
-                out['expense']=mval+cval; out['expense_source']='管理費率+保管費率'
+                total=mval+cval
+                if 0 <= mval <= 5 and 0 <= cval <= 5 and total <= 10:
+                    out['expense']=total; out['expense_source']='管理費率+保管費率'
         except Exception as e:
             print(f'ETF台灣 profile 費用備援失敗 {symbol}: {type(e).__name__}',flush=True)
     RUN_CACHE[key]=out
@@ -5500,7 +5562,7 @@ def etf_analysis(query):
     premium=((price/nav)-1)*100 if price and nav and nav>0 else None
     score,reasons=score_etf(tech,p)
     verdict='🟢 可分批配置' if score>=75 else '🟡 等待回檔/止跌' if score>=60 else '🟠 暫緩配置' if score>=40 else '🔴 不建議配置'
-    return (f'📊 ETF配置分析 V2.10.34\n\n標的：{info["name"]}（{code}）\n代號：{symbol}\n\n'
+    return (f'📊 ETF配置分析 V2.10.35\n\n標的：{info["name"]}（{code}）\n代號：{symbol}\n\n'
             f'【ETF特性 40分】\nNAV：{fmt(nav)}\n溢價/折價：{fmt(premium)}%\n殖利率：{fmt(p.get("yield"))}%\n費用率：{fmt(p.get("expense"))}%{("（" + str(p.get("expense_source")) + "）") if p.get("expense_source") else ""}\nBeta：{fmt(p.get("beta"))}\n資產規模：{fmt(p.get("assets"),0)}\n\n'
             f'【技術面 60分】\n價格：{fmt(price)}\nRSI：{fmt(tech.get("rsi"))}\nKD：K={fmt(tech.get("k"))} / D={fmt(tech.get("d"))}\nMA20：{fmt(tech.get("ma20"))}\nMA60：{fmt(tech.get("ma60"))}\n趨勢：{tech.get("trend") or "N/A"}\n\n'
             f'【ETF綜合評分】\n綜合評分：{score}/100\n結論：{verdict}\n加分因素：{"、".join(reasons) if reasons else "無"}')
@@ -5677,6 +5739,10 @@ def analysis(
         one, sample, one_label = one_year_pe_proxy(code, pe, symbol)
         if one is not None:
             print(f'LINE PE：一年平均PE使用價格/目前TTM EPS近似 {code} = {one:.2f}（{sample}筆）',flush=True)
+    if one is None:
+        one, sample, one_label = one_year_pe_from_ttm_eps(code, symbol)
+        if one is not None:
+            print(f'LINE PE：一年平均PE使用最新TTM EPS近似 {code} = {one:.2f}（{sample}筆）',flush=True)
 
     # --------------------------------------------------------
     # V2.9.8
@@ -5969,7 +6035,7 @@ def analysis(
     # --------------------------------------------------------
 
     return (
-        f'📊 股票加碼分析 V2.10.34\n\n'
+        f'📊 股票加碼分析 V2.10.35\n\n'
         f'標的：{name}（{code}）\n'
         f'市場：{market}\n'
         f'產業：{industry}\n'
@@ -6420,7 +6486,7 @@ def run_webhook_server():
 
     @app.get('/')
     def health():
-        return 'stock_alert V2.10.34 OK', 200
+        return 'stock_alert V2.10.35 OK', 200
 
     @app.get('/health')
     def health2():
