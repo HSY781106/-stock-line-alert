@@ -1,4 +1,4 @@
-# stock_alert.py V2.10.37
+# stock_alert.py V2.10.38
 # 效能修正版：
 # 1. 全市場資料批次化
 # 2. 單次執行快取
@@ -27,9 +27,11 @@
 # - 保留原本基本面 / 技術 / 籌碼 / 風險 / LINE 功能
 #
 # 股票跌幅 + 15分鐘區間最低價 + 動態估值 + 技術 + 籌碼 + 100分制加碼決策
-# V2.10.37：直接以正式 V2.10.36 實際檔案為基底；修復 LINE 資券 fallback、ETF 多來源資料、ETF 技術快取缺口
-#          + LINE webhook HMAC-SHA256 簽章驗證 + 群組/聊天室支援
-#          + Actions 批次建立全市場技術快取；Render LINE 優先只讀快取，避免 Yahoo/TWSE 即時限流
+# V2.10.38：以正式 V2.10.37 實際檔案為基底；LINE 查詢改採 A 方案
+#          + 查詢結果不再使用 Push，不消耗每月 Push 額度
+#          + Reply 僅立即回覆「分析頁面網址」；背景分析完成後寫入 Render 結果頁
+#          + /line-result/<id> 顯示即時分析狀態與完整結果
+#          + 保留 eventId 去重、Webhook HMAC 驗證、ETF/股票既有分析架構
 
 import os
 import json
@@ -140,7 +142,8 @@ LINE_ANALYSIS_LOCK = threading.Lock()
 
 # V2.10.19：使用非 daemon 的 ThreadPoolExecutor 執行 LINE 背景分析。
 # 不再用 daemon=True 的裸 Thread，降低 Render request 結束後背景工作
-# 被直接終止的風險。完整分析仍在獨立工作執行緒中，不會讓 replyToken 過期。
+# 被直接終止的風險。Reply token 僅用於立即回覆結果頁網址，背景分析不再依賴 replyToken。
+# 完整結果寫入 Render /line-result/<id>，不使用 Push。
 from concurrent.futures import ThreadPoolExecutor
 LINE_ANALYSIS_EXECUTOR = ThreadPoolExecutor(
     max_workers=1,
@@ -153,6 +156,14 @@ LINE_MODE_ACTIVE = False
 LINE_EVENT_LOCK = threading.Lock()
 LINE_SEEN_EVENTS = set()
 LINE_SEEN_EVENT_MAX = 500
+
+# V2.10.38：LINE A 方案。使用者主動查詢不再 Push 完整結果。
+# Reply 只回覆一個 Render 結果頁網址；背景分析完成後更新記憶體中的結果。
+# Reply 不計入方案訊息額度，Push 則會計入每月額度。
+LINE_RESULT_LOCK = threading.Lock()
+LINE_RESULT_CACHE = {}
+LINE_RESULT_MAX = 100
+
 
 
 # ============================================================
@@ -6330,7 +6341,7 @@ def _line_headers():
 
 
 def push_line(to, msg):
-    """背景分析完成後，使用 Push API 回傳給原本的聊天室。"""
+    """主動通知用 Push API。僅供系統主動警報使用，不用於 LINE 查詢結果。"""
     if not LINE_TOKEN or not to:
         print('LINE Push 略過：缺少 LINE token 或聊天室 ID')
         return False
@@ -6350,6 +6361,10 @@ def push_line(to, msg):
                     print(f'LINE Push成功：{to[:12]}...（第{attempt}次）')
                     return True
                 last=f'{r.status_code} {r.text[:500]}'
+                # V2.10.38：月額度 429 不再重試；重試不可能解決額度問題。
+                if r.status_code == 429 and 'monthly limit' in r.text.lower():
+                    print(f'LINE Push月額度已用完：{last}', flush=True)
+                    return False
                 if r.status_code not in (429,500,502,503,504): break
                 time.sleep(min(2*attempt,4))
             except Exception as e:
@@ -6361,6 +6376,65 @@ def push_line(to, msg):
     except Exception as e:
         print('LINE Push例外：', e)
         return False
+
+
+def _render_base_url():
+    """取得 Render 對外網址；優先使用環境變數，避免把內部 host 放進 LINE。"""
+    base = (
+        os.environ.get('RENDER_EXTERNAL_URL')
+        or os.environ.get('PUBLIC_BASE_URL')
+        or ''
+    ).strip().rstrip('/')
+    if base:
+        return base
+    host = os.environ.get('RENDER_EXTERNAL_HOSTNAME', '').strip()
+    if host:
+        return f'https://{host}'
+    return ''
+
+
+def _new_line_result_id(event_id=None, text=''):
+    seed = f'{event_id or ""}|{text}|{time.time_ns()}'
+    return hashlib.sha256(seed.encode('utf-8')).hexdigest()[:16]
+
+
+def _create_line_result(text, event_id=None):
+    """建立 LINE A 方案結果頁；回傳 result_id 與完整網址。"""
+    rid = _new_line_result_id(event_id, text)
+    now = time.time()
+    with LINE_RESULT_LOCK:
+        LINE_RESULT_CACHE[rid] = {
+            'text': text,
+            'status': 'running',
+            'result': None,
+            'created_at': now,
+            'updated_at': now,
+            'event_id': event_id,
+        }
+        if len(LINE_RESULT_CACHE) > LINE_RESULT_MAX:
+            oldest = sorted(LINE_RESULT_CACHE.items(), key=lambda kv: kv[1].get('created_at', 0))
+            for old_id, _ in oldest[:max(1, len(oldest)-LINE_RESULT_MAX)]:
+                LINE_RESULT_CACHE.pop(old_id, None)
+    base = _render_base_url()
+    url = f'{base}/line-result/{rid}' if base else f'/line-result/{rid}'
+    return rid, url
+
+
+def _update_line_result(rid, status, result=None):
+    with LINE_RESULT_LOCK:
+        item = LINE_RESULT_CACHE.get(rid)
+        if not item:
+            return
+        item['status'] = status
+        item['result'] = result
+        item['updated_at'] = time.time()
+
+
+def _get_line_result(rid):
+    with LINE_RESULT_LOCK:
+        item = LINE_RESULT_CACHE.get(rid)
+        return dict(item) if item else None
+
 
 
 def line_target_from_event(e):
@@ -6378,11 +6452,11 @@ def line_target_from_event(e):
     return None
 
 
-def _background_line_analysis(text, target, u, event_id=None):
-    """V2.10.23：低記憶體背景完整分析；技術面改用全市場 GitHub 快取。
+def _background_line_analysis(text, target, u, event_id=None, result_id=None):
+    """V2.10.38：LINE A 方案背景分析。
 
-    使用 ThreadPoolExecutor（非 daemon）而非裸 daemon Thread，並在分析前後
-    明確記錄狀態；完成後用 Push API 回原聊天室。
+    完整結果不再 Push；分析完成後寫入 Render /line-result/<id>。
+    使用者收到的 Reply 只包含結果頁網址，因此主動查詢不消耗 Push 月額度。
     """
     global LINE_MODE_ACTIVE
     LINE_MODE_ACTIVE = True
@@ -6412,21 +6486,22 @@ def _background_line_analysis(text, target, u, event_id=None):
         if not result:
             result = f'❌ {text} 分析沒有產生結果。'
 
-        if not push_line(target, result):
-            print(f'❌ LINE背景分析完成，但 Push 失敗：{text}', flush=True)
+        if result_id:
+            _update_line_result(result_id, 'done', result)
+            print(f'✅ LINE背景分析完成：{text} | 結果頁={result_id}', flush=True)
         else:
-            print(f'✅ LINE背景分析完成：{text}', flush=True)
+            print(f'⚠️ LINE背景分析完成但沒有 result_id：{text}', flush=True)
 
     except Exception as e:
         traceback.print_exc()
+        err = f'❌ {text} 分析失敗：{e}'
+        if result_id:
+            _update_line_result(result_id, 'error', err)
         print(f'❌ LINE背景分析例外：{type(e).__name__}: {e}', flush=True)
-        push_line(
-            target,
-            f'❌ {text} 分析失敗：{e}'
-        )
     finally:
         LINE_MODE_ACTIVE = False
         release_line_memory()
+
 
 
 def _mark_line_event_seen(event_id):
@@ -6566,7 +6641,7 @@ def release_line_memory():
 
 
 def handle_event(e, u):
-    """V2.10.23：立即 Reply 確認，再用低記憶體背景分析並 Push。"""
+    """V2.10.38：LINE A 方案。Reply 只回覆結果頁網址，完整分析不上 Push。"""
     if (
         e.get('type') != 'message'
         or e.get('message', {}).get('type') != 'text'
@@ -6588,12 +6663,12 @@ def handle_event(e, u):
     if text.lower() in {'help', '說明', '功能', '股票'}:
         ok = reply_line(
             token,
-            '📈 股票加碼分析 Bot V2.10.25\n\n'
+            '📈 股票加碼分析 Bot V2.10.38\n\n'
             '輸入股票代號、股票名稱或 ETF 代號即可查詢。\n'
             '例如：2330、台積電、3711、日月光投控、0050、00878、QQQ\n\n'
-            '模型：依產業自動選擇估值模型；基本面40 + 技術30 + 籌碼20 + 風險10。\n'
-            '同業估值：動態次產業 Top 10；若次產業快取不足則自動改用同大產業 Top 10。\n\n'
-            '查詢後會先回覆「分析中」，完成後再把完整結果推送回本聊天室。'
+            '股票：基本面40 + 技術30 + 籌碼20 + 風險10。\n'
+            'ETF：ETF特性40 + 技術60。\n'
+            '查詢結果會立即回覆 Render 分析頁網址，完整分析不使用 LINE Push。'
         )
         if not ok:
             print('❌ LINE Help Reply失敗')
@@ -6606,36 +6681,39 @@ def handle_event(e, u):
         )
         return
 
-    # 只做極短的立即回覆，避免 replyToken 因完整分析耗時而失效。
+    # V2.10.38：先建立結果頁，再用一次 Reply 回覆網址。
+    # 完整分析在背景執行；完成後直接更新結果頁，不需要 Push。
+    result_id, result_url = _create_line_result(text, event_id)
     ok = reply_line(
         token,
         f'🔎 收到「{text}」\n\n'
-        '⏳ 正在進行完整分析……\n'
-        '會計算基本面、次產業估值、技術、籌碼、風險與綜合評分。\n\n'
-        '分析完成後會自動回傳結果。'
+        '⏳ 分析已開始。\n'
+        '完整結果會直接更新到下面的分析頁，不需要等待 LINE Push：\n\n'
+        f'{result_url}'
     )
 
     if not ok:
-        print('⚠️ LINE 即時確認回覆失敗；仍會嘗試背景 Push。')
+        print('⚠️ LINE 結果頁網址 Reply 失敗；背景分析仍會繼續。', flush=True)
 
-    # V2.10.19：使用單一非 daemon Executor，避免同一 Render instance
-    # 同時跑多個查詢造成記憶體暴增；/callback 仍立即 HTTP 200。
     try:
         future = LINE_ANALYSIS_EXECUTOR.submit(
             _background_line_analysis,
-            text, target, u, event_id
+            text, target, u, event_id, result_id
         )
         print(
             f'LINE背景工作已提交：{text} | done={future.done()} | '
-            'executor=max_workers=1',
+            f'executor=max_workers=1 | result_id={result_id}',
             flush=True
         )
     except Exception as e:
+        err = f'❌ {text} 無法啟動分析工作：{e}'
+        _update_line_result(result_id, 'error', err)
         print(
             f'❌ LINE背景工作啟動失敗：{type(e).__name__}: {e}',
             flush=True
         )
-        push_line(target, f'❌ {text} 無法啟動分析工作：{e}')
+
+
 
 def run_webhook_server():
     from flask import Flask, request
@@ -6644,7 +6722,7 @@ def run_webhook_server():
 
     print('================================')
     print('LINE Webhook Server V2.10.28')
-    print('模式：立即 Reply + Render Free 穩定背景 Thread + Push')
+    print('模式：LINE A 方案｜Reply 結果頁網址 + 背景分析 + Render 完整結果頁｜查詢不 Push')
     print('================================')
 
     if not LINE_TOKEN:
@@ -6667,6 +6745,52 @@ def run_webhook_server():
     @app.get('/health')
     def health2():
         return 'OK', 200
+
+    @app.get('/line-result/<rid>')
+    def line_result_page(rid):
+        # V2.10.38：LINE A 方案完整分析頁。Render instance 記憶體中的結果
+        # 會在背景分析完成後更新；若服務重新部署，舊結果會失效。
+        item = _get_line_result(rid)
+        if not item:
+            return (
+                '<!doctype html><html><head><meta charset="utf-8">'
+                '<meta name="viewport" content="width=device-width,initial-scale=1">'
+                '<title>Stock Alert</title></head><body>'
+                '<h2>找不到這筆分析</h2>'
+                '<p>結果可能因 Render 重新部署而被清除，請重新查詢。</p>'
+                '</body></html>', 404
+            )
+
+        status = item.get('status')
+        text = html.escape(str(item.get('text') or ''))
+        updated = datetime.fromtimestamp(item.get('updated_at', time.time()), TW_TZ).strftime('%Y-%m-%d %H:%M:%S')
+        if status == 'running':
+            body = (
+                f'<h2>⏳ {text} 分析中</h2>'
+                '<p>分析正在背景執行，請重新整理本頁查看最新結果。</p>'
+                f'<p>最後更新：{updated}</p>'
+                '<meta http-equiv="refresh" content="5">'
+            )
+        else:
+            result = html.escape(str(item.get('result') or ''))
+            body = (
+                f'<h2>📊 {text} 分析結果</h2>'
+                f'<p>最後更新：{updated}</p>'
+                f'<pre style="white-space:pre-wrap;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif;line-height:1.55">{result}</pre>'
+            )
+            if status == 'error':
+                body = '<h2>分析失敗</h2>' + body
+
+        return (
+            '<!doctype html><html><head><meta charset="utf-8">'
+            '<meta name="viewport" content="width=device-width,initial-scale=1">'
+            '<title>Stock Alert V2.10.38</title>'
+            '<style>body{margin:0;padding:20px;background:#f6f7f9;color:#222}'
+            '.card{max-width:900px;margin:auto;background:#fff;border-radius:14px;padding:20px;box-shadow:0 2px 12px #0001}'
+            'a{word-break:break-all}</style></head><body><div class="card">'
+            + body +
+            '</div></body></html>', 200
+        )
 
     @app.post('/callback')
     def cb():
