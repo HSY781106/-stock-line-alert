@@ -1,5 +1,5 @@
-# stock_alert.py V2.10.49
-# V2.10.49：基本面/估值資料層改為 TWSE/TPEx 官方 + MOPS 官方財報；Yahoo 不再作股票基本面主來源
+# stock_alert.py V2.10.50
+# V2.10.50：基本面/估值資料層改為 TWSE/TPEx 官方 + Yahoo 財報多層補值；移除 MOPS 必要依賴
 # V2.10.48：加入 MOPS 官方財報 EPS Growth fallback，補強 Yahoo 多層來源仍為 N/A 的股票
 # V2.10.47：統一 EPS Growth 與 PEG 資料口徑；修正 EPS 成長 N/A 但 PEG 有值的矛盾
 # V2.10.41：修正 line_fund_cache 覆蓋策略、ETF NAV/溢價、Beta、TPEX 資券與 ETF chart fallback
@@ -90,6 +90,8 @@ TWSE_QUOTES_CACHE_FILE = 'twse_quotes_cache.json'
 # V2.9.8 新增
 SUBINDUSTRY_CACHE_FILE = 'subindustry_cache.json'
 # V2.10.49：官方基本面快取
+# V2.10.50：不再使用 MOPS 基本面快取
+# MOPS_FUND_CACHE_FILE 保留名稱僅避免舊程式碼/舊快取造成相容性問題，但 V2.10.50 基本面主流程不讀寫。
 MOPS_FUND_CACHE_FILE = 'mops_fund_cache.json'
 
 LINE_REPLY_URL = 'https://api.line.me/v2/bot/message/reply'
@@ -539,7 +541,7 @@ def http_json(
     last = None
 
     base_headers = {
-        'User-Agent': 'Mozilla/5.0 stock-alert/2.10.49'
+        'User-Agent': 'Mozilla/5.0 stock-alert/2.10.50'
     }
 
     if headers:
@@ -613,7 +615,7 @@ def http_text(
                 timeout=timeout,
                 headers={
                     'User-Agent':
-                        'Mozilla/5.0 stock-alert/2.10.49'
+                        'Mozilla/5.0 stock-alert/2.10.50'
                 }
             )
 
@@ -3686,7 +3688,7 @@ def mops_annual_roe_fallback(code, market=None):
     years = [now.year - 1 - 1911, now.year - 2 - 1911]
     mkt = _mops_market_type(market)
     headers = {
-        'User-Agent': 'Mozilla/5.0 stock-alert/2.10.49',
+        'User-Agent': 'Mozilla/5.0 stock-alert/2.10.50',
         'Referer': 'https://mops.twse.com.tw/'
     }
 
@@ -3754,20 +3756,21 @@ def mops_annual_roe_fallback(code, market=None):
 
 
 def official_fundamental(symbol, official=None, current_price=None, market=None):
-    """V2.10.49：股票基本面/估值官方資料層。
+    """V2.10.50：股票基本面/估值多來源資料層。
 
     資料優先順序：
       1. TWSE / TPEx 官方當日 PE、PB、殖利率
-      2. MOPS 官方財報 EPS 成長率
-      3. MOPS 官方年度 ROE
-      4. PEG 僅由「官方 PE / 官方 EPS Growth」一致計算
+      2. Yahoo quoteSummary / fundamentals-timeseries 補 EPS Growth、ROE
+      3. yfinance 財報（income statement / balance sheet）再補 EPS Growth、ROE
+      4. PEG 僅由 PE / EPS Growth 統一計算
 
-    本函式刻意不再呼叫 Yahoo fundamentals，避免 Yahoo 缺欄位、TTM 口徑
-    或 parser 異常造成不同股票資料口徑不一致。
+    重要：V2.10.50 不再把 MOPS HTML parser 當成基本面必要路徑。
+    MOPS 的 HTTP/HTML 反爬與 pandas.read_html 相依性會讓 GitHub Actions
+    出現 HTTPError / ImportError，進而使原本有資料的股票也變成 N/A。
     """
-    code=clean_code(str(symbol).split('.')[0])
-    off=official if isinstance(official,dict) else {}
-    out={
+    code = clean_code(str(symbol).split('.')[0])
+    off = official if isinstance(official, dict) else {}
+    out = {
         'pe': to_float(off.get('pe')),
         'pb': to_float(off.get('pb')),
         'yield': to_float(off.get('yield')),
@@ -3775,50 +3778,115 @@ def official_fundamental(symbol, official=None, current_price=None, market=None)
         'roe': None,
         'peg': None,
     }
-    for k in ('pe','pb','yield'):
-        if not _fund_cache_valid_value(k,out.get(k)):
-            out[k]=None
 
-    # TPEX 官方網頁是 OpenAPI 缺資料時的官方補洞。
-    if market=='TPEX' and any(out.get(k) is None for k in ('pe','pb','yield')):
+    # 官方交易所資料優先；不讓無效值進入後續評分。
+    for k in ('pe', 'pb', 'yield'):
+        if not _fund_cache_valid_value(k, out.get(k)):
+            out[k] = None
+
+    # TPEx 官方估值資料的單次網頁補洞仍保留，但只負責 PE/PB/Yield。
+    if market == 'TPEX' and any(out.get(k) is None for k in ('pe', 'pb', 'yield')):
         try:
-            one=parse_tpex_web_peratio(tpex_web_peratio_data(timeout=5)).get(code) or {}
-            for k in ('pe','pb','yield'):
+            one = parse_tpex_web_peratio(tpex_web_peratio_data(timeout=8)).get(code) or {}
+            for k in ('pe', 'pb', 'yield'):
                 if out.get(k) is None:
-                    v=to_float(one.get(k))
-                    if v is not None and _fund_cache_valid_value(k,v):
-                        out[k]=v
+                    v = to_float(one.get(k))
+                    if v is not None and _fund_cache_valid_value(k, v):
+                        out[k] = v
         except Exception as e:
-            print(f'V2.10.49 TPEx 官方估值補洞失敗 {code}: {type(e).__name__}', flush=True)
+            print(f'V2.10.50 TPEx 官方估值補洞失敗 {code}: {type(e).__name__}', flush=True)
 
-    # MOPS EPS Growth：官方財報，不用營收成長代替。
+    # ------------------------------------------------------------
+    # V2.10.50：基本面資料來源重構
+    # 不再呼叫 MOPS EPS/ROE fallback。
+    # ------------------------------------------------------------
+    symbol_full = symbol_for(code, market) if market in ('TWSE', 'TPEX') else symbol
+
     try:
-        out['eps_growth']=mops_eps_growth_fallback(code, market)
+        qs = yahoo_quote_summary_fund(symbol_full) or {}
     except Exception as e:
-        print(f'V2.10.49 MOPS EPS Growth失敗 {code}: {type(e).__name__}', flush=True)
+        qs = {}
+        print(f'V2.10.50 Yahoo quoteSummary失敗 {code}: {type(e).__name__}', flush=True)
 
-    # MOPS ROE：官方年度財務分析。
     try:
-        out['roe']=mops_annual_roe_fallback(code, market)
+        ts = yahoo_timeseries_fund(symbol_full) or {}
     except Exception as e:
-        print(f'V2.10.49 MOPS ROE失敗 {code}: {type(e).__name__}', flush=True)
+        ts = {}
+        print(f'V2.10.50 Yahoo timeseries失敗 {code}: {type(e).__name__}', flush=True)
 
-    # PEG 只允許由同一套官方 PE + EPS Growth 計算，不再混用 Yahoo PEG。
-    g=to_float(out.get('eps_growth'))
-    pe=to_float(out.get('pe'))
-    if pe is not None and pe>0 and g is not None and 0<g<=200:
-        peg=pe/g
-        if math.isfinite(peg) and 0<peg<100:
-            out['peg']=peg
+    # EPS Growth：優先 Yahoo 已整理的 earningsGrowth，其次 timeseries。
+    g_candidates = [qs.get('eps_growth'), ts.get('eps_growth')]
+    out['eps_growth'] = next(
+        (float(v) for v in g_candidates
+         if to_float(v) is not None and -500 <= to_float(v) <= 500),
+        None
+    )
+
+    # ROE：優先 Yahoo financialData，再用 timeseries 的淨利/平均權益計算。
+    r_candidates = [qs.get('roe'), ts.get('roe')]
+    out['roe'] = next(
+        (float(v) for v in r_candidates
+         if to_float(v) is not None and -100 <= to_float(v) <= 100),
+        None
+    )
+
+    # 若 quoteSummary / timeseries 仍缺欄位，再直接讀 yfinance 財報。
+    # 每次執行只針對分析標的呼叫，不會掃描全市場。
+    if out['eps_growth'] is None or out['roe'] is None:
+        try:
+            ticker = yf.Ticker(symbol_full)
+            if out['eps_growth'] is None:
+                g = _eps_growth_from_yfinance_statements(ticker)
+                if g is not None and -500 <= g <= 500:
+                    out['eps_growth'] = g
+                    print(f'V2.10.50 yfinance EPS Growth：{code}={g:.2f}%', flush=True)
+
+            if out['roe'] is None:
+                inc = ticker.get_income_stmt(freq='yearly')
+                bs = ticker.get_balance_sheet(freq='yearly')
+                ni = None
+                eq = None
+                if isinstance(inc, pd.DataFrame) and not inc.empty:
+                    for row in ('NetIncome', 'Net Income', 'NetIncomeCommonStockholders'):
+                        if row in inc.index:
+                            ni = pd.to_numeric(inc.loc[row], errors='coerce').dropna()
+                            if len(ni):
+                                break
+                if isinstance(bs, pd.DataFrame) and not bs.empty:
+                    for row in ('StockholdersEquity', 'CommonStockholdersEquity', 'TotalEquityGrossMinorityInterest'):
+                        if row in bs.index:
+                            eq = pd.to_numeric(bs.loc[row], errors='coerce').dropna()
+                            if len(eq):
+                                break
+                if ni is not None and len(ni) >= 1 and eq is not None and len(eq) >= 1:
+                    latest_ni = float(ni.iloc[0])
+                    latest_eq = float(eq.iloc[0])
+                    avg_eq = latest_eq
+                    if len(eq) >= 2:
+                        avg_eq = (latest_eq + float(eq.iloc[1])) / 2
+                    if avg_eq != 0:
+                        r = latest_ni / avg_eq * 100
+                        if math.isfinite(r) and -100 <= r <= 100:
+                            out['roe'] = float(r)
+                            print(f'V2.10.50 yfinance ROE：{code}={r:.2f}%', flush=True)
+        except Exception as e:
+            print(f'V2.10.50 yfinance 財報補值失敗 {code}: {type(e).__name__}: {e}', flush=True)
+
+    # PEG 統一由 PE / EPS Growth 計算，避免 EPS Growth=N/A 卻有 PEG 的矛盾。
+    pe = to_float(out.get('pe'))
+    g = to_float(out.get('eps_growth'))
+    if pe is not None and pe > 0 and g is not None and 0 < g <= 200:
+        peg = pe / g
+        if math.isfinite(peg) and 0 < peg < 100:
+            out['peg'] = peg
 
     print(
-        f'V2.10.49 官方基本面 {code}: '
+        f'V2.10.50 基本面 {code}: '
         f'PE={fmt(out["pe"])} PB={fmt(out["pb"])} Yield={fmt(out["yield"])} '
         f'EPSGrowth={fmt(out["eps_growth"])} ROE={fmt(out["roe"])} PEG={fmt(out["peg"])}',
         flush=True
     )
     return out
-
 
 def _eps_growth_from_yfinance_statements(ticker):
     """V2.10.47：從 yfinance 財報直接建立 EPS 成長率 fallback。
@@ -7099,7 +7167,7 @@ def analysis(
     # --------------------------------------------------------
 
     return (
-        f'📊 股票加碼分析 V2.10.49\n\n'
+        f'📊 股票加碼分析 V2.10.50\n\n'
         f'標的：{name}（{code}）\n'
         f'市場：{market}\n'
         f'產業：{industry}\n'
