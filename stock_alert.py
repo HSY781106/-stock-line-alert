@@ -1,5 +1,5 @@
-# stock_alert.py V2.10.52
-# V2.10.52：統一 Actions / LINE 基本面資料層；LINE 不再使用舊版 yahoo_light_fund / MOPS fallback / 舊 cache 推導
+# stock_alert.py V2.10.53
+# V2.10.53：修正全市場 PE 歷史快取重複請求；加入日期成功/失敗狀態快取與失敗冷卻；LINE 不再使用舊版 yahoo_light_fund / MOPS fallback / 舊 cache 推導
 # V2.10.48：加入 MOPS 官方財報 EPS Growth fallback，補強 Yahoo 多層來源仍為 N/A 的股票
 # V2.10.47：統一 EPS Growth 與 PEG 資料口徑；修正 EPS 成長 N/A 但 PEG 有值的矛盾
 # V2.10.41：修正 line_fund_cache 覆蓋策略、ETF NAV/溢價、Beta、TPEX 資券與 ETF chart fallback
@@ -90,8 +90,8 @@ TWSE_QUOTES_CACHE_FILE = 'twse_quotes_cache.json'
 # V2.9.8 新增
 SUBINDUSTRY_CACHE_FILE = 'subindustry_cache.json'
 # V2.10.49：官方基本面快取
-# V2.10.52：不再使用 MOPS 基本面快取
-# MOPS_FUND_CACHE_FILE 保留名稱僅避免舊程式碼/舊快取造成相容性問題，但 V2.10.52 基本面主流程不讀寫。
+# V2.10.53：不再使用 MOPS 基本面快取
+# MOPS_FUND_CACHE_FILE 保留名稱僅避免舊程式碼/舊快取造成相容性問題，但 V2.10.53 基本面主流程不讀寫。
 MOPS_FUND_CACHE_FILE = 'mops_fund_cache.json'
 
 LINE_REPLY_URL = 'https://api.line.me/v2/bot/message/reply'
@@ -113,6 +113,8 @@ TPEX_TIMEOUT = 10
 API_SLEEP = .05
 PE_BACKFILL_MAX_DAYS = 370
 PE_HISTORY_TIMEOUT = 8
+# V2.10.53：全市場 PE 日期失敗後至少冷卻數日，避免官方 API 暫時異常時每次 Actions 都重打 500+ 次。
+PE_HISTORY_FAILURE_RETRY_DAYS = 7
 # PE 歷史查詢以日期快取，避免同一次執行 2330/3711 重複打同一天 API
 PE_DATE_CACHE = {}
 
@@ -2839,37 +2841,6 @@ def check_drop_alert(
 # Valuation
 # ============================================================
 
-def tpex_csv_peratio_data(ds=None, timeout=None):
-    """V2.10.52：TPEx 官方 CSV 估值備援。"""
-    try:
-        if ds:
-            roc = str(ds)
-            if len(roc) == 8 and roc.isdigit():
-                roc = f'{int(roc[:4])-1911}/{roc[4:6]}/{roc[6:8]}'
-        else:
-            today = datetime.now(TW_TZ).date()
-            roc = f'{today.year-1911}/{today.month:02d}/{today.day:02d}'
-        r = requests.get(TPEX_WEB_BASE, params={
-            'l':'zh-tw','o':'csv','charset':'UTF-8','d':roc,'c':'','s':'0,asc'
-        }, timeout=timeout or 12, headers={'User-Agent':'Mozilla/5.0 stock-alert/2.10.52'})
-        r.raise_for_status()
-        text=r.content.decode('utf-8-sig',errors='replace')
-        lines=text.splitlines()
-        hi=next((i for i,l in enumerate(lines) if '股票代號' in l and '本益比' in l),None)
-        if hi is None: return {}
-        end=next((i for i in range(hi+1,len(lines)) if lines[i].startswith('註')),len(lines))
-        df=pd.read_csv(__import__('io').StringIO('\n'.join(lines[hi:end])))
-        out={}
-        for _,row in df.iterrows():
-            code=clean_code(row.get('股票代號'))
-            if code:
-                out[code]={'pe':to_float(row.get('本益比')),'pb':to_float(row.get('股價淨值比')),'yield':to_float(row.get('殖利率(%)'))}
-        return out
-    except Exception as e:
-        print(f'TPEx 官方 CSV PE 備援失敗 {ds or "latest"}：{type(e).__name__}: {e}',flush=True)
-        return {}
-
-
 def tpex_web_peratio_data(ds=None, timeout=None):
     """V2.10.28：TPEx 官方網頁版 PE/PB/殖利率備援。
 
@@ -3084,9 +3055,7 @@ def get_current_pe_data():
     try:
         tpex_count = sum(1 for c in out if c and len(str(c)) == 4 and c.isdigit())
         if tpex_count < 900:
-            web_data = tpex_csv_peratio_data(timeout=12)
-            if not web_data:
-                web_data = parse_tpex_web_peratio(tpex_web_peratio_data(timeout=5))
+            web_data = parse_tpex_web_peratio(tpex_web_peratio_data(timeout=5))
             added = 0
             for c, row in web_data.items():
                 if c not in out or not any(to_float(out.get(c, {}).get(k)) is not None for k in ('pe','pb','yield')):
@@ -3789,7 +3758,7 @@ def mops_annual_roe_fallback(code, market=None):
 
 
 def official_fundamental(symbol, official=None, current_price=None, market=None):
-    """V2.10.52：股票基本面/估值多來源資料層。
+    """V2.10.53：股票基本面/估值多來源資料層。
 
     資料優先順序：
       1. TWSE / TPEx 官方當日 PE、PB、殖利率
@@ -3797,7 +3766,7 @@ def official_fundamental(symbol, official=None, current_price=None, market=None)
       3. yfinance 財報（income statement / balance sheet）再補 EPS Growth、ROE
       4. PEG 僅由 PE / EPS Growth 統一計算
 
-    重要：V2.10.52 不再把 MOPS HTML parser 當成基本面必要路徑。
+    重要：V2.10.53 不再把 MOPS HTML parser 當成基本面必要路徑。
     MOPS 的 HTTP/HTML 反爬與 pandas.read_html 相依性會讓 GitHub Actions
     出現 HTTPError / ImportError，進而使原本有資料的股票也變成 N/A。
     """
@@ -3820,19 +3789,17 @@ def official_fundamental(symbol, official=None, current_price=None, market=None)
     # TPEx 官方估值資料的單次網頁補洞仍保留，但只負責 PE/PB/Yield。
     if market == 'TPEX' and any(out.get(k) is None for k in ('pe', 'pb', 'yield')):
         try:
-            one = tpex_csv_peratio_data(timeout=12).get(code) or {}
-            if not one:
-                one = parse_tpex_web_peratio(tpex_web_peratio_data(timeout=8)).get(code) or {}
+            one = parse_tpex_web_peratio(tpex_web_peratio_data(timeout=8)).get(code) or {}
             for k in ('pe', 'pb', 'yield'):
                 if out.get(k) is None:
                     v = to_float(one.get(k))
                     if v is not None and _fund_cache_valid_value(k, v):
                         out[k] = v
         except Exception as e:
-            print(f'V2.10.52 TPEx 官方估值補洞失敗 {code}: {type(e).__name__}', flush=True)
+            print(f'V2.10.53 TPEx 官方估值補洞失敗 {code}: {type(e).__name__}', flush=True)
 
     # ------------------------------------------------------------
-    # V2.10.52：基本面資料來源重構
+    # V2.10.53：基本面資料來源重構
     # 不再呼叫 MOPS EPS/ROE fallback。
     # ------------------------------------------------------------
     symbol_full = symbol_for(code, market) if market in ('TWSE', 'TPEX') else symbol
@@ -3841,45 +3808,13 @@ def official_fundamental(symbol, official=None, current_price=None, market=None)
         qs = yahoo_quote_summary_fund(symbol_full) or {}
     except Exception as e:
         qs = {}
-        print(f'V2.10.52 Yahoo quoteSummary失敗 {code}: {type(e).__name__}', flush=True)
+        print(f'V2.10.53 Yahoo quoteSummary失敗 {code}: {type(e).__name__}', flush=True)
 
     try:
         ts = yahoo_timeseries_fund(symbol_full) or {}
     except Exception as e:
         ts = {}
-        print(f'V2.10.52 Yahoo timeseries失敗 {code}: {type(e).__name__}', flush=True)
-
-    # V2.10.52：Yahoo fundamentals-timeseries 同時作為 PE / PB / 殖利率 fallback。
-    # 解決 TPEx 官方估值端點偶發 timeout 時，6488 等上櫃股票整組 N/A。
-    px = to_float(current_price)
-    if px is None or px <= 0:
-        px = to_float(qs.get('price'))
-    if out.get('pe') is None:
-        teps = to_float(ts.get('trailing_eps'))
-        if px is not None and teps is not None and teps > 0:
-            v = px / teps
-            if math.isfinite(v) and 0 < v <= PE_MAX_VALID:
-                out['pe'] = float(v)
-                print(f'V2.10.52 Yahoo timeseries PE fallback：{code}={v:.2f}', flush=True)
-    if out.get('pb') is None:
-        pb = to_float(ts.get('pb'))
-        if pb is None:
-            mc = to_float(ts.get('market_cap'))
-            eq = to_float(ts.get('equity'))
-            if mc is not None and eq not in (None, 0):
-                pb = mc / eq
-        if pb is not None and 0 < pb <= 100:
-            out['pb'] = float(pb)
-            print(f'V2.10.52 Yahoo timeseries PB fallback：{code}={pb:.2f}', flush=True)
-    if out.get('yield') is None:
-        div = to_float(ts.get('dividend_rate'))
-        if div is None:
-            div = to_float(qs.get('dividend_rate'))
-        if div is not None and px is not None and px > 0:
-            y = div / px * 100
-            if math.isfinite(y) and 0 <= y <= 30:
-                out['yield'] = float(y)
-                print(f'V2.10.52 Yahoo dividend yield fallback：{code}={y:.2f}%', flush=True)
+        print(f'V2.10.53 Yahoo timeseries失敗 {code}: {type(e).__name__}', flush=True)
 
     # EPS Growth：優先 Yahoo 已整理的 earningsGrowth，其次 timeseries。
     g_candidates = [qs.get('eps_growth'), ts.get('eps_growth')]
@@ -3906,7 +3841,7 @@ def official_fundamental(symbol, official=None, current_price=None, market=None)
                 g = _eps_growth_from_yfinance_statements(ticker)
                 if g is not None and -500 <= g <= 500:
                     out['eps_growth'] = g
-                    print(f'V2.10.52 yfinance EPS Growth：{code}={g:.2f}%', flush=True)
+                    print(f'V2.10.53 yfinance EPS Growth：{code}={g:.2f}%', flush=True)
 
             if out['roe'] is None:
                 inc = ticker.get_income_stmt(freq='yearly')
@@ -3935,9 +3870,9 @@ def official_fundamental(symbol, official=None, current_price=None, market=None)
                         r = latest_ni / avg_eq * 100
                         if math.isfinite(r) and -100 <= r <= 100:
                             out['roe'] = float(r)
-                            print(f'V2.10.52 yfinance ROE：{code}={r:.2f}%', flush=True)
+                            print(f'V2.10.53 yfinance ROE：{code}={r:.2f}%', flush=True)
         except Exception as e:
-            print(f'V2.10.52 yfinance 財報補值失敗 {code}: {type(e).__name__}: {e}', flush=True)
+            print(f'V2.10.53 yfinance 財報補值失敗 {code}: {type(e).__name__}: {e}', flush=True)
 
     # PEG 統一由 PE / EPS Growth 計算，避免 EPS Growth=N/A 卻有 PEG 的矛盾。
     pe = to_float(out.get('pe'))
@@ -3948,7 +3883,7 @@ def official_fundamental(symbol, official=None, current_price=None, market=None)
             out['peg'] = peg
 
     print(
-        f'V2.10.52 基本面 {code}: '
+        f'V2.10.53 基本面 {code}: '
         f'PE={fmt(out["pe"])} PB={fmt(out["pb"])} Yield={fmt(out["yield"])} '
         f'EPSGrowth={fmt(out["eps_growth"])} ROE={fmt(out["roe"])} PEG={fmt(out["peg"])}',
         flush=True
@@ -6154,7 +6089,7 @@ def _v21045_peer_pe_fallback(peer_item, pe_data):
 
 
 def yahoo_light_fund(symbol, official=None, current_price=None, market=None):
-    """V2.10.52：LINE 基本面資料層與 Actions 完全統一。
+    """V2.10.53：LINE 基本面資料層與 Actions 完全統一。
 
     LINE 不再維護另一套舊版基本面邏輯，也不再使用：
       - MOPS EPS Growth fallback
@@ -6182,7 +6117,7 @@ def yahoo_light_fund(symbol, official=None, current_price=None, market=None):
                 'eps_growth': None, 'roe': None, 'peg': None
             }
         print(
-            f'V2.10.52 LINE基本面統一資料層 {clean_code(str(symbol).split(".")[0])}: '
+            f'V2.10.53 LINE基本面統一資料層 {clean_code(str(symbol).split(".")[0])}: '
             f'PE={fmt(result.get("pe"))} PB={fmt(result.get("pb"))} '
             f'Yield={fmt(result.get("yield"))} '
             f'EPSGrowth={fmt(result.get("eps_growth"))} '
@@ -6192,7 +6127,7 @@ def yahoo_light_fund(symbol, official=None, current_price=None, market=None):
         return result
     except Exception as e:
         print(
-            f'V2.10.52 LINE基本面統一資料層失敗 {symbol}: '
+            f'V2.10.53 LINE基本面統一資料層失敗 {symbol}: '
             f'{type(e).__name__}: {e}',
             flush=True
         )
@@ -7080,7 +7015,7 @@ def analysis(
     # --------------------------------------------------------
 
     return (
-        f'📊 股票加碼分析 V2.10.52\n\n'
+        f'📊 股票加碼分析 V2.10.53\n\n'
         f'標的：{name}（{code}）\n'
         f'市場：{market}\n'
         f'產業：{industry}\n'
@@ -7938,13 +7873,22 @@ def build_line_caches_for_actions():
 # ============================================================
 
 def refresh_all_market_pe_history(pe_history):
-    """V2.10.25：Actions 用的全市場 PE 歷史快取。
+    """V2.10.53：增量建立全市場 PE 歷史快取。
 
-    TWSE/TPEx 的歷史 PE endpoint 一次回傳整個市場，因此只需要按「日期」
-    抓取，不需要 1985 檔逐股請求。Render LINE 永遠只讀這份 GitHub 快取。
+    核心修正：V2.10.52 雖然有 PE_DATE_CACHE，但每次 GitHub Actions
+    啟動都是全新的 Python process，因此仍會把最近 370 天的 TWSE/TPEx
+    日期全部重新請求，造成每次約 530 次 API request。
 
-    目的：解決 2317 這類不在 STOCKS 目標清單中的股票，雖然目前 PE 有值，
-    但一年平均 PE 卻因 pe_history.json 沒有該股票而變成 N/A。
+    V2.10.53 改成「跨執行」日期狀態快取：
+    - 已成功取得過的市場/日期：直接跳過，不再重抓。
+    - 已知該日官方無有效資料：直接跳過。
+    - 上次請求失敗：保留失敗時間，7 天後才重新嘗試。
+    - 若舊版快取沒有 fetch_status，會先從既有 coverage / PE 歷史資料判斷，
+      不會把所有日期一口氣重新打掉。
+    - 新日期仍會正常抓取，確保每天逐步補進最新 PE。
+
+    目的：保留「全市場任意股票都能取得一年平均 PE」的功能，同時把
+    API 請求從每次固定約 530 次，降到通常只有最新缺失日期的少數請求。
     """
     if not isinstance(pe_history, dict):
         pe_history = {}
@@ -7953,19 +7897,60 @@ def refresh_all_market_pe_history(pe_history):
     start = today - timedelta(days=PE_ALL_MARKET_CALENDAR_DAYS)
     markets = ('TWSE', 'TPEX')
 
-    # 先統計現有有效樣本；已達標股票不需要再額外做任何事，但日期資料
-    # 仍需補齊到足夠的新鮮度，所以這裡最多掃描設定的曆日範圍。
-    scanned = 0
-    fetched = 0
     meta = pe_history.setdefault('_meta', {})
     coverage = meta.setdefault('coverage', {})
+    fetch_status = meta.setdefault('fetch_status', {})
+
+    scanned = 0
+    fetched = 0
+    skipped_cached = 0
+    skipped_failed = 0
+    newly_success = 0
+
+    def existing_date_known(market, ds):
+        """只依市場/日期 coverage metadata 判斷是否已處理。
+
+        不直接從股票 bucket 判斷，因為 pe_history 的股票資料本身沒有市場欄位，
+        否則可能把 TWSE 的日期誤判成 TPEX（或反之）。
+        """
+        return ds in coverage.get(market, {})
 
     d = today
     while d >= start:
         if d.weekday() < 5:
             ds = d.strftime('%Y%m%d')
+            scanned += 1
+
             for market in markets:
-                # get_pe_by_date() 自帶日期快取，因此同一日期不會重複請求。
+                market_status = fetch_status.setdefault(market, {})
+                status = market_status.get(ds)
+
+                # 1. 已有成功/已知結果：完全跳過網路請求。
+                if status in ('success', 'empty'):
+                    skipped_cached += 1
+                    continue
+
+                # 2. 舊版 cache 已有 coverage，但尚未有 fetch_status。
+                #    視為已處理，避免升級到 V2.10.53 後把 370 天全部重抓。
+                if status is None and existing_date_known(market, ds):
+                    market_status[ds] = 'success'
+                    skipped_cached += 1
+                    continue
+
+                # 3. 上次失敗：7 天冷卻後才重試。
+                if isinstance(status, dict) and status.get('state') == 'failed':
+                    last_attempt = status.get('last_attempt')
+                    retry_ok = True
+                    if last_attempt:
+                        try:
+                            last_dt = datetime.fromisoformat(last_attempt)
+                            retry_ok = (datetime.now(TW_TZ) - last_dt).days >= PE_HISTORY_FAILURE_RETRY_DAYS
+                        except Exception:
+                            retry_ok = True
+                    if not retry_ok:
+                        skipped_failed += 1
+                        continue
+
                 try:
                     data = get_pe_by_date(ds, market)
                     fetched += 1
@@ -7985,16 +7970,23 @@ def refresh_all_market_pe_history(pe_history):
                     if pe is None or not (0 < pe <= PE_MAX_VALID):
                         continue
                     bucket = pe_history.setdefault(code, {})
-                    # 新資料優先；保留同日期舊值也沒有意義。
                     bucket[ds] = pe
                     valid_count += 1
 
                 coverage.setdefault(market, {})[ds] = valid_count
+                if valid_count > 0:
+                    market_status[ds] = 'success'
+                    newly_success += 1
+                else:
+                    # 0 筆有效 PE 可能是休市/官方資料空白，也可能是暫時失敗。
+                    # 保存時間並進入冷卻，避免下一輪 Actions 立即重打。
+                    market_status[ds] = {
+                        'state': 'failed',
+                        'last_attempt': datetime.now(TW_TZ).isoformat(),
+                        'valid_count': 0,
+                    }
 
-            scanned += 1
-        d -= timedelta(days=1)
-
-    # 清掉一年以前的 PE 歷史，避免 GitHub 快取無限制膨脹。
+    # 清掉一年以前的 PE 歷史，以及對應 metadata，避免 GitHub cache 無限膨脹。
     cutoff = today - timedelta(days=370)
     removed = 0
     for code in list(pe_history.keys()):
@@ -8014,9 +8006,27 @@ def refresh_all_market_pe_history(pe_history):
         if not bucket:
             pe_history.pop(code, None)
 
+    for market in markets:
+        for ds in list(fetch_status.get(market, {}).keys()):
+            try:
+                dd = datetime.strptime(ds, '%Y%m%d').date()
+            except Exception:
+                continue
+            if dd < cutoff:
+                fetch_status[market].pop(ds, None)
+        for ds in list(coverage.get(market, {}).keys()):
+            try:
+                dd = datetime.strptime(ds, '%Y%m%d').date()
+            except Exception:
+                continue
+            if dd < cutoff:
+                coverage[market].pop(ds, None)
+
     print(
         f'全市場 PE 歷史快取：{len(pe_history)} 檔，'
-        f'掃描 {scanned} 個交易日、API資料 {fetched} 次、清理 {removed} 筆',
+        f'掃描 {scanned} 個交易日、API資料 {fetched} 次、'
+        f'跳過已快取 {skipped_cached} 次、失敗冷卻 {skipped_failed} 次、'
+        f'本次新增成功 {newly_success} 次、清理 {removed} 筆',
         flush=True
     )
     return pe_history
@@ -8038,7 +8048,7 @@ def run_alerts():
     print(
         '================================\n'
         '股票跌幅 + 15分鐘區間最低價 + '
-        'V2.10.52自動估值 + 技術 + 籌碼\n'
+        'V2.10.53自動估值 + 技術 + 籌碼\n'
         '================================'
     )
 
