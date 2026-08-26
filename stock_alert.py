@@ -1,4 +1,4 @@
-# stock_alert.py V2.10.64
+# stock_alert.py V2.10.65
 # V2.10.56：修正 V2.10.53 舊 PE 快取 migration；加入 PE 每次執行請求/時間上限、即時進度與安全降級；LINE 不再使用舊版 yahoo_light_fund / MOPS fallback / 舊 cache 推導
 # V2.10.48：加入 MOPS 官方財報 EPS Growth fallback，補強 Yahoo 多層來源仍為 N/A 的股票
 # V2.10.47：統一 EPS Growth 與 PEG 資料口徑；修正 EPS 成長 N/A 但 PEG 有值的矛盾
@@ -130,12 +130,12 @@ PE_HISTORY_PROGRESS_EVERY = 1
 # PE 歷史查詢以日期快取，避免同一次執行 2330/3711 重複打同一天 API
 PE_DATE_CACHE = {}
 
-# V2.10.64：季度 EPS 年度預估模型；修正 Yahoo quarterlyDilutedEPS 缺欄導致全數 N/A。
+# V2.10.65：季度 EPS 年度預估模型；修正 Yahoo quarterlyDilutedEPS 缺欄導致全數 N/A。
 # EPS Growth 僅由「各季度 EPS」建立，不再使用 Q2 YoY / TTM YoY / Yahoo earningsGrowth。
 # 已公布季度用實際 EPS；未公布季度用歷史同季度趨勢回歸 + 季節性中位數預估。
 # 重大且已確認事件可透過 EPS_EVENT_ADJUSTMENTS 調整指定季度，預設空表，不增加網路請求。
 EPS_EVENT_ADJUSTMENTS = {}
-# V2.10.64：已確認的「季度 EPS 指引/可靠公開預估」可直接覆寫尚未公布季度。
+# V2.10.65：已確認的「季度 EPS 指引/可靠公開預估」可直接覆寫尚未公布季度。
 # 格式：{'2330': {2026: {3: 32.50, 4: 34.10}}}
 # 只允許作用於尚未公布季度；不會覆蓋實際 EPS。
 # 不自行抓新聞、不把傳聞寫進模型；只有人工/程式明確填入的確認值才會生效。
@@ -3448,11 +3448,11 @@ def _yfinance_earnings_dates_eps(symbol):
 
 
 def yahoo_timeseries_fund(symbol):
-    """V2.10.64：免費基本面多源資料層。
+    """V2.10.65：免費基本面多源資料層。
 
     一次取得季度/年度 EPS 與其他基本面資料。
     EPS Growth 本身不在這裡用 Q2 YoY、TTM YoY 或 earningsGrowth 計算；
-    僅提供完整的季度 EPS 給 V2.10.64 年度模型使用。
+    僅提供完整的季度 EPS 給 V2.10.65 年度模型使用。
     """
     key=('yf_ts_fund_v21030',symbol)
     if key in RUN_CACHE:
@@ -3838,7 +3838,7 @@ def mops_annual_roe_fallback(code, market=None):
 
 
 def _eps_growth_sanity(value, source='unknown', corroborated=False, cached_value=None):
-    """V2.10.64：季度 EPS 年度模型結果的安全驗證。
+    """V2.10.65：季度 EPS 年度模型結果的安全驗證。
 
     只有模型本身建立在實際季度 EPS 上時才視為 corroborated；
     不再用 Q2 YoY、TTM YoY 或 Yahoo earningsGrowth 幫模型背書。
@@ -3856,7 +3856,7 @@ def _eps_growth_sanity(value, source='unknown', corroborated=False, cached_value
 
 
 def _eps_growth_event_factor(code, year, quarter):
-    """V2.10.64：已確認重大事件的季度調整係數。
+    """V2.10.65：已確認重大事件的季度調整係數。
 
     不自行爬新聞、不把傳聞寫進模型。只有 EPS_EVENT_ADJUSTMENTS 明確設定才會生效。
     例如 1.10 = 該季度預估 EPS +10%，0.90 = -10%。
@@ -3872,7 +3872,7 @@ def _eps_growth_event_factor(code, year, quarter):
 
 
 def _eps_growth_confirmed_quarter(code, year, quarter):
-    """V2.10.64：取得已確認的未公布季度 EPS 覆寫值。
+    """V2.10.65：取得已確認的未公布季度 EPS 覆寫值。
 
     這裡只接受明確設定的季度 EPS，不自行爬新聞或猜測公司指引。
     若值不合理則忽略；實際季度由主模型優先保留。
@@ -3892,7 +3892,7 @@ def _eps_growth_confirmed_quarter(code, year, quarter):
 
 
 def _eps_growth_from_quarterly_model(code, ts, now=None):
-    """V2.10.64：完整年度 EPS 模型。
+    """V2.10.65：完整年度 EPS 模型。
 
     模型設計：
     1. 已公布季度：直接使用實際 EPS，絕不重新估算。
@@ -4073,16 +4073,20 @@ def _eps_growth_from_quarterly_model(code, ts, now=None):
             return None,None
 
         # --------------------------------------------------------
-        # D. 今年已公布季度校正
+        # D. 已公布季度校正：只調整「未來季度基準」，不直接乘整個全年
         #
-        # 例：
-        # base annual = 90
-        # 歷史 Q1+Q2 seasonal share = 0.55
-        # 預期 H1 = 49.5
-        # 實際 H1 = 52
-        # => correction = 52/49.5
+        # V2.10.65 修正：
+        # 舊版把「實際已公布季度 / 季節係數預期值」直接作用在全年，
+        # 容易讓 Q1/Q2 的單季超預期被放大成全年 EPS 大幅跳升。
+        # 新版改為：先建立每個未公布季度的基準 EPS，再用已公布季度
+        # 對「剩餘季度」做阻尼校正。已公布季度本身永遠保持實際值。
         #
-        # 這會把全年基準從 90 向上校正，而不是重新獨立預測 Q3/Q4。
+        # 例：今年 Q1/Q2 已公布，Q3/Q4 未公布：
+        #   1. 年度趨勢 -> base_annual
+        #   2. 歷史季節係數 -> Q3/Q4 baseline
+        #   3. 實際 H1 / 歷史 H1 預期 -> actual_ratio
+        #   4. 只用阻尼後的 ratio 調整 Q3/Q4 baseline
+        #   5. 實際 H1 + 預估 Q3/Q4 = 全年 EPS
         # --------------------------------------------------------
         actual_sum=sum(float(v) for v in current_actual.values())
         actual_weight=sum(
@@ -4092,19 +4096,22 @@ def _eps_growth_from_quarterly_model(code, ts, now=None):
         )
 
         correction_factor=1.0
+        actual_correction_ratio=1.0
+        correction_alpha=0.0
         if current_actual and actual_weight>0:
             expected_actual=base_annual*actual_weight
-            if expected_actual>0 and actual_sum>0:
-                raw_correction=actual_sum/expected_actual
-                # 限制單次已公布季度對全年模型的影響，避免單季異常造成全年爆量。
-                raw_correction=float(min(max(raw_correction,0.70),1.35))
-                # 有實際資料就以實際為主，但保留 20% 年度趨勢錨點。
-                correction_factor=0.80*raw_correction+0.20*1.0
+            if expected_actual>0 and math.isfinite(expected_actual):
+                actual_correction_ratio=actual_sum/expected_actual
+                if math.isfinite(actual_correction_ratio):
+                    # 單季資訊不要過度影響全年；公布季度越多，
+                    # 對剩餘季度的校正權重才逐步提高。
+                    correction_alpha=min(0.90,0.50 + 0.15*len(current_actual))
+                    bounded_ratio=float(min(max(actual_correction_ratio,0.70),1.30))
+                    correction_factor=1.0 + correction_alpha*(bounded_ratio-1.0)
 
-        corrected_annual=base_annual*correction_factor
-
-        if not math.isfinite(corrected_annual) or corrected_annual<=0:
-            corrected_annual=base_annual
+        if not math.isfinite(correction_factor):
+            correction_factor=1.0
+        correction_factor=float(min(max(correction_factor,0.75),1.25))
 
         # --------------------------------------------------------
         # E. 先放入實際季度與確認季度
@@ -4121,7 +4128,11 @@ def _eps_growth_from_quarterly_model(code, ts, now=None):
                 confirmed_used.append(q)
 
         # --------------------------------------------------------
-        # F. 將剩餘年度 EPS 依季節係數分配
+        # F. 預測未公布季度
+        #
+        # 優先：年度趨勢 × 歷史季節係數 × 已公布季度阻尼校正。
+        # 若資料結構特殊或預測值無效，再退回逐季度歷史回歸/中位數。
+        # 重大事件只作用於真正的模型預測季度。
         # --------------------------------------------------------
         remaining=[q for q in range(1,5) if q not in projected]
         seasonal_used=[]
@@ -4130,37 +4141,29 @@ def _eps_growth_from_quarterly_model(code, ts, now=None):
         event_adjusted=[]
 
         if remaining:
-            known_sum=sum(float(v) for v in projected.values())
+            seasonal_ok=True
+            for q in remaining:
+                w=seasonal_weights.get(q,0.25)
+                pred=base_annual*float(w)*correction_factor
+                if not math.isfinite(pred) or pred<=0:
+                    seasonal_ok=False
+                    break
+                factor=_eps_growth_event_factor(code,current_year,q)
+                if factor!=1.0:
+                    pred*=factor
+                    event_adjusted.append(q)
+                if not math.isfinite(pred) or pred<=0:
+                    seasonal_ok=False
+                    break
+                projected[q]=float(pred)
+                seasonal_used.append(q)
 
-            remaining_weight=sum(
-                seasonal_weights.get(q,0.25)
-                for q in remaining
-            )
-
-            residual=corrected_annual-known_sum
-
-            # 正常情況：剩餘年度 EPS 足夠，依季節係數分配。
-            seasonal_ok=(
-                remaining_weight>0
-                and math.isfinite(residual)
-                and residual>0
-            )
-
-            if seasonal_ok:
-                for q in remaining:
-                    w=seasonal_weights.get(q,0.25)
-                    pred=residual*(w/remaining_weight)
-
-                    if not math.isfinite(pred):
-                        seasonal_ok=False
-                        break
-
-                    projected[q]=float(pred)
-                    seasonal_used.append(q)
-
-            # 若確認值過高/模型週期特殊，避免產生負的未來 EPS；
-            # 回退到逐季度歷史趨勢。
             if not seasonal_ok:
+                # 清除本段剛建立的預測，改走逐季度歷史回歸。
+                for q in remaining:
+                    projected.pop(q,None)
+                seasonal_used=[]
+
                 for q in remaining:
                     pts=[]
                     for y in hist_years:
@@ -4169,22 +4172,18 @@ def _eps_growth_from_quarterly_model(code, ts, now=None):
                             pts.append((float(y),float(v)))
 
                     pred=None
-
                     if len(pts)>=EPS_MODEL_MIN_YEARS:
                         try:
                             x=np.array([a for a,_ in pts],dtype=float)
                             y=np.array([b for _,b in pts],dtype=float)
                             slope,intercept=np.polyfit(x,y,1)
                             reg=float(intercept+slope*float(current_year))
-
                             recent=[v for _,v in pts[-min(3,len(pts)):]]
                             med=float(np.median(recent)) if recent else None
-
                             if math.isfinite(reg) and med is not None:
                                 pred=0.70*reg+0.30*med
                             elif math.isfinite(reg):
                                 pred=reg
-
                             if pred is not None:
                                 regression_used.append(q)
                         except Exception:
@@ -4194,14 +4193,14 @@ def _eps_growth_from_quarterly_model(code, ts, now=None):
                         pred=float(np.median([v for _,v in pts]))
                         median_used.append(q)
 
-                    if pred is None:
+                    if pred is None or not math.isfinite(pred):
                         return None,None
 
                     factor=_eps_growth_event_factor(code,current_year,q)
                     if factor!=1.0:
+                        pred*=factor
                         event_adjusted.append(q)
-
-                    projected[q]=float(pred*factor)
+                    projected[q]=float(pred)
 
         # --------------------------------------------------------
         # G. 重大事件調整
@@ -4257,15 +4256,15 @@ def _eps_growth_from_quarterly_model(code, ts, now=None):
         return float(growth),detail
 
     except Exception as e:
-        print(f'V2.10.64 季度EPS年度模型失敗 {code}: {type(e).__name__}: {e}',flush=True)
+        print(f'V2.10.65 季度EPS年度模型失敗 {code}: {type(e).__name__}: {e}',flush=True)
         return None,None
 
 def official_fundamental(symbol, official=None, current_price=None, market=None):
-    """V2.10.64：股票基本面/估值資料層。
+    """V2.10.65：股票基本面/估值資料層。
 
     EPS Growth 唯一主模型：已公布季度實際 EPS -> 已確認季度 EPS -> 未公布季度回歸/季節性預估 -> 全年 EPS -> 去年完整年度 EPS -> YoY。
     不再採用 Q2 YoY、TTM YoY、Yahoo earningsGrowth 或 annual EPS 作為 Growth 主來源。
-    其他 PE/PB/Yield/ROE/PEG 口徑與 V2.10.64 保持。
+    其他 PE/PB/Yield/ROE/PEG 口徑與 V2.10.65 保持。
     """
     code=clean_code(str(symbol).split('.')[0])
     off=official if isinstance(official,dict) else {}
@@ -4298,7 +4297,7 @@ def official_fundamental(symbol, official=None, current_price=None, market=None)
     except Exception: pass
 
     model_g,detail=_eps_growth_from_quarterly_model(code,ts,now=datetime.now(TW_TZ))
-    model_g=_eps_growth_sanity(model_g,'V2.10.64 annual EPS seasonal model',True,cached_g)
+    model_g=_eps_growth_sanity(model_g,'V2.10.65 annual EPS seasonal model',True,cached_g)
     if model_g is not None:
         out['eps_growth']=model_g
         if detail:
@@ -4311,12 +4310,59 @@ def official_fundamental(symbol, official=None, current_price=None, market=None)
             if detail.get('seasonal_quarters'): source_bits.append('季節Q'+','.join(map(str,detail['seasonal_quarters'])))
             if detail.get('event_adjusted_quarters'): source_bits.append('事件調整Q'+','.join(map(str,detail['event_adjusted_quarters'])))
             src='；'.join(source_bits) if source_bits else '無'
-            print(f'V2.10.64 EPS Growth：{code}={model_g:.2f}% [年度趨勢+季節係數模型] {detail["current_year"]}全年={detail["current_annual"]:.4f} vs {detail["prev_year"]}全年={detail["prev_annual"]:.4f} | {qtext} | 年度趨勢={detail["annual_trend_growth"]:.2f}% | 基準全年={detail["base_annual"]:.4f} | 已公布校正={detail["correction_factor"]:.4f} | 校正全年={detail["corrected_annual"]:.4f} | 來源：{src}',flush=True)
+            print(f'V2.10.65 EPS Growth：{code}={model_g:.2f}% [年度趨勢+季節係數模型] {detail["current_year"]}全年={detail["current_annual"]:.4f} vs {detail["prev_year"]}全年={detail["prev_annual"]:.4f} | {qtext} | 年度趨勢={detail["annual_trend_growth"]:.2f}% | 基準全年={detail["base_annual"]:.4f} | 已公布校正={detail["correction_factor"]:.4f} | 校正全年={detail["corrected_annual"]:.4f} | 來源：{src}',flush=True)
     else:
-        print(f'V2.10.64 EPS Growth：{code}=N/A [季度EPS資料不足/模型無法建立]',flush=True)
+        print(f'V2.10.65 EPS Growth：{code}=N/A [季度EPS資料不足/模型無法建立]',flush=True)
 
     r_candidates=[qs.get('roe'),ts.get('roe')]
     out['roe']=next((float(v) for v in r_candidates if to_float(v) is not None and -100<=to_float(v)<=100),None)
+
+    # V2.10.65：Yahoo quoteSummary 401 時，恢復舊版已有的 yfinance/profile 補洞。
+    # 只補原本就有資料的 PE/PB/殖利率/ROE；PEG 刻意不在這裡補。
+    try:
+        info=(yf.Ticker(symbol_full).info or {})
+        if out['pb'] is None:
+            pbv=to_float(info.get('priceToBook'))
+            if pbv is not None and 0 < pbv <= 100:
+                out['pb']=pbv
+        if out['yield'] is None:
+            yv=to_float(info.get('dividendYield'))
+            if yv is not None:
+                yv=yv*100 if abs(yv)<=1.5 else yv
+                if 0 <= yv <= 30: out['yield']=yv
+        if out['roe'] is None:
+            rv=to_float(info.get('returnOnEquity'))
+            if rv is not None:
+                rv=rv*100 if abs(rv)<2 else rv
+                if -100 <= rv <= 100: out['roe']=rv
+        if out['pe'] is None:
+            pv=to_float(info.get('trailingPE')) or to_float(info.get('forwardPE'))
+            if pv is not None and 0 < pv <= PE_MAX_VALID:
+                out['pe']=pv
+    except Exception as e:
+        print(f'V2.10.65 yfinance基本面補洞失敗 {code}: {type(e).__name__}',flush=True)
+
+    # Yahoo Profile 是 quoteSummary 失敗時的第二層輕量備援。
+    if market in ('TWSE','TPEX') and (out['pb'] is None or out['yield'] is None or out['roe'] is None):
+        try:
+            prof=yahoo_tw_profile_fallback(symbol_full)
+            px=next((to_float(v) for v in (current_price,prof.get('price'),qs.get('price'),ts.get('price')) if to_float(v) is not None and to_float(v)>0),None)
+            if out['pb'] is None:
+                bvps=to_float(prof.get('bvps'))
+                if px is not None and bvps is not None and bvps>0:
+                    calc_pb=px/bvps
+                    if math.isfinite(calc_pb) and 0 < calc_pb <= 100: out['pb']=calc_pb
+            if out['yield'] is None:
+                div=to_float(prof.get('dividend_rate'))
+                if px is not None and div is not None and div>=0:
+                    calc_y=div/px*100
+                    if math.isfinite(calc_y) and 0 <= calc_y <= 30: out['yield']=calc_y
+            if out['roe'] is None:
+                rv=to_float(prof.get('roe'))
+                if rv is not None and -100 <= rv <= 100: out['roe']=rv
+        except Exception as e:
+            print(f'V2.10.65 Yahoo Profile基本面補洞失敗 {code}: {type(e).__name__}',flush=True)
+
     if out['pe'] is None:
         eps_candidates=[qs.get('trailing_eps'),ts.get('trailing_eps')]
         eps=next((to_float(v) for v in eps_candidates if to_float(v) is not None and to_float(v)>0),None)
@@ -4330,7 +4376,7 @@ def official_fundamental(symbol, official=None, current_price=None, market=None)
     if pe is not None and pe>0 and g is not None and 0<g<=200:
         peg=pe/g
         if math.isfinite(peg) and 0<peg<100: out['peg']=peg
-    print(f'V2.10.64 基本面 {code}: PE={fmt(out["pe"])} PB={fmt(out["pb"])} Yield={fmt(out["yield"])} EPSGrowth={fmt(out["eps_growth"])} ROE={fmt(out["roe"])} PEG={fmt(out["peg"])}',flush=True)
+    print(f'V2.10.65 基本面 {code}: PE={fmt(out["pe"])} PB={fmt(out["pb"])} Yield={fmt(out["yield"])} EPSGrowth={fmt(out["eps_growth"])} ROE={fmt(out["roe"])} PEG={fmt(out["peg"])}',flush=True)
     return out
 
 
@@ -6526,14 +6572,31 @@ def _fund_cache_suspicious(key, value):
 
 
 def _v21045_peer_pe_fallback(peer_item, pe_data):
-    """V2.10.49：同次產業 PE 僅使用交易所官方資料。
+    """V2.10.65：同次產業 PE 官方資料優先，缺當日資料時使用最近有效歷史 PE。
 
-    官方 PE 為 N/A 時代表該公司當日不具可計算的正 EPS PE；不再用 Yahoo
-    或價格/TTM EPS 猜值，避免同業平均被不同資料口徑污染。
+    目的：TWSE/TPEx 當日 BWIBBU_ALL 暫時失敗時，不讓整個同業 Top10
+    平均/中位數突然全部變成 N/A。歷史 fallback 只取最近一筆有效官方 PE，
+    不使用 Yahoo PE 或價格/TTM EPS 推算，維持同業比較的官方口徑。
     """
     code=clean_code(str(peer_item.get('code','')))
     v=to_float((pe_data.get(code,{}) or {}).get('pe')) if isinstance(pe_data,dict) else None
-    return v if v is not None and 0 < v <= PE_MAX_VALID else None
+    if v is not None and 0 < v <= PE_MAX_VALID:
+        return v
+    try:
+        h=load_json(PE_HISTORY_FILE)
+        item=h.get(code,{}) if isinstance(h,dict) else {}
+        vals=[]
+        if isinstance(item,dict):
+            for ds,rv in item.items():
+                pv=to_float(rv)
+                if pv is not None and 0 < pv <= PE_MAX_VALID:
+                    vals.append((str(ds),pv))
+        if vals:
+            vals.sort(key=lambda x:x[0],reverse=True)
+            return vals[0][1]
+    except Exception:
+        pass
+    return None
 
 
 def yahoo_light_fund(symbol, official=None, current_price=None, market=None):
@@ -7470,7 +7533,7 @@ def analysis(
     # --------------------------------------------------------
 
     return (
-        f'📊 股票加碼分析 V2.10.64\n\n'
+        f'📊 股票加碼分析 V2.10.65\n\n'
         f'標的：{name}（{code}）\n'
         f'市場：{market}\n'
         f'產業：{industry}\n'
