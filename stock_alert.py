@@ -1,6 +1,6 @@
 # stock_alert.py V2.10.48
-# V2.10.48：加入 MOPS 每季 EPS 官方彙總資料，優先計算台股 EPS YoY，降低 Yahoo EPS N/A
-# V2.10.48：EPS Growth 增加來源診斷、季度同季 YoY 與 MOPS fallback；保留 Yahoo 多層備援
+# V2.10.48：加入 MOPS 官方財報 EPS Growth fallback，補強 Yahoo 多層來源仍為 N/A 的股票
+# V2.10.47：統一 EPS Growth 與 PEG 資料口徑；修正 EPS 成長 N/A 但 PEG 有值的矛盾
 # V2.10.41：修正 line_fund_cache 覆蓋策略、ETF NAV/溢價、Beta、TPEX 資券與 ETF chart fallback
 # 效能修正版：
 # 1. 全市場資料批次化
@@ -80,7 +80,6 @@ LINE_CHIP_SUMMARY_CACHE_FILE = 'line_chip_summary_cache.json'
 LINE_PE_CACHE_FILE = 'line_pe_cache.json'
 # V2.10.23：LINE 查詢用的輕量快取；Actions 每日批次建立全市場技術資料，Render 優先讀 GitHub 快取。
 LINE_FUND_CACHE_FILE = 'line_fund_cache.json'
-MOPS_EPS_CACHE_FILE = 'mops_eps_cache.json'
 LINE_TECH_CACHE_FILE = 'line_technical_cache.json'
 
 UNIVERSE_CACHE_FILE = 'market_universe_cache.json'
@@ -2694,7 +2693,7 @@ def check_interval_low(
 
 
 def _drop_alert_analysis_message(name, symbol, u, day, week, cur, pc, wh, daily_triggered, weekly_triggered):
-    """V2.10.48：跌幅警報觸發後，直接沿用同一套股票加碼分析模型。
+    """V2.10.47：跌幅警報觸發後，直接沿用同一套股票加碼分析模型。
 
     這裡使用 LINE 輕量路徑與 Actions 已建立的快取，避免警報時重新掃描全市場。
     若分析失敗，仍會送出原本的跌幅通知，不讓分析故障影響警報。
@@ -3298,137 +3297,6 @@ def one_year_pe_proxy(code, current_pe, symbol):
         print(f'一年平均PE proxy失敗 {code}：{type(e).__name__}',flush=True)
         return None,0,''
 
-
-def _mops_quarter_from_date(d=None):
-    """V2.10.48：依台灣日期取得目前應查的財報季度（民國年、季別）。"""
-    d = d or datetime.now(TW_TZ).date()
-    if d.month <= 3:
-        q = 1
-    elif d.month <= 6:
-        q = 2
-    elif d.month <= 9:
-        q = 3
-    else:
-        q = 4
-    return d.year - 1911, q
-
-
-def _mops_parse_eps_table(html_text):
-    """V2.10.48：解析 MOPS t163sb04 彙總損益表中的公司代號與基本 EPS。"""
-    result = {}
-    if not html_text or '<table' not in html_text.lower():
-        return result
-    try:
-        tables = pd.read_html(html_text)
-    except Exception as e:
-        print(f'V2.10.48 MOPS EPS HTML解析失敗: {type(e).__name__}: {e}', flush=True)
-        return result
-
-    for df in tables:
-        if not isinstance(df, pd.DataFrame) or df.empty:
-            continue
-        try:
-            if isinstance(df.columns, pd.MultiIndex):
-                cols=[]
-                for c in df.columns:
-                    parts=[str(x) for x in c if str(x).lower() != 'nan']
-                    cols.append(' '.join(parts))
-                df=df.copy(); df.columns=cols
-            else:
-                df=df.copy(); df.columns=[str(c) for c in df.columns]
-            code_col=next((c for c in df.columns if '公司代號' in c or '股票代號' in c or '證券代號' in c), None)
-            eps_col=next((c for c in df.columns if '基本每股盈餘' in c or ('每股盈餘' in c and '基本' in c)), None)
-            if code_col is None or eps_col is None:
-                continue
-            for _, row in df.iterrows():
-                raw_code=row.get(code_col)
-                code=clean_code(str(raw_code))
-                if not code or not re.fullmatch(r'\d{4,6}', code):
-                    continue
-                eps=to_float(row.get(eps_col))
-                if eps is None:
-                    continue
-                result[code]=eps
-            if result:
-                break
-        except Exception:
-            continue
-    return result
-
-
-def mops_eps_growth(market, symbol):
-    """V2.10.48：使用 MOPS 每季綜合損益彙總表直接計算 EPS 同季年增。
-
-    這是台股上市/上櫃公司的優先 EPS Growth 來源：
-    目前季度 EPS vs 去年同季度 EPS。
-    不使用淨利 YoY 冒充 EPS Growth；前期 EPS <= 0 時不硬算百分比。
-    每次執行只抓同一市場的兩個季度資料，並以 12 小時快取降低 MOPS 請求量。
-    """
-    if market not in ('TWSE', 'TPEX'):
-        return None, '不適用'
-    code=clean_code(str(symbol).split('.')[0])
-    if not code:
-        return None, '無股票代號'
-    cache=load_json(MOPS_EPS_CACHE_FILE)
-    if not isinstance(cache,dict):
-        cache={}
-    today_key=datetime.now(TW_TZ).strftime('%Y-%m-%d')
-    run_key=('mops_eps_growth_v21048',market,code)
-    if run_key in RUN_CACHE:
-        return RUN_CACHE[run_key]
-
-    # 批次抓取同市場：目前季度 + 去年同季度。
-    batch_key=('mops_eps_batch_v21048',market,today_key)
-    if batch_key not in RUN_CACHE:
-        typek='sii' if market=='TWSE' else 'otc'
-        roc_year,q=_mops_quarter_from_date()
-        endpoint='https://mops.twse.com.tw/mops/web/ajax_t163sb04'
-        def fetch(year,season):
-            key=f'{typek}:{year}:{season:02d}'
-            c=cache.get(key,{})
-            ts=to_float(c.get('_cached_at')) if isinstance(c,dict) else None
-            if isinstance(c,dict) and ts and (time.time()-ts)<12*3600 and isinstance(c.get('data'),dict):
-                return c['data']
-            data={}
-            try:
-                payload={
-                    'encodeURIComponent':1,'step':1,'firstin':1,'off':1,
-                    'isQuery':'Y','TYPEK':typek,'year':str(year),'season':f'{season:02d}'
-                }
-                r=requests.post(endpoint,data=payload,timeout=12,headers={
-                    'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120 Safari/537.36',
-                    'Referer':'https://mops.twse.com.tw/mops/web/t163sb04'
-                })
-                r.raise_for_status()
-                data=_mops_parse_eps_table(r.text)
-                cache[key]={'_cached_at':time.time(),'data':data}
-                save_json(MOPS_EPS_CACHE_FILE,cache)
-                print(f'V2.10.48 MOPS EPS：{market} {year}Q{season} 取得 {len(data)} 檔',flush=True)
-            except Exception as e:
-                print(f'V2.10.48 MOPS EPS：{market} {year}Q{season} 失敗 {type(e).__name__}: {e}',flush=True)
-            return data
-        current=fetch(roc_year,q)
-        prior=fetch(roc_year-1,q)
-        RUN_CACHE[batch_key]=(current,prior,roc_year,q)
-    current,prior,roc_year,q=RUN_CACHE[batch_key]
-    a=to_float((current or {}).get(code))
-    b=to_float((prior or {}).get(code))
-    if a is None:
-        result=(None,f'MOPS {roc_year}Q{q} 無 EPS')
-    elif b is None:
-        result=(None,f'MOPS {roc_year-1}Q{q} 無去年同期 EPS')
-    elif b<=0:
-        result=(None,f'MOPS 去年同期 EPS={b:.2f}，不適合計算百分比')
-    else:
-        g=(a/b-1)*100
-        if math.isfinite(g) and -500<=g<=500:
-            result=(float(g),f'MOPS {roc_year}Q{q} EPS YoY ({a:.2f}/{b:.2f})')
-        else:
-            result=(None,f'MOPS EPS YoY 異常 {g:.2f}%')
-    RUN_CACHE[run_key]=result
-    return result
-
-
 def yahoo_quote_summary_fund(symbol):
     """V2.10.34：單股 Yahoo quoteSummary 補洞。
 
@@ -3472,7 +3340,7 @@ def yahoo_quote_summary_fund(symbol):
         out['market_cap']=raw('price','marketCap')
         out['price']=raw('price','regularMarketPrice','postMarketPrice')
 
-        # V2.10.48：Yahoo earningsHistory / incomeStatementHistory fallback。
+        # V2.10.47：Yahoo earningsHistory / incomeStatementHistory fallback。
         # 不再只依賴 financialData.earningsGrowth；部分台股沒有該欄位，
         # 但仍可從實際季度/年度 EPS 計算 YoY。
         hist=[]
@@ -3613,8 +3481,158 @@ def yahoo_timeseries_fund(symbol):
     RUN_CACHE[key]=out
     return out
 
+
+def mops_eps_growth_fallback(code, market=None):
+    """V2.10.48：MOPS 官方財報 EPS Growth 最終強化 fallback。
+
+    目的：修正「PE / PB / ROE 有資料，但 EPS Growth 仍 N/A」的情況。
+    台股上市/上櫃公司可直接從 MOPS t164sb01 財報抓「基本每股盈餘合計」，
+    該報表通常同時列出本期與上年同期，因此不需要另外猜測 EPS 或用營收成長
+    代替 EPS 成長。
+
+    優先找最新可取得季度：Q2 -> Q1 -> Q4 -> Q3（依目前月份調整），
+    每個公司最多使用第一個成功的財報，避免大量請求。
+    回傳：EPS 成長率百分比；失敗回傳 None。
+    """
+    code = clean_code(code)
+    if not code or not code.isdigit():
+        return None
+
+    key = ('mops_eps_growth_v21048', code, market or '')
+    if key in RUN_CACHE:
+        return RUN_CACHE[key]
+
+    def parse_eps(html_text):
+        if not html_text:
+            return None
+        try:
+            import io
+            tables = pd.read_html(io.StringIO(html_text))
+        except Exception:
+            return None
+
+        candidates = []
+        for df in tables:
+            if not isinstance(df, pd.DataFrame) or df.empty:
+                continue
+            # MOPS 表格欄位可能是多層 index；轉成純文字搜尋。
+            for ridx in range(len(df)):
+                vals = [str(x).strip() for x in df.iloc[ridx].tolist()]
+                label = ' '.join(vals[:3])
+                if ('基本每股盈餘合計' in label or
+                    '基本每股盈餘' in label or
+                    '每股盈餘合計' in label):
+                    nums = []
+                    for x in vals:
+                        sx = str(x).strip().replace(',', '')
+                        if sx in ('', '-', '--', '－', '—', 'N/A', 'nan', 'None'):
+                            continue
+                        # 避免把年度/日期等數字誤當 EPS；EPS 一般是小數。
+                        m = re.search(r'(?<![0-9])[-+]?\d+(?:\.\d+)?(?![0-9])', sx)
+                        if not m:
+                            continue
+                        try:
+                            v = float(m.group(0))
+                        except Exception:
+                            continue
+                        if math.isfinite(v) and abs(v) <= 1000:
+                            nums.append(v)
+                    # 去除重複，保留報表原始順序。
+                    clean=[]
+                    for v in nums:
+                        if not clean or abs(v-clean[-1]) > 1e-12:
+                            clean.append(v)
+                    if len(clean) >= 2:
+                        return clean[0], clean[1]
+                    if len(clean) == 1:
+                        candidates.append(clean[0])
+
+        # 某些財報格式會把「基本每股盈餘」拆成不同列，
+        # 若只有一個數值，不足以計算 YoY，因此不猜測。
+        return (candidates[0], None) if candidates else None
+
+    def growth(a, b):
+        if a is None or b is None or b == 0:
+            return None
+        try:
+            # 與既有 EPS Growth fallback 保持一致：前期為負數時以絕對值計算改善幅度。
+            g = (a / abs(b) - 1) * 100 if b < 0 else (a / b - 1) * 100
+            if math.isfinite(g) and -500 <= g <= 500:
+                return float(g)
+        except Exception:
+            pass
+        return None
+
+    now = datetime.now(TW_TZ)
+    y = now.year
+    m = now.month
+    # 依財報公告節奏排列候選季度；即使最新季度尚未公告，也會自動往前找。
+    if m <= 2:
+        candidates = [(y-1,3),(y-1,2),(y-1,1),(y-2,4)]
+    elif m <= 5:
+        candidates = [(y-1,4),(y-1,3),(y-1,2),(y-1,1)]
+    elif m <= 8:
+        candidates = [(y,2),(y,1),(y-1,4),(y-1,3)]
+    elif m <= 11:
+        candidates = [(y,3),(y,2),(y,1),(y-1,4)]
+    else:
+        candidates = [(y,3),(y,2),(y,1),(y-1,4)]
+
+    # REPORT_ID=C：合併財報。若失敗再嘗試 B（個體），避免少數公司合併報表不可用。
+    report_ids = ['C','B']
+    headers = {
+        'User-Agent': 'Mozilla/5.0 stock-alert/2.10.48',
+        'Referer': 'https://mops.twse.com.tw/'
+    }
+
+    for year, season in candidates:
+        for rid in report_ids:
+            url = (
+                'https://mops.twse.com.tw/server-java/t164sb01'
+                f'?step=1&CO_ID={code}&SYEAR={year}&SSEASON={season}&REPORT_ID={rid}'
+            )
+            try:
+                r = requests.get(url, timeout=8, headers=headers)
+                r.raise_for_status()
+                raw = r.content
+                # MOPS 歷史頁面常見 Big5/CP950；依內容自動嘗試。
+                text = None
+                for enc in ('utf-8-sig','cp950','big5'):
+                    try:
+                        text = raw.decode(enc)
+                        if '基本每股盈餘' in text or '每股盈餘' in text:
+                            break
+                    except Exception:
+                        pass
+                if not text:
+                    text = raw.decode('utf-8', errors='replace')
+                pair = parse_eps(text)
+                if not pair:
+                    continue
+                cur, prev = pair
+                g = growth(cur, prev)
+                if g is not None:
+                    print(
+                        f'V2.10.48 MOPS EPS Growth：{code} '
+                        f'{year}Q{season} 本期EPS={cur:.4f} / 上年同期={prev:.4f} '
+                        f'=> {g:.2f}%', flush=True
+                    )
+                    RUN_CACHE[key] = g
+                    return g
+            except Exception as e:
+                # MOPS 只作 fallback；單一財報失敗不可阻塞整份分析。
+                print(
+                    f'V2.10.48 MOPS EPS fallback失敗 {code} '
+                    f'{year}Q{season}/{rid}: {type(e).__name__}', flush=True
+                )
+                continue
+
+    RUN_CACHE[key] = None
+    return None
+
+
 def _eps_growth_from_yfinance_statements(ticker):
-    """V2.10.48：從 yfinance 財報直接建立 EPS 成長率 fallback。
+    """V2.10.47：從 yfinance 財報直接建立 EPS 成長率 fallback。
 
     優先順序：
     1. 年度 diluted/basic EPS YoY
@@ -3683,7 +3701,7 @@ def _eps_growth_from_yfinance_statements(ticker):
                     if math.isfinite(g) and -500<=g<=500:
                         return float(g)
     except Exception as e:
-        print(f'V2.10.48 yfinance年度EPS fallback失敗: {type(e).__name__}: {e}',flush=True)
+        print(f'V2.10.47 yfinance年度EPS fallback失敗: {type(e).__name__}: {e}',flush=True)
 
     # 2) 季度同季 YoY：最新季度 vs 約一年前季度。
     try:
@@ -3699,7 +3717,7 @@ def _eps_growth_from_yfinance_statements(ticker):
                     if math.isfinite(g) and -500<=g<=500:
                         return float(g)
     except Exception as e:
-        print(f'V2.10.48 yfinance季度EPS fallback失敗: {type(e).__name__}: {e}',flush=True)
+        print(f'V2.10.47 yfinance季度EPS fallback失敗: {type(e).__name__}: {e}',flush=True)
 
     # 3) 最後才使用淨利 YoY；這是「EPS 無法取得」時的近似值，並在 log 明確標記。
     try:
@@ -3707,7 +3725,7 @@ def _eps_growth_from_yfinance_statements(ticker):
         ni=clean_series(inc,['NetIncome','Net Income','NetIncomeCommonStockholders'])
         g=growth_from_series(ni)
         if g is not None:
-            print('V2.10.48：無 EPS 欄位，使用年度淨利 YoY 作為 EPS Growth 近似',flush=True)
+            print('V2.10.47：無 EPS 欄位，使用年度淨利 YoY 作為 EPS Growth 近似',flush=True)
             return g
     except Exception:
         pass
@@ -3735,13 +3753,20 @@ def yahoo_fund(symbol):
         if info.get('earningsGrowth') is not None:
             o['eps_growth'] = to_float(info.get('earningsGrowth')) * 100
 
-        # V2.10.48：Ticker.info 沒有 earningsGrowth 時，直接從財報 EPS 補值。
+        # V2.10.47：Ticker.info 沒有 earningsGrowth 時，直接從財報 EPS 補值。
         # 這是修正 1802/2401/2354 等「PE 有值但 EPS 成長 N/A」的主要 fallback。
         if o['eps_growth'] is None:
             try:
                 o['eps_growth'] = _eps_growth_from_yfinance_statements(ticker)
             except Exception as e_eps:
-                print(f'V2.10.48 EPS Growth 財報 fallback失敗 {symbol}: {type(e_eps).__name__}: {e_eps}',flush=True)
+                print(f'V2.10.47 EPS Growth 財報 fallback失敗 {symbol}: {type(e_eps).__name__}: {e_eps}',flush=True)
+
+        # V2.10.48：Yahoo 財報仍無 EPS Growth 時，改用 MOPS 官方財報。
+        if o['eps_growth'] is None:
+            try:
+                o['eps_growth'] = mops_eps_growth_fallback(clean_code(symbol), 'TWSE' if str(symbol).endswith('.TW') else 'TPEX')
+            except Exception as e_mops:
+                print(f'V2.10.48 MOPS EPS Growth fallback失敗 {symbol}: {type(e_mops).__name__}: {e_mops}',flush=True)
 
         if info.get('returnOnEquity') is not None:
             o['roe'] = to_float(info.get('returnOnEquity')) * 100
@@ -5794,7 +5819,7 @@ def _fund_cache_suspicious(key, value):
 
 
 def _v21045_peer_pe_fallback(peer_item, pe_data):
-    """V2.10.48：同次產業 PE 統一 fallback。
+    """V2.10.47：同次產業 PE 統一 fallback。
 
     同業不能只讀 pe_data；官方 PE 缺欄時，依序使用 Yahoo quoteSummary、
     fundamentals-timeseries、yfinance，最後用最新價格 / TTM EPS 計算。
@@ -5866,20 +5891,6 @@ def yahoo_light_fund(symbol, official=None, current_price=None, market=None):
     if not isinstance(cached,dict): cached={}
 
     cached_values={k:to_float(cached.get(k)) for k in keys}
-
-    # V2.10.48：台股 EPS Growth 優先使用 MOPS 官方每季 EPS，同季 YoY。
-    # 這一層不依賴 Yahoo 的 earningsGrowth / financial statements。
-    mops_growth=None
-    mops_source='未取得'
-    if market in ('TWSE','TPEX'):
-        try:
-            mops_growth,mops_source=mops_eps_growth(market,symbol)
-            if mops_growth is not None:
-                print(f'V2.10.48 EPS Growth：{code} 使用 {mops_source} = {mops_growth:.2f}%',flush=True)
-            else:
-                print(f'V2.10.48 EPS Growth：{code} MOPS 無法計算：{mops_source}',flush=True)
-        except Exception as e:
-            print(f'V2.10.48 EPS Growth：{code} MOPS fallback失敗 {type(e).__name__}: {e}',flush=True)
     cached_at=to_float(cached.get('_cached_at')) or 0
     cache_age=(time.time()-cached_at)/3600 if cached_at else 999999
     # 24 小時後自動刷新；這讓 Actions 每日更新可以覆蓋舊值。
@@ -5904,9 +5915,9 @@ def yahoo_light_fund(symbol, official=None, current_price=None, market=None):
                 v=to_float(rr.get(k))
                 if o.get(k) is None and v is not None and _fund_cache_valid_value(k,v):
                     o[k]=v
-            print(f'V2.10.48 LINE基本面：交易所官方 {code} {rr}',flush=True)
+            print(f'V2.10.47 LINE基本面：交易所官方 {code} {rr}',flush=True)
         except Exception as e:
-            print(f'V2.10.48 LINE基本面：交易所官方 fallback失敗 {code}: {type(e).__name__}',flush=True)
+            print(f'V2.10.47 LINE基本面：交易所官方 fallback失敗 {code}: {type(e).__name__}',flush=True)
 
     # 即使 cache 有值，只要過期/可疑就刷新 Yahoo；新值一定覆蓋舊 cache。
     if need_yahoo:
@@ -5928,9 +5939,13 @@ def yahoo_light_fund(symbol, official=None, current_price=None, market=None):
         if o.get(k) is None:
             o[k]=first_valid(k,qs.get(k),ts.get(k),yfinfo.get(k))
 
-    # V2.10.48：官方 MOPS EPS Growth > Yahoo timeseries > quoteSummary > yfinance。
-    o['eps_growth']=first_valid('eps_growth',mops_growth,ts.get('eps_growth'),qs.get('eps_growth'),yfinfo.get('eps_growth'))
-    # V2.10.48：quoteSummary earningsHistory / incomeStatementHistory 計算結果。
+    o['eps_growth']=first_valid('eps_growth',ts.get('eps_growth'),qs.get('eps_growth'),yfinfo.get('eps_growth'))
+    # V2.10.47：quoteSummary earningsHistory / incomeStatementHistory 計算結果。
+    if o['eps_growth'] is None:
+        try:
+            o['eps_growth'] = mops_eps_growth_fallback(code, market)
+        except Exception as e_mops:
+            print(f'V2.10.48 LINE MOPS EPS Growth fallback失敗 {code}: {type(e_mops).__name__}',flush=True)
     if o['eps_growth'] is None:
         qg=to_float(qs.get('eps_growth'))
         if qg is not None and -500 <= qg <= 500:
@@ -5971,19 +5986,19 @@ def yahoo_light_fund(symbol, official=None, current_price=None, market=None):
             y=yahoo_tw_dividend_fallback(symbol,px)
             if y is not None and 0<=y<=30:
                 o['yield']=y
-                print(f'V2.10.48 LINE基本面：Yahoo股利頁補殖利率 {code} = {y:.2f}%',flush=True)
+                print(f'V2.10.47 LINE基本面：Yahoo股利頁補殖利率 {code} = {y:.2f}%',flush=True)
         except Exception as e:
-            print(f'V2.10.48 LINE基本面：Yahoo股利頁失敗 {code}: {type(e).__name__}',flush=True)
+            print(f'V2.10.47 LINE基本面：Yahoo股利頁失敗 {code}: {type(e).__name__}',flush=True)
 
     if o['yield'] is not None and (not math.isfinite(o['yield']) or o['yield']<0 or o['yield']>30):
         o['yield']=None
 
-    # V2.10.48：EPS Growth 與 PEG 必須互相一致。
+    # V2.10.47：EPS Growth 與 PEG 必須互相一致。
     # 超過 200% 的低基期成長仍保留為顯示值，但不拿來計算 PEG。
     raw_growth = to_float(o.get('eps_growth'))
     growth_for_peg = raw_growth if raw_growth is not None and abs(raw_growth) <= 200 else None
     if raw_growth is not None and abs(raw_growth) > 200:
-        print(f'V2.10.48 LINE基本面：低基期/異常EPS成長不納入PEG {code}={raw_growth:.2f}%',flush=True)
+        print(f'V2.10.47 LINE基本面：低基期/異常EPS成長不納入PEG {code}={raw_growth:.2f}%',flush=True)
 
     # 只要有合理 EPS Growth，就強制用本程式統一口徑重算 PEG。
     if o['pe'] and growth_for_peg and o['pe']>0 and growth_for_peg>0:
@@ -5999,7 +6014,7 @@ def yahoo_light_fund(symbol, official=None, current_price=None, market=None):
             if 0 < implied_growth <= 200 and math.isfinite(implied_growth):
                 o['eps_growth'] = implied_growth
                 o['peg'] = implied_peg
-                print(f'V2.10.48 LINE基本面：由可靠PEG反推EPS成長 {code} = {implied_growth:.2f}% (PEG={implied_peg:.2f})',flush=True)
+                print(f'V2.10.47 LINE基本面：由可靠PEG反推EPS成長 {code} = {implied_growth:.2f}% (PEG={implied_peg:.2f})',flush=True)
 
     # 若 PE/Growth 其中一項缺失，保留可信 cache，而不是拿舊 cache 覆蓋新值。
     # 只有「新來源仍沒有值」時才使用 cache。
@@ -6010,9 +6025,9 @@ def yahoo_light_fund(symbol, official=None, current_price=None, market=None):
             if _fund_cache_valid_value(k,cv) and not (k=='eps_growth' and _fund_cache_suspicious(k,cv)):
                 # 過期 cache 可以用作最後 fallback，但標記 log。
                 o[k]=cv
-                print(f'V2.10.48 LINE基本面：{code} {k} 使用 cache fallback={cv} age={cache_age:.1f}h',flush=True)
+                print(f'V2.10.47 LINE基本面：{code} {k} 使用 cache fallback={cv} age={cache_age:.1f}h',flush=True)
 
-    # V2.10.48：如果 PEG 最後是從 cache fallback 而直接 EPS Growth 仍缺失，
+    # V2.10.47：如果 PEG 最後是從 cache fallback 而直接 EPS Growth 仍缺失，
     # 以合理 cache PEG 反推一致的隱含成長率，避免畫面再次出現 N/A + PEG。
     if o['eps_growth'] is None and o['pe'] and o['pe']>0:
         cached_peg = to_float(o.get('peg'))
@@ -6020,7 +6035,7 @@ def yahoo_light_fund(symbol, official=None, current_price=None, market=None):
             implied_growth = o['pe'] / cached_peg
             if 0 < implied_growth <= 200 and math.isfinite(implied_growth):
                 o['eps_growth'] = implied_growth
-                print(f'V2.10.48 LINE基本面：cache PEG反推EPS成長 {code} = {implied_growth:.2f}% (PEG={cached_peg:.2f})',flush=True)
+                print(f'V2.10.47 LINE基本面：cache PEG反推EPS成長 {code} = {implied_growth:.2f}% (PEG={cached_peg:.2f})',flush=True)
 
     # ROE <-> PB/PE：只在完全沒有新/可信來源時推導。
     if o['roe'] is None and o['pe'] and o['pb'] and o['pe']>0 and o['pb']>0:
@@ -6044,15 +6059,11 @@ def yahoo_light_fund(symbol, official=None, current_price=None, market=None):
             else:
                 merged[k]=None
         merged['_cached_at']=time.time()
-        if mops_growth is not None:
-            merged['_eps_growth_source']='MOPS quarterly EPS YoY'
-        elif mops_source and mops_source != '未取得':
-            merged['_eps_growth_source']=str(mops_source)
         cache[code]=merged
         save_json(LINE_FUND_CACHE_FILE,cache)
-        print(f'V2.10.48 LINE基本面快取更新 {code}: {merged}',flush=True)
+        print(f'V2.10.47 LINE基本面快取更新 {code}: {merged}',flush=True)
     except Exception as e:
-        print(f'V2.10.48 LINE基本面快取保存失敗 {code}: {e}',flush=True)
+        print(f'V2.10.47 LINE基本面快取保存失敗 {code}: {e}',flush=True)
     return o
 
 def _parse_number_near(text, label, max_chars=180):
@@ -6122,7 +6133,7 @@ def yahoo_tw_dividend_fallback(symbol, price=None):
         px=to_float(price)
         if px is None or px<=0: return None
 
-        # V2.10.48：優先使用 Yahoo Chart events=div。
+        # V2.10.47：優先使用 Yahoo Chart events=div。
         # 股利頁是 JS 動態頁，Render requests 有時拿不到表格內容；Chart events
         # 則直接提供實際現金股利事件。最近 365 天加總可處理半年配/季配股票。
         try:
@@ -6696,7 +6707,7 @@ def analysis(
 
     vals = []
     for peer_item in peers:
-        # V2.10.48：LINE 輕量模式與一般模式統一同業 PE fallback。
+        # V2.10.47：LINE 輕量模式與一般模式統一同業 PE fallback。
         peer_pe = _v21045_peer_pe_fallback(peer_item, pe_data)
         if peer_pe is not None and 0 < peer_pe <= PE_MAX_VALID:
             vals.append(peer_pe)
