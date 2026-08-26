@@ -1,4 +1,4 @@
-# stock_alert.py V2.10.60
+# stock_alert.py V2.10.62
 # V2.10.56：修正 V2.10.53 舊 PE 快取 migration；加入 PE 每次執行請求/時間上限、即時進度與安全降級；LINE 不再使用舊版 yahoo_light_fund / MOPS fallback / 舊 cache 推導
 # V2.10.48：加入 MOPS 官方財報 EPS Growth fallback，補強 Yahoo 多層來源仍為 N/A 的股票
 # V2.10.47：統一 EPS Growth 與 PEG 資料口徑；修正 EPS 成長 N/A 但 PEG 有值的矛盾
@@ -82,6 +82,8 @@ LINE_PE_CACHE_FILE = 'line_pe_cache.json'
 # V2.10.23：LINE 查詢用的輕量快取；Actions 每日批次建立全市場技術資料，Render 優先讀 GitHub 快取。
 LINE_FUND_CACHE_FILE = 'line_fund_cache.json'
 LINE_TECH_CACHE_FILE = 'line_technical_cache.json'
+# V2.10.62：季度 EPS 持久快取；用於補強 Yahoo fundamentals-timeseries 偶發缺少季度 EPS。
+EPS_QUARTERLY_CACHE_FILE = 'eps_quarterly_cache.json'
 
 UNIVERSE_CACHE_FILE = 'market_universe_cache.json'
 TWSE_PROFILE_CACHE_FILE = 'twse_profile_cache.json'
@@ -128,7 +130,7 @@ PE_HISTORY_PROGRESS_EVERY = 1
 # PE 歷史查詢以日期快取，避免同一次執行 2330/3711 重複打同一天 API
 PE_DATE_CACHE = {}
 
-# V2.10.60：季度 EPS 年度預估模型。
+# V2.10.62：季度 EPS 年度預估模型；修正 Yahoo quarterlyDilutedEPS 缺欄導致全數 N/A。
 # EPS Growth 僅由「各季度 EPS」建立，不再使用 Q2 YoY / TTM YoY / Yahoo earningsGrowth。
 # 已公布季度用實際 EPS；未公布季度用歷史同季度趨勢回歸 + 季節性中位數預估。
 # 重大且已確認事件可透過 EPS_EVENT_ADJUSTMENTS 調整指定季度，預設空表，不增加網路請求。
@@ -139,6 +141,13 @@ EPS_MODEL_MIN_HISTORY_QUARTERS = 8
 EPS_MODEL_MAX_ABS_GROWTH = 300
 EPS_MODEL_BLEND_REGRESSION = 0.70
 EPS_MODEL_BLEND_MEDIAN = 0.30
+# V2.10.62：Yahoo 台股有時沒有 quarterlyDilutedEPS，但會提供 quarterlyBasicEPS /
+# quarterlyNormalizedDilutedEPS / quarterlyNormalizedBasicEPS；依優先順序補洞。
+EPS_QUARTERLY_TYPES = [
+    'quarterlyDilutedEPS','quarterlyBasicEPS',
+    'quarterlyNormalizedDilutedEPS','quarterlyNormalizedBasicEPS',
+    'quarterlyReportedNormalizedDilutedEPS','quarterlyReportedNormalizedBasicEPS'
+]
 
 YF_TIMEOUT = 10
 MAX_HISTORY_DAYS_PER_RUN = 75
@@ -3362,12 +3371,83 @@ def yahoo_quote_summary_fund(symbol):
     return out
 
 
+def _yfinance_earnings_dates_eps(symbol):
+    """V2.10.62：用 Yahoo earnings dates 的「Reported EPS」補季度 EPS。
+
+    這是季度 EPS 的備援來源，不使用 earningsGrowth / Q2 YoY。
+    公告月份映射台股常見財報公告節奏：
+      Jan-Mar -> 前一年 Q4；Apr-May -> 當年 Q1；Jun-Aug -> 當年 Q2；Sep-Nov -> 當年 Q3。
+    只接受已公布的 Reported EPS，並持久快取 7 天；不增加每次執行的全市場請求。
+    """
+    key=('yf_earnings_dates_eps_v21062', symbol)
+    if key in RUN_CACHE:
+        return RUN_CACHE[key]
+    cache=load_json(EPS_QUARTERLY_CACHE_FILE)
+    item=cache.get(symbol,{}) if isinstance(cache,dict) else {}
+    cached_at=to_float(item.get('_cached_at')) if isinstance(item,dict) else None
+    if cached_at and time.time()-cached_at < 7*86400:
+        data=item.get('data') if isinstance(item,dict) else None
+        if isinstance(data,list):
+            RUN_CACHE[key]=data
+            return data
+    out=[]
+    try:
+        t=yf.Ticker(symbol)
+        df=t.get_earnings_dates(limit=32)
+        if isinstance(df,pd.DataFrame) and not df.empty:
+            # yfinance 欄位名稱可能是 Reported EPS / EPS Actual / reportedEPS。
+            eps_col=next((c for c in df.columns if str(c).strip().lower() in ('reported eps','eps actual','reportedeps')),None)
+            if eps_col is None:
+                eps_col=next((c for c in df.columns if 'reported' in str(c).lower() and 'eps' in str(c).lower()),None)
+            if eps_col is not None:
+                for idx,row in df.iterrows():
+                    ev=to_float(row.get(eps_col))
+                    if ev is None or not math.isfinite(ev):
+                        continue
+                    try:
+                        dt=pd.Timestamp(idx)
+                        if dt.tzinfo is not None: dt=dt.tz_localize(None)
+                        y=int(dt.year); m=int(dt.month)
+                    except Exception:
+                        continue
+                    if 1<=m<=3:
+                        yq,q=y-1,4
+                    elif 4<=m<=5:
+                        yq,q=y,1
+                    elif 6<=m<=8:
+                        yq,q=y,2
+                    elif 9<=m<=11:
+                        yq,q=y,3
+                    else:
+                        # 12 月極少數特殊公告，保守不猜季度。
+                        continue
+                    out.append({'date':f'{yq:04d}-{q*3:02d}-{[31,30,30,31][q-1]:02d}','eps':float(ev),'source':'Yahoo Reported EPS'})
+        # 同一年度/季度若有重複，只留最後一筆。
+        dedup={}
+        for x in out:
+            try:
+                keyq=(int(x['date'][:4]),int(x['date'][5:7]))
+            except Exception:
+                continue
+            dedup[keyq]=x
+        out=list(dedup.values())
+        out.sort(key=lambda x:x['date'])
+        cache[symbol]={'_cached_at':time.time(),'data':out,'source':'Yahoo earnings dates Reported EPS'}
+        save_json(EPS_QUARTERLY_CACHE_FILE,cache)
+        print(f'V2.10.62 Yahoo Reported EPS 備援：{symbol} {len(out)} 季',flush=True)
+    except Exception as e:
+        print(f'V2.10.62 Yahoo Reported EPS 備援失敗 {symbol}: {type(e).__name__}: {e}',flush=True)
+        out=[]
+    RUN_CACHE[key]=out
+    return out
+
+
 def yahoo_timeseries_fund(symbol):
-    """V2.10.60：免費基本面多源資料層。
+    """V2.10.62：免費基本面多源資料層。
 
     一次取得季度/年度 EPS 與其他基本面資料。
     EPS Growth 本身不在這裡用 Q2 YoY、TTM YoY 或 earningsGrowth 計算；
-    僅提供完整的季度 EPS 給 V2.10.60 年度模型使用。
+    僅提供完整的季度 EPS 給 V2.10.62 年度模型使用。
     """
     key=('yf_ts_fund_v21030',symbol)
     if key in RUN_CACHE:
@@ -3379,12 +3459,14 @@ def yahoo_timeseries_fund(symbol):
     now=datetime.now(TW_TZ)
     period1=int((now-timedelta(days=1900)).timestamp())
     period2=int((now+timedelta(days=2)).timestamp())
-    types=','.join([
-        'quarterlyDilutedEPS','annualDilutedEPS','trailingDilutedEPS',
-        'trailingNetIncome','annualNetIncome','trailingStockholdersEquity',
-        'annualStockholdersEquity','trailingMarketCap','trailingPegRatio',
-        'trailingDividendRate','trailingCashDividendsPerShare'
-    ])
+    types=','.join(
+        EPS_QUARTERLY_TYPES + [
+            'annualDilutedEPS','annualBasicEPS','trailingDilutedEPS','trailingBasicEPS',
+            'trailingNetIncome','annualNetIncome','trailingStockholdersEquity',
+            'annualStockholdersEquity','trailingMarketCap','trailingPegRatio',
+            'trailingDividendRate','trailingCashDividendsPerShare'
+        ]
+    )
     url='https://query1.finance.yahoo.com/ws/fundamentals-timeseries/v1/finance/timeseries/'+str(symbol)
     params={'symbol':symbol,'type':types,'period1':period1,'period2':period2,'padTimeSeries':'true'}
     try:
@@ -3408,12 +3490,47 @@ def yahoo_timeseries_fund(symbol):
                     dedup[dt]=v
             return sorted(dedup.items(),key=lambda z:z[0])
 
-        epsq=rows_for('quarterlyDilutedEPS')
-        epsa=rows_for('annualDilutedEPS')
+        # V2.10.62：季度 EPS 來源優先順序。先用 fundamentals-timeseries；
+        # 若季度不足，再用 Yahoo Reported EPS 補洞。兩者只保留實際季度 EPS。
+        epsq=[]
+        epsq_source=None
+        for eps_type in EPS_QUARTERLY_TYPES:
+            cand=rows_for(eps_type)
+            if len(cand)>=EPS_MODEL_MIN_HISTORY_QUARTERS:
+                epsq=cand; epsq_source=eps_type; break
+        if not epsq:
+            candidates_eps=[(rows_for(t),t) for t in EPS_QUARTERLY_TYPES]
+            if candidates_eps:
+                epsq,epsq_source=max(candidates_eps,key=lambda z:len(z[0]))
+        # 若 fundamentals-timeseries 不足 8 季，補 Yahoo earnings dates 的 Reported EPS。
+        if len(epsq)<EPS_MODEL_MIN_HISTORY_QUARTERS:
+            fallback=_yfinance_earnings_dates_eps(symbol)
+            # 依「年度+季度」合併，而非單純日期，避免兩個來源的日期不同造成同季重複。
+            merged_q={}
+            for dt,v in epsq:
+                try:
+                    y0=int(str(dt)[:4]); m0=int(str(dt)[5:7]); q0=(m0-1)//3+1
+                    merged_q[(y0,q0)]=(dt,v)
+                except Exception:
+                    continue
+            for x in fallback:
+                dt=str(x.get('date') or '')
+                v=to_float(x.get('eps'))
+                if len(dt)>=7 and v is not None and math.isfinite(v):
+                    try:
+                        y0=int(dt[:4]); m0=int(dt[5:7]); q0=(m0-1)//3+1
+                        # fallback 只補缺，不覆蓋較正式的 fundamentals-timeseries。
+                        merged_q.setdefault((y0,q0),(dt,v))
+                    except Exception:
+                        continue
+            epsq=sorted(merged_q.values(),key=lambda z:z[0])
+            if len(epsq)>=EPS_MODEL_MIN_HISTORY_QUARTERS:
+                epsq_source=(epsq_source or 'Yahoo Reported EPS')+' + Yahoo Reported EPS'
+        epsa=rows_for('annualDilutedEPS') or rows_for('annualBasicEPS')
         out['eps_history']=[v for _,v in epsq]
-        out['eps_quarterly_history']=[{'date':dt,'eps':v} for dt,v in epsq]
+        out['eps_quarterly_history']=[{'date':dt,'eps':v,'source':epsq_source or 'unknown'} for dt,v in epsq]
         out['eps_annual_history']=[{'date':dt,'eps':v} for dt,v in epsa]
-        trail=rows_for('trailingDilutedEPS')
+        trail=rows_for('trailingDilutedEPS') or rows_for('trailingBasicEPS')
         if trail:
             out['trailing_eps']=trail[-1][1]
         if out['trailing_eps'] is None and len(epsq)>=4:
@@ -3443,7 +3560,7 @@ def yahoo_timeseries_fund(symbol):
             divs=rows_for('trailingCashDividendsPerShare')
             if divs: out['dividend_rate']=divs[-1][1]
     except Exception as e:
-        print(f'V2.10.60 Yahoo timeseries fundamentals失敗 {symbol}: {type(e).__name__}: {e}',flush=True)
+        print(f'V2.10.62 Yahoo timeseries fundamentals失敗 {symbol}: {type(e).__name__}: {e}',flush=True)
     RUN_CACHE[key]=out
     return out
 
@@ -3716,7 +3833,7 @@ def mops_annual_roe_fallback(code, market=None):
 
 
 def _eps_growth_sanity(value, source='unknown', corroborated=False, cached_value=None):
-    """V2.10.60：季度 EPS 年度模型結果的安全驗證。
+    """V2.10.62：季度 EPS 年度模型結果的安全驗證。
 
     只有模型本身建立在實際季度 EPS 上時才視為 corroborated；
     不再用 Q2 YoY、TTM YoY 或 Yahoo earningsGrowth 幫模型背書。
@@ -3728,13 +3845,13 @@ def _eps_growth_sanity(value, source='unknown', corroborated=False, cached_value
     # 但若和既有 cache 差異極大，仍不覆蓋舊值。
     cv=to_float(cached_value)
     if cv is not None and math.isfinite(cv) and abs(g-cv)>150:
-        print(f'V2.10.60 EPS Growth 與既有快取差異過大：來源={source} 新值={g:.2f}% 快取={cv:.2f}%，保留快取',flush=True)
+        print(f'V2.10.62 EPS Growth 與既有快取差異過大：來源={source} 新值={g:.2f}% 快取={cv:.2f}%，保留快取',flush=True)
         return None
     return float(g)
 
 
 def _eps_growth_event_factor(code, year, quarter):
-    """V2.10.60：已確認重大事件的季度調整係數。
+    """V2.10.62：已確認重大事件的季度調整係數。
 
     不自行爬新聞、不把傳聞寫進模型。只有 EPS_EVENT_ADJUSTMENTS 明確設定才會生效。
     例如 1.10 = 該季度預估 EPS +10%，0.90 = -10%。
@@ -3750,7 +3867,7 @@ def _eps_growth_event_factor(code, year, quarter):
 
 
 def _eps_growth_from_quarterly_model(code, ts, now=None):
-    """V2.10.60：只用季度 EPS 推估「完整年度 EPS Growth」。
+    """V2.10.62：只用季度 EPS 推估「完整年度 EPS Growth」。
 
     1. 已公布季度：直接使用實際 EPS。
     2. 未公布季度：每季分開，以最近 5 年同季度 EPS 做線性回歸。
@@ -3864,16 +3981,16 @@ def _eps_growth_from_quarterly_model(code, ts, now=None):
         }
         return float(growth),detail
     except Exception as e:
-        print(f'V2.10.60 季度EPS模型失敗 {code}: {type(e).__name__}: {e}',flush=True)
+        print(f'V2.10.62 季度EPS模型失敗 {code}: {type(e).__name__}: {e}',flush=True)
         return None,None
 
 
 def official_fundamental(symbol, official=None, current_price=None, market=None):
-    """V2.10.60：股票基本面/估值資料層。
+    """V2.10.62：股票基本面/估值資料層。
 
     EPS Growth 唯一主模型：季度 EPS -> 未來季度回歸/季節性預估 -> 全年 EPS -> 去年完整年度 EPS -> YoY。
     不再採用 Q2 YoY、TTM YoY、Yahoo earningsGrowth 或 annual EPS 作為 Growth 主來源。
-    其他 PE/PB/Yield/ROE/PEG 口徑與 V2.10.60 保持。
+    其他 PE/PB/Yield/ROE/PEG 口徑與 V2.10.62 保持。
     """
     code=clean_code(str(symbol).split('.')[0])
     off=official if isinstance(official,dict) else {}
@@ -3889,14 +4006,14 @@ def official_fundamental(symbol, official=None, current_price=None, market=None)
                     v=to_float(one.get(k))
                     if v is not None and _fund_cache_valid_value(k,v): out[k]=v
         except Exception as e:
-            print(f'V2.10.60 TPEx 官方估值補洞失敗 {code}: {type(e).__name__}',flush=True)
+            print(f'V2.10.62 TPEx 官方估值補洞失敗 {code}: {type(e).__name__}',flush=True)
     symbol_full=symbol_for(code,market) if market in ('TWSE','TPEX') else symbol
     try: qs=yahoo_quote_summary_fund(symbol_full) or {}
     except Exception as e:
-        qs={}; print(f'V2.10.60 Yahoo quoteSummary失敗 {code}: {type(e).__name__}',flush=True)
+        qs={}; print(f'V2.10.62 Yahoo quoteSummary失敗 {code}: {type(e).__name__}',flush=True)
     try: ts=yahoo_timeseries_fund(symbol_full) or {}
     except Exception as e:
-        ts={}; print(f'V2.10.60 Yahoo timeseries失敗 {code}: {type(e).__name__}',flush=True)
+        ts={}; print(f'V2.10.62 Yahoo timeseries失敗 {code}: {type(e).__name__}',flush=True)
 
     # 既有 cache 僅作極端差異保護，不作 Growth 來源。
     cached_g=None
@@ -3906,14 +4023,14 @@ def official_fundamental(symbol, official=None, current_price=None, market=None)
     except Exception: pass
 
     model_g,detail=_eps_growth_from_quarterly_model(code,ts,now=datetime.now(TW_TZ))
-    model_g=_eps_growth_sanity(model_g,'V2.10.60 quarterly EPS model',True,cached_g)
+    model_g=_eps_growth_sanity(model_g,'V2.10.62 quarterly EPS model',True,cached_g)
     if model_g is not None:
         out['eps_growth']=model_g
         if detail:
             qtext=' / '.join([f'Q{q}={detail["projected_quarters"][q]:.4f}' for q in range(1,5)])
-            print(f'V2.10.60 EPS Growth：{code}={model_g:.2f}% [季度EPS年度模型] {detail["current_year"]}全年={detail["current_annual"]:.4f} vs {detail["prev_year"]}全年={detail["prev_annual"]:.4f} | {qtext}',flush=True)
+            print(f'V2.10.62 EPS Growth：{code}={model_g:.2f}% [季度EPS年度模型] {detail["current_year"]}全年={detail["current_annual"]:.4f} vs {detail["prev_year"]}全年={detail["prev_annual"]:.4f} | {qtext}',flush=True)
     else:
-        print(f'V2.10.60 EPS Growth：{code}=N/A [季度EPS資料不足/模型無法建立]',flush=True)
+        print(f'V2.10.62 EPS Growth：{code}=N/A [季度EPS資料不足/模型無法建立]',flush=True)
 
     r_candidates=[qs.get('roe'),ts.get('roe')]
     out['roe']=next((float(v) for v in r_candidates if to_float(v) is not None and -100<=to_float(v)<=100),None)
@@ -3930,7 +4047,7 @@ def official_fundamental(symbol, official=None, current_price=None, market=None)
     if pe is not None and pe>0 and g is not None and 0<g<=200:
         peg=pe/g
         if math.isfinite(peg) and 0<peg<100: out['peg']=peg
-    print(f'V2.10.60 基本面 {code}: PE={fmt(out["pe"])} PB={fmt(out["pb"])} Yield={fmt(out["yield"])} EPSGrowth={fmt(out["eps_growth"])} ROE={fmt(out["roe"])} PEG={fmt(out["peg"])}',flush=True)
+    print(f'V2.10.62 基本面 {code}: PE={fmt(out["pe"])} PB={fmt(out["pb"])} Yield={fmt(out["yield"])} EPSGrowth={fmt(out["eps_growth"])} ROE={fmt(out["roe"])} PEG={fmt(out["peg"])}',flush=True)
     return out
 
 
@@ -6165,7 +6282,7 @@ def yahoo_light_fund(symbol, official=None, current_price=None, market=None):
                 'eps_growth': None, 'roe': None, 'peg': None
             }
         print(
-            f'V2.10.60 LINE基本面統一資料層 {clean_code(str(symbol).split(".")[0])}: '
+            f'V2.10.62 LINE基本面統一資料層 {clean_code(str(symbol).split(".")[0])}: '
             f'PE={fmt(result.get("pe"))} PB={fmt(result.get("pb"))} '
             f'Yield={fmt(result.get("yield"))} '
             f'EPSGrowth={fmt(result.get("eps_growth"))} '
@@ -6175,7 +6292,7 @@ def yahoo_light_fund(symbol, official=None, current_price=None, market=None):
         return result
     except Exception as e:
         print(
-            f'V2.10.60 LINE基本面統一資料層失敗 {symbol}: '
+            f'V2.10.62 LINE基本面統一資料層失敗 {symbol}: '
             f'{type(e).__name__}: {e}',
             flush=True
         )
