@@ -1,4 +1,4 @@
-# stock_alert.py V2.10.57
+# stock_alert.py V2.10.58
 # V2.10.56：修正 V2.10.53 舊 PE 快取 migration；加入 PE 每次執行請求/時間上限、即時進度與安全降級；LINE 不再使用舊版 yahoo_light_fund / MOPS fallback / 舊 cache 推導
 # V2.10.48：加入 MOPS 官方財報 EPS Growth fallback，補強 Yahoo 多層來源仍為 N/A 的股票
 # V2.10.47：統一 EPS Growth 與 PEG 資料口徑；修正 EPS 成長 N/A 但 PEG 有值的矛盾
@@ -3708,18 +3708,77 @@ def mops_annual_roe_fallback(code, market=None):
     return None
 
 
+def _eps_growth_sanity(value, source='unknown', corroborated=False, cached_value=None):
+    """V2.10.58：EPS Growth 合理性驗證。
+
+    原則：
+      1. 只接受有限、可解釋的百分比，拒絕 inf/NaN 與極端異常值。
+      2. >100% 的高成長只有在另一個獨立 EPS/財報來源交叉支持時才接受。
+      3. 若新值與既有快取相差超過 100 個百分點，視為來源口徑異常，
+         不覆蓋既有值；避免 Yahoo earningsGrowth 突然換口徑污染分析。
+    """
+    g = to_float(value)
+    if g is None or not math.isfinite(g) or g < -300 or g > 300:
+        return None
+    if abs(g) > 100 and not corroborated:
+        print(
+            f'V2.10.58 EPS Growth 合理性驗證拒絕：來源={source} 值={g:.2f}% '
+            f'(>100% 且無獨立交叉驗證)', flush=True
+        )
+        return None
+    cv = to_float(cached_value)
+    if cv is not None and math.isfinite(cv) and abs(g-cv) > 100:
+        print(
+            f'V2.10.58 EPS Growth 與既有快取差異過大：來源={source} '
+            f'新值={g:.2f}% 快取={cv:.2f}%，保留快取', flush=True
+        )
+        return None
+    return float(g)
+
+
+def _eps_growth_from_eps_history(hist):
+    """V2.10.58：由 Yahoo earningsHistory 的 EPS 重新計算同季 YoY。
+    不直接相信 financialData.earningsGrowth 的口徑。
+    """
+    if not isinstance(hist, list) or len(hist) < 2:
+        return None
+    rows=[]
+    for item in hist:
+        if isinstance(item, (tuple,list)) and len(item) >= 2:
+            dt=str(item[0] or '')
+            v=to_float(item[1])
+            if v is not None and math.isfinite(v):
+                rows.append((dt,v))
+    rows=sorted(rows,key=lambda x:x[0])
+    if len(rows) < 2:
+        return None
+    latest_date, latest = rows[-1]
+    # 優先找不同年度的最近一期；這比單純 latest/previous 更不容易誤算季增。
+    for dt, prev in reversed(rows[:-1]):
+        if dt[:4] and latest_date[:4] and dt[:4] != latest_date[:4] and prev != 0:
+            g=(latest/prev-1)*100
+            if math.isfinite(g) and -300 <= g <= 300:
+                return float(g)
+    prev=rows[-2][1]
+    if prev != 0:
+        g=(latest/prev-1)*100
+        if math.isfinite(g) and -300 <= g <= 300:
+            return float(g)
+    return None
+
+
 def official_fundamental(symbol, official=None, current_price=None, market=None):
-    """V2.10.53：股票基本面/估值多來源資料層。
+    """V2.10.58：股票基本面/估值多來源資料層。
 
-    資料優先順序：
-      1. TWSE / TPEx 官方當日 PE、PB、殖利率
-      2. Yahoo quoteSummary / fundamentals-timeseries 補 EPS Growth、ROE
-      3. yfinance 財報（income statement / balance sheet）再補 EPS Growth、ROE
-      4. PEG 僅由 PE / EPS Growth 統一計算
+    EPS Growth 新版來源優先順序：
+      1. Yahoo fundamentals-timeseries 由季度 EPS/TTM/年度 EPS 計算的 Growth
+      2. Yahoo quoteSummary earningsHistory 由實際 EPS 重新計算的 Growth
+      3. Yahoo quoteSummary financialData.earningsGrowth
+      4. yfinance Ticker.info earningsGrowth（僅缺值時）
+      5. 既有 line_fund_cache（最後安全 fallback）
 
-    重要：V2.10.53 不再把 MOPS HTML parser 當成基本面必要路徑。
-    MOPS 的 HTTP/HTML 反爬與 pandas.read_html 相依性會讓 GitHub Actions
-    出現 HTTPError / ImportError，進而使原本有資料的股票也變成 N/A。
+    重要：不為 EPS Growth 額外呼叫慢速財報 API；保留 V2.10.57 的 24 秒級快取架構。
+    PEG 仍只由 PE / EPS Growth 統一計算。
     """
     code = clean_code(str(symbol).split('.')[0])
     off = official if isinstance(official, dict) else {}
@@ -3732,12 +3791,11 @@ def official_fundamental(symbol, official=None, current_price=None, market=None)
         'peg': None,
     }
 
-    # 官方交易所資料優先；不讓無效值進入後續評分。
     for k in ('pe', 'pb', 'yield'):
         if not _fund_cache_valid_value(k, out.get(k)):
             out[k] = None
 
-    # TPEx 官方估值資料的單次網頁補洞仍保留，但只負責 PE/PB/Yield。
+    # TPEx 官方估值資料補洞：只負責 PE/PB/Yield，不碰 EPS Growth。
     if market == 'TPEX' and any(out.get(k) is None for k in ('pe', 'pb', 'yield')):
         try:
             one = parse_tpex_web_peratio(tpex_web_peratio_data(timeout=8)).get(code) or {}
@@ -3747,35 +3805,96 @@ def official_fundamental(symbol, official=None, current_price=None, market=None)
                     if v is not None and _fund_cache_valid_value(k, v):
                         out[k] = v
         except Exception as e:
-            print(f'V2.10.53 TPEx 官方估值補洞失敗 {code}: {type(e).__name__}', flush=True)
+            print(f'V2.10.58 TPEx 官方估值補洞失敗 {code}: {type(e).__name__}', flush=True)
 
-    # ------------------------------------------------------------
-    # V2.10.53：基本面資料來源重構
-    # 不再呼叫 MOPS EPS/ROE fallback。
-    # ------------------------------------------------------------
     symbol_full = symbol_for(code, market) if market in ('TWSE', 'TPEX') else symbol
 
     try:
         qs = yahoo_quote_summary_fund(symbol_full) or {}
     except Exception as e:
         qs = {}
-        print(f'V2.10.53 Yahoo quoteSummary失敗 {code}: {type(e).__name__}', flush=True)
+        print(f'V2.10.58 Yahoo quoteSummary失敗 {code}: {type(e).__name__}', flush=True)
 
     try:
         ts = yahoo_timeseries_fund(symbol_full) or {}
     except Exception as e:
         ts = {}
-        print(f'V2.10.53 Yahoo timeseries失敗 {code}: {type(e).__name__}', flush=True)
+        print(f'V2.10.58 Yahoo timeseries失敗 {code}: {type(e).__name__}', flush=True)
 
-    # EPS Growth：優先 Yahoo 已整理的 earningsGrowth，其次 timeseries。
-    g_candidates = [qs.get('eps_growth'), ts.get('eps_growth')]
-    out['eps_growth'] = next(
-        (float(v) for v in g_candidates
-         if to_float(v) is not None and -500 <= to_float(v) <= 500),
-        None
+    # 讀取既有快取只用來做 sanity check / 最後 fallback，不會搶在即時資料之前。
+    cached_g = None
+    try:
+        fc0 = load_json(LINE_FUND_CACHE_FILE)
+        ci0 = fc0.get(code,{}) if isinstance(fc0,dict) else {}
+        cached_g = to_float(ci0.get('eps_growth')) if isinstance(ci0,dict) else None
+    except Exception:
+        cached_g = None
+
+    # ------------------------------------------------------------
+    # V2.10.58 EPS Growth：來源優先順序 + 合理性驗證
+    # ------------------------------------------------------------
+    # A. fundamentals-timeseries：已用實際 EPS 計算，最高優先。
+    ts_g = _eps_growth_sanity(
+        ts.get('eps_growth'), 'Yahoo timeseries',
+        corroborated=True, cached_value=cached_g
     )
+    if ts_g is not None:
+        out['eps_growth'] = ts_g
+        print(f'V2.10.58 EPS Growth：{code}={ts_g:.2f}% [Yahoo timeseries]', flush=True)
 
-    # ROE：優先 Yahoo financialData，再用 timeseries 的淨利/平均權益計算。
+    # B. quoteSummary earningsHistory：不直接採用 financialData.earningsGrowth，
+    #    先用實際 EPS history 重算同季 YoY。
+    if out['eps_growth'] is None:
+        qs_hist_g = _eps_growth_from_eps_history(qs.get('eps_history'))
+        qs_hist_g = _eps_growth_sanity(
+            qs_hist_g, 'Yahoo earningsHistory',
+            corroborated=True, cached_value=cached_g
+        )
+        if qs_hist_g is not None:
+            out['eps_growth'] = qs_hist_g
+            print(f'V2.10.58 EPS Growth：{code}={qs_hist_g:.2f}% [Yahoo earningsHistory]', flush=True)
+
+    # C. quoteSummary financialData.earningsGrowth：最後才採用原始整理值。
+    if out['eps_growth'] is None:
+        qs_raw_g = _eps_growth_sanity(
+            qs.get('eps_growth'), 'Yahoo financialData.earningsGrowth',
+            corroborated=False, cached_value=cached_g
+        )
+        if qs_raw_g is not None:
+            out['eps_growth'] = qs_raw_g
+            print(f'V2.10.58 EPS Growth：{code}={qs_raw_g:.2f}% [Yahoo financialData]', flush=True)
+
+    # D. yfinance info：保留 V2.10.57 的快速 fallback；不呼叫財報 statement API。
+    if out.get('eps_growth') is None:
+        try:
+            yf_key=('yf_fast_eps_growth_v21058', symbol_full)
+            yf_fast=RUN_CACHE.get(yf_key)
+            if yf_fast is None:
+                ticker=yf.Ticker(symbol_full)
+                info=ticker.info or {}
+                g=to_float(info.get('earningsGrowth'))
+                if g is not None and abs(g) < 2:
+                    g *= 100
+                yf_fast={'eps_growth': g}
+                RUN_CACHE[yf_key]=yf_fast
+            g=_eps_growth_sanity(
+                yf_fast.get('eps_growth'), 'yfinance Ticker.info',
+                corroborated=False, cached_value=cached_g
+            )
+            if g is not None:
+                out['eps_growth']=g
+                print(f'V2.10.58 yfinance EPS Growth：{code}={g:.2f}%', flush=True)
+        except Exception as e:
+            print(f'V2.10.58 yfinance EPS Growth fallback失敗 {code}: {type(e).__name__}', flush=True)
+
+    # E. 最後才使用既有快取；不主動抓網路、不用 PEG 反推 Growth。
+    if out.get('eps_growth') is None:
+        g=_eps_growth_sanity(cached_g, 'line_fund_cache', corroborated=True)
+        if g is not None:
+            out['eps_growth']=g
+            print(f'V2.10.58 EPS Growth cache fallback：{code}={g:.2f}%', flush=True)
+
+    # ROE：維持 V2.10.57 口徑。
     r_candidates = [qs.get('roe'), ts.get('roe')]
     out['roe'] = next(
         (float(v) for v in r_candidates
@@ -3783,9 +3902,7 @@ def official_fundamental(symbol, official=None, current_price=None, market=None)
         None
     )
 
-    # V2.10.56：官方 PE 缺失時，直接用「目前股價 / TTM EPS」計算。
-    # TTM EPS 優先來自 Yahoo quoteSummary / fundamentals-timeseries；
-    # 不再為了 PE 額外呼叫 MOPS 或逐日歷史 PE API。
+    # V2.10.56 PE fallback：股價 / TTM EPS。
     if out['pe'] is None:
         eps_candidates = [qs.get('trailing_eps'), ts.get('trailing_eps')]
         eps = next(
@@ -3793,11 +3910,7 @@ def official_fundamental(symbol, official=None, current_price=None, market=None)
              if to_float(v) is not None and to_float(v) > 0),
             None
         )
-        price_candidates = [
-            current_price,
-            qs.get('price'),
-            ts.get('price')
-        ]
+        price_candidates = [current_price, qs.get('price'), ts.get('price')]
         px = next(
             (to_float(v) for v in price_candidates
              if to_float(v) is not None and to_float(v) > 0),
@@ -3812,41 +3925,7 @@ def official_fundamental(symbol, official=None, current_price=None, market=None)
                     flush=True
                 )
 
-    # V2.10.57：修正 V2.10.56 誤刪 yfinance EPS Growth fallback。
-    # 只在 Yahoo quoteSummary / timeseries 都沒有 EPS Growth 時，
-    # 使用一次 Ticker.info 取得 earningsGrowth；不呼叫財報 statement API，避免拖慢 Actions。
-    if out.get('eps_growth') is None:
-        try:
-            yf_key=('yf_fast_eps_growth_v21057', symbol_full)
-            yf_fast=RUN_CACHE.get(yf_key)
-            if yf_fast is None:
-                ticker=yf.Ticker(symbol_full)
-                info=ticker.info or {}
-                g=to_float(info.get('earningsGrowth'))
-                if g is not None and abs(g) < 2:
-                    g *= 100
-                yf_fast={'eps_growth': g if g is not None and -500 <= g <= 500 else None}
-                RUN_CACHE[yf_key]=yf_fast
-            if yf_fast.get('eps_growth') is not None:
-                out['eps_growth']=yf_fast['eps_growth']
-                print(f'V2.10.57 yfinance EPS Growth：{code}={out["eps_growth"]:.2f}%',flush=True)
-        except Exception as e:
-            print(f'V2.10.57 yfinance EPS Growth fallback失敗 {code}: {type(e).__name__}',flush=True)
-
-    # V2.10.57：若本次 Yahoo 仍沒有 EPS Growth，再讀既有 line_fund_cache。
-    # 只接受合理範圍；不主動抓網路、不用 PEG 反推 EPS Growth。
-    if out.get('eps_growth') is None:
-        try:
-            fc=load_json(LINE_FUND_CACHE_FILE)
-            item=fc.get(code,{}) if isinstance(fc,dict) else {}
-            g=to_float(item.get('eps_growth')) if isinstance(item,dict) else None
-            if g is not None and -500 <= g <= 500:
-                out['eps_growth']=g
-                print(f'V2.10.57 EPS Growth cache fallback：{code}={g:.2f}%',flush=True)
-        except Exception:
-            pass
-
-    # PEG 統一由 PE / EPS Growth 計算，避免 EPS Growth=N/A 卻有 PEG 的矛盾。
+    # PEG 統一由 PE / EPS Growth 計算。
     pe = to_float(out.get('pe'))
     g = to_float(out.get('eps_growth'))
     if pe is not None and pe > 0 and g is not None and 0 < g <= 200:
@@ -3855,7 +3934,7 @@ def official_fundamental(symbol, official=None, current_price=None, market=None)
             out['peg'] = peg
 
     print(
-        f'V2.10.57 基本面 {code}: '
+        f'V2.10.58 基本面 {code}: '
         f'PE={fmt(out["pe"])} PB={fmt(out["pb"])} Yield={fmt(out["yield"])} '
         f'EPSGrowth={fmt(out["eps_growth"])} ROE={fmt(out["roe"])} PEG={fmt(out["peg"])}',
         flush=True
@@ -6093,7 +6172,7 @@ def yahoo_light_fund(symbol, official=None, current_price=None, market=None):
                 'eps_growth': None, 'roe': None, 'peg': None
             }
         print(
-            f'V2.10.57 LINE基本面統一資料層 {clean_code(str(symbol).split(".")[0])}: '
+            f'V2.10.58 LINE基本面統一資料層 {clean_code(str(symbol).split(".")[0])}: '
             f'PE={fmt(result.get("pe"))} PB={fmt(result.get("pb"))} '
             f'Yield={fmt(result.get("yield"))} '
             f'EPSGrowth={fmt(result.get("eps_growth"))} '
@@ -6103,7 +6182,7 @@ def yahoo_light_fund(symbol, official=None, current_price=None, market=None):
         return result
     except Exception as e:
         print(
-            f'V2.10.57 LINE基本面統一資料層失敗 {symbol}: '
+            f'V2.10.58 LINE基本面統一資料層失敗 {symbol}: '
             f'{type(e).__name__}: {e}',
             flush=True
         )
