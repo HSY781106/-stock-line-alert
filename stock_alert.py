@@ -1,5 +1,5 @@
-# stock_alert.py V2.10.55
-# V2.10.55：修正 V2.10.53 舊 PE 快取 migration；加入 PE 每次執行請求/時間上限、即時進度與安全降級；LINE 不再使用舊版 yahoo_light_fund / MOPS fallback / 舊 cache 推導
+# stock_alert.py V2.10.56
+# V2.10.56：修正 V2.10.53 舊 PE 快取 migration；加入 PE 每次執行請求/時間上限、即時進度與安全降級；LINE 不再使用舊版 yahoo_light_fund / MOPS fallback / 舊 cache 推導
 # V2.10.48：加入 MOPS 官方財報 EPS Growth fallback，補強 Yahoo 多層來源仍為 N/A 的股票
 # V2.10.47：統一 EPS Growth 與 PEG 資料口徑；修正 EPS 成長 N/A 但 PEG 有值的矛盾
 # V2.10.41：修正 line_fund_cache 覆蓋策略、ETF NAV/溢價、Beta、TPEX 資券與 ETF chart fallback
@@ -90,8 +90,8 @@ TWSE_QUOTES_CACHE_FILE = 'twse_quotes_cache.json'
 # V2.9.8 新增
 SUBINDUSTRY_CACHE_FILE = 'subindustry_cache.json'
 # V2.10.49：官方基本面快取
-# V2.10.55：不再使用 MOPS 基本面快取
-# MOPS_FUND_CACHE_FILE 保留名稱僅避免舊程式碼/舊快取造成相容性問題，但 V2.10.55 基本面主流程不讀寫。
+# V2.10.56：不再使用 MOPS 基本面快取
+# MOPS_FUND_CACHE_FILE 保留名稱僅避免舊程式碼/舊快取造成相容性問題，但 V2.10.56 基本面主流程不讀寫。
 MOPS_FUND_CACHE_FILE = 'mops_fund_cache.json'
 
 LINE_REPLY_URL = 'https://api.line.me/v2/bot/message/reply'
@@ -112,18 +112,18 @@ TPEX_TIMEOUT = 10
 
 API_SLEEP = .05
 PE_BACKFILL_MAX_DAYS = 370
-# V2.10.55：目標股歷史 PE 回補總預算；不得因單股/單市場 API 異常拖垮 Action。
-PE_BACKFILL_MAX_SECONDS_PER_RUN = 30
-PE_BACKFILL_MAX_API_PER_RUN = 4
+# V2.10.56：目標股歷史 PE 回補總預算；不得因單股/單市場 API 異常拖垮 Action。
+PE_BACKFILL_MAX_SECONDS_PER_RUN = 0
+PE_BACKFILL_MAX_API_PER_RUN = 0
 PE_BACKFILL_MARKET_FAILURE_LIMIT = 2
-# V2.10.55：Yahoo/官方基本面單股備援總時間上限。
+# V2.10.56：Yahoo/官方基本面單股備援總時間上限。
 FUNDAMENTAL_FALLBACK_TIMEOUT = 8
 PE_HISTORY_TIMEOUT = 8
-# V2.10.55：全市場 PE 日期失敗後至少冷卻數日，避免官方 API 暫時異常時每次 Actions 都重打 500+ 次。
+# V2.10.56：全市場 PE 日期失敗後至少冷卻數日，避免官方 API 暫時異常時每次 Actions 都重打 500+ 次。
 PE_HISTORY_FAILURE_RETRY_DAYS = 7
-# V2.10.55：全市場 PE 每次 Actions 的硬性預算。即使官方 API 異常，也不得拖垮整個 Action。
-PE_HISTORY_MAX_API_PER_RUN = 8
-PE_HISTORY_MAX_SECONDS_PER_RUN = 60
+# V2.10.56：全市場 PE 每次 Actions 的硬性預算。即使官方 API 異常，也不得拖垮整個 Action。
+PE_HISTORY_MAX_API_PER_RUN = 0
+PE_HISTORY_MAX_SECONDS_PER_RUN = 0
 PE_HISTORY_PROGRESS_EVERY = 1
 # PE 歷史查詢以日期快取，避免同一次執行 2330/3711 重複打同一天 API
 PE_DATE_CACHE = {}
@@ -3123,7 +3123,7 @@ def get_pe_by_date(
     if market == 'TPEX':
         # V2.10.28：歷史上櫃 PE 直接使用 TPEx 官方網頁 JSON；
         # 該資料比 OpenAPI 完整，且一次就是整個上櫃市場，避免 6488 等股票被漏掉。
-        # V2.10.55：歷史 TPEX 每日期只允許有限網路成本。
+        # V2.10.56：歷史 TPEX 每日期只允許有限網路成本。
         # 官方網頁資料優先；若失敗，不再立刻再打一個可能同樣 timeout 的 OpenAPI。
         # 否則 8 個日期 × (5~10 秒) 就足以讓 Action 明顯拖慢。
         try:
@@ -3185,77 +3185,24 @@ def get_pe_by_date(
 
 
 def backfill_pe(code, h, market, run_budget=None):
-    """V2.10.55：受總時間/API預算保護的目標股 PE 歷史回補。
+    """V2.10.56：停用逐日歷史 PE 網路回補。
 
-    原則：
-    1. 已有有效 PE 絕不重抓。
-    2. 單次 Action 對所有目標股共用預算，不允許某一檔吃光時間。
-    3. 同市場連續失敗達上限，立即停止該市場的歷史回補。
-    4. 找不到 60 筆不再把 Action 卡在 370 天；由一年平均 PE proxy 接手。
-    5. 不把失敗的日期永久視為有效資料。
+    官方 TWSE/TPEx 歷史 PE API 在 Actions 環境容易 timeout/428/520；
+    歷史 PE 已有就使用，沒有就交給目前 PE（官方或股價/TTM EPS）與
+    「目前 PE 代理」處理。此函式保留原介面，避免舊流程需要大改。
     """
     h.setdefault(code, {})
-    if run_budget is None:
-        run_budget = {'started': time.time(), 'api_used': 0,
-                      'blocked': set(), 'market_failures': {}}
-
-    def valid_pe(v):
-        x = to_float(v)
-        return x is not None and 0 < x <= PE_MAX_VALID
-
-    n = sum(1 for v in h[code].values() if valid_pe(v))
-    if n >= PE_MIN_HISTORY:
-        print(f'PE歷史回補：{code} {n}/{PE_MIN_HISTORY} 個有效PE，已足夠，搜尋 0 天', flush=True)
-        return h
-
-    def budget_ok():
-        return (
-            run_budget['api_used'] < PE_BACKFILL_MAX_API_PER_RUN
-            and time.time() - run_budget['started'] < PE_BACKFILL_MAX_SECONDS_PER_RUN
-            and market not in run_budget['blocked']
-        )
-
-    today = datetime.now(TW_TZ).date()
-    d = today
-    checked = 0
-    while n < PE_MIN_HISTORY and checked < PE_BACKFILL_MAX_DAYS:
-        if not budget_ok():
-            break
-        if d.weekday() < 5:
-            ds = d.strftime('%Y%m%d')
-            old = h[code].get(ds)
-            if not valid_pe(old):
-                run_budget['api_used'] += 1
-                print(f'PE回補進度：API {run_budget["api_used"]}/{PE_BACKFILL_MAX_API_PER_RUN} | {market} {code} {ds}', flush=True)
-                try:
-                    data = get_pe_by_date(ds, market)
-                    pe = data.get(code, {}).get('pe') if isinstance(data, dict) else None
-                    if valid_pe(pe):
-                        h[code][ds] = pe
-                        n += 1
-                        run_budget['market_failures'][market] = 0
-                    else:
-                        run_budget['market_failures'][market] = run_budget['market_failures'].get(market, 0) + 1
-                except Exception as e:
-                    run_budget['market_failures'][market] = run_budget['market_failures'].get(market, 0) + 1
-                    print(f'PE回補失敗：{market} {code} {ds} / {type(e).__name__}', flush=True)
-                if run_budget['market_failures'].get(market, 0) >= PE_BACKFILL_MARKET_FAILURE_LIMIT:
-                    run_budget['blocked'].add(market)
-                    print(f'⚠️ V2.10.55：{market} 歷史 PE 連續失敗，停止本次該市場回補。', flush=True)
-                    break
-        d -= timedelta(days=1)
-        checked += 1
-    elapsed = time.time() - run_budget['started']
-    reason = ''
-    if n < PE_MIN_HISTORY:
-        if market in run_budget['blocked']:
-            reason = '；市場 API 連續失敗'
-        elif run_budget['api_used'] >= PE_BACKFILL_MAX_API_PER_RUN:
-            reason = '；達 API 上限'
-        elif elapsed >= PE_BACKFILL_MAX_SECONDS_PER_RUN:
-            reason = '；達時間上限'
-    print(f'PE歷史回補：{code} {n}/{PE_MIN_HISTORY} 個有效PE，搜尋 {checked} 天，耗時 {elapsed:.1f}s{reason}', flush=True)
+    valid = sum(
+        1 for v in h[code].values()
+        if (to_float(v) is not None and 0 < to_float(v) <= PE_MAX_VALID)
+    )
+    print(
+        f'PE歷史回補：{code} {valid}/{PE_MIN_HISTORY} 個有效PE，'
+        f'V2.10.56 已停用逐日歷史API，搜尋 0 天',
+        flush=True
+    )
     return h
+
 
 def one_year_pe(
     code,
@@ -3290,42 +3237,23 @@ def one_year_pe(
     if not v:
         return None, 0
 
-    # V2.10.34：一年平均 PE 不再因不足 60 個有效樣本直接 N/A。
-    # 虧損/週期股部分交易日官方 PE 本來就可能 N/A；一年內有至少 20 個
-    # 有效正 PE 即採可取得樣本計算，樣本數照實顯示。
-    if len(v) < 20:
-        return None, len(v)
-
+    # V2.10.56：只要快取中有任何有效歷史 PE，就使用實際可取得樣本。
+    # 不再因樣本少於 20 筆直接回 N/A；樣本數照實顯示。
     return sum(x for _, x in v) / len(v), len(v)
 
 
 def one_year_pe_proxy(code, current_pe, symbol):
-    """V2.10.34：一年平均 PE 的最後備援。\n\n    若官方逐日 PE 歷史沒有足夠有效樣本，使用「近一年價格 / 目前 TTM EPS」\n    的價格區間平均作為 proxy。這不是官方歷史 PE，因此回傳 (value, sample, label)。\n    只有在目前 PE 有效且能取得一年價格資料時啟用，避免憑空製造數字。\n    """
-    pe=to_float(current_pe)
-    if pe is None or pe<=0 or pe>PE_MAX_VALID:
-        return None,0,''
-    try:
-        d=yf_download(symbol,'1y','1d')
-        if d is None or d.empty or 'Close' not in d.columns:
-            return None,0,''
-        c=pd.to_numeric(d['Close'],errors='coerce').dropna()
-        if len(c)<20:
-            return None,0,''
-        px_now=float(c.iloc[-1])
-        if px_now<=0:
-            return None,0,''
-        # current PE = current price / current EPS，因此歷史 proxy PE = historical price / current EPS.
-        eps=px_now/pe
-        if eps<=0:
-            return None,0,''
-        vals=(c/eps).replace([np.inf,-np.inf],np.nan).dropna()
-        vals=vals[(vals>0)&(vals<=PE_MAX_VALID)]
-        if len(vals)<20:
-            return None,len(vals),''
-        return float(vals.mean()),int(len(vals)),'價格/目前TTM EPS近似'
-    except Exception as e:
-        print(f'一年平均PE proxy失敗 {code}：{type(e).__name__}',flush=True)
-        return None,0,''
+    """V2.10.56：無歷史 PE 時的零網路代理。
+
+    不再為了「一年平均 PE」另外抓 1 年 Yahoo 日線，避免 Actions 因 PE
+    proxy 再次等待。若目前 PE 可由官方或「股價 / TTM EPS」取得，則以目前 PE
+    作為最後代理，明確標示 sample=1；這不是官方一年平均 PE。
+    """
+    pe = to_float(current_pe)
+    if pe is None or pe <= 0 or pe > PE_MAX_VALID:
+        return None, 0, ''
+    return pe, 1, '目前PE代理（無歷史PE）'
+
 
 def yahoo_quote_summary_fund(symbol):
     """V2.10.34：單股 Yahoo quoteSummary 補洞。
@@ -3855,47 +3783,36 @@ def official_fundamental(symbol, official=None, current_price=None, market=None)
         None
     )
 
-    # 若 quoteSummary / timeseries 仍缺欄位，再直接讀 yfinance 財報。
-    # 每次執行只針對分析標的呼叫，不會掃描全市場。
-    if out['eps_growth'] is None or out['roe'] is None:
-        try:
-            ticker = yf.Ticker(symbol_full)
-            if out['eps_growth'] is None:
-                g = _eps_growth_from_yfinance_statements(ticker)
-                if g is not None and -500 <= g <= 500:
-                    out['eps_growth'] = g
-                    print(f'V2.10.55 yfinance EPS Growth：{code}={g:.2f}%', flush=True)
+    # V2.10.56：官方 PE 缺失時，直接用「目前股價 / TTM EPS」計算。
+    # TTM EPS 優先來自 Yahoo quoteSummary / fundamentals-timeseries；
+    # 不再為了 PE 額外呼叫 MOPS 或逐日歷史 PE API。
+    if out['pe'] is None:
+        eps_candidates = [qs.get('trailing_eps'), ts.get('trailing_eps')]
+        eps = next(
+            (to_float(v) for v in eps_candidates
+             if to_float(v) is not None and to_float(v) > 0),
+            None
+        )
+        price_candidates = [
+            current_price,
+            qs.get('price'),
+            ts.get('price')
+        ]
+        px = next(
+            (to_float(v) for v in price_candidates
+             if to_float(v) is not None and to_float(v) > 0),
+            None
+        )
+        if px is not None and eps is not None:
+            calc_pe = px / eps
+            if math.isfinite(calc_pe) and 0 < calc_pe <= PE_MAX_VALID:
+                out['pe'] = float(calc_pe)
+                print(
+                    f'V2.10.56 PE fallback：{code} = 股價 {px:.2f} / TTM EPS {eps:.4f} = {calc_pe:.2f}',
+                    flush=True
+                )
 
-            if out['roe'] is None:
-                inc = ticker.get_income_stmt(freq='yearly')
-                bs = ticker.get_balance_sheet(freq='yearly')
-                ni = None
-                eq = None
-                if isinstance(inc, pd.DataFrame) and not inc.empty:
-                    for row in ('NetIncome', 'Net Income', 'NetIncomeCommonStockholders'):
-                        if row in inc.index:
-                            ni = pd.to_numeric(inc.loc[row], errors='coerce').dropna()
-                            if len(ni):
-                                break
-                if isinstance(bs, pd.DataFrame) and not bs.empty:
-                    for row in ('StockholdersEquity', 'CommonStockholdersEquity', 'TotalEquityGrossMinorityInterest'):
-                        if row in bs.index:
-                            eq = pd.to_numeric(bs.loc[row], errors='coerce').dropna()
-                            if len(eq):
-                                break
-                if ni is not None and len(ni) >= 1 and eq is not None and len(eq) >= 1:
-                    latest_ni = float(ni.iloc[0])
-                    latest_eq = float(eq.iloc[0])
-                    avg_eq = latest_eq
-                    if len(eq) >= 2:
-                        avg_eq = (latest_eq + float(eq.iloc[1])) / 2
-                    if avg_eq != 0:
-                        r = latest_ni / avg_eq * 100
-                        if math.isfinite(r) and -100 <= r <= 100:
-                            out['roe'] = float(r)
-                            print(f'V2.10.53 yfinance ROE：{code}={r:.2f}%', flush=True)
-        except Exception as e:
-            print(f'V2.10.53 yfinance 財報補值失敗 {code}: {type(e).__name__}: {e}', flush=True)
+    # V2.10.56：缺少 EPS Growth / ROE 時維持 N/A，不再使用慢速 yfinance 財報 fallback。
 
     # PEG 統一由 PE / EPS Growth 計算，避免 EPS Growth=N/A 卻有 PEG 的矛盾。
     pe = to_float(out.get('pe'))
@@ -3906,7 +3823,7 @@ def official_fundamental(symbol, official=None, current_price=None, market=None)
             out['peg'] = peg
 
     print(
-        f'V2.10.55 基本面 {code}: '
+        f'V2.10.56 基本面 {code}: '
         f'PE={fmt(out["pe"])} PB={fmt(out["pb"])} Yield={fmt(out["yield"])} '
         f'EPSGrowth={fmt(out["eps_growth"])} ROE={fmt(out["roe"])} PEG={fmt(out["peg"])}',
         flush=True
@@ -4567,7 +4484,7 @@ def refresh_all_technical_cache(u, force=False):
             extras.append((key, ticker))
     for etf in ETF_MAP.values():
         ticker=etf['symbol']; key=clean_code(ticker)
-        # V2.10.55：已知 Yahoo 不提供歷史資料的下市/失效 ETF 不進技術批次。
+        # V2.10.56：已知 Yahoo 不提供歷史資料的下市/失效 ETF 不進技術批次。
         # 這些標的仍可保留在 ETF_MAP 供名稱解析，但不應每次 Action 觸發 404。
         if ticker in {'00679B.TW','00887.TW'}:
             continue
@@ -6144,7 +6061,7 @@ def yahoo_light_fund(symbol, official=None, current_price=None, market=None):
                 'eps_growth': None, 'roe': None, 'peg': None
             }
         print(
-            f'V2.10.53 LINE基本面統一資料層 {clean_code(str(symbol).split(".")[0])}: '
+            f'V2.10.56 LINE基本面統一資料層 {clean_code(str(symbol).split(".")[0])}: '
             f'PE={fmt(result.get("pe"))} PB={fmt(result.get("pb"))} '
             f'Yield={fmt(result.get("yield"))} '
             f'EPSGrowth={fmt(result.get("eps_growth"))} '
@@ -6154,7 +6071,7 @@ def yahoo_light_fund(symbol, official=None, current_price=None, market=None):
         return result
     except Exception as e:
         print(
-            f'V2.10.53 LINE基本面統一資料層失敗 {symbol}: '
+            f'V2.10.56 LINE基本面統一資料層失敗 {symbol}: '
             f'{type(e).__name__}: {e}',
             flush=True
         )
@@ -6761,7 +6678,7 @@ def analysis(
         or yf_f.get('yield')
     )
 
-    # V2.10.55：官方歷史 PE 優先；若有效樣本不足 20，才使用明確標示的價格/EPS proxy。
+    # V2.10.56：官方歷史 PE 優先；若有效樣本不足 20，才使用明確標示的價格/EPS proxy。
     # Proxy 只作「缺資料時的最後備援」，不覆蓋官方有效歷史 PE。
     one, sample = one_year_pe(code, h)
     one_label = ''
@@ -7049,7 +6966,7 @@ def analysis(
     # --------------------------------------------------------
 
     return (
-        f'📊 股票加碼分析 V2.10.53\n\n'
+        f'📊 股票加碼分析 V2.10.56\n\n'
         f'標的：{name}（{code}）\n'
         f'市場：{market}\n'
         f'產業：{industry}\n'
@@ -7907,232 +7824,64 @@ def build_line_caches_for_actions():
 # ============================================================
 
 def refresh_all_market_pe_history(pe_history, universe=None):
-    """V2.10.55：安全、增量建立全市場 PE 歷史快取。
+    """V2.10.56：只整理既有 PE 歷史快取，不呼叫任何歷史 PE API。
 
-    V2.10.55 核心修正：
-    1. 舊版 pe_history.json 若沒有 V2.10.53 的 _meta.coverage，
-       會依目前市場股票池的既有 PE 歷史自動 migration，不再把 370 天
-       × 2 市場約 530 次 API 全部重抓。
-    2. 每次 Actions 對全市場 PE 設定「最多 API 次數」與「最長時間」；
-       官方 TWSE/TPEx 異常時，最多只會消耗有限預算，之後直接跳過，
-       不阻塞後面的法人、融資與逐股分析。
-    3. 每個實際 API 請求即時印出進度，避免 Action 長時間沒有任何 log。
-    4. 已成功日期直接跳過；失敗日期依 7 天冷卻；新日期才真正請求。
-    5. 既有全市場 PE 歷史完全保留，只清理 370 天以前資料。
-
-    注意：全市場 PE 是「日期 × 市場」的整市場資料，因此不需要逐股票
-    請求。V2.10.55 的目標是「每天少量增量更新」，而不是每次重建一年資料。
+    目的：徹底消除 Actions 卡在 TWSE 428 / TPEx 520 / timeout 的可能性。
+    現有 pe_history.json 完整保留；只做 metadata migration 與 370 天清理。
+    目前 PE 若官方資料為 N/A，official_fundamental() 會再用股價 / TTM EPS
+    計算，因此不再需要為了單一股票逐日回補歷史 PE。
     """
     if not isinstance(pe_history, dict):
         pe_history = {}
 
     today = datetime.now(TW_TZ).date()
-    start = today - timedelta(days=PE_ALL_MARKET_CALENDAR_DAYS)
-    markets = ('TWSE', 'TPEX')
-
+    cutoff = today - timedelta(days=370)
     meta = pe_history.setdefault('_meta', {})
     coverage = meta.setdefault('coverage', {})
     fetch_status = meta.setdefault('fetch_status', {})
-
+    markets = ('TWSE', 'TPEX')
     for market in markets:
         if not isinstance(coverage.get(market), dict):
             coverage[market] = {}
         if not isinstance(fetch_status.get(market), dict):
             fetch_status[market] = {}
 
-    # --------------------------------------------------------
-    # V2.10.55：舊版 cache migration
-    # --------------------------------------------------------
-    # V2.10.53 的 existing_date_known() 只看 _meta.coverage。
-    # 如果舊版 pe_history.json 本身已有大量股票/日期 PE，但沒有 coverage，
-    # V2.10.53 就會把所有日期誤判為「從未處理」，造成 500+ 次 API。
-    # 這裡利用目前 universe 的市場欄位精準反推：某市場只要有至少一檔
-    # 股票在該日期已有有效 PE，就代表該市場/日期曾經被整市場 API 處理過。
-    migrated_dates = 0
-    if universe and isinstance(universe, dict):
-        market_codes = {'TWSE': [], 'TPEX': []}
+    # 舊 cache migration：只標記已有有效 PE 的日期，不做網路請求。
+    migrated = 0
+    market_codes = {'TWSE': set(), 'TPEX': set()}
+    if isinstance(universe, dict):
         for code, item in universe.items():
-            if not isinstance(item, dict):
-                continue
-            market = item.get('market')
-            c = clean_code(code)
-            if market in market_codes and c:
-                market_codes[market].append(c)
+            if isinstance(item, dict) and item.get('market') in market_codes:
+                market_codes[item['market']].add(clean_code(code))
 
-        for market in markets:
-            known = coverage[market]
-            codes = market_codes[market]
-            date_counts = {}
-            for code in codes:
-                bucket = pe_history.get(code)
-                if not isinstance(bucket, dict):
-                    continue
-                for ds, value in bucket.items():
-                    if not isinstance(ds, str) or not re.fullmatch(r'\d{8}', ds):
-                        continue
-                    try:
-                        dd = datetime.strptime(ds, '%Y%m%d').date()
-                    except Exception:
-                        continue
-                    if dd < start or dd > today:
-                        continue
-                    pe = to_float(value)
-                    if pe is not None and 0 < pe <= PE_MAX_VALID:
-                        date_counts[ds] = date_counts.get(ds, 0) + 1
-
-            for ds, count in date_counts.items():
-                if ds not in known:
-                    known[ds] = count
-                    migrated_dates += 1
-
-    # 如果因特殊情況沒有 universe，仍提供保守 fallback：
-    # 舊 PE bucket 有任何資料時，將日期標記為「已存在歷史資料」，
-    # 避免升級後突然重抓 530 次。正式 Actions 會傳入 universe，因此
-    # 正常情況不會走到這個模糊 fallback。
-    if not universe:
-        any_dates = set()
-        for code, bucket in pe_history.items():
-            if code == '_meta' or not isinstance(bucket, dict):
+    for market in markets:
+        counts = {}
+        codes = market_codes[market]
+        source_codes = codes if codes else {
+            clean_code(c) for c in pe_history
+            if c != '_meta' and isinstance(pe_history.get(c), dict)
+        }
+        for code in source_codes:
+            bucket = pe_history.get(code)
+            if not isinstance(bucket, dict):
                 continue
             for ds, value in bucket.items():
-                pe = to_float(value)
-                if pe is not None and 0 < pe <= PE_MAX_VALID:
-                    any_dates.add(ds)
-        for ds in any_dates:
-            try:
-                dd = datetime.strptime(ds, '%Y%m%d').date()
-            except Exception:
-                continue
-            if start <= dd <= today:
-                for market in markets:
-                    coverage[market].setdefault(ds, 1)
-
-    # --------------------------------------------------------
-    # V2.10.55：每次執行硬性預算
-    # --------------------------------------------------------
-    run_started = time.time()
-    api_budget = max(0, int(PE_HISTORY_MAX_API_PER_RUN))
-    time_budget = max(1.0, float(PE_HISTORY_MAX_SECONDS_PER_RUN))
-    api_used = 0
-
-    scanned = 0
-    fetched = 0
-    skipped_cached = 0
-    skipped_failed = 0
-    newly_success = 0
-    newly_failed = 0
-    budget_stopped = False
-
-    def budget_available():
-        if api_used >= api_budget:
-            return False
-        if time.time() - run_started >= time_budget:
-            return False
-        return True
-
-    def existing_date_known(market, ds):
-        return ds in coverage.get(market, {})
-
-    d = today
-    while d >= start:
-        if d.weekday() < 5:
-            ds = d.strftime('%Y%m%d')
-            scanned += 1
-
-            for market in markets:
-                market_status = fetch_status[market]
-                status = market_status.get(ds)
-
-                # 1. 已有成功/已知結果：完全跳過網路請求。
-                if status in ('success', 'empty'):
-                    skipped_cached += 1
+                if not isinstance(ds, str) or not re.fullmatch(r'\d{8}', ds):
                     continue
-
-                # 2. 舊版 cache 已有 coverage，但尚未有 fetch_status。
-                if status is None and existing_date_known(market, ds):
-                    market_status[ds] = 'success'
-                    skipped_cached += 1
-                    continue
-
-                # 3. 上次失敗：7 天冷卻後才重試。
-                if isinstance(status, dict) and status.get('state') == 'failed':
-                    last_attempt = status.get('last_attempt')
-                    retry_ok = True
-                    if last_attempt:
-                        try:
-                            last_dt = datetime.fromisoformat(last_attempt)
-                            retry_ok = (
-                                datetime.now(TW_TZ) - last_dt
-                            ).total_seconds() >= PE_HISTORY_FAILURE_RETRY_DAYS * 86400
-                        except Exception:
-                            retry_ok = True
-                    if not retry_ok:
-                        skipped_failed += 1
-                        continue
-
-                # 4. V2.10.55：達到本次 API/時間預算立即停止全市場 PE 更新。
-                if not budget_available():
-                    budget_stopped = True
-                    break
-
-                api_used += 1
-                elapsed_before = time.time() - run_started
-                print(
-                    f'PE歷史進度：API {api_used}/{api_budget} | '
-                    f'{market} {ds} | 已耗時 {elapsed_before:.1f}s',
-                    flush=True
-                )
-
                 try:
-                    data = get_pe_by_date(ds, market)
-                    fetched += 1
-                except Exception as e:
-                    print(
-                        f'全市場 PE 快取失敗：{market} {ds} / '
-                        f'{type(e).__name__}: {e}',
-                        flush=True
-                    )
-                    data = {}
+                    dd = datetime.strptime(ds, '%Y%m%d').date()
+                except Exception:
+                    continue
+                if cutoff <= dd <= today:
+                    pe = to_float(value)
+                    if pe is not None and 0 < pe <= PE_MAX_VALID:
+                        counts[ds] = counts.get(ds, 0) + 1
+        for ds, count in counts.items():
+            if ds not in coverage[market]:
+                coverage[market][ds] = count
+                migrated += 1
+            fetch_status[market].setdefault(ds, 'success')
 
-                valid_count = 0
-                for code, row in (data or {}).items():
-                    code = clean_code(code)
-                    if not code or not isinstance(row, dict):
-                        continue
-                    pe = to_float(row.get('pe'))
-                    if pe is None or not (0 < pe <= PE_MAX_VALID):
-                        continue
-                    bucket = pe_history.setdefault(code, {})
-                    bucket[ds] = pe
-                    valid_count += 1
-
-                coverage[market][ds] = valid_count
-
-                if valid_count > 0:
-                    market_status[ds] = 'success'
-                    newly_success += 1
-                else:
-                    # 0 筆有效 PE 可能是官方資料空白，也可能是暫時失敗。
-                    # 仍保留冷卻狀態，避免每次 Action 立即重打。
-                    market_status[ds] = {
-                        'state': 'failed',
-                        'last_attempt': datetime.now(TW_TZ).isoformat(),
-                        'valid_count': 0,
-                    }
-                    newly_failed += 1
-
-                elapsed = time.time() - run_started
-                print(
-                    f'PE歷史結果：{market} {ds} | 有效 {valid_count} 檔 | '
-                    f'已耗時 {elapsed:.1f}s',
-                    flush=True
-                )
-
-            if budget_stopped:
-                break
-
-    # 清掉一年以前的 PE 歷史，以及對應 metadata，避免 GitHub cache 無限膨脹。
-    cutoff = today - timedelta(days=370)
     removed = 0
     for code in list(pe_history.keys()):
         if code == '_meta':
@@ -8152,47 +7901,30 @@ def refresh_all_market_pe_history(pe_history, universe=None):
             pe_history.pop(code, None)
 
     for market in markets:
-        for ds in list(fetch_status[market].keys()):
-            try:
-                dd = datetime.strptime(ds, '%Y%m%d').date()
-            except Exception:
-                continue
-            if dd < cutoff:
-                fetch_status[market].pop(ds, None)
-        for ds in list(coverage[market].keys()):
-            try:
-                dd = datetime.strptime(ds, '%Y%m%d').date()
-            except Exception:
-                continue
-            if dd < cutoff:
-                coverage[market].pop(ds, None)
+        for store in (coverage[market], fetch_status[market]):
+            for ds in list(store.keys()):
+                try:
+                    dd = datetime.strptime(ds, '%Y%m%d').date()
+                except Exception:
+                    continue
+                if dd < cutoff:
+                    store.pop(ds, None)
 
-    elapsed = time.time() - run_started
-    stop_reason = ''
-    if budget_stopped:
-        if api_used >= api_budget:
-            stop_reason = '；已達 API 上限'
-        elif elapsed >= time_budget:
-            stop_reason = '；已達時間上限'
+    valid_stocks = 0
+    for code, bucket in pe_history.items():
+        if code == '_meta' or not isinstance(bucket, dict):
+            continue
+        if any(to_float(v) is not None and 0 < to_float(v) <= PE_MAX_VALID for v in bucket.values()):
+            valid_stocks += 1
 
     print(
-        f'全市場 PE 歷史快取：{len(pe_history)} 檔，'
-        f'掃描 {scanned} 個交易日、API資料 {fetched} 次、'
-        f'跳過已快取 {skipped_cached} 次、失敗冷卻 {skipped_failed} 次、'
-        f'本次新增成功 {newly_success} 次、失敗 {newly_failed} 次、'
-        f'舊快取 migration {migrated_dates} 日期、清理 {removed} 筆、'
-        f'耗時 {elapsed:.1f}s{stop_reason}',
+        f'全市場 PE 歷史快取：{valid_stocks} 檔，'
+        f'本次 0 次歷史PE API、migration {migrated} 日期、清理 {removed} 筆；'
+        f'V2.10.56 不再呼叫 TWSE/TPEx 歷史 PE API',
         flush=True
     )
-
-    if budget_stopped:
-        print(
-            '⚠️ V2.10.55：全市場 PE 本次更新已安全停止；'
-            '保留既有 PE 快取並繼續後續法人/融資與逐股分析。',
-            flush=True
-        )
-
     return pe_history
+
 
 def run_alerts():
 
@@ -8210,7 +7942,7 @@ def run_alerts():
     print(
         '================================\n'
         '股票跌幅 + 15分鐘區間最低價 + '
-        'V2.10.55自動估值 + 技術 + 籌碼\n'
+        'V2.10.56自動估值 + 技術 + 籌碼\n'
         '================================'
     )
 
@@ -8300,7 +8032,7 @@ def run_alerts():
             if target_market in ('TWSE', 'TPEX'):
                 if (pe_backfill_budget['api_used'] >= PE_BACKFILL_MAX_API_PER_RUN or
                     time.time() - pe_backfill_budget['started'] >= PE_BACKFILL_MAX_SECONDS_PER_RUN):
-                    print('⚠️ V2.10.55：目標股 PE 回補總預算已用完，後續改用既有快取/proxy，不再打歷史 API。', flush=True)
+                    print('⚠️ V2.10.56：目標股 PE 回補總預算已用完，後續改用既有快取/proxy，不再打歷史 API。', flush=True)
                     break
                 try:
                     pe_history = backfill_pe(target_code, pe_history, target_market, pe_backfill_budget)
