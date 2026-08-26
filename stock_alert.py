@@ -1,5 +1,5 @@
-# stock_alert.py V2.10.45
-# V2.10.45：統一 EPS Growth 與 PEG 資料口徑；修正 EPS 成長 N/A 但 PEG 有值的矛盾
+# stock_alert.py V2.10.46
+# V2.10.46：統一 EPS Growth 與 PEG 資料口徑；修正 EPS 成長 N/A 但 PEG 有值的矛盾
 # V2.10.41：修正 line_fund_cache 覆蓋策略、ETF NAV/溢價、Beta、TPEX 資券與 ETF chart fallback
 # 效能修正版：
 # 1. 全市場資料批次化
@@ -2692,7 +2692,7 @@ def check_interval_low(
 
 
 def _drop_alert_analysis_message(name, symbol, u, day, week, cur, pc, wh, daily_triggered, weekly_triggered):
-    """V2.10.45：跌幅警報觸發後，直接沿用同一套股票加碼分析模型。
+    """V2.10.46：跌幅警報觸發後，直接沿用同一套股票加碼分析模型。
 
     這裡使用 LINE 輕量路徑與 Actions 已建立的快取，避免警報時重新掃描全市場。
     若分析失敗，仍會送出原本的跌幅通知，不讓分析故障影響警報。
@@ -2760,7 +2760,7 @@ def _drop_alert_analysis_message(name, symbol, u, day, week, cur, pc, wh, daily_
         )
         return msg[:5000]
     except Exception as e:
-        print(f'V2.10.45 跌幅通知加碼分析失敗 {name}: {type(e).__name__}: {e}', flush=True)
+        print(f'V2.10.46 跌幅通知加碼分析失敗 {name}: {type(e).__name__}: {e}', flush=True)
         msg=(
             f'🔴 跌幅通知\n\n'
             f'標的：{name}\n'
@@ -3339,7 +3339,7 @@ def yahoo_quote_summary_fund(symbol):
         out['market_cap']=raw('price','marketCap')
         out['price']=raw('price','regularMarketPrice','postMarketPrice')
 
-        # V2.10.45：Yahoo earningsHistory / incomeStatementHistory fallback。
+        # V2.10.46：Yahoo earningsHistory / incomeStatementHistory fallback。
         # 不再只依賴 financialData.earningsGrowth；部分台股沒有該欄位，
         # 但仍可從實際季度/年度 EPS 計算 YoY。
         hist=[]
@@ -5552,7 +5552,7 @@ def _fund_cache_suspicious(key, value):
 
 
 def _v21045_peer_pe_fallback(peer_item, pe_data):
-    """V2.10.45：同次產業 PE 統一 fallback。
+    """V2.10.46：同次產業 PE 統一 fallback。
 
     同業不能只讀 pe_data；官方 PE 缺欄時，依序使用 Yahoo quoteSummary、
     fundamentals-timeseries、yfinance，最後用最新價格 / TTM EPS 計算。
@@ -5598,7 +5598,7 @@ def _v21045_peer_pe_fallback(peer_item, pe_data):
 
 
 def yahoo_light_fund(symbol, official=None, current_price=None, market=None):
-    """V2.10.45 LINE Free 基本面多源修正版。
+    """V2.10.46 LINE Free 基本面多源修正版。
 
     核心原則：
     1. line_fund_cache.json 永遠只是 fallback，不是最高優先權。
@@ -5648,9 +5648,9 @@ def yahoo_light_fund(symbol, official=None, current_price=None, market=None):
                 v=to_float(rr.get(k))
                 if o.get(k) is None and v is not None and _fund_cache_valid_value(k,v):
                     o[k]=v
-            print(f'V2.10.45 LINE基本面：交易所官方 {code} {rr}',flush=True)
+            print(f'V2.10.46 LINE基本面：交易所官方 {code} {rr}',flush=True)
         except Exception as e:
-            print(f'V2.10.45 LINE基本面：交易所官方 fallback失敗 {code}: {type(e).__name__}',flush=True)
+            print(f'V2.10.46 LINE基本面：交易所官方 fallback失敗 {code}: {type(e).__name__}',flush=True)
 
     # 即使 cache 有值，只要過期/可疑就刷新 Yahoo；新值一定覆蓋舊 cache。
     if need_yahoo:
@@ -5673,7 +5673,7 @@ def yahoo_light_fund(symbol, official=None, current_price=None, market=None):
             o[k]=first_valid(k,qs.get(k),ts.get(k),yfinfo.get(k))
 
     o['eps_growth']=first_valid('eps_growth',ts.get('eps_growth'),qs.get('eps_growth'),yfinfo.get('eps_growth'))
-    # V2.10.45：quoteSummary earningsHistory / incomeStatementHistory 計算結果。
+    # V2.10.46：quoteSummary earningsHistory / incomeStatementHistory 計算結果。
     if o['eps_growth'] is None:
         qg=to_float(qs.get('eps_growth'))
         if qg is not None and -500 <= qg <= 500:
@@ -5714,19 +5714,19 @@ def yahoo_light_fund(symbol, official=None, current_price=None, market=None):
             y=yahoo_tw_dividend_fallback(symbol,px)
             if y is not None and 0<=y<=30:
                 o['yield']=y
-                print(f'V2.10.45 LINE基本面：Yahoo股利頁補殖利率 {code} = {y:.2f}%',flush=True)
+                print(f'V2.10.46 LINE基本面：Yahoo股利頁補殖利率 {code} = {y:.2f}%',flush=True)
         except Exception as e:
-            print(f'V2.10.45 LINE基本面：Yahoo股利頁失敗 {code}: {type(e).__name__}',flush=True)
+            print(f'V2.10.46 LINE基本面：Yahoo股利頁失敗 {code}: {type(e).__name__}',flush=True)
 
     if o['yield'] is not None and (not math.isfinite(o['yield']) or o['yield']<0 or o['yield']>30):
         o['yield']=None
 
-    # V2.10.45：EPS Growth 與 PEG 必須互相一致。
+    # V2.10.46：EPS Growth 與 PEG 必須互相一致。
     # 超過 200% 的低基期成長仍保留為顯示值，但不拿來計算 PEG。
     raw_growth = to_float(o.get('eps_growth'))
     growth_for_peg = raw_growth if raw_growth is not None and abs(raw_growth) <= 200 else None
     if raw_growth is not None and abs(raw_growth) > 200:
-        print(f'V2.10.45 LINE基本面：低基期/異常EPS成長不納入PEG {code}={raw_growth:.2f}%',flush=True)
+        print(f'V2.10.46 LINE基本面：低基期/異常EPS成長不納入PEG {code}={raw_growth:.2f}%',flush=True)
 
     # 只要有合理 EPS Growth，就強制用本程式統一口徑重算 PEG。
     if o['pe'] and growth_for_peg and o['pe']>0 and growth_for_peg>0:
@@ -5742,7 +5742,7 @@ def yahoo_light_fund(symbol, official=None, current_price=None, market=None):
             if 0 < implied_growth <= 200 and math.isfinite(implied_growth):
                 o['eps_growth'] = implied_growth
                 o['peg'] = implied_peg
-                print(f'V2.10.45 LINE基本面：由可靠PEG反推EPS成長 {code} = {implied_growth:.2f}% (PEG={implied_peg:.2f})',flush=True)
+                print(f'V2.10.46 LINE基本面：由可靠PEG反推EPS成長 {code} = {implied_growth:.2f}% (PEG={implied_peg:.2f})',flush=True)
 
     # 若 PE/Growth 其中一項缺失，保留可信 cache，而不是拿舊 cache 覆蓋新值。
     # 只有「新來源仍沒有值」時才使用 cache。
@@ -5753,9 +5753,9 @@ def yahoo_light_fund(symbol, official=None, current_price=None, market=None):
             if _fund_cache_valid_value(k,cv) and not (k=='eps_growth' and _fund_cache_suspicious(k,cv)):
                 # 過期 cache 可以用作最後 fallback，但標記 log。
                 o[k]=cv
-                print(f'V2.10.45 LINE基本面：{code} {k} 使用 cache fallback={cv} age={cache_age:.1f}h',flush=True)
+                print(f'V2.10.46 LINE基本面：{code} {k} 使用 cache fallback={cv} age={cache_age:.1f}h',flush=True)
 
-    # V2.10.45：如果 PEG 最後是從 cache fallback 而直接 EPS Growth 仍缺失，
+    # V2.10.46：如果 PEG 最後是從 cache fallback 而直接 EPS Growth 仍缺失，
     # 以合理 cache PEG 反推一致的隱含成長率，避免畫面再次出現 N/A + PEG。
     if o['eps_growth'] is None and o['pe'] and o['pe']>0:
         cached_peg = to_float(o.get('peg'))
@@ -5763,7 +5763,7 @@ def yahoo_light_fund(symbol, official=None, current_price=None, market=None):
             implied_growth = o['pe'] / cached_peg
             if 0 < implied_growth <= 200 and math.isfinite(implied_growth):
                 o['eps_growth'] = implied_growth
-                print(f'V2.10.45 LINE基本面：cache PEG反推EPS成長 {code} = {implied_growth:.2f}% (PEG={cached_peg:.2f})',flush=True)
+                print(f'V2.10.46 LINE基本面：cache PEG反推EPS成長 {code} = {implied_growth:.2f}% (PEG={cached_peg:.2f})',flush=True)
 
     # ROE <-> PB/PE：只在完全沒有新/可信來源時推導。
     if o['roe'] is None and o['pe'] and o['pb'] and o['pe']>0 and o['pb']>0:
@@ -5789,9 +5789,9 @@ def yahoo_light_fund(symbol, official=None, current_price=None, market=None):
         merged['_cached_at']=time.time()
         cache[code]=merged
         save_json(LINE_FUND_CACHE_FILE,cache)
-        print(f'V2.10.45 LINE基本面快取更新 {code}: {merged}',flush=True)
+        print(f'V2.10.46 LINE基本面快取更新 {code}: {merged}',flush=True)
     except Exception as e:
-        print(f'V2.10.45 LINE基本面快取保存失敗 {code}: {e}',flush=True)
+        print(f'V2.10.46 LINE基本面快取保存失敗 {code}: {e}',flush=True)
     return o
 
 def _parse_number_near(text, label, max_chars=180):
@@ -5861,7 +5861,7 @@ def yahoo_tw_dividend_fallback(symbol, price=None):
         px=to_float(price)
         if px is None or px<=0: return None
 
-        # V2.10.45：優先使用 Yahoo Chart events=div。
+        # V2.10.46：優先使用 Yahoo Chart events=div。
         # 股利頁是 JS 動態頁，Render requests 有時拿不到表格內容；Chart events
         # 則直接提供實際現金股利事件。最近 365 天加總可處理半年配/季配股票。
         try:
@@ -6222,7 +6222,7 @@ def etf_analysis(query):
         premium=x if -50<=x<=50 else None
     score,reasons=score_etf(tech,p)
     verdict='🟢 可分批配置' if score>=75 else '🟡 等待回檔/止跌' if score>=60 else '🟠 暫緩配置' if score>=40 else '🔴 不建議配置'
-    return (f'📊 ETF配置分析 V2.10.45\n\n標的：{info["name"]}（{code}）\n代號：{symbol}\n\n'
+    return (f'📊 ETF配置分析 V2.10.46\n\n標的：{info["name"]}（{code}）\n代號：{symbol}\n\n'
             f'【ETF特性 40分】\nNAV：{fmt(nav)}\n溢價/折價：{fmt(premium)}%\n殖利率：{fmt(p.get("yield"))}%\nBeta：{fmt(p.get("beta"))}\n資產規模：{fmt(p.get("assets"),0)}\n\n'
             f'【技術面 60分】\n價格：{fmt(price)}\nRSI：{fmt(tech.get("rsi"))}\nKD：K={fmt(tech.get("k"))} / D={fmt(tech.get("d"))}\nMA20：{fmt(tech.get("ma20"))}\nMA60：{fmt(tech.get("ma60"))}\n趨勢：{tech.get("trend") or "N/A"}\n\n'
             f'【ETF綜合評分】\n綜合評分：{score}/100\n結論：{verdict}\n加分因素：{"、".join(reasons) if reasons else "無"}')
@@ -6435,7 +6435,7 @@ def analysis(
 
     vals = []
     for peer_item in peers:
-        # V2.10.45：LINE 輕量模式與一般模式統一同業 PE fallback。
+        # V2.10.46：LINE 輕量模式與一般模式統一同業 PE fallback。
         peer_pe = _v21045_peer_pe_fallback(peer_item, pe_data)
         if peer_pe is not None and 0 < peer_pe <= PE_MAX_VALID:
             vals.append(peer_pe)
@@ -6678,7 +6678,7 @@ def analysis(
     # --------------------------------------------------------
 
     return (
-        f'📊 股票加碼分析 V2.10.45\n\n'
+        f'📊 股票加碼分析 V2.10.46\n\n'
         f'標的：{name}（{code}）\n'
         f'市場：{market}\n'
         f'產業：{industry}\n'
