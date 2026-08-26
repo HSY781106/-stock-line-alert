@@ -1,4 +1,4 @@
-name: Stock Alert V2.10.20
+name: Stock Alert V2.10
 
 on:
   schedule:
@@ -7,11 +7,12 @@ on:
 
 concurrency:
   group: stock-alert-main
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   check-stock:
     runs-on: ubuntu-latest
+
     permissions:
       contents: write
 
@@ -43,6 +44,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
           echo "========== 檢查 Python 產生的狀態/快取 =========="
+
           for f in \
             alert_state.json \
             pe_history.json \
@@ -54,41 +56,59 @@ jobs:
             twse_profile_cache.json \
             twse_quotes_cache.json \
             subindustry_cache.json; do
+
             if [ -f "$f" ]; then
               echo "存在：$f ($(wc -c < "$f") bytes)"
             else
               echo "不存在：$f（略過）"
             fi
+
           done
 
           if [ -f line_technical_cache.json ]; then
             echo "========== 技術快取摘要 =========="
+
             python - <<'PY'
           import json
           from pathlib import Path
+
           p = Path("line_technical_cache.json")
+
           try:
               d = json.loads(p.read_text(encoding="utf-8"))
-              entries = [k for k,v in d.items() if isinstance(v, dict) and v.get("price") is not None]
+
+              entries = [
+                  k for k, v in d.items()
+                  if isinstance(v, dict) and v.get("price") is not None
+              ]
+
               print(f"技術快取有效標的：{len(entries)}")
               print("前20檔：", ", ".join(entries[:20]))
+
           except Exception as e:
               print("技術快取摘要失敗：", e)
           PY
           fi
 
           echo "========== 暫存本次 Python 產生內容 =========="
+
           git add -A
-          git diff --cached --quiet || git stash push -u -m "stock-alert-generated-state-v2.10.20"
+
+          if ! git diff --cached --quiet; then
+            git stash push -u -m "stock-alert-generated-state-v2.10.20"
+          fi
 
           echo "========== 同步 GitHub 最新 main =========="
+
           git fetch origin main
           git rebase origin/main
 
           echo "========== 還原本次 Python 產生內容 =========="
+
           git stash pop || true
 
           echo "========== 最終加入所有變更 =========="
+
           git add -A
 
           if git diff --cached --quiet; then
@@ -99,4 +119,5 @@ jobs:
           git commit -m "Update stock alert state and all-market technical cache V2.10.20"
 
           echo "========== Push =========="
+
           git push origin HEAD:main
