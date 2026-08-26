@@ -1,4 +1,4 @@
-# stock_alert.py V2.10.62
+# stock_alert.py V2.10.63
 # V2.10.56：修正 V2.10.53 舊 PE 快取 migration；加入 PE 每次執行請求/時間上限、即時進度與安全降級；LINE 不再使用舊版 yahoo_light_fund / MOPS fallback / 舊 cache 推導
 # V2.10.48：加入 MOPS 官方財報 EPS Growth fallback，補強 Yahoo 多層來源仍為 N/A 的股票
 # V2.10.47：統一 EPS Growth 與 PEG 資料口徑；修正 EPS 成長 N/A 但 PEG 有值的矛盾
@@ -130,11 +130,16 @@ PE_HISTORY_PROGRESS_EVERY = 1
 # PE 歷史查詢以日期快取，避免同一次執行 2330/3711 重複打同一天 API
 PE_DATE_CACHE = {}
 
-# V2.10.62：季度 EPS 年度預估模型；修正 Yahoo quarterlyDilutedEPS 缺欄導致全數 N/A。
+# V2.10.63：季度 EPS 年度預估模型；修正 Yahoo quarterlyDilutedEPS 缺欄導致全數 N/A。
 # EPS Growth 僅由「各季度 EPS」建立，不再使用 Q2 YoY / TTM YoY / Yahoo earningsGrowth。
 # 已公布季度用實際 EPS；未公布季度用歷史同季度趨勢回歸 + 季節性中位數預估。
 # 重大且已確認事件可透過 EPS_EVENT_ADJUSTMENTS 調整指定季度，預設空表，不增加網路請求。
 EPS_EVENT_ADJUSTMENTS = {}
+# V2.10.63：已確認的「季度 EPS 指引/可靠公開預估」可直接覆寫尚未公布季度。
+# 格式：{'2330': {2026: {3: 32.50, 4: 34.10}}}
+# 只允許作用於尚未公布季度；不會覆蓋實際 EPS。
+# 不自行抓新聞、不把傳聞寫進模型；只有人工/程式明確填入的確認值才會生效。
+EPS_CONFIRMED_QUARTER_OVERRIDES = {}
 EPS_MODEL_MIN_YEARS = 3
 EPS_MODEL_MAX_YEARS = 5
 EPS_MODEL_MIN_HISTORY_QUARTERS = 8
@@ -3833,7 +3838,7 @@ def mops_annual_roe_fallback(code, market=None):
 
 
 def _eps_growth_sanity(value, source='unknown', corroborated=False, cached_value=None):
-    """V2.10.62：季度 EPS 年度模型結果的安全驗證。
+    """V2.10.63：季度 EPS 年度模型結果的安全驗證。
 
     只有模型本身建立在實際季度 EPS 上時才視為 corroborated；
     不再用 Q2 YoY、TTM YoY 或 Yahoo earningsGrowth 幫模型背書。
@@ -3851,7 +3856,7 @@ def _eps_growth_sanity(value, source='unknown', corroborated=False, cached_value
 
 
 def _eps_growth_event_factor(code, year, quarter):
-    """V2.10.62：已確認重大事件的季度調整係數。
+    """V2.10.63：已確認重大事件的季度調整係數。
 
     不自行爬新聞、不把傳聞寫進模型。只有 EPS_EVENT_ADJUSTMENTS 明確設定才會生效。
     例如 1.10 = 該季度預估 EPS +10%，0.90 = -10%。
@@ -3866,15 +3871,36 @@ def _eps_growth_event_factor(code, year, quarter):
         return 1.0
 
 
-def _eps_growth_from_quarterly_model(code, ts, now=None):
-    """V2.10.62：只用季度 EPS 推估「完整年度 EPS Growth」。
+def _eps_growth_confirmed_quarter(code, year, quarter):
+    """V2.10.63：取得已確認的未公布季度 EPS 覆寫值。
 
-    1. 已公布季度：直接使用實際 EPS。
-    2. 未公布季度：每季分開，以最近 5 年同季度 EPS 做線性回歸。
-    3. 回歸同時與最近 3 年同季度中位數 70/30 融合，降低單次異常值影響。
-    4. 若同季度回歸資料不足，使用同季度中位數；再不足才使用季節性比例模型。
-    5. 去年完整 EPS 一律由「去年 Q1~Q4 實際 EPS 加總」取得，不使用 annual EPS、Q2 YoY、TTM YoY。
-    6. 已確認重大事件可調整尚未公布季度。
+    這裡只接受明確設定的季度 EPS，不自行爬新聞或猜測公司指引。
+    若值不合理則忽略；實際季度由主模型優先保留。
+    """
+    try:
+        item=EPS_CONFIRMED_QUARTER_OVERRIDES.get(clean_code(code), {})
+        y=item.get(int(year), {}) if isinstance(item, dict) else {}
+        v=to_float(y.get(int(quarter))) if isinstance(y, dict) else None
+        if v is None or not math.isfinite(v):
+            return None
+        # EPS 預估值必須為有限數；允許負 EPS，因為部分公司可能處於虧損。
+        if abs(v) > 1000:
+            return None
+        return float(v)
+    except Exception:
+        return None
+
+
+def _eps_growth_from_quarterly_model(code, ts, now=None):
+    """V2.10.63：只用季度 EPS 推估完整年度 EPS Growth。
+
+    優先順序：
+    1. 已公布季度：直接使用實際 EPS，絕不重新估算。
+    2. 尚未公布季度若有明確確認的 EPS 指引/可靠公開預估：直接採用該值。
+    3. 其餘未公布季度：最近 5 年同季度線性回歸 + 最近 3 年同季度中位數 70/30。
+    4. 回歸不足：同季度中位數；再不足才使用季節性比例模型。
+    5. 重大事件係數只作用於第 3/4 層的「模型預測」，不會修改實際值或已確認 EPS。
+    6. 去年完整 EPS 一律由去年 Q1~Q4 實際 EPS 加總，不使用 annual EPS、Q2 YoY、TTM YoY。
     """
     try:
         qrows=ts.get('eps_quarterly_history') or []
@@ -3892,12 +3918,10 @@ def _eps_growth_from_quarterly_model(code, ts, now=None):
         if len(quarterly)<EPS_MODEL_MIN_HISTORY_QUARTERS: return None,None
         if now is None: now=datetime.now(TW_TZ)
         current_year=int(now.year)
-        # 以資料最新年度與系統年度較新的那個為準，避免 Yahoo 時區/延遲造成誤判。
         latest_year=max(y for y,q in quarterly)
         if latest_year>current_year: current_year=latest_year
         current_actual={q:v for (y,q),v in quarterly.items() if y==current_year}
 
-        # 找「上一個完整年度」，且四季都必須有實際季度 EPS。
         complete_years=[]
         for y in sorted(set(y for y,q in quarterly if y<current_year)):
             vals=[quarterly.get((y,q)) for q in range(1,5)]
@@ -3907,34 +3931,44 @@ def _eps_growth_from_quarterly_model(code, ts, now=None):
         prev_year=complete_years[-1]
         prev_annual=sum(float(quarterly[(prev_year,q)]) for q in range(1,5))
         if not math.isfinite(prev_annual) or prev_annual<=0:
-            # EPS 由負轉正/負轉負時，百分比 YoY 沒有穩健經濟意義。
             return None,None
 
         projected=dict(current_actual)
         missing=[q for q in range(1,5) if q not in projected]
+        confirmed_used=[]
+        for q in list(missing):
+            v=_eps_growth_confirmed_quarter(code,current_year,q)
+            if v is not None:
+                projected[q]=float(v)
+                confirmed_used.append(q)
+
+        missing=[q for q in range(1,5) if q not in projected]
         hist_years=sorted(set(y for y,q in quarterly if y<current_year))[-EPS_MODEL_MAX_YEARS:]
-        regression_used=[]; median_used=[]; seasonal_used=[]
+        regression_used=[]; median_used=[]; seasonal_used=[]; event_adjusted=[]
 
         for q in missing:
             pts=[]
             for y in hist_years:
                 v=quarterly.get((y,q))
-                if v is not None and math.isfinite(float(v)): pts.append((float(y),float(v)))
+                if v is not None and math.isfinite(float(v)):
+                    pts.append((float(y),float(v)))
             pred=None
             if len(pts)>=EPS_MODEL_MIN_YEARS:
                 vals=[v for _,v in pts[-min(3,len(pts)):]]
                 med=float(np.median(vals)) if vals else None
                 try:
-                    xs=np.array([x for x,_ in pts],dtype=float); ys=np.array([v for _,v in pts],dtype=float)
+                    xs=np.array([x for x,_ in pts],dtype=float)
+                    ys=np.array([v for _,v in pts],dtype=float)
                     slope,intercept=np.polyfit(xs,ys,1)
                     reg=float(intercept+slope*float(current_year))
                     if math.isfinite(reg) and med is not None:
-                        # 軟護欄：預測不可遠超最近同季實績範圍。
                         lo=min(vals)*0.50; hi=max(vals)*1.50
                         if lo<=hi: reg=min(max(reg,lo),hi)
                         pred=EPS_MODEL_BLEND_REGRESSION*reg+EPS_MODEL_BLEND_MEDIAN*med
-                    elif math.isfinite(reg): pred=reg
-                except Exception: pred=None
+                    elif math.isfinite(reg):
+                        pred=reg
+                except Exception:
+                    pred=None
                 if pred is None and med is not None: pred=med
                 if pred is not None: regression_used.append(q)
             elif pts:
@@ -3942,11 +3976,11 @@ def _eps_growth_from_quarterly_model(code, ts, now=None):
 
             if pred is not None and math.isfinite(pred):
                 factor=_eps_growth_event_factor(code,current_year,q)
+                if factor != 1.0: event_adjusted.append(q)
                 projected[q]=float(pred*factor)
 
         # 回歸不足時，以歷史完整年度中該季度占全年 EPS 的季節係數補洞。
-        for q in missing:
-            if q in projected: continue
+        for q in [qq for qq in range(1,5) if qq not in projected]:
             ratios=[]
             for y in hist_years:
                 vals=[quarterly.get((y,j)) for j in range(1,5)]
@@ -3963,7 +3997,9 @@ def _eps_growth_from_quarterly_model(code, ts, now=None):
                 if abs(denom)>0.15:
                     pred=known*r/denom
                     if math.isfinite(pred):
-                        projected[q]=float(pred*_eps_growth_event_factor(code,current_year,q)); seasonal_used.append(q)
+                        factor=_eps_growth_event_factor(code,current_year,q)
+                        if factor != 1.0: event_adjusted.append(q)
+                        projected[q]=float(pred*factor); seasonal_used.append(q)
 
         if len(projected)!=4: return None,None
         current_annual=sum(float(projected[q]) for q in range(1,5))
@@ -3974,21 +4010,23 @@ def _eps_growth_from_quarterly_model(code, ts, now=None):
         detail={
             'current_year':current_year,'prev_year':prev_year,'prev_annual':prev_annual,
             'projected_quarters':{q:float(projected[q]) for q in range(1,5)},
-            'actual_quarters':sorted(current_actual),'forecast_quarters':[q for q in range(1,5) if q not in current_actual],
+            'actual_quarters':sorted(current_actual),
+            'forecast_quarters':[q for q in range(1,5) if q not in current_actual],
+            'confirmed_quarters':sorted(confirmed_used),
             'regression_quarters':regression_used,'median_quarters':median_used,'seasonal_quarters':seasonal_used,
             'current_annual':current_annual,'growth':float(growth),
-            'event_adjusted_quarters':[q for q in range(1,5) if _eps_growth_event_factor(code,current_year,q)!=1.0]
+            'event_adjusted_quarters':sorted(set(event_adjusted))
         }
         return float(growth),detail
     except Exception as e:
-        print(f'V2.10.62 季度EPS模型失敗 {code}: {type(e).__name__}: {e}',flush=True)
+        print(f'V2.10.63 季度EPS模型失敗 {code}: {type(e).__name__}: {e}',flush=True)
         return None,None
 
 
 def official_fundamental(symbol, official=None, current_price=None, market=None):
     """V2.10.62：股票基本面/估值資料層。
 
-    EPS Growth 唯一主模型：季度 EPS -> 未來季度回歸/季節性預估 -> 全年 EPS -> 去年完整年度 EPS -> YoY。
+    EPS Growth 唯一主模型：已公布季度實際 EPS -> 已確認季度 EPS -> 未公布季度回歸/季節性預估 -> 全年 EPS -> 去年完整年度 EPS -> YoY。
     不再採用 Q2 YoY、TTM YoY、Yahoo earningsGrowth 或 annual EPS 作為 Growth 主來源。
     其他 PE/PB/Yield/ROE/PEG 口徑與 V2.10.62 保持。
     """
@@ -4023,14 +4061,22 @@ def official_fundamental(symbol, official=None, current_price=None, market=None)
     except Exception: pass
 
     model_g,detail=_eps_growth_from_quarterly_model(code,ts,now=datetime.now(TW_TZ))
-    model_g=_eps_growth_sanity(model_g,'V2.10.62 quarterly EPS model',True,cached_g)
+    model_g=_eps_growth_sanity(model_g,'V2.10.63 quarterly EPS model',True,cached_g)
     if model_g is not None:
         out['eps_growth']=model_g
         if detail:
             qtext=' / '.join([f'Q{q}={detail["projected_quarters"][q]:.4f}' for q in range(1,5)])
-            print(f'V2.10.62 EPS Growth：{code}={model_g:.2f}% [季度EPS年度模型] {detail["current_year"]}全年={detail["current_annual"]:.4f} vs {detail["prev_year"]}全年={detail["prev_annual"]:.4f} | {qtext}',flush=True)
+            source_bits=[]
+            if detail.get('actual_quarters'): source_bits.append('實際Q'+','.join(map(str,detail['actual_quarters'])))
+            if detail.get('confirmed_quarters'): source_bits.append('確認Q'+','.join(map(str,detail['confirmed_quarters'])))
+            if detail.get('regression_quarters'): source_bits.append('回歸Q'+','.join(map(str,detail['regression_quarters'])))
+            if detail.get('median_quarters'): source_bits.append('中位數Q'+','.join(map(str,detail['median_quarters'])))
+            if detail.get('seasonal_quarters'): source_bits.append('季節Q'+','.join(map(str,detail['seasonal_quarters'])))
+            if detail.get('event_adjusted_quarters'): source_bits.append('事件調整Q'+','.join(map(str,detail['event_adjusted_quarters'])))
+            src='；'.join(source_bits) if source_bits else '無'
+            print(f'V2.10.63 EPS Growth：{code}={model_g:.2f}% [季度EPS年度模型] {detail["current_year"]}全年={detail["current_annual"]:.4f} vs {detail["prev_year"]}全年={detail["prev_annual"]:.4f} | {qtext} | 來源：{src}',flush=True)
     else:
-        print(f'V2.10.62 EPS Growth：{code}=N/A [季度EPS資料不足/模型無法建立]',flush=True)
+        print(f'V2.10.63 EPS Growth：{code}=N/A [季度EPS資料不足/模型無法建立]',flush=True)
 
     r_candidates=[qs.get('roe'),ts.get('roe')]
     out['roe']=next((float(v) for v in r_candidates if to_float(v) is not None and -100<=to_float(v)<=100),None)
@@ -4047,7 +4093,7 @@ def official_fundamental(symbol, official=None, current_price=None, market=None)
     if pe is not None and pe>0 and g is not None and 0<g<=200:
         peg=pe/g
         if math.isfinite(peg) and 0<peg<100: out['peg']=peg
-    print(f'V2.10.62 基本面 {code}: PE={fmt(out["pe"])} PB={fmt(out["pb"])} Yield={fmt(out["yield"])} EPSGrowth={fmt(out["eps_growth"])} ROE={fmt(out["roe"])} PEG={fmt(out["peg"])}',flush=True)
+    print(f'V2.10.63 基本面 {code}: PE={fmt(out["pe"])} PB={fmt(out["pb"])} Yield={fmt(out["yield"])} EPSGrowth={fmt(out["eps_growth"])} ROE={fmt(out["roe"])} PEG={fmt(out["peg"])}',flush=True)
     return out
 
 
