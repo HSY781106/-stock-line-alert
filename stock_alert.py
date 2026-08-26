@@ -1,4 +1,5 @@
-# stock_alert.py V2.10.48
+# stock_alert.py V2.10.49
+# V2.10.49：基本面/估值資料層改為 TWSE/TPEx 官方 + MOPS 官方財報；Yahoo 不再作股票基本面主來源
 # V2.10.48：加入 MOPS 官方財報 EPS Growth fallback，補強 Yahoo 多層來源仍為 N/A 的股票
 # V2.10.47：統一 EPS Growth 與 PEG 資料口徑；修正 EPS 成長 N/A 但 PEG 有值的矛盾
 # V2.10.41：修正 line_fund_cache 覆蓋策略、ETF NAV/溢價、Beta、TPEX 資券與 ETF chart fallback
@@ -88,6 +89,8 @@ TWSE_QUOTES_CACHE_FILE = 'twse_quotes_cache.json'
 
 # V2.9.8 新增
 SUBINDUSTRY_CACHE_FILE = 'subindustry_cache.json'
+# V2.10.49：官方基本面快取
+MOPS_FUND_CACHE_FILE = 'mops_fund_cache.json'
 
 LINE_REPLY_URL = 'https://api.line.me/v2/bot/message/reply'
 LINE_PUSH_URL = 'https://api.line.me/v2/bot/message/push'
@@ -536,7 +539,7 @@ def http_json(
     last = None
 
     base_headers = {
-        'User-Agent': 'Mozilla/5.0 stock-alert/2.10.7'
+        'User-Agent': 'Mozilla/5.0 stock-alert/2.10.49'
     }
 
     if headers:
@@ -610,7 +613,7 @@ def http_text(
                 timeout=timeout,
                 headers={
                     'User-Agent':
-                        'Mozilla/5.0 stock-alert/2.10.7'
+                        'Mozilla/5.0 stock-alert/2.10.49'
                 }
             )
 
@@ -3498,9 +3501,19 @@ def mops_eps_growth_fallback(code, market=None):
     if not code or not code.isdigit():
         return None
 
-    key = ('mops_eps_growth_v21048', code, market or '')
+    key = ('mops_eps_growth_v21049', code, market or '')
     if key in RUN_CACHE:
         return RUN_CACHE[key]
+    # V2.10.49：持久快取官方 EPS Growth，避免每次 LINE/Actions 重複抓同一財報。
+    fund_cache = load_json(MOPS_FUND_CACHE_FILE)
+    cached_item = fund_cache.get(code, {}) if isinstance(fund_cache, dict) else {}
+    if isinstance(cached_item, dict):
+        cv = to_float(cached_item.get('eps_growth'))
+        cached_at = to_float(cached_item.get('_cached_at')) or 0
+        age_days = (time.time() - cached_at) / 86400 if cached_at else 999999
+        if cv is not None and -500 <= cv <= 500 and age_days < 1.5:
+            RUN_CACHE[key] = cv
+            return cv
 
     def parse_eps(html_text):
         if not html_text:
@@ -3618,6 +3631,14 @@ def mops_eps_growth_fallback(code, market=None):
                         f'=> {g:.2f}%', flush=True
                     )
                     RUN_CACHE[key] = g
+                    try:
+                        fund_cache.setdefault(code, {})['eps_growth'] = g
+                        fund_cache[code]['eps_growth_source'] = 'MOPS'
+                        fund_cache[code]['eps_growth_period'] = f'{year}Q{season}'
+                        fund_cache[code]['_cached_at'] = time.time()
+                        save_json(MOPS_FUND_CACHE_FILE, fund_cache)
+                    except Exception:
+                        pass
                     return g
             except Exception as e:
                 # MOPS 只作 fallback；單一財報失敗不可阻塞整份分析。
@@ -3629,6 +3650,174 @@ def mops_eps_growth_fallback(code, market=None):
 
     RUN_CACHE[key] = None
     return None
+
+
+
+def _mops_market_type(market):
+    return 'otc' if str(market or '').upper() == 'TPEX' else 'sii'
+
+
+def mops_annual_roe_fallback(code, market=None):
+    """V2.10.49：MOPS 官方年度財務分析中的股東權益報酬率。
+
+    MOPS t51sb02 是上市/上櫃公司的年度財務分析彙總表，直接提供
+    「股東權益報酬率(%)」。不再用 Yahoo ROE 或 PE/PB 反推 ROE。
+    """
+    code = clean_code(code)
+    if not code or not code.isdigit():
+        return None
+    key = ('mops_roe_v21049', code, market or '')
+    if key in RUN_CACHE:
+        return RUN_CACHE[key]
+
+    cache = load_json(MOPS_FUND_CACHE_FILE)
+    cached = cache.get(code, {}) if isinstance(cache, dict) else {}
+    if isinstance(cached, dict):
+        cv = to_float(cached.get('roe'))
+        cy = datetime.now(TW_TZ).year
+        target_annual_year = cy - 1
+        cached_year = int(to_float(cached.get('roe_year')) or 0)
+        if cv is not None and -100 <= cv <= 100 and cached_year >= target_annual_year:
+            RUN_CACHE[key] = cv
+            return cv
+
+    now = datetime.now(TW_TZ)
+    # 年度財務分析通常在隔年申報後更新；先找最近兩個已完成年度。
+    years = [now.year - 1 - 1911, now.year - 2 - 1911]
+    mkt = _mops_market_type(market)
+    headers = {
+        'User-Agent': 'Mozilla/5.0 stock-alert/2.10.49',
+        'Referer': 'https://mops.twse.com.tw/'
+    }
+
+    for roc_year in years:
+        if roc_year <= 0:
+            continue
+        try:
+            url = 'https://mops.twse.com.tw/mops/web/ajax_t51sb02'
+            form = {
+                'encodeURIComponent': 1,
+                'run': 'Y',
+                'step': 1,
+                'firstin': 1,
+                'off': 1,
+                'TYPEK': mkt,
+                'year': str(roc_year),
+                'isnew': 'Y',
+                'ifrs': 'Y'
+            }
+            r = requests.post(url, data=form, timeout=10, headers=headers)
+            r.raise_for_status()
+            text = r.content.decode('utf-8-sig', errors='replace')
+            tables = pd.read_html(__import__('io').StringIO(text))
+            for df in tables:
+                if not isinstance(df, pd.DataFrame) or df.empty or len(df) < 5:
+                    continue
+                # Flatten MultiIndex columns for robust matching across MOPS format changes.
+                if isinstance(df.columns, pd.MultiIndex):
+                    cols=[]
+                    for c in df.columns:
+                        parts=[str(x).strip() for x in c if str(x).strip() not in ('nan','None')]
+                        cols.append(' '.join(parts))
+                    df=df.copy(); df.columns=cols
+                else:
+                    df=df.copy(); df.columns=[str(c).strip() for c in df.columns]
+                code_col=None; roe_col=None
+                for c in df.columns:
+                    cs=str(c)
+                    if code_col is None and ('公司代號' in cs or cs in ('代號','證券代號')):
+                        code_col=c
+                    if '股東權益報酬率' in cs or '權益報酬率' in cs:
+                        roe_col=c
+                if code_col is None or roe_col is None:
+                    continue
+                for _, row in df.iterrows():
+                    rc=clean_code(row.get(code_col))
+                    if rc != code:
+                        continue
+                    roe=to_float(row.get(roe_col))
+                    if roe is not None and -100 <= roe <= 100:
+                        cache.setdefault(code,{})['roe']=roe
+                        cache[code]['roe_source']='MOPS'
+                        cache[code]['roe_year']=int(roc_year)+1911
+                        cache[code]['_cached_at']=time.time()
+                        save_json(MOPS_FUND_CACHE_FILE, cache)
+                        RUN_CACHE[key]=roe
+                        print(f'V2.10.49 MOPS ROE：{code} {int(roc_year)+1911}={roe:.2f}%', flush=True)
+                        return roe
+        except Exception as e:
+            print(f'V2.10.49 MOPS ROE fallback失敗 {code} 年度{int(roc_year)+1911}: {type(e).__name__}', flush=True)
+            continue
+
+    RUN_CACHE[key]=None
+    return None
+
+
+def official_fundamental(symbol, official=None, current_price=None, market=None):
+    """V2.10.49：股票基本面/估值官方資料層。
+
+    資料優先順序：
+      1. TWSE / TPEx 官方當日 PE、PB、殖利率
+      2. MOPS 官方財報 EPS 成長率
+      3. MOPS 官方年度 ROE
+      4. PEG 僅由「官方 PE / 官方 EPS Growth」一致計算
+
+    本函式刻意不再呼叫 Yahoo fundamentals，避免 Yahoo 缺欄位、TTM 口徑
+    或 parser 異常造成不同股票資料口徑不一致。
+    """
+    code=clean_code(str(symbol).split('.')[0])
+    off=official if isinstance(official,dict) else {}
+    out={
+        'pe': to_float(off.get('pe')),
+        'pb': to_float(off.get('pb')),
+        'yield': to_float(off.get('yield')),
+        'eps_growth': None,
+        'roe': None,
+        'peg': None,
+    }
+    for k in ('pe','pb','yield'):
+        if not _fund_cache_valid_value(k,out.get(k)):
+            out[k]=None
+
+    # TPEX 官方網頁是 OpenAPI 缺資料時的官方補洞。
+    if market=='TPEX' and any(out.get(k) is None for k in ('pe','pb','yield')):
+        try:
+            one=parse_tpex_web_peratio(tpex_web_peratio_data(timeout=5)).get(code) or {}
+            for k in ('pe','pb','yield'):
+                if out.get(k) is None:
+                    v=to_float(one.get(k))
+                    if v is not None and _fund_cache_valid_value(k,v):
+                        out[k]=v
+        except Exception as e:
+            print(f'V2.10.49 TPEx 官方估值補洞失敗 {code}: {type(e).__name__}', flush=True)
+
+    # MOPS EPS Growth：官方財報，不用營收成長代替。
+    try:
+        out['eps_growth']=mops_eps_growth_fallback(code, market)
+    except Exception as e:
+        print(f'V2.10.49 MOPS EPS Growth失敗 {code}: {type(e).__name__}', flush=True)
+
+    # MOPS ROE：官方年度財務分析。
+    try:
+        out['roe']=mops_annual_roe_fallback(code, market)
+    except Exception as e:
+        print(f'V2.10.49 MOPS ROE失敗 {code}: {type(e).__name__}', flush=True)
+
+    # PEG 只允許由同一套官方 PE + EPS Growth 計算，不再混用 Yahoo PEG。
+    g=to_float(out.get('eps_growth'))
+    pe=to_float(out.get('pe'))
+    if pe is not None and pe>0 and g is not None and 0<g<=200:
+        peg=pe/g
+        if math.isfinite(peg) and 0<peg<100:
+            out['peg']=peg
+
+    print(
+        f'V2.10.49 官方基本面 {code}: '
+        f'PE={fmt(out["pe"])} PB={fmt(out["pb"])} Yield={fmt(out["yield"])} '
+        f'EPSGrowth={fmt(out["eps_growth"])} ROE={fmt(out["roe"])} PEG={fmt(out["peg"])}',
+        flush=True
+    )
+    return out
 
 
 def _eps_growth_from_yfinance_statements(ticker):
@@ -5819,49 +6008,14 @@ def _fund_cache_suspicious(key, value):
 
 
 def _v21045_peer_pe_fallback(peer_item, pe_data):
-    """V2.10.47：同次產業 PE 統一 fallback。
+    """V2.10.49：同次產業 PE 僅使用交易所官方資料。
 
-    同業不能只讀 pe_data；官方 PE 缺欄時，依序使用 Yahoo quoteSummary、
-    fundamentals-timeseries、yfinance，最後用最新價格 / TTM EPS 計算。
-    RUN_CACHE 會避免同一支股票在同一個 Action 重複請求。
+    官方 PE 為 N/A 時代表該公司當日不具可計算的正 EPS PE；不再用 Yahoo
+    或價格/TTM EPS 猜值，避免同業平均被不同資料口徑污染。
     """
     code=clean_code(str(peer_item.get('code','')))
     v=to_float((pe_data.get(code,{}) or {}).get('pe')) if isinstance(pe_data,dict) else None
-    if v is not None and 0 < v <= PE_MAX_VALID:
-        return v
-    symbol=peer_item.get('symbol')
-    if not symbol:
-        return None
-    key=('peer_pe_v21045',symbol)
-    if key in RUN_CACHE:
-        return RUN_CACHE[key]
-    qs=ts=yfinfo={}
-    try: qs=yahoo_quote_summary_fund(symbol) or {}
-    except Exception: pass
-    v=to_float(qs.get('pe'))
-    if v is not None and 0 < v <= PE_MAX_VALID:
-        RUN_CACHE[key]=v; return v
-    try: ts=yahoo_timeseries_fund(symbol) or {}
-    except Exception: ts={}
-    px=to_float(peer_item.get('price')) or to_float(qs.get('price'))
-    eps=to_float(qs.get('trailing_eps')) or to_float(ts.get('trailing_eps'))
-    if px and px>0 and eps and eps>0:
-        v=px/eps
-        if 0 < v <= PE_MAX_VALID:
-            RUN_CACHE[key]=v; return v
-    try: yfinfo=yahoo_fund(symbol) or {}
-    except Exception: yfinfo={}
-    v=to_float(yfinfo.get('pe'))
-    if v is not None and 0 < v <= PE_MAX_VALID:
-        RUN_CACHE[key]=v; return v
-    px=px or to_float(yfinfo.get('price'))
-    eps=eps or to_float(yfinfo.get('trailing_eps'))
-    if px and px>0 and eps and eps>0:
-        v=px/eps
-        if 0 < v <= PE_MAX_VALID:
-            RUN_CACHE[key]=v; return v
-    RUN_CACHE[key]=None
-    return None
+    return v if v is not None and 0 < v <= PE_MAX_VALID else None
 
 
 def yahoo_light_fund(symbol, official=None, current_price=None, market=None):
@@ -6494,7 +6648,7 @@ def etf_analysis(query):
         premium=x if -50<=x<=50 else None
     score,reasons=score_etf(tech,p)
     verdict='🟢 可分批配置' if score>=75 else '🟡 等待回檔/止跌' if score>=60 else '🟠 暫緩配置' if score>=40 else '🔴 不建議配置'
-    return (f'📊 ETF配置分析 V2.10.47\n\n標的：{info["name"]}（{code}）\n代號：{symbol}\n\n'
+    return (f'📊 ETF配置分析 V2.10.49\n\n標的：{info["name"]}（{code}）\n代號：{symbol}\n\n'
             f'【ETF特性 40分】\nNAV：{fmt(nav)}\n溢價/折價：{fmt(premium)}%\n殖利率：{fmt(p.get("yield"))}%\nBeta：{fmt(p.get("beta"))}\n資產規模：{fmt(p.get("assets"),0)}\n\n'
             f'【技術面 60分】\n價格：{fmt(price)}\nRSI：{fmt(tech.get("rsi"))}\nKD：K={fmt(tech.get("k"))} / D={fmt(tech.get("d"))}\nMA20：{fmt(tech.get("ma20"))}\nMA60：{fmt(tech.get("ma60"))}\n趨勢：{tech.get("trend") or "N/A"}\n\n'
             f'【ETF綜合評分】\n綜合評分：{score}/100\n結論：{verdict}\n加分因素：{"、".join(reasons) if reasons else "無"}')
@@ -6643,10 +6797,10 @@ def analysis(
 
     if line_light:
         print(f'LINE輕量分析：基本面資料 {code}', flush=True)
-        yf_f = yahoo_light_fund(symbol, off, current_price=to_float(u.get(code, {}).get('price')), market=market)
+        yf_f = official_fundamental(symbol, off, current_price=to_float(u.get(code, {}).get('price')), market=market)
     else:
-        yf_f = yahoo_fund(
-            symbol
+        yf_f = official_fundamental(
+            symbol, off, current_price=to_float(u.get(code, {}).get('price')), market=market
         )
 
     pe = (
@@ -6664,15 +6818,10 @@ def analysis(
         or yf_f.get('yield')
     )
 
-    one, sample = one_year_pe(
-        code,
-        h
-    )
+    # V2.10.49：一年平均 PE 僅使用交易所官方歷史 PE。
+    # 不再使用「價格 / 目前 TTM EPS」近似，避免把目前 EPS 套到歷史股價造成口徑偏差。
+    one, sample = one_year_pe(code, h)
     one_label = ''
-    if one is None:
-        one, sample, one_label = one_year_pe_proxy(code, pe, symbol)
-        if one is not None:
-            print(f'LINE PE：一年平均PE使用價格/目前TTM EPS近似 {code} = {one:.2f}（{sample}筆）',flush=True)
 
     # --------------------------------------------------------
     # V2.9.8
@@ -6950,7 +7099,7 @@ def analysis(
     # --------------------------------------------------------
 
     return (
-        f'📊 股票加碼分析 V2.10.47\n\n'
+        f'📊 股票加碼分析 V2.10.49\n\n'
         f'標的：{name}（{code}）\n'
         f'市場：{market}\n'
         f'產業：{industry}\n'
