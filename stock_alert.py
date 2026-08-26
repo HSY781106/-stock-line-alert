@@ -1,5 +1,5 @@
-# stock_alert.py V2.10.51
-# V2.10.51：統一 Actions / LINE 基本面資料層；LINE 不再使用舊版 yahoo_light_fund / MOPS fallback / 舊 cache 推導
+# stock_alert.py V2.10.52
+# V2.10.52：統一 Actions / LINE 基本面資料層；LINE 不再使用舊版 yahoo_light_fund / MOPS fallback / 舊 cache 推導
 # V2.10.48：加入 MOPS 官方財報 EPS Growth fallback，補強 Yahoo 多層來源仍為 N/A 的股票
 # V2.10.47：統一 EPS Growth 與 PEG 資料口徑；修正 EPS 成長 N/A 但 PEG 有值的矛盾
 # V2.10.41：修正 line_fund_cache 覆蓋策略、ETF NAV/溢價、Beta、TPEX 資券與 ETF chart fallback
@@ -90,8 +90,8 @@ TWSE_QUOTES_CACHE_FILE = 'twse_quotes_cache.json'
 # V2.9.8 新增
 SUBINDUSTRY_CACHE_FILE = 'subindustry_cache.json'
 # V2.10.49：官方基本面快取
-# V2.10.51：不再使用 MOPS 基本面快取
-# MOPS_FUND_CACHE_FILE 保留名稱僅避免舊程式碼/舊快取造成相容性問題，但 V2.10.51 基本面主流程不讀寫。
+# V2.10.52：不再使用 MOPS 基本面快取
+# MOPS_FUND_CACHE_FILE 保留名稱僅避免舊程式碼/舊快取造成相容性問題，但 V2.10.52 基本面主流程不讀寫。
 MOPS_FUND_CACHE_FILE = 'mops_fund_cache.json'
 
 LINE_REPLY_URL = 'https://api.line.me/v2/bot/message/reply'
@@ -2839,6 +2839,37 @@ def check_drop_alert(
 # Valuation
 # ============================================================
 
+def tpex_csv_peratio_data(ds=None, timeout=None):
+    """V2.10.52：TPEx 官方 CSV 估值備援。"""
+    try:
+        if ds:
+            roc = str(ds)
+            if len(roc) == 8 and roc.isdigit():
+                roc = f'{int(roc[:4])-1911}/{roc[4:6]}/{roc[6:8]}'
+        else:
+            today = datetime.now(TW_TZ).date()
+            roc = f'{today.year-1911}/{today.month:02d}/{today.day:02d}'
+        r = requests.get(TPEX_WEB_BASE, params={
+            'l':'zh-tw','o':'csv','charset':'UTF-8','d':roc,'c':'','s':'0,asc'
+        }, timeout=timeout or 12, headers={'User-Agent':'Mozilla/5.0 stock-alert/2.10.52'})
+        r.raise_for_status()
+        text=r.content.decode('utf-8-sig',errors='replace')
+        lines=text.splitlines()
+        hi=next((i for i,l in enumerate(lines) if '股票代號' in l and '本益比' in l),None)
+        if hi is None: return {}
+        end=next((i for i in range(hi+1,len(lines)) if lines[i].startswith('註')),len(lines))
+        df=pd.read_csv(__import__('io').StringIO('\n'.join(lines[hi:end])))
+        out={}
+        for _,row in df.iterrows():
+            code=clean_code(row.get('股票代號'))
+            if code:
+                out[code]={'pe':to_float(row.get('本益比')),'pb':to_float(row.get('股價淨值比')),'yield':to_float(row.get('殖利率(%)'))}
+        return out
+    except Exception as e:
+        print(f'TPEx 官方 CSV PE 備援失敗 {ds or "latest"}：{type(e).__name__}: {e}',flush=True)
+        return {}
+
+
 def tpex_web_peratio_data(ds=None, timeout=None):
     """V2.10.28：TPEx 官方網頁版 PE/PB/殖利率備援。
 
@@ -3053,7 +3084,9 @@ def get_current_pe_data():
     try:
         tpex_count = sum(1 for c in out if c and len(str(c)) == 4 and c.isdigit())
         if tpex_count < 900:
-            web_data = parse_tpex_web_peratio(tpex_web_peratio_data(timeout=5))
+            web_data = tpex_csv_peratio_data(timeout=12)
+            if not web_data:
+                web_data = parse_tpex_web_peratio(tpex_web_peratio_data(timeout=5))
             added = 0
             for c, row in web_data.items():
                 if c not in out or not any(to_float(out.get(c, {}).get(k)) is not None for k in ('pe','pb','yield')):
@@ -3756,7 +3789,7 @@ def mops_annual_roe_fallback(code, market=None):
 
 
 def official_fundamental(symbol, official=None, current_price=None, market=None):
-    """V2.10.51：股票基本面/估值多來源資料層。
+    """V2.10.52：股票基本面/估值多來源資料層。
 
     資料優先順序：
       1. TWSE / TPEx 官方當日 PE、PB、殖利率
@@ -3764,7 +3797,7 @@ def official_fundamental(symbol, official=None, current_price=None, market=None)
       3. yfinance 財報（income statement / balance sheet）再補 EPS Growth、ROE
       4. PEG 僅由 PE / EPS Growth 統一計算
 
-    重要：V2.10.51 不再把 MOPS HTML parser 當成基本面必要路徑。
+    重要：V2.10.52 不再把 MOPS HTML parser 當成基本面必要路徑。
     MOPS 的 HTTP/HTML 反爬與 pandas.read_html 相依性會讓 GitHub Actions
     出現 HTTPError / ImportError，進而使原本有資料的股票也變成 N/A。
     """
@@ -3787,17 +3820,19 @@ def official_fundamental(symbol, official=None, current_price=None, market=None)
     # TPEx 官方估值資料的單次網頁補洞仍保留，但只負責 PE/PB/Yield。
     if market == 'TPEX' and any(out.get(k) is None for k in ('pe', 'pb', 'yield')):
         try:
-            one = parse_tpex_web_peratio(tpex_web_peratio_data(timeout=8)).get(code) or {}
+            one = tpex_csv_peratio_data(timeout=12).get(code) or {}
+            if not one:
+                one = parse_tpex_web_peratio(tpex_web_peratio_data(timeout=8)).get(code) or {}
             for k in ('pe', 'pb', 'yield'):
                 if out.get(k) is None:
                     v = to_float(one.get(k))
                     if v is not None and _fund_cache_valid_value(k, v):
                         out[k] = v
         except Exception as e:
-            print(f'V2.10.51 TPEx 官方估值補洞失敗 {code}: {type(e).__name__}', flush=True)
+            print(f'V2.10.52 TPEx 官方估值補洞失敗 {code}: {type(e).__name__}', flush=True)
 
     # ------------------------------------------------------------
-    # V2.10.51：基本面資料來源重構
+    # V2.10.52：基本面資料來源重構
     # 不再呼叫 MOPS EPS/ROE fallback。
     # ------------------------------------------------------------
     symbol_full = symbol_for(code, market) if market in ('TWSE', 'TPEX') else symbol
@@ -3806,13 +3841,45 @@ def official_fundamental(symbol, official=None, current_price=None, market=None)
         qs = yahoo_quote_summary_fund(symbol_full) or {}
     except Exception as e:
         qs = {}
-        print(f'V2.10.51 Yahoo quoteSummary失敗 {code}: {type(e).__name__}', flush=True)
+        print(f'V2.10.52 Yahoo quoteSummary失敗 {code}: {type(e).__name__}', flush=True)
 
     try:
         ts = yahoo_timeseries_fund(symbol_full) or {}
     except Exception as e:
         ts = {}
-        print(f'V2.10.51 Yahoo timeseries失敗 {code}: {type(e).__name__}', flush=True)
+        print(f'V2.10.52 Yahoo timeseries失敗 {code}: {type(e).__name__}', flush=True)
+
+    # V2.10.52：Yahoo fundamentals-timeseries 同時作為 PE / PB / 殖利率 fallback。
+    # 解決 TPEx 官方估值端點偶發 timeout 時，6488 等上櫃股票整組 N/A。
+    px = to_float(current_price)
+    if px is None or px <= 0:
+        px = to_float(qs.get('price'))
+    if out.get('pe') is None:
+        teps = to_float(ts.get('trailing_eps'))
+        if px is not None and teps is not None and teps > 0:
+            v = px / teps
+            if math.isfinite(v) and 0 < v <= PE_MAX_VALID:
+                out['pe'] = float(v)
+                print(f'V2.10.52 Yahoo timeseries PE fallback：{code}={v:.2f}', flush=True)
+    if out.get('pb') is None:
+        pb = to_float(ts.get('pb'))
+        if pb is None:
+            mc = to_float(ts.get('market_cap'))
+            eq = to_float(ts.get('equity'))
+            if mc is not None and eq not in (None, 0):
+                pb = mc / eq
+        if pb is not None and 0 < pb <= 100:
+            out['pb'] = float(pb)
+            print(f'V2.10.52 Yahoo timeseries PB fallback：{code}={pb:.2f}', flush=True)
+    if out.get('yield') is None:
+        div = to_float(ts.get('dividend_rate'))
+        if div is None:
+            div = to_float(qs.get('dividend_rate'))
+        if div is not None and px is not None and px > 0:
+            y = div / px * 100
+            if math.isfinite(y) and 0 <= y <= 30:
+                out['yield'] = float(y)
+                print(f'V2.10.52 Yahoo dividend yield fallback：{code}={y:.2f}%', flush=True)
 
     # EPS Growth：優先 Yahoo 已整理的 earningsGrowth，其次 timeseries。
     g_candidates = [qs.get('eps_growth'), ts.get('eps_growth')]
@@ -3839,7 +3906,7 @@ def official_fundamental(symbol, official=None, current_price=None, market=None)
                 g = _eps_growth_from_yfinance_statements(ticker)
                 if g is not None and -500 <= g <= 500:
                     out['eps_growth'] = g
-                    print(f'V2.10.51 yfinance EPS Growth：{code}={g:.2f}%', flush=True)
+                    print(f'V2.10.52 yfinance EPS Growth：{code}={g:.2f}%', flush=True)
 
             if out['roe'] is None:
                 inc = ticker.get_income_stmt(freq='yearly')
@@ -3868,9 +3935,9 @@ def official_fundamental(symbol, official=None, current_price=None, market=None)
                         r = latest_ni / avg_eq * 100
                         if math.isfinite(r) and -100 <= r <= 100:
                             out['roe'] = float(r)
-                            print(f'V2.10.51 yfinance ROE：{code}={r:.2f}%', flush=True)
+                            print(f'V2.10.52 yfinance ROE：{code}={r:.2f}%', flush=True)
         except Exception as e:
-            print(f'V2.10.51 yfinance 財報補值失敗 {code}: {type(e).__name__}: {e}', flush=True)
+            print(f'V2.10.52 yfinance 財報補值失敗 {code}: {type(e).__name__}: {e}', flush=True)
 
     # PEG 統一由 PE / EPS Growth 計算，避免 EPS Growth=N/A 卻有 PEG 的矛盾。
     pe = to_float(out.get('pe'))
@@ -3881,7 +3948,7 @@ def official_fundamental(symbol, official=None, current_price=None, market=None)
             out['peg'] = peg
 
     print(
-        f'V2.10.51 基本面 {code}: '
+        f'V2.10.52 基本面 {code}: '
         f'PE={fmt(out["pe"])} PB={fmt(out["pb"])} Yield={fmt(out["yield"])} '
         f'EPSGrowth={fmt(out["eps_growth"])} ROE={fmt(out["roe"])} PEG={fmt(out["peg"])}',
         flush=True
@@ -6087,7 +6154,7 @@ def _v21045_peer_pe_fallback(peer_item, pe_data):
 
 
 def yahoo_light_fund(symbol, official=None, current_price=None, market=None):
-    """V2.10.51：LINE 基本面資料層與 Actions 完全統一。
+    """V2.10.52：LINE 基本面資料層與 Actions 完全統一。
 
     LINE 不再維護另一套舊版基本面邏輯，也不再使用：
       - MOPS EPS Growth fallback
@@ -6115,7 +6182,7 @@ def yahoo_light_fund(symbol, official=None, current_price=None, market=None):
                 'eps_growth': None, 'roe': None, 'peg': None
             }
         print(
-            f'V2.10.51 LINE基本面統一資料層 {clean_code(str(symbol).split(".")[0])}: '
+            f'V2.10.52 LINE基本面統一資料層 {clean_code(str(symbol).split(".")[0])}: '
             f'PE={fmt(result.get("pe"))} PB={fmt(result.get("pb"))} '
             f'Yield={fmt(result.get("yield"))} '
             f'EPSGrowth={fmt(result.get("eps_growth"))} '
@@ -6125,7 +6192,7 @@ def yahoo_light_fund(symbol, official=None, current_price=None, market=None):
         return result
     except Exception as e:
         print(
-            f'V2.10.51 LINE基本面統一資料層失敗 {symbol}: '
+            f'V2.10.52 LINE基本面統一資料層失敗 {symbol}: '
             f'{type(e).__name__}: {e}',
             flush=True
         )
@@ -7013,7 +7080,7 @@ def analysis(
     # --------------------------------------------------------
 
     return (
-        f'📊 股票加碼分析 V2.10.51\n\n'
+        f'📊 股票加碼分析 V2.10.52\n\n'
         f'標的：{name}（{code}）\n'
         f'市場：{market}\n'
         f'產業：{industry}\n'
@@ -7971,7 +8038,7 @@ def run_alerts():
     print(
         '================================\n'
         '股票跌幅 + 15分鐘區間最低價 + '
-        'V2.10.51自動估值 + 技術 + 籌碼\n'
+        'V2.10.52自動估值 + 技術 + 籌碼\n'
         '================================'
     )
 
