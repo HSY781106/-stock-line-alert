@@ -14,9 +14,9 @@
       "2025": 65.47
     },
     "meta": {
-      "mops_attempted_at": 1787839015.9962494,
+      "mops_attempted_at": 1787840323.1526902,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839849.7023098,
+      "updated_at": 1787840323.1622531,
       "first_year": 2015,
       "last_year": 2025,
       "count": 11,
@@ -25,7 +25,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443815.9962494
+      "mops_retry_after": 1788445123.1526902
     }
   },
   "3711": {
@@ -39,9 +39,9 @@
       "2025": 8.89
     },
     "meta": {
-      "mops_attempted_at": 1787839020.278343,
+      "mops_attempted_at": 1787840326.5546322,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839856.6421459,
+      "updated_at": 1787840326.5666456,
       "first_year": 2019,
       "last_year": 2025,
       "count": 7,
@@ -50,7 +50,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443820.278343
+      "mops_retry_after": 1788445126.5546322
     }
   },
   "1229": {
@@ -62,9 +62,9 @@
       "2025": 2.519576
     },
     "meta": {
-      "mops_attempted_at": 1787839025.3854475,
+      "mops_attempted_at": 1787840330.862825,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839864.7072856,
+      "updated_at": 1787840330.8762207,
       "first_year": 2014,
       "last_year": 2025,
       "count": 5,
@@ -73,7 +73,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443825.3854475
+      "mops_retry_after": 1788445130.862825
     }
   },
   "1301": {
@@ -91,9 +91,9 @@
       "2025": -1.58
     },
     "meta": {
-      "mops_attempted_at": 1787839027.127821,
+      "mops_attempted_at": 1787840331.864622,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839865.7122297,
+      "updated_at": 1787840331.8740563,
       "first_year": 2015,
       "last_year": 2025,
       "count": 11,
@@ -102,7 +102,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443827.127821
+      "mops_retry_after": 1788445131.864622
     }
   },
   "1308": {
@@ -116,9 +116,9 @@
       "2025": -1.76
     },
     "meta": {
-      "mops_attempted_at": 1787839028.4596958,
+      "mops_attempted_at": 1787840332.3571334,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839868.7658596,
+      "updated_at": 1787840332.3691475,
       "first_year": 2011,
       "last_year": 2025,
       "count": 7,
@@ -127,7 +127,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443828.4596958
+      "mops_retry_after": 1788445132.3571334
     }
   },
   "1313": {
@@ -137,9 +137,9 @@
       "2025": -1.17
     },
     "meta": {
-      "mops_attempted_at": 1787839029.6133041,
+      "mops_attempted_at": 1787840332.758197,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839869.1873825,
+      "updated_at": 1787840332.7727504,
       "first_year": 2011,
       "last_year": 2025,
       "count": 3,
@@ -148,7 +148,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443829.6133041
+      "mops_retry_after": 1788445132.758197
     }
   },
   "1337": {
@@ -157,9 +157,9 @@
       "2025": -1.74
     },
     "meta": {
-      "mops_attempted_at": 1787839030.7596982,
+      "mops_attempted_at": 1787840333.1449487,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839869.5757372,
+      "updated_at": 1787840333.1600785,
       "first_year": 2012,
       "last_year": 2025,
       "count": 2,
@@ -168,7 +168,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443830.7596982
+      "mops_retry_after": 1788445133.1449487
     }
   },
   "1434": {
@@ -182,9 +182,9 @@
       "2025": 0.51
     },
     "meta": {
-      "mops_attempted_at": 1787839033.503136,
+      "mops_attempted_at": 1787840335.2085602,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839871.3489234,
+      "updated_at": 1787840335.2205799,
       "first_year": 2007,
       "last_year": 2025,
       "count": 7,
@@ -193,7 +193,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443833.503136
+      "mops_retry_after": 1788445135.2085602
     }
   },
   "1466": {
@@ -202,9 +202,9 @@
       "2025": -1.07
     },
     "meta": {
-      "mops_attempted_at": 1787839035.081664,
+      "mops_attempted_at": 1787840335.6800752,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839871.819606,
+      "updated_at": 1787840335.6953523,
       "first_year": 2011,
       "last_year": 2025,
       "count": 2,
@@ -213,7 +213,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443835.081664
+      "mops_retry_after": 1788445135.6800752
     }
   },
   "1517": {
@@ -221,9 +221,9 @@
       "2025": -0.69
     },
     "meta": {
-      "mops_attempted_at": 1787839044.9242558,
+      "mops_attempted_at": 1787840342.0269785,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839876.0998354,
+      "updated_at": 1787840342.042842,
       "first_year": 2025,
       "last_year": 2025,
       "count": 1,
@@ -232,7 +232,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443844.9242558
+      "mops_retry_after": 1788445142.0269785
     }
   },
   "1521": {
@@ -247,9 +247,9 @@
       "2025": 0.87
     },
     "meta": {
-      "mops_attempted_at": 1787839046.502214,
+      "mops_attempted_at": 1787840342.6662998,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839876.6843755,
+      "updated_at": 1787840342.6779344,
       "first_year": 2011,
       "last_year": 2025,
       "count": 8,
@@ -258,7 +258,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443846.502214
+      "mops_retry_after": 1788445142.6662998
     }
   },
   "1522": {
@@ -269,9 +269,9 @@
       "2025": 1.72
     },
     "meta": {
-      "mops_attempted_at": 1787839047.7516813,
+      "mops_attempted_at": 1787840343.1282883,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839877.1322803,
+      "updated_at": 1787840343.1423926,
       "first_year": 2017,
       "last_year": 2025,
       "count": 4,
@@ -280,7 +280,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443847.7516813
+      "mops_retry_after": 1788445143.1282883
     }
   },
   "1524": {
@@ -288,9 +288,9 @@
       "2025": 1.95
     },
     "meta": {
-      "mops_attempted_at": 1787839048.9410887,
+      "mops_attempted_at": 1787840343.6118243,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839877.5472858,
+      "updated_at": 1787840343.6281393,
       "first_year": 2025,
       "last_year": 2025,
       "count": 1,
@@ -299,7 +299,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443848.9410887
+      "mops_retry_after": 1788445143.6118243
     }
   },
   "1525": {
@@ -311,9 +311,9 @@
       "2025": 3.21
     },
     "meta": {
-      "mops_attempted_at": 1787839050.598544,
+      "mops_attempted_at": 1787840344.1413639,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839878.1214397,
+      "updated_at": 1787840344.15494,
       "first_year": 2016,
       "last_year": 2025,
       "count": 5,
@@ -322,7 +322,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443850.598544
+      "mops_retry_after": 1788445144.1413639
     }
   },
   "1536": {
@@ -340,9 +340,9 @@
       "2025": -2.71
     },
     "meta": {
-      "mops_attempted_at": 1787839052.93671,
+      "mops_attempted_at": 1787840345.7465882,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839879.7431033,
+      "updated_at": 1787840345.7561214,
       "first_year": 2014,
       "last_year": 2025,
       "count": 11,
@@ -351,7 +351,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443852.93671
+      "mops_retry_after": 1788445145.7465882
     }
   },
   "1541": {
@@ -359,9 +359,9 @@
       "2025": 2.31
     },
     "meta": {
-      "mops_attempted_at": 1787839054.5956705,
+      "mops_attempted_at": 1787840346.172912,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839880.2542295,
+      "updated_at": 1787840346.1890273,
       "first_year": 2025,
       "last_year": 2025,
       "count": 1,
@@ -370,7 +370,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443854.5956705
+      "mops_retry_after": 1788445146.172912
     }
   },
   "1598": {
@@ -379,9 +379,9 @@
       "2025": -3.35
     },
     "meta": {
-      "mops_attempted_at": 1787839055.8916042,
+      "mops_attempted_at": 1787840346.7423809,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839880.8051226,
+      "updated_at": 1787840346.7578514,
       "first_year": 2017,
       "last_year": 2025,
       "count": 2,
@@ -390,7 +390,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443855.8916042
+      "mops_retry_after": 1788445146.7423809
     }
   },
   "1605": {
@@ -401,9 +401,9 @@
       "2025": 0.75
     },
     "meta": {
-      "mops_attempted_at": 1787839061.6573775,
+      "mops_attempted_at": 1787840352.0614567,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839886.266954,
+      "updated_at": 1787840352.0756302,
       "first_year": 2009,
       "last_year": 2025,
       "count": 4,
@@ -412,7 +412,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443861.6573775
+      "mops_retry_after": 1788445152.0614567
     }
   },
   "1608": {
@@ -421,9 +421,9 @@
       "2025": 5.48
     },
     "meta": {
-      "mops_attempted_at": 1787839062.7304819,
+      "mops_attempted_at": 1787840352.4552321,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839886.6550858,
+      "updated_at": 1787840352.4707274,
       "first_year": 2012,
       "last_year": 2025,
       "count": 2,
@@ -432,7 +432,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443862.7304819
+      "mops_retry_after": 1788445152.4552321
     }
   },
   "1702": {
@@ -447,9 +447,9 @@
       "2025": 1.12
     },
     "meta": {
-      "mops_attempted_at": 1787839064.300372,
+      "mops_attempted_at": 1787840352.9569435,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839887.1678455,
+      "updated_at": 1787840352.9683828,
       "first_year": 2011,
       "last_year": 2025,
       "count": 8,
@@ -458,7 +458,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443864.300372
+      "mops_retry_after": 1788445152.9569435
     }
   },
   "1736": {
@@ -472,9 +472,9 @@
       "2025": 9.06
     },
     "meta": {
-      "mops_attempted_at": 1787839065.969039,
+      "mops_attempted_at": 1787840354.0624845,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839888.1704288,
+      "updated_at": 1787840354.0748105,
       "first_year": 2016,
       "last_year": 2025,
       "count": 7,
@@ -483,7 +483,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443865.969039
+      "mops_retry_after": 1788445154.0624845
     }
   },
   "1783": {
@@ -492,9 +492,9 @@
       "2025": 2.94
     },
     "meta": {
-      "mops_attempted_at": 1787839066.9737418,
+      "mops_attempted_at": 1787840354.5166957,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839888.6297324,
+      "updated_at": 1787840354.532148,
       "first_year": 2014,
       "last_year": 2025,
       "count": 2,
@@ -503,7 +503,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443866.9737418
+      "mops_retry_after": 1788445154.5166957
     }
   },
   "1806": {
@@ -512,9 +512,9 @@
       "2025": 0.29
     },
     "meta": {
-      "mops_attempted_at": 1787839068.5346289,
+      "mops_attempted_at": 1787840355.1172745,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839889.1527107,
+      "updated_at": 1787840355.1328151,
       "first_year": 2011,
       "last_year": 2025,
       "count": 2,
@@ -523,7 +523,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443868.5346289
+      "mops_retry_after": 1788445155.1172745
     }
   },
   "1903": {
@@ -533,9 +533,9 @@
       "2025": 1.29
     },
     "meta": {
-      "mops_attempted_at": 1787839069.8542087,
+      "mops_attempted_at": 1787840355.635864,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839889.6546438,
+      "updated_at": 1787840355.6507883,
       "first_year": 2011,
       "last_year": 2025,
       "count": 3,
@@ -544,7 +544,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443869.8542087
+      "mops_retry_after": 1788445155.635864
     }
   },
   "1907": {
@@ -555,9 +555,9 @@
       "2025": 1.19
     },
     "meta": {
-      "mops_attempted_at": 1787839072.7836087,
+      "mops_attempted_at": 1787840358.1107614,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839892.1041427,
+      "updated_at": 1787840358.1248908,
       "first_year": 2012,
       "last_year": 2025,
       "count": 4,
@@ -566,7 +566,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443872.7836087
+      "mops_retry_after": 1788445158.1107614
     }
   },
   "2010": {
@@ -576,9 +576,9 @@
       "2025": 2.32
     },
     "meta": {
-      "mops_attempted_at": 1787839074.0026166,
+      "mops_attempted_at": 1787840358.805169,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839892.5932422,
+      "updated_at": 1787840358.8199327,
       "first_year": 2013,
       "last_year": 2025,
       "count": 3,
@@ -587,7 +587,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443874.0026166
+      "mops_retry_after": 1788445158.805169
     }
   },
   "2013": {
@@ -595,9 +595,9 @@
       "2025": 3.18
     },
     "meta": {
-      "mops_attempted_at": 1787839074.8830507,
+      "mops_attempted_at": 1787840359.2042365,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839892.9943683,
+      "updated_at": 1787840359.2206645,
       "first_year": 2025,
       "last_year": 2025,
       "count": 1,
@@ -606,7 +606,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443874.8830507
+      "mops_retry_after": 1788445159.2042365
     }
   },
   "2015": {
@@ -624,9 +624,9 @@
       "2025": 3.85
     },
     "meta": {
-      "mops_attempted_at": 1787839076.275878,
+      "mops_attempted_at": 1787840359.8140585,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839893.5041645,
+      "updated_at": 1787840359.823433,
       "first_year": 2014,
       "last_year": 2025,
       "count": 11,
@@ -635,7 +635,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443876.275878
+      "mops_retry_after": 1788445159.8140585
     }
   },
   "2206": {
@@ -645,9 +645,9 @@
       "2025": 5.77
     },
     "meta": {
-      "mops_attempted_at": 1787839077.3414805,
+      "mops_attempted_at": 1787840360.297117,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839893.920725,
+      "updated_at": 1787840360.3119278,
       "first_year": 2011,
       "last_year": 2025,
       "count": 3,
@@ -656,7 +656,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443877.3414805
+      "mops_retry_after": 1788445160.297117
     }
   },
   "2207": {
@@ -674,9 +674,9 @@
       "2024": 36.74
     },
     "meta": {
-      "mops_attempted_at": 1787839078.7942274,
+      "mops_attempted_at": 1787840360.7691727,
       "source": "Yahoo complete quarterly EPS",
-      "updated_at": 1787839895.3918366,
+      "updated_at": 1787840360.7787442,
       "first_year": 2014,
       "last_year": 2024,
       "count": 11,
@@ -685,7 +685,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443878.7942274
+      "mops_retry_after": 1788445160.7691727
     }
   },
   "2331": {
@@ -695,9 +695,9 @@
       "2025": 1.4
     },
     "meta": {
-      "mops_attempted_at": 1787839080.6127672,
+      "mops_attempted_at": 1787840361.8556244,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839896.5155625,
+      "updated_at": 1787840361.870463,
       "first_year": 2013,
       "last_year": 2025,
       "count": 3,
@@ -706,7 +706,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443880.6127672
+      "mops_retry_after": 1788445161.8556244
     }
   },
   "2344": {
@@ -723,9 +723,9 @@
       "2025": 0.88
     },
     "meta": {
-      "mops_attempted_at": 1787839087.3999639,
+      "mops_attempted_at": 1787840367.7530339,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839901.8547413,
+      "updated_at": 1787840367.7630196,
       "first_year": 2015,
       "last_year": 2025,
       "count": 10,
@@ -734,7 +734,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443887.3999639
+      "mops_retry_after": 1788445167.7530339
     }
   },
   "2353": {
@@ -751,9 +751,9 @@
       "2025": 1.25
     },
     "meta": {
-      "mops_attempted_at": 1787839093.6044207,
+      "mops_attempted_at": 1787840373.6972513,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839907.3122375,
+      "updated_at": 1787840373.7073221,
       "first_year": 2016,
       "last_year": 2025,
       "count": 10,
@@ -762,7 +762,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443893.6044207
+      "mops_retry_after": 1788445173.6972513
     }
   },
   "2408": {
@@ -780,9 +780,9 @@
       "2025": 2.1
     },
     "meta": {
-      "mops_attempted_at": 1787839094.929368,
+      "mops_attempted_at": 1787840374.0912526,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839907.8185227,
+      "updated_at": 1787840374.1005847,
       "first_year": 2014,
       "last_year": 2025,
       "count": 11,
@@ -791,7 +791,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443894.929368
+      "mops_retry_after": 1788445174.0912526
     }
   },
   "2421": {
@@ -809,9 +809,9 @@
       "2025": 7.887489
     },
     "meta": {
-      "mops_attempted_at": 1787839096.51049,
+      "mops_attempted_at": 1787840374.6310058,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839908.3393977,
+      "updated_at": 1787840374.6404016,
       "first_year": 2014,
       "last_year": 2025,
       "count": 11,
@@ -820,7 +820,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443896.51049
+      "mops_retry_after": 1788445174.6310058
     }
   },
   "2423": {
@@ -828,9 +828,9 @@
       "2025": 2.91
     },
     "meta": {
-      "mops_attempted_at": 1787839097.4230673,
+      "mops_attempted_at": 1787840375.1410208,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839908.797726,
+      "updated_at": 1787840375.1572783,
       "first_year": 2025,
       "last_year": 2025,
       "count": 1,
@@ -839,7 +839,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443897.4230673
+      "mops_retry_after": 1788445175.1410208
     }
   },
   "2455": {
@@ -858,9 +858,9 @@
       "2025": 2.96
     },
     "meta": {
-      "mops_attempted_at": 1787839099.9766026,
+      "mops_attempted_at": 1787840376.8993797,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839910.52144,
+      "updated_at": 1787840376.908216,
       "first_year": 2014,
       "last_year": 2025,
       "count": 12,
@@ -869,7 +869,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443899.9766026
+      "mops_retry_after": 1788445176.8993797
     }
   },
   "2476": {
@@ -881,9 +881,9 @@
       "2025": 4.17
     },
     "meta": {
-      "mops_attempted_at": 1787839102.3310103,
+      "mops_attempted_at": 1787840378.533885,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839912.4193616,
+      "updated_at": 1787840378.547247,
       "first_year": 2007,
       "last_year": 2025,
       "count": 5,
@@ -892,7 +892,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443902.3310103
+      "mops_retry_after": 1788445178.533885
     }
   },
   "2498": {
@@ -910,9 +910,9 @@
       "2025": 7.15
     },
     "meta": {
-      "mops_attempted_at": 1787839103.2178924,
+      "mops_attempted_at": 1787840379.091432,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839912.8119516,
+      "updated_at": 1787840379.1008759,
       "first_year": 2014,
       "last_year": 2025,
       "count": 11,
@@ -921,7 +921,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443903.2178924
+      "mops_retry_after": 1788445179.091432
     }
   },
   "2515": {
@@ -930,9 +930,9 @@
       "2025": 0.371393
     },
     "meta": {
-      "mops_attempted_at": 1787839104.2598677,
+      "mops_attempted_at": 1787840379.4871247,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839913.2623014,
+      "updated_at": 1787840379.502519,
       "first_year": 2012,
       "last_year": 2025,
       "count": 2,
@@ -941,7 +941,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443904.2598677
+      "mops_retry_after": 1788445179.4871247
     }
   },
   "2534": {
@@ -952,9 +952,9 @@
       "2025": 2.06
     },
     "meta": {
-      "mops_attempted_at": 1787839107.6094236,
+      "mops_attempted_at": 1787840381.7070618,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839915.4186018,
+      "updated_at": 1787840381.7211356,
       "first_year": 2007,
       "last_year": 2025,
       "count": 4,
@@ -963,7 +963,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443907.6094236
+      "mops_retry_after": 1788445181.7070618
     }
   },
   "2535": {
@@ -975,9 +975,9 @@
       "2025": 6.48
     },
     "meta": {
-      "mops_attempted_at": 1787839108.746285,
+      "mops_attempted_at": 1787840382.0985677,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839915.8142745,
+      "updated_at": 1787840382.1120448,
       "first_year": 2009,
       "last_year": 2025,
       "count": 5,
@@ -986,7 +986,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443908.746285
+      "mops_retry_after": 1788445182.0985677
     }
   },
   "2618": {
@@ -1003,9 +1003,9 @@
       "2025": 4.8
     },
     "meta": {
-      "mops_attempted_at": 1787839110.7078547,
+      "mops_attempted_at": 1787840383.0028856,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839916.889838,
+      "updated_at": 1787840383.0129983,
       "first_year": 2015,
       "last_year": 2025,
       "count": 10,
@@ -1014,7 +1014,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443910.7078547
+      "mops_retry_after": 1788445183.0028856
     }
   },
   "2850": {
@@ -1023,9 +1023,9 @@
       "2014": 3.28
     },
     "meta": {
-      "mops_attempted_at": 1787839113.3395753,
+      "mops_attempted_at": 1787840385.0256608,
       "source": "Yahoo complete quarterly EPS",
-      "updated_at": 1787839918.5909715,
+      "updated_at": 1787840385.0412228,
       "first_year": 2013,
       "last_year": 2014,
       "count": 2,
@@ -1034,7 +1034,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443913.3395753
+      "mops_retry_after": 1788445185.0256608
     }
   },
   "2883": {
@@ -1044,9 +1044,9 @@
       "2025": 1.737128
     },
     "meta": {
-      "mops_attempted_at": 1787839114.5002553,
+      "mops_attempted_at": 1787840385.5327067,
       "source": "Yahoo complete quarterly EPS",
-      "updated_at": 1787839919.2809505,
+      "updated_at": 1787840385.5474784,
       "first_year": 2015,
       "last_year": 2025,
       "count": 3,
@@ -1055,7 +1055,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443914.5002553
+      "mops_retry_after": 1788445185.5327067
     }
   },
   "2890": {
@@ -1073,9 +1073,9 @@
       "2025": 1.96639
     },
     "meta": {
-      "mops_attempted_at": 1787839115.9880192,
+      "mops_attempted_at": 1787840386.08517,
       "source": "Yahoo complete quarterly EPS",
-      "updated_at": 1787839919.8936062,
+      "updated_at": 1787840386.0946243,
       "first_year": 2015,
       "last_year": 2025,
       "count": 11,
@@ -1084,7 +1084,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443915.9880192
+      "mops_retry_after": 1788445186.08517
     }
   },
   "2912": {
@@ -1102,9 +1102,9 @@
       "2025": 10.75
     },
     "meta": {
-      "mops_attempted_at": 1787839116.901412,
+      "mops_attempted_at": 1787840386.6053076,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839920.314691,
+      "updated_at": 1787840386.6148283,
       "first_year": 2015,
       "last_year": 2025,
       "count": 11,
@@ -1113,7 +1113,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443916.901412
+      "mops_retry_after": 1788445186.6053076
     }
   },
   "2913": {
@@ -1122,9 +1122,9 @@
       "2025": -0.15
     },
     "meta": {
-      "mops_attempted_at": 1787839117.9453058,
+      "mops_attempted_at": 1787840387.0825481,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839920.748281,
+      "updated_at": 1787840387.0980487,
       "first_year": 2013,
       "last_year": 2025,
       "count": 2,
@@ -1133,7 +1133,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443917.9453058
+      "mops_retry_after": 1788445187.0825481
     }
   },
   "3003": {
@@ -1143,9 +1143,9 @@
       "2025": 0.99
     },
     "meta": {
-      "mops_attempted_at": 1787839119.6946576,
+      "mops_attempted_at": 1787840389.0198128,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839921.9652643,
+      "updated_at": 1787840389.034503,
       "first_year": 2020,
       "last_year": 2025,
       "count": 3,
@@ -1154,7 +1154,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443919.6946576
+      "mops_retry_after": 1788445189.0198128
     }
   },
   "3005": {
@@ -1170,9 +1170,9 @@
       "2025": 8.31
     },
     "meta": {
-      "mops_attempted_at": 1787839120.89951,
+      "mops_attempted_at": 1787840390.5990689,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839922.5354614,
+      "updated_at": 1787840390.6098936,
       "first_year": 2017,
       "last_year": 2025,
       "count": 9,
@@ -1181,7 +1181,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443920.89951
+      "mops_retry_after": 1788445190.5990689
     }
   },
   "3006": {
@@ -1192,9 +1192,9 @@
       "2025": 0.87
     },
     "meta": {
-      "mops_attempted_at": 1787839122.1847248,
+      "mops_attempted_at": 1787840391.00694,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839922.9919448,
+      "updated_at": 1787840391.0211303,
       "first_year": 2011,
       "last_year": 2025,
       "count": 4,
@@ -1203,7 +1203,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443922.1847248
+      "mops_retry_after": 1788445191.00694
     }
   },
   "3023": {
@@ -1221,9 +1221,9 @@
       "2025": 13.01
     },
     "meta": {
-      "mops_attempted_at": 1787839123.6612997,
+      "mops_attempted_at": 1787840391.5853484,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839923.6061823,
+      "updated_at": 1787840391.594822,
       "first_year": 2015,
       "last_year": 2025,
       "count": 11,
@@ -1232,7 +1232,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443923.6612997
+      "mops_retry_after": 1788445191.5853484
     }
   },
   "3056": {
@@ -1240,9 +1240,9 @@
       "2025": 1.07
     },
     "meta": {
-      "mops_attempted_at": 1787839125.054792,
+      "mops_attempted_at": 1787840392.507007,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839924.5768256,
+      "updated_at": 1787840392.5230293,
       "first_year": 2025,
       "last_year": 2025,
       "count": 1,
@@ -1251,7 +1251,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443925.054792
+      "mops_retry_after": 1788445192.507007
     }
   },
   "3189": {
@@ -1269,9 +1269,9 @@
       "2025": 3.374031
     },
     "meta": {
-      "mops_attempted_at": 1787839126.224593,
+      "mops_attempted_at": 1787840393.096493,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839925.1382143,
+      "updated_at": 1787840393.1060796,
       "first_year": 2014,
       "last_year": 2025,
       "count": 11,
@@ -1280,7 +1280,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443926.224593
+      "mops_retry_after": 1788445193.096493
     }
   },
   "3416": {
@@ -1292,9 +1292,9 @@
       "2025": 7.09
     },
     "meta": {
-      "mops_attempted_at": 1787839127.2616036,
+      "mops_attempted_at": 1787840393.7293978,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839925.6374147,
+      "updated_at": 1787840393.742745,
       "first_year": 2014,
       "last_year": 2025,
       "count": 5,
@@ -1303,7 +1303,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443927.2616036
+      "mops_retry_after": 1788445193.7293978
     }
   },
   "3545": {
@@ -1320,9 +1320,9 @@
       "2025": -4.64
     },
     "meta": {
-      "mops_attempted_at": 1787839128.2219884,
+      "mops_attempted_at": 1787840394.5081716,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839926.0431273,
+      "updated_at": 1787840394.5181317,
       "first_year": 2016,
       "last_year": 2025,
       "count": 10,
@@ -1331,7 +1331,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443928.2219884
+      "mops_retry_after": 1788445194.5081716
     }
   },
   "3563": {
@@ -1344,9 +1344,9 @@
       "2025": 15.74
     },
     "meta": {
-      "mops_attempted_at": 1787839129.2624002,
+      "mops_attempted_at": 1787840394.916433,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839926.484277,
+      "updated_at": 1787840394.9292214,
       "first_year": 2017,
       "last_year": 2025,
       "count": 6,
@@ -1355,7 +1355,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443929.2624002
+      "mops_retry_after": 1788445194.916433
     }
   },
   "3679": {
@@ -1366,9 +1366,9 @@
       "2025": 9.73
     },
     "meta": {
-      "mops_attempted_at": 1787839130.8037422,
+      "mops_attempted_at": 1787840395.5111675,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839926.8943815,
+      "updated_at": 1787840395.5253813,
       "first_year": 2016,
       "last_year": 2025,
       "count": 4,
@@ -1377,7 +1377,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443930.8037422
+      "mops_retry_after": 1788445195.5111675
     }
   },
   "3706": {
@@ -1392,9 +1392,9 @@
       "2025": 5.13
     },
     "meta": {
-      "mops_attempted_at": 1787839132.0735667,
+      "mops_attempted_at": 1787840395.9227886,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839927.2879765,
+      "updated_at": 1787840395.9343455,
       "first_year": 2015,
       "last_year": 2025,
       "count": 8,
@@ -1403,7 +1403,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443932.0735667
+      "mops_retry_after": 1788445195.9227886
     }
   },
   "3714": {
@@ -1415,9 +1415,9 @@
       "2025": -3.69
     },
     "meta": {
-      "mops_attempted_at": 1787839140.2635462,
+      "mops_attempted_at": 1787840405.4507542,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839934.9052374,
+      "updated_at": 1787840405.464169,
       "first_year": 2021,
       "last_year": 2025,
       "count": 5,
@@ -1426,7 +1426,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443940.2635462
+      "mops_retry_after": 1788445205.4507542
     }
   },
   "4119": {
@@ -1443,9 +1443,9 @@
       "2025": 0.9
     },
     "meta": {
-      "mops_attempted_at": 1787839141.4129527,
+      "mops_attempted_at": 1787840405.8611443,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839935.324252,
+      "updated_at": 1787840405.8713694,
       "first_year": 2009,
       "last_year": 2025,
       "count": 10,
@@ -1454,7 +1454,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443941.4129527
+      "mops_retry_after": 1788445205.8611443
     }
   },
   "4142": {
@@ -1465,9 +1465,9 @@
       "2025": -0.57
     },
     "meta": {
-      "mops_attempted_at": 1787839142.346608,
+      "mops_attempted_at": 1787840406.3026037,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839935.7910907,
+      "updated_at": 1787840406.3165636,
       "first_year": 2014,
       "last_year": 2025,
       "count": 4,
@@ -1476,7 +1476,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443942.346608
+      "mops_retry_after": 1788445206.3026037
     }
   },
   "4540": {
@@ -1485,9 +1485,9 @@
       "2025": -0.66
     },
     "meta": {
-      "mops_attempted_at": 1787839144.9585037,
+      "mops_attempted_at": 1787840408.0789387,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839937.634398,
+      "updated_at": 1787840408.094245,
       "first_year": 2019,
       "last_year": 2025,
       "count": 2,
@@ -1496,7 +1496,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443944.9585037
+      "mops_retry_after": 1788445208.0789387
     }
   },
   "4555": {
@@ -1508,9 +1508,9 @@
       "2025": 0.19
     },
     "meta": {
-      "mops_attempted_at": 1787839146.8044145,
+      "mops_attempted_at": 1787840409.342383,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839938.8679247,
+      "updated_at": 1787840409.355884,
       "first_year": 2016,
       "last_year": 2025,
       "count": 5,
@@ -1519,7 +1519,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443946.8044145
+      "mops_retry_after": 1788445209.342383
     }
   },
   "4557": {
@@ -1527,9 +1527,9 @@
       "2018": 5.17
     },
     "meta": {
-      "mops_attempted_at": 1787839148.0825853,
+      "mops_attempted_at": 1787840409.947038,
       "source": "Yahoo complete quarterly EPS",
-      "updated_at": 1787839939.4213946,
+      "updated_at": 1787840409.9631932,
       "first_year": 2018,
       "last_year": 2018,
       "count": 1,
@@ -1538,7 +1538,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443948.0825853
+      "mops_retry_after": 1788445209.947038
     }
   },
   "4576": {
@@ -1546,9 +1546,9 @@
       "2025": 2.01
     },
     "meta": {
-      "mops_attempted_at": 1787839150.465029,
+      "mops_attempted_at": 1787840411.53828,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839941.2659965,
+      "updated_at": 1787840411.5544696,
       "first_year": 2025,
       "last_year": 2025,
       "count": 1,
@@ -1557,7 +1557,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443950.465029
+      "mops_retry_after": 1788445211.53828
     }
   },
   "4912": {
@@ -1567,9 +1567,9 @@
       "2025": 1.97
     },
     "meta": {
-      "mops_attempted_at": 1787839151.9239037,
+      "mops_attempted_at": 1787840412.1472893,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839941.8020575,
+      "updated_at": 1787840412.1621616,
       "first_year": 2018,
       "last_year": 2025,
       "count": 3,
@@ -1578,7 +1578,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443951.9239037
+      "mops_retry_after": 1788445212.1472893
     }
   },
   "4952": {
@@ -1588,9 +1588,9 @@
       "2025": 1.03
     },
     "meta": {
-      "mops_attempted_at": 1787839153.3806071,
+      "mops_attempted_at": 1787840412.6918316,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839942.325817,
+      "updated_at": 1787840412.7064586,
       "first_year": 2014,
       "last_year": 2025,
       "count": 3,
@@ -1599,7 +1599,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443953.3806071
+      "mops_retry_after": 1788445212.6918316
     }
   },
   "5269": {
@@ -1614,9 +1614,9 @@
       "2025": 72.37
     },
     "meta": {
-      "mops_attempted_at": 1787839155.1650865,
+      "mops_attempted_at": 1787840413.6154728,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839943.2095432,
+      "updated_at": 1787840413.6267912,
       "first_year": 2018,
       "last_year": 2025,
       "count": 8,
@@ -1625,7 +1625,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443955.1650865
+      "mops_retry_after": 1788445213.6154728
     }
   },
   "5288": {
@@ -1642,9 +1642,9 @@
       "2025": 12.15
     },
     "meta": {
-      "mops_attempted_at": 1787839156.2784975,
+      "mops_attempted_at": 1787840414.0073652,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839943.6203294,
+      "updated_at": 1787840414.017417,
       "first_year": 2015,
       "last_year": 2025,
       "count": 10,
@@ -1653,7 +1653,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443956.2784975
+      "mops_retry_after": 1788445214.0073652
     }
   },
   "5538": {
@@ -1661,9 +1661,9 @@
       "2025": 3.02
     },
     "meta": {
-      "mops_attempted_at": 1787839157.7376733,
+      "mops_attempted_at": 1787840414.4069135,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839944.0220811,
+      "updated_at": 1787840414.422694,
       "first_year": 2025,
       "last_year": 2025,
       "count": 1,
@@ -1672,7 +1672,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443957.7376733
+      "mops_retry_after": 1788445214.4069135
     }
   },
   "6112": {
@@ -1681,9 +1681,9 @@
       "2025": 1.81
     },
     "meta": {
-      "mops_attempted_at": 1787839159.401147,
+      "mops_attempted_at": 1787840415.4956903,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839945.0977979,
+      "updated_at": 1787840415.5109463,
       "first_year": 2020,
       "last_year": 2025,
       "count": 2,
@@ -1692,7 +1692,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443959.401147
+      "mops_retry_after": 1788445215.4956903
     }
   },
   "6152": {
@@ -1706,9 +1706,9 @@
       "2025": -1.47
     },
     "meta": {
-      "mops_attempted_at": 1787839160.6990426,
+      "mops_attempted_at": 1787840415.993313,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839945.734781,
+      "updated_at": 1787840416.0053055,
       "first_year": 2007,
       "last_year": 2025,
       "count": 7,
@@ -1717,7 +1717,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443960.6990426
+      "mops_retry_after": 1788445215.993313
     }
   },
   "6409": {
@@ -1735,9 +1735,9 @@
       "2025": 40.05
     },
     "meta": {
-      "mops_attempted_at": 1787839162.7026668,
+      "mops_attempted_at": 1787840417.2103283,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839946.7599223,
+      "updated_at": 1787840417.2196958,
       "first_year": 2015,
       "last_year": 2025,
       "count": 11,
@@ -1746,7 +1746,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443962.7026668
+      "mops_retry_after": 1788445217.2103283
     }
   },
   "6491": {
@@ -1759,9 +1759,9 @@
       "2025": 20.62
     },
     "meta": {
-      "mops_attempted_at": 1787839163.9542453,
+      "mops_attempted_at": 1787840417.6935625,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839947.4504447,
+      "updated_at": 1787840417.7064302,
       "first_year": 2020,
       "last_year": 2025,
       "count": 6,
@@ -1770,7 +1770,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443963.9542453
+      "mops_retry_after": 1788445217.6935625
     }
   },
   "6581": {
@@ -1778,9 +1778,9 @@
       "2025": 6.15
     },
     "meta": {
-      "mops_attempted_at": 1787839164.8833663,
+      "mops_attempted_at": 1787840418.153236,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839947.9045086,
+      "updated_at": 1787840418.1691344,
       "first_year": 2025,
       "last_year": 2025,
       "count": 1,
@@ -1789,7 +1789,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443964.8833663
+      "mops_retry_after": 1788445218.153236
     }
   },
   "6592": {
@@ -1798,9 +1798,9 @@
       "2025": 4.572816
     },
     "meta": {
-      "mops_attempted_at": 1787839166.331577,
+      "mops_attempted_at": 1787840418.7465756,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839948.4895718,
+      "updated_at": 1787840418.7620718,
       "first_year": 2024,
       "last_year": 2025,
       "count": 2,
@@ -1809,7 +1809,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443966.331577
+      "mops_retry_after": 1788445218.7465756
     }
   },
   "6598": {
@@ -1817,9 +1817,9 @@
       "2021": -2.02
     },
     "meta": {
-      "mops_attempted_at": 1787839167.3286266,
+      "mops_attempted_at": 1787840419.3443294,
       "source": "Yahoo complete quarterly EPS",
-      "updated_at": 1787839949.1442206,
+      "updated_at": 1787840419.3605473,
       "first_year": 2021,
       "last_year": 2021,
       "count": 1,
@@ -1828,7 +1828,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443967.3286266
+      "mops_retry_after": 1788445219.3443294
     }
   },
   "6605": {
@@ -1837,9 +1837,9 @@
       "2025": 13.79
     },
     "meta": {
-      "mops_attempted_at": 1787839169.6820815,
+      "mops_attempted_at": 1787840420.5192533,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839950.4524543,
+      "updated_at": 1787840420.5346677,
       "first_year": 2007,
       "last_year": 2025,
       "count": 2,
@@ -1848,7 +1848,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443969.6820815
+      "mops_retry_after": 1788445220.5192533
     }
   },
   "8271": {
@@ -1856,9 +1856,9 @@
       "2025": 6.64
     },
     "meta": {
-      "mops_attempted_at": 1787839177.4103148,
+      "mops_attempted_at": 1787840427.1033819,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839956.6808722,
+      "updated_at": 1787840427.1194556,
       "first_year": 2025,
       "last_year": 2025,
       "count": 1,
@@ -1867,7 +1867,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443977.4103148
+      "mops_retry_after": 1788445227.1033819
     }
   },
   "8404": {
@@ -1880,9 +1880,9 @@
       "2024": 0.89
     },
     "meta": {
-      "mops_attempted_at": 1787839179.009537,
+      "mops_attempted_at": 1787840427.6551445,
       "source": "Yahoo complete quarterly EPS",
-      "updated_at": 1787839957.2274728,
+      "updated_at": 1787840427.667941,
       "first_year": 2018,
       "last_year": 2024,
       "count": 6,
@@ -1891,7 +1891,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443979.009537
+      "mops_retry_after": 1788445227.6551445
     }
   },
   "9927": {
@@ -1900,9 +1900,9 @@
       "2025": 4.25
     },
     "meta": {
-      "mops_attempted_at": 1787839180.5566692,
+      "mops_attempted_at": 1787840428.561281,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839958.433923,
+      "updated_at": 1787840428.5767272,
       "first_year": 2011,
       "last_year": 2025,
       "count": 2,
@@ -1911,7 +1911,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443980.5566692
+      "mops_retry_after": 1788445228.561281
     }
   },
   "9934": {
@@ -1920,9 +1920,9 @@
       "2025": -0.29
     },
     "meta": {
-      "mops_attempted_at": 1787839181.56014,
+      "mops_attempted_at": 1787840429.0976727,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839958.9660478,
+      "updated_at": 1787840429.11318,
       "first_year": 2011,
       "last_year": 2025,
       "count": 2,
@@ -1931,7 +1931,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443981.56014
+      "mops_retry_after": 1788445229.0976727
     }
   },
   "9935": {
@@ -1939,9 +1939,9 @@
       "2025": 1.59
     },
     "meta": {
-      "mops_attempted_at": 1787839182.5778544,
+      "mops_attempted_at": 1787840429.7969637,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839959.5839915,
+      "updated_at": 1787840429.8130467,
       "first_year": 2025,
       "last_year": 2025,
       "count": 1,
@@ -1950,7 +1950,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443982.5778544
+      "mops_retry_after": 1788445229.7969637
     }
   },
   "9941": {
@@ -1965,9 +1965,9 @@
       "2025": 7.32
     },
     "meta": {
-      "mops_attempted_at": 1787839184.1594634,
+      "mops_attempted_at": 1787840430.3281648,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839960.1791527,
+      "updated_at": 1787840430.3396482,
       "first_year": 2012,
       "last_year": 2025,
       "count": 8,
@@ -1976,7 +1976,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443984.1594634
+      "mops_retry_after": 1788445230.3281648
     }
   },
   "3324": {
@@ -1993,9 +1993,9 @@
       "2025": 27.6
     },
     "meta": {
-      "mops_attempted_at": 1787839187.9763381,
+      "mops_attempted_at": 1787840437.5123618,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839981.2946324,
+      "updated_at": 1787840437.5223513,
       "first_year": 2012,
       "last_year": 2025,
       "count": 10,
@@ -2004,7 +2004,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443987.9763381
+      "mops_retry_after": 1788445237.5123618
     }
   },
   "3484": {
@@ -2014,9 +2014,9 @@
       "2025": 3.98
     },
     "meta": {
-      "mops_attempted_at": 1787839190.6220384,
+      "mops_attempted_at": 1787840439.1456056,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839991.0641208,
+      "updated_at": 1787840439.1602886,
       "first_year": 2010,
       "last_year": 2025,
       "count": 3,
@@ -2025,7 +2025,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443990.6220384
+      "mops_retry_after": 1788445239.1456056
     }
   },
   "3693": {
@@ -2035,9 +2035,9 @@
       "2025": 15.35
     },
     "meta": {
-      "mops_attempted_at": 1787839191.9805496,
+      "mops_attempted_at": 1787840439.8829322,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839992.6718962,
+      "updated_at": 1787840439.8977828,
       "first_year": 2014,
       "last_year": 2025,
       "count": 3,
@@ -2046,7 +2046,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443991.9805496
+      "mops_retry_after": 1788445239.8829322
     }
   },
   "4121": {
@@ -2054,9 +2054,9 @@
       "2025": -0.36
     },
     "meta": {
-      "mops_attempted_at": 1787839198.2913961,
+      "mops_attempted_at": 1787840441.4607635,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839994.1137612,
+      "updated_at": 1787840441.4769728,
       "first_year": 2025,
       "last_year": 2025,
       "count": 1,
@@ -2065,7 +2065,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788443998.2913961
+      "mops_retry_after": 1788445241.4607635
     }
   },
   "4138": {
@@ -2075,9 +2075,9 @@
       "2025": 3.79
     },
     "meta": {
-      "mops_attempted_at": 1787839200.9727664,
+      "mops_attempted_at": 1787840443.2182922,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839995.7335188,
+      "updated_at": 1787840443.2330358,
       "first_year": 2012,
       "last_year": 2025,
       "count": 3,
@@ -2086,7 +2086,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788444000.9727664
+      "mops_retry_after": 1788445243.2182922
     }
   },
   "4541": {
@@ -2099,9 +2099,9 @@
       "2025": 2.02
     },
     "meta": {
-      "mops_attempted_at": 1787839202.589601,
+      "mops_attempted_at": 1787840444.0021882,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787839996.4351928,
+      "updated_at": 1787840444.014877,
       "first_year": 2015,
       "last_year": 2025,
       "count": 6,
@@ -2110,7 +2110,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788444002.589601
+      "mops_retry_after": 1788445244.0021882
     }
   },
   "5392": {
@@ -2121,9 +2121,9 @@
       "2013": 1.46
     },
     "meta": {
-      "mops_attempted_at": 1787839206.955318,
+      "mops_attempted_at": 1787840445.5110927,
       "source": "Yahoo complete quarterly EPS",
-      "updated_at": 1787839999.0008752,
+      "updated_at": 1787840445.5249908,
       "first_year": 2010,
       "last_year": 2013,
       "count": 4,
@@ -2132,7 +2132,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788444006.955318
+      "mops_retry_after": 1788445245.5110927
     }
   },
   "6508": {
@@ -2141,9 +2141,9 @@
       "2025": 0.27
     },
     "meta": {
-      "mops_attempted_at": 1787839215.6691036,
+      "mops_attempted_at": 1787840449.7959692,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840003.9219003,
+      "updated_at": 1787840449.8113163,
       "first_year": 2011,
       "last_year": 2025,
       "count": 2,
@@ -2152,7 +2152,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788444015.6691036
+      "mops_retry_after": 1788445249.7959692
     }
   },
   "6576": {
@@ -2166,9 +2166,9 @@
       "2025": -5.7
     },
     "meta": {
-      "mops_attempted_at": 1787839218.5443766,
+      "mops_attempted_at": 1787840450.6016502,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840004.6763577,
+      "updated_at": 1787840450.6136682,
       "first_year": 2019,
       "last_year": 2025,
       "count": 7,
@@ -2177,7 +2177,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788444018.5443766
+      "mops_retry_after": 1788445250.6016502
     }
   },
   "6712": {
@@ -2187,9 +2187,9 @@
       "2025": 4.647619
     },
     "meta": {
-      "mops_attempted_at": 1787839226.461906,
+      "mops_attempted_at": 1787840452.5982118,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840006.2098863,
+      "updated_at": 1787840452.6130347,
       "first_year": 2021,
       "last_year": 2025,
       "count": 3,
@@ -2198,7 +2198,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788444026.461906
+      "mops_retry_after": 1788445252.5982118
     }
   },
   "6733": {
@@ -2206,9 +2206,9 @@
       "2025": -0.687856
     },
     "meta": {
-      "mops_attempted_at": 1787839229.010698,
+      "mops_attempted_at": 1787840453.5095162,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840007.1683338,
+      "updated_at": 1787840453.5255322,
       "first_year": 2025,
       "last_year": 2025,
       "count": 1,
@@ -2217,7 +2217,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788444029.010698
+      "mops_retry_after": 1788445253.5095162
     }
   },
   "8109": {
@@ -2227,9 +2227,9 @@
       "2025": 6.16
     },
     "meta": {
-      "mops_attempted_at": 1787839233.7596054,
+      "mops_attempted_at": 1787840456.3582137,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840009.4560943,
+      "updated_at": 1787840456.3728733,
       "first_year": 2011,
       "last_year": 2025,
       "count": 3,
@@ -2238,7 +2238,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788444033.7596054
+      "mops_retry_after": 1788445256.3582137
     }
   },
   "8349": {
@@ -2249,9 +2249,9 @@
       "2025": 1.92
     },
     "meta": {
-      "mops_attempted_at": 1787839235.6145036,
+      "mops_attempted_at": 1787840456.9975407,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840010.1435444,
+      "updated_at": 1787840457.0115292,
       "first_year": 2017,
       "last_year": 2025,
       "count": 4,
@@ -2260,7 +2260,7 @@
       "target_years": 25,
       "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
-      "mops_retry_after": 1788444035.6145036
+      "mops_retry_after": 1788445256.9975407
     }
   }
 }
