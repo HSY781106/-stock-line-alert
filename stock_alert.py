@@ -1,5 +1,5 @@
-# stock_alert.py V2.10.70
-# V2.10.70：即時資料 / 歷史資料快取分離版。
+# stock_alert.py V2.10.71
+# V2.10.71：即時資料 / 歷史資料快取分離版。
 #             背景網頁分析（非 LINE 輕量模式）一律優先抓取最新可用 Yahoo 1d 日線，
 #             不再被 LINE_MODE_ACTIVE 或 36/72 小時技術快取攔截；成功後立即寫回
 #             line_technical_cache.json，確保快取也同步到最新交易日。
@@ -164,7 +164,7 @@ EPS_QUARTERLY_TYPES = [
 YF_TIMEOUT = 10
 MAX_HISTORY_DAYS_PER_RUN = 75
 
-# V2.10.70：即時 / 歷史快取分離。
+# V2.10.71：即時 / 歷史快取分離。
 # 全市場 Actions 批次仍以 36 小時作為「歷史技術快取」更新門檻；
 # 但背景網頁分析的目標股不使用此門檻，會優先刷新最新可用日線。
 TECH_CACHE_MAX_AGE = 36 * 3600
@@ -2311,6 +2311,39 @@ def yf_download(
         RUN_CACHE[key] = None
 
         return None
+
+
+def get_latest_intraday_price(symbol):
+    """V2.10.71：取得目標股最新可用 5 分鐘價格。
+
+    技術趨勢的 price 不再使用 market_universe_cache.json 裡可能過期的價格。
+    正常背景分析優先使用 Yahoo 最新 5 分鐘 K 棒的 Close；若 5 分鐘資料
+    無法取得，才退回既有 get_latest_price() 的最新日線收盤價。
+    這個價格只用來做「目前價格相對 MA20/MA60」的即時判斷，不改動
+    MA20/MA60、RSI、KD 的歷史日線計算口徑。
+    """
+    key = ('latest_intraday_v211', symbol)
+    if key in RUN_CACHE:
+        return RUN_CACHE[key]
+
+    v = None
+    try:
+        d = yf_download(symbol, '1d', '5m')
+        if d is not None and not d.empty and 'Close' in d.columns:
+            c = pd.to_numeric(d['Close'], errors='coerce').dropna()
+            if not c.empty:
+                v = float(c.iloc[-1])
+    except Exception as e:
+        print(
+            f'V2.10.71 即時5分鐘價格取得失敗 {symbol}：{type(e).__name__}',
+            flush=True
+        )
+
+    if v is None:
+        v = get_latest_price(symbol)
+
+    RUN_CACHE[key] = v
+    return v
 
 
 def get_latest_price(symbol):
@@ -4941,7 +4974,7 @@ def _load_technical_cache_entry(cache, key, max_age=72 * 3600):
             out[k] = x.get(k)
         else:
             out[k] = to_float(x.get(k))
-    # V2.10.70：保留快取對應的最新可用交易日，便於辨識資料新鮮度。
+    # V2.10.71：保留快取對應的最新可用交易日，便於辨識資料新鮮度。
     if x.get('_data_date'):
         out['_data_date'] = str(x.get('_data_date'))
     return out
@@ -5064,7 +5097,7 @@ def refresh_all_technical_cache(u, force=False):
 
     - 目標：動態市場股票池內全部 TWSE/TPEX 股票，另含 0050、QQQ、^TWII。
     - 歷史技術快取先保留新鮮資料；只更新缺少或超過 36 小時的標的。
-    - V2.10.70：這個 36 小時門檻只適用全市場批次，不適用背景目標股即時分析。
+    - V2.10.71：這個 36 小時門檻只適用全市場批次，不適用背景目標股即時分析。
     - Yahoo 以 80 檔/批次下載 6 個月日線，避免 1985 次單檔 API 呼叫。
     - 每批成功後統一寫回一次 JSON，最後由既有 Actions git add -A 提交。
     - 批次失敗不清空舊快取；因此不會因單次 Yahoo 限流把 Render 可用資料變成 N/A。
@@ -5142,7 +5175,7 @@ def refresh_all_technical_cache(u, force=False):
                 frame = _technical_from_yahoo_batch_frame(frame)
                 result = _technical_from_df(frame)
                 if result.get('price') is not None:
-                    # V2.10.70：全市場歷史技術快取也記錄其最新交易日。
+                    # V2.10.71：全市場歷史技術快取也記錄其最新交易日。
                     try:
                         if frame is not None and not frame.empty:
                             latest_dt = pd.to_datetime(frame.index[-1])
@@ -5182,7 +5215,7 @@ def refresh_all_technical_cache(u, force=False):
 
 
 def technical(symbol, force_refresh=False):
-    """V2.10.70：即時資料 / 歷史資料快取分離。
+    """V2.10.71：即時資料 / 歷史資料快取分離。
 
     規則：
     1. LINE 輕量模式（force_refresh=False）：
@@ -5203,7 +5236,7 @@ def technical(symbol, force_refresh=False):
         cache = {}
 
     # --------------------------------------------------------
-    # V2.10.70：LINE 輕量模式
+    # V2.10.71：LINE 輕量模式
     # 只有「非強制刷新」才走快取優先。
     # 背景網頁分析會以 force_refresh=True 直接跳過這裡，
     # 即使 LINE_MODE_ACTIVE=True 也不會被舊快取攔截。
@@ -5244,7 +5277,7 @@ def technical(symbol, force_refresh=False):
         return _technical_from_df(None)
 
     # --------------------------------------------------------
-    # V2.10.70：背景網頁分析 / Actions
+    # V2.10.71：背景網頁分析 / Actions
     # force_refresh=True 時「即時資料優先」，
     # 不讀舊技術快取作為正常路徑。
     # --------------------------------------------------------
@@ -5260,7 +5293,7 @@ def technical(symbol, force_refresh=False):
     d = None
     try:
         print(
-            f'V2.10.70 技術面即時刷新：{cache_key} '
+            f'V2.10.71 技術面即時刷新：{cache_key} '
             f'Yahoo 1d/6mo',
             flush=True
         )
@@ -5271,7 +5304,7 @@ def technical(symbol, force_refresh=False):
         )
     except Exception as e:
         print(
-            f'V2.10.70 技術面 Yahoo 失敗 {cache_key}：'
+            f'V2.10.71 技術面 Yahoo 失敗 {cache_key}：'
             f'{type(e).__name__}',
             flush=True
         )
@@ -5298,7 +5331,7 @@ def technical(symbol, force_refresh=False):
                 d = tw
         except Exception as e:
             print(
-                f'V2.10.70 技術面 TWSE 備援失敗 {cache_key}：'
+                f'V2.10.71 技術面 TWSE 備援失敗 {cache_key}：'
                 f'{type(e).__name__}',
                 flush=True
             )
@@ -5306,7 +5339,36 @@ def technical(symbol, force_refresh=False):
     o = _technical_from_df(d)
 
     # --------------------------------------------------------
-    # V2.10.70：成功取得即時日線後，立即更新技術快取。
+    # V2.10.71：技術趨勢即時價格強制重算。
+    # MA20/MA60/RSI/KD 仍完全使用日線資料；只有「目前 price」改用
+    # 最新 5 分鐘 K 棒，避免 market_universe_cache.json 的舊收盤價
+    # 把已站回 MA20、但尚未站上 MA60 的股票誤判成空頭。
+    # --------------------------------------------------------
+    if force_refresh:
+        live_price = get_latest_intraday_price(symbol)
+        if live_price is not None and live_price > 0:
+            o['price'] = live_price
+            if o.get('ma20') is not None and o.get('ma60') is not None:
+                if live_price > o['ma20'] > o['ma60']:
+                    o['trend'] = '多頭'
+                elif live_price < o['ma20'] < o['ma60']:
+                    o['trend'] = '空頭'
+                else:
+                    o['trend'] = '震盪'
+            else:
+                o['trend'] = '震盪'
+            if o.get('recent_low') is not None and o['recent_low'] > 0:
+                o['distance_low'] = live_price / o['recent_low'] - 1
+            print(
+                f'V2.10.71 技術趨勢強制重算：{cache_key} '
+                f'live_price={live_price:.2f} '
+                f'MA20={o.get("ma20")} MA60={o.get("ma60")} '
+                f'trend={o.get("trend")}',
+                flush=True
+            )
+
+    # --------------------------------------------------------
+    # V2.10.71：成功取得即時日線後，立即更新技術快取。
     # 這裡保存的是「由最新日線重新計算後的結果」，
     # 因此快取本身也會同步到最新可用交易日。
     # --------------------------------------------------------
@@ -5333,7 +5395,7 @@ def technical(symbol, force_refresh=False):
             save=True
         )
         print(
-            f'V2.10.70 技術快取已更新：{cache_key} '
+            f'V2.10.71 技術快取已更新：{cache_key} '
             f'price={o.get("price"):.2f}'
             + (
                 f' data_date={o.get("_data_date")}'
@@ -5355,7 +5417,7 @@ def technical(symbol, force_refresh=False):
     )
     if z:
         print(
-            f'V2.10.70 技術面即時刷新失敗，退回本機技術快取：'
+            f'V2.10.71 技術面即時刷新失敗，退回本機技術快取：'
             f'{cache_key}',
             flush=True
         )
@@ -5372,7 +5434,7 @@ def technical(symbol, force_refresh=False):
     )
     if z:
         print(
-            f'V2.10.70 技術面即時刷新失敗，退回 GitHub 技術快取：'
+            f'V2.10.71 技術面即時刷新失敗，退回 GitHub 技術快取：'
             f'{cache_key}',
             flush=True
         )
@@ -7524,30 +7586,9 @@ def analysis(
         force_refresh=(not line_light)
     )
 
-    # V2.10.70：一般股票背景分析強制刷新目標股日線。
-    # 即使 Render / LINE_MODE_ACTIVE=True，也會跳過舊技術快取直接抓最新資料；
-    # 刷新失敗才退回快取。
-    # V2.10.68：若本次股票池仍有更新價格，再以該價格覆蓋 price，
-    # 但趨勢與風險判斷的 price 必須使用本次股票池的最新價。
-    # 舊版 technical() 的 price 是快取最後一根日線 Close，可能是前一交易日，
-    # 因此會出現「最新價已站回 MA20，但趨勢仍顯示空頭」的錯誤。
-    live_price = to_float(u.get(code, {}).get('price'))
-    if live_price is not None and live_price > 0:
-        tech['price'] = live_price
-        m20_live = to_float(tech.get('ma20'))
-        m60_live = to_float(tech.get('ma60'))
-        if m20_live is not None and m60_live is not None:
-            if live_price > m20_live > m60_live:
-                tech['trend'] = '多頭'
-            elif live_price < m20_live < m60_live:
-                tech['trend'] = '空頭'
-            else:
-                tech['trend'] = '震盪'
-        else:
-            tech['trend'] = '震盪'
-        recent_low_live = to_float(tech.get('recent_low'))
-        if recent_low_live is not None and recent_low_live > 0:
-            tech['distance_low'] = live_price / recent_low_live - 1
+    # V2.10.71：不要再用 market_universe_cache.json 的 price 覆蓋 technical()。
+    # 背景分析 force_refresh=True 時，technical() 已經用最新 5 分鐘價格
+    # 強制重算趨勢；股票池價格僅供其他非技術用途，不能回寫 tech['price']。
 
     # --------------------------------------------------------
     # Chips
@@ -7764,7 +7805,7 @@ def analysis(
     # --------------------------------------------------------
 
     return (
-        f'📊 股票加碼分析 V2.10.69\n\n'
+        f'📊 股票加碼分析 V2.10.71\n\n'
         f'標的：{name}（{code}）\n'
         f'市場：{market}\n'
         f'產業：{industry}\n'
@@ -8740,7 +8781,7 @@ def run_alerts():
     print(
         '================================\n'
         '股票跌幅 + 15分鐘區間最低價 + '
-        'V2.10.67自動估值 + 技術 + 籌碼\n'
+        'V2.10.71自動估值 + 技術 + 籌碼\n'
         '================================'
     )
 
