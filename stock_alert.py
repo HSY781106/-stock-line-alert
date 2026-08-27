@@ -1,4 +1,4 @@
-# stock_alert.py V2.10.80
+# stock_alert.py V2.10.81
 # V2.10.75：統計驗證 EPS 模型。
 #             年度 EPS 趨勢加入 β/SE/t/p/95% CI/R²/n 與 A/B/C 可信度；
 #             季節係數加入 n/平均/中位數/SD/95% CI/異常值檢查；
@@ -67,6 +67,7 @@ import hmac
 import hashlib
 import base64
 import threading
+import io
 
 from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
@@ -106,6 +107,8 @@ EPS_QUARTERLY_CACHE_FILE = 'eps_quarterly_cache.json'
 # V2.10.80：25 年 EPS 歷史資料引擎持久快取。
 EPS_ANNUAL_HISTORY_CACHE_FILE = 'eps_annual_history_cache.json'
 EPS_HISTORY_ENGINE_CACHE_FILE = 'eps_history_engine_cache.json'
+# V2.10.81：Goodinfo 一次取得多年年度 EPS，作為真正的25年歷史來源。
+EPS_HISTORY_GOODINFO_CACHE_FILE = 'eps_goodinfo_history_cache.json'
 
 UNIVERSE_CACHE_FILE = 'market_universe_cache.json'
 TWSE_PROFILE_CACHE_FILE = 'twse_profile_cache.json'
@@ -177,7 +180,9 @@ EPS_ANNUAL_FETCH_TIMEOUT = 8
 # 再由季度完整年度與 MOPS 歷史介面補洞；已嘗試但不可得的年份 7 天內不重打。
 EPS_HISTORY_SOURCE_YEARS = 30
 EPS_HISTORY_RETRY_DAYS = 7
-EPS_HISTORY_MOPS_MAX_WORKERS = 4
+EPS_HISTORY_MOPS_MAX_WORKERS = 2
+EPS_HISTORY_GOODINFO_TIMEOUT = 10
+EPS_HISTORY_GOODINFO_RETRY_DAYS = 7
 # V2.10.75：EPS 統計驗證與情境預測參數。
 EPS_MODEL_TREND_P_SIGNIFICANT = 0.05
 EPS_MODEL_TREND_P_WEAK = 0.20
@@ -3600,68 +3605,170 @@ def _official_eps_snapshot(market):
 
 
 def _parse_mops_eps_html(text):
-    """從 MOPS 綜合損益表頁面抓「基本每股盈餘合計」。"""
-    if not text: return None
+    """V2.10.81：穩健解析 MOPS 綜合損益表的「基本每股盈餘合計」。
+
+    舊版問題：原程式使用 io.StringIO 卻沒有 import io，例外被外層吃掉後
+    看起來就像「MOPS 沒資料」。另外 MOPS 同一列常同時有「本期」與「上期」數值，
+    年度 Q4 查詢應取本期第一個合理 EPS，而不是舊版的最後一個數字。
+    """
+    if not text:
+        return None
     try:
-        tables=pd.read_html(io.StringIO(text))
+        tables = pd.read_html(io.StringIO(text))
     except Exception:
-        tables=[]
+        tables = []
     for df in tables:
-        if not isinstance(df,pd.DataFrame) or df.empty: continue
+        if not isinstance(df, pd.DataFrame) or df.empty:
+            continue
+        # Flatten multi-index columns。
+        cols=[]
+        for c in df.columns:
+            if isinstance(c, tuple):
+                cols.append(' '.join(str(x) for x in c if str(x) != 'nan'))
+            else:
+                cols.append(str(c))
         for i in range(len(df)):
             vals=[str(x).replace(',','').strip() for x in df.iloc[i].tolist()]
-            label=' '.join(vals[:8])
-            if not any(k in label for k in ('基本每股盈餘合計','基本每股盈餘','每股盈餘合計')): continue
+            label=' '.join(vals[:10])
+            if not any(k in label for k in ('基本每股盈餘合計','基本每股盈餘','每股盈餘合計')):
+                continue
             nums=[]
             for x in vals:
-                m=re.search(r'(?<![0-9])[-+]?\d+(?:\.\d+)?(?![0-9])',x)
-                if not m: continue
+                # 避免把年度、百分比、日期等混進 EPS。
+                if '%' in x or re.fullmatch(r'20\d{2}',x):
+                    continue
+                m=re.fullmatch(r'[-+]?\s*\d+(?:\.\d+)?',x.replace(' ',''))
+                if not m:
+                    continue
                 try:
                     v=float(m.group(0))
-                    if math.isfinite(v) and abs(v)<=1000: nums.append(v)
-                except Exception: pass
-            # MOPS 常見列第一個數字就是合計 EPS；若前面混有註記，取最後合理值較安全。
-            if nums: return float(nums[-1] if len(nums)>1 else nums[0])
-    # HTML 文字直接 regex 備援。
-    m=re.search(r'基本每股盈餘合計.{0,500}?([-+]?\d+(?:\.\d+)?)',text,re.S)
+                    if math.isfinite(v) and abs(v)<=1000:
+                        nums.append(v)
+                except Exception:
+                    pass
+            if nums:
+                # Q4 財報的第一個合理數值通常就是該年度「本期」EPS；
+                # 第二個通常是上年同期，不能取最後一個。
+                return float(nums[0])
+    # 文字備援：只在明確標籤後抓第一個合理數字。
+    m=re.search(r'基本每股盈餘(?:合計)?(.{0,300})',text,re.S)
     if m:
-        try: return float(m.group(1))
-        except Exception: pass
+        nums=re.findall(r'(?<![0-9])[-+]?\d+(?:\.\d+)?(?![0-9])',m.group(1))
+        for x in nums:
+            try:
+                v=float(x)
+                if math.isfinite(v) and abs(v)<=1000:
+                    return v
+            except Exception:
+                pass
     return None
 
+
+def _goodinfo_annual_eps_history(code, max_years=EPS_MODEL_MAX_YEARS):
+    """V2.10.81：Goodinfo 年度經營績效一次取得長期 EPS。
+
+    Goodinfo 的年度經營績效頁面提供 10 年以上長期財報統計，並直接列出
+    年度 EPS。它只需要「一支股票一次 HTTP」，比逐年打 MOPS 25 次可靠且快很多。
+    這裡只拿年度 EPS，不拿 Goodinfo 的 PE/PB/技術資料，避免改變原本估值口徑。
+    """
+    code=clean_code(code)
+    if not code or not code.isdigit():
+        return {}
+    url=f'https://goodinfo.tw/tw/StockBzPerformance.asp?RPT_CAT=M_YEAR&STOCK_ID={code}'
+    headers={
+        'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
+                     '(KHTML, like Gecko) Chrome/128.0 Safari/537.36',
+        'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+        'Referer':'https://goodinfo.tw/tw/'
+    }
+    try:
+        r=requests.get(url,timeout=EPS_HISTORY_GOODINFO_TIMEOUT,headers=headers)
+        if r.status_code!=200 or not r.content:
+            return {}
+        # Goodinfo 現在多數頁面是 UTF-8；若出現亂碼再由 requests fallback。
+        r.encoding=r.apparent_encoding or 'utf-8'
+        tables=pd.read_html(io.StringIO(r.text))
+        out={}
+        for df in tables:
+            if not isinstance(df,pd.DataFrame) or df.empty:
+                continue
+            flat=[]
+            for c in df.columns:
+                if isinstance(c,tuple):
+                    flat.append(' '.join(str(x) for x in c if str(x)!='nan'))
+                else:
+                    flat.append(str(c))
+            eps_idx=None
+            for j,c in enumerate(flat):
+                c2=c.replace(' ','')
+                if ('EPS' in c2 or '每股盈餘' in c2) and '年增' not in c2:
+                    eps_idx=j; break
+            if eps_idx is None:
+                continue
+            # 年度通常在第一欄；兼容「年度」欄位不是第0欄的情況。
+            year_idx=0
+            for j,c in enumerate(flat):
+                if '年度' in c or c.strip()=='年份':
+                    year_idx=j; break
+            for _,row in df.iterrows():
+                if year_idx>=len(row) or eps_idx>=len(row):
+                    continue
+                ys=str(row.iloc[year_idx]).strip()
+                m=re.fullmatch(r'(19|20)\d{2}',ys)
+                if not m:
+                    continue
+                y=int(ys)
+                v=to_float(row.iloc[eps_idx])
+                if v is not None and math.isfinite(v) and abs(v)<=1000:
+                    out[y]=float(v)
+        if out:
+            # 只回傳模型要求的最後 max_years 個完整年度。
+            years=sorted(out)
+            return {y:out[y] for y in years[-int(max_years):]}
+    except Exception as e:
+        print(f'V2.10.81 Goodinfo EPS歷史失敗 {code}: {type(e).__name__}: {e}',flush=True)
+    return {}
 
 def _mops_historical_annual_eps_one(code, market, year):
-    """V2.10.79：單年度 MOPS 歷史 EPS，使用新/舊兩種公開查詢介面輪替。"""
-    code=clean_code(code); y=int(year)
-    typek='sii' if str(market).upper()=='TWSE' else 'otc'
-    # 民國年與西元年兩種格式都嘗試；GET/POST 兩種方式均可降級。
-    roc=y-1911
-    payloads=[
-        {'step':'1','firstin':'1','off':'1','TYPEK':typek,'co_id':code,'year':str(roc),'season':'4'},
-        {'step':'1','firstin':'1','off':'1','TYPEK':typek,'co_id':code,'year':str(y),'season':'4'},
-        {'step':'1','firstin':'1','off':'1','TYPEK':typek,'co_id':code,'SYEAR':str(y),'SSEASON':'4','REPORT_ID':'C'},
-    ]
-    urls=['https://mops.twse.com.tw/mops/web/ajax_t164sb01','https://mops.twse.com.tw/mops/web/t164sb01']
-    headers={'User-Agent':'Mozilla/5.0 stock-alert/2.10.79','Referer':'https://mops.twse.com.tw/mops/web/t164sb01'}
-    for payload in payloads:
-        for method,url in (('post',urls[0]),('get',urls[0]),('get',urls[1])):
-            try:
-                if method=='post': r=requests.post(url,data=payload,timeout=8,headers=headers)
-                else: r=requests.get(url,params=payload,timeout=8,headers=headers)
-                if r.status_code!=200 or not r.content: continue
-                raw=r.content
-                text=None
-                for enc in ('utf-8-sig','big5','cp950','utf-8'):
-                    try:
-                        t=raw.decode(enc)
-                        if '每股盈餘' in t or 'EPS' in t.upper(): text=t; break
-                    except Exception: pass
-                if text is None: text=raw.decode('utf-8',errors='replace')
-                v=_parse_mops_eps_html(text)
-                if v is not None and math.isfinite(v): return float(v)
-            except Exception: continue
-    return None
+    """V2.10.81：單年度 MOPS Q4 EPS。
 
+    直接使用目前仍可查到的 server-java/t164sb01 GET 介面；年度使用 Q4，
+    解析「基本每股盈餘合計」本期第一個數值。先試西元年，再試民國年。
+    """
+    code=clean_code(code); y=int(year)
+    if not code.isdigit():
+        return None
+    headers={
+        'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
+                     '(KHTML, like Gecko) Chrome/128.0 Safari/537.36',
+        'Referer':'https://mops.twse.com.tw/mops/web/t164sb01',
+        'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
+    }
+    url='https://mops.twse.com.tw/server-java/t164sb01'
+    years=[str(y),str(y-1911)]
+    for sy in years:
+        params={'step':'1','CO_ID':code,'SYEAR':sy,'SSEASON':'4','REPORT_ID':'C'}
+        try:
+            r=requests.get(url,params=params,timeout=EPS_ANNUAL_FETCH_TIMEOUT,headers=headers)
+            if r.status_code!=200 or not r.content:
+                continue
+            # MOPS 舊頁面常為 Big5/CP950，新版則可能是 UTF-8。
+            text=None
+            for enc in ('big5','cp950','utf-8-sig','utf-8'):
+                try:
+                    t=r.content.decode(enc)
+                    if '基本每股盈餘' in t or '每股盈餘' in t:
+                        text=t; break
+                except Exception:
+                    pass
+            if text is None:
+                text=r.text
+            v=_parse_mops_eps_html(text)
+            if v is not None and math.isfinite(v):
+                return float(v)
+        except Exception:
+            continue
+    return None
 
 def _eps_history_engine(code, market=None, ts=None, max_years=EPS_MODEL_MAX_YEARS):
     """V2.10.80：真正的 25 年 EPS 歷史資料引擎。
@@ -3746,7 +3853,24 @@ def _eps_history_engine(code, market=None, ts=None, max_years=EPS_MODEL_MAX_YEAR
     if quarterly_rows:
         sources.append('Yahoo complete quarterly EPS')
 
-    # 3) 如果 Yahoo 來源仍不足，再嘗試 MOPS；但有 7 天冷卻，避免 Action 每次重打25年。
+    # 3) V2.10.81：一次查 Goodinfo 年度經營績效，直接補最多25年。
+    # 這是本版真正解決「Yahoo 只有2015~2025」的關鍵：只需一個HTTP請求，
+    # 不再把25年拆成25次 MOPS 請求。
+    goodinfo_fetched=0
+    try:
+        missing_before=[y for y in range(first_year,last_year+1) if y not in data]
+        goodinfo=_goodinfo_annual_eps_history(code,max_years=max_years)
+        if goodinfo:
+            for y,v in goodinfo.items():
+                if first_year<=int(y)<=last_year and int(y) not in data:
+                    data[int(y)]=float(v); goodinfo_fetched+=1
+            if goodinfo_fetched:
+                sources.append('Goodinfo年度EPS')
+    except Exception as e:
+        print(f'V2.10.81 Goodinfo EPS歷史引擎例外 {code}: {type(e).__name__}: {e}',flush=True)
+
+    # 4) 如果 Goodinfo 仍不足，再以 MOPS Q4 逐年補缺；避免每次 Action 重打，
+    # 但 V2.10.81 使用新的 cache key，因此不會被舊版錯誤的 cooldown 永久卡住。
     missing=[y for y in range(first_year,last_year+1) if y not in data]
     attempted_at=to_float(meta.get('mops_attempted_at')) or 0
     cooldown_ok=(time.time()-attempted_at) >= EPS_HISTORY_RETRY_DAYS*86400
@@ -3769,7 +3893,7 @@ def _eps_history_engine(code, market=None, ts=None, max_years=EPS_MODEL_MAX_YEAR
         meta['mops_attempted_at']=time.time()
         if fetched: sources.append('MOPS historical EPS')
 
-    # 4) 持久化：key 統一使用字串，另外記錄來源/涵蓋範圍/補抓狀態。
+    # 5) 持久化：key 統一使用字串，另外記錄來源/涵蓋範圍/補抓狀態。
     data={str(y):float(v) for y,v in sorted(data.items())}
     years=sorted(int(y) for y in data)
     meta.update({
@@ -3782,6 +3906,7 @@ def _eps_history_engine(code, market=None, ts=None, max_years=EPS_MODEL_MAX_YEAR
         'target_last_year': last_year,
         'target_years': int(max_years),
         'fetched_this_run': int(fetched),
+        'goodinfo_fetched_this_run': int(goodinfo_fetched),
         'mops_retry_after': (meta.get('mops_attempted_at',0)+EPS_HISTORY_RETRY_DAYS*86400) if meta.get('mops_attempted_at') else None,
     })
     cache[code]={'data':data,'meta':meta}
@@ -3798,12 +3923,12 @@ def _eps_history_engine(code, market=None, ts=None, max_years=EPS_MODEL_MAX_YEAR
     result={int(y):float(v) for y,v in data.items()}
     if result:
         print(
-            f'V2.10.80 EPS歷史引擎：{code} {min(result)}～{max(result)} 共{len(result)}年 '
+            f'V2.10.81 EPS歷史引擎：{code} {min(result)}～{max(result)} 共{len(result)}年 '
             f'（目標{first_year}～{last_year}、本次新增{len(set(result)-before)}年、來源={meta.get("source","cache")}）',
             flush=True)
     else:
         print(
-            f'V2.10.80 EPS歷史引擎：{code} 無可用年度資料（目標{first_year}～{last_year}）；'
+            f'V2.10.81 EPS歷史引擎：{code} 無可用年度資料（目標{first_year}～{last_year}）；'
             f'已記錄來源失敗並進入{EPS_HISTORY_RETRY_DAYS}天冷卻', flush=True)
     RUN_CACHE[key]=result
     return result
@@ -4973,7 +5098,7 @@ def _eps_growth_from_quarterly_model(code, ts, now=None, market=None):
             'scenario_pct':float(scenario_pct),
             'conservative_annual':float(conservative_annual),
             'optimistic_annual':float(optimistic_annual),
-            'model_version':'V2.10.80 25年EPS歷史資料引擎＋近期10年統計時間序列 EPS 模型'
+            'model_version':'V2.10.81 Goodinfo25年EPS歷史引擎＋近期10年統計時間序列 EPS 模型'
         }
         return float(growth),detail
 
@@ -5080,7 +5205,7 @@ def official_fundamental(symbol, official=None, current_price=None, market=None)
             if detail.get('seasonal_quarters'): source_bits.append('季節Q'+','.join(map(str,detail['seasonal_quarters'])))
             if detail.get('event_adjusted_quarters'): source_bits.append('事件調整Q'+','.join(map(str,detail['event_adjusted_quarters'])))
             src='；'.join(source_bits) if source_bits else '無'
-            print(f'V2.10.79 EPS Growth：{code}={model_g:.2f}% [統計驗證EPS模型] {detail["current_year"]}全年={detail["current_annual"]:.4f} | 保守={detail["conservative_annual"]:.4f} 基準={detail["current_annual"]:.4f} 樂觀={detail["optimistic_annual"]:.4f} | {qtext} | 年度趨勢={detail["annual_trend_growth"]:.2f}% {detail["trend_credibility"]}級 p={detail.get("annual_trend_stats",{}).get("p") if detail.get("annual_trend_stats") else "N/A"} R²={detail.get("annual_trend_stats",{}).get("r2") if detail.get("annual_trend_stats") else "N/A"} | 模型融合=回歸{detail.get('model_weight_regression',0):.0%}/時間序列{detail.get('model_weight_time_series',0):.0%} | 基準全年={detail["base_annual"]:.4f} | 已公布校正={detail["correction_factor"]:.4f}（{detail["correction_status"]}） | 來源：{src}',flush=True)
+            print(f'V2.10.81 EPS Growth：{code}={model_g:.2f}% [統計驗證EPS模型] {detail["current_year"]}全年={detail["current_annual"]:.4f} | 保守={detail["conservative_annual"]:.4f} 基準={detail["current_annual"]:.4f} 樂觀={detail["optimistic_annual"]:.4f} | {qtext} | 年度趨勢={detail["annual_trend_growth"]:.2f}% {detail["trend_credibility"]}級 p={detail.get("annual_trend_stats",{}).get("p") if detail.get("annual_trend_stats") else "N/A"} R²={detail.get("annual_trend_stats",{}).get("r2") if detail.get("annual_trend_stats") else "N/A"} | 模型融合=回歸{detail.get('model_weight_regression',0):.0%}/時間序列{detail.get('model_weight_time_series',0):.0%} | 基準全年={detail["base_annual"]:.4f} | 已公布校正={detail["correction_factor"]:.4f}（{detail["correction_status"]}） | 來源：{src}',flush=True)
     else:
         # V2.10.67：只有完整季度年度模型真的無法建立時，才啟動舊有的
         # EPS fallback。正常由季度模型成功取得的結果完全不覆蓋。
@@ -8521,7 +8646,7 @@ def analysis(
     # --------------------------------------------------------
 
     return (
-        f'📊 股票加碼分析 V2.10.80\n\n'
+        f'📊 股票加碼分析 V2.10.81\n\n'
         f'標的：{name}（{code}）\n'
         f'市場：{market}\n'
         f'產業：{industry}\n'
