@@ -1,0 +1,302 @@
+{
+  "sii_2001": {
+    "cached_at": 1787839835.3119185,
+    "data": {},
+    "source": "failed",
+    "failed_at": 1787839835.3119195
+  },
+  "sii_2002": {
+    "cached_at": 1787839836.5262952,
+    "data": {},
+    "source": "failed",
+    "failed_at": 1787839836.5262966
+  },
+  "sii_2003": {
+    "cached_at": 1787839837.8852324,
+    "data": {},
+    "source": "failed",
+    "failed_at": 1787839837.885233
+  },
+  "sii_2004": {
+    "cached_at": 1787839838.910121,
+    "data": {},
+    "source": "failed",
+    "failed_at": 1787839838.9101214
+  },
+  "sii_2005": {
+    "cached_at": 1787839840.074466,
+    "data": {},
+    "source": "failed",
+    "failed_at": 1787839840.0744667
+  },
+  "sii_2006": {
+    "cached_at": 1787839841.9905014,
+    "data": {},
+    "source": "failed",
+    "failed_at": 1787839841.9905024
+  },
+  "sii_2007": {
+    "cached_at": 1787839842.8735113,
+    "data": {},
+    "source": "failed",
+    "failed_at": 1787839842.873512
+  },
+  "sii_2008": {
+    "cached_at": 1787839843.8928914,
+    "data": {},
+    "source": "failed",
+    "failed_at": 1787839843.892892
+  },
+  "sii_2009": {
+    "cached_at": 1787839844.962805,
+    "data": {},
+    "source": "failed",
+    "failed_at": 1787839844.9628057
+  },
+  "sii_2010": {
+    "cached_at": 1787839846.0305798,
+    "data": {},
+    "source": "failed",
+    "failed_at": 1787839846.0305805
+  },
+  "sii_2011": {
+    "cached_at": 1787839847.051351,
+    "data": {},
+    "source": "failed",
+    "failed_at": 1787839847.0513515
+  },
+  "sii_2012": {
+    "cached_at": 1787839847.9348583,
+    "data": {},
+    "source": "failed",
+    "failed_at": 1787839847.934859
+  },
+  "sii_2013": {
+    "cached_at": 1787839848.8184426,
+    "data": {},
+    "source": "failed",
+    "failed_at": 1787839848.8184438
+  },
+  "sii_2014": {
+    "cached_at": 1787839849.7007644,
+    "data": {},
+    "source": "failed",
+    "failed_at": 1787839849.7007651
+  },
+  "sii_2015": {
+    "cached_at": 1787839853.7997065,
+    "data": {},
+    "source": "failed",
+    "failed_at": 1787839853.799707
+  },
+  "sii_2016": {
+    "cached_at": 1787839854.6834633,
+    "data": {},
+    "source": "failed",
+    "failed_at": 1787839854.683464
+  },
+  "sii_2017": {
+    "cached_at": 1787839855.751227,
+    "data": {},
+    "source": "failed",
+    "failed_at": 1787839855.7512276
+  },
+  "sii_2018": {
+    "cached_at": 1787839856.6405172,
+    "data": {},
+    "source": "failed",
+    "failed_at": 1787839856.640518
+  },
+  "sii_2019": {
+    "cached_at": 1787839862.057831,
+    "data": {},
+    "source": "failed",
+    "failed_at": 1787839862.0578318
+  },
+  "sii_2022": {
+    "cached_at": 1787839862.9415476,
+    "data": {},
+    "source": "failed",
+    "failed_at": 1787839862.9415483
+  },
+  "sii_2023": {
+    "cached_at": 1787839863.823732,
+    "data": {},
+    "source": "failed",
+    "failed_at": 1787839863.8237329
+  },
+  "sii_2024": {
+    "cached_at": 1787839864.7054574,
+    "data": {},
+    "source": "failed",
+    "failed_at": 1787839864.7054582
+  },
+  "sii_2020": {
+    "cached_at": 1787839867.878723,
+    "data": {},
+    "source": "failed",
+    "failed_at": 1787839867.8787239
+  },
+  "sii_2021": {
+    "cached_at": 1787839868.7632654,
+    "data": {},
+    "source": "failed",
+    "failed_at": 1787839868.7632658
+  },
+  "sii_2025": {
+    "cached_at": 1787839895.3901684,
+    "data": {},
+    "source": "failed",
+    "failed_at": 1787839895.3901691
+  },
+  "otc_2001": {
+    "cached_at": 1787839965.0331724,
+    "data": {},
+    "source": "failed",
+    "failed_at": 1787839965.0331733
+  },
+  "otc_2002": {
+    "cached_at": 1787839966.1113844,
+    "data": {},
+    "source": "failed",
+    "failed_at": 1787839966.111385
+  },
+  "otc_2003": {
+    "cached_at": 1787839967.2667687,
+    "data": {},
+    "source": "failed",
+    "failed_at": 1787839967.2667692
+  },
+  "otc_2004": {
+    "cached_at": 1787839968.442688,
+    "data": {},
+    "source": "failed",
+    "failed_at": 1787839968.4426887
+  },
+  "otc_2005": {
+    "cached_at": 1787839969.5119355,
+    "data": {},
+    "source": "failed",
+    "failed_at": 1787839969.511936
+  },
+  "otc_2006": {
+    "cached_at": 1787839971.1602595,
+    "data": {},
+    "source": "failed",
+    "failed_at": 1787839971.1602602
+  },
+  "otc_2007": {
+    "cached_at": 1787839972.332742,
+    "data": {},
+    "source": "failed",
+    "failed_at": 1787839972.332743
+  },
+  "otc_2008": {
+    "cached_at": 1787839973.2148929,
+    "data": {},
+    "source": "failed",
+    "failed_at": 1787839973.2148936
+  },
+  "otc_2009": {
+    "cached_at": 1787839974.680056,
+    "data": {},
+    "source": "failed",
+    "failed_at": 1787839974.6800568
+  },
+  "otc_2010": {
+    "cached_at": 1787839975.713959,
+    "data": {},
+    "source": "failed",
+    "failed_at": 1787839975.7139597
+  },
+  "otc_2011": {
+    "cached_at": 1787839976.5958307,
+    "data": {},
+    "source": "failed",
+    "failed_at": 1787839976.5958314
+  },
+  "otc_2013": {
+    "cached_at": 1787839977.647399,
+    "data": {},
+    "source": "failed",
+    "failed_at": 1787839977.6474001
+  },
+  "otc_2014": {
+    "cached_at": 1787839979.518565,
+    "data": {},
+    "source": "failed",
+    "failed_at": 1787839979.5185657
+  },
+  "otc_2015": {
+    "cached_at": 1787839980.3985581,
+    "data": {},
+    "source": "failed",
+    "failed_at": 1787839980.398559
+  },
+  "otc_2019": {
+    "cached_at": 1787839981.2926419,
+    "data": {},
+    "source": "failed",
+    "failed_at": 1787839981.2926424
+  },
+  "otc_2012": {
+    "cached_at": 1787839984.7102468,
+    "data": {},
+    "source": "failed",
+    "failed_at": 1787839984.710248
+  },
+  "otc_2017": {
+    "cached_at": 1787839985.5924616,
+    "data": {},
+    "source": "failed",
+    "failed_at": 1787839985.5924623
+  },
+  "otc_2018": {
+    "cached_at": 1787839986.4787486,
+    "data": {},
+    "source": "failed",
+    "failed_at": 1787839986.4787495
+  },
+  "otc_2020": {
+    "cached_at": 1787839987.5336847,
+    "data": {},
+    "source": "failed",
+    "failed_at": 1787839987.5336852
+  },
+  "otc_2021": {
+    "cached_at": 1787839988.414848,
+    "data": {},
+    "source": "failed",
+    "failed_at": 1787839988.4148486
+  },
+  "otc_2022": {
+    "cached_at": 1787839989.296563,
+    "data": {},
+    "source": "failed",
+    "failed_at": 1787839989.2965634
+  },
+  "otc_2023": {
+    "cached_at": 1787839990.1794162,
+    "data": {},
+    "source": "failed",
+    "failed_at": 1787839990.1794167
+  },
+  "otc_2024": {
+    "cached_at": 1787839991.0618007,
+    "data": {},
+    "source": "failed",
+    "failed_at": 1787839991.0618014
+  },
+  "otc_2016": {
+    "cached_at": 1787839992.6642783,
+    "data": {},
+    "source": "failed",
+    "failed_at": 1787839992.6642792
+  },
+  "otc_2025": {
+    "cached_at": 1787839998.9985526,
+    "data": {},
+    "source": "failed",
+    "failed_at": 1787839998.998553
+  }
+}
