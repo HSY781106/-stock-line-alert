@@ -1,4 +1,7 @@
-# stock_alert.py V2.10.67
+# stock_alert.py V2.10.68
+# V2.10.68：修正技術面趨勢/風險使用舊日線快取價格的問題；
+#             MA20/MA60、RSI、KD仍沿用既有技術快取，僅以本次股票池最新價
+#             更新 price、趨勢、距20日低點，確保與當次分析/15分鐘區間的最新股價一致。
 # V2.10.56：修正 V2.10.53 舊 PE 快取 migration；加入 PE 每次執行請求/時間上限、即時進度與安全降級；LINE 不再使用舊版 yahoo_light_fund / MOPS fallback / 舊 cache 推導
 # V2.10.48：加入 MOPS 官方財報 EPS Growth fallback，補強 Yahoo 多層來源仍為 N/A 的股票
 # V2.10.47：統一 EPS Growth 與 PEG 資料口徑；修正 EPS 成長 N/A 但 PEG 有值的矛盾
@@ -7368,6 +7371,28 @@ def analysis(
         symbol
     )
 
+    # V2.10.68：技術指標的 MA20/MA60、RSI、KD 仍使用既有日線快取，
+    # 但趨勢與風險判斷的 price 必須使用本次股票池的最新價。
+    # 舊版 technical() 的 price 是快取最後一根日線 Close，可能是前一交易日，
+    # 因此會出現「最新價已站回 MA20，但趨勢仍顯示空頭」的錯誤。
+    live_price = to_float(u.get(code, {}).get('price'))
+    if live_price is not None and live_price > 0:
+        tech['price'] = live_price
+        m20_live = to_float(tech.get('ma20'))
+        m60_live = to_float(tech.get('ma60'))
+        if m20_live is not None and m60_live is not None:
+            if live_price > m20_live > m60_live:
+                tech['trend'] = '多頭'
+            elif live_price < m20_live < m60_live:
+                tech['trend'] = '空頭'
+            else:
+                tech['trend'] = '震盪'
+        else:
+            tech['trend'] = '震盪'
+        recent_low_live = to_float(tech.get('recent_low'))
+        if recent_low_live is not None and recent_low_live > 0:
+            tech['distance_low'] = live_price / recent_low_live - 1
+
     # --------------------------------------------------------
     # Chips
     # --------------------------------------------------------
@@ -7583,7 +7608,7 @@ def analysis(
     # --------------------------------------------------------
 
     return (
-        f'📊 股票加碼分析 V2.10.67\n\n'
+        f'📊 股票加碼分析 V2.10.68\n\n'
         f'標的：{name}（{code}）\n'
         f'市場：{market}\n'
         f'產業：{industry}\n'
