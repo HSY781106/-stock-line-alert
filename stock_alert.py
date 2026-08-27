@@ -1,4 +1,4 @@
-# stock_alert.py V2.10.83
+# stock_alert.py V2.10.84
 # V2.10.75：統計驗證 EPS 模型。
 #             年度 EPS 趨勢加入 β/SE/t/p/95% CI/R²/n 與 A/B/C 可信度；
 #             季節係數加入 n/平均/中位數/SD/95% CI/異常值檢查；
@@ -70,6 +70,7 @@ import threading
 import io
 
 from datetime import datetime, timedelta
+from urllib.parse import quote
 from zoneinfo import ZoneInfo
 
 import requests
@@ -104,10 +105,10 @@ LINE_FUND_CACHE_FILE = 'line_fund_cache.json'
 LINE_TECH_CACHE_FILE = 'line_technical_cache.json'
 # V2.10.62：季度 EPS 持久快取；用於補強 Yahoo fundamentals-timeseries 偶發缺少季度 EPS。
 EPS_QUARTERLY_CACHE_FILE = 'eps_quarterly_cache.json'
-# V2.10.83：25 年 EPS 歷史資料引擎持久快取。
+# V2.10.84：25 年 EPS 歷史資料引擎持久快取。
 EPS_ANNUAL_HISTORY_CACHE_FILE = 'eps_annual_history_cache.json'
 EPS_HISTORY_ENGINE_CACHE_FILE = 'eps_history_engine_cache.json'
-# V2.10.83：Goodinfo 一次取得多年年度 EPS，作為真正的25年歷史來源。
+# V2.10.84：Goodinfo 一次取得多年年度 EPS，作為真正的25年歷史來源。
 EPS_HISTORY_GOODINFO_CACHE_FILE = 'eps_goodinfo_history_cache.json'
 
 UNIVERSE_CACHE_FILE = 'market_universe_cache.json'
@@ -176,7 +177,7 @@ EPS_MODEL_BLEND_MEDIAN = 0.30
 # V2.10.79：歷史年度資料補抓預算；只在真正進入 EPS 基本面分析的股票使用。
 EPS_ANNUAL_FETCH_MAX_YEARS_PER_STOCK = 25
 EPS_ANNUAL_FETCH_TIMEOUT = 8
-# V2.10.83：歷史 EPS 引擎一次向 Yahoo fundamentals-timeseries 要求 30 年，
+# V2.10.84：歷史 EPS 引擎一次向 Yahoo fundamentals-timeseries 要求 30 年，
 # 再由季度完整年度與 MOPS 歷史介面補洞；已嘗試但不可得的年份 7 天內不重打。
 EPS_HISTORY_SOURCE_YEARS = 30
 EPS_HISTORY_RETRY_DAYS = 7
@@ -3605,7 +3606,7 @@ def _official_eps_snapshot(market):
 
 
 def _parse_mops_eps_html(text):
-    """V2.10.83：穩健解析 MOPS 綜合損益表的「基本每股盈餘合計」。
+    """V2.10.84：穩健解析 MOPS 綜合損益表的「基本每股盈餘合計」。
 
     舊版問題：原程式使用 io.StringIO 卻沒有 import io，例外被外層吃掉後
     看起來就像「MOPS 沒資料」。另外 MOPS 同一列常同時有「本期」與「上期」數值，
@@ -3665,47 +3666,39 @@ def _parse_mops_eps_html(text):
 
 
 def _goodinfo_annual_eps_history(code, max_years=EPS_MODEL_MAX_YEARS):
-    """V2.10.83：Goodinfo 年度 EPS 歷史引擎。
+    """V2.10.84：Goodinfo 25年年度EPS歷史引擎。
 
-    針對 V2.10.83 仍只有 2015~2025 的根因修正：Goodinfo 的年度經營績效
-    頁面在程式化請求時，直接 GET /tw/StockBzPerformance.asp 並不一定會回傳
-    完整的財報資料；公開的抓取方式是以 POST 搭配 STEP=DATA、SHEET=獲利指標、
-    YEAR_PERIOD=9999 取得完整年度表。本版優先走這個 POST 流程，並保留 GET
-    與舊 /StockInfo/ 路徑作 fallback。
+    重要修正：V2.10.84 已證明 GitHub Actions 對 Goodinfo 直接請求會得到
+    HTTP 403，因此再繼續增加 direct GET/POST 沒有意義。本版把 Goodinfo
+    的長期年度表改成「多通道」：
+      1) r.jina.ai Reader proxy 取得 Goodinfo HTML/Markdown（優先）
+      2) Google Translate proxy 作第二備援
+      3) Goodinfo direct GET/POST 最後才嘗試
 
-    解析優先鎖定 Goodinfo 的 #divFinDetail / #txtFinDetailData，再從表格
-    header 找「稅後EPS(元)」或「EPS(元)」。若 header 被網站簡化，最後才用
-    年度獲利指標表的固定欄位：年度=0、稅後EPS=18。
+    Goodinfo 的年度頁本身可提供 1994~2025 的年度財報與 EPS；本函式只負責
+    取得/解析，不改任何 EPS 預測模型。
     """
     code=clean_code(code)
     if not code or not code.isdigit():
         return {}
 
+    base='https://goodinfo.tw'
+    direct_url=(f'{base}/tw/StockBzPerformance.asp?RPT_CAT=M_YEAR&'
+                f'STOCK_ID={code}&YEAR_PERIOD=9999')
     headers={
         'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
                      '(KHTML, like Gecko) Chrome/131.0 Safari/537.36',
         'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
         'Accept-Language':'zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7',
-        'Content-Type':'application/x-www-form-urlencoded',
-        'Origin':'https://goodinfo.tw',
-        'Referer':f'https://goodinfo.tw/tw/StockBzPerformance.asp?STOCK_ID={code}',
-        'Cache-Control':'no-cache',
-        'Pragma':'no-cache',
-    }
-    payload={
-        'STOCK_ID':code,
-        'YEAR_PERIOD':'9999',
-        'RPT_CAT':'M_YEAR',
-        'STEP':'DATA',
-        'SHEET':'獲利指標',
+        'Cache-Control':'no-cache','Pragma':'no-cache',
+        'Referer':base+'/tw/',
     }
 
     def clean_cell(x):
         x=str(x)
         x=re.sub(r'<br\s*/?>',' ',x,flags=re.I)
         x=re.sub(r'<[^>]+>',' ',x)
-        x=html.unescape(x)
-        x=x.replace('\xa0',' ').replace('\u3000',' ')
+        x=html.unescape(x).replace('\\xa0',' ').replace('\\u3000',' ')
         return re.sub(r'\s+',' ',x).strip()
 
     def parse_df(df):
@@ -3713,33 +3706,26 @@ def _goodinfo_annual_eps_history(code, max_years=EPS_MODEL_MAX_YEARS):
         if not isinstance(df,pd.DataFrame) or df.empty:
             return out
         try:
-            # flatten MultiIndex headers
             cols=[]
             for c in df.columns:
-                if isinstance(c,tuple):
-                    cols.append(' '.join(str(x) for x in c if str(x).lower()!='nan'))
-                else:
-                    cols.append(str(c))
+                if isinstance(c,tuple): cols.append(' '.join(str(x) for x in c if str(x).lower()!='nan'))
+                else: cols.append(str(c))
             norm=[re.sub(r'\s+','',c).replace('(','').replace(')','') for c in cols]
-            year_idx=0
-            eps_idx=None
+            year_idx=0; eps_idx=None
             for j,c in enumerate(norm):
                 if '年度' in c or c in ('年份','年'):
                     year_idx=j; break
-            # IMPORTANT: do not match EPS年增; prefer 稅後EPS / EPS(元)
             for j,c in enumerate(norm):
-                if ('稅後EPS' in c or '每股盈餘' in c or c.startswith('EPS')) and '年增' not in c:
+                if (('稅後EPS' in c) or ('每股盈餘' in c) or c.startswith('EPS')) and '年增' not in c:
                     eps_idx=j; break
             if eps_idx is None:
-                # Goodinfo 獲利指標表欄位：年度...ROE、ROA、稅後EPS、成長、BPS
+                # M_YEAR 獲利指標表的稅後EPS位置；另保留PER/PBR頁常見位置。
                 eps_idx=18
             for _,row in df.iterrows():
                 vals=[clean_cell(x) for x in row.tolist()]
-                if year_idx>=len(vals) or eps_idx>=len(vals):
-                    continue
+                if year_idx>=len(vals) or eps_idx>=len(vals): continue
                 m=re.fullmatch(r'(19|20)\d{2}',vals[year_idx])
-                if not m:
-                    continue
+                if not m: continue
                 v=to_float(vals[eps_idx])
                 if v is not None and math.isfinite(v) and abs(v)<=1000:
                     out[int(vals[year_idx])]=float(v)
@@ -3747,119 +3733,139 @@ def _goodinfo_annual_eps_history(code, max_years=EPS_MODEL_MAX_YEARS):
             pass
         return out
 
+    def parse_markdown(text):
+        """Parse r.jina.ai markdown tables returned from Goodinfo."""
+        out={}
+        lines=text.splitlines()
+        header=None
+        for i,line in enumerate(lines):
+            if 'EPS' in line or '每股盈餘' in line or '稅後EPS' in line:
+                if '年度' in line and '|' in line:
+                    header=[x.strip() for x in line.strip().strip('|').split('|')]
+                    break
+        if not header:
+            # Goodinfo reader output may use translated/flattened header.
+            for i,line in enumerate(lines):
+                if '年度' in line and '|' in line:
+                    nxt=' '.join(lines[i:i+4])
+                    if 'EPS' in nxt or '每股盈餘' in nxt:
+                        header=[x.strip() for x in line.strip().strip('|').split('|')]
+                        break
+        if not header:
+            return out
+        eps_idx=None; year_idx=None
+        for j,c in enumerate(header):
+            c2=re.sub(r'\s+','',c)
+            if '年度' in c2 or c2 in ('年份','年'): year_idx=j
+            if ('EPS' in c2.upper() or '每股盈餘' in c2 or '稅後EPS' in c2) and '年增' not in c2:
+                eps_idx=j
+        # If header is a multi-row flattened table, locate the EPS-bearing column by
+        # looking at the header neighborhood and then fallback to known positions.
+        if year_idx is None: year_idx=0
+        if eps_idx is None:
+            for j,c in enumerate(header):
+                if 'EPS' in c.upper(): eps_idx=j; break
+        if eps_idx is None: eps_idx=18
+        for line in lines:
+            if '|' not in line: continue
+            vals=[clean_cell(x) for x in line.strip().strip('|').split('|')]
+            if len(vals)<=max(year_idx,eps_idx): continue
+            m=re.fullmatch(r'(19|20)\d{2}',vals[year_idx])
+            if not m: continue
+            v=to_float(vals[eps_idx])
+            if v is not None and math.isfinite(v) and abs(v)<=1000:
+                out[int(vals[year_idx])]=float(v)
+        return out
+
     def parse_page(text):
         out={}
-        # First isolate the financial-detail container. This avoids accidentally
-        # parsing small unrelated tables on Goodinfo.
-        fragments=[]
+        # Markdown / text parser first for proxy readers.
+        got=parse_markdown(text)
+        if got: out.update(got)
+        # HTML table parser second.
         try:
             from bs4 import BeautifulSoup
             soup=BeautifulSoup(text,'lxml')
-            for sel in ('#divFinDetail','#txtFinDetailData','div#divFinDetail','table.solid_1_padding_4_0_tbl'):
-                try:
-                    nodes=soup.select(sel)
-                except Exception:
-                    nodes=[]
-                for node in nodes:
-                    fragments.append(str(node))
-            if not fragments:
-                fragments=[text]
+            fragments=[]
+            for sel in ('#divFinDetail','#txtFinDetailData','div#divFinDetail'):
+                try: fragments.extend(str(n) for n in soup.select(sel))
+                except Exception: pass
+            if not fragments: fragments=[text]
         except Exception:
             fragments=[text]
-
-        # pandas parser: Goodinfo's actual profit-indicator table is usually one
-        # of the first tables inside the financial-detail container.
         for frag in fragments:
-            try:
-                tables=pd.read_html(io.StringIO(frag))
-            except Exception:
-                tables=[]
+            try: tables=pd.read_html(io.StringIO(frag))
+            except Exception: tables=[]
             for df in tables:
-                got=parse_df(df)
-                if len(got)>len(out):
-                    out.update(got)
-        if out:
-            return out
-
-        # Raw row parser. For the 獲利指標 table EPS is column 18 (0-based).
+                g=parse_df(df)
+                if len(g)>len(out): out.update(g)
+        if out: return out
+        # Raw HTML rows fallback.
         try:
-            row_blocks=re.findall(r'<tr\b[^>]*>(.*?)</tr>',text,flags=re.I|re.S)
-            for block in row_blocks:
-                cells=re.findall(r'<t[dh]\b[^>]*>(.*?)</t[dh]>',block,flags=re.I|re.S)
-                vals=[clean_cell(c) for c in cells]
-                if len(vals)<19:
-                    continue
+            for block in re.findall(r'<tr\b[^>]*>(.*?)</tr>',text,flags=re.I|re.S):
+                vals=[clean_cell(c) for c in re.findall(r'<t[dh]\b[^>]*>(.*?)</t[dh]>',block,flags=re.I|re.S)]
+                if len(vals)<10: continue
                 ym=re.fullmatch(r'(19|20)\d{2}',vals[0])
-                if not ym:
-                    continue
-                # Header-derived alternatives first, then fixed Goodinfo index.
-                candidates=[]
-                for i,v in enumerate(vals):
-                    if re.fullmatch(r'-?\d+(?:\.\d+)?',v or ''):
-                        candidates.append(i)
-                for idx in (18,16,17):
-                    if idx>=len(vals):
-                        continue
+                if not ym: continue
+                for idx in (18,17,16,15):
+                    if idx>=len(vals): continue
                     v=to_float(vals[idx])
                     if v is not None and math.isfinite(v) and abs(v)<=1000:
-                        out[int(vals[0])]=float(v)
-                        break
-        except Exception:
-            pass
+                        out[int(vals[0])]=float(v); break
+        except Exception: pass
         return out
 
-    requests_list=[]
-    # Current canonical endpoint: POST DATA/獲利指標.
-    requests_list.append(('POST','https://goodinfo.tw/StockInfo/StockBzPerformance.asp?',payload))
-    requests_list.append(('POST','https://goodinfo.tw/tw/StockBzPerformance.asp?',payload))
-    # GET fallbacks, including the current documented long-history URL.
-    requests_list.append(('GET',f'https://goodinfo.tw/tw/StockBzPerformance.asp?RPT_CAT=M_YEAR&STOCK_ID={code}&YEAR_PERIOD=9999',None))
-    requests_list.append(('GET',f'https://goodinfo.tw/StockInfo/StockBzPerformance.asp?STOCK_ID={code}&YEAR_PERIOD=9999&RPT_CAT=M_YEAR&SHEET=%E7%8D%B2%E5%88%A9%E6%8C%87%E6%A8%99&STEP=DATA',None))
+    candidates=[]
+    # 1) Jina Reader proxy. It converts blocked/complex pages to readable HTML/MD.
+    candidates.append(('JINA',f'https://r.jina.ai/http://goodinfo.tw/tw/StockBzPerformance.asp?RPT_CAT=M_YEAR&STOCK_ID={code}&YEAR_PERIOD=9999',None))
+    candidates.append(('JINA',f'https://r.jina.ai/https://goodinfo.tw/tw/StockBzPerformance.asp?RPT_CAT=M_YEAR&STOCK_ID={code}&YEAR_PERIOD=9999',None))
+    # 2) Google Translate proxy. Keep query in the translated URL.
+    gt=(f'https://goodinfo-tw.translate.goog/tw/StockBzPerformance.asp?'
+        f'RPT_CAT=M_YEAR&STOCK_ID={code}&YEAR_PERIOD=9999&_x_tr_sl=auto&_x_tr_tl=zh-TW&_x_tr_hl=zh-TW')
+    candidates.append(('TRANSLATE',gt,None))
+    # 3) Direct Goodinfo only as final fallback; V2.10.84 showed this can be 403.
+    candidates.append(('DIRECT',direct_url,None))
+    payload={'STOCK_ID':code,'YEAR_PERIOD':'9999','RPT_CAT':'M_YEAR','STEP':'DATA','SHEET':'獲利指標'}
+    candidates.append(('DIRECT_POST',f'{base}/tw/StockBzPerformance.asp?',payload))
 
     last_error=''
-    for method,url,data_payload in requests_list:
+    for source,url,data in candidates:
         try:
-            session=requests.Session()
-            session.headers.update(headers)
-            # Establish session/cookies. If blocked, the subsequent request will
-            # still be attempted and its status is recorded for diagnostics.
-            try:
-                session.get('https://goodinfo.tw/tw/',timeout=EPS_HISTORY_GOODINFO_TIMEOUT)
-            except Exception:
-                pass
-            if method=='POST':
-                r=session.post(url,data=data_payload,timeout=EPS_HISTORY_GOODINFO_TIMEOUT,allow_redirects=True)
+            h=dict(headers)
+            if source=='JINA':
+                h.update({'Accept':'text/plain,text/html;q=0.9,*/*;q=0.8','X-Return-Format':'html'})
+            session=requests.Session(); session.headers.update(h)
+            if source.startswith('DIRECT'):
+                try: session.get(base+'/tw/',timeout=EPS_HISTORY_GOODINFO_TIMEOUT)
+                except Exception: pass
+            if source=='DIRECT_POST':
+                r=session.post(url,data=data,timeout=EPS_HISTORY_GOODINFO_TIMEOUT,allow_redirects=True)
             else:
-                r=session.get(url,timeout=EPS_HISTORY_GOODINFO_TIMEOUT,allow_redirects=True)
+                r=session.get(url,timeout=max(EPS_HISTORY_GOODINFO_TIMEOUT,15),allow_redirects=True)
             if r.status_code!=200 or not r.content:
-                last_error=f'{method} HTTP {r.status_code}, bytes={len(r.content or b"")}'
+                last_error=f'{source} HTTP {r.status_code}, bytes={len(r.content or b"")}'
                 continue
-            # Goodinfo commonly serves UTF-8; retain a couple of fallbacks.
             texts=[]
             for enc in ('utf-8','utf-8-sig','big5','cp950'):
                 try:
                     t=r.content.decode(enc,errors='strict')
-                    if t and t not in [x for x,_ in texts]:
-                        texts.append((t,enc))
-                except Exception:
-                    pass
+                    if t and all(t!=x for x,_ in texts): texts.append((t,enc))
+                except Exception: pass
             for text,enc in texts:
-                low=text.lower()
-                if ('goodinfo' not in low and 'divfindetail' not in low and 'stockbzperformance' not in low):
-                    continue
                 got=parse_page(text)
                 if got:
                     years=sorted(got)
-                    return {y:got[y] for y in years[-int(max_years):]}
-            last_error=f'{method} HTTP 200 but financial-indicator table parse failed, bytes={len(r.content)}'
+                    # Reject suspicious tiny parses that are not annual history.
+                    if len(years)>=2:
+                        return {y:got[y] for y in years[-int(max_years):]}
+            last_error=f'{source} HTTP 200 but EPS history parse failed, bytes={len(r.content)}'
         except Exception as e:
-            last_error=f'{method} {type(e).__name__}: {e}'
-
-    print(f'V2.10.83 Goodinfo EPS歷史失敗 {code}: {last_error}',flush=True)
+            last_error=f'{source} {type(e).__name__}: {e}'
+    print(f'V2.10.84 Goodinfo EPS歷史失敗 {code}: {last_error}',flush=True)
     return {}
 
 def _mops_historical_annual_eps_one(code, market, year):
-    """V2.10.83：單年度 MOPS Q4 EPS。
+    """V2.10.84：單年度 MOPS Q4 EPS。
 
     直接使用目前仍可查到的 server-java/t164sb01 GET 介面；年度使用 Q4，
     解析「基本每股盈餘合計」本期第一個數值。先試西元年，再試民國年。
@@ -3900,7 +3906,7 @@ def _mops_historical_annual_eps_one(code, market, year):
     return None
 
 def _eps_history_engine(code, market=None, ts=None, max_years=EPS_MODEL_MAX_YEARS):
-    """V2.10.83：真正的 25 年 EPS 歷史資料引擎。
+    """V2.10.84：真正的 25 年 EPS 歷史資料引擎。
 
     資料優先順序：
       1) 持久快取 eps_annual_history_cache.json
@@ -3982,7 +3988,7 @@ def _eps_history_engine(code, market=None, ts=None, max_years=EPS_MODEL_MAX_YEAR
     if quarterly_rows:
         sources.append('Yahoo complete quarterly EPS')
 
-    # 3) V2.10.83：一次查 Goodinfo 年度經營績效，直接補最多25年。
+    # 3) V2.10.84：一次查 Goodinfo 年度經營績效，直接補最多25年。
     # 這是本版真正解決「Yahoo 只有2015~2025」的關鍵：只需一個HTTP請求，
     # 不再把25年拆成25次 MOPS 請求。
     goodinfo_fetched=0
@@ -3996,10 +4002,10 @@ def _eps_history_engine(code, market=None, ts=None, max_years=EPS_MODEL_MAX_YEAR
             if goodinfo_fetched:
                 sources.append('Goodinfo年度EPS')
     except Exception as e:
-        print(f'V2.10.83 Goodinfo EPS歷史引擎例外 {code}: {type(e).__name__}: {e}',flush=True)
+        print(f'V2.10.84 Goodinfo EPS歷史引擎例外 {code}: {type(e).__name__}: {e}',flush=True)
 
     # 4) 如果 Goodinfo 仍不足，再以 MOPS Q4 逐年補缺；
-    # 但 V2.10.83 使用新的 cache key，因此不會被舊版錯誤的 cooldown 永久卡住。
+    # 但 V2.10.84 使用新的 cache key，因此不會被舊版錯誤的 cooldown 永久卡住。
     missing=[y for y in range(first_year,last_year+1) if y not in data]
     attempted_at=to_float(meta.get('mops_attempted_at')) or 0
     cooldown_ok=(time.time()-attempted_at) >= EPS_HISTORY_RETRY_DAYS*86400
@@ -4045,24 +4051,24 @@ def _eps_history_engine(code, market=None, ts=None, max_years=EPS_MODEL_MAX_YEAR
     try:
         old=load_json(EPS_ANNUAL_HISTORY_CACHE_FILE)
         if not isinstance(old,dict): old={}
-        old[code]={'data':data,'_cached_at':time.time(),'source':meta.get('source','V2.10.83 EPS history engine')}
+        old[code]={'data':data,'_cached_at':time.time(),'source':meta.get('source','V2.10.84 EPS history engine')}
         save_json(EPS_ANNUAL_HISTORY_CACHE_FILE,old)
     except Exception: pass
 
     result={int(y):float(v) for y,v in data.items()}
     if result:
         print(
-            f'V2.10.83 EPS歷史引擎：{code} {min(result)}～{max(result)} 共{len(result)}年 '
+            f'V2.10.84 EPS歷史引擎：{code} {min(result)}～{max(result)} 共{len(result)}年 '
             f'（目標{first_year}～{last_year}、本次新增{len(set(result)-before)}年、來源={meta.get("source","cache")}）',
             flush=True)
     else:
         print(
-            f'V2.10.83 EPS歷史引擎：{code} 無可用年度資料（目標{first_year}～{last_year}）；'
+            f'V2.10.84 EPS歷史引擎：{code} 無可用年度資料（目標{first_year}～{last_year}）；'
             f'已記錄來源失敗並進入{EPS_HISTORY_RETRY_DAYS}天冷卻', flush=True)
     RUN_CACHE[key]=result
     return result
 
-# 舊函式名稱保留，所有既有呼叫自動切換到 V2.10.83 引擎。
+# 舊函式名稱保留，所有既有呼叫自動切換到 V2.10.84 引擎。
 def _mops_annual_eps_history(code, market=None, max_years=EPS_ANNUAL_FETCH_MAX_YEARS_PER_STOCK, ts=None):
     return _eps_history_engine(code, market, ts=ts, max_years=max_years)
 
@@ -5227,7 +5233,7 @@ def _eps_growth_from_quarterly_model(code, ts, now=None, market=None):
             'scenario_pct':float(scenario_pct),
             'conservative_annual':float(conservative_annual),
             'optimistic_annual':float(optimistic_annual),
-            'model_version':'V2.10.83 Goodinfo25年EPS歷史引擎＋近期10年統計時間序列 EPS 模型'
+            'model_version':'V2.10.84 Goodinfo25年EPS歷史引擎＋近期10年統計時間序列 EPS 模型'
         }
         return float(growth),detail
 
@@ -5334,7 +5340,7 @@ def official_fundamental(symbol, official=None, current_price=None, market=None)
             if detail.get('seasonal_quarters'): source_bits.append('季節Q'+','.join(map(str,detail['seasonal_quarters'])))
             if detail.get('event_adjusted_quarters'): source_bits.append('事件調整Q'+','.join(map(str,detail['event_adjusted_quarters'])))
             src='；'.join(source_bits) if source_bits else '無'
-            print(f'V2.10.83 EPS Growth：{code}={model_g:.2f}% [統計驗證EPS模型] {detail["current_year"]}全年={detail["current_annual"]:.4f} | 保守={detail["conservative_annual"]:.4f} 基準={detail["current_annual"]:.4f} 樂觀={detail["optimistic_annual"]:.4f} | {qtext} | 年度趨勢={detail["annual_trend_growth"]:.2f}% {detail["trend_credibility"]}級 p={detail.get("annual_trend_stats",{}).get("p") if detail.get("annual_trend_stats") else "N/A"} R²={detail.get("annual_trend_stats",{}).get("r2") if detail.get("annual_trend_stats") else "N/A"} | 模型融合=回歸{detail.get('model_weight_regression',0):.0%}/時間序列{detail.get('model_weight_time_series',0):.0%} | 基準全年={detail["base_annual"]:.4f} | 已公布校正={detail["correction_factor"]:.4f}（{detail["correction_status"]}） | 來源：{src}',flush=True)
+            print(f'V2.10.84 EPS Growth：{code}={model_g:.2f}% [統計驗證EPS模型] {detail["current_year"]}全年={detail["current_annual"]:.4f} | 保守={detail["conservative_annual"]:.4f} 基準={detail["current_annual"]:.4f} 樂觀={detail["optimistic_annual"]:.4f} | {qtext} | 年度趨勢={detail["annual_trend_growth"]:.2f}% {detail["trend_credibility"]}級 p={detail.get("annual_trend_stats",{}).get("p") if detail.get("annual_trend_stats") else "N/A"} R²={detail.get("annual_trend_stats",{}).get("r2") if detail.get("annual_trend_stats") else "N/A"} | 模型融合=回歸{detail.get('model_weight_regression',0):.0%}/時間序列{detail.get('model_weight_time_series',0):.0%} | 基準全年={detail["base_annual"]:.4f} | 已公布校正={detail["correction_factor"]:.4f}（{detail["correction_status"]}） | 來源：{src}',flush=True)
     else:
         # V2.10.67：只有完整季度年度模型真的無法建立時，才啟動舊有的
         # EPS fallback。正常由季度模型成功取得的結果完全不覆蓋。
