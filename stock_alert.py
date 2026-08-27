@@ -4179,7 +4179,7 @@ def _eps_history_engine(code, market=None, ts=None, max_years=EPS_MODEL_MAX_YEAR
     fetched=0
     missing_years=[y for y in range(first_year,last_year+1) if y not in data]
     if missing_years:
-        print(f'V2.10.92 EPS歷史缺口：{code} 尚缺{len(missing_years)}年 → 改用 Jina/Goodinfo 長期公開歷史來源',flush=True)
+        print(f'V2.10.93 EPS歷史缺口：{code} 尚缺{len(missing_years)}年 → 改用 Jina/Goodinfo 長期公開歷史來源',flush=True)
         added=_long_eps_external_v21090(code, missing_years)
         if added:
             data.update(added); fetched=len(added)
@@ -4215,12 +4215,12 @@ def _eps_history_engine(code, market=None, ts=None, max_years=EPS_MODEL_MAX_YEAR
     result={int(y):float(v) for y,v in data.items()}
     if result:
         print(
-            f'V2.10.92 EPS歷史引擎：{code} {min(result)}～{max(result)} 共{len(result)}年 '
+            f'V2.10.93 EPS歷史引擎：{code} {min(result)}～{max(result)} 共{len(result)}年 '
             f'（目標{first_year}～{last_year}、本次新增{len(set(result)-before)}年、來源={meta.get("source","cache")}）',
             flush=True)
     else:
         print(
-            f'V2.10.92 EPS歷史引擎：{code} 無可用年度資料（目標{first_year}～{last_year}）；'
+            f'V2.10.93 EPS歷史引擎：{code} 無可用年度資料（目標{first_year}～{last_year}）；'
             f'已記錄來源失敗並進入{EPS_HISTORY_RETRY_DAYS}天冷卻', flush=True)
     RUN_CACHE[key]=result
     return result
@@ -5390,7 +5390,7 @@ def _eps_growth_from_quarterly_model(code, ts, now=None, market=None):
             'scenario_pct':float(scenario_pct),
             'conservative_annual':float(conservative_annual),
             'optimistic_annual':float(optimistic_annual),
-            'model_version':'V2.10.92 Yahoo/Goodinfo多源25年EPS歷史引擎＋法人起始年約束＋長期25年/近期10年統計模型＋Walk-forward時間序列'
+            'model_version':'V2.10.93 Yahoo/Goodinfo多源25年EPS歷史引擎＋法人起始年約束＋長期25年/近期10年統計模型＋Walk-forward時間序列'
         }
         return float(growth),detail
 
@@ -5409,8 +5409,23 @@ def _format_eps_model_summary(detail):
     rtxt=f'{float(r2):.2f}' if r2 is not None and math.isfinite(float(r2)) else 'N/A'
     lines=[]
     lines.append('【EPS統計驗證】')
-    lines.append(f'歷史資料：{detail.get("history_start_year","N/A")}～{detail.get("history_end_year","N/A")}｜完整年度 {detail.get("long_history_years","N/A")} 年｜近期模型 {detail.get("recent_history_years","N/A")} 年｜模型={detail.get("model_version","V2.10.92")}｜來源={detail.get("history_source","N/A")}')
-    lines.append(f'年度趨勢：{float(detail.get("annual_trend_growth",0)):.2f}%｜近期10年趨勢={float(detail.get("recent_trend_growth",detail.get("annual_trend_growth",0))):.2f}%｜{detail.get("trend_credibility","C")}級｜p={ptxt}｜R²={rtxt}｜n={n or "N/A"}')
+    lines.append(f'歷史資料：{detail.get("history_start_year","N/A")}～{detail.get("history_end_year","N/A")}｜完整年度 {detail.get("long_history_years","N/A")} 年｜近期模型 {detail.get("recent_history_years","N/A")} 年｜模型={detail.get("model_version","V2.10.93")}｜來源={detail.get("history_source","N/A")}')
+    # V2.10.93：修正 2303 等含負 EPS 歷史股票的 LINE 報告崩潰。
+    # 線性年度模型不會建立 recent_growth，因此 detail 會有
+    # recent_trend_growth=None；舊版使用 dict.get(default) 仍會取到 None，
+    # 再 float(None) 就會直接拋出 TypeError。
+    annual_growth = to_float(detail.get('annual_trend_growth'))
+    recent_growth_value = to_float(detail.get('recent_trend_growth'))
+    if recent_growth_value is None:
+        recent_growth_value = annual_growth
+    if annual_growth is None:
+        annual_growth = 0.0
+    if recent_growth_value is None:
+        recent_growth_value = 0.0
+    lines.append(
+        f'年度趨勢：{annual_growth:.2f}%｜近期10年趨勢={recent_growth_value:.2f}%｜'
+        f'{detail.get("trend_credibility","C")}級｜p={ptxt}｜R²={rtxt}｜n={n or "N/A"}'
+    )
     if st.get('se') is not None:
         lines.append(f'β={float(st.get("beta",0)):.6f}｜SE={float(st.get("se",0)):.6f}｜t={float(st.get("t",0)):.2f}｜95% CI={float(st.get("ci_low",0)):.6f}～{float(st.get("ci_high",0)):.6f}')
     sw=detail.get('seasonal_weights') or {}; ss=detail.get('seasonal_stats') or {}
@@ -5497,7 +5512,7 @@ def official_fundamental(symbol, official=None, current_price=None, market=None)
             if detail.get('seasonal_quarters'): source_bits.append('季節Q'+','.join(map(str,detail['seasonal_quarters'])))
             if detail.get('event_adjusted_quarters'): source_bits.append('事件調整Q'+','.join(map(str,detail['event_adjusted_quarters'])))
             src='；'.join(source_bits) if source_bits else '無'
-            print(f'V2.10.92 EPS Growth：{code}={model_g:.2f}% [統計驗證EPS模型] {detail["current_year"]}全年={detail["current_annual"]:.4f} | 保守={detail["conservative_annual"]:.4f} 基準={detail["current_annual"]:.4f} 樂觀={detail["optimistic_annual"]:.4f} | {qtext} | 年度趨勢={detail["annual_trend_growth"]:.2f}% {detail["trend_credibility"]}級 p={detail.get("annual_trend_stats",{}).get("p") if detail.get("annual_trend_stats") else "N/A"} R²={detail.get("annual_trend_stats",{}).get("r2") if detail.get("annual_trend_stats") else "N/A"} | 模型融合=回歸{detail.get('model_weight_regression',0):.0%}/時間序列{detail.get('model_weight_time_series',0):.0%} | 基準全年={detail["base_annual"]:.4f} | 已公布校正={detail["correction_factor"]:.4f}（{detail["correction_status"]}） | 來源：{src}',flush=True)
+            print(f'V2.10.93 EPS Growth：{code}={model_g:.2f}% [統計驗證EPS模型] {detail["current_year"]}全年={detail["current_annual"]:.4f} | 保守={detail["conservative_annual"]:.4f} 基準={detail["current_annual"]:.4f} 樂觀={detail["optimistic_annual"]:.4f} | {qtext} | 年度趨勢={detail["annual_trend_growth"]:.2f}% {detail["trend_credibility"]}級 p={detail.get("annual_trend_stats",{}).get("p") if detail.get("annual_trend_stats") else "N/A"} R²={detail.get("annual_trend_stats",{}).get("r2") if detail.get("annual_trend_stats") else "N/A"} | 模型融合=回歸{detail.get('model_weight_regression',0):.0%}/時間序列{detail.get('model_weight_time_series',0):.0%} | 基準全年={detail["base_annual"]:.4f} | 已公布校正={detail["correction_factor"]:.4f}（{detail["correction_status"]}） | 來源：{src}',flush=True)
     else:
         # V2.10.67：只有完整季度年度模型真的無法建立時，才啟動舊有的
         # EPS fallback。正常由季度模型成功取得的結果完全不覆蓋。
@@ -8938,7 +8953,7 @@ def analysis(
     # --------------------------------------------------------
 
     return (
-        f'📊 股票加碼分析 V2.10.92\n\n'
+        f'📊 股票加碼分析 V2.10.93\n\n'
         f'標的：{name}（{code}）\n'
         f'市場：{market}\n'
         f'產業：{industry}\n'
