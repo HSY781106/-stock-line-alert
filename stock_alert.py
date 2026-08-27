@@ -1,4 +1,10 @@
-# stock_alert.py V2.10.74
+# stock_alert.py V2.10.76
+# V2.10.75：統計驗證 EPS 模型。
+#             年度 EPS 趨勢加入 β/SE/t/p/95% CI/R²/n 與 A/B/C 可信度；
+#             季節係數加入 n/平均/中位數/SD/95% CI/異常值檢查；
+#             已公布季度校正加入歷史校正倍率分布與收縮，避免單年度超預期過度放大；
+#             未公布季度輸出保守/基準/樂觀 EPS 情境，並避免使用當年度資料估計歷史季節性。
+#             p-value 不作為硬性淘汰條件；依統計證據調整年度趨勢權重。
 # V2.10.74：新增「全市場綜合評分 >= 90 分」批次掃描通知。
 #             使用本次 Actions 已建立的技術／法人／融資／PE／次產業快取，
 #             先以「技術＋籌碼＋風險」計算可達上限；只有理論上可能達到 90 分的股票，
@@ -159,6 +165,17 @@ EPS_MODEL_MIN_HISTORY_QUARTERS = 8
 EPS_MODEL_MAX_ABS_GROWTH = 300
 EPS_MODEL_BLEND_REGRESSION = 0.70
 EPS_MODEL_BLEND_MEDIAN = 0.30
+# V2.10.75：EPS 統計驗證與情境預測參數。
+EPS_MODEL_TREND_P_SIGNIFICANT = 0.05
+EPS_MODEL_TREND_P_WEAK = 0.20
+EPS_MODEL_TREND_MIN_R2 = 0.35
+EPS_MODEL_TREND_A_WEIGHT = 1.00
+EPS_MODEL_TREND_B_WEIGHT = 0.60
+EPS_MODEL_TREND_C_WEIGHT = 0.20
+EPS_MODEL_SCENARIO_Z = 1.96
+EPS_MODEL_CORRECTION_ALPHA_MAX = 0.60
+EPS_MODEL_CORRECTION_MIN = 0.90
+EPS_MODEL_CORRECTION_MAX = 1.10
 # V2.10.62：Yahoo 台股有時沒有 quarterlyDilutedEPS，但會提供 quarterlyBasicEPS /
 # quarterlyNormalizedDilutedEPS / quarterlyNormalizedBasicEPS；依優先順序補洞。
 EPS_QUARTERLY_TYPES = [
@@ -3940,6 +3957,273 @@ def _eps_growth_confirmed_quarter(code, year, quarter):
         return None
 
 
+def _eps_student_t_cdf(t_value, df):
+    """V2.10.75：不依賴 scipy 的 Student-t CDF fallback。
+    只用於 scipy 不可用時；以 Simpson 數值積分計算，df 很小時仍可用。
+    """
+    t_value=float(t_value)
+    df=int(df)
+    if df <= 0 or not math.isfinite(t_value):
+        return None
+    if t_value == 0:
+        return 0.5
+    sign=1.0 if t_value > 0 else -1.0
+    x=abs(t_value)
+    # t 分布 PDF；x 太大時尾端機率可安全視為極小。
+    def pdf(z):
+        return (math.gamma((df+1)/2.0) /
+                (math.sqrt(df*math.pi)*math.gamma(df/2.0)) *
+                (1.0+z*z/df) ** (-(df+1)/2.0))
+    if x > 50:
+        cdf_pos=1.0
+    else:
+        n=2000
+        h=x/n
+        total=pdf(0.0)+pdf(x)
+        for i in range(1,n):
+            total += (4.0 if i % 2 else 2.0) * pdf(i*h)
+        integral=max(0.0, min(0.5, total*h/3.0))
+        cdf_pos=0.5+integral
+    return cdf_pos if sign > 0 else 1.0-cdf_pos
+
+
+def _eps_regression_stats(xs, ys, log_response=False):
+    """V2.10.75：年度回歸統計量。
+    回傳 beta、SE、t、p、95% CI、R²、n、預測值與殘差 RMSE/MAE。
+    """
+    try:
+        x=np.asarray(xs,dtype=float)
+        y=np.asarray(ys,dtype=float)
+        mask=np.isfinite(x) & np.isfinite(y)
+        x=x[mask]; y=y[mask]
+        n=len(x)
+        if n < 3 or len(np.unique(x)) < 2:
+            return None
+        if log_response:
+            if np.any(y <= 0):
+                return None
+            yy=np.log(y)
+        else:
+            yy=y.copy()
+        xm=float(np.mean(x)); ym=float(np.mean(yy))
+        sxx=float(np.sum((x-xm)**2))
+        if sxx <= 0:
+            return None
+        beta=float(np.sum((x-xm)*(yy-ym))/sxx)
+        intercept=float(ym-beta*xm)
+        fitted=intercept+beta*x
+        residual=yy-fitted
+        df=n-2
+        sse=float(np.sum(residual**2))
+        mse=sse/df
+        se=float(math.sqrt(max(mse/sxx,0.0)))
+        t_stat=(beta/se) if se > 0 else (math.inf if beta > 0 else -math.inf if beta < 0 else 0.0)
+        try:
+            from scipy.stats import t as student_t
+            p_value=float(2.0*student_t.sf(abs(t_stat),df)) if math.isfinite(t_stat) else 0.0
+            tcrit=float(student_t.ppf(0.975,df))
+        except Exception:
+            cdf=_eps_student_t_cdf(abs(t_stat),df) if math.isfinite(t_stat) else 1.0
+            p_value=float(max(0.0,min(1.0,2.0*(1.0-cdf))))
+            # fallback 的 95% t critical；EPS 模型最多取 5 年，因此 df 通常 3~。
+            tcrit_table={1:12.706,2:4.303,3:3.182,4:2.776,5:2.571,6:2.447,7:2.365,8:2.306,9:2.262,10:2.228,20:2.086,30:2.042}
+            tcrit=float(tcrit_table.get(df,1.96 if df>120 else 2.0))
+        ci_low=float(beta-tcrit*se)
+        ci_high=float(beta+tcrit*se)
+        ss_tot=float(np.sum((yy-ym)**2))
+        r2=float(1.0-sse/ss_tot) if ss_tot>0 else 0.0
+        rmse=float(math.sqrt(max(sse/df,0.0)))
+        mae=float(np.mean(np.abs(residual))) if n else None
+        return {'beta':beta,'intercept':intercept,'se':se,'t':float(t_stat),'p':p_value,
+                'ci_low':ci_low,'ci_high':ci_high,'r2':r2,'n':n,'df':df,
+                'residual_rmse':rmse,'residual_mae':mae}
+    except Exception:
+        return None
+
+
+def _eps_trend_credibility(stats):
+    """V2.10.75：A/B/C 統計可信度，不把 p>0.05 當成沒有趨勢。"""
+    if not isinstance(stats,dict):
+        return 'C', EPS_MODEL_TREND_C_WEIGHT
+    n=int(stats.get('n') or 0)
+    beta=float(stats.get('beta') or 0.0)
+    p=float(stats.get('p') if stats.get('p') is not None else 1.0)
+    r2=float(stats.get('r2') or 0.0)
+    ci_low=float(stats.get('ci_low') or 0.0)
+    ci_high=float(stats.get('ci_high') or 0.0)
+    if n >= 5 and beta > 0 and p < EPS_MODEL_TREND_P_SIGNIFICANT and ci_low > 0 and r2 >= EPS_MODEL_TREND_MIN_R2:
+        return 'A', EPS_MODEL_TREND_A_WEIGHT
+    if beta > 0 and (p < EPS_MODEL_TREND_P_WEAK or r2 >= EPS_MODEL_TREND_MIN_R2 or ci_low > 0):
+        return 'B', EPS_MODEL_TREND_B_WEIGHT
+    return 'C', EPS_MODEL_TREND_C_WEIGHT
+
+
+def _eps_ci_mean(vals):
+    """V2.10.75：平均值 95% CI；n 小時使用 t critical。"""
+    vals=[float(v) for v in vals if v is not None and math.isfinite(float(v))]
+    n=len(vals)
+    if n==0:
+        return None,None,None
+    mean=float(np.mean(vals))
+    if n<2:
+        return mean,None,None
+    sd=float(np.std(vals,ddof=1))
+    se=sd/math.sqrt(n)
+    try:
+        from scipy.stats import t as student_t
+        crit=float(student_t.ppf(0.975,n-1))
+    except Exception:
+        crit={1:12.706,2:4.303,3:3.182,4:2.776,5:2.571,6:2.447,7:2.365,8:2.306,9:2.262,10:2.228}.get(n-1,1.96)
+    return mean,sd,(mean-crit*se,mean+crit*se)
+
+
+# ============================================================
+# V2.10.76：多模型統計時間序列 EPS 預測
+# 不依賴 statsmodels；使用 NumPy 建立可攜式季度趨勢/季節性模型，
+# 並以 walk-forward backtest 評估回歸與季度時間序列的歷史誤差。
+# ============================================================
+EPS_TS_MIN_QUARTERS = 8
+EPS_TS_MAX_QUARTERS = 24
+EPS_TS_MIN_YEARS_BACKTEST = 3
+EPS_TS_WEIGHT_MIN = 0.20
+EPS_TS_WEIGHT_MAX = 0.80
+EPS_TS_HOLDOUT_MIN_YEARS = 3
+
+
+def _eps_safe_mape(actual, pred):
+    vals=[]
+    for a,p in zip(actual,pred):
+        if a is None or p is None: continue
+        try:
+            a=float(a); p=float(p)
+            if math.isfinite(a) and math.isfinite(p) and abs(a)>1e-9:
+                vals.append(abs((p-a)/a)*100.0)
+        except Exception:
+            pass
+    return float(np.mean(vals)) if vals else None
+
+
+def _eps_ts_forecast_quarters(history, forecast_year, max_quarters=EPS_TS_MAX_QUARTERS):
+    """季度時間序列輔助模型：季節中位數 + 去季節化趨勢回歸。
+    history: {(year, quarter): eps}，只應包含 forecast_year 前的資料。
+    回傳各季度預測與模型統計。負/零 EPS 自動改用線性尺度。
+    """
+    pts=[]
+    for (y,q),v in history.items():
+        if y < forecast_year and v is not None and math.isfinite(float(v)):
+            pts.append((int(y),int(q),float(v)))
+    pts=sorted(pts, key=lambda z:(z[0],z[1]))[-max_quarters:]
+    if len(pts)<EPS_TS_MIN_QUARTERS:
+        return None
+
+    # 季節性先以各季相對於該年度總和的比例估計；年度完整性不足時改用季內尺度。
+    years=sorted(set(y for y,_,_ in pts))
+    complete=[]
+    for y in years:
+        vals=[next((v for yy,q,v in pts if yy==y and q==qq),None) for qq in range(1,5)]
+        if all(v is not None for v in vals) and sum(vals)>0:
+            complete.append((y,vals))
+    season={q:[] for q in range(1,5)}
+    for y,vals in complete:
+        total=sum(vals)
+        for q,v in enumerate(vals,1):
+            r=v/total
+            if math.isfinite(r) and 0<r<1:
+                season[q].append(r)
+    sw={q:(float(np.median(season[q])) if season[q] else 0.25) for q in range(1,5)}
+    ss=sum(sw.values())
+    if ss>0: sw={q:sw[q]/ss for q in range(1,5)}
+
+    # 年度總 EPS 趨勢；這裡是時間序列模型的年度 level，用最近資料估計。
+    annual=[]
+    for y,vals in complete:
+        annual.append((y,float(sum(vals))))
+    if len(annual)<EPS_TS_MIN_YEARS_BACKTEST:
+        return None
+    x=np.asarray([y for y,_ in annual],dtype=float)
+    a=np.asarray([v for _,v in annual],dtype=float)
+    try:
+        if np.all(a>0):
+            z=np.log(a)
+            slope,intercept=np.polyfit(x,z,1)
+            level=float(math.exp(intercept+slope*forecast_year))
+        else:
+            slope,intercept=np.polyfit(x,a,1)
+            level=float(intercept+slope*forecast_year)
+    except Exception:
+        level=float(a[-1])
+    if not math.isfinite(level) or level<=0:
+        level=max(0.0,float(a[-1]))
+
+    pred={q:max(0.0,float(level*sw[q])) for q in range(1,5)}
+    return {'forecast':pred,'annual':float(sum(pred.values())),
+            'seasonal_weights':sw,'history_quarters':len(pts),'history_years':len(annual)}
+
+
+def _eps_ts_walk_forward_backtest(quarterly, years):
+    """逐年留出測試：只用 target year 以前的完整年度，預測 target year 全年 EPS。"""
+    targets=[]
+    years=sorted(set(int(y) for y in years))
+    if len(years)<EPS_TS_HOLDOUT_MIN_YEARS+2:
+        return {'n':0,'mae':None,'rmse':None,'mape':None,'bias':None,'rows':[]}
+    for target in years[EPS_TS_HOLDOUT_MIN_YEARS:]:
+        hist={k:v for k,v in quarterly.items() if k[0] < target}
+        actual=sum(float(quarterly[(target,q)]) for q in range(1,5)
+                   if (target,q) in quarterly)
+        if any((target,q) not in quarterly for q in range(1,5)):
+            continue
+        model=_eps_ts_forecast_quarters(hist,target)
+        if not model: continue
+        pred=float(model['annual'])
+        if math.isfinite(actual) and math.isfinite(pred):
+            targets.append((target,actual,pred))
+    if not targets:
+        return {'n':0,'mae':None,'rmse':None,'mape':None,'bias':None,'rows':[]}
+    err=np.asarray([p-a for _,a,p in targets],dtype=float)
+    ae=np.abs(err)
+    return {'n':len(targets),'mae':float(np.mean(ae)),
+            'rmse':float(np.sqrt(np.mean(err**2))),
+            'mape':_eps_safe_mape([a for _,a,_ in targets],[p for _,_,p in targets]),
+            'bias':float(np.mean(err)),
+            'rows':[{'year':y,'actual':a,'pred':p} for y,a,p in targets]}
+
+
+def _eps_regression_backtest(annual_totals):
+    """與主年度回歸一致的簡化 walk-forward backtest。"""
+    rows=[]
+    data=sorted((int(y),float(v)) for y,v in annual_totals if math.isfinite(float(v)))
+    if len(data)<EPS_TS_HOLDOUT_MIN_YEARS+2:
+        return {'n':0,'mae':None,'rmse':None,'mape':None,'bias':None,'rows':[]}
+    for i in range(EPS_TS_HOLDOUT_MIN_YEARS,len(data)):
+        train=data[:i]; target,actual=data[i]
+        if len(train)<EPS_MODEL_MIN_YEARS: continue
+        xx=np.asarray([y for y,_ in train],dtype=float); yy=np.asarray([v for _,v in train],dtype=float)
+        try:
+            if np.all(yy>0):
+                sl,ic=np.polyfit(xx,np.log(yy),1); pred=float(math.exp(ic+sl*target))
+            else:
+                sl,ic=np.polyfit(xx,yy,1); pred=float(ic+sl*target)
+            if math.isfinite(pred): rows.append((target,actual,pred))
+        except Exception: pass
+    if not rows: return {'n':0,'mae':None,'rmse':None,'mape':None,'bias':None,'rows':[]}
+    err=np.asarray([p-a for _,a,p in rows],dtype=float)
+    return {'n':len(rows),'mae':float(np.mean(np.abs(err))),
+            'rmse':float(np.sqrt(np.mean(err**2))),
+            'mape':_eps_safe_mape([a for _,a,_ in rows],[p for _,_,p in rows]),
+            'bias':float(np.mean(err)),
+            'rows':[{'year':y,'actual':a,'pred':p} for y,a,p in rows]}
+
+
+def _eps_model_blend_weight(reg_bt, ts_bt):
+    """依歷史 MAPE/RMSE 決定時間序列權重；資料不足則採保守 35%。"""
+    rm=reg_bt.get('mape'); tm=ts_bt.get('mape')
+    if rm is None or tm is None or not math.isfinite(rm) or not math.isfinite(tm):
+        return 0.35, '資料不足，時間序列35%'
+    inv_r=1.0/max(0.25,float(rm)); inv_t=1.0/max(0.25,float(tm))
+    tw=inv_t/(inv_r+inv_t)
+    tw=float(min(EPS_TS_WEIGHT_MAX,max(EPS_TS_WEIGHT_MIN,tw)))
+    return tw, f'依Walk-forward MAPE自動加權 TS={tw:.0%}/Regression={1-tw:.0%}'
+
 def _eps_growth_from_quarterly_model(code, ts, now=None):
     """V2.10.67：完整年度 EPS 模型。
 
@@ -4049,12 +4333,28 @@ def _eps_growth_from_quarterly_model(code, ts, now=None):
                     seasonal_ratios[q].append(r)
 
         seasonal_weights={}
+        seasonal_stats={}
         for q in range(1,5):
             vals=seasonal_ratios[q]
-            if vals:
-                seasonal_weights[q]=float(np.median(vals))
-            else:
-                seasonal_weights[q]=None
+            mean,sd,ci=_eps_ci_mean(vals)
+            # 以 IQR 檢查異常季度；預測主值仍採中位數，避免單一異常年主導。
+            clean_vals=list(vals)
+            outlier_count=0
+            if len(vals)>=4:
+                q1,q3=np.percentile(np.asarray(vals,dtype=float),[25,75])
+                iqr=float(q3-q1)
+                lo=float(q1-1.5*iqr); hi=float(q3+1.5*iqr)
+                clean_vals=[v for v in vals if lo<=v<=hi]
+                outlier_count=len(vals)-len(clean_vals)
+            seasonal_weights[q]=float(np.median(clean_vals)) if clean_vals else (float(np.median(vals)) if vals else None)
+            cmean,csd,cci=_eps_ci_mean(clean_vals)
+            seasonal_stats[q]={
+                'n':len(vals),'mean':mean,'median':float(np.median(vals)) if vals else None,
+                'sd':sd,'ci_low':(ci[0] if ci else None),'ci_high':(ci[1] if ci else None),
+                'robust_mean':cmean,'robust_sd':csd,
+                'robust_ci_low':(cci[0] if cci else None),'robust_ci_high':(cci[1] if cci else None),
+                'outliers':outlier_count
+            }
 
         valid_weights=[v for v in seasonal_weights.values()
                        if v is not None and math.isfinite(v)]
@@ -4074,40 +4374,64 @@ def _eps_growth_from_quarterly_model(code, ts, now=None):
 
         trend_growth=None
         trend_method=''
+        trend_stats=None
+        trend_credibility='C'
+        trend_weight=EPS_MODEL_TREND_C_WEIGHT
 
-        # 全為正值時，用 log EPS 的趨勢較適合估算成長率。
+        # 全為正值時，用 log EPS 回歸；統計檢定也在 log(EPS) 空間進行。
         if len(annual_totals)>=EPS_MODEL_MIN_YEARS and np.all(ys>0):
             try:
-                slope,intercept=np.polyfit(xs,np.log(ys),1)
-                reg_log=float(intercept+slope*float(current_year))
-                reg_annual=float(math.exp(reg_log))
-                reg_growth=(reg_annual/prev_annual-1.0)*100.0
+                stats=_eps_regression_stats(xs,ys,log_response=True)
+                if stats:
+                    slope=float(stats['beta'])
+                    reg_log=float(stats['intercept']+slope*float(current_year))
+                    reg_annual=float(math.exp(reg_log))
+                    reg_growth=(reg_annual/prev_annual-1.0)*100.0
+                    stats['forecast_annual']=reg_annual
+                    stats['growth_percent']=reg_growth
+                    trend_stats=stats
+                    trend_credibility,trend_weight=_eps_trend_credibility(stats)
 
-                yoy_values=[]
-                for i in range(1,len(annual_totals)):
-                    prev=annual_totals[i-1][1]
-                    cur=annual_totals[i][1]
-                    if prev>0 and math.isfinite(cur):
-                        g=(cur/prev-1.0)*100.0
-                        if math.isfinite(g) and -200<g<300:
-                            yoy_values.append(g)
-
-                med_growth=float(np.median(yoy_values[-3:])) if yoy_values else reg_growth
-
-                # 年度趨勢 70% log regression + 30% recent YoY median。
-                trend_growth=0.70*reg_growth+0.30*med_growth
-                trend_method='log年度回歸70%+近3年YoY中位數30%'
+                    yoy_values=[]
+                    for i in range(1,len(annual_totals)):
+                        prev=annual_totals[i-1][1]; cur=annual_totals[i][1]
+                        if prev>0 and math.isfinite(cur):
+                            g=(cur/prev-1.0)*100.0
+                            if math.isfinite(g) and -200<g<300:
+                                yoy_values.append(g)
+                    med_growth=float(np.median(yoy_values[-3:])) if yoy_values else reg_growth
+                    # A級完整採用回歸；B級保留方向但降低權重；C級不讓回歸主導。
+                    # 趨勢權重與近期 YoY 權重互補，避免 p>0.05 被硬切成 0。
+                    reg_w=float(trend_weight)
+                    med_w=1.0-reg_w
+                    trend_growth=reg_w*reg_growth+med_w*med_growth
+                    trend_method=f'log年度回歸{reg_w:.0%}+近3年YoY中位數{med_w:.0%}（{trend_credibility}級）'
             except Exception:
                 trend_growth=None
 
         # 有負/零 EPS 時，不使用 log，改用年度 EPS 線性趨勢。
         if trend_growth is None:
             try:
-                slope,intercept=np.polyfit(xs,ys,1)
-                forecast=float(intercept+slope*float(current_year))
-                if math.isfinite(forecast):
-                    trend_growth=(forecast/prev_annual-1.0)*100.0
-                    trend_method='年度EPS線性回歸'
+                stats=_eps_regression_stats(xs,ys,log_response=False)
+                if stats:
+                    forecast=float(stats['intercept']+stats['beta']*float(current_year))
+                    if math.isfinite(forecast):
+                        trend_stats=stats
+                        trend_credibility,trend_weight=_eps_trend_credibility(stats)
+                        reg_growth=(forecast/prev_annual-1.0)*100.0
+                        recent_yoy=[]
+                        for i in range(1,len(annual_totals)):
+                            p0=annual_totals[i-1][1]; p1=annual_totals[i][1]
+                            if math.isfinite(p0) and p0!=0 and math.isfinite(p1):
+                                g=(p1/p0-1.0)*100.0
+                                if math.isfinite(g) and -200<g<300:
+                                    recent_yoy.append(g)
+                        med_growth=float(np.median(recent_yoy[-3:])) if recent_yoy else reg_growth
+                        # 線性模型仍保留統計可信度；C級時只給較小權重。
+                        trend_growth=trend_weight*reg_growth+(1.0-trend_weight)*med_growth
+                        trend_stats['forecast_annual']=forecast
+                        trend_stats['growth_percent']=reg_growth
+                        trend_method=f'年度EPS線性回歸{trend_weight:.0%}+近3年YoY中位數{1-trend_weight:.0%}（{trend_credibility}級）'
             except Exception:
                 trend_growth=None
 
@@ -4147,20 +4471,48 @@ def _eps_growth_from_quarterly_model(code, ts, now=None):
         correction_factor=1.0
         actual_correction_ratio=1.0
         correction_alpha=0.0
+        correction_history=[]
+        correction_mean=None
+        correction_sd=None
+        correction_ci_low=None
+        correction_ci_high=None
+        correction_status='無已公布季度校正'
         if current_actual and actual_weight>0:
             expected_actual=base_annual*actual_weight
             if expected_actual>0 and math.isfinite(expected_actual):
                 actual_correction_ratio=actual_sum/expected_actual
                 if math.isfinite(actual_correction_ratio):
-                    # 單季資訊不要過度影響全年；公布季度越多，
-                    # 對剩餘季度的校正權重才逐步提高。
-                    correction_alpha=min(0.90,0.50 + 0.15*len(current_actual))
-                    bounded_ratio=float(min(max(actual_correction_ratio,0.70),1.30))
-                    correction_factor=1.0 + correction_alpha*(bounded_ratio-1.0)
-
+                    actual_qs=sorted(current_actual)
+                    for hy,total in annual_totals:
+                        hweight=sum(seasonal_weights.get(q,0.25) for q in actual_qs)
+                        hactual=sum(float(quarterly.get((hy,q))) for q in actual_qs if quarterly.get((hy,q)) is not None)
+                        if hweight>0 and total>0 and len([q for q in actual_qs if quarterly.get((hy,q)) is not None])==len(actual_qs):
+                            hr=(hactual/total)/hweight
+                            if math.isfinite(hr) and 0.70<=hr<=1.30:
+                                correction_history.append(float(hr))
+                    correction_mean,correction_sd,correction_ci=_eps_ci_mean(correction_history)
+                    correction_ci_low=correction_ci[0] if correction_ci else None
+                    correction_ci_high=correction_ci[1] if correction_ci else None
+                    raw=float(min(max(actual_correction_ratio,0.70),1.30))
+                    hist_center=correction_mean if correction_mean is not None else 1.0
+                    hist_center=float(min(max(hist_center,EPS_MODEL_CORRECTION_MIN),EPS_MODEL_CORRECTION_MAX))
+                    if correction_history:
+                        n_hist=len(correction_history)
+                        correction_alpha=min(EPS_MODEL_CORRECTION_ALPHA_MAX, 0.35 + 0.08*len(current_actual) + 0.02*max(0,n_hist-3))
+                        if correction_sd is not None and correction_mean and correction_mean!=0:
+                            cv=abs(correction_sd/correction_mean)
+                            if cv>0.12:
+                                correction_alpha*=0.80
+                        correction_factor=hist_center + correction_alpha*(raw-hist_center)
+                        if correction_ci_low is not None and correction_ci_high is not None:
+                            correction_status=('高於歷史正常區間' if raw>correction_ci_high else '低於歷史正常區間' if raw<correction_ci_low else '歷史正常區間內')
+                    else:
+                        correction_alpha=min(0.45,0.25+0.10*len(current_actual))
+                        correction_factor=1.0+correction_alpha*(raw-1.0)
+                        correction_status='歷史校正樣本不足，採保守收縮'
         if not math.isfinite(correction_factor):
             correction_factor=1.0
-        correction_factor=float(min(max(correction_factor,0.75),1.25))
+        correction_factor=float(min(max(correction_factor,0.85),1.15))
 
         # --------------------------------------------------------
         # E. 先放入實際季度與確認季度
@@ -4271,6 +4623,33 @@ def _eps_growth_from_quarterly_model(code, ts, now=None):
         if len(projected)!=4:
             return None,None
 
+        # V2.10.76：多模型融合。主模型保留 V2.10.75 的統計回歸/季節性結果，
+        # 再加入季度時間序列輔助模型；只融合「尚未公布/確認」季度，實際值絕不被模型覆寫。
+        all_annual_totals=[]
+        for y in complete_years:
+            vals=[quarterly.get((y,q)) for q in range(1,5)]
+            if all(v is not None and math.isfinite(float(v)) for v in vals):
+                total=sum(float(v) for v in vals)
+                if math.isfinite(total): all_annual_totals.append((y,total))
+        ts_model=_eps_ts_forecast_quarters(quarterly,current_year)
+        reg_bt=_eps_regression_backtest(all_annual_totals)
+        ts_bt=_eps_ts_walk_forward_backtest(quarterly,[y for y,_ in all_annual_totals])
+        ts_weight,blend_method=_eps_model_blend_weight(reg_bt,ts_bt)
+        reg_weight=1.0-ts_weight
+        ts_used=False
+        if ts_model and remaining:
+            # 已公布/確認季度固定，只取時間序列對剩餘季度的預測。
+            ts_future=sum(float(ts_model['forecast'].get(q,0.0)) for q in remaining)
+            reg_future=sum(float(projected[q]) for q in remaining if q in projected)
+            if math.isfinite(ts_future) and math.isfinite(reg_future) and ts_future>=0 and reg_future>=0:
+                # 時間序列在資料完整時提供輔助；不讓它完全取代基本統計模型。
+                for q in remaining:
+                    rp=float(projected[q])
+                    tp=float(ts_model['forecast'].get(q,rp))
+                    if math.isfinite(tp) and tp>=0:
+                        projected[q]=float(reg_weight*rp + ts_weight*tp)
+                ts_used=True
+
         current_annual=sum(float(projected[q]) for q in range(1,5))
         # V2.10.67：修正 V2.10.65 的 NameError；校正全年指的是套用
         # 已公布季度阻尼校正後、尚未加入實際季度替換結果前的年度基準。
@@ -4280,6 +4659,30 @@ def _eps_growth_from_quarterly_model(code, ts, now=None):
             return None,None
 
         growth=(current_annual/prev_annual-1.0)*100.0
+        # V2.10.75：保守/基準/樂觀三情境；已公布季度固定，只對剩餘季度加減不確定性。
+        trend_uncertainty=0.0
+        if trend_stats:
+            ci_growth_low=None; ci_growth_high=None
+            if np.all(ys>0) and trend_stats.get('forecast_annual') and trend_stats.get('intercept') is not None:
+                lo=math.exp(float(trend_stats['intercept'])+float(trend_stats['ci_low'])*current_year)
+                hi=math.exp(float(trend_stats['intercept'])+float(trend_stats['ci_high'])*current_year)
+                ci_growth_low=(lo/prev_annual-1.0)*100.0
+                ci_growth_high=(hi/prev_annual-1.0)*100.0
+            if ci_growth_low is None:
+                ci_growth_low=trend_growth-abs(trend_growth)*0.20-5.0
+                ci_growth_high=trend_growth+abs(trend_growth)*0.20+5.0
+            trend_uncertainty=max(abs(float(trend_growth)-float(ci_growth_low)),abs(float(ci_growth_high)-float(trend_growth)))
+        seasonal_cv=[]
+        for q in range(1,5):
+            st=seasonal_stats.get(q,{})
+            if isinstance(st,dict) and st.get('sd') is not None and st.get('mean') not in (None,0):
+                seasonal_cv.append(abs(float(st['sd'])/float(st['mean'])))
+        season_uncertainty=float(np.mean(seasonal_cv)) if seasonal_cv else 0.05
+        scenario_pct=max(0.06,min(0.25,trend_uncertainty/100.0 + season_uncertainty*0.50))
+        forecast_sum=sum(float(projected[q]) for q in range(1,5) if q not in current_actual and q not in confirmed_used)
+        fixed_sum=current_annual-forecast_sum
+        conservative_annual=max(0.0,fixed_sum+forecast_sum*(1.0-scenario_pct))
+        optimistic_annual=max(0.0,fixed_sum+forecast_sum*(1.0+scenario_pct))
         if (not math.isfinite(growth)
                 or growth < -EPS_MODEL_MAX_ABS_GROWTH
                 or growth > EPS_MODEL_MAX_ABS_GROWTH):
@@ -4304,13 +4707,66 @@ def _eps_growth_from_quarterly_model(code, ts, now=None):
             'base_annual':float(base_annual),
             'correction_factor':float(correction_factor),
             'corrected_annual':float(corrected_annual),
-            'seasonal_weights':{q:float(seasonal_weights[q]) for q in range(1,5)}
+            'seasonal_weights':{q:float(seasonal_weights[q]) for q in range(1,5)},
+            'seasonal_stats':seasonal_stats,
+            'annual_trend_stats':trend_stats,
+            'trend_credibility':trend_credibility,
+            'trend_weight':float(trend_weight),
+            'correction_history':correction_history,
+            'correction_mean':correction_mean,
+            'correction_sd':correction_sd,
+            'correction_ci_low':correction_ci_low,
+            'correction_ci_high':correction_ci_high,
+            'correction_status':correction_status,
+            'scenario_pct':float(scenario_pct),
+            'conservative_annual':float(conservative_annual),
+            'optimistic_annual':float(optimistic_annual),
+            'time_series_used':bool(ts_used),
+            'time_series_forecast':(ts_model.get('forecast') if ts_model else None),
+            'time_series_annual':(float(ts_model.get('annual')) if ts_model and ts_model.get('annual') is not None else None),
+            'time_series_weight':float(ts_weight),
+            'regression_weight':float(reg_weight),
+            'blend_method':blend_method,
+            'regression_backtest':reg_bt,
+            'time_series_backtest':ts_bt,
+            'model_version':'V2.10.76 多模型統計時間序列 EPS 預測'
         }
         return float(growth),detail
 
     except Exception as e:
-        print(f'V2.10.67 季度EPS年度模型失敗 {code}: {type(e).__name__}: {e}',flush=True)
+        print(f'V2.10.75 統計驗證EPS年度模型失敗 {code}: {type(e).__name__}: {e}',flush=True)
         return None,None
+
+def _format_eps_model_summary(detail):
+    """V2.10.75：將統計驗證 EPS 模型摘要格式化給 LINE / Web 結果頁。"""
+    if not isinstance(detail,dict):
+        return ''
+    st=detail.get('annual_trend_stats') or {}
+    if not isinstance(st,dict): st={}
+    p=st.get('p'); r2=st.get('r2'); n=st.get('n')
+    ptxt=f'{float(p):.3f}' if p is not None and math.isfinite(float(p)) else 'N/A'
+    rtxt=f'{float(r2):.2f}' if r2 is not None and math.isfinite(float(r2)) else 'N/A'
+    lines=[]
+    lines.append('【EPS統計驗證／多模型】')
+    if detail.get('time_series_used'):
+        lines.append(f'模型融合：回歸 {float(detail.get("regression_weight",0))*100:.0f}% + 時間序列 {float(detail.get("time_series_weight",0))*100:.0f}%')
+    rb=detail.get('regression_backtest') or {}; tb=detail.get('time_series_backtest') or {}
+    if rb.get('n') or tb.get('n'):
+        lines.append(f'Walk-forward：回歸 MAPE={rb.get("mape","N/A")}｜時間序列 MAPE={tb.get("mape","N/A")}')
+    lines.append(f'年度趨勢：{float(detail.get("annual_trend_growth",0)):.2f}%｜{detail.get("trend_credibility","C")}級｜p={ptxt}｜R²={rtxt}｜n={n or "N/A"}')
+    if st.get('se') is not None:
+        lines.append(f'β={float(st.get("beta",0)):.6f}｜SE={float(st.get("se",0)):.6f}｜t={float(st.get("t",0)):.2f}｜95% CI={float(st.get("ci_low",0)):.6f}～{float(st.get("ci_high",0)):.6f}')
+    sw=detail.get('seasonal_weights') or {}; ss=detail.get('seasonal_stats') or {}
+    qparts=[]
+    for q in range(1,5):
+        w=sw.get(q)
+        stq=ss.get(q,{}) if isinstance(ss,dict) else {}
+        if w is None: continue
+        qparts.append(f'Q{q} {float(w)*100:.1f}% (n={stq.get("n","?")}, SD={float(stq["sd"])*100:.1f}% )' if stq.get('sd') is not None else f'Q{q} {float(w)*100:.1f}%')
+    if qparts: lines.append('季節係數：'+'｜'.join(qparts))
+    lines.append(f'已公布校正：{float(detail.get("correction_factor",1)):.3f}｜{detail.get("correction_status","")}｜歷史樣本={len(detail.get("correction_history") or [])}')
+    lines.append(f'全年EPS：保守 {float(detail.get("conservative_annual",detail.get("current_annual",0))):.2f}｜基準 {float(detail.get("current_annual",0)):.2f}｜樂觀 {float(detail.get("optimistic_annual",detail.get("current_annual",0))):.2f}')
+    return '\n'.join(lines)+'\n'
 
 def official_fundamental(symbol, official=None, current_price=None, market=None):
     """V2.10.67：股票基本面/估值資料層。
@@ -4322,7 +4778,7 @@ def official_fundamental(symbol, official=None, current_price=None, market=None)
     code=clean_code(str(symbol).split('.')[0])
     off=official if isinstance(official,dict) else {}
     out={'pe':to_float(off.get('pe')),'pb':to_float(off.get('pb')),'yield':to_float(off.get('yield')),
-         'eps_growth':None,'roe':None,'peg':None}
+         'eps_growth':None,'roe':None,'peg':None,'eps_model_detail':None}
     for k in ('pe','pb','yield'):
         if not _fund_cache_valid_value(k,out.get(k)): out[k]=None
     if market=='TPEX' and any(out.get(k) is None for k in ('pe','pb','yield')):
@@ -4367,9 +4823,10 @@ def official_fundamental(symbol, official=None, current_price=None, market=None)
     except Exception: pass
 
     model_g,detail=_eps_growth_from_quarterly_model(code,ts,now=datetime.now(TW_TZ))
-    model_g=_eps_growth_sanity(model_g,'V2.10.67 annual EPS seasonal model',True,cached_g)
+    model_g=_eps_growth_sanity(model_g,'V2.10.75 statistical EPS seasonal model',True,cached_g)
     if model_g is not None:
         out['eps_growth']=model_g
+        out['eps_model_detail']=detail
         if detail:
             qtext=' / '.join([f'Q{q}={detail["projected_quarters"][q]:.4f}' for q in range(1,5)])
             source_bits=[]
@@ -4380,7 +4837,7 @@ def official_fundamental(symbol, official=None, current_price=None, market=None)
             if detail.get('seasonal_quarters'): source_bits.append('季節Q'+','.join(map(str,detail['seasonal_quarters'])))
             if detail.get('event_adjusted_quarters'): source_bits.append('事件調整Q'+','.join(map(str,detail['event_adjusted_quarters'])))
             src='；'.join(source_bits) if source_bits else '無'
-            print(f'V2.10.67 EPS Growth：{code}={model_g:.2f}% [年度趨勢+季節係數模型] {detail["current_year"]}全年={detail["current_annual"]:.4f} vs {detail["prev_year"]}全年={detail["prev_annual"]:.4f} | {qtext} | 年度趨勢={detail["annual_trend_growth"]:.2f}% | 基準全年={detail["base_annual"]:.4f} | 已公布校正={detail["correction_factor"]:.4f} | 校正全年={detail["corrected_annual"]:.4f} | 來源：{src}',flush=True)
+            print(f'V2.10.75 EPS Growth：{code}={model_g:.2f}% [統計驗證EPS模型] {detail["current_year"]}全年={detail["current_annual"]:.4f} | 保守={detail["conservative_annual"]:.4f} 基準={detail["current_annual"]:.4f} 樂觀={detail["optimistic_annual"]:.4f} | {qtext} | 年度趨勢={detail["annual_trend_growth"]:.2f}% {detail["trend_credibility"]}級 p={detail.get("annual_trend_stats",{}).get("p") if detail.get("annual_trend_stats") else "N/A"} R²={detail.get("annual_trend_stats",{}).get("r2") if detail.get("annual_trend_stats") else "N/A"} | 基準全年={detail["base_annual"]:.4f} | 已公布校正={detail["correction_factor"]:.4f}（{detail["correction_status"]}） | 來源：{src}',flush=True)
     else:
         # V2.10.67：只有完整季度年度模型真的無法建立時，才啟動舊有的
         # EPS fallback。正常由季度模型成功取得的結果完全不覆蓋。
@@ -7841,6 +8298,7 @@ def analysis(
         f'殖利率：{fmt(yld)}%\n'
         f'EPS成長：'
         f'{fmt(yf_f["eps_growth"])}%\n'
+        f'{_format_eps_model_summary(yf_f.get("eps_model_detail"))}'
         f'PEG：{fmt(yf_f["peg"])}\n'
         f'ROE：{fmt(yf_f["roe"])}%\n'
         f'基本面得分：{fs}/40\n'
@@ -8806,7 +9264,7 @@ def _scan_high_score_stocks(u, state):
     threshold = 90
 
     if not isinstance(u, dict) or not u:
-        print('⚠️ V2.10.74 高評分掃描：股票池為空，跳過', flush=True)
+        print('⚠️ V2.10.75 高評分掃描：股票池為空，跳過', flush=True)
         return []
 
     # --------------------------------------------------------
@@ -9002,7 +9460,7 @@ def _scan_high_score_stocks(u, state):
         })
 
     print(
-        f'V2.10.74 高評分第一階段：候選 {len(candidates)} 檔；'
+        f'V2.10.75 高評分第一階段：候選 {len(candidates)} 檔；'
         f'無技術快取 {skipped_no_tech} 檔；'
         f'耗時 {time.time()-started:.1f}s',
         flush=True
@@ -9078,13 +9536,13 @@ def _scan_high_score_stocks(u, state):
                 })
         except Exception as e:
             print(
-                f'V2.10.74 高評分完整基本面失敗 {c.get("code")}: '
+                f'V2.10.75 高評分完整基本面失敗 {c.get("code")}: '
                 f'{type(e).__name__}: {e}',
                 flush=True
             )
         if idx % 10 == 0 or idx == len(candidates):
             print(
-                f'V2.10.74 高評分第二階段進度：{idx}/{len(candidates)}；'
+                f'V2.10.75 高評分第二階段進度：{idx}/{len(candidates)}；'
                 f'目前 >=90：{len(results)}',
                 flush=True
             )
@@ -9118,7 +9576,7 @@ def _scan_high_score_stocks(u, state):
         by_code = {x['code']: x for x in results}
         new_rows = [by_code[x] for x in new_codes if x in by_code]
         msg = (
-            '🚨 全市場高評分股票通知 V2.10.74\n\n'
+            '🚨 全市場高評分股票通知 V2.10.75\n\n'
             f'執行時間：{datetime.now(TW_TZ).strftime("%Y-%m-%d %H:%M:%S")}\n'
             '條件：綜合評分 ≥ 90 分\n\n'
             '【本次新進榜】\n' +
@@ -9135,19 +9593,19 @@ def _scan_high_score_stocks(u, state):
         )
         send_line(msg[:5000])
         print(
-            f'V2.10.74 高評分 LINE 已發送：新進榜 {len(new_rows)} 檔；'
+            f'V2.10.75 高評分 LINE 已發送：新進榜 {len(new_rows)} 檔；'
             f'目前 >=90 共 {len(results)} 檔',
             flush=True
         )
     else:
         print(
-            f'V2.10.74 高評分掃描完成：目前 >=90 共 {len(results)} 檔；'
+            f'V2.10.75 高評分掃描完成：目前 >=90 共 {len(results)} 檔；'
             f'本次新進榜 {len(new_codes)} 檔；不發送重複 LINE',
             flush=True
         )
 
     print(
-        f'V2.10.74 高評分掃描總耗時：{time.time()-started:.1f}s',
+        f'V2.10.75 高評分掃描總耗時：{time.time()-started:.1f}s',
         flush=True
     )
     return results
@@ -9169,7 +9627,7 @@ def run_alerts():
     print(
         '================================\n'
         '股票跌幅 + 15分鐘區間最低價 + '
-        'V2.10.74自動估值 + 技術 + 籌碼\n'
+        'V2.10.75自動估值 + 技術 + 籌碼\n'
         '================================'
     )
 
@@ -9456,7 +9914,7 @@ def run_alerts():
     try:
         _scan_high_score_stocks(u, state)
     except Exception as e:
-        print(f'⚠️ V2.10.74 高評分全市場掃描失敗：{type(e).__name__}: {e}', flush=True)
+        print(f'⚠️ V2.10.75 高評分全市場掃描失敗：{type(e).__name__}: {e}', flush=True)
         traceback.print_exc()
 
     save_json(
