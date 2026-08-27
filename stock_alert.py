@@ -1,5 +1,5 @@
-# stock_alert.py V2.10.72
-# V2.10.72：LINE背景技術面強制即時刷新修正版。
+# stock_alert.py V2.10.73
+# V2.10.73：LINE背景技術面強制即時刷新修正版。
 #             背景網頁分析（非 LINE 輕量模式）一律優先抓取最新可用 Yahoo 1d 日線，
 #             不再被 LINE_MODE_ACTIVE 或 36/72 小時技術快取攔截；成功後立即寫回
 #             line_technical_cache.json，確保快取也同步到最新交易日。
@@ -5215,7 +5215,7 @@ def refresh_all_technical_cache(u, force=False):
 
 
 def technical(symbol, force_refresh=False):
-    """V2.10.72：即時資料 / 歷史資料快取分離。
+    """V2.10.73：即時資料 / 歷史資料快取分離。
 
     規則：
     1. LINE 輕量模式（force_refresh=False）：
@@ -5236,7 +5236,7 @@ def technical(symbol, force_refresh=False):
         cache = {}
 
     # --------------------------------------------------------
-    # V2.10.72：LINE 輕量模式
+    # V2.10.73：LINE 輕量模式
     # 只有「非強制刷新」才走快取優先。
     # 背景網頁分析會以 force_refresh=True 直接跳過這裡，
     # 即使 LINE_MODE_ACTIVE=True 也不會被舊快取攔截。
@@ -5277,7 +5277,7 @@ def technical(symbol, force_refresh=False):
         return _technical_from_df(None)
 
     # --------------------------------------------------------
-    # V2.10.72：背景網頁分析 / Actions
+    # V2.10.73：背景網頁分析 / Actions
     # force_refresh=True 時「即時資料優先」，
     # 不讀舊技術快取作為正常路徑。
     # --------------------------------------------------------
@@ -5293,7 +5293,7 @@ def technical(symbol, force_refresh=False):
     d = None
     try:
         print(
-            f'V2.10.72 技術面即時刷新：{cache_key} '
+            f'V2.10.73 技術面即時刷新：{cache_key} '
             f'Yahoo 1d/6mo',
             flush=True
         )
@@ -5304,7 +5304,7 @@ def technical(symbol, force_refresh=False):
         )
     except Exception as e:
         print(
-            f'V2.10.72 技術面 Yahoo 失敗 {cache_key}：'
+            f'V2.10.73 技術面 Yahoo 失敗 {cache_key}：'
             f'{type(e).__name__}',
             flush=True
         )
@@ -5331,7 +5331,7 @@ def technical(symbol, force_refresh=False):
                 d = tw
         except Exception as e:
             print(
-                f'V2.10.72 技術面 TWSE 備援失敗 {cache_key}：'
+                f'V2.10.73 技術面 TWSE 備援失敗 {cache_key}：'
                 f'{type(e).__name__}',
                 flush=True
             )
@@ -5339,13 +5339,14 @@ def technical(symbol, force_refresh=False):
     o = _technical_from_df(d)
 
     # --------------------------------------------------------
-    # V2.10.72：技術趨勢即時價格強制重算。
+    # V2.10.73：技術趨勢即時價格強制重算。
     # MA20/MA60/RSI/KD 仍完全使用日線資料；只有「目前 price」改用
     # 最新 5 分鐘 K 棒，避免 market_universe_cache.json 的舊收盤價
     # 把已站回 MA20、但尚未站上 MA60 的股票誤判成空頭。
     # --------------------------------------------------------
     if force_refresh:
         live_price = get_latest_intraday_price(symbol)
+        o['price_source'] = 'Yahoo 5分鐘即時' if live_price is not None and live_price > 0 else '日線收盤（即時價格取得失敗）'
         if live_price is not None and live_price > 0:
             o['price'] = live_price
             if o.get('ma20') is not None and o.get('ma60') is not None:
@@ -5360,7 +5361,7 @@ def technical(symbol, force_refresh=False):
             if o.get('recent_low') is not None and o['recent_low'] > 0:
                 o['distance_low'] = live_price / o['recent_low'] - 1
             print(
-                f'V2.10.71 技術趨勢強制重算：{cache_key} '
+                f'V2.10.73 技術趨勢強制重算：{cache_key} '
                 f'live_price={live_price:.2f} '
                 f'MA20={o.get("ma20")} MA60={o.get("ma60")} '
                 f'trend={o.get("trend")}',
@@ -5417,7 +5418,7 @@ def technical(symbol, force_refresh=False):
     )
     if z:
         print(
-            f'V2.10.72 技術面即時刷新失敗，退回本機技術快取：'
+            f'V2.10.73 技術面即時刷新失敗，退回本機技術快取：'
             f'{cache_key}',
             flush=True
         )
@@ -5434,7 +5435,7 @@ def technical(symbol, force_refresh=False):
     )
     if z:
         print(
-            f'V2.10.72 技術面即時刷新失敗，退回 GitHub 技術快取：'
+            f'V2.10.73 技術面即時刷新失敗，退回 GitHub 技術快取：'
             f'{cache_key}',
             flush=True
         )
@@ -7355,7 +7356,7 @@ def analysis(
     line_light=False,
     force_technical_refresh=False
 ):
-    """V2.10.72：可由背景 LINE 分析單獨要求技術面即時刷新。
+    """V2.10.73：可由背景 LINE 分析單獨要求技術面即時刷新。
 
     force_technical_refresh=True 僅影響 technical()；其餘基本面、籌碼
     與既有 line_light 快取流程保持不變。
@@ -7587,7 +7588,7 @@ def analysis(
     # --------------------------------------------------------
 
     print(f'LINE輕量分析：技術面 {code}', flush=True) if line_light else None
-    # V2.10.72：LINE 背景網頁分析即使採用 line_light=True，
+    # V2.10.73：LINE 背景網頁分析即使採用 line_light=True，
     # 技術面仍強制抓取最新資料並重算，避免沿用舊技術快取。
     # 其他既有 line_light 路徑維持原本快取邏輯，不影響跌幅警報等流程。
     tech = technical(
@@ -7814,7 +7815,7 @@ def analysis(
     # --------------------------------------------------------
 
     return (
-        f'📊 股票加碼分析 V2.10.72\n\n'
+        f'📊 股票加碼分析 V2.10.73\n\n'
         f'標的：{name}（{code}）\n'
         f'市場：{market}\n'
         f'產業：{industry}\n'
@@ -7848,6 +7849,8 @@ def analysis(
         f'{peer_text}\n\n'
 
         f'【技術面 30分】\n'
+        f'最新價格：{fmt(tech.get("price"))}\n'
+        f'價格來源：{tech.get("price_source") or "N/A"}\n'
         f'RSI：{fmt(tech["rsi"])}\n'
         f'KD：'
         f'K={fmt(tech["k"])} / '
