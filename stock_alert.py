@@ -1,4 +1,4 @@
-# stock_alert.py V2.10.84
+# stock_alert.py V2.10.85
 # V2.10.75：統計驗證 EPS 模型。
 #             年度 EPS 趨勢加入 β/SE/t/p/95% CI/R²/n 與 A/B/C 可信度；
 #             季節係數加入 n/平均/中位數/SD/95% CI/異常值檢查；
@@ -105,10 +105,10 @@ LINE_FUND_CACHE_FILE = 'line_fund_cache.json'
 LINE_TECH_CACHE_FILE = 'line_technical_cache.json'
 # V2.10.62：季度 EPS 持久快取；用於補強 Yahoo fundamentals-timeseries 偶發缺少季度 EPS。
 EPS_QUARTERLY_CACHE_FILE = 'eps_quarterly_cache.json'
-# V2.10.84：25 年 EPS 歷史資料引擎持久快取。
+# V2.10.85：25 年 EPS 歷史資料引擎持久快取。
 EPS_ANNUAL_HISTORY_CACHE_FILE = 'eps_annual_history_cache.json'
 EPS_HISTORY_ENGINE_CACHE_FILE = 'eps_history_engine_cache.json'
-# V2.10.84：Goodinfo 一次取得多年年度 EPS，作為真正的25年歷史來源。
+# V2.10.85：Goodinfo 一次取得多年年度 EPS，作為真正的25年歷史來源。
 EPS_HISTORY_GOODINFO_CACHE_FILE = 'eps_goodinfo_history_cache.json'
 
 UNIVERSE_CACHE_FILE = 'market_universe_cache.json'
@@ -177,7 +177,7 @@ EPS_MODEL_BLEND_MEDIAN = 0.30
 # V2.10.79：歷史年度資料補抓預算；只在真正進入 EPS 基本面分析的股票使用。
 EPS_ANNUAL_FETCH_MAX_YEARS_PER_STOCK = 25
 EPS_ANNUAL_FETCH_TIMEOUT = 8
-# V2.10.84：歷史 EPS 引擎一次向 Yahoo fundamentals-timeseries 要求 30 年，
+# V2.10.85：歷史 EPS 引擎一次向 Yahoo fundamentals-timeseries 要求 30 年，
 # 再由季度完整年度與 MOPS 歷史介面補洞；已嘗試但不可得的年份 7 天內不重打。
 EPS_HISTORY_SOURCE_YEARS = 30
 EPS_HISTORY_RETRY_DAYS = 7
@@ -3606,7 +3606,7 @@ def _official_eps_snapshot(market):
 
 
 def _parse_mops_eps_html(text):
-    """V2.10.84：穩健解析 MOPS 綜合損益表的「基本每股盈餘合計」。
+    """V2.10.85：穩健解析 MOPS 綜合損益表的「基本每股盈餘合計」。
 
     舊版問題：原程式使用 io.StringIO 卻沒有 import io，例外被外層吃掉後
     看起來就像「MOPS 沒資料」。另外 MOPS 同一列常同時有「本期」與「上期」數值，
@@ -3666,9 +3666,9 @@ def _parse_mops_eps_html(text):
 
 
 def _goodinfo_annual_eps_history(code, max_years=EPS_MODEL_MAX_YEARS):
-    """V2.10.84：Goodinfo 25年年度EPS歷史引擎。
+    """V2.10.85：Goodinfo 25年年度EPS歷史引擎。
 
-    重要修正：V2.10.84 已證明 GitHub Actions 對 Goodinfo 直接請求會得到
+    重要修正：V2.10.85 已證明 GitHub Actions 對 Goodinfo 直接請求會得到
     HTTP 403，因此再繼續增加 direct GET/POST 沒有意義。本版把 Goodinfo
     的長期年度表改成「多通道」：
       1) r.jina.ai Reader proxy 取得 Goodinfo HTML/Markdown（優先）
@@ -3823,7 +3823,7 @@ def _goodinfo_annual_eps_history(code, max_years=EPS_MODEL_MAX_YEARS):
     gt=(f'https://goodinfo-tw.translate.goog/tw/StockBzPerformance.asp?'
         f'RPT_CAT=M_YEAR&STOCK_ID={code}&YEAR_PERIOD=9999&_x_tr_sl=auto&_x_tr_tl=zh-TW&_x_tr_hl=zh-TW')
     candidates.append(('TRANSLATE',gt,None))
-    # 3) Direct Goodinfo only as final fallback; V2.10.84 showed this can be 403.
+    # 3) Direct Goodinfo only as final fallback; V2.10.85 showed this can be 403.
     candidates.append(('DIRECT',direct_url,None))
     payload={'STOCK_ID':code,'YEAR_PERIOD':'9999','RPT_CAT':'M_YEAR','STEP':'DATA','SHEET':'獲利指標'}
     candidates.append(('DIRECT_POST',f'{base}/tw/StockBzPerformance.asp?',payload))
@@ -3861,52 +3861,20 @@ def _goodinfo_annual_eps_history(code, max_years=EPS_MODEL_MAX_YEARS):
             last_error=f'{source} HTTP 200 but EPS history parse failed, bytes={len(r.content)}'
         except Exception as e:
             last_error=f'{source} {type(e).__name__}: {e}'
-    print(f'V2.10.84 Goodinfo EPS歷史失敗 {code}: {last_error}',flush=True)
+    print(f'V2.10.85 Goodinfo EPS歷史失敗 {code}: {last_error}',flush=True)
     return {}
 
 def _mops_historical_annual_eps_one(code, market, year):
-    """V2.10.84：單年度 MOPS Q4 EPS。
+    """V2.10.85: disabled as a per-year Action fallback.
 
-    直接使用目前仍可查到的 server-java/t164sb01 GET 介面；年度使用 Q4，
-    解析「基本每股盈餘合計」本期第一個數值。先試西元年，再試民國年。
+    Per-year MOPS requests can be slow and inconsistent from GitHub Actions.
+    The historical engine should use batch/cache sources instead.
     """
-    code=clean_code(code); y=int(year)
-    if not code.isdigit():
-        return None
-    headers={
-        'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
-                     '(KHTML, like Gecko) Chrome/128.0 Safari/537.36',
-        'Referer':'https://mops.twse.com.tw/mops/web/t164sb01',
-        'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
-    }
-    url='https://mops.twse.com.tw/server-java/t164sb01'
-    years=[str(y),str(y-1911)]
-    for sy in years:
-        params={'step':'1','CO_ID':code,'SYEAR':sy,'SSEASON':'4','REPORT_ID':'C'}
-        try:
-            r=requests.get(url,params=params,timeout=EPS_ANNUAL_FETCH_TIMEOUT,headers=headers)
-            if r.status_code!=200 or not r.content:
-                continue
-            # MOPS 舊頁面常為 Big5/CP950，新版則可能是 UTF-8。
-            text=None
-            for enc in ('big5','cp950','utf-8-sig','utf-8'):
-                try:
-                    t=r.content.decode(enc)
-                    if '基本每股盈餘' in t or '每股盈餘' in t:
-                        text=t; break
-                except Exception:
-                    pass
-            if text is None:
-                text=r.text
-            v=_parse_mops_eps_html(text)
-            if v is not None and math.isfinite(v):
-                return float(v)
-        except Exception:
-            continue
     return None
 
+
 def _eps_history_engine(code, market=None, ts=None, max_years=EPS_MODEL_MAX_YEARS):
-    """V2.10.84：真正的 25 年 EPS 歷史資料引擎。
+    """V2.10.85：真正的 25 年 EPS 歷史資料引擎。
 
     資料優先順序：
       1) 持久快取 eps_annual_history_cache.json
@@ -3988,7 +3956,7 @@ def _eps_history_engine(code, market=None, ts=None, max_years=EPS_MODEL_MAX_YEAR
     if quarterly_rows:
         sources.append('Yahoo complete quarterly EPS')
 
-    # 3) V2.10.84：一次查 Goodinfo 年度經營績效，直接補最多25年。
+    # 3) V2.10.85：一次查 Goodinfo 年度經營績效，直接補最多25年。
     # 這是本版真正解決「Yahoo 只有2015~2025」的關鍵：只需一個HTTP請求，
     # 不再把25年拆成25次 MOPS 請求。
     goodinfo_fetched=0
@@ -4002,10 +3970,10 @@ def _eps_history_engine(code, market=None, ts=None, max_years=EPS_MODEL_MAX_YEAR
             if goodinfo_fetched:
                 sources.append('Goodinfo年度EPS')
     except Exception as e:
-        print(f'V2.10.84 Goodinfo EPS歷史引擎例外 {code}: {type(e).__name__}: {e}',flush=True)
+        print(f'V2.10.85 Goodinfo EPS歷史引擎例外 {code}: {type(e).__name__}: {e}',flush=True)
 
     # 4) 如果 Goodinfo 仍不足，再以 MOPS Q4 逐年補缺；
-    # 但 V2.10.84 使用新的 cache key，因此不會被舊版錯誤的 cooldown 永久卡住。
+    # 但 V2.10.85 使用新的 cache key，因此不會被舊版錯誤的 cooldown 永久卡住。
     missing=[y for y in range(first_year,last_year+1) if y not in data]
     attempted_at=to_float(meta.get('mops_attempted_at')) or 0
     cooldown_ok=(time.time()-attempted_at) >= EPS_HISTORY_RETRY_DAYS*86400
@@ -4051,24 +4019,24 @@ def _eps_history_engine(code, market=None, ts=None, max_years=EPS_MODEL_MAX_YEAR
     try:
         old=load_json(EPS_ANNUAL_HISTORY_CACHE_FILE)
         if not isinstance(old,dict): old={}
-        old[code]={'data':data,'_cached_at':time.time(),'source':meta.get('source','V2.10.84 EPS history engine')}
+        old[code]={'data':data,'_cached_at':time.time(),'source':meta.get('source','V2.10.85 EPS history engine')}
         save_json(EPS_ANNUAL_HISTORY_CACHE_FILE,old)
     except Exception: pass
 
     result={int(y):float(v) for y,v in data.items()}
     if result:
         print(
-            f'V2.10.84 EPS歷史引擎：{code} {min(result)}～{max(result)} 共{len(result)}年 '
+            f'V2.10.85 EPS歷史引擎：{code} {min(result)}～{max(result)} 共{len(result)}年 '
             f'（目標{first_year}～{last_year}、本次新增{len(set(result)-before)}年、來源={meta.get("source","cache")}）',
             flush=True)
     else:
         print(
-            f'V2.10.84 EPS歷史引擎：{code} 無可用年度資料（目標{first_year}～{last_year}）；'
+            f'V2.10.85 EPS歷史引擎：{code} 無可用年度資料（目標{first_year}～{last_year}）；'
             f'已記錄來源失敗並進入{EPS_HISTORY_RETRY_DAYS}天冷卻', flush=True)
     RUN_CACHE[key]=result
     return result
 
-# 舊函式名稱保留，所有既有呼叫自動切換到 V2.10.84 引擎。
+# 舊函式名稱保留，所有既有呼叫自動切換到 V2.10.85 引擎。
 def _mops_annual_eps_history(code, market=None, max_years=EPS_ANNUAL_FETCH_MAX_YEARS_PER_STOCK, ts=None):
     return _eps_history_engine(code, market, ts=ts, max_years=max_years)
 
@@ -5233,7 +5201,7 @@ def _eps_growth_from_quarterly_model(code, ts, now=None, market=None):
             'scenario_pct':float(scenario_pct),
             'conservative_annual':float(conservative_annual),
             'optimistic_annual':float(optimistic_annual),
-            'model_version':'V2.10.84 Goodinfo25年EPS歷史引擎＋近期10年統計時間序列 EPS 模型'
+            'model_version':'V2.10.85 Goodinfo25年EPS歷史引擎＋近期10年統計時間序列 EPS 模型'
         }
         return float(growth),detail
 
@@ -5340,7 +5308,7 @@ def official_fundamental(symbol, official=None, current_price=None, market=None)
             if detail.get('seasonal_quarters'): source_bits.append('季節Q'+','.join(map(str,detail['seasonal_quarters'])))
             if detail.get('event_adjusted_quarters'): source_bits.append('事件調整Q'+','.join(map(str,detail['event_adjusted_quarters'])))
             src='；'.join(source_bits) if source_bits else '無'
-            print(f'V2.10.84 EPS Growth：{code}={model_g:.2f}% [統計驗證EPS模型] {detail["current_year"]}全年={detail["current_annual"]:.4f} | 保守={detail["conservative_annual"]:.4f} 基準={detail["current_annual"]:.4f} 樂觀={detail["optimistic_annual"]:.4f} | {qtext} | 年度趨勢={detail["annual_trend_growth"]:.2f}% {detail["trend_credibility"]}級 p={detail.get("annual_trend_stats",{}).get("p") if detail.get("annual_trend_stats") else "N/A"} R²={detail.get("annual_trend_stats",{}).get("r2") if detail.get("annual_trend_stats") else "N/A"} | 模型融合=回歸{detail.get('model_weight_regression',0):.0%}/時間序列{detail.get('model_weight_time_series',0):.0%} | 基準全年={detail["base_annual"]:.4f} | 已公布校正={detail["correction_factor"]:.4f}（{detail["correction_status"]}） | 來源：{src}',flush=True)
+            print(f'V2.10.85 EPS Growth：{code}={model_g:.2f}% [統計驗證EPS模型] {detail["current_year"]}全年={detail["current_annual"]:.4f} | 保守={detail["conservative_annual"]:.4f} 基準={detail["current_annual"]:.4f} 樂觀={detail["optimistic_annual"]:.4f} | {qtext} | 年度趨勢={detail["annual_trend_growth"]:.2f}% {detail["trend_credibility"]}級 p={detail.get("annual_trend_stats",{}).get("p") if detail.get("annual_trend_stats") else "N/A"} R²={detail.get("annual_trend_stats",{}).get("r2") if detail.get("annual_trend_stats") else "N/A"} | 模型融合=回歸{detail.get('model_weight_regression',0):.0%}/時間序列{detail.get('model_weight_time_series',0):.0%} | 基準全年={detail["base_annual"]:.4f} | 已公布校正={detail["correction_factor"]:.4f}（{detail["correction_status"]}） | 來源：{src}',flush=True)
     else:
         # V2.10.67：只有完整季度年度模型真的無法建立時，才啟動舊有的
         # EPS fallback。正常由季度模型成功取得的結果完全不覆蓋。
