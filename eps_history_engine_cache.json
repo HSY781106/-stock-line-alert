@@ -1,6 +1,20 @@
 {
   "2330": {
     "data": {
+      "2001": 0.83,
+      "2002": 1.14,
+      "2003": 2.33,
+      "2004": 3.97,
+      "2005": 3.79,
+      "2006": 4.93,
+      "2007": 4.14,
+      "2008": 3.86,
+      "2009": 3.45,
+      "2010": 6.24,
+      "2011": 5.18,
+      "2012": 6.42,
+      "2013": 7.26,
+      "2014": 10.18,
       "2015": 11.83,
       "2016": 12.89,
       "2017": 13.24,
@@ -15,15 +29,15 @@
     },
     "meta": {
       "mops_attempted_at": 1787840323.1526902,
-      "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840323.1622531,
-      "first_year": 2015,
+      "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS + Goodinfo public annual EPS via Jina Reader",
+      "updated_at": 1787841028.0779815,
+      "first_year": 2001,
       "last_year": 2025,
-      "count": 11,
+      "count": 25,
       "target_first_year": 2001,
       "target_last_year": 2025,
       "target_years": 25,
-      "fetched_this_run": 0,
+      "fetched_this_run": 14,
       "goodinfo_fetched_this_run": 0,
       "mops_retry_after": 1788445123.1526902
     }
@@ -41,7 +55,7 @@
     "meta": {
       "mops_attempted_at": 1787840326.5546322,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840326.5666456,
+      "updated_at": 1787841033.9892979,
       "first_year": 2019,
       "last_year": 2025,
       "count": 7,
@@ -64,7 +78,7 @@
     "meta": {
       "mops_attempted_at": 1787840330.862825,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840330.8762207,
+      "updated_at": 1787841040.6727493,
       "first_year": 2014,
       "last_year": 2025,
       "count": 5,
@@ -93,7 +107,7 @@
     "meta": {
       "mops_attempted_at": 1787840331.864622,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840331.8740563,
+      "updated_at": 1787841044.807967,
       "first_year": 2015,
       "last_year": 2025,
       "count": 11,
@@ -118,7 +132,7 @@
     "meta": {
       "mops_attempted_at": 1787840332.3571334,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840332.3691475,
+      "updated_at": 1787841047.8714042,
       "first_year": 2011,
       "last_year": 2025,
       "count": 7,
@@ -139,7 +153,7 @@
     "meta": {
       "mops_attempted_at": 1787840332.758197,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840332.7727504,
+      "updated_at": 1787841051.7809575,
       "first_year": 2011,
       "last_year": 2025,
       "count": 3,
@@ -159,7 +173,7 @@
     "meta": {
       "mops_attempted_at": 1787840333.1449487,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840333.1600785,
+      "updated_at": 1787841054.764009,
       "first_year": 2012,
       "last_year": 2025,
       "count": 2,
@@ -184,7 +198,7 @@
     "meta": {
       "mops_attempted_at": 1787840335.2085602,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840335.2205799,
+      "updated_at": 1787841060.9500127,
       "first_year": 2007,
       "last_year": 2025,
       "count": 7,
@@ -204,7 +218,7 @@
     "meta": {
       "mops_attempted_at": 1787840335.6800752,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840335.6953523,
+      "updated_at": 1787841064.5038228,
       "first_year": 2011,
       "last_year": 2025,
       "count": 2,
@@ -223,7 +237,7 @@
     "meta": {
       "mops_attempted_at": 1787840342.0269785,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840342.042842,
+      "updated_at": 1787841074.4822943,
       "first_year": 2025,
       "last_year": 2025,
       "count": 1,
@@ -249,7 +263,7 @@
     "meta": {
       "mops_attempted_at": 1787840342.6662998,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840342.6779344,
+      "updated_at": 1787841078.1018662,
       "first_year": 2011,
       "last_year": 2025,
       "count": 8,
@@ -271,7 +285,7 @@
     "meta": {
       "mops_attempted_at": 1787840343.1282883,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840343.1423926,
+      "updated_at": 1787841082.0094123,
       "first_year": 2017,
       "last_year": 2025,
       "count": 4,
@@ -290,7 +304,7 @@
     "meta": {
       "mops_attempted_at": 1787840343.6118243,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840343.6281393,
+      "updated_at": 1787841085.6848586,
       "first_year": 2025,
       "last_year": 2025,
       "count": 1,
@@ -313,7 +327,7 @@
     "meta": {
       "mops_attempted_at": 1787840344.1413639,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840344.15494,
+      "updated_at": 1787841090.009115,
       "first_year": 2016,
       "last_year": 2025,
       "count": 5,
@@ -342,7 +356,7 @@
     "meta": {
       "mops_attempted_at": 1787840345.7465882,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840345.7561214,
+      "updated_at": 1787841094.8830013,
       "first_year": 2014,
       "last_year": 2025,
       "count": 11,
@@ -361,7 +375,7 @@
     "meta": {
       "mops_attempted_at": 1787840346.172912,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840346.1890273,
+      "updated_at": 1787841099.7898896,
       "first_year": 2025,
       "last_year": 2025,
       "count": 1,
@@ -381,7 +395,7 @@
     "meta": {
       "mops_attempted_at": 1787840346.7423809,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840346.7578514,
+      "updated_at": 1787841104.1882641,
       "first_year": 2017,
       "last_year": 2025,
       "count": 2,
@@ -403,7 +417,7 @@
     "meta": {
       "mops_attempted_at": 1787840352.0614567,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840352.0756302,
+      "updated_at": 1787841113.54672,
       "first_year": 2009,
       "last_year": 2025,
       "count": 4,
@@ -423,7 +437,7 @@
     "meta": {
       "mops_attempted_at": 1787840352.4552321,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840352.4707274,
+      "updated_at": 1787841117.217017,
       "first_year": 2012,
       "last_year": 2025,
       "count": 2,
@@ -449,7 +463,7 @@
     "meta": {
       "mops_attempted_at": 1787840352.9569435,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840352.9683828,
+      "updated_at": 1787841120.5828989,
       "first_year": 2011,
       "last_year": 2025,
       "count": 8,
@@ -474,7 +488,7 @@
     "meta": {
       "mops_attempted_at": 1787840354.0624845,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840354.0748105,
+      "updated_at": 1787841124.2942603,
       "first_year": 2016,
       "last_year": 2025,
       "count": 7,
@@ -494,7 +508,7 @@
     "meta": {
       "mops_attempted_at": 1787840354.5166957,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840354.532148,
+      "updated_at": 1787841128.136912,
       "first_year": 2014,
       "last_year": 2025,
       "count": 2,
@@ -514,7 +528,7 @@
     "meta": {
       "mops_attempted_at": 1787840355.1172745,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840355.1328151,
+      "updated_at": 1787841131.5831,
       "first_year": 2011,
       "last_year": 2025,
       "count": 2,
@@ -535,7 +549,7 @@
     "meta": {
       "mops_attempted_at": 1787840355.635864,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840355.6507883,
+      "updated_at": 1787841135.804163,
       "first_year": 2011,
       "last_year": 2025,
       "count": 3,
@@ -557,7 +571,7 @@
     "meta": {
       "mops_attempted_at": 1787840358.1107614,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840358.1248908,
+      "updated_at": 1787841141.2389019,
       "first_year": 2012,
       "last_year": 2025,
       "count": 4,
@@ -578,7 +592,7 @@
     "meta": {
       "mops_attempted_at": 1787840358.805169,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840358.8199327,
+      "updated_at": 1787841146.0954812,
       "first_year": 2013,
       "last_year": 2025,
       "count": 3,
@@ -597,7 +611,7 @@
     "meta": {
       "mops_attempted_at": 1787840359.2042365,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840359.2206645,
+      "updated_at": 1787841151.5482383,
       "first_year": 2025,
       "last_year": 2025,
       "count": 1,
@@ -626,7 +640,7 @@
     "meta": {
       "mops_attempted_at": 1787840359.8140585,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840359.823433,
+      "updated_at": 1787841154.6790495,
       "first_year": 2014,
       "last_year": 2025,
       "count": 11,
@@ -647,7 +661,7 @@
     "meta": {
       "mops_attempted_at": 1787840360.297117,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840360.3119278,
+      "updated_at": 1787841158.4518783,
       "first_year": 2011,
       "last_year": 2025,
       "count": 3,
@@ -676,7 +690,7 @@
     "meta": {
       "mops_attempted_at": 1787840360.7691727,
       "source": "Yahoo complete quarterly EPS",
-      "updated_at": 1787840360.7787442,
+      "updated_at": 1787841161.9676628,
       "first_year": 2014,
       "last_year": 2024,
       "count": 11,
@@ -697,7 +711,7 @@
     "meta": {
       "mops_attempted_at": 1787840361.8556244,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840361.870463,
+      "updated_at": 1787841165.942228,
       "first_year": 2013,
       "last_year": 2025,
       "count": 3,
@@ -725,7 +739,7 @@
     "meta": {
       "mops_attempted_at": 1787840367.7530339,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840367.7630196,
+      "updated_at": 1787841178.2843578,
       "first_year": 2015,
       "last_year": 2025,
       "count": 10,
@@ -753,7 +767,7 @@
     "meta": {
       "mops_attempted_at": 1787840373.6972513,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840373.7073221,
+      "updated_at": 1787841188.865294,
       "first_year": 2016,
       "last_year": 2025,
       "count": 10,
@@ -782,7 +796,7 @@
     "meta": {
       "mops_attempted_at": 1787840374.0912526,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840374.1005847,
+      "updated_at": 1787841196.4788492,
       "first_year": 2014,
       "last_year": 2025,
       "count": 11,
@@ -811,7 +825,7 @@
     "meta": {
       "mops_attempted_at": 1787840374.6310058,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840374.6404016,
+      "updated_at": 1787841199.6064794,
       "first_year": 2014,
       "last_year": 2025,
       "count": 11,
@@ -830,7 +844,7 @@
     "meta": {
       "mops_attempted_at": 1787840375.1410208,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840375.1572783,
+      "updated_at": 1787841202.6377661,
       "first_year": 2025,
       "last_year": 2025,
       "count": 1,
@@ -860,7 +874,7 @@
     "meta": {
       "mops_attempted_at": 1787840376.8993797,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840376.908216,
+      "updated_at": 1787841208.4000366,
       "first_year": 2014,
       "last_year": 2025,
       "count": 12,
@@ -883,7 +897,7 @@
     "meta": {
       "mops_attempted_at": 1787840378.533885,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840378.547247,
+      "updated_at": 1787841213.1562204,
       "first_year": 2007,
       "last_year": 2025,
       "count": 5,
@@ -912,7 +926,7 @@
     "meta": {
       "mops_attempted_at": 1787840379.091432,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840379.1008759,
+      "updated_at": 1787841216.1000476,
       "first_year": 2014,
       "last_year": 2025,
       "count": 11,
@@ -932,7 +946,7 @@
     "meta": {
       "mops_attempted_at": 1787840379.4871247,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840379.502519,
+      "updated_at": 1787841219.0862558,
       "first_year": 2012,
       "last_year": 2025,
       "count": 2,
@@ -954,7 +968,7 @@
     "meta": {
       "mops_attempted_at": 1787840381.7070618,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840381.7211356,
+      "updated_at": 1787841226.049689,
       "first_year": 2007,
       "last_year": 2025,
       "count": 4,
@@ -977,7 +991,7 @@
     "meta": {
       "mops_attempted_at": 1787840382.0985677,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840382.1120448,
+      "updated_at": 1787841229.3193657,
       "first_year": 2009,
       "last_year": 2025,
       "count": 5,
@@ -1005,7 +1019,7 @@
     "meta": {
       "mops_attempted_at": 1787840383.0028856,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840383.0129983,
+      "updated_at": 1787841235.550138,
       "first_year": 2015,
       "last_year": 2025,
       "count": 10,
@@ -1025,7 +1039,7 @@
     "meta": {
       "mops_attempted_at": 1787840385.0256608,
       "source": "Yahoo complete quarterly EPS",
-      "updated_at": 1787840385.0412228,
+      "updated_at": 1787841239.1429513,
       "first_year": 2013,
       "last_year": 2014,
       "count": 2,
@@ -1046,7 +1060,7 @@
     "meta": {
       "mops_attempted_at": 1787840385.5327067,
       "source": "Yahoo complete quarterly EPS",
-      "updated_at": 1787840385.5474784,
+      "updated_at": 1787841242.4451656,
       "first_year": 2015,
       "last_year": 2025,
       "count": 3,
@@ -1075,7 +1089,7 @@
     "meta": {
       "mops_attempted_at": 1787840386.08517,
       "source": "Yahoo complete quarterly EPS",
-      "updated_at": 1787840386.0946243,
+      "updated_at": 1787841247.1323872,
       "first_year": 2015,
       "last_year": 2025,
       "count": 11,
@@ -1104,7 +1118,7 @@
     "meta": {
       "mops_attempted_at": 1787840386.6053076,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840386.6148283,
+      "updated_at": 1787841249.3705823,
       "first_year": 2015,
       "last_year": 2025,
       "count": 11,
@@ -1124,7 +1138,7 @@
     "meta": {
       "mops_attempted_at": 1787840387.0825481,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840387.0980487,
+      "updated_at": 1787841252.2603438,
       "first_year": 2013,
       "last_year": 2025,
       "count": 2,
@@ -1145,7 +1159,7 @@
     "meta": {
       "mops_attempted_at": 1787840389.0198128,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840389.034503,
+      "updated_at": 1787841262.8372314,
       "first_year": 2020,
       "last_year": 2025,
       "count": 3,
@@ -1172,7 +1186,7 @@
     "meta": {
       "mops_attempted_at": 1787840390.5990689,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840390.6098936,
+      "updated_at": 1787841266.1140406,
       "first_year": 2017,
       "last_year": 2025,
       "count": 9,
@@ -1194,7 +1208,7 @@
     "meta": {
       "mops_attempted_at": 1787840391.00694,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840391.0211303,
+      "updated_at": 1787841270.509962,
       "first_year": 2011,
       "last_year": 2025,
       "count": 4,
@@ -1223,7 +1237,7 @@
     "meta": {
       "mops_attempted_at": 1787840391.5853484,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840391.594822,
+      "updated_at": 1787841274.2159066,
       "first_year": 2015,
       "last_year": 2025,
       "count": 11,
@@ -1242,7 +1256,7 @@
     "meta": {
       "mops_attempted_at": 1787840392.507007,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840392.5230293,
+      "updated_at": 1787841277.5143113,
       "first_year": 2025,
       "last_year": 2025,
       "count": 1,
@@ -1271,7 +1285,7 @@
     "meta": {
       "mops_attempted_at": 1787840393.096493,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840393.1060796,
+      "updated_at": 1787841280.5222628,
       "first_year": 2014,
       "last_year": 2025,
       "count": 11,
@@ -1294,7 +1308,7 @@
     "meta": {
       "mops_attempted_at": 1787840393.7293978,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840393.742745,
+      "updated_at": 1787841284.0090098,
       "first_year": 2014,
       "last_year": 2025,
       "count": 5,
@@ -1322,7 +1336,7 @@
     "meta": {
       "mops_attempted_at": 1787840394.5081716,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840394.5181317,
+      "updated_at": 1787841289.0723267,
       "first_year": 2016,
       "last_year": 2025,
       "count": 10,
@@ -1346,7 +1360,7 @@
     "meta": {
       "mops_attempted_at": 1787840394.916433,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840394.9292214,
+      "updated_at": 1787841292.2048984,
       "first_year": 2017,
       "last_year": 2025,
       "count": 6,
@@ -1368,7 +1382,7 @@
     "meta": {
       "mops_attempted_at": 1787840395.5111675,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840395.5253813,
+      "updated_at": 1787841295.7739468,
       "first_year": 2016,
       "last_year": 2025,
       "count": 4,
@@ -1394,7 +1408,7 @@
     "meta": {
       "mops_attempted_at": 1787840395.9227886,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840395.9343455,
+      "updated_at": 1787841298.967202,
       "first_year": 2015,
       "last_year": 2025,
       "count": 8,
@@ -1417,7 +1431,7 @@
     "meta": {
       "mops_attempted_at": 1787840405.4507542,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840405.464169,
+      "updated_at": 1787841310.012395,
       "first_year": 2021,
       "last_year": 2025,
       "count": 5,
@@ -1445,7 +1459,7 @@
     "meta": {
       "mops_attempted_at": 1787840405.8611443,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840405.8713694,
+      "updated_at": 1787841315.4461918,
       "first_year": 2009,
       "last_year": 2025,
       "count": 10,
@@ -1467,7 +1481,7 @@
     "meta": {
       "mops_attempted_at": 1787840406.3026037,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840406.3165636,
+      "updated_at": 1787841318.8169005,
       "first_year": 2014,
       "last_year": 2025,
       "count": 4,
@@ -1487,7 +1501,7 @@
     "meta": {
       "mops_attempted_at": 1787840408.0789387,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840408.094245,
+      "updated_at": 1787841324.322492,
       "first_year": 2019,
       "last_year": 2025,
       "count": 2,
@@ -1510,7 +1524,7 @@
     "meta": {
       "mops_attempted_at": 1787840409.342383,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840409.355884,
+      "updated_at": 1787841327.3438327,
       "first_year": 2016,
       "last_year": 2025,
       "count": 5,
@@ -1529,7 +1543,7 @@
     "meta": {
       "mops_attempted_at": 1787840409.947038,
       "source": "Yahoo complete quarterly EPS",
-      "updated_at": 1787840409.9631932,
+      "updated_at": 1787841331.0480924,
       "first_year": 2018,
       "last_year": 2018,
       "count": 1,
@@ -1548,7 +1562,7 @@
     "meta": {
       "mops_attempted_at": 1787840411.53828,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840411.5544696,
+      "updated_at": 1787841340.5911474,
       "first_year": 2025,
       "last_year": 2025,
       "count": 1,
@@ -1569,7 +1583,7 @@
     "meta": {
       "mops_attempted_at": 1787840412.1472893,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840412.1621616,
+      "updated_at": 1787841344.253293,
       "first_year": 2018,
       "last_year": 2025,
       "count": 3,
@@ -1590,7 +1604,7 @@
     "meta": {
       "mops_attempted_at": 1787840412.6918316,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840412.7064586,
+      "updated_at": 1787841348.3296356,
       "first_year": 2014,
       "last_year": 2025,
       "count": 3,
@@ -1616,7 +1630,7 @@
     "meta": {
       "mops_attempted_at": 1787840413.6154728,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840413.6267912,
+      "updated_at": 1787841352.7553053,
       "first_year": 2018,
       "last_year": 2025,
       "count": 8,
@@ -1644,7 +1658,7 @@
     "meta": {
       "mops_attempted_at": 1787840414.0073652,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840414.017417,
+      "updated_at": 1787841356.8290448,
       "first_year": 2015,
       "last_year": 2025,
       "count": 10,
@@ -1663,7 +1677,7 @@
     "meta": {
       "mops_attempted_at": 1787840414.4069135,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840414.422694,
+      "updated_at": 1787841363.128195,
       "first_year": 2025,
       "last_year": 2025,
       "count": 1,
@@ -1683,7 +1697,7 @@
     "meta": {
       "mops_attempted_at": 1787840415.4956903,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840415.5109463,
+      "updated_at": 1787841368.320956,
       "first_year": 2020,
       "last_year": 2025,
       "count": 2,
@@ -1708,7 +1722,7 @@
     "meta": {
       "mops_attempted_at": 1787840415.993313,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840416.0053055,
+      "updated_at": 1787841371.385345,
       "first_year": 2007,
       "last_year": 2025,
       "count": 7,
@@ -1737,7 +1751,7 @@
     "meta": {
       "mops_attempted_at": 1787840417.2103283,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840417.2196958,
+      "updated_at": 1787841374.9891548,
       "first_year": 2015,
       "last_year": 2025,
       "count": 11,
@@ -1761,7 +1775,7 @@
     "meta": {
       "mops_attempted_at": 1787840417.6935625,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840417.7064302,
+      "updated_at": 1787841379.1173482,
       "first_year": 2020,
       "last_year": 2025,
       "count": 6,
@@ -1780,7 +1794,7 @@
     "meta": {
       "mops_attempted_at": 1787840418.153236,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840418.1691344,
+      "updated_at": 1787841383.6978376,
       "first_year": 2025,
       "last_year": 2025,
       "count": 1,
@@ -1800,7 +1814,7 @@
     "meta": {
       "mops_attempted_at": 1787840418.7465756,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840418.7620718,
+      "updated_at": 1787841387.5891469,
       "first_year": 2024,
       "last_year": 2025,
       "count": 2,
@@ -1819,7 +1833,7 @@
     "meta": {
       "mops_attempted_at": 1787840419.3443294,
       "source": "Yahoo complete quarterly EPS",
-      "updated_at": 1787840419.3605473,
+      "updated_at": 1787841391.3495085,
       "first_year": 2021,
       "last_year": 2021,
       "count": 1,
@@ -1839,7 +1853,7 @@
     "meta": {
       "mops_attempted_at": 1787840420.5192533,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840420.5346677,
+      "updated_at": 1787841395.095314,
       "first_year": 2007,
       "last_year": 2025,
       "count": 2,
@@ -1858,7 +1872,7 @@
     "meta": {
       "mops_attempted_at": 1787840427.1033819,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840427.1194556,
+      "updated_at": 1787841405.6263037,
       "first_year": 2025,
       "last_year": 2025,
       "count": 1,
@@ -1882,7 +1896,7 @@
     "meta": {
       "mops_attempted_at": 1787840427.6551445,
       "source": "Yahoo complete quarterly EPS",
-      "updated_at": 1787840427.667941,
+      "updated_at": 1787841409.3885217,
       "first_year": 2018,
       "last_year": 2024,
       "count": 6,
@@ -1902,7 +1916,7 @@
     "meta": {
       "mops_attempted_at": 1787840428.561281,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840428.5767272,
+      "updated_at": 1787841413.7930217,
       "first_year": 2011,
       "last_year": 2025,
       "count": 2,
@@ -1922,7 +1936,7 @@
     "meta": {
       "mops_attempted_at": 1787840429.0976727,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840429.11318,
+      "updated_at": 1787841417.6647272,
       "first_year": 2011,
       "last_year": 2025,
       "count": 2,
@@ -1941,7 +1955,7 @@
     "meta": {
       "mops_attempted_at": 1787840429.7969637,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840429.8130467,
+      "updated_at": 1787841423.4445186,
       "first_year": 2025,
       "last_year": 2025,
       "count": 1,
@@ -1967,7 +1981,7 @@
     "meta": {
       "mops_attempted_at": 1787840430.3281648,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840430.3396482,
+      "updated_at": 1787841427.4501877,
       "first_year": 2012,
       "last_year": 2025,
       "count": 8,
@@ -1995,7 +2009,7 @@
     "meta": {
       "mops_attempted_at": 1787840437.5123618,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840437.5223513,
+      "updated_at": 1787841433.6909077,
       "first_year": 2012,
       "last_year": 2025,
       "count": 10,
@@ -2016,7 +2030,7 @@
     "meta": {
       "mops_attempted_at": 1787840439.1456056,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840439.1602886,
+      "updated_at": 1787841438.7651181,
       "first_year": 2010,
       "last_year": 2025,
       "count": 3,
@@ -2037,7 +2051,7 @@
     "meta": {
       "mops_attempted_at": 1787840439.8829322,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840439.8977828,
+      "updated_at": 1787841442.7133064,
       "first_year": 2014,
       "last_year": 2025,
       "count": 3,
@@ -2056,7 +2070,7 @@
     "meta": {
       "mops_attempted_at": 1787840441.4607635,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840441.4769728,
+      "updated_at": 1787841447.8200657,
       "first_year": 2025,
       "last_year": 2025,
       "count": 1,
@@ -2077,7 +2091,7 @@
     "meta": {
       "mops_attempted_at": 1787840443.2182922,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840443.2330358,
+      "updated_at": 1787841453.4886866,
       "first_year": 2012,
       "last_year": 2025,
       "count": 3,
@@ -2101,7 +2115,7 @@
     "meta": {
       "mops_attempted_at": 1787840444.0021882,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840444.014877,
+      "updated_at": 1787841457.3118012,
       "first_year": 2015,
       "last_year": 2025,
       "count": 6,
@@ -2123,7 +2137,7 @@
     "meta": {
       "mops_attempted_at": 1787840445.5110927,
       "source": "Yahoo complete quarterly EPS",
-      "updated_at": 1787840445.5249908,
+      "updated_at": 1787841462.0652192,
       "first_year": 2010,
       "last_year": 2013,
       "count": 4,
@@ -2143,7 +2157,7 @@
     "meta": {
       "mops_attempted_at": 1787840449.7959692,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840449.8113163,
+      "updated_at": 1787841469.6501694,
       "first_year": 2011,
       "last_year": 2025,
       "count": 2,
@@ -2168,7 +2182,7 @@
     "meta": {
       "mops_attempted_at": 1787840450.6016502,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840450.6136682,
+      "updated_at": 1787841479.2388136,
       "first_year": 2019,
       "last_year": 2025,
       "count": 7,
@@ -2189,7 +2203,7 @@
     "meta": {
       "mops_attempted_at": 1787840452.5982118,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840452.6130347,
+      "updated_at": 1787841484.6370323,
       "first_year": 2021,
       "last_year": 2025,
       "count": 3,
@@ -2208,7 +2222,7 @@
     "meta": {
       "mops_attempted_at": 1787840453.5095162,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840453.5255322,
+      "updated_at": 1787841488.6607814,
       "first_year": 2025,
       "last_year": 2025,
       "count": 1,
@@ -2229,7 +2243,7 @@
     "meta": {
       "mops_attempted_at": 1787840456.3582137,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840456.3728733,
+      "updated_at": 1787841496.6599948,
       "first_year": 2011,
       "last_year": 2025,
       "count": 3,
@@ -2251,7 +2265,7 @@
     "meta": {
       "mops_attempted_at": 1787840456.9975407,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787840457.0115292,
+      "updated_at": 1787841501.0329947,
       "first_year": 2017,
       "last_year": 2025,
       "count": 4,
