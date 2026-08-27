@@ -1,7 +1,11 @@
-# stock_alert.py V2.10.68
-# V2.10.68：修正技術面趨勢/風險使用舊日線快取價格的問題；
-#             MA20/MA60、RSI、KD仍沿用既有技術快取，僅以本次股票池最新價
-#             更新 price、趨勢、距20日低點，確保與當次分析/15分鐘區間的最新股價一致。
+# stock_alert.py V2.10.70
+# V2.10.70：即時資料 / 歷史資料快取分離版。
+#             背景網頁分析（非 LINE 輕量模式）一律優先抓取最新可用 Yahoo 1d 日線，
+#             不再被 LINE_MODE_ACTIVE 或 36/72 小時技術快取攔截；成功後立即寫回
+#             line_technical_cache.json，確保快取也同步到最新交易日。
+#             即時刷新失敗時才安全退回既有快取。LINE 輕量查詢仍維持快取優先，
+#             避免 callback / Render Free 因即時 API 請求而延遲。
+#             歷史資料與次產業等不變資料繼續使用快取，避免不必要 API 流量。
 # V2.10.56：修正 V2.10.53 舊 PE 快取 migration；加入 PE 每次執行請求/時間上限、即時進度與安全降級；LINE 不再使用舊版 yahoo_light_fund / MOPS fallback / 舊 cache 推導
 # V2.10.48：加入 MOPS 官方財報 EPS Growth fallback，補強 Yahoo 多層來源仍為 N/A 的股票
 # V2.10.47：統一 EPS Growth 與 PEG 資料口徑；修正 EPS 成長 N/A 但 PEG 有值的矛盾
@@ -160,9 +164,12 @@ EPS_QUARTERLY_TYPES = [
 YF_TIMEOUT = 10
 MAX_HISTORY_DAYS_PER_RUN = 75
 
-# V2.10.23：全市場技術快取設定。
-# Actions 只在快取缺少/過期時更新，避免每天重抓 1985 檔造成不必要的 Yahoo 流量。
+# V2.10.70：即時 / 歷史快取分離。
+# 全市場 Actions 批次仍以 36 小時作為「歷史技術快取」更新門檻；
+# 但背景網頁分析的目標股不使用此門檻，會優先刷新最新可用日線。
 TECH_CACHE_MAX_AGE = 36 * 3600
+# LINE 輕量模式仍允許使用遠端快取，避免 callback / Render Free 延遲。
+TECH_LINE_CACHE_MAX_AGE = 72 * 3600
 TECH_BATCH_CHUNK = 80
 TECH_BATCH_TIMEOUT = 30
 
@@ -4934,6 +4941,9 @@ def _load_technical_cache_entry(cache, key, max_age=72 * 3600):
             out[k] = x.get(k)
         else:
             out[k] = to_float(x.get(k))
+    # V2.10.70：保留快取對應的最新可用交易日，便於辨識資料新鮮度。
+    if x.get('_data_date'):
+        out['_data_date'] = str(x.get('_data_date'))
     return out
 
 
@@ -5053,7 +5063,8 @@ def refresh_all_technical_cache(u, force=False):
     """V2.10.23：GitHub Actions 全市場技術快取建立器。
 
     - 目標：動態市場股票池內全部 TWSE/TPEX 股票，另含 0050、QQQ、^TWII。
-    - 先保留新鮮快取；只更新缺少或超過 36 小時的標的。
+    - 歷史技術快取先保留新鮮資料；只更新缺少或超過 36 小時的標的。
+    - V2.10.70：這個 36 小時門檻只適用全市場批次，不適用背景目標股即時分析。
     - Yahoo 以 80 檔/批次下載 6 個月日線，避免 1985 次單檔 API 呼叫。
     - 每批成功後統一寫回一次 JSON，最後由既有 Actions git add -A 提交。
     - 批次失敗不清空舊快取；因此不會因單次 Yahoo 限流把 Render 可用資料變成 N/A。
@@ -5114,7 +5125,7 @@ def refresh_all_technical_cache(u, force=False):
     )
 
     if not targets:
-        print('技術快取：全部在 36 小時有效期內，無需更新', flush=True)
+        print('技術快取：全市場歷史快取全部在 36 小時有效期內，無需批次更新；目標股背景分析仍可即時刷新', flush=True)
         return sum(1 for k in cache if isinstance(cache.get(k), dict))
 
     success = 0
@@ -5131,6 +5142,17 @@ def refresh_all_technical_cache(u, force=False):
                 frame = _technical_from_yahoo_batch_frame(frame)
                 result = _technical_from_df(frame)
                 if result.get('price') is not None:
+                    # V2.10.70：全市場歷史技術快取也記錄其最新交易日。
+                    try:
+                        if frame is not None and not frame.empty:
+                            latest_dt = pd.to_datetime(frame.index[-1])
+                            if getattr(latest_dt, 'tzinfo', None) is not None:
+                                latest_dt = latest_dt.tz_convert(TW_TZ)
+                            else:
+                                latest_dt = latest_dt.tz_localize(TW_TZ)
+                            result['_data_date'] = latest_dt.strftime('%Y-%m-%d')
+                    except Exception:
+                        pass
                     if _save_technical_cache_entry(cache, code, result, save=False):
                         chunk_success += 1
                 else:
@@ -5159,27 +5181,52 @@ def refresh_all_technical_cache(u, force=False):
     return sum(1 for k in cache if isinstance(cache.get(k), dict))
 
 
-def technical(symbol):
-    """V2.10.23 技術面。
+def technical(symbol, force_refresh=False):
+    """V2.10.70：即時資料 / 歷史資料快取分離。
 
-    LINE 路徑：本機快取 -> GitHub 全市場快取 -> 不再主動打 Yahoo/TWSE。
-    Actions 批次：若快取缺少/過期，先由 refresh_all_technical_cache() 建立；
-    單檔 fallback 僅保留給非 LINE 的特殊情況。
+    規則：
+    1. LINE 輕量模式（force_refresh=False）：
+       本機技術快取 -> GitHub 遠端技術快取 -> N/A。
+       這條路徑刻意不主動打 Yahoo/TWSE，以維持 callback / Render Free 的速度。
+    2. 背景網頁分析 / Actions 目標股（force_refresh=True）：
+       一律先抓最新可用 Yahoo 1d 日線，不受 36/72 小時快取限制。
+       成功後重新計算 MA20/MA60、RSI、KD、趨勢、距20日低點，
+       並立即寫回 line_technical_cache.json。
+    3. 即時刷新失敗：
+       才退回本機快取；若本機沒有，再嘗試 GitHub 遠端快取。
+    4. 全市場 Actions 批次仍由 refresh_all_technical_cache() 使用 36 小時
+       更新門檻，避免 1985 檔全部重抓；但目標股背景分析永遠優先最新資料。
     """
     cache_key = clean_code(str(symbol).split('.')[0]) or str(symbol)
     cache = load_json(LINE_TECH_CACHE_FILE)
     if not isinstance(cache, dict):
         cache = {}
 
-    if LINE_MODE_ACTIVE:
-        z = _load_technical_cache_entry(cache, cache_key, max_age=72 * 3600)
+    # --------------------------------------------------------
+    # V2.10.70：LINE 輕量模式
+    # 只有「非強制刷新」才走快取優先。
+    # 背景網頁分析會以 force_refresh=True 直接跳過這裡，
+    # 即使 LINE_MODE_ACTIVE=True 也不會被舊快取攔截。
+    # --------------------------------------------------------
+    if LINE_MODE_ACTIVE and not force_refresh:
+        z = _load_technical_cache_entry(
+            cache,
+            cache_key,
+            max_age=TECH_LINE_CACHE_MAX_AGE
+        )
         if z:
             print(f'LINE技術面：使用本機全市場快取 {cache_key}', flush=True)
             return z
 
-        # Render Free 只下載一次整份 GitHub JSON；若有目標股就直接取。
-        remote = load_remote_json_cache(LINE_TECH_CACHE_FILE, timeout=4)
-        z = _load_technical_cache_entry(remote, cache_key, max_age=72 * 3600)
+        remote = load_remote_json_cache(
+            LINE_TECH_CACHE_FILE,
+            timeout=4
+        )
+        z = _load_technical_cache_entry(
+            remote,
+            cache_key,
+            max_age=TECH_LINE_CACHE_MAX_AGE
+        )
         if z:
             try:
                 cache[cache_key] = remote[cache_key]
@@ -5189,44 +5236,149 @@ def technical(symbol):
             print(f'LINE技術面：使用 GitHub 全市場快取 {cache_key}', flush=True)
             return z
 
-        # 重要：Render Free 不再因為快取缺一檔就連續打 Yahoo + 3 個 TWSE 月份。
         print(
-            f'LINE技術面：全市場快取沒有 {cache_key}，避免 Render Free 即時抓取，使用 N/A',
+            f'LINE技術面：全市場快取沒有 {cache_key}，'
+            f'避免 Render Free 即時抓取，使用 N/A',
             flush=True
         )
         return _technical_from_df(None)
 
-    # 非 LINE（Actions / analyze）單檔路徑：先使用快取，沒有才使用既有 Yahoo/TWSE 備援。
-    z = _load_technical_cache_entry(cache, cache_key, max_age=TECH_CACHE_MAX_AGE)
-    if z:
-        return z
+    # --------------------------------------------------------
+    # V2.10.70：背景網頁分析 / Actions
+    # force_refresh=True 時「即時資料優先」，
+    # 不讀舊技術快取作為正常路徑。
+    # --------------------------------------------------------
+    if not force_refresh:
+        z = _load_technical_cache_entry(
+            cache,
+            cache_key,
+            max_age=TECH_CACHE_MAX_AGE
+        )
+        if z:
+            return z
 
     d = None
     try:
-        d = yf_download(symbol, '6mo', '1d')
+        print(
+            f'V2.10.70 技術面即時刷新：{cache_key} '
+            f'Yahoo 1d/6mo',
+            flush=True
+        )
+        d = yf_download(
+            symbol,
+            '6mo',
+            '1d'
+        )
     except Exception as e:
-        print(f'技術面 Yahoo 失敗 {cache_key}：{type(e).__name__}', flush=True)
+        print(
+            f'V2.10.70 技術面 Yahoo 失敗 {cache_key}：'
+            f'{type(e).__name__}',
+            flush=True
+        )
 
     if d is not None and not d.empty:
         try:
-            c = pd.to_numeric(d['Close'], errors='coerce').dropna()
+            c = pd.to_numeric(
+                d['Close'],
+                errors='coerce'
+            ).dropna()
         except Exception:
             c = None
     else:
         c = None
 
+    # Yahoo 沒有至少 60 根日線才使用 TWSE 官方日線備援。
     if c is None or len(c) < 60:
         try:
-            tw = _twse_history_fallback(cache_key, 3)
+            tw = _twse_history_fallback(
+                cache_key,
+                3
+            )
             if tw is not None and not tw.empty:
                 d = tw
         except Exception as e:
-            print(f'技術面 TWSE 備援失敗 {cache_key}：{type(e).__name__}', flush=True)
+            print(
+                f'V2.10.70 技術面 TWSE 備援失敗 {cache_key}：'
+                f'{type(e).__name__}',
+                flush=True
+            )
 
     o = _technical_from_df(d)
+
+    # --------------------------------------------------------
+    # V2.10.70：成功取得即時日線後，立即更新技術快取。
+    # 這裡保存的是「由最新日線重新計算後的結果」，
+    # 因此快取本身也會同步到最新可用交易日。
+    # --------------------------------------------------------
     if o.get('price') is not None:
-        _save_technical_cache_entry(cache, cache_key, o, save=True)
-    return o
+        try:
+            if d is not None and not d.empty:
+                idx = d.index[-1]
+                try:
+                    latest_dt = pd.to_datetime(idx)
+                    if getattr(latest_dt, 'tzinfo', None) is not None:
+                        latest_dt = latest_dt.tz_convert(TW_TZ)
+                    else:
+                        latest_dt = latest_dt.tz_localize(TW_TZ)
+                    o['_data_date'] = latest_dt.strftime('%Y-%m-%d')
+                except Exception:
+                    pass
+        except Exception:
+            pass
+
+        _save_technical_cache_entry(
+            cache,
+            cache_key,
+            o,
+            save=True
+        )
+        print(
+            f'V2.10.70 技術快取已更新：{cache_key} '
+            f'price={o.get("price"):.2f}'
+            + (
+                f' data_date={o.get("_data_date")}'
+                if o.get('_data_date')
+                else ''
+            ),
+            flush=True
+        )
+        return o
+
+    # --------------------------------------------------------
+    # 即時資料失敗才 fallback。
+    # 注意：這是「故障保護」，不是正常分析路徑。
+    # --------------------------------------------------------
+    z = _load_technical_cache_entry(
+        cache,
+        cache_key,
+        max_age=TECH_CACHE_MAX_AGE
+    )
+    if z:
+        print(
+            f'V2.10.70 技術面即時刷新失敗，退回本機技術快取：'
+            f'{cache_key}',
+            flush=True
+        )
+        return z
+
+    remote = load_remote_json_cache(
+        LINE_TECH_CACHE_FILE,
+        timeout=4
+    )
+    z = _load_technical_cache_entry(
+        remote,
+        cache_key,
+        max_age=TECH_LINE_CACHE_MAX_AGE
+    )
+    if z:
+        print(
+            f'V2.10.70 技術面即時刷新失敗，退回 GitHub 技術快取：'
+            f'{cache_key}',
+            flush=True
+        )
+        return z
+
+    return _technical_from_df(None)
 
 
 # ============================================================
@@ -7368,10 +7520,14 @@ def analysis(
 
     print(f'LINE輕量分析：技術面 {code}', flush=True) if line_light else None
     tech = technical(
-        symbol
+        symbol,
+        force_refresh=(not line_light)
     )
 
-    # V2.10.68：技術指標的 MA20/MA60、RSI、KD 仍使用既有日線快取，
+    # V2.10.70：一般股票背景分析強制刷新目標股日線。
+    # 即使 Render / LINE_MODE_ACTIVE=True，也會跳過舊技術快取直接抓最新資料；
+    # 刷新失敗才退回快取。
+    # V2.10.68：若本次股票池仍有更新價格，再以該價格覆蓋 price，
     # 但趨勢與風險判斷的 price 必須使用本次股票池的最新價。
     # 舊版 technical() 的 price 是快取最後一根日線 Close，可能是前一交易日，
     # 因此會出現「最新價已站回 MA20，但趨勢仍顯示空頭」的錯誤。
@@ -7608,7 +7764,7 @@ def analysis(
     # --------------------------------------------------------
 
     return (
-        f'📊 股票加碼分析 V2.10.68\n\n'
+        f'📊 股票加碼分析 V2.10.69\n\n'
         f'標的：{name}（{code}）\n'
         f'市場：{market}\n'
         f'產業：{industry}\n'
