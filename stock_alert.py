@@ -1,4 +1,4 @@
-# stock_alert.py V2.10.75
+# stock_alert.py V2.10.80
 # V2.10.75：統計驗證 EPS 模型。
 #             年度 EPS 趨勢加入 β/SE/t/p/95% CI/R²/n 與 A/B/C 可信度；
 #             季節係數加入 n/平均/中位數/SD/95% CI/異常值檢查；
@@ -103,8 +103,9 @@ LINE_FUND_CACHE_FILE = 'line_fund_cache.json'
 LINE_TECH_CACHE_FILE = 'line_technical_cache.json'
 # V2.10.62：季度 EPS 持久快取；用於補強 Yahoo fundamentals-timeseries 偶發缺少季度 EPS。
 EPS_QUARTERLY_CACHE_FILE = 'eps_quarterly_cache.json'
-# V2.10.79：長期年度 EPS 持久快取；25 年上限、增量補抓。
+# V2.10.80：25 年 EPS 歷史資料引擎持久快取。
 EPS_ANNUAL_HISTORY_CACHE_FILE = 'eps_annual_history_cache.json'
+EPS_HISTORY_ENGINE_CACHE_FILE = 'eps_history_engine_cache.json'
 
 UNIVERSE_CACHE_FILE = 'market_universe_cache.json'
 TWSE_PROFILE_CACHE_FILE = 'twse_profile_cache.json'
@@ -172,6 +173,11 @@ EPS_MODEL_BLEND_MEDIAN = 0.30
 # V2.10.79：歷史年度資料補抓預算；只在真正進入 EPS 基本面分析的股票使用。
 EPS_ANNUAL_FETCH_MAX_YEARS_PER_STOCK = 25
 EPS_ANNUAL_FETCH_TIMEOUT = 8
+# V2.10.80：歷史 EPS 引擎一次向 Yahoo fundamentals-timeseries 要求 30 年，
+# 再由季度完整年度與 MOPS 歷史介面補洞；已嘗試但不可得的年份 7 天內不重打。
+EPS_HISTORY_SOURCE_YEARS = 30
+EPS_HISTORY_RETRY_DAYS = 7
+EPS_HISTORY_MOPS_MAX_WORKERS = 4
 # V2.10.75：EPS 統計驗證與情境預測參數。
 EPS_MODEL_TREND_P_SIGNIFICANT = 0.05
 EPS_MODEL_TREND_P_WEAK = 0.20
@@ -3589,7 +3595,7 @@ def _official_eps_snapshot(market):
     cache[mk]=item
     try: save_json(cache_file,cache)
     except Exception: pass
-    print(f'V2.10.79 官方EPS批次快照：{mk} {len(out)}檔，成功endpoint={ok}',flush=True)
+    print(f'V2.10.80 官方EPS批次快照：{mk} {len(out)}檔，成功endpoint={ok}',flush=True)
     return out
 
 
@@ -3657,66 +3663,154 @@ def _mops_historical_annual_eps_one(code, market, year):
     return None
 
 
-def _mops_annual_eps_history(code, market=None, max_years=EPS_ANNUAL_FETCH_MAX_YEARS_PER_STOCK):
-    """V2.10.79：官方批次優先＋MOPS歷史補抓＋Yahoo既有歷史快取。
+def _eps_history_engine(code, market=None, ts=None, max_years=EPS_MODEL_MAX_YEARS):
+    """V2.10.80：真正的 25 年 EPS 歷史資料引擎。
 
-    重要：官方批次 OpenAPI 主要提供最新財報快照，不把它錯誤宣稱為25年歷史。
-    真正的25年缺口只對「缺少年份」呼叫 MOPS 歷史查詢；成功後永久寫入
-    eps_annual_history_cache.json。若 MOPS 歷史介面不可用，保留 Yahoo 已取得的
-    歷史資料，不會印成虛假的25年。
+    資料優先順序：
+      1) 持久快取 eps_annual_history_cache.json
+      2) Yahoo fundamentals-timeseries 的 annualBasicEPS / annualDilutedEPS（一次要求30年）
+      3) Yahoo 已取得的季度 EPS：只有完整 Q1~Q4 才合計成年度 EPS
+      4) MOPS 歷史財報：只補缺少年份，成功即寫入快取
+
+    重要：不把「最新官方批次快照」誤當成25年歷史，也不會把不足25年的資料印成25年。
+    若資料源實際只能取得11年，模型就明確標示11年；下一次執行在 retry cooldown 到期後再補。
     """
     code=clean_code(code)
-    if not code or not code.isdigit(): return {}
-    key=('official_annual_eps_v21079',code,str(market or ''))
-    if key in RUN_CACHE: return RUN_CACHE[key]
-    cache=load_json(EPS_ANNUAL_HISTORY_CACHE_FILE)
+    if not code or not code.isdigit():
+        return {}
+    key=('eps_history_engine_v21080',code,str(market or ''),int(max_years))
+    if key in RUN_CACHE:
+        return RUN_CACHE[key]
+
+    cache=load_json(EPS_HISTORY_ENGINE_CACHE_FILE)
     if not isinstance(cache,dict): cache={}
     item=cache.get(code,{}) if isinstance(cache.get(code,{}),dict) else {}
-    data=item.get('data',{}) if isinstance(item,dict) else {}
-    if not isinstance(data,dict): data={}
-
-    # 先同步官方最新快照；這一步是批次的，不是逐股票逐年抓。
-    try:
-        snap=_official_eps_snapshot(market)
-        # 最新快照只有在年度資料已可辨識時才寫入；不能把「最新季度」誤當全年 EPS。
-        # 因此這裡僅保留 metadata，不直接覆蓋年度 data。
-    except Exception: pass
-
+    data=item.get('data',{}) if isinstance(item.get('data',{}),dict) else {}
+    meta=item.get('meta',{}) if isinstance(item.get('meta',{}),dict) else {}
     now=datetime.now(TW_TZ)
     last_year=now.year-1
-    start=max(1990,last_year-int(max_years)+1)
-    missing=[y for y in range(start,last_year+1) if to_float(data.get(str(y))) is None]
+    first_year=max(1990,last_year-int(max_years)+1)
 
-    # 歷史補抓採小型並發，避免25年×單股串行拖太久；成功一筆即寫入快取。
+    def valid_years(d):
+        out={}
+        for y,v in (d or {}).items():
+            try:
+                yi=int(str(y)); fv=float(v)
+                if first_year<=yi<=last_year and math.isfinite(fv) and abs(fv)<=1000:
+                    out[yi]=fv
+            except Exception:
+                continue
+        return out
+
+    data=valid_years(data)
+    before=set(data)
+    sources=[]
+
+    # 1) 優先使用本次已完成的 Yahoo fundamentals-timeseries。
+    annual_rows=[]
+    quarterly_rows=[]
+    if isinstance(ts,dict):
+        for x in ts.get('eps_annual_history') or []:
+            if isinstance(x,dict):
+                dt=str(x.get('date') or '')
+                v=to_float(x.get('eps'))
+                if len(dt)>=4 and v is not None and math.isfinite(v):
+                    try: annual_rows.append((int(dt[:4]),float(v)))
+                    except Exception: pass
+        for x in ts.get('eps_quarterly_history') or []:
+            if isinstance(x,dict):
+                dt=str(x.get('date') or '')
+                v=to_float(x.get('eps'))
+                if len(dt)>=7 and v is not None and math.isfinite(v):
+                    try:
+                        y=int(dt[:4]); m=int(dt[5:7]); q=(m-1)//3+1
+                        if 1<=q<=4: quarterly_rows.append((y,q,float(v)))
+                    except Exception: pass
+
+    if annual_rows:
+        for y,v in annual_rows:
+            if first_year<=y<=last_year and y not in data:
+                data[y]=v
+        sources.append('Yahoo annualBasic/annualDilutedEPS')
+
+    # 2) 季度資料補成完整年度；不猜缺少季度。
+    qmap={}
+    for y,q,v in quarterly_rows:
+        qmap[(y,q)]=v
+    for y in range(first_year,last_year+1):
+        if y in data: continue
+        vals=[qmap.get((y,q)) for q in range(1,5)]
+        if all(v is not None and math.isfinite(float(v)) for v in vals):
+            total=float(sum(vals))
+            if math.isfinite(total): data[y]=total
+    if quarterly_rows:
+        sources.append('Yahoo complete quarterly EPS')
+
+    # 3) 如果 Yahoo 來源仍不足，再嘗試 MOPS；但有 7 天冷卻，避免 Action 每次重打25年。
+    missing=[y for y in range(first_year,last_year+1) if y not in data]
+    attempted_at=to_float(meta.get('mops_attempted_at')) or 0
+    cooldown_ok=(time.time()-attempted_at) >= EPS_HISTORY_RETRY_DAYS*86400
     fetched=0
-    if missing:
+    if missing and cooldown_ok:
         try:
             from concurrent.futures import ThreadPoolExecutor, as_completed
-            workers=min(4,len(missing))
-            with ThreadPoolExecutor(max_workers=workers) as ex:
-                futs={ex.submit(_mops_historical_annual_eps_one,code,market,y):y for y in missing}
-                for fut in as_completed(futs):
-                    y=futs[fut]
-                    try: v=fut.result()
-                    except Exception: v=None
-                    if v is not None and math.isfinite(v):
-                        data[str(y)]=float(v); fetched+=1
-                        cache[code]={'data':data,'_cached_at':time.time(),'source':'MOPS official historical EPS + official batch snapshot'}
-                        try: save_json(EPS_ANNUAL_HISTORY_CACHE_FILE,cache)
-                        except Exception: pass
+            workers=min(EPS_HISTORY_MOPS_MAX_WORKERS,len(missing))
+            if workers>0:
+                with ThreadPoolExecutor(max_workers=workers) as ex:
+                    futs={ex.submit(_mops_historical_annual_eps_one,code,market,y):y for y in missing}
+                    for fut in as_completed(futs):
+                        y=futs[fut]
+                        try: v=fut.result()
+                        except Exception: v=None
+                        if v is not None and math.isfinite(v):
+                            data[y]=float(v); fetched+=1
         except Exception as e:
-            print(f'V2.10.79 MOPS歷史EPS並發補抓失敗 {code}: {type(e).__name__}: {e}',flush=True)
+            meta['mops_error']=f'{type(e).__name__}: {e}'
+        meta['mops_attempted_at']=time.time()
+        if fetched: sources.append('MOPS historical EPS')
 
-    cache[code]={'data':data,'_cached_at':time.time(),'source':'MOPS official historical EPS + official batch snapshot'}
-    try: save_json(EPS_ANNUAL_HISTORY_CACHE_FILE,cache)
+    # 4) 持久化：key 統一使用字串，另外記錄來源/涵蓋範圍/補抓狀態。
+    data={str(y):float(v) for y,v in sorted(data.items())}
+    years=sorted(int(y) for y in data)
+    meta.update({
+        'source': ' + '.join(dict.fromkeys(sources)) if sources else (meta.get('source') or 'cache'),
+        'updated_at': time.time(),
+        'first_year': years[0] if years else None,
+        'last_year': years[-1] if years else None,
+        'count': len(years),
+        'target_first_year': first_year,
+        'target_last_year': last_year,
+        'target_years': int(max_years),
+        'fetched_this_run': int(fetched),
+        'mops_retry_after': (meta.get('mops_attempted_at',0)+EPS_HISTORY_RETRY_DAYS*86400) if meta.get('mops_attempted_at') else None,
+    })
+    cache[code]={'data':data,'meta':meta}
+    try: save_json(EPS_HISTORY_ENGINE_CACHE_FILE,cache)
     except Exception: pass
-    years=sorted((int(y),float(v)) for y,v in data.items() if str(y).isdigit() and to_float(v) is not None)
-    if years:
-        print(f'V2.10.79 EPS官方歷史：{code} {years[0][0]}～{years[-1][0]} 共{len(years)}年，本次補抓{fetched}年，來源=MOPS官方歷史/快取',flush=True)
+    # 同步舊快取檔，避免其他既有流程讀不到。
+    try:
+        old=load_json(EPS_ANNUAL_HISTORY_CACHE_FILE)
+        if not isinstance(old,dict): old={}
+        old[code]={'data':data,'_cached_at':time.time(),'source':meta.get('source','V2.10.80 EPS history engine')}
+        save_json(EPS_ANNUAL_HISTORY_CACHE_FILE,old)
+    except Exception: pass
+
+    result={int(y):float(v) for y,v in data.items()}
+    if result:
+        print(
+            f'V2.10.80 EPS歷史引擎：{code} {min(result)}～{max(result)} 共{len(result)}年 '
+            f'（目標{first_year}～{last_year}、本次新增{len(set(result)-before)}年、來源={meta.get("source","cache")}）',
+            flush=True)
     else:
-        print(f'V2.10.79 EPS官方歷史：{code} N/A～N/A 共0年，本次補抓0年；保留Yahoo季度歷史作模型來源',flush=True)
-    RUN_CACHE[key]=dict(years)
-    return dict(years)
+        print(
+            f'V2.10.80 EPS歷史引擎：{code} 無可用年度資料（目標{first_year}～{last_year}）；'
+            f'已記錄來源失敗並進入{EPS_HISTORY_RETRY_DAYS}天冷卻', flush=True)
+    RUN_CACHE[key]=result
+    return result
+
+# 舊函式名稱保留，所有既有呼叫自動切換到 V2.10.80 引擎。
+def _mops_annual_eps_history(code, market=None, max_years=EPS_ANNUAL_FETCH_MAX_YEARS_PER_STOCK, ts=None):
+    return _eps_history_engine(code, market, ts=ts, max_years=max_years)
 
 def yahoo_timeseries_fund(symbol):
     """V2.10.67：免費基本面多源資料層。
@@ -3733,7 +3827,7 @@ def yahoo_timeseries_fund(symbol):
          'eps_history':[],'eps_quarterly_history':[],'eps_annual_history':[],
          'net_income_history':[],'equity_history':[]}
     now=datetime.now(TW_TZ)
-    period1=int((now-timedelta(days=365*12)).timestamp())
+    period1=int((now-timedelta(days=365*EPS_HISTORY_SOURCE_YEARS)).timestamp())
     period2=int((now+timedelta(days=2)).timestamp())
     types=','.join(
         EPS_QUARTERLY_TYPES + [
@@ -4345,7 +4439,7 @@ def _eps_growth_from_quarterly_model(code, ts, now=None, market=None):
 
         # V2.10.79：長期年度 EPS 改由 MOPS Q4 官方財報快取補強。
         # 季度資料主要用於季節性/近期時間序列；年度趨勢可使用最多25年。
-        annual_official=_mops_annual_eps_history(code, market, EPS_MODEL_MAX_YEARS)
+        annual_official=_eps_history_engine(code, market, ts=ts, max_years=EPS_MODEL_MAX_YEARS)
 
         # 找出歷史完整年度；這些年度才能建立季節係數與年度成長趨勢。
         complete_years=[]
@@ -4851,6 +4945,7 @@ def _eps_growth_from_quarterly_model(code, ts, now=None, market=None):
             'annual_trend_growth':float(trend_growth),
             'annual_trend_method':trend_method,
             'long_history_years':len(annual_totals),
+            'history_source': (load_json(EPS_HISTORY_ENGINE_CACHE_FILE).get(code,{}).get('meta',{}).get('source','cache') if isinstance(load_json(EPS_HISTORY_ENGINE_CACHE_FILE),dict) else 'cache'),
             'history_start_year':annual_totals[0][0] if annual_totals else None,
             'history_end_year':annual_totals[-1][0] if annual_totals else None,
             'recent_history_years':min(EPS_MODEL_RECENT_YEARS,len(annual_totals)),
@@ -4878,12 +4973,12 @@ def _eps_growth_from_quarterly_model(code, ts, now=None, market=None):
             'scenario_pct':float(scenario_pct),
             'conservative_annual':float(conservative_annual),
             'optimistic_annual':float(optimistic_annual),
-            'model_version':'V2.10.79 25年歷史＋近期10年統計時間序列 EPS 模型'
+            'model_version':'V2.10.80 25年EPS歷史資料引擎＋近期10年統計時間序列 EPS 模型'
         }
         return float(growth),detail
 
     except Exception as e:
-        print(f'V2.10.79 多模型EPS年度模型失敗 {code}: {type(e).__name__}: {e}',flush=True)
+        print(f'V2.10.80 多模型EPS年度模型失敗 {code}: {type(e).__name__}: {e}',flush=True)
         return None,None
 
 def _format_eps_model_summary(detail):
@@ -4897,7 +4992,7 @@ def _format_eps_model_summary(detail):
     rtxt=f'{float(r2):.2f}' if r2 is not None and math.isfinite(float(r2)) else 'N/A'
     lines=[]
     lines.append('【EPS統計驗證】')
-    lines.append(f'歷史資料：{detail.get("history_start_year","N/A")}～{detail.get("history_end_year","N/A")}｜完整年度 {detail.get("long_history_years","N/A")} 年｜近期模型 {detail.get("recent_history_years","N/A")} 年')
+    lines.append(f'歷史資料：{detail.get("history_start_year","N/A")}～{detail.get("history_end_year","N/A")}｜完整年度 {detail.get("long_history_years","N/A")} 年｜近期模型 {detail.get("recent_history_years","N/A")} 年｜來源={detail.get("history_source","N/A")}')
     lines.append(f'年度趨勢：{float(detail.get("annual_trend_growth",0)):.2f}%｜近期10年趨勢={float(detail.get("recent_trend_growth",detail.get("annual_trend_growth",0))):.2f}%｜{detail.get("trend_credibility","C")}級｜p={ptxt}｜R²={rtxt}｜n={n or "N/A"}')
     if st.get('se') is not None:
         lines.append(f'β={float(st.get("beta",0)):.6f}｜SE={float(st.get("se",0)):.6f}｜t={float(st.get("t",0)):.2f}｜95% CI={float(st.get("ci_low",0)):.6f}～{float(st.get("ci_high",0)):.6f}')
@@ -8426,7 +8521,7 @@ def analysis(
     # --------------------------------------------------------
 
     return (
-        f'📊 股票加碼分析 V2.10.74\n\n'
+        f'📊 股票加碼分析 V2.10.80\n\n'
         f'標的：{name}（{code}）\n'
         f'市場：{market}\n'
         f'產業：{industry}\n'
