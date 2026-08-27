@@ -1,4 +1,4 @@
-# stock_alert.py V2.10.88
+# stock_alert.py V2.10.89
 # V2.10.75：統計驗證 EPS 模型。
 #             年度 EPS 趨勢加入 β/SE/t/p/95% CI/R²/n 與 A/B/C 可信度；
 #             季節係數加入 n/平均/中位數/SD/95% CI/異常值檢查；
@@ -187,8 +187,8 @@ EPS_HISTORY_GOODINFO_TIMEOUT = 10
 EPS_HISTORY_GOODINFO_DISABLED = True
 EPS_HISTORY_MOPS_DISABLED = False
 EPS_HISTORY_GOODINFO_RETRY_DAYS = 7
-EPS_HISTORY_MOPS_CACHE_VERSION = 'v21088'
-EPS_HISTORY_MOPS_FAILED_RETRY_HOURS = 24
+EPS_HISTORY_MOPS_CACHE_VERSION = 'v21089'
+EPS_HISTORY_MOPS_FAILED_RETRY_HOURS = 6
 EPS_HISTORY_MOPS_MAX_YEARS_PER_RUN = 25
 # V2.10.75：EPS 統計驗證與情境預測參數。
 EPS_MODEL_TREND_P_SIGNIFICANT = 0.05
@@ -3687,7 +3687,7 @@ def _mops_historical_annual_eps_one(code, market, year):
 
 
 def _mops_market_year_eps_batch(market, year, timeout=8):
-    """V2.10.88：MOPS 市場/年度 EPS 批次補洞。
+    """V2.10.89：MOPS 市場/年度 EPS 批次補洞。
 
     V2.10.87 的致命問題：
     - failed/empty cache 沒有有效 retry 機制；
@@ -3876,13 +3876,121 @@ def _mops_market_year_eps_batch(market, year, timeout=8):
     return {}
 
 
+def _mops_direct_annual_eps_one(code, market, year, timeout=10):
+    """V2.10.89：MOPS 年度財務分析直接補洞。
+
+    針對 2001～2025 缺口，不再只依賴市場批次 endpoint 的表格欄位解析。
+    t51sb02 是 MOPS 年度財務分析彙總表；加入 run=Y、GET/POST 雙路徑，
+    並直接尋找指定公司代號 + 「每股盈餘」欄位。
+    """
+    code=clean_code(code)
+    if not code or not code.isdigit():
+        return None
+    try:
+        year=int(year)
+    except Exception:
+        return None
+    if year < 2001 or year > datetime.now(TW_TZ).year-1:
+        return None
+    typek='sii' if str(market).lower() in ('twse','sii','上市') else 'otc'
+    roc=year-1911
+    url='https://mops.twse.com.tw/mops/web/ajax_t51sb02'
+    headers={
+        'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/124.0 Safari/537.36',
+        'Referer':'https://mops.twse.com.tw/mops/web/t51sb02',
+        'Accept-Language':'zh-TW,zh;q=0.9,en;q=0.8',
+        'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
+    }
+    if year <= 2012:
+        ifrs='N'
+    else:
+        ifrs='Y'
+    payload={
+        'encodeURIComponent':'1','run':'Y','step':'1','firstin':'1','off':'1',
+        'TYPEK':typek,'year':str(roc),'isnew':'Y','ifrs':ifrs,
+        'isQuery':'Y','queryName':'co_id','co_id':code
+    }
+    responses=[]
+    try:
+        responses.append(requests.post(url,data=payload,headers=headers,timeout=timeout))
+    except Exception:
+        pass
+    # MOPS 某些年份/環境 POST 會回空頁；GET 作為第二通道。
+    try:
+        responses.append(requests.get(url,params=payload,headers=headers,timeout=timeout))
+    except Exception:
+        pass
+    for r in responses:
+        try:
+            if r.status_code!=200 or len(r.content)<500:
+                continue
+            text=r.content.decode('utf-8-sig',errors='replace')
+            tables=pd.read_html(io.StringIO(text))
+            for df in tables:
+                if not isinstance(df,pd.DataFrame) or df.empty:
+                    continue
+                # flatten columns
+                if isinstance(df.columns,pd.MultiIndex):
+                    cols=[]
+                    for c in df.columns:
+                        cols.append(' '.join(str(x).strip() for x in c if str(x).strip() not in ('nan','None')))
+                    df=df.copy(); df.columns=cols
+                else:
+                    df=df.copy(); df.columns=[str(c).strip() for c in df.columns]
+                code_col=next((c for c in df.columns if '公司代號' in str(c) or '證券代號' in str(c) or str(c) in ('代號','公司代碼')),None)
+                eps_cols=[c for c in df.columns if any(k in str(c) for k in ('基本每股盈餘','每股盈餘','基本EPS','EPS'))]
+                if code_col is None or not eps_cols:
+                    continue
+                # 優先「合計/全年/本期」欄位；年度財務分析通常第一個 EPS 就是年度 EPS。
+                eps_col=next((c for c in eps_cols if any(k in str(c) for k in ('合計','全年','本期'))),eps_cols[0])
+                for _,row in df.iterrows():
+                    rc=clean_code(row.get(code_col))
+                    if rc!=code:
+                        continue
+                    v=to_float(row.get(eps_col))
+                    if v is not None and math.isfinite(v) and abs(v)<=1000:
+                        return float(v)
+                # 某些舊版表格代號欄被拆成純數值，改掃 row。
+                for _,row in df.iterrows():
+                    vals=[str(x).strip() for x in row.tolist()]
+                    if not any(re.sub(r'\D','',v)==code for v in vals[:8]):
+                        continue
+                    for j,v in enumerate(vals):
+                        if any(k in str(df.columns[j]) for k in ('每股盈餘','EPS')):
+                            x=to_float(v)
+                            if x is not None and math.isfinite(x) and abs(x)<=1000:
+                                return float(x)
+        except Exception:
+            continue
+    return None
+
 def _mops_batch_fill_eps(code, market, years):
     out={}; code=clean_code(code)
     for y in sorted(set(years)):
         d=_mops_market_year_eps_batch(market,y,timeout=EPS_ANNUAL_FETCH_TIMEOUT)
         if code in d:
-            try: out[int(y)]=float(d[code])
-            except Exception: pass
+            try:
+                out[int(y)]=float(d[code])
+                continue
+            except Exception:
+                pass
+        # V2.10.89：市場批次解析失敗時，直接以指定公司補洞。
+        v=_mops_direct_annual_eps_one(code,market,y,timeout=EPS_HISTORY_GOODINFO_TIMEOUT)
+        if v is not None:
+            out[int(y)]=float(v)
+            # 寫回市場/年度 cache，避免下一次再打同一年度。
+            try:
+                c=load_json(EPS_HISTORY_MOPS_BATCH_CACHE_FILE)
+                if not isinstance(c,dict): c={}
+                k=f"{'sii' if str(market).lower() in ('twse','sii','上市') else 'otc'}_{int(y)}"
+                c[k]={
+                    'version':EPS_HISTORY_MOPS_CACHE_VERSION,'status':'ok','cached_at':time.time(),
+                    'data':{code:float(v)},'source':'MOPS t51sb02 direct company fallback',
+                    'year':int(y),'market':('sii' if str(market).lower() in ('twse','sii','上市') else 'otc')
+                }
+                save_json(EPS_HISTORY_MOPS_BATCH_CACHE_FILE,c)
+            except Exception:
+                pass
     return out
 def _eps_history_engine(code, market=None, ts=None, max_years=EPS_MODEL_MAX_YEARS):
     """V2.10.88：真正的 25 年 EPS 歷史資料引擎。
@@ -3899,7 +4007,7 @@ def _eps_history_engine(code, market=None, ts=None, max_years=EPS_MODEL_MAX_YEAR
     code=clean_code(code)
     if not code or not code.isdigit():
         return {}
-    key=('eps_history_engine_v21088',code,str(market or ''),int(max_years))
+    key=('eps_history_engine_v21089',code,str(market or ''),int(max_years))
     if key in RUN_CACHE:
         return RUN_CACHE[key]
 
@@ -3974,7 +4082,7 @@ def _eps_history_engine(code, market=None, ts=None, max_years=EPS_MODEL_MAX_YEAR
     # 一個年度只請求一次整個市場；所有股票共享同一份 cache。
     fetched=0
     missing_years=[y for y in range(first_year,last_year+1) if y not in data]
-    print(f'V2.10.88 EPS歷史缺口：{code} 尚缺{len(missing_years)}年 → MOPS逐年度批次補洞',flush=True) if missing_years else None
+    print(f'V2.10.89 EPS歷史缺口：{code} 尚缺{len(missing_years)}年 → MOPS逐年度批次補洞',flush=True) if missing_years else None
     if missing_years and market and not EPS_HISTORY_MOPS_DISABLED:
         meta['mops_attempted_at']=time.time()
         added=_mops_batch_fill_eps(code,market,missing_years)
@@ -4005,19 +4113,19 @@ def _eps_history_engine(code, market=None, ts=None, max_years=EPS_MODEL_MAX_YEAR
     try:
         old=load_json(EPS_ANNUAL_HISTORY_CACHE_FILE)
         if not isinstance(old,dict): old={}
-        old[code]={'data':data,'_cached_at':time.time(),'source':meta.get('source','V2.10.88 EPS history engine')}
+        old[code]={'data':data,'_cached_at':time.time(),'source':meta.get('source','V2.10.89 EPS history engine')}
         save_json(EPS_ANNUAL_HISTORY_CACHE_FILE,old)
     except Exception: pass
 
     result={int(y):float(v) for y,v in data.items()}
     if result:
         print(
-            f'V2.10.88 EPS歷史引擎：{code} {min(result)}～{max(result)} 共{len(result)}年 '
+            f'V2.10.89 EPS歷史引擎：{code} {min(result)}～{max(result)} 共{len(result)}年 '
             f'（目標{first_year}～{last_year}、本次新增{len(set(result)-before)}年、來源={meta.get("source","cache")}）',
             flush=True)
     else:
         print(
-            f'V2.10.88 EPS歷史引擎：{code} 無可用年度資料（目標{first_year}～{last_year}）；'
+            f'V2.10.89 EPS歷史引擎：{code} 無可用年度資料（目標{first_year}～{last_year}）；'
             f'已記錄來源失敗並進入{EPS_HISTORY_RETRY_DAYS}天冷卻', flush=True)
     RUN_CACHE[key]=result
     return result
@@ -5187,7 +5295,7 @@ def _eps_growth_from_quarterly_model(code, ts, now=None, market=None):
             'scenario_pct':float(scenario_pct),
             'conservative_annual':float(conservative_annual),
             'optimistic_annual':float(optimistic_annual),
-            'model_version':'V2.10.87 Goodinfo25年EPS歷史引擎＋近期10年統計時間序列 EPS 模型'
+            'model_version':'V2.10.89 MOPS/Yahoo 25年EPS歷史引擎＋近期10年統計時間序列 EPS 模型'
         }
         return float(growth),detail
 
