@@ -1,5 +1,5 @@
-# stock_alert.py V2.10.99
-# V2.10.99：重構 PEG 估值正規化成長率。V2.10.97 以25年/10年 CAGR 直接做估值成長率，
+# stock_alert.py V2.11.00
+# V2.11.00：PEG/技術趨勢/Actions 穩定版。V2.10.97 以25年/10年 CAGR 直接做估值成長率，
 #             對不同景氣階段的股票失真，造成 2303/3711/2330 PEG 全部偏高。
 #             本版改為「次產業分層 + 歷史穩健YoY中位數 + 5/10年CAGR + 統計可信度收縮」；
 #             EPS預測Growth與估值Growth完全分離。估值Growth不再直接採單一年份預測，也不以固定CAGR硬套所有次產業。
@@ -5530,15 +5530,27 @@ def _eps_growth_from_quarterly_model(code, ts, now=None, market=None, industry=N
                     vg=sum(v*w for v,w in zip(comps,weights))/tw
                     # PEG 的 growth 必須是「可持續正成長」；負值或過低
                     # 的結果不假裝成便宜。上限 25% 只作異常保護，不是目標。
-                    if math.isfinite(vg) and 0.0<vg<=25.0:
+                    # V2.11.00：PEG 適用性門檻。
+                    # 循環型公司若正規化成長 <5%，PEG 對小幅成長的除數極度敏感，
+                    # 會產生 10～30 以上的假精確數字；此時寧可標示 N/A，
+                    # 改由 PE / PB / ROE 與循環位置評估，不強行計 PEG。
+                    min_meaningful_growth = 5.0 if model.get('name','').find('循環') >= 0 else 3.0
+                    if (math.isfinite(vg) and min_meaningful_growth <= vg <= 25.0
+                            and (robust_yoy is not None) and len(recent_yoy) >= 4):
                         valuation_growth=float(vg)
                         valuation_method=(
                             f"{model.get('name','一般型')}｜近期7年穩健YoY中位數60%"
                             f"＋3年平均EPS常態25%＋5年CAGR15%"
                             f"｜可信度收縮{credibility:.0%}"
                         )
+                    else:
+                        valuation_growth=None
+                        valuation_method=(
+                            f"{model.get('name','一般型')}｜近期常態成長不足以支撐PEG"
+                            f"（門檻{min_meaningful_growth:.0f}%）"
+                        )
         except Exception as e:
-            print(f'V2.10.99 估值正規化成長率計算失敗 {code}: {type(e).__name__}: {e}',flush=True)
+            print(f'V2.11.00 估值正規化成長率計算失敗 {code}: {type(e).__name__}: {e}',flush=True)
             valuation_growth=None
 
 
@@ -5594,90 +5606,62 @@ def _eps_growth_from_quarterly_model(code, ts, now=None, market=None, industry=N
             'scenario_pct':float(scenario_pct),
             'conservative_annual':float(conservative_annual),
             'optimistic_annual':float(optimistic_annual),
-            'model_version':'V2.10.99 產業分層EPS模型＋Yahoo/Goodinfo多源25年EPS歷史引擎＋近期7年PEG常態成長模型＋3年平均EPS＋5年CAGR＋可信度收縮＋Walk-forward時間序列'
+            'model_version':'V2.11.00 產業分層EPS模型＋多源25年統計驗證＋近期7年PEG常態成長模型＋3年平均EPS＋5年CAGR＋可信度收縮＋PEG適用性門檻＋Walk-forward時間序列'
         }
         return float(growth),detail
 
     except Exception as e:
-        print(f'V2.10.96 產業分層EPS年度模型失敗 {code}: {type(e).__name__}: {e}',flush=True)
+        print(f'V2.11.00 產業分層EPS年度模型失敗 {code}: {type(e).__name__}: {e}',flush=True)
         return None,None
 
 def _format_eps_model_summary(detail):
-    """V2.10.96：精簡 EPS 統計驗證輸出，將統計量、估值成長率與預測分區顯示。"""
+    """V2.11.00：精簡 LINE EPS 統計版面；資料與統計分區顯示。"""
     if not isinstance(detail, dict):
         return ''
-    st = detail.get('annual_trend_stats') or {}
-    if not isinstance(st, dict):
-        st = {}
-
-    def nf(v, digits=2):
-        x = to_float(v)
-        return f'{x:.{digits}f}' if x is not None and math.isfinite(x) else 'N/A'
-
-    p = to_float(st.get('p'))
-    r2 = to_float(st.get('r2'))
-    n = st.get('n') or 'N/A'
-    ptxt = f'{p:.3f}' if p is not None and math.isfinite(p) else 'N/A'
-    rtxt = f'{r2:.2f}' if r2 is not None and math.isfinite(r2) else 'N/A'
-
-    annual_growth = to_float(detail.get('annual_trend_growth'))
-    recent_growth = to_float(detail.get('recent_trend_growth'))
-    if recent_growth is None:
-        recent_growth = annual_growth
-
-    valuation_growth = to_float(detail.get('valuation_growth'))
-    eps_growth = to_float(detail.get('growth'))
-
-    lines = []
-    lines.append('【EPS統計驗證】')
-    lines.append(f'模型：{detail.get("eps_industry_model","一般型")}｜{detail.get("eps_industry_model_method","產業分層") }')
-    lines.append(f'長期趨勢：{nf(annual_growth)}%｜近期10年：{nf(recent_growth)}%｜{detail.get("trend_credibility","C")}級｜p={ptxt}｜R²={rtxt}｜n={n}')
-
-    beta = to_float(st.get('beta')); se = to_float(st.get('se')); t = to_float(st.get('t'))
-    ci_low = to_float(st.get('ci_low')); ci_high = to_float(st.get('ci_high'))
+    st=detail.get('annual_trend_stats') or {}
+    if not isinstance(st,dict): st={}
+    def nf(v,d=2):
+        x=to_float(v)
+        return f'{x:.{d}f}' if x is not None and math.isfinite(x) else 'N/A'
+    p=to_float(st.get('p')); r2=to_float(st.get('r2')); n=st.get('n') or 'N/A'
+    ptxt=f'{p:.3f}' if p is not None and math.isfinite(p) else 'N/A'
+    rtxt=f'{r2:.2f}' if r2 is not None and math.isfinite(r2) else 'N/A'
+    annual_growth=to_float(detail.get('annual_trend_growth'))
+    recent_growth=to_float(detail.get('recent_trend_growth'))
+    valuation_growth=to_float(detail.get('valuation_growth'))
+    eps_growth=to_float(detail.get('growth'))
+    lines=['【EPS統計驗證】',
+           f'模型：{detail.get("eps_industry_model","一般型")}｜{detail.get("eps_industry_model_method","產業分層")}',
+           f'長期趨勢：{nf(annual_growth)}%｜近期10年：{nf(recent_growth if recent_growth is not None else annual_growth)}%｜{detail.get("trend_credibility","C")}級',
+           f'統計可信度：p={ptxt}｜R²={rtxt}｜n={n}']
+    beta=to_float(st.get('beta')); se=to_float(st.get('se')); t=to_float(st.get('t')); lo=to_float(st.get('ci_low')); hi=to_float(st.get('ci_high'))
     if beta is not None or se is not None or t is not None:
-        lines.append(f'β={nf(beta,3)}｜SE={nf(se,3)}｜t={nf(t,2)}｜95% CI={nf(ci_low,3)}～{nf(ci_high,3)}')
-
-    sw = detail.get('seasonal_weights') or {}
-    if isinstance(sw, dict) and sw:
-        qparts = []
-        for q in range(1,5):
-            w = to_float(sw.get(q))
-            if w is not None:
-                qparts.append(f'Q{q} {w*100:.1f}%')
-        if qparts:
-            lines.append('季節分布：' + '｜'.join(qparts))
-
-    correction = to_float(detail.get('correction_factor'))
-    correction_status = detail.get('correction_status','')
-    correction_n = len(detail.get('correction_history') or [])
-    if correction is not None:
-        lines.append(f'已公布校正：{correction:.3f}｜樣本 {correction_n}｜{correction_status}')
-
-    rw = to_float(detail.get('model_weight_regression'))
-    tw = to_float(detail.get('model_weight_time_series'))
-    rb = detail.get('regression_backtest') or {}
-    tb = detail.get('time_series_stats') or {}
+        lines.append(f'回歸：β={nf(beta,3)}｜SE={nf(se,3)}｜t={nf(t,2)}｜95% CI {nf(lo,3)}～{nf(hi,3)}')
+    sw=detail.get('seasonal_weights') or {}
+    q=[]
+    for i in range(1,5):
+        w=to_float(sw.get(i))
+        if w is not None: q.append(f'Q{i} {w*100:.1f}%')
+    if q: lines.append('季節分布：'+'｜'.join(q))
+    rw=to_float(detail.get('model_weight_regression')); tw=to_float(detail.get('model_weight_time_series'))
+    rb=detail.get('regression_backtest') or {}; tb=detail.get('time_series_stats') or {}
     if rw is not None or tw is not None:
-        fusion = f'回歸 {rw:.0%}' if rw is not None else '回歸 N/A'
-        fusion += f'＋時間序列 {tw:.0%}' if tw is not None else '＋時間序列 N/A'
-        rmse_r = to_float(rb.get('backtest_rmse'))
-        rmse_t = to_float(tb.get('rmse'))
-        if rmse_r is not None and rmse_t is not None:
-            fusion += f'｜RMSE {rmse_r:.2f}/{rmse_t:.2f}'
-        lines.append(f'模型融合：{fusion}')
+        text=f'融合：回歸 {rw:.0%}' if rw is not None else '融合：回歸 N/A'
+        text+=f'＋時間序列 {tw:.0%}' if tw is not None else '＋時間序列 N/A'
+        rr=to_float(rb.get('backtest_rmse')); tr=to_float(tb.get('rmse'))
+        if rr is not None and tr is not None: text+=f'｜RMSE {rr:.2f}/{tr:.2f}'
+        lines.append(text)
+    if valuation_growth is not None:
+        lines.append(f'估值：EPS成長 {nf(eps_growth)}%｜PEG正規化成長 {nf(valuation_growth)}%')
+    else:
+        lines.append(f'估值：EPS成長 {nf(eps_growth)}%｜PEG正規化成長 N/A（不適用）')
+    correction=to_float(detail.get('correction_factor'))
+    if correction is not None:
+        lines.append(f'已公布校正：{correction:.3f}｜樣本 {len(detail.get("correction_history") or [])}')
+    base=to_float(detail.get('current_annual')); cons=to_float(detail.get('conservative_annual')); opt=to_float(detail.get('optimistic_annual'))
+    if base is not None: lines.append(f'全年EPS：保守 {nf(cons)}｜基準 {nf(base)}｜樂觀 {nf(opt)}')
+    return '\n'.join(lines)+'\n'
 
-    # V2.10.98：明確區分「觀察到的 EPS 成長」與「估值使用的 EPS 正規化成長率」。
-    if eps_growth is not None or valuation_growth is not None:
-        lines.append(f'EPS成長率：{nf(eps_growth)}%｜估值用EPS正規化成長率：{nf(valuation_growth)}%')
-
-    conservative = to_float(detail.get('conservative_annual'))
-    base = to_float(detail.get('current_annual'))
-    optimistic = to_float(detail.get('optimistic_annual'))
-    if base is not None:
-        lines.append(f'全年EPS：保守 {nf(conservative)}｜基準 {nf(base)}｜樂觀 {nf(optimistic)}')
-
-    return '\n'.join(lines) + '\n'
 
 def official_fundamental(symbol, official=None, current_price=None, market=None, industry=None, subindustry=None):
     """V2.10.67：股票基本面/估值資料層。
@@ -5748,7 +5732,7 @@ def official_fundamental(symbol, official=None, current_price=None, market=None,
             if detail.get('seasonal_quarters'): source_bits.append('季節Q'+','.join(map(str,detail['seasonal_quarters'])))
             if detail.get('event_adjusted_quarters'): source_bits.append('事件調整Q'+','.join(map(str,detail['event_adjusted_quarters'])))
             src='；'.join(source_bits) if source_bits else '無'
-            print(f'V2.10.99 EPS Growth：{code}={model_g:.2f}% [統計驗證EPS模型] {detail["current_year"]}全年={detail["current_annual"]:.4f} | 保守={detail["conservative_annual"]:.4f} 基準={detail["current_annual"]:.4f} 樂觀={detail["optimistic_annual"]:.4f} | {qtext} | 年度趨勢={detail["annual_trend_growth"]:.2f}% {detail["trend_credibility"]}級 p={detail.get("annual_trend_stats",{}).get("p") if detail.get("annual_trend_stats") else "N/A"} R²={detail.get("annual_trend_stats",{}).get("r2") if detail.get("annual_trend_stats") else "N/A"} | 模型融合=回歸{detail.get('model_weight_regression',0):.0%}/時間序列{detail.get('model_weight_time_series',0):.0%} | 基準全年={detail["base_annual"]:.4f} | 已公布校正={detail["correction_factor"]:.4f}（{detail["correction_status"]}） | 來源：{src}',flush=True)
+            print(f'V2.11.00 EPS Growth：{code}={model_g:.2f}% [統計驗證EPS模型] {detail["current_year"]}全年={detail["current_annual"]:.4f} | 保守={detail["conservative_annual"]:.4f} 基準={detail["current_annual"]:.4f} 樂觀={detail["optimistic_annual"]:.4f} | {qtext} | 年度趨勢={detail["annual_trend_growth"]:.2f}% {detail["trend_credibility"]}級 p={detail.get("annual_trend_stats",{}).get("p") if detail.get("annual_trend_stats") else "N/A"} R²={detail.get("annual_trend_stats",{}).get("r2") if detail.get("annual_trend_stats") else "N/A"} | 模型融合=回歸{detail.get('model_weight_regression',0):.0%}/時間序列{detail.get('model_weight_time_series',0):.0%} | 基準全年={detail["base_annual"]:.4f} | 已公布校正={detail["correction_factor"]:.4f}（{detail["correction_status"]}） | 來源：{src}',flush=True)
     else:
         # V2.10.67：只有完整季度年度模型真的無法建立時，才啟動舊有的
         # EPS fallback。正常由季度模型成功取得的結果完全不覆蓋。
@@ -5851,7 +5835,7 @@ def official_fundamental(symbol, official=None, current_price=None, market=None,
     if pe is not None and pe>0 and valuation_growth is not None and 0<valuation_growth<=100:
         peg=pe/valuation_growth
         if math.isfinite(peg) and 0<peg<100: out['peg']=peg
-    print(f'V2.10.99 基本面 {code}: PE={fmt(out["pe"])} PB={fmt(out["pb"])} Yield={fmt(out["yield"])} EPSGrowth={fmt(out["eps_growth"])} ValuationGrowth={fmt(out["valuation_growth"])} ROE={fmt(out["roe"])} PEG={fmt(out["peg"])}',flush=True)
+    print(f'V2.11.00 基本面 {code}: PE={fmt(out["pe"])} PB={fmt(out["pb"])} Yield={fmt(out["yield"])} EPSGrowth={fmt(out["eps_growth"])} ValuationGrowth={fmt(out["valuation_growth"])} ROE={fmt(out["roe"])} PEG={fmt(out["peg"])}',flush=True)
     return out
 
 
@@ -6318,15 +6302,7 @@ def _technical_from_df(d):
         'price': float(c.iloc[-1])
     })
 
-    if o['ma20'] is not None and o['ma60'] is not None:
-        if o['price'] > o['ma20'] > o['ma60']:
-            o['trend'] = '多頭'
-        elif o['price'] < o['ma20'] < o['ma60']:
-            o['trend'] = '空頭'
-        else:
-            o['trend'] = '震盪'
-    else:
-        o['trend'] = '震盪'
+    o['trend'] = classify_trend(o.get('price'), o.get('ma20'), o.get('ma60'))
 
     lo = c.tail(20).min() if len(c) >= 20 else c.min()
     if lo is not None and not pd.isna(lo):
@@ -6731,15 +6707,7 @@ def technical(symbol, force_refresh=False):
         o['price_source'] = 'Yahoo 5分鐘即時' if live_price is not None and live_price > 0 else '日線收盤（即時價格取得失敗）'
         if live_price is not None and live_price > 0:
             o['price'] = live_price
-            if o.get('ma20') is not None and o.get('ma60') is not None:
-                if live_price > o['ma20'] > o['ma60']:
-                    o['trend'] = '多頭'
-                elif live_price < o['ma20'] < o['ma60']:
-                    o['trend'] = '空頭'
-                else:
-                    o['trend'] = '震盪'
-            else:
-                o['trend'] = '震盪'
+            o['trend'] = classify_trend(live_price, o.get('ma20'), o.get('ma60'))
             if o.get('recent_low') is not None and o['recent_low'] > 0:
                 o['distance_low'] = live_price / o['recent_low'] - 1
             print(
@@ -7942,6 +7910,27 @@ def score_fund(pe, one, peer, peg, roe, eps, pb, yld, model, valuation_growth=No
     cap=40 if coverage>=.80 else 36 if coverage>=.60 else 32 if coverage>=.45 else 28 if coverage>=.30 else 24 if coverage>=.20 else 20
     return min(cap,int(round(raw))),why
 
+def classify_trend(price, ma20, ma60):
+    """V2.11.00：以價格相對兩條均線 + 均線排列判斷趨勢。
+
+    不再要求嚴格的「price > MA20 > MA60」才叫多頭。
+    股價高於兩條均線但 MA20 暫時低於 MA60 時，標示為「偏多」，
+    避免像 2330 這種價格明顯站在月線/季線之上卻被判成震盪。
+    """
+    p=to_float(price); m20=to_float(ma20); m60=to_float(ma60)
+    if p is None or m20 is None or m60 is None:
+        return '震盪'
+    if p >= m20 and p >= m60:
+        return '多頭' if m20 >= m60 else '偏多'
+    if p <= m20 and p <= m60:
+        return '空頭' if m20 <= m60 else '偏空'
+    if p >= m20 and m20 < m60:
+        return '偏多'
+    if p <= m20 and m20 > m60:
+        return '偏空'
+    return '震盪'
+
+
 def score_tech(t):
 
     s = 0
@@ -8016,6 +8005,10 @@ def score_tech(t):
             s += 3
 
     if t['trend'] == '多頭':
+
+        s += 3
+
+    elif t['trend'] == '偏多':
 
         s += 3
 
@@ -8282,7 +8275,7 @@ def yahoo_light_fund(symbol, official=None, current_price=None, market=None, ind
                 'eps_growth': None, 'roe': None, 'peg': None
             }
         print(
-            f'V2.10.98 LINE基本面統一資料層 {clean_code(str(symbol).split(".")[0])}: '
+            f'V2.11.00 LINE基本面統一資料層 {clean_code(str(symbol).split(".")[0])}: '
             f'PE={fmt(result.get("pe"))} PB={fmt(result.get("pb"))} '
             f'Yield={fmt(result.get("yield"))} '
             f'EPSGrowth={fmt(result.get("eps_growth"))} '
@@ -8292,7 +8285,7 @@ def yahoo_light_fund(symbol, official=None, current_price=None, market=None, ind
         return result
     except Exception as e:
         print(
-            f'V2.10.98 LINE基本面統一資料層失敗 {symbol}: '
+            f'V2.11.00 LINE基本面統一資料層失敗 {symbol}: '
             f'{type(e).__name__}: {e}',
             flush=True
         )
@@ -9204,7 +9197,7 @@ def analysis(
     # --------------------------------------------------------
 
     return (
-        f'📊 股票加碼分析 V2.10.96\n\n'
+        f'📊 股票加碼分析 V2.11.00\n\n'
         f'標的：{name}（{code}）\n'
         f'市場：{market}\n'
         f'產業：{industry}\n'
@@ -9771,7 +9764,7 @@ def run_webhook_server():
         return (
             '<!doctype html><html><head><meta charset="utf-8">'
             '<meta name="viewport" content="width=device-width,initial-scale=1">'
-            '<title>Stock Alert V2.10.40</title>'
+            '<title>Stock Alert V2.11.00</title>'
             '<style>body{margin:0;padding:20px;background:#f6f7f9;color:#222}'
             '.card{max-width:900px;margin:auto;background:#fff;border-radius:14px;padding:20px;box-shadow:0 2px 12px #0001}'
             'a{word-break:break-all}</style></head><body><div class="card">'
@@ -10902,7 +10895,10 @@ def main():
 
     else:
 
+        print('========== V2.11.00 RUN START ==========', flush=True)
+        print(f'執行時間（台灣）：{datetime.now(TW_TZ).strftime("%Y-%m-%d %H:%M:%S")}', flush=True)
         run_alerts()
+        print('========== V2.11.00 RUN END ==========', flush=True)
 
 
 if __name__ == '__main__':
