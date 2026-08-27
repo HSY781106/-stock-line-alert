@@ -1,5 +1,5 @@
 # stock_alert.py V2.10.99
-# V2.10.99：修正估值 PEG 正規化成長率。V2.10.97 以25年/10年 CAGR 直接做估值成長率，
+# V2.10.99：重構 PEG 估值正規化成長率。V2.10.97 以25年/10年 CAGR 直接做估值成長率，
 #             對不同景氣階段的股票失真，造成 2303/3711/2330 PEG 全部偏高。
 #             本版改為「次產業分層 + 歷史穩健YoY中位數 + 5/10年CAGR + 統計可信度收縮」；
 #             EPS預測Growth與估值Growth完全分離。估值Growth不再直接採單一年份預測，也不以固定CAGR硬套所有次產業。
@@ -427,7 +427,7 @@ DEFAULT_MODEL = {
     'weights': {'pe':8,'peg':4,'pb':6,'yield':6,'roe':8,'growth':8}
 }
 
-# V2.10.99：EPS 預測模型與估值模型分離。
+# V2.10.98：EPS 預測模型與估值模型分離。
 # EPS_INDUSTRY_MODEL 仍負責「下一年度 EPS 預測」，不要把估值正規化 Growth 混進預測。
 EPS_INDUSTRY_MODEL = {
     '半導體業': {'name':'景氣循環型','method':'log回歸＋近期10年＋穩健YoY中位數','regression_weight':0.35,'recent_weight':0.35,'robust_yoy_weight':0.30,'max_normalized_growth':60.0,'valuation_growth_cap':30.0},
@@ -444,7 +444,7 @@ EPS_INDUSTRY_DEFAULT = {'name':'一般型','method':'長期回歸＋近期10年�
 def get_eps_industry_model(industry):
     return EPS_INDUSTRY_MODEL.get(canonical_industry(industry), EPS_INDUSTRY_DEFAULT)
 
-# V2.10.99：估值 PEG 專用的「次產業正規化 EPS Growth」模型。
+# V2.10.98：估值 PEG 專用的「次產業正規化 EPS Growth」模型。
 # 這個模型與上面的 EPS 預測模型完全獨立。
 EPS_VALUATION_SUBINDUSTRY_MODEL = {
     '晶圓製造': {'name':'晶圓製造成長循環型','median_w':0.55,'cagr5_w':0.25,'cagr10_w':0.20,'cap':25.0},
@@ -4846,7 +4846,7 @@ def _eps_ci_mean(vals):
     return mean,sd,(mean-crit*se,mean+crit*se)
 
 
-def _eps_growth_from_quarterly_model(code, ts, now=None, market=None, industry=None, subindustry=None):
+def _eps_growth_from_quarterly_model(code, ts, now=None, market=None, industry=None):
     """V2.10.67：完整年度 EPS 模型。
 
     模型設計：
@@ -5430,84 +5430,117 @@ def _eps_growth_from_quarterly_model(code, ts, now=None, market=None, industry=N
                 or growth > EPS_MODEL_MAX_ABS_GROWTH):
             return None,None
 
-        # V2.10.99：估值用 EPS 正規化成長率。
-        # 不再使用「25年CAGR 40% + 10年CAGR 60%」的固定公式。
-        # 原因：CAGR 對起點/終點高度敏感；景氣循環股可能因低基期或高基期產生
-        # 完全不代表正常獲利能力的 PEG growth。改用：
-        #   1) 穩健 YoY 中位數（winsorize 15/85）
-        #   2) 5 年 CAGR
-        #   3) 10 年 CAGR
-        # 再依「次產業模型」決定權重。
-        # V2.10.99：PEG 正規化成長率採「次產業 + 歷史穩健成長」；
-        # 若正規化模型無法建立，PEG 必須維持 N/A，絕不再用當年度 EPS 反彈或 cap 值冒充。
+        # V2.10.99：估值用 EPS 正規化成長率（PEG）重構。
+        # 25 年歷史仍保留給「統計驗證／趨勢可信度」，但不再直接拿 25 年
+        # CAGR 參與 PEG。原因是公司規模、產品組合、產業結構、資本週期與
+        # 景氣環境都可能在 10～25 年內發生結構性改變。
+        #
+        # PEG 估值只使用「近期獲利常態」：
+        #   1) 最近 5～7 年的穩健 YoY 中位數（去除極端值）
+        #   2) 最近 3 年平均 EPS 對前一段 3 年平均 EPS 的年化成長
+        #   3) 最近 5 年 CAGR（只有在資料品質足夠時才加入）
+        # 並依統計可信度收縮，避免單一低基期年度或景氣高峰主導 PEG。
+        # 不再使用 10 年 CAGR，更不使用 25 年 CAGR。
+        # 若無法建立可靠的近期常態成長率，PEG 必須 N/A，絕不回退使用 raw EPS Growth。
         valuation_growth=None
         valuation_method='N/A'
-        valuation_model_level='N/A'
+        valuation_model_level='大產業'
         try:
             model=get_eps_valuation_model(industry, subindustry)
             valuation_model_level=model.get('source_level','大產業')
-            positive_hist=[(int(y),float(v)) for y,v in annual_totals
-                           if math.isfinite(float(v)) and float(v)>0]
 
-            if len(positive_hist)>=5:
-                # 以完整年度 YoY 的「中位數」作為循環產業的核心錨點；
-                # 先 winsorize，避免低基期反彈/一次性異常把 PEG Growth 拉爆。
-                yoy=[]
-                for i in range(1,len(positive_hist)):
-                    p0=positive_hist[i-1][1]; p1=positive_hist[i][1]
-                    if p0>0 and p1>0:
-                        gg=(p1/p0-1.0)*100.0
-                        if math.isfinite(gg) and -80.0 <= gg <= 150.0:
-                            yoy.append(gg)
-                robust_yoy=None
-                if yoy:
-                    arr=np.asarray(yoy,dtype=float)
-                    if len(arr)>=5:
-                        lo,hi=np.percentile(arr,[15,85])
-                        arr=np.clip(arr,lo,hi)
-                    robust_yoy=float(np.median(arr))
+            # 僅取最近 7 個完整年度；25 年資料仍留給上面的統計驗證。
+            hist=[(int(y),float(v)) for y,v in annual_totals
+                  if math.isfinite(float(v)) and float(v)>0]
+            recent_hist=hist[-7:] if len(hist)>=7 else hist[-6:]
 
-                def cagr(n):
-                    if len(positive_hist)<n+1: return None
-                    a=positive_hist[-(n+1):]
-                    y0,v0=a[0]; y1,v1=a[-1]
-                    yrs=int(y1-y0)
-                    if yrs<=0 or v0<=0 or v1<=0: return None
+            robust_yoy=None
+            recent_yoy=[]
+            for i in range(1,len(recent_hist)):
+                p0=recent_hist[i-1][1]; p1=recent_hist[i][1]
+                if p0>0 and p1>0:
+                    gg=(p1/p0-1.0)*100.0
+                    if math.isfinite(gg) and -80.0<gg<150.0:
+                        recent_yoy.append(gg)
+            if recent_yoy:
+                arr=np.asarray(recent_yoy,dtype=float)
+                # 只有 >=5 個觀察值才做 20/80 winsorize；避免小樣本被過度處理。
+                if len(arr)>=5:
+                    lo,hi=np.percentile(arr,[20,80])
+                    arr=np.clip(arr,lo,hi)
+                robust_yoy=float(np.median(arr))
+
+            # 「3年平均 EPS」比單點 CAGR 更能代表循環股的常態獲利。
+            normalized_cycle_growth=None
+            if len(hist)>=6:
+                prev3=np.asarray([v for _,v in hist[-6:-3]],dtype=float)
+                curr3=np.asarray([v for _,v in hist[-3:]],dtype=float)
+                a=float(np.mean(prev3)); b=float(np.mean(curr3))
+                if a>0 and b>0:
+                    # 兩個三年視窗中心相距約 3 年，因此以 3 年年化。
+                    z=((b/a)**(1.0/3.0)-1.0)*100.0
+                    if math.isfinite(z) and -50.0<z<100.0:
+                        normalized_cycle_growth=z
+
+            # 最近 5 年 CAGR 只當輔助，不再使用 10 年 CAGR。
+            cagr5=None
+            if len(hist)>=6:
+                y0,v0=hist[-6]; y1,v1=hist[-1]
+                yrs=int(y1-y0)
+                if v0>0 and v1>0 and yrs>=4:
                     z=((v1/v0)**(1.0/yrs)-1.0)*100.0
-                    return z if math.isfinite(z) else None
+                    if math.isfinite(z) and -50.0<z<100.0:
+                        cagr5=z
 
-                c5=cagr(5); c10=cagr(10)
-                vals=[]; ws=[]
-                if robust_yoy is not None:
-                    vals.append(robust_yoy); ws.append(float(model.get('median_w',.60)))
-                if c5 is not None:
-                    vals.append(c5); ws.append(float(model.get('cagr5_w',.25)))
-                if c10 is not None:
-                    vals.append(c10); ws.append(float(model.get('cagr10_w',.15)))
+            # 統計可信度：R² 越低、樣本越少，越依賴近期常態中位數，
+            # 並降低 CAGR 權重。25 年的高 R² 不代表近期景氣 regime 不變。
+            stats=trend_stats if isinstance(trend_stats,dict) else {}
+            r2=to_float(stats.get('r2'))
+            n=len(hist)
+            if r2 is None:
+                credibility=0.50
+            elif r2>=0.70:
+                credibility=1.00
+            elif r2>=0.45:
+                credibility=0.80
+            elif r2>=0.25:
+                credibility=0.60
+            else:
+                credibility=0.40
+            if n<7:
+                credibility=min(credibility,0.60)
 
-                # 統計可信度：R²低於0.35時，降低 CAGR 影響，
-                # 讓循環股以穩健歷史 YoY 為主，避免回歸線失真。
-                stats=trend_stats if isinstance(trend_stats,dict) else {}
-                r2=to_float(stats.get('r2'))
-                if vals and sum(ws)>0:
-                    if robust_yoy is not None and r2 is not None and r2 < 0.35:
-                        for i in range(len(ws)):
-                            if abs(vals[i]-robust_yoy)>1e-12:
-                                ws[i]*=0.35
-                    total_w=sum(ws)
-                    valuation_growth=sum(v*w for v,w in zip(vals,ws))/total_w
-                    cap=float(model.get('cap',25.0))
-                    # PEG 的成長率不允許負值，也不允許超過該次產業的合理上限。
-                    if math.isfinite(valuation_growth) and valuation_growth>0:
-                        valuation_growth=float(min(valuation_growth,cap))
+            # 次產業模型只決定「循環/成長」的基礎權重；不再把 10 年 CAGR
+            # 當成固定核心。若近期常態資料不足，直接 N/A。
+            if robust_yoy is not None:
+                comps=[robust_yoy]; weights=[0.60]
+                if normalized_cycle_growth is not None:
+                    comps.append(normalized_cycle_growth); weights.append(0.25)
+                if cagr5 is not None and len(hist)>=7:
+                    comps.append(cagr5); weights.append(0.15)
+
+                # CAGR 對循環股敏感：可信度越低，越把權重拉回近期中位數。
+                if len(comps)>1:
+                    for i in range(1,len(weights)):
+                        weights[i]*=credibility
+                    weights[0]=max(0.0,1.0-sum(weights[1:]))
+
+                tw=sum(weights)
+                if tw>0:
+                    vg=sum(v*w for v,w in zip(comps,weights))/tw
+                    # PEG 的 growth 必須是「可持續正成長」；負值或過低
+                    # 的結果不假裝成便宜。上限 25% 只作異常保護，不是目標。
+                    if math.isfinite(vg) and 0.0<vg<=25.0:
+                        valuation_growth=float(vg)
                         valuation_method=(
-                            f"{model.get('name','一般型')}｜穩健YoY{float(model.get('median_w',.5)):.0%}"
-                            f"＋5年CAGR{float(model.get('cagr5_w',.25)):.0%}"
-                            f"＋10年CAGR{float(model.get('cagr10_w',.25)):.0%}"
+                            f"{model.get('name','一般型')}｜近期7年穩健YoY中位數60%"
+                            f"＋3年平均EPS常態25%＋5年CAGR15%"
+                            f"｜可信度收縮{credibility:.0%}"
                         )
         except Exception as e:
             print(f'V2.10.99 估值正規化成長率計算失敗 {code}: {type(e).__name__}: {e}',flush=True)
             valuation_growth=None
+
 
         detail={
             'current_year':current_year,
@@ -5561,7 +5594,7 @@ def _eps_growth_from_quarterly_model(code, ts, now=None, market=None, industry=N
             'scenario_pct':float(scenario_pct),
             'conservative_annual':float(conservative_annual),
             'optimistic_annual':float(optimistic_annual),
-            'model_version':'V2.10.96 產業分層EPS模型＋Yahoo/Goodinfo多源25年EPS歷史引擎＋法人起始年約束＋長期25年/近期10年統計模型＋Walk-forward時間序列'
+            'model_version':'V2.10.99 產業分層EPS模型＋Yahoo/Goodinfo多源25年EPS歷史引擎＋近期7年PEG常態成長模型＋3年平均EPS＋5年CAGR＋可信度收縮＋Walk-forward時間序列'
         }
         return float(growth),detail
 
@@ -5634,7 +5667,7 @@ def _format_eps_model_summary(detail):
             fusion += f'｜RMSE {rmse_r:.2f}/{rmse_t:.2f}'
         lines.append(f'模型融合：{fusion}')
 
-    # V2.10.99：明確區分「觀察到的 EPS 成長」與「估值使用的 EPS 正規化成長率」。
+    # V2.10.98：明確區分「觀察到的 EPS 成長」與「估值使用的 EPS 正規化成長率」。
     if eps_growth is not None or valuation_growth is not None:
         lines.append(f'EPS成長率：{nf(eps_growth)}%｜估值用EPS正規化成長率：{nf(valuation_growth)}%')
 
@@ -5700,7 +5733,7 @@ def official_fundamental(symbol, official=None, current_price=None, market=None,
         cached_g=to_float(ci0.get('eps_growth')) if isinstance(ci0,dict) else None
     except Exception: pass
 
-    model_g,detail=_eps_growth_from_quarterly_model(code,ts,now=datetime.now(TW_TZ),market=market,industry=industry,subindustry=subindustry)
+    model_g,detail=_eps_growth_from_quarterly_model(code,ts,now=datetime.now(TW_TZ),market=market,industry=industry)
     model_g=_eps_growth_sanity(model_g,'V2.10.96 產業分層25年歷史 EPS',True,cached_g)
     if model_g is not None:
         out['eps_growth']=model_g
@@ -5810,8 +5843,9 @@ def official_fundamental(symbol, official=None, current_price=None, market=None,
     # 估值用途改採 25 年/近期 10 年 EPS CAGR 的產業化正規化成長率；
     # 原始模型 EPS Growth 仍保留給預測與報表，避免 PEG 被景氣循環扭曲。
     pe=to_float(out.get('pe')); g=to_float(out.get('eps_growth'))
-    # V2.10.99：正規化成長率沒有成功建立時，PEG 必須保持 N/A。
-    # 絕不以當年度 EPS Growth、cap 或其他 fallback 冒充估值 Growth。
+    # V2.10.99：PEG 僅接受獨立的「近期常態 EPS Growth」。
+    # 絕不再以預測/觀察到的 raw EPS Growth 作 fallback，避免 2303 低基期
+    # 反彈或 3711 單一景氣階段直接把 PEG 算成失真的數字。
     valuation_growth=to_float((out.get('eps_model_detail') or {}).get('valuation_growth'))
     out['valuation_growth']=valuation_growth
     if pe is not None and pe>0 and valuation_growth is not None and 0<valuation_growth<=100:
@@ -6698,12 +6732,9 @@ def technical(symbol, force_refresh=False):
         if live_price is not None and live_price > 0:
             o['price'] = live_price
             if o.get('ma20') is not None and o.get('ma60') is not None:
-                # V2.10.99：趨勢先判斷「現價相對月線/季線」；
-                # 現價高於兩條均線即視為多頭，低於兩條即空頭。
-                # 不再要求 MA20 > MA60，避免「股價站上月/季線但 MA20 尚未上穿 MA60」被誤判震盪。
-                if live_price > o['ma20'] and live_price > o['ma60']:
+                if live_price > o['ma20'] > o['ma60']:
                     o['trend'] = '多頭'
-                elif live_price < o['ma20'] and live_price < o['ma60']:
+                elif live_price < o['ma20'] < o['ma60']:
                     o['trend'] = '空頭'
                 else:
                     o['trend'] = '震盪'
@@ -7901,15 +7932,8 @@ def score_fund(pe, one, peer, peg, roe, eps, pb, yld, model, valuation_growth=No
     if pb is not None and pb>0: add('pb',1 if pb<1.5 else .75 if pb<2 else .5 if pb<4 else .15 if pb<6 else 0,'PB合理')
     if yld is not None and yld>=0: add('yield',1 if yld>=5 else .75 if yld>=3 else .45 if yld>=2 else .15 if yld>=1 else 0,'殖利率具吸引力')
     if roe is not None: add('roe',1 if roe>=30 else .8 if roe>=20 else .6 if roe>=15 else .4 if roe>=10 else .15 if roe>0 else 0,'ROE良好')
-    # V2.10.99：景氣循環型估值若沒有正規化 Growth，不用當年度反彈 Growth 撐分。
-    # 非循環產業仍可使用 EPS Growth 作為成長配分。
-    profile=str(model.get('profile',''))
-    if valuation_growth is not None:
-        growth_for_score=to_float(valuation_growth)
-    elif profile in {'資本密集型','特殊型'}:
-        growth_for_score=None
-    else:
-        growth_for_score=eps
+    # V2.10.99：成長分數衡量「獲利成長能力」，PEG 只衡量估值；兩者不互相污染。
+    growth_for_score = to_float(eps)
     if growth_for_score is not None: add('growth',1 if growth_for_score>=50 else .85 if growth_for_score>=30 else .7 if growth_for_score>=20 else .5 if growth_for_score>10 else .25 if growth_for_score>0 else 0,'獲利成長')
     if available<=0: return 0,why
     raw=s/available*40.0
@@ -8258,7 +8282,7 @@ def yahoo_light_fund(symbol, official=None, current_price=None, market=None, ind
                 'eps_growth': None, 'roe': None, 'peg': None
             }
         print(
-            f'V2.10.99 LINE基本面統一資料層 {clean_code(str(symbol).split(".")[0])}: '
+            f'V2.10.98 LINE基本面統一資料層 {clean_code(str(symbol).split(".")[0])}: '
             f'PE={fmt(result.get("pe"))} PB={fmt(result.get("pb"))} '
             f'Yield={fmt(result.get("yield"))} '
             f'EPSGrowth={fmt(result.get("eps_growth"))} '
@@ -8268,7 +8292,7 @@ def yahoo_light_fund(symbol, official=None, current_price=None, market=None, ind
         return result
     except Exception as e:
         print(
-            f'V2.10.99 LINE基本面統一資料層失敗 {symbol}: '
+            f'V2.10.98 LINE基本面統一資料層失敗 {symbol}: '
             f'{type(e).__name__}: {e}',
             flush=True
         )
