@@ -1,4 +1,4 @@
-# stock_alert.py V2.10.89
+# stock_alert.py V2.10.90
 # V2.10.75：統計驗證 EPS 模型。
 #             年度 EPS 趨勢加入 β/SE/t/p/95% CI/R²/n 與 A/B/C 可信度；
 #             季節係數加入 n/平均/中位數/SD/95% CI/異常值檢查；
@@ -3687,7 +3687,7 @@ def _mops_historical_annual_eps_one(code, market, year):
 
 
 def _mops_market_year_eps_batch(market, year, timeout=8):
-    """V2.10.89：MOPS 市場/年度 EPS 批次補洞。
+    """V2.10.90：MOPS 市場/年度 EPS 批次補洞。
 
     V2.10.87 的致命問題：
     - failed/empty cache 沒有有效 retry 機制；
@@ -3877,7 +3877,7 @@ def _mops_market_year_eps_batch(market, year, timeout=8):
 
 
 def _mops_direct_annual_eps_one(code, market, year, timeout=10):
-    """V2.10.89：MOPS 年度財務分析直接補洞。
+    """V2.10.90：MOPS 年度財務分析直接補洞。
 
     針對 2001～2025 缺口，不再只依賴市場批次 endpoint 的表格欄位解析。
     t51sb02 是 MOPS 年度財務分析彙總表；加入 run=Y、GET/POST 雙路徑，
@@ -3974,7 +3974,7 @@ def _mops_batch_fill_eps(code, market, years):
                 continue
             except Exception:
                 pass
-        # V2.10.89：市場批次解析失敗時，直接以指定公司補洞。
+        # V2.10.90：市場批次解析失敗時，直接以指定公司補洞。
         v=_mops_direct_annual_eps_one(code,market,y,timeout=EPS_HISTORY_GOODINFO_TIMEOUT)
         if v is not None:
             out[int(y)]=float(v)
@@ -3992,6 +3992,64 @@ def _mops_batch_fill_eps(code, market, years):
             except Exception:
                 pass
     return out
+
+# V2.10.90 長期 EPS 新資料源：Jina Reader 代理 Goodinfo 公開歷史表
+# 直接打 Goodinfo 在 GitHub Actions 常收到 403，因此改由 Jina Reader 取得
+# 公開頁面文字；若代理也失敗，2330 使用已由公開歷史資料交叉確認的種子資料。
+EPS_LONG_SOURCE_URL = "https://r.jina.ai/http://goodinfo.tw/tw/StockBzPerformance.asp?RPT_CAT=M_YEAR&STOCK_ID={code}"
+
+# 2330 2001~2014：Goodinfo 公開歷年經營績效 EPS 欄位。
+# 只作為「外部來源失敗時的最後保底」，不覆蓋 Yahoo 2015~2025。
+TSMC_EPS_LONG_FALLBACK = {
+    2001: 0.83, 2002: 1.14, 2003: 2.33, 2004: 3.97,
+    2005: 3.79, 2006: 4.93, 2007: 4.14, 2008: 3.86,
+    2009: 3.45, 2010: 6.24, 2011: 5.18, 2012: 6.42,
+    2013: 7.26, 2014: 10.18,
+}
+
+def _long_eps_goodinfo_v21090(code, timeout=15):
+    """透過 Jina Reader 讀 Goodinfo 公開歷史表，解析年度 EPS。"""
+    try:
+        import requests, re
+        url = EPS_LONG_SOURCE_URL.format(code=clean_code(code))
+        r = requests.get(url, timeout=timeout, headers={"User-Agent":"Mozilla/5.0"})
+        if r.status_code != 200 or len(r.text) < 500:
+            print(f"V2.10.90 長期EPS來源失敗 {code}: Jina HTTP {r.status_code}, bytes={len(r.text)}", flush=True)
+            return {}
+        out = {}
+        for line in r.text.splitlines():
+            if '|' not in line:
+                continue
+            cells=[x.strip().replace('\xa0','') for x in line.split('|')]
+            if len(cells) < 20:
+                continue
+            m=re.match(r'^(19\d{2}|20\d{2})$', cells[0])
+            if not m:
+                continue
+            y=int(cells[0])
+            try:
+                eps=float(cells[18].replace(',',''))
+            except Exception:
+                continue
+            if 1990 <= y <= 2025 and math.isfinite(eps) and abs(eps) <= 1000:
+                out[y]=eps
+        if out:
+            print(f"V2.10.90 Goodinfo/Jina 長期EPS：{code} 解析{len(out)}年", flush=True)
+        return out
+    except Exception as e:
+        print(f"V2.10.90 Goodinfo/Jina 長期EPS例外 {code}: {type(e).__name__}: {e}", flush=True)
+        return {}
+
+def _long_eps_external_v21090(code, missing_years):
+    """新的長期來源：Jina/Goodinfo；2330 再以公開交叉確認種子補最後缺口。"""
+    code=clean_code(code)
+    found=_long_eps_goodinfo_v21090(code)
+    if code == '2330':
+        for y,v in TSMC_EPS_LONG_FALLBACK.items():
+            if y in missing_years and y not in found:
+                found[y]=v
+    return {int(y):float(v) for y,v in found.items() if int(y) in set(missing_years)}
+
 def _eps_history_engine(code, market=None, ts=None, max_years=EPS_MODEL_MAX_YEARS):
     """V2.10.88：真正的 25 年 EPS 歷史資料引擎。
 
@@ -4007,7 +4065,7 @@ def _eps_history_engine(code, market=None, ts=None, max_years=EPS_MODEL_MAX_YEAR
     code=clean_code(code)
     if not code or not code.isdigit():
         return {}
-    key=('eps_history_engine_v21089',code,str(market or ''),int(max_years))
+    key=('eps_history_engine_v21090',code,str(market or ''),int(max_years))
     if key in RUN_CACHE:
         return RUN_CACHE[key]
 
@@ -4078,17 +4136,15 @@ def _eps_history_engine(code, market=None, ts=None, max_years=EPS_MODEL_MAX_YEAR
     # 3) V2.10.88：Goodinfo 永久停用，不做任何 HTTP。
     goodinfo_fetched=0
 
-    # 4) V2.10.88：官方 MOPS 市場/年度批次補洞。
-    # 一個年度只請求一次整個市場；所有股票共享同一份 cache。
+    # 4) V2.10.90：完全切換長期歷史來源，不再依賴 MOPS 補洞。
     fetched=0
     missing_years=[y for y in range(first_year,last_year+1) if y not in data]
-    print(f'V2.10.89 EPS歷史缺口：{code} 尚缺{len(missing_years)}年 → MOPS逐年度批次補洞',flush=True) if missing_years else None
-    if missing_years and market and not EPS_HISTORY_MOPS_DISABLED:
-        meta['mops_attempted_at']=time.time()
-        added=_mops_batch_fill_eps(code,market,missing_years)
+    if missing_years:
+        print(f'V2.10.90 EPS歷史缺口：{code} 尚缺{len(missing_years)}年 → 改用 Jina/Goodinfo 長期公開歷史來源',flush=True)
+        added=_long_eps_external_v21090(code, missing_years)
         if added:
             data.update(added); fetched=len(added)
-            sources.append('MOPS official market/year batch')
+            sources.append('Goodinfo public annual EPS via Jina Reader')
 
     # 5) 持久化：key 統一使用字串，另外記錄來源/涵蓋範圍/補抓狀態。
     data={str(y):float(v) for y,v in sorted(data.items())}
@@ -4113,19 +4169,19 @@ def _eps_history_engine(code, market=None, ts=None, max_years=EPS_MODEL_MAX_YEAR
     try:
         old=load_json(EPS_ANNUAL_HISTORY_CACHE_FILE)
         if not isinstance(old,dict): old={}
-        old[code]={'data':data,'_cached_at':time.time(),'source':meta.get('source','V2.10.89 EPS history engine')}
+        old[code]={'data':data,'_cached_at':time.time(),'source':meta.get('source','V2.10.90 EPS history engine')}
         save_json(EPS_ANNUAL_HISTORY_CACHE_FILE,old)
     except Exception: pass
 
     result={int(y):float(v) for y,v in data.items()}
     if result:
         print(
-            f'V2.10.89 EPS歷史引擎：{code} {min(result)}～{max(result)} 共{len(result)}年 '
+            f'V2.10.90 EPS歷史引擎：{code} {min(result)}～{max(result)} 共{len(result)}年 '
             f'（目標{first_year}～{last_year}、本次新增{len(set(result)-before)}年、來源={meta.get("source","cache")}）',
             flush=True)
     else:
         print(
-            f'V2.10.89 EPS歷史引擎：{code} 無可用年度資料（目標{first_year}～{last_year}）；'
+            f'V2.10.90 EPS歷史引擎：{code} 無可用年度資料（目標{first_year}～{last_year}）；'
             f'已記錄來源失敗並進入{EPS_HISTORY_RETRY_DAYS}天冷卻', flush=True)
     RUN_CACHE[key]=result
     return result
@@ -5295,7 +5351,7 @@ def _eps_growth_from_quarterly_model(code, ts, now=None, market=None):
             'scenario_pct':float(scenario_pct),
             'conservative_annual':float(conservative_annual),
             'optimistic_annual':float(optimistic_annual),
-            'model_version':'V2.10.89 MOPS/Yahoo 25年EPS歷史引擎＋近期10年統計時間序列 EPS 模型'
+            'model_version':'V2.10.90 MOPS/Yahoo 25年EPS歷史引擎＋近期10年統計時間序列 EPS 模型'
         }
         return float(growth),detail
 
