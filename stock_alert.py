@@ -1,4 +1,10 @@
-# stock_alert.py V2.10.73
+# stock_alert.py V2.10.74
+# V2.10.74：新增「全市場綜合評分 >= 90 分」批次掃描通知。
+#             使用本次 Actions 已建立的技術／法人／融資／PE／次產業快取，
+#             先以「技術＋籌碼＋風險」計算可達上限；只有理論上可能達到 90 分的股票，
+#             才進一步呼叫既有 official_fundamental() 補完整基本面，避免 1985 檔逐一完整分析。
+#             通知採「當日首次進榜／跌破90後重新進榜」邏輯，同一次執行只發一則彙整 LINE。
+#             不改動原有跌幅通知、15分鐘區間通知與目標股分析流程。
 # V2.10.73：LINE背景技術面強制即時刷新修正版。
 #             背景網頁分析（非 LINE 輕量模式）一律優先抓取最新可用 Yahoo 1d 日線，
 #             不再被 LINE_MODE_ACTIVE 或 36/72 小時技術快取攔截；成功後立即寫回
@@ -7815,7 +7821,7 @@ def analysis(
     # --------------------------------------------------------
 
     return (
-        f'📊 股票加碼分析 V2.10.73\n\n'
+        f'📊 股票加碼分析 V2.10.74\n\n'
         f'標的：{name}（{code}）\n'
         f'市場：{market}\n'
         f'產業：{industry}\n'
@@ -8783,6 +8789,370 @@ def refresh_all_market_pe_history(pe_history, universe=None):
     return pe_history
 
 
+def _scan_high_score_stocks(u, state):
+    """V2.10.74：全市場綜合評分 >= 90 分批次掃描。
+
+    設計原則：
+    1. 不對 1985 檔逐一執行完整 analysis()。
+    2. 技術面直接讀 Actions 本次已建立的全市場技術快取。
+    3. 法人／融資直接讀本次批次快取；PE／一年平均PE也只讀本次既有資料。
+    4. 先計算「非基本面最高可得分」：技術 + 籌碼 + (10-風險)。
+       若連基本面滿分40都不可能達到90，直接淘汰，不呼叫 Yahoo 基本面。
+    5. 只有理論上可能 >=90 的候選股，才使用既有 official_fundamental() 補完整基本面。
+    6. 通知只針對「今日首次 >=90」或「曾低於90後重新 >=90」的股票，
+       同一次執行彙整成一則 LINE，避免每15分鐘洗版。
+    """
+    started = time.time()
+    threshold = 90
+
+    if not isinstance(u, dict) or not u:
+        print('⚠️ V2.10.74 高評分掃描：股票池為空，跳過', flush=True)
+        return []
+
+    # --------------------------------------------------------
+    # 一次載入本次 Actions 已建立的快取，避免逐股反覆 I/O。
+    # --------------------------------------------------------
+    pe_data = RUN_CACHE.get('current_pe')
+    if not isinstance(pe_data, dict) or not pe_data:
+        try:
+            pe_data = get_current_pe_data()
+        except Exception:
+            pe_data = {}
+
+    pe_history = load_json(PE_HISTORY_FILE)
+    if not isinstance(pe_history, dict):
+        pe_history = {}
+
+    tech_cache = load_json(LINE_TECH_CACHE_FILE)
+    if not isinstance(tech_cache, dict):
+        tech_cache = {}
+
+    chip_cache = load_json(LINE_CHIP_SUMMARY_CACHE_FILE)
+    if not isinstance(chip_cache, dict):
+        chip_cache = {}
+
+    # 法人摘要快取若尚未落盤，直接由本次 INSTITUTIONAL_CACHE 壓縮一次。
+    if not chip_cache:
+        chip_cache = {}
+        for key, rows in INSTITUTIONAL_CACHE.items():
+            if not (isinstance(key, tuple) and len(key) >= 3 and key[0] == 'inst'):
+                continue
+            market = str(key[1])
+            if not isinstance(rows, list):
+                continue
+            values = {}
+            valid_rows = [r for r in rows if isinstance(r, dict) and isinstance(r.get('data'), dict)]
+            valid_rows.sort(key=lambda x: str(x.get('date', '')), reverse=True)
+            for row in valid_rows:
+                for raw_code, item in row.get('data', {}).items():
+                    code = clean_code(raw_code)
+                    if not code or not isinstance(item, dict):
+                        continue
+                    v = to_float(item.get('total'))
+                    if v is not None:
+                        values.setdefault(code, []).append(v)
+            md = {}
+            for code, arr in values.items():
+                if arr:
+                    md[code] = {
+                        'latest': arr[0],
+                        '5d': sum(arr[:5]) if len(arr) >= 5 else None,
+                        '20d': sum(arr[:20]) if len(arr) >= 20 else None,
+                    }
+            if md:
+                chip_cache[market] = md
+
+    # --------------------------------------------------------
+    # 同業 PE：只使用既有官方 PE / 歷史 PE，不觸發任何網路查詢。
+    # --------------------------------------------------------
+    def cached_peer_pe(peer_item):
+        code = clean_code(str(peer_item.get('code', '')))
+        row = pe_data.get(code, {}) if isinstance(pe_data, dict) else {}
+        v = to_float(row.get('pe')) if isinstance(row, dict) else None
+        if v is not None and 0 < v <= PE_MAX_VALID:
+            return v
+        bucket = pe_history.get(code, {}) if isinstance(pe_history, dict) else {}
+        if isinstance(bucket, dict):
+            vals = []
+            for ds, rv in bucket.items():
+                try:
+                    datetime.strptime(str(ds), '%Y%m%d')
+                except Exception:
+                    continue
+                pv = to_float(rv)
+                if pv is not None and 0 < pv <= PE_MAX_VALID:
+                    vals.append((str(ds), pv))
+            if vals:
+                vals.sort(reverse=True)
+                return vals[0][1]
+        return None
+
+    def local_peer_median(code, industry, subindustries):
+        target_subs = set(normalize_subindustry(x) for x in (subindustries or []) if normalize_subindustry(x))
+        candidates = []
+        for c, x in u.items():
+            if clean_code(c) == code or not isinstance(x, dict):
+                continue
+            if canonical_industry(x.get('industry')) != canonical_industry(industry):
+                continue
+            if target_subs:
+                xs = set(normalize_subindustry(z) for z in (x.get('subindustries') or ([x.get('subindustry')] if x.get('subindustry') else [])) if normalize_subindustry(z))
+                if not (target_subs & xs):
+                    continue
+            if to_float(x.get('market_cap')) is None:
+                continue
+            candidates.append(x)
+        candidates.sort(key=lambda x: to_float(x.get('market_cap')) or 0, reverse=True)
+        vals = []
+        for x in candidates[:10]:
+            pv = cached_peer_pe(x)
+            if pv is not None:
+                vals.append(pv)
+        # 若次產業快取不足，與既有 analysis() 的 fallback 邏輯一致：同大產業市值Top10。
+        if not vals and target_subs:
+            return local_peer_median(code, industry, [])
+        return float(np.median(vals)) if vals else None
+
+    candidates = []
+    skipped_no_tech = 0
+
+    # --------------------------------------------------------
+    # 第一階段：只算非基本面。最大可能分數 < 90 就完全不用查基本面。
+    # --------------------------------------------------------
+    for code, item in u.items():
+        if not isinstance(item, dict):
+            continue
+        code = clean_code(code)
+        if not code or not code.isdigit():
+            continue
+        symbol = item.get('symbol') or symbol_for(code, item.get('market'))
+        market = item.get('market')
+        if market not in ('TWSE', 'TPEX') or not symbol:
+            continue
+
+        tech = _load_technical_cache_entry(tech_cache, code, max_age=TECH_CACHE_MAX_AGE)
+        if not tech:
+            skipped_no_tech += 1
+            continue
+
+        market_chip = chip_cache.get(market, {}) if isinstance(chip_cache, dict) else {}
+        inst = market_chip.get(code, {}) if isinstance(market_chip, dict) else {}
+        if not isinstance(inst, dict):
+            inst = {}
+        inst = {
+            'latest': to_float(inst.get('latest')),
+            '5d': to_float(inst.get('5d')),
+            '20d': to_float(inst.get('20d')),
+        }
+
+        margin = MARGIN_CACHE.get(('margin', market), {})
+        margin = margin.get(code, {}) if isinstance(margin, dict) else {}
+        if not isinstance(margin, dict):
+            margin = {}
+        margin = {
+            'margin_change': to_float(margin.get('margin_change')),
+            'margin_balance': to_float(margin.get('margin_balance')),
+            'short_change': to_float(margin.get('short_change')),
+            'short_balance': to_float(margin.get('short_balance')),
+        }
+
+        ts, _ = score_tech(tech)
+        cs, _ = score_chip(inst, margin)
+        risk, _ = score_risk(tech, inst, margin)
+        nonfund_max = ts + cs + (10 - risk)
+
+        if nonfund_max < threshold - 40:
+            continue
+
+        industry = canonical_industry(item.get('industry'))
+        subindustries = get_subindustries_for_stock(code, item)
+        peer_med = local_peer_median(code, industry, subindustries)
+        off = pe_data.get(code, {}) if isinstance(pe_data, dict) else {}
+        off = off if isinstance(off, dict) else {}
+        pe = to_float(off.get('pe'))
+        pb = to_float(off.get('pb'))
+        yld = to_float(off.get('yield'))
+        one, sample = one_year_pe(code, pe_history)
+
+        # 先用現有 PE/PB/殖利率算一個保守的基本面估計。
+        # score_fund() 的資料完整度 cap 會限制缺資料時的最高基本面分數，
+        # 因此這裡只作候選排序/篩選，不把它當最終分數。
+        partial_fs, _ = score_fund(
+            pe, one, peer_med, None, None, None, pb, yld,
+            INDUSTRY_MODEL.get(industry, DEFAULT_MODEL)
+        )
+        candidates.append({
+            'code': code,
+            'item': item,
+            'symbol': symbol,
+            'market': market,
+            'industry': industry,
+            'subindustries': subindustries,
+            'tech': tech,
+            'inst': inst,
+            'margin': margin,
+            'peer_med': peer_med,
+            'pe': pe,
+            'pb': pb,
+            'yld': yld,
+            'one': one,
+            'one_sample': sample,
+            'partial_fs': partial_fs,
+            'nonfund_max': nonfund_max,
+        })
+
+    print(
+        f'V2.10.74 高評分第一階段：候選 {len(candidates)} 檔；'
+        f'無技術快取 {skipped_no_tech} 檔；'
+        f'耗時 {time.time()-started:.1f}s',
+        flush=True
+    )
+
+    # --------------------------------------------------------
+    # 第二階段：只有「理論上可能 >=90」的股票才補完整基本面。
+    # --------------------------------------------------------
+    results = []
+    for idx, c in enumerate(candidates, 1):
+        try:
+            item = c['item']
+            current_price = to_float(c['tech'].get('price')) or to_float(item.get('price'))
+            yf_f = official_fundamental(
+                c['symbol'],
+                {
+                    'pe': c['pe'],
+                    'pb': c['pb'],
+                    'yield': c['yld'],
+                },
+                current_price=current_price,
+                market=c['market']
+            )
+            if not isinstance(yf_f, dict):
+                yf_f = {}
+
+            pe = to_float(c['pe'])
+            pb = to_float(c['pb'])
+            yld = to_float(c['yld'])
+            if pe is None:
+                pe = to_float(yf_f.get('pe'))
+            if pb is None:
+                pb = to_float(yf_f.get('pb'))
+            if yld is None:
+                yld = to_float(yf_f.get('yield'))
+
+            one = c['one']
+            one_sample = c['one_sample']
+            if one is None and pe is not None:
+                try:
+                    one, one_sample, _ = one_year_pe_proxy(c['code'], pe, c['symbol'])
+                except Exception:
+                    pass
+
+            fs, fr = score_fund(
+                pe,
+                one,
+                c['peer_med'],
+                to_float(yf_f.get('peg')),
+                to_float(yf_f.get('roe')),
+                to_float(yf_f.get('eps_growth')),
+                pb,
+                yld,
+                INDUSTRY_MODEL.get(c['industry'], DEFAULT_MODEL)
+            )
+            ts, tr = score_tech(c['tech'])
+            cs, cr = score_chip(c['inst'], c['margin'])
+            risk, rr = score_risk(c['tech'], c['inst'], c['margin'])
+            total = max(0, min(100, fs + ts + cs + (10 - risk)))
+
+            if total >= threshold:
+                results.append({
+                    'code': c['code'],
+                    'name': item.get('name') or c['code'],
+                    'symbol': c['symbol'],
+                    'score': int(total),
+                    'fund': int(fs),
+                    'tech': int(ts),
+                    'chip': int(cs),
+                    'risk': int(risk),
+                    'price': current_price,
+                    'reasons': fr + tr,
+                })
+        except Exception as e:
+            print(
+                f'V2.10.74 高評分完整基本面失敗 {c.get("code")}: '
+                f'{type(e).__name__}: {e}',
+                flush=True
+            )
+        if idx % 10 == 0 or idx == len(candidates):
+            print(
+                f'V2.10.74 高評分第二階段進度：{idx}/{len(candidates)}；'
+                f'目前 >=90：{len(results)}',
+                flush=True
+            )
+
+    results.sort(key=lambda x: (-x['score'], x['code']))
+
+    # --------------------------------------------------------
+    # 第三階段：每日去重；跌破90後重新站回90可再次通知。
+    # --------------------------------------------------------
+    today = datetime.now(TW_TZ).strftime('%Y-%m-%d')
+    hs = state.setdefault('high_score_alert', {})
+    if not isinstance(hs, dict):
+        hs = {}
+        state['high_score_alert'] = hs
+    if hs.get('date') != today:
+        hs.clear()
+        hs['date'] = today
+        hs['active'] = []
+
+    current_codes = {x['code'] for x in results}
+    previous_active = set(hs.get('active') or [])
+
+    # 目前 <90 的股票從 active 移除；之後重新 >=90 就視為重新進榜。
+    # 不使用永久 notified 清單，確保「跌破90 → 再次站回90」仍會重新通知。
+    reentries = current_codes - previous_active
+    new_codes = [x['code'] for x in results if x['code'] in reentries]
+
+    hs['active'] = sorted(current_codes)
+
+    if new_codes and LINE_TOKEN:
+        by_code = {x['code']: x for x in results}
+        new_rows = [by_code[x] for x in new_codes if x in by_code]
+        msg = (
+            '🚨 全市場高評分股票通知 V2.10.74\n\n'
+            f'執行時間：{datetime.now(TW_TZ).strftime("%Y-%m-%d %H:%M:%S")}\n'
+            '條件：綜合評分 ≥ 90 分\n\n'
+            '【本次新進榜】\n' +
+            '\n'.join(
+                f'{i}. {x["code"]} {x["name"]}｜{x["score"]}分'
+                for i, x in enumerate(new_rows, 1)
+            ) +
+            f'\n\n目前90分以上共 {len(results)} 檔\n\n' +
+            '【目前90分以上】\n' +
+            '\n'.join(
+                f'{i}. {x["code"]} {x["name"]}｜{x["score"]}分'
+                for i, x in enumerate(results, 1)
+            )
+        )
+        send_line(msg[:5000])
+        print(
+            f'V2.10.74 高評分 LINE 已發送：新進榜 {len(new_rows)} 檔；'
+            f'目前 >=90 共 {len(results)} 檔',
+            flush=True
+        )
+    else:
+        print(
+            f'V2.10.74 高評分掃描完成：目前 >=90 共 {len(results)} 檔；'
+            f'本次新進榜 {len(new_codes)} 檔；不發送重複 LINE',
+            flush=True
+        )
+
+    print(
+        f'V2.10.74 高評分掃描總耗時：{time.time()-started:.1f}s',
+        flush=True
+    )
+    return results
+
+
 def run_alerts():
 
     global RUN_CACHE
@@ -8799,7 +9169,7 @@ def run_alerts():
     print(
         '================================\n'
         '股票跌幅 + 15分鐘區間最低價 + '
-        'V2.10.71自動估值 + 技術 + 籌碼\n'
+        'V2.10.74自動估值 + 技術 + 籌碼\n'
         '================================'
     )
 
@@ -9081,6 +9451,13 @@ def run_alerts():
             )
 
             traceback.print_exc()
+
+    # V2.10.74：全市場 >=90 分彙整通知；使用本次 Actions 已建立快取，避免逐股完整 analysis。
+    try:
+        _scan_high_score_stocks(u, state)
+    except Exception as e:
+        print(f'⚠️ V2.10.74 高評分全市場掃描失敗：{type(e).__name__}: {e}', flush=True)
+        traceback.print_exc()
 
     save_json(
         STATE_FILE,
