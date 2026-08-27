@@ -1,4 +1,4 @@
-# stock_alert.py V2.10.87
+# stock_alert.py V2.10.88
 # V2.10.75：統計驗證 EPS 模型。
 #             年度 EPS 趨勢加入 β/SE/t/p/95% CI/R²/n 與 A/B/C 可信度；
 #             季節係數加入 n/平均/中位數/SD/95% CI/異常值檢查；
@@ -105,11 +105,11 @@ LINE_FUND_CACHE_FILE = 'line_fund_cache.json'
 LINE_TECH_CACHE_FILE = 'line_technical_cache.json'
 # V2.10.62：季度 EPS 持久快取；用於補強 Yahoo fundamentals-timeseries 偶發缺少季度 EPS。
 EPS_QUARTERLY_CACHE_FILE = 'eps_quarterly_cache.json'
-# V2.10.87：25 年 EPS 歷史資料引擎持久快取。
+# V2.10.88：25 年 EPS 歷史資料引擎持久快取。
 EPS_ANNUAL_HISTORY_CACHE_FILE = 'eps_annual_history_cache.json'
 EPS_HISTORY_ENGINE_CACHE_FILE = 'eps_history_engine_cache.json'
 EPS_HISTORY_MOPS_BATCH_CACHE_FILE = 'eps_mops_batch_history_cache.json'
-# V2.10.87：Goodinfo 一次取得多年年度 EPS，作為真正的25年歷史來源。
+# V2.10.88：Goodinfo 一次取得多年年度 EPS，作為真正的25年歷史來源。
 EPS_HISTORY_GOODINFO_CACHE_FILE = 'eps_goodinfo_history_cache.json'
 
 UNIVERSE_CACHE_FILE = 'market_universe_cache.json'
@@ -178,7 +178,7 @@ EPS_MODEL_BLEND_MEDIAN = 0.30
 # V2.10.79：歷史年度資料補抓預算；只在真正進入 EPS 基本面分析的股票使用。
 EPS_ANNUAL_FETCH_MAX_YEARS_PER_STOCK = 25
 EPS_ANNUAL_FETCH_TIMEOUT = 8
-# V2.10.87：歷史 EPS 引擎一次向 Yahoo fundamentals-timeseries 要求 30 年，
+# V2.10.88：歷史 EPS 引擎一次向 Yahoo fundamentals-timeseries 要求 30 年，
 # 再由季度完整年度與 MOPS 歷史介面補洞；已嘗試但不可得的年份 7 天內不重打。
 EPS_HISTORY_SOURCE_YEARS = 30
 EPS_HISTORY_RETRY_DAYS = 7
@@ -187,6 +187,9 @@ EPS_HISTORY_GOODINFO_TIMEOUT = 10
 EPS_HISTORY_GOODINFO_DISABLED = True
 EPS_HISTORY_MOPS_DISABLED = False
 EPS_HISTORY_GOODINFO_RETRY_DAYS = 7
+EPS_HISTORY_MOPS_CACHE_VERSION = 'v21088'
+EPS_HISTORY_MOPS_FAILED_RETRY_HOURS = 24
+EPS_HISTORY_MOPS_MAX_YEARS_PER_RUN = 25
 # V2.10.75：EPS 統計驗證與情境預測參數。
 EPS_MODEL_TREND_P_SIGNIFICANT = 0.05
 EPS_MODEL_TREND_P_WEAK = 0.20
@@ -3609,7 +3612,7 @@ def _official_eps_snapshot(market):
 
 
 def _parse_mops_eps_html(text):
-    """V2.10.87：穩健解析 MOPS 綜合損益表的「基本每股盈餘合計」。
+    """V2.10.88：穩健解析 MOPS 綜合損益表的「基本每股盈餘合計」。
 
     舊版問題：原程式使用 io.StringIO 卻沒有 import io，例外被外層吃掉後
     看起來就像「MOPS 沒資料」。另外 MOPS 同一列常同時有「本期」與「上期」數值，
@@ -3684,62 +3687,194 @@ def _mops_historical_annual_eps_one(code, market, year):
 
 
 def _mops_market_year_eps_batch(market, year, timeout=8):
-    """V2.10.87：MOPS 市場/年度批次 EPS，一次抓整個市場並持久快取。"""
-    typek='sii' if str(market).lower() in ('twse','sii','上市') else 'otc'
-    try: year=int(year)
-    except Exception: return {}
+    """V2.10.88：MOPS 市場/年度 EPS 批次補洞。
+
+    V2.10.87 的致命問題：
+    - failed/empty cache 沒有有效 retry 機制；
+    - 舊版空快取會永久命中，導致之後永遠顯示「本次新增0年」；
+    - cache key 沒有版本隔離，升版後仍沿用錯誤結果。
+
+    本版：
+    1. 舊 failed cache 不再永久視為成功；
+    2. 每個 market/year 失敗最多冷卻 24 小時；
+    3. 成功資料永久保留；
+    4. 解析 EPS 欄位時不再盲抓最後一個小數；
+    5. cache 加版本標記，V2.10.88 會重新驗證舊資料。
+    """
+    typek = 'sii' if str(market).lower() in ('twse','sii','上市') else 'otc'
+    try:
+        year = int(year)
+    except Exception:
+        return {}
+    if year < 2001 or year > 2025:
+        return {}
+
     key=f'{typek}_{year}'
     cache=load_json(EPS_HISTORY_MOPS_BATCH_CACHE_FILE)
-    if not isinstance(cache,dict): cache={}
+    if not isinstance(cache,dict):
+        cache={}
+
     hit=cache.get(key)
-    if isinstance(hit,dict) and isinstance(hit.get('data'),dict): return hit['data']
+    now=time.time()
+    if isinstance(hit,dict):
+        data=hit.get('data')
+        version=hit.get('version')
+        status=hit.get('status','ok' if isinstance(data,dict) and data else 'failed')
+
+        # 成功 cache：直接使用。
+        if version == EPS_HISTORY_MOPS_CACHE_VERSION and isinstance(data,dict) and data:
+            return data
+
+        # 舊版成功 cache 也可以沿用，不必重新抓；但轉成新版格式。
+        if isinstance(data,dict) and data and status != 'failed':
+            hit['version']=EPS_HISTORY_MOPS_CACHE_VERSION
+            hit['status']='ok'
+            cache[key]=hit
+            try: save_json(EPS_HISTORY_MOPS_BATCH_CACHE_FILE,cache)
+            except Exception: pass
+            return data
+
+        # 失敗 cache：只冷卻 24 小時，不再永久鎖死。
+        failed_at=float(hit.get('failed_at', hit.get('cached_at',0)) or 0)
+        if status == 'failed' and failed_at and now-failed_at < EPS_HISTORY_MOPS_FAILED_RETRY_HOURS*3600:
+            return {}
+
     roc=year-1911
-    headers={'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/124 Safari/537.36','Referer':'https://mops.twse.com.tw/mops/web/t51sb02'}
+    headers={
+        'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
+                     'AppleWebKit/537.36 (KHTML, like Gecko) '
+                     'Chrome/124.0 Safari/537.36',
+        'Referer':'https://mops.twse.com.tw/mops/web/t51sb02',
+        'Accept-Language':'zh-TW,zh;q=0.9,en;q=0.8'
+    }
+
     endpoints=[
-      ('https://mops.twse.com.tw/mops/web/ajax_t163sb04',{'encodeURIComponent':'1','step':'1','firstin':'1','off':'1','isQuery':'Y','TYPEK':typek,'year':str(roc),'season':'04'}),
-      ('https://mops.twse.com.tw/mops/web/ajax_t51sb02',{'encodeURIComponent':'1','step':'1','firstin':'1','off':'1','TYPEK':typek,'year':str(roc),'isnew':'Y','ifrs':'N' if year<=2012 else 'Y'})]
+      ('https://mops.twse.com.tw/mops/web/ajax_t163sb04',
+       {'encodeURIComponent':'1','step':'1','firstin':'1','off':'1',
+        'isQuery':'Y','TYPEK':typek,'year':str(roc),'season':'04'}),
+      ('https://mops.twse.com.tw/mops/web/ajax_t51sb02',
+       {'encodeURIComponent':'1','step':'1','firstin':'1','off':'1',
+        'TYPEK':typek,'year':str(roc),
+        'isnew':'Y','ifrs':'N' if year<=2012 else 'Y'})
+    ]
+
+    def flatten_col(c):
+        if isinstance(c,tuple):
+            return ' '.join(str(x) for x in c if str(x).lower()!='nan')
+        return str(c)
+
+    def clean_num(v):
+        x=str(v).replace(',','').replace('％','').strip()
+        if x in ('','-','--','—','－','N/A','NA','nan','None'):
+            return None
+        m=re.search(r'[-+]?\d+(?:\.\d+)?',x)
+        if not m: return None
+        try:
+            q=float(m.group(0))
+            return q if math.isfinite(q) and abs(q)<=1000 else None
+        except Exception:
+            return None
+
     for url,payload in endpoints:
         try:
             r=requests.post(url,data=payload,headers=headers,timeout=timeout)
-            if r.status_code!=200 or len(r.content)<1000: continue
-            tables=pd.read_html(io.StringIO(r.content.decode('utf-8',errors='replace')))
+            if r.status_code!=200 or len(r.content)<1000:
+                continue
+            raw=r.content.decode('utf-8',errors='replace')
+            tables=pd.read_html(io.StringIO(raw))
             result={}
+
             for df in tables:
-                if not isinstance(df,pd.DataFrame) or df.empty: continue
-                cols=[]
-                for c in df.columns:
-                    cols.append(' '.join(str(x) for x in c if str(x)!='nan') if isinstance(c,tuple) else str(c))
-                code_col=next((i for i,c in enumerate(cols) if any(k in c.replace(' ','') for k in ('公司代號','證券代號','股票代號','公司代碼'))),None)
-                eps_col=next((i for i,c in enumerate(cols) if any(k in c.replace(' ','') for k in ('基本每股盈餘','每股盈餘','EPS'))),None)
+                if not isinstance(df,pd.DataFrame) or df.empty:
+                    continue
+
+                cols=[flatten_col(c) for c in df.columns]
+                norm=[c.replace(' ','').replace('\n','') for c in cols]
+
+                code_col=next(
+                    (i for i,c in enumerate(norm)
+                     if any(k in c for k in ('公司代號','證券代號','股票代號','公司代碼'))),
+                    None
+                )
+                eps_col=next(
+                    (i for i,c in enumerate(norm)
+                     if ('每股盈餘' in c or '每股收益' in c or c=='EPS'
+                         or ('基本每股盈餘' in c))),
+                    None
+                )
+
                 for ridx in range(len(df)):
                     vals=[str(x).replace(',','').strip() for x in df.iloc[ridx].tolist()]
-                    if code_col is None:
-                        code_col=next((j for j,v in enumerate(vals[:6]) if re.fullmatch(r'\d{4,6}',v)),None)
-                    if code_col is None or code_col>=len(vals): continue
-                    code=re.sub(r'\D','',vals[code_col])
-                    if len(code)<4: continue
+
+                    cc=code_col
+                    if cc is None:
+                        cc=next(
+                            (j for j,v in enumerate(vals[:8])
+                             if re.fullmatch(r'\d{4,6}',v)),
+                            None
+                        )
+                    if cc is None or cc>=len(vals):
+                        continue
+
+                    code=re.sub(r'\D','',vals[cc])
+                    if len(code)<4:
+                        continue
+
                     eps=None
                     if eps_col is not None and eps_col<len(vals):
-                        m=re.search(r'[-+]?\d+(?:\.\d+)?',vals[eps_col]); eps=float(m.group(0)) if m else None
+                        eps=clean_num(vals[eps_col])
+
+                    # 僅在沒有明確 EPS 欄位時，尋找「EPS/每股盈餘」
+                    # 標題附近的數值；不再使用 nums[-1] 這種高風險猜測。
                     if eps is None:
-                        # t51sb02 的每股盈餘欄位可能位於資料列；取合理的小數值。
-                        nums=[]
-                        for v in vals:
-                            if re.fullmatch(r'[-+]?\d+\.\d+',v):
-                                q=float(v)
-                                if math.isfinite(q) and abs(q)<=1000: nums.append(q)
-                        if nums: eps=nums[-1]
-                    if eps is not None and math.isfinite(eps) and abs(eps)<=1000: result[code]=float(eps)
-                if result: break
+                        header_hits=[
+                            i for i,c in enumerate(norm)
+                            if 'EPS' in c or '每股盈餘' in c or '每股收益' in c
+                        ]
+                        for hi in header_hits:
+                            if hi<len(vals):
+                                eps=clean_num(vals[hi])
+                                if eps is not None:
+                                    break
+
+                    if eps is not None:
+                        result[code]=float(eps)
+
+                if result:
+                    break
+
             if result:
-                cache[key]={'cached_at':time.time(),'data':result,'source':url}
-                save_json(EPS_HISTORY_MOPS_BATCH_CACHE_FILE,cache)
+                cache[key]={
+                    'version':EPS_HISTORY_MOPS_CACHE_VERSION,
+                    'status':'ok',
+                    'cached_at':now,
+                    'data':result,
+                    'source':url,
+                    'year':year,
+                    'market':typek
+                }
+                try: save_json(EPS_HISTORY_MOPS_BATCH_CACHE_FILE,cache)
+                except Exception: pass
                 return result
-        except Exception: continue
-    cache[key]={'cached_at':time.time(),'data':{},'source':'failed','failed_at':time.time()}
+
+        except Exception:
+            continue
+
+    # 失敗只冷卻24h；下一天會真正重新嘗試。
+    cache[key]={
+        'version':EPS_HISTORY_MOPS_CACHE_VERSION,
+        'status':'failed',
+        'cached_at':now,
+        'failed_at':now,
+        'data':{},
+        'source':'failed',
+        'year':year,
+        'market':typek
+    }
     try: save_json(EPS_HISTORY_MOPS_BATCH_CACHE_FILE,cache)
     except Exception: pass
     return {}
+
 
 def _mops_batch_fill_eps(code, market, years):
     out={}; code=clean_code(code)
@@ -3750,7 +3885,7 @@ def _mops_batch_fill_eps(code, market, years):
             except Exception: pass
     return out
 def _eps_history_engine(code, market=None, ts=None, max_years=EPS_MODEL_MAX_YEARS):
-    """V2.10.87：真正的 25 年 EPS 歷史資料引擎。
+    """V2.10.88：真正的 25 年 EPS 歷史資料引擎。
 
     資料優先順序：
       1) 持久快取 eps_annual_history_cache.json
@@ -3764,7 +3899,7 @@ def _eps_history_engine(code, market=None, ts=None, max_years=EPS_MODEL_MAX_YEAR
     code=clean_code(code)
     if not code or not code.isdigit():
         return {}
-    key=('eps_history_engine_v21086',code,str(market or ''),int(max_years))
+    key=('eps_history_engine_v21088',code,str(market or ''),int(max_years))
     if key in RUN_CACHE:
         return RUN_CACHE[key]
 
@@ -3832,14 +3967,16 @@ def _eps_history_engine(code, market=None, ts=None, max_years=EPS_MODEL_MAX_YEAR
     if quarterly_rows:
         sources.append('Yahoo complete quarterly EPS')
 
-    # 3) V2.10.87：Goodinfo 永久停用，不做任何 HTTP。
+    # 3) V2.10.88：Goodinfo 永久停用，不做任何 HTTP。
     goodinfo_fetched=0
 
-    # 4) V2.10.87：官方 MOPS 市場/年度批次補洞。
+    # 4) V2.10.88：官方 MOPS 市場/年度批次補洞。
     # 一個年度只請求一次整個市場；所有股票共享同一份 cache。
     fetched=0
     missing_years=[y for y in range(first_year,last_year+1) if y not in data]
+    print(f'V2.10.88 EPS歷史缺口：{code} 尚缺{len(missing_years)}年 → MOPS逐年度批次補洞',flush=True) if missing_years else None
     if missing_years and market and not EPS_HISTORY_MOPS_DISABLED:
+        meta['mops_attempted_at']=time.time()
         added=_mops_batch_fill_eps(code,market,missing_years)
         if added:
             data.update(added); fetched=len(added)
@@ -3868,19 +4005,19 @@ def _eps_history_engine(code, market=None, ts=None, max_years=EPS_MODEL_MAX_YEAR
     try:
         old=load_json(EPS_ANNUAL_HISTORY_CACHE_FILE)
         if not isinstance(old,dict): old={}
-        old[code]={'data':data,'_cached_at':time.time(),'source':meta.get('source','V2.10.87 EPS history engine')}
+        old[code]={'data':data,'_cached_at':time.time(),'source':meta.get('source','V2.10.88 EPS history engine')}
         save_json(EPS_ANNUAL_HISTORY_CACHE_FILE,old)
     except Exception: pass
 
     result={int(y):float(v) for y,v in data.items()}
     if result:
         print(
-            f'V2.10.87 EPS歷史引擎：{code} {min(result)}～{max(result)} 共{len(result)}年 '
+            f'V2.10.88 EPS歷史引擎：{code} {min(result)}～{max(result)} 共{len(result)}年 '
             f'（目標{first_year}～{last_year}、本次新增{len(set(result)-before)}年、來源={meta.get("source","cache")}）',
             flush=True)
     else:
         print(
-            f'V2.10.87 EPS歷史引擎：{code} 無可用年度資料（目標{first_year}～{last_year}）；'
+            f'V2.10.88 EPS歷史引擎：{code} 無可用年度資料（目標{first_year}～{last_year}）；'
             f'已記錄來源失敗並進入{EPS_HISTORY_RETRY_DAYS}天冷卻', flush=True)
     RUN_CACHE[key]=result
     return result
