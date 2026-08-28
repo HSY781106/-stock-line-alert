@@ -1,5 +1,5 @@
 {
-  "cached_at": 1787808802.090928,
+  "cached_at": 1787953955.3093538,
   "data": [
     {
       "code": "1101",
@@ -887,7 +887,7 @@
       "industry": "電機機械",
       "market": "TWSE",
       "symbol": "1519.TW",
-      "capital": 3158808440.0
+      "capital": 3474689290.0
     },
     {
       "code": "1521",
@@ -1199,7 +1199,7 @@
       "industry": "電器電纜",
       "market": "TWSE",
       "symbol": "1615.TW",
-      "capital": 1966637020.0
+      "capital": 1986303390.0
     },
     {
       "code": "1616",
@@ -1319,7 +1319,7 @@
       "industry": "化學工業",
       "market": "TWSE",
       "symbol": "1717.TW",
-      "capital": 11722454830.0
+      "capital": 11842454830.0
     },
     {
       "code": "1718",
@@ -2535,7 +2535,7 @@
       "industry": "電腦及週邊設備業",
       "market": "TWSE",
       "symbol": "2382.TW",
-      "capital": 38626274320.0
+      "capital": 41076274320.0
     },
     {
       "code": "2383",
@@ -4255,7 +4255,7 @@
       "industry": "通信網路業",
       "market": "TWSE",
       "symbol": "3027.TW",
-      "capital": 1299602990.0
+      "capital": 1291602990.0
     },
     {
       "code": "3028",
@@ -4327,7 +4327,7 @@
       "industry": "電子通路業",
       "market": "TWSE",
       "symbol": "3036.TW",
-      "capital": 12691483010.0
+      "capital": 12705627010.0
     },
     {
       "code": "3037",
@@ -4511,7 +4511,7 @@
       "industry": "通信網路業",
       "market": "TWSE",
       "symbol": "3062.TW",
-      "capital": 3300918180.0
+      "capital": 3300818180.0
     },
     {
       "code": "3090",
@@ -4959,7 +4959,7 @@
       "industry": "半導體業",
       "market": "TWSE",
       "symbol": "3588.TW",
-      "capital": 619931820.0
+      "capital": 619911820.0
     },
     {
       "code": "3591",
@@ -5111,7 +5111,7 @@
       "industry": "電腦及週邊設備業",
       "market": "TWSE",
       "symbol": "3701.TW",
-      "capital": 2366376160.0
+      "capital": 2366688830.0
     },
     {
       "code": "3702",
@@ -5855,7 +5855,7 @@
       "industry": "電子零組件業",
       "market": "TWSE",
       "symbol": "4989.TW",
-      "capital": 1377765000.0
+      "capital": 1727765000.0
     },
     {
       "code": "4994",
@@ -7143,7 +7143,7 @@
       "industry": "半導體業",
       "market": "TWSE",
       "symbol": "6719.TW",
-      "capital": 1054839890.0
+      "capital": 1055169890.0
     },
     {
       "code": "6722",
@@ -7967,7 +7967,7 @@
       "industry": "電子零組件業",
       "market": "TWSE",
       "symbol": "8039.TW",
-      "capital": 2636689940.0
+      "capital": 2638039940.0
     },
     {
       "code": "8045",
@@ -8207,7 +8207,7 @@
       "industry": "數位雲端",
       "market": "TWSE",
       "symbol": "8422.TW",
-      "capital": 1357391830.0
+      "capital": 1358762544.0
     },
     {
       "code": "8429",
