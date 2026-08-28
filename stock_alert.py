@@ -1,5 +1,5 @@
-# stock_alert.py V2.11.01
-# V2.11.01：PEG近期優先/次產業校正/循環防極端值/失效才fallback；技術趨勢與Actions穩定版。V2.10.97 以25年/10年 CAGR 直接做估值成長率，
+# stock_alert.py V2.12.00
+# V2.12.00：PEG近期優先/次產業校正/循環防極端值/失效才fallback；技術趨勢與Actions穩定版。V2.10.97 以25年/10年 CAGR 直接做估值成長率，
 #             對不同景氣階段的股票失真，造成 2303/3711/2330 PEG 全部偏高。
 #             本版改為「次產業分層 + 歷史穩健YoY中位數 + 5/10年CAGR + 統計可信度收縮」；
 #             EPS預測Growth與估值Growth完全分離。估值Growth不再直接採單一年份預測，也不以固定CAGR硬套所有次產業。
@@ -5430,135 +5430,162 @@ def _eps_growth_from_quarterly_model(code, ts, now=None, market=None, industry=N
                 or growth > EPS_MODEL_MAX_ABS_GROWTH):
             return None,None
 
-        # V2.11.01：PEG 專用估值成長率重構。
-        # 原則：
-        # 1. 近期優先：以最近 3 年平均 EPS 對前 3 年平均 EPS 的年化變化
-        #    + 最近 5 年 CAGR + 穩健 YoY 中位數建立常態成長。
-        # 2. 次產業校正：晶圓製造/封裝測試/記憶體等使用各自權重與上限。
-        # 3. 景氣循環防極端值：極端 YoY、低基期反彈、單一年度暴增不得主導 PEG。
-        # 4. 模型失效才 fallback：只有主要近期模型無法建立時，才使用較保守的
-        #    次級近期 CAGR；絕不使用 Yahoo PEG，也絕不直接用 raw EPS Growth。
-        # 5. PEG = PE / 正規化 EPS Growth(%)；正規化成長率必須為正且達到
-        #    循環型股票的最低可解釋門檻，否則 PEG = N/A。
+        # V2.12.00：Forward EPS + Cycle Model
+        # --------------------------------------------------------
+        # 核心原則：
+        # 1. PEG 不再由 10/25 年 CAGR 直接主導。
+        # 2. 近期預測（今年完整 EPS 模型）是第一順位。
+        # 3. 最近已公布季度/YTD 是「最新資訊」的第二層確認。
+        # 4. 5 年資料只作溫和穩定器；25 年資料只負責景氣循環位置/防極端值。
+        # 5. 景氣循環股若處於低基期反彈，將 forward growth 向「中週期 EPS」收縮。
+        # 6. 模型失效才 fallback；不使用 Yahoo PEG，也不把 raw EPS Growth 無條件當 PEG 分母。
         valuation_growth=None
         valuation_method='N/A'
-        valuation_model_level='大產業'
+        valuation_model_level='次產業/大產業'
+        valuation_confidence='低'
+        cycle_adjustment=None
+        forward_growth=None
+        recent_growth_signal=None
+        cycle_growth=None
         try:
             model=get_eps_valuation_model(industry, subindustry)
             valuation_model_level=model.get('source_level','大產業')
             model_name=str(model.get('name','一般型'))
+            model_key=(normalize_subindustry(subindustry) or canonical_industry(industry) or '').strip()
             cyclical=('循環' in model_name or '週期' in model_name)
 
             hist=sorted([(int(y),float(v)) for y,v in annual_totals
                          if math.isfinite(float(v)) and float(v)>0], key=lambda x:x[0])
 
-            # 最近年度資料；舊資料僅用來提供穩定性參考，不直接支配 PEG。
-            recent7=hist[-7:] if len(hist)>=7 else hist
-            recent_yoy=[]
-            for i in range(1,len(recent7)):
-                a,b=recent7[i-1][1],recent7[i][1]
-                if a>0 and b>0:
-                    g=(b/a-1.0)*100.0
-                    if math.isfinite(g):
-                        # 嚴格排除低基期/崩跌後反彈等極端觀測。
-                        if -50.0 <= g <= 100.0:
-                            recent_yoy.append(g)
-            robust_yoy=None
-            if recent_yoy:
-                arr=np.asarray(recent_yoy,dtype=float)
-                if len(arr)>=5:
-                    lo,hi=np.percentile(arr,[20,80])
-                    arr=np.clip(arr,lo,hi)
-                robust_yoy=float(np.median(arr))
+            # A. Forward EPS：直接使用今年模型預測 vs 去年完整 EPS。
+            # 這是最接近「現在資訊」的成長率；current_annual 已經包含
+            # 已公布季度、確認季度、季節性預測及明確 EPS_EVENT_ADJUSTMENTS。
+            if prev_annual>0 and current_annual>0:
+                z=(float(current_annual)/float(prev_annual)-1.0)*100.0
+                if math.isfinite(z) and -80.0 <= z <= 150.0:
+                    forward_growth=float(z)
 
-            # 3年平均 EPS：循環型股票的核心常態化方法。
-            cycle_growth=None
-            if len(hist)>=6:
-                prev=np.mean([v for _,v in hist[-6:-3]])
-                curr=np.mean([v for _,v in hist[-3:]])
-                if prev>0 and curr>0:
-                    z=((curr/prev)**(1/3)-1)*100.0
-                    if math.isfinite(z) and -30<=z<=60:
-                        cycle_growth=float(z)
+            # B. 最新 YTD signal：只使用今年已公布季度 vs 去年同期。
+            # 至少 2 季才納入，避免單季 EPS 波動主導 PEG。
+            actual_qs=sorted(set(current_actual) | set(confirmed_used))
+            if len(actual_qs)>=2:
+                ytd_now=sum(float(projected[q]) for q in actual_qs if q in projected)
+                ytd_prev=sum(float(quarterly.get((prev_year,q))) for q in actual_qs
+                             if quarterly.get((prev_year,q)) is not None)
+                if ytd_prev>0 and ytd_now>0:
+                    z=(ytd_now/ytd_prev-1.0)*100.0
+                    if math.isfinite(z) and -80.0 <= z <= 150.0:
+                        recent_growth_signal=float(z)
 
-            # 5年 CAGR：只作輔助，避免長期資料主導。
+            # C. 近期 3 年 / 5 年 CAGR：只作穩定器，不再作 PEG 主引擎。
+            cagr3=None
             cagr5=None
+            if len(hist)>=4:
+                y0,v0=hist[-4]; y1,v1=hist[-1]
+                yrs=y1-y0
+                if yrs>=2 and v0>0 and v1>0:
+                    z=((v1/v0)**(1/yrs)-1.0)*100.0
+                    if math.isfinite(z) and -40<=z<=80: cagr3=float(z)
             if len(hist)>=6:
                 y0,v0=hist[-6]; y1,v1=hist[-1]
                 yrs=y1-y0
                 if yrs>=4 and v0>0 and v1>0:
-                    z=((v1/v0)**(1/yrs)-1)*100.0
-                    if math.isfinite(z) and -30<=z<=60:
-                        cagr5=float(z)
+                    z=((v1/v0)**(1/yrs)-1.0)*100.0
+                    if math.isfinite(z) and -40<=z<=80: cagr5=float(z)
 
-            # 次產業模型的權重；若有次產業模型，優先使用它。
-            mw=float(model.get('median_w',0.50) or 0.50)
-            cw=float(model.get('cagr5_w',0.25) or 0.25)
-            # 舊版 cagr10_w 不再使用，避免 10 年/25 年資料重新主導 PEG。
-            cap=float(model.get('cap',25.0) or 25.0)
+            # D. 中週期 EPS 成長：25 年資料的唯一主要用途是辨識「目前
+            # 是否遠離正常景氣區」。使用 3 年平均 EPS 對前一個 3 年平均 EPS，
+            # 而不是把 2001 年與 2025 年硬塞進同一條線。
+            if len(hist)>=6:
+                prev_cycle=float(np.mean([v for _,v in hist[-6:-3]]))
+                curr_cycle=float(np.mean([v for _,v in hist[-3:]]))
+                if prev_cycle>0 and curr_cycle>0:
+                    z=((curr_cycle/prev_cycle)**(1/3)-1.0)*100.0
+                    if math.isfinite(z) and -30<=z<=60: cycle_growth=float(z)
 
-            # 近期 3 年循環常態是第一順位；若不存在才提高 YoY 中位數。
+            # E. 先建立 Forward base：今年預測為主，YTD 為最新實績確認。
+            # 若 YTD 與 forward 差距極大，只做部分融合，不直接覆蓋 forward。
             components=[]
-            if cycle_growth is not None:
-                components.append(('cycle3',cycle_growth,0.50))
-            if robust_yoy is not None:
-                components.append(('median',robust_yoy,mw if cycle_growth is None else min(mw,0.35)))
+            if forward_growth is not None:
+                components.append(('forward',forward_growth,0.60))
+            if recent_growth_signal is not None:
+                components.append(('ytd',recent_growth_signal,0.25))
+            if cagr3 is not None:
+                components.append(('cagr3',cagr3,0.10))
             if cagr5 is not None:
-                components.append(('cagr5',cagr5,cw))
+                components.append(('cagr5',cagr5,0.05))
 
             if components:
-                # 重新正規化權重。
-                total_w=sum(w for _,_,w in components)
-                vg=sum(v*w for _,v,w in components)/total_w if total_w>0 else None
+                tw=sum(w for _,_,w in components)
+                base_growth=sum(v*w for _,v,w in components)/tw if tw>0 else None
+            else:
+                base_growth=None
 
-                # 若模型是循環型，再做「近期常態 vs 單年 YoY」的防極端收縮。
-                if vg is not None and cyclical:
-                    # 單年反彈明顯高於 3 年常態時，向 3 年常態收縮。
-                    if cycle_growth is not None and robust_yoy is not None:
-                        gap=abs(robust_yoy-cycle_growth)
-                        if gap>15:
-                            vg=0.70*vg+0.30*cycle_growth
-                    # 避免 0 附近的成長率造成 PEG 假精確。
-                    min_growth=5.0
+            # F. 景氣循環調整：只有「高成長且明顯偏離中週期」才收縮。
+            # 不會把正常的結構性成長公司硬壓回 1~2%。
+            normalized=base_growth
+            adjustment_reason='無循環大幅偏離'
+            if normalized is not None and cyclical and cycle_growth is not None:
+                gap=float(normalized)-float(cycle_growth)
+                # 只有正向極端偏離才強力收縮；負成長則保留 forward 訊息。
+                if gap>15.0:
+                    shrink=min(0.65, max(0.25, (gap-15.0)/45.0))
+                    normalized=(1.0-shrink)*float(normalized)+shrink*float(cycle_growth)
+                    cycle_adjustment=-shrink*gap
+                    adjustment_reason=f'循環高基期/反彈收縮 {shrink:.0%}'
                 else:
-                    min_growth=3.0
+                    cycle_adjustment=0.0
+            elif normalized is not None:
+                cycle_adjustment=0.0
 
-                # 正規化成長率不得被單次反彈推到產業上限；上限只做異常保護。
-                if vg is not None and math.isfinite(vg):
-                    vg=max(-20.0,min(float(cap),float(vg)))
-                    if vg>=min_growth:
-                        valuation_growth=float(vg)
-                        names={
-                            'cycle3':'近期3年平均EPS常態',
-                            'median':'近期7年穩健YoY中位數',
-                            'cagr5':'近期5年CAGR'
-                        }
-                        valuation_method=(
-                            f'{model_name}｜近期優先：'
-                            + '＋'.join(f'{names[k]}{w/total_w:.0%}' for k,_,w in components)
-                            + f'｜上限{cap:.0f}%｜循環防極端值'
-                        )
+            # G. 次產業校正：用次產業模型的 cap 與類型作合理範圍約束，
+            # 但不再用 median/cagr 權重直接決定 PEG。
+            cap=float(model.get('cap',30.0) or 30.0)
+            # Forward 模型可以超過舊 cap，但 PEG 不應被單年暴增扭曲。
+            # 結構性成長型允許較高；循環型更保守。
+            if cyclical:
+                cap=min(cap,30.0)
+            else:
+                cap=min(max(cap,25.0),45.0)
 
-            # 只有主要近期模型失效時才 fallback；仍然不能用 raw EPS Growth/Yahoo PEG。
+            if normalized is not None and math.isfinite(normalized):
+                # 對正成長做溫和上限；負成長不作 PEG 分母。
+                normalized=min(float(cap),float(normalized))
+                # PEG 需要「可持續、可解釋」的正成長率。
+                # 循環股最低 3%；一般成長股最低 2%。
+                min_growth=3.0 if cyclical else 2.0
+                if normalized>=min_growth:
+                    valuation_growth=float(normalized)
+                    valuation_confidence='高' if forward_growth is not None and (recent_growth_signal is not None or len(hist)>=6) else '中'
+                    parts=[]
+                    names={'forward':'Forward全年EPS','ytd':'最新YTD實績','cagr3':'近3年穩定器','cagr5':'近5年穩定器'}
+                    for k,_,w in components:
+                        parts.append(f'{names[k]}{w/tw:.0%}')
+                    valuation_method=(
+                        f'V2.12 Forward EPS＋Cycle｜{model_name}｜'
+                        + '＋'.join(parts)
+                        + f'｜循環調整：{adjustment_reason}｜上限{cap:.0f}%'
+                    )
+
+            # H. 只有主要模型失效才 fallback：優先近期 3 年 CAGR，再 5 年 CAGR。
             if valuation_growth is None:
-                fallback_candidates=[]
-                if cagr5 is not None and cagr5>=5:
-                    fallback_candidates.append(('近期5年CAGR',cagr5))
-                if robust_yoy is not None and robust_yoy>=5:
-                    fallback_candidates.append(('近期穩健YoY中位數',robust_yoy))
-                if fallback_candidates:
-                    # fallback 取較保守者，而不是較樂觀者。
-                    name,val=min(fallback_candidates,key=lambda x:x[1])
+                fallback=[]
+                if cagr3 is not None and cagr3>=3.0: fallback.append(('近3年CAGR',cagr3))
+                if cagr5 is not None and cagr5>=3.0: fallback.append(('近5年CAGR',cagr5))
+                if fallback:
+                    name,val=min(fallback,key=lambda x:x[1])
                     val=min(float(cap),float(val))
-                    if val>=min_growth:
+                    if val>=3.0:
                         valuation_growth=val
-                        valuation_method=f'{model_name}｜主要模型失效 fallback：{name}｜上限{cap:.0f}%'
+                        valuation_confidence='低'
+                        valuation_method=f'V2.12 Forward EPS＋Cycle｜主要模型失效 fallback：{name}｜上限{cap:.0f}%'
 
             if valuation_growth is not None and not math.isfinite(valuation_growth):
                 valuation_growth=None
         except Exception as e:
-            print(f'V2.11.01 估值正規化成長率計算失敗 {code}: {type(e).__name__}: {e}',flush=True)
+            print(f'V2.12 Forward EPS＋Cycle 估值成長率計算失敗 {code}: {type(e).__name__}: {e}',flush=True)
             valuation_growth=None
+
 
 
         detail={
@@ -5577,6 +5604,11 @@ def _eps_growth_from_quarterly_model(code, ts, now=None, market=None, industry=N
             'valuation_growth':float(valuation_growth) if valuation_growth is not None else None,
             'valuation_growth_method':valuation_method,
             'valuation_model_level':valuation_model_level,
+            'valuation_confidence':valuation_confidence,
+            'forward_growth':float(forward_growth) if forward_growth is not None else None,
+            'recent_growth_signal':float(recent_growth_signal) if recent_growth_signal is not None else None,
+            'cycle_growth':float(cycle_growth) if cycle_growth is not None else None,
+            'cycle_adjustment':float(cycle_adjustment) if cycle_adjustment is not None else None,
             'event_adjusted_quarters':sorted(set(event_adjusted)),
             'annual_trend_growth':float(trend_growth),
             'raw_statistical_growth':float(raw_trend_growth) if 'raw_trend_growth' in locals() else float(trend_growth),
@@ -5613,16 +5645,16 @@ def _eps_growth_from_quarterly_model(code, ts, now=None, market=None, industry=N
             'scenario_pct':float(scenario_pct),
             'conservative_annual':float(conservative_annual),
             'optimistic_annual':float(optimistic_annual),
-            'model_version':'V2.11.01 產業分層EPS模型＋多源25年統計驗證＋近期優先PEG模型＋次產業校正＋循環防極端值＋失效fallback＋Walk-forward時間序列'
+            'model_version':'V2.12.00 產業分層EPS模型＋多源25年統計驗證＋近期優先PEG模型＋次產業校正＋循環防極端值＋失效fallback＋Walk-forward時間序列'
         }
         return float(growth),detail
 
     except Exception as e:
-        print(f'V2.11.01 產業分層EPS年度模型失敗 {code}: {type(e).__name__}: {e}',flush=True)
+        print(f'V2.12.00 產業分層EPS年度模型失敗 {code}: {type(e).__name__}: {e}',flush=True)
         return None,None
 
 def _format_eps_model_summary(detail):
-    """V2.11.01：精簡 LINE EPS 統計版面；資料與統計分區顯示。"""
+    """V2.12.00：精簡 LINE EPS 統計版面；資料與統計分區顯示。"""
     if not isinstance(detail, dict):
         return ''
     st=detail.get('annual_trend_stats') or {}
@@ -5658,10 +5690,13 @@ def _format_eps_model_summary(detail):
         rr=to_float(rb.get('backtest_rmse')); tr=to_float(tb.get('rmse'))
         if rr is not None and tr is not None: text+=f'｜RMSE {rr:.2f}/{tr:.2f}'
         lines.append(text)
+    fg=to_float(detail.get('forward_growth')); yg=to_float(detail.get('recent_growth_signal')); cg=to_float(detail.get('cycle_growth'))
     if valuation_growth is not None:
-        lines.append(f'估值：EPS成長 {nf(eps_growth)}%｜PEG正規化成長 {nf(valuation_growth)}%')
+        lines.append(f'估值：Forward EPS {nf(fg)}%｜最新YTD {nf(yg)}%｜中週期 {nf(cg)}%')
+        lines.append(f'PEG正規化成長：{nf(valuation_growth)}%｜可信度：{detail.get("valuation_confidence","低")}')
     else:
-        lines.append(f'估值：EPS成長 {nf(eps_growth)}%｜PEG正規化成長 N/A（不適用）')
+        lines.append(f'估值：Forward EPS {nf(fg)}%｜最新YTD {nf(yg)}%｜中週期 {nf(cg)}%')
+        lines.append('PEG正規化成長：N/A（主要模型不足，未硬算PEG）')
     correction=to_float(detail.get('correction_factor'))
     if correction is not None:
         lines.append(f'已公布校正：{correction:.3f}｜樣本 {len(detail.get("correction_history") or [])}')
@@ -5739,7 +5774,7 @@ def official_fundamental(symbol, official=None, current_price=None, market=None,
             if detail.get('seasonal_quarters'): source_bits.append('季節Q'+','.join(map(str,detail['seasonal_quarters'])))
             if detail.get('event_adjusted_quarters'): source_bits.append('事件調整Q'+','.join(map(str,detail['event_adjusted_quarters'])))
             src='；'.join(source_bits) if source_bits else '無'
-            print(f'V2.11.01 EPS Growth：{code}={model_g:.2f}% [統計驗證EPS模型] {detail["current_year"]}全年={detail["current_annual"]:.4f} | 保守={detail["conservative_annual"]:.4f} 基準={detail["current_annual"]:.4f} 樂觀={detail["optimistic_annual"]:.4f} | {qtext} | 年度趨勢={detail["annual_trend_growth"]:.2f}% {detail["trend_credibility"]}級 p={detail.get("annual_trend_stats",{}).get("p") if detail.get("annual_trend_stats") else "N/A"} R²={detail.get("annual_trend_stats",{}).get("r2") if detail.get("annual_trend_stats") else "N/A"} | 模型融合=回歸{detail.get('model_weight_regression',0):.0%}/時間序列{detail.get('model_weight_time_series',0):.0%} | 基準全年={detail["base_annual"]:.4f} | 已公布校正={detail["correction_factor"]:.4f}（{detail["correction_status"]}） | 來源：{src}',flush=True)
+            print(f'V2.12.00 EPS Growth：{code}={model_g:.2f}% [統計驗證EPS模型] {detail["current_year"]}全年={detail["current_annual"]:.4f} | 保守={detail["conservative_annual"]:.4f} 基準={detail["current_annual"]:.4f} 樂觀={detail["optimistic_annual"]:.4f} | {qtext} | 年度趨勢={detail["annual_trend_growth"]:.2f}% {detail["trend_credibility"]}級 p={detail.get("annual_trend_stats",{}).get("p") if detail.get("annual_trend_stats") else "N/A"} R²={detail.get("annual_trend_stats",{}).get("r2") if detail.get("annual_trend_stats") else "N/A"} | 模型融合=回歸{detail.get('model_weight_regression',0):.0%}/時間序列{detail.get('model_weight_time_series',0):.0%} | 基準全年={detail["base_annual"]:.4f} | 已公布校正={detail["correction_factor"]:.4f}（{detail["correction_status"]}） | 來源：{src}',flush=True)
     else:
         # V2.10.67：只有完整季度年度模型真的無法建立時，才啟動舊有的
         # EPS fallback。正常由季度模型成功取得的結果完全不覆蓋。
@@ -5842,7 +5877,7 @@ def official_fundamental(symbol, official=None, current_price=None, market=None,
     if pe is not None and pe>0 and valuation_growth is not None and 0<valuation_growth<=100:
         peg=pe/valuation_growth
         if math.isfinite(peg) and 0<peg<100: out['peg']=peg
-    print(f'V2.11.01 基本面 {code}: PE={fmt(out["pe"])} PB={fmt(out["pb"])} Yield={fmt(out["yield"])} EPSGrowth={fmt(out["eps_growth"])} ValuationGrowth={fmt(out["valuation_growth"])} ROE={fmt(out["roe"])} PEG={fmt(out["peg"])}',flush=True)
+    print(f'V2.12.00 基本面 {code}: PE={fmt(out["pe"])} PB={fmt(out["pb"])} Yield={fmt(out["yield"])} EPSGrowth={fmt(out["eps_growth"])} ForwardGrowth={fmt(out["valuation_growth"])} ROE={fmt(out["roe"])} PEG={fmt(out["peg"])}',flush=True)
     return out
 
 
@@ -5985,7 +6020,7 @@ def yahoo_fund(symbol):
 
         if info.get('returnOnEquity') is not None:
             o['roe'] = to_float(info.get('returnOnEquity')) * 100
-        # V2.11.01：PEG 統一由 official_fundamental 的近期正規化模型計算，
+        # V2.12.00：PEG 統一由 official_fundamental 的近期正規化模型計算，
         # 不再直接採用 Yahoo PEG，避免不同資料口徑污染評分。
         o['peg'] = None
 
@@ -7920,7 +7955,7 @@ def score_fund(pe, one, peer, peg, roe, eps, pb, yld, model, valuation_growth=No
     return min(cap,int(round(raw))),why
 
 def classify_trend(price, ma20, ma60):
-    """V2.11.01：以價格相對兩條均線 + 均線排列判斷趨勢。
+    """V2.12.00：以價格相對兩條均線 + 均線排列判斷趨勢。
 
     不再要求嚴格的「price > MA20 > MA60」才叫多頭。
     股價高於兩條均線但 MA20 暫時低於 MA60 時，標示為「偏多」，
@@ -8284,7 +8319,7 @@ def yahoo_light_fund(symbol, official=None, current_price=None, market=None, ind
                 'eps_growth': None, 'roe': None, 'peg': None
             }
         print(
-            f'V2.11.01 LINE基本面統一資料層 {clean_code(str(symbol).split(".")[0])}: '
+            f'V2.12.00 LINE基本面統一資料層 {clean_code(str(symbol).split(".")[0])}: '
             f'PE={fmt(result.get("pe"))} PB={fmt(result.get("pb"))} '
             f'Yield={fmt(result.get("yield"))} '
             f'EPSGrowth={fmt(result.get("eps_growth"))} '
@@ -8294,7 +8329,7 @@ def yahoo_light_fund(symbol, official=None, current_price=None, market=None, ind
         return result
     except Exception as e:
         print(
-            f'V2.11.01 LINE基本面統一資料層失敗 {symbol}: '
+            f'V2.12.00 LINE基本面統一資料層失敗 {symbol}: '
             f'{type(e).__name__}: {e}',
             flush=True
         )
@@ -9206,7 +9241,7 @@ def analysis(
     # --------------------------------------------------------
 
     return (
-        f'📊 股票加碼分析 V2.11.01\n\n'
+        f'📊 股票加碼分析 V2.12.00\n\n'
         f'標的：{name}（{code}）\n'
         f'市場：{market}\n'
         f'產業：{industry}\n'
@@ -9773,7 +9808,7 @@ def run_webhook_server():
         return (
             '<!doctype html><html><head><meta charset="utf-8">'
             '<meta name="viewport" content="width=device-width,initial-scale=1">'
-            '<title>Stock Alert V2.11.01</title>'
+            '<title>Stock Alert V2.12.00</title>'
             '<style>body{margin:0;padding:20px;background:#f6f7f9;color:#222}'
             '.card{max-width:900px;margin:auto;background:#fff;border-radius:14px;padding:20px;box-shadow:0 2px 12px #0001}'
             'a{word-break:break-all}</style></head><body><div class="card">'
@@ -10904,10 +10939,10 @@ def main():
 
     else:
 
-        print('========== V2.11.01 RUN START ==========', flush=True)
+        print('========== V2.12.00 RUN START ==========', flush=True)
         print(f'執行時間（台灣）：{datetime.now(TW_TZ).strftime("%Y-%m-%d %H:%M:%S")}', flush=True)
         run_alerts()
-        print('========== V2.11.01 RUN END ==========', flush=True)
+        print('========== V2.12.00 RUN END ==========', flush=True)
 
 
 if __name__ == '__main__':
