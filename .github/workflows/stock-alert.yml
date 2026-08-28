@@ -1,20 +1,23 @@
-name: Stock Alert V2.10.20
+name: Stock Alert V2.11.00
 
 on:
   schedule:
-    - cron: "*/15 * * * *"
+    - cron: '*/15 * * * *'
   workflow_dispatch:
 
+# V2.11.00：避免舊一輪卡住後，後續15分鐘排程全部排隊。
+# 單輪有明確 timeout；新一輪可取消仍在執行的舊輪，維持接近15分鐘節奏。
 concurrency:
   group: stock-alert-main
   cancel-in-progress: true
 
+permissions:
+  contents: write
+
 jobs:
   check-stock:
     runs-on: ubuntu-latest
-
-    permissions:
-      contents: write
+    timeout-minutes: 13
 
     steps:
       - name: Checkout
@@ -25,26 +28,33 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: '3.12'
+          cache: pip
 
       - name: Install packages
         run: pip install -r requirements.txt
 
-      - name: Run stock alert + refresh all-market technical cache
+      - name: Run stock alert V2.11.00
         env:
           LINE_CHANNEL_ACCESS_TOKEN: ${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }}
-        run: python stock_alert.py
+          LINE_CHANNEL_SECRET: ${{ secrets.LINE_CHANNEL_SECRET }}
+        run: |
+          echo "========== V2.11.00 ACTION START =========="
+          echo "UTC: $(date -u '+%Y-%m-%d %H:%M:%S')"
+          echo "TAIWAN: $(TZ=Asia/Taipei date '+%Y-%m-%d %H:%M:%S')"
+          python stock_alert.py
+          echo "========== V2.11.00 ACTION END =========="
 
-      - name: Save generated state and all-market technical cache
+      - name: Save generated state and caches
+        if: always()
         shell: bash
         run: |
           set -e
 
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
 
-          echo "========== 檢查 Python 產生的狀態/快取 =========="
-
+          echo '========== 檢查狀態/快取 =========='
           for f in \
             alert_state.json \
             pe_history.json \
@@ -52,72 +62,49 @@ jobs:
             line_fund_cache.json \
             line_technical_cache.json \
             line_chip_cache.json \
+            line_chip_summary_cache.json \
+            line_margin_cache.json \
+            line_pe_cache.json \
             market_universe_cache.json \
             twse_profile_cache.json \
             twse_quotes_cache.json \
-            subindustry_cache.json; do
-
+            subindustry_cache.json \
+            eps_quarterly_cache.json \
+            eps_annual_history_cache.json \
+            eps_history_engine_cache.json \
+            eps_mops_batch_history_cache.json \
+            eps_goodinfo_history_cache.json; do
             if [ -f "$f" ]; then
               echo "存在：$f ($(wc -c < "$f") bytes)"
             else
-              echo "不存在：$f（略過）"
+              echo "不存在：$f"
             fi
-
           done
 
-          if [ -f line_technical_cache.json ]; then
-            echo "========== 技術快取摘要 =========="
+          echo '========== Git 工作樹 =========='
+          git status --short
 
-            python - <<'PY'
-          import json
-          from pathlib import Path
-
-          p = Path("line_technical_cache.json")
-
-          try:
-              d = json.loads(p.read_text(encoding="utf-8"))
-
-              entries = [
-                  k for k, v in d.items()
-                  if isinstance(v, dict) and v.get("price") is not None
-              ]
-
-              print(f"技術快取有效標的：{len(entries)}")
-              print("前20檔：", ", ".join(entries[:20]))
-
-          except Exception as e:
-              print("技術快取摘要失敗：", e)
-          PY
-          fi
-
-          echo "========== 暫存本次 Python 產生內容 =========="
-
+          # 若 Python 有產生資料，先保存；再同步最新 main，避免15分鐘排程互相覆蓋。
           git add -A
-
-          if ! git diff --cached --quiet; then
-            git stash push -u -m "stock-alert-generated-state-v2.10.20"
-          fi
-
-          echo "========== 同步 GitHub 最新 main =========="
-
-          git fetch origin main
-          git rebase origin/main
-
-          echo "========== 還原本次 Python 產生內容 =========="
-
-          git stash pop || true
-
-          echo "========== 最終加入所有變更 =========="
-
-          git add -A
-
           if git diff --cached --quiet; then
-            echo "沒有需要提交的資料"
+            echo '沒有需要提交的資料'
             exit 0
           fi
 
-          git commit -m "Update stock alert state and all-market technical cache V2.10.20"
+          git stash push -u -m "stock-alert-v2.11.00-generated-state" || true
 
-          echo "========== Push =========="
+          echo '========== 同步 GitHub 最新 main =========='
+          git fetch origin main
+          git rebase origin/main
 
+          echo '========== 還原本輪資料 =========='
+          git stash pop || true
+
+          git add -A
+          if git diff --cached --quiet; then
+            echo 'rebase 後沒有需要提交的資料'
+            exit 0
+          fi
+
+          git commit -m 'Update stock alert state and caches V2.11.00'
           git push origin HEAD:main
