@@ -1,5 +1,5 @@
-# stock_alert.py V2.12.02
-# V2.12.02：PEG近期優先/次產業校正/循環防極端值/失效才fallback；技術趨勢與Actions穩定版。V2.10.97 以25年/10年 CAGR 直接做估值成長率，
+# stock_alert.py V2.12.03
+# V2.12.03：PEG近期優先/次產業校正/循環防極端值/失效才fallback；技術趨勢與Actions穩定版。V2.10.97 以25年/10年 CAGR 直接做估值成長率，
 #             對不同景氣階段的股票失真，造成 2303/3711/2330 PEG 全部偏高。
 #             本版改為「次產業分層 + 歷史穩健YoY中位數 + 5/10年CAGR + 統計可信度收縮」；
 #             EPS預測Growth與估值Growth完全分離。估值Growth不再直接採單一年份預測，也不以固定CAGR硬套所有次產業。
@@ -176,6 +176,12 @@ EPS_MODEL_MIN_YEARS = 3
 EPS_MODEL_MAX_YEARS = 25
 # V2.10.79：近期視窗與長期視窗分離；近期資料反映目前商業結構。
 EPS_MODEL_RECENT_YEARS = 10
+# V2.12.03：只對長期獲利且成長穩定的公司啟動高成本 EPS/PEG 模型。
+EPS_STABILITY_GATE_YEARS = 5
+EPS_STABILITY_MIN_POSITIVE_YOYS = 3
+EPS_STABILITY_MIN_CAGR = 2.0
+EPS_STABILITY_MAX_ABS_YOY = 100.0
+EPS_STABILITY_MAX_CV = 1.25
 EPS_MODEL_MIN_HISTORY_QUARTERS = 8
 EPS_MODEL_MAX_ABS_GROWTH = 300
 EPS_MODEL_BLEND_REGRESSION = 0.70
@@ -4138,6 +4144,64 @@ def _long_eps_external_v21090(code, missing_years):
             found[y]=v
     return {int(y):float(v) for y,v in found.items() if int(y) in set(missing_years)}
 
+def _eps_model_stability_gate(code, ts, market=None):
+    """V2.12.03：低成本篩選是否值得啟動完整 EPS/PEG 統計模型。
+
+    條件：最近5個完整年度 EPS 全為正、5年 CAGR >= 2%、最近4年
+    至少3年正成長，且近期 YoY 不含極端值、波動不過大。
+    不通過時不抓25年歷史，不建立 Forward EPS + Cycle PEG。
+    """
+    try:
+        annual={}
+        if isinstance(ts,dict):
+            for x in ts.get('eps_annual_history') or []:
+                if not isinstance(x,dict): continue
+                dt=str(x.get('date') or ''); v=to_float(x.get('eps'))
+                if len(dt)>=4 and v is not None and math.isfinite(v):
+                    try: annual[int(dt[:4])]=float(v)
+                    except Exception: pass
+            qmap={}
+            for x in ts.get('eps_quarterly_history') or []:
+                if not isinstance(x,dict): continue
+                dt=str(x.get('date') or ''); v=to_float(x.get('eps'))
+                if len(dt)>=7 and v is not None and math.isfinite(v):
+                    try:
+                        y=int(dt[:4]); m=int(dt[5:7]); q=(m-1)//3+1
+                        if 1<=q<=4: qmap[(y,q)]=float(v)
+                    except Exception: pass
+            for y in sorted(set(y for y,q in qmap)):
+                vals=[qmap.get((y,q)) for q in range(1,5)]
+                if y not in annual and all(v is not None and math.isfinite(v) for v in vals):
+                    annual[y]=float(sum(vals))
+        years=sorted(annual)
+        recent=years[-EPS_STABILITY_GATE_YEARS:]
+        if len(recent)<EPS_STABILITY_GATE_YEARS:
+            return False,{'reason':f'完整年度不足{EPS_STABILITY_GATE_YEARS}年','years':len(recent)}
+        vals=[float(annual[y]) for y in recent]
+        if not all(math.isfinite(v) and v>0 for v in vals):
+            return False,{'reason':'最近5年存在EPS<=0','years':recent}
+        cagr=((vals[-1]/vals[0])**(1.0/(len(vals)-1))-1.0)*100.0
+        if not math.isfinite(cagr) or cagr<EPS_STABILITY_MIN_CAGR:
+            return False,{'reason':f'5年CAGR不足{EPS_STABILITY_MIN_CAGR:.0f}%','cagr':cagr}
+        yoy=[]
+        for a,b in zip(vals[:-1],vals[1:]):
+            g=(b/a-1.0)*100.0
+            if not math.isfinite(g): return False,{'reason':'YoY無效'}
+            yoy.append(float(g))
+        positive=sum(1 for g in yoy if g>0)
+        if positive<EPS_STABILITY_MIN_POSITIVE_YOYS:
+            return False,{'reason':f'最近4年僅{positive}年正成長','yoy':yoy}
+        if any(abs(g)>EPS_STABILITY_MAX_ABS_YOY for g in yoy):
+            return False,{'reason':'近期YoY含極端值','yoy':yoy}
+        mean_abs=float(np.mean(np.abs(yoy))) if yoy else 0.0
+        cv=float(np.std(yoy,ddof=0))/max(mean_abs,1e-9)
+        if cv>EPS_STABILITY_MAX_CV:
+            return False,{'reason':'近期成長波動過大','yoy':yoy,'cv':cv}
+        return True,{'reason':'通過','years':recent,'cagr':float(cagr),'yoy':yoy,'positive_yoys':positive,'cv':cv}
+    except Exception as e:
+        return False,{'reason':f'穩定性檢查失敗：{type(e).__name__}'}
+
+
 def _eps_history_engine(code, market=None, ts=None, max_years=EPS_MODEL_MAX_YEARS):
     """V2.10.88：真正的 25 年 EPS 歷史資料引擎。
 
@@ -4268,12 +4332,12 @@ def _eps_history_engine(code, market=None, ts=None, max_years=EPS_MODEL_MAX_YEAR
     result={int(y):float(v) for y,v in data.items()}
     if result:
         print(
-            f'V2.12.02 EPS歷史引擎：{code} {min(result)}～{max(result)} 共{len(result)}年 '
+            f'V2.12.03 EPS歷史引擎：{code} {min(result)}～{max(result)} 共{len(result)}年 '
             f'（目標{first_year}～{last_year}、本次新增{len(set(result)-before)}年、來源={meta.get("source","cache")}）',
             flush=True)
     else:
         print(
-            f'V2.12.02 EPS歷史引擎：{code} 無可用年度資料（目標{first_year}～{last_year}）；'
+            f'V2.12.03 EPS歷史引擎：{code} 無可用年度資料（目標{first_year}～{last_year}）；'
             f'已記錄來源失敗並進入{EPS_HISTORY_RETRY_DAYS}天冷卻', flush=True)
     RUN_CACHE[key]=result
     return result
@@ -5430,7 +5494,7 @@ def _eps_growth_from_quarterly_model(code, ts, now=None, market=None, industry=N
                 or growth > EPS_MODEL_MAX_ABS_GROWTH):
             return None,None
 
-        # V2.12.02：Forward EPS 優先 + Cycle 僅作修正 + 統計可信度自動降權
+        # V2.12.03：Forward EPS 優先 + Cycle 僅作修正 + 統計可信度自動降權
         # ----------------------------------------------------------------
         # 核心原則：
         # 1. PEG 的主要成長率來自「今年 Forward EPS」，不是 10/25 年 CAGR。
@@ -5594,7 +5658,7 @@ def _eps_growth_from_quarterly_model(code, ts, now=None, market=None, industry=N
             if valuation_growth is not None and not math.isfinite(valuation_growth):
                 valuation_growth=None
         except Exception as e:
-            print(f'V2.12.02 Forward EPS＋Cycle 估值成長率計算失敗 {code}: {type(e).__name__}: {e}',flush=True)
+            print(f'V2.12.03 Forward EPS＋Cycle 估值成長率計算失敗 {code}: {type(e).__name__}: {e}',flush=True)
             valuation_growth=None
 
 
@@ -5657,18 +5721,29 @@ def _eps_growth_from_quarterly_model(code, ts, now=None, market=None, industry=N
             'scenario_pct':float(scenario_pct),
             'conservative_annual':float(conservative_annual),
             'optimistic_annual':float(optimistic_annual),
-            'model_version':'V2.12.02 產業分層EPS模型＋多源25年統計驗證＋近期優先PEG模型＋次產業校正＋循環防極端值＋失效fallback＋Walk-forward時間序列'
+            'model_version':'V2.12.03 穩定獲利門檻＋Forward EPS優先＋Cycle修正＋統計模型條件啟用＋PEG'
         }
         return float(growth),detail
 
     except Exception as e:
-        print(f'V2.12.02 產業分層EPS年度模型失敗 {code}: {type(e).__name__}: {e}',flush=True)
+        print(f'V2.12.03 產業分層EPS年度模型失敗 {code}: {type(e).__name__}: {e}',flush=True)
         return None,None
 
 def _format_eps_model_summary(detail):
-    """V2.12.02：精簡 LINE EPS 統計版面；資料與統計分區顯示。"""
+    """V2.12.03：精簡 LINE EPS 統計版面；資料與統計分區顯示。"""
     if not isinstance(detail, dict):
         return ''
+    if detail.get('model_skipped'):
+        reason=detail.get('skip_reason','資料不足')
+        cagr=to_float(detail.get('gate_cagr'))
+        yoy=detail.get('gate_yoy') or []
+        ctext=f'{cagr:.2f}%' if cagr is not None and math.isfinite(cagr) else 'N/A'
+        ytext='、'.join(f'{float(x):.1f}%' for x in yoy if to_float(x) is not None) or 'N/A'
+        return (f'【EPS統計驗證】\n'
+                f'模型：未通過EPS穩定性門檻，略過高成本Forward EPS＋Cycle模型\n'
+                f'原因：{reason}\n'
+                f'最近5年CAGR：{ctext}｜最近4年YoY：{ytext}\n'
+                f'PEG：N/A（獲利穩定性不足，不納入PEG估值）\n')
     st=detail.get('annual_trend_stats') or {}
     if not isinstance(st,dict): st={}
     def nf(v,d=2):
@@ -5771,8 +5846,16 @@ def official_fundamental(symbol, official=None, current_price=None, market=None,
         cached_g=to_float(ci0.get('eps_growth')) if isinstance(ci0,dict) else None
     except Exception: pass
 
-    model_g,detail=_eps_growth_from_quarterly_model(code,ts,now=datetime.now(TW_TZ),market=market,industry=industry,subindustry=subindustry)
-    model_g=_eps_growth_sanity(model_g,'V2.10.96 產業分層25年歷史 EPS',True,cached_g)
+    # V2.12.03：先做低成本穩定性門檻；不通過就不啟動25年歷史/PEG模型。
+    stable_for_model, gate_detail = _eps_model_stability_gate(code, ts, market=market)
+    model_skipped = not stable_for_model
+    if stable_for_model:
+        print(f'V2.12.03 EPS穩定性門檻：{code} 通過｜5年CAGR={gate_detail.get("cagr"):.2f}%｜正成長{gate_detail.get("positive_yoys")}/4｜啟動EPS/PEG模型',flush=True)
+        model_g,detail=_eps_growth_from_quarterly_model(code,ts,now=datetime.now(TW_TZ),market=market,industry=industry,subindustry=subindustry)
+        model_g=_eps_growth_sanity(model_g,'V2.12.03 產業分層EPS模型',True,cached_g) if model_g is not None else None
+    else:
+        model_g=None; detail=None
+        print(f'V2.12.03 EPS穩定性門檻：{code} 未通過｜{gate_detail.get("reason","資料不足")}｜略過25年EPS/PEG模型',flush=True)
     if model_g is not None:
         out['eps_growth']=model_g
         out['eps_model_detail']=detail
@@ -5786,8 +5869,15 @@ def official_fundamental(symbol, official=None, current_price=None, market=None,
             if detail.get('seasonal_quarters'): source_bits.append('季節Q'+','.join(map(str,detail['seasonal_quarters'])))
             if detail.get('event_adjusted_quarters'): source_bits.append('事件調整Q'+','.join(map(str,detail['event_adjusted_quarters'])))
             src='；'.join(source_bits) if source_bits else '無'
-            print(f'V2.12.02 EPS Growth：{code}={model_g:.2f}% [統計驗證EPS模型] {detail["current_year"]}全年={detail["current_annual"]:.4f} | 保守={detail["conservative_annual"]:.4f} 基準={detail["current_annual"]:.4f} 樂觀={detail["optimistic_annual"]:.4f} | {qtext} | 年度趨勢={detail["annual_trend_growth"]:.2f}% {detail["trend_credibility"]}級 p={detail.get("annual_trend_stats",{}).get("p") if detail.get("annual_trend_stats") else "N/A"} R²={detail.get("annual_trend_stats",{}).get("r2") if detail.get("annual_trend_stats") else "N/A"} | 模型融合=回歸{detail.get('model_weight_regression',0):.0%}/時間序列{detail.get('model_weight_time_series',0):.0%} | 基準全年={detail["base_annual"]:.4f} | 已公布校正={detail["correction_factor"]:.4f}（{detail["correction_status"]}） | 來源：{src}',flush=True)
+            print(f'V2.12.03 EPS Growth：{code}={model_g:.2f}% [統計驗證EPS模型] {detail["current_year"]}全年={detail["current_annual"]:.4f} | 保守={detail["conservative_annual"]:.4f} 基準={detail["current_annual"]:.4f} 樂觀={detail["optimistic_annual"]:.4f} | {qtext} | 年度趨勢={detail["annual_trend_growth"]:.2f}% {detail["trend_credibility"]}級 p={detail.get("annual_trend_stats",{}).get("p") if detail.get("annual_trend_stats") else "N/A"} R²={detail.get("annual_trend_stats",{}).get("r2") if detail.get("annual_trend_stats") else "N/A"} | 模型融合=回歸{detail.get('model_weight_regression',0):.0%}/時間序列{detail.get('model_weight_time_series',0):.0%} | 基準全年={detail["base_annual"]:.4f} | 已公布校正={detail["correction_factor"]:.4f}（{detail["correction_status"]}） | 來源：{src}',flush=True)
     else:
+        if model_skipped:
+            out['eps_model_detail']={
+                'model_skipped':True,
+                'skip_reason':gate_detail.get('reason','資料不足'),
+                'gate_cagr':gate_detail.get('cagr'),
+                'gate_yoy':gate_detail.get('yoy')
+            }
         # V2.10.67：只有完整季度年度模型真的無法建立時，才啟動舊有的
         # EPS fallback。正常由季度模型成功取得的結果完全不覆蓋。
         fallback_g=None
@@ -5889,7 +5979,7 @@ def official_fundamental(symbol, official=None, current_price=None, market=None,
     if pe is not None and pe>0 and valuation_growth is not None and 0<valuation_growth<=100:
         peg=pe/valuation_growth
         if math.isfinite(peg) and 0<peg<100: out['peg']=peg
-    print(f'V2.12.02 基本面 {code}: PE={fmt(out["pe"])} PB={fmt(out["pb"])} Yield={fmt(out["yield"])} EPSGrowth={fmt(out["eps_growth"])} ForwardGrowth={fmt(out["valuation_growth"])} ROE={fmt(out["roe"])} PEG={fmt(out["peg"])}',flush=True)
+    print(f'V2.12.03 基本面 {code}: PE={fmt(out["pe"])} PB={fmt(out["pb"])} Yield={fmt(out["yield"])} EPSGrowth={fmt(out["eps_growth"])} ForwardGrowth={fmt(out["valuation_growth"])} ROE={fmt(out["roe"])} PEG={fmt(out["peg"])}',flush=True)
     return out
 
 
@@ -6032,7 +6122,7 @@ def yahoo_fund(symbol):
 
         if info.get('returnOnEquity') is not None:
             o['roe'] = to_float(info.get('returnOnEquity')) * 100
-        # V2.12.02：PEG 統一由 official_fundamental 的近期正規化模型計算，
+        # V2.12.03：PEG 統一由 official_fundamental 的近期正規化模型計算，
         # 不再直接採用 Yahoo PEG，避免不同資料口徑污染評分。
         o['peg'] = None
 
@@ -6707,7 +6797,7 @@ def technical(symbol, force_refresh=False):
     d = None
     try:
         print(
-            f'V2.12.02 技術面即時刷新：{cache_key} '
+            f'V2.12.03 技術面即時刷新：{cache_key} '
             f'Yahoo 1d/6mo',
             flush=True
         )
@@ -6767,7 +6857,7 @@ def technical(symbol, force_refresh=False):
             if o.get('recent_low') is not None and o['recent_low'] > 0:
                 o['distance_low'] = live_price / o['recent_low'] - 1
             print(
-                f'V2.12.02 技術趨勢強制重算：{cache_key} '
+                f'V2.12.03 技術趨勢強制重算：{cache_key} '
                 f'live_price={live_price:.2f} '
                 f'MA20={o.get("ma20")} MA60={o.get("ma60")} '
                 f'trend={o.get("trend")}',
@@ -6802,7 +6892,7 @@ def technical(symbol, force_refresh=False):
             save=True
         )
         print(
-            f'V2.12.02 技術快取已更新：{cache_key} '
+            f'V2.12.03 技術快取已更新：{cache_key} '
             f'price={o.get("price"):.2f}'
             + (
                 f' data_date={o.get("_data_date")}'
@@ -6824,7 +6914,7 @@ def technical(symbol, force_refresh=False):
     )
     if z:
         print(
-            f'V2.12.02 技術面即時刷新失敗，退回本機技術快取：'
+            f'V2.12.03 技術面即時刷新失敗，退回本機技術快取：'
             f'{cache_key}',
             flush=True
         )
@@ -6841,7 +6931,7 @@ def technical(symbol, force_refresh=False):
     )
     if z:
         print(
-            f'V2.12.02 技術面即時刷新失敗，退回 GitHub 技術快取：'
+            f'V2.12.03 技術面即時刷新失敗，退回 GitHub 技術快取：'
             f'{cache_key}',
             flush=True
         )
@@ -7952,7 +8042,7 @@ def score_fund(pe, one, peer, peg, roe, eps, pb, yld, model, valuation_growth=No
         if peer is not None and peer>0:
             r=pe/peer; ratios.append(1 if r<.85 else .75 if r<=1.05 else .4 if r<=1.15 else .1 if r<=1.3 else 0)
         if ratios: add('pe',max(ratios),'低於自身/同業合理估值')
-    # V2.12.02：PEG 評分必須與有效的 Forward-derived valuation_growth 綁定。
+    # V2.12.03：PEG 評分必須與有效的 Forward-derived valuation_growth 綁定。
     # 若 PEG 是 N/A、成長率無效，或 PEG 與 PE / 正規化成長率不一致，完全不給 PEG 分。
     valid_peg=False
     vg=to_float(valuation_growth)
@@ -7977,7 +8067,7 @@ def score_fund(pe, one, peer, peg, roe, eps, pb, yld, model, valuation_growth=No
     return min(cap,int(round(raw))),why
 
 def classify_trend(price, ma20, ma60):
-    """V2.12.02：以價格相對兩條均線 + 均線排列判斷趨勢。
+    """V2.12.03：以價格相對兩條均線 + 均線排列判斷趨勢。
 
     不再要求嚴格的「price > MA20 > MA60」才叫多頭。
     股價高於兩條均線但 MA20 暫時低於 MA60 時，標示為「偏多」，
@@ -8341,7 +8431,7 @@ def yahoo_light_fund(symbol, official=None, current_price=None, market=None, ind
                 'eps_growth': None, 'roe': None, 'peg': None
             }
         print(
-            f'V2.12.02 LINE基本面統一資料層 {clean_code(str(symbol).split(".")[0])}: '
+            f'V2.12.03 LINE基本面統一資料層 {clean_code(str(symbol).split(".")[0])}: '
             f'PE={fmt(result.get("pe"))} PB={fmt(result.get("pb"))} '
             f'Yield={fmt(result.get("yield"))} '
             f'EPSGrowth={fmt(result.get("eps_growth"))} '
@@ -8351,7 +8441,7 @@ def yahoo_light_fund(symbol, official=None, current_price=None, market=None, ind
         return result
     except Exception as e:
         print(
-            f'V2.12.02 LINE基本面統一資料層失敗 {symbol}: '
+            f'V2.12.03 LINE基本面統一資料層失敗 {symbol}: '
             f'{type(e).__name__}: {e}',
             flush=True
         )
@@ -9263,7 +9353,7 @@ def analysis(
     # --------------------------------------------------------
 
     return (
-        f'📊 股票加碼分析 V2.12.02\n\n'
+        f'📊 股票加碼分析 V2.12.03\n\n'
         f'標的：{name}（{code}）\n'
         f'市場：{market}\n'
         f'產業：{industry}\n'
@@ -9830,7 +9920,7 @@ def run_webhook_server():
         return (
             '<!doctype html><html><head><meta charset="utf-8">'
             '<meta name="viewport" content="width=device-width,initial-scale=1">'
-            '<title>Stock Alert V2.12.02</title>'
+            '<title>Stock Alert V2.12.03</title>'
             '<style>body{margin:0;padding:20px;background:#f6f7f9;color:#222}'
             '.card{max-width:900px;margin:auto;background:#fff;border-radius:14px;padding:20px;box-shadow:0 2px 12px #0001}'
             'a{word-break:break-all}</style></head><body><div class="card">'
@@ -10961,10 +11051,10 @@ def main():
 
     else:
 
-        print('========== V2.12.02 RUN START ==========', flush=True)
+        print('========== V2.12.03 RUN START ==========', flush=True)
         print(f'執行時間（台灣）：{datetime.now(TW_TZ).strftime("%Y-%m-%d %H:%M:%S")}', flush=True)
         run_alerts()
-        print('========== V2.12.02 RUN END ==========', flush=True)
+        print('========== V2.12.03 RUN END ==========', flush=True)
 
 
 if __name__ == '__main__':
