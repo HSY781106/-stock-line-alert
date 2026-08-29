@@ -30,7 +30,7 @@
     "meta": {
       "mops_attempted_at": 1787840323.1526902,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787972592.1079872,
+      "updated_at": 1787973498.403394,
       "first_year": 2001,
       "last_year": 2025,
       "count": 25,
@@ -92,7 +92,7 @@
     "meta": {
       "mops_attempted_at": 1787840330.862825,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787972600.0806596,
+      "updated_at": 1787973516.5209744,
       "first_year": 2001,
       "last_year": 2025,
       "count": 18,
@@ -2732,7 +2732,7 @@
     "meta": {
       "mops_attempted_at": 1787840417.6935625,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787972657.723953,
+      "updated_at": 1787973543.806857,
       "first_year": 2001,
       "last_year": 2025,
       "count": 20,
@@ -4205,7 +4205,7 @@
     },
     "meta": {
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1787972662.946133,
+      "updated_at": 1787973550.8779233,
       "first_year": 2001,
       "last_year": 2025,
       "count": 19,
