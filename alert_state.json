@@ -1,65 +1,65 @@
 {
   "drop_alert": {
     "0050 元大台灣50": {
-      "date": "2026-08-30",
+      "date": "2026-08-31",
       "daily_alert": false,
       "weekly_alert": false
     },
     "2330 台積電": {
-      "date": "2026-08-30",
+      "date": "2026-08-31",
       "daily_alert": false,
       "weekly_alert": false
     },
     "3711 日月光投控": {
-      "date": "2026-08-30",
+      "date": "2026-08-31",
       "daily_alert": false,
       "weekly_alert": false
     },
     "QQQ": {
-      "date": "2026-08-30",
+      "date": "2026-08-31",
       "daily_alert": false,
       "weekly_alert": false
     },
     "台灣加權指數": {
-      "date": "2026-08-30",
+      "date": "2026-08-31",
       "daily_alert": false,
       "weekly_alert": false
     }
   },
   "interval_low": {
     "0050 元大台灣50": {
-      "last_check": "2026-08-30T23:48:14.496658+08:00",
+      "last_check": "2026-08-31T00:03:41.253272+08:00",
       "last_price": 106.05000305175781,
       "last_interval_low": 106.94999694824219,
       "last_interval_source": "Yahoo-5m"
     },
     "2330 台積電": {
-      "last_check": "2026-08-30T23:48:15.262396+08:00",
+      "last_check": "2026-08-31T00:03:41.896738+08:00",
       "last_price": 2420.0,
       "last_interval_low": 2420.0,
       "last_interval_source": "Yahoo-5m"
     },
     "3711 日月光投控": {
-      "last_check": "2026-08-30T23:48:19.225982+08:00",
+      "last_check": "2026-08-31T00:03:45.512640+08:00",
       "last_price": 621.0,
       "last_interval_low": 618.0,
       "last_interval_source": "Yahoo-5m"
     },
     "QQQ": {
-      "last_check": "2026-08-30T23:48:22.105789+08:00",
+      "last_check": "2026-08-31T00:03:48.151385+08:00",
       "last_price": 716.4299926757812,
       "last_interval_low": 715.9349975585938,
       "last_interval_source": "Yahoo-5m"
     },
     "台灣加權指數": {
-      "last_check": "2026-08-30T23:48:22.811806+08:00",
+      "last_check": "2026-08-31T00:03:48.770963+08:00",
       "last_price": 46331.44921875,
       "last_interval_low": 46291.46875,
       "last_interval_source": "Yahoo-5m"
     }
   },
   "high_score_alert": {
-    "date": "2026-08-30",
+    "date": "2026-08-31",
     "active": [
       "8271"
     ]

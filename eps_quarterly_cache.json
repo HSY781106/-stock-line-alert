@@ -29260,5 +29260,94 @@
       }
     ],
     "source": "Yahoo earnings dates Reported EPS"
+  },
+  "4561.TWO": {
+    "_cached_at": 1788105936.9371474,
+    "data": [
+      {
+        "date": "2018-06-30",
+        "eps": 0.67,
+        "source": "Yahoo Reported EPS"
+      },
+      {
+        "date": "2018-09-30",
+        "eps": 0.36,
+        "source": "Yahoo Reported EPS"
+      }
+    ],
+    "source": "Yahoo earnings dates Reported EPS"
+  },
+  "4711.TWO": {
+    "_cached_at": 1788105941.317048,
+    "data": [
+      {
+        "date": "2009-03-31",
+        "eps": -0.04,
+        "source": "Yahoo Reported EPS"
+      },
+      {
+        "date": "2024-09-30",
+        "eps": -0.04,
+        "source": "Yahoo Reported EPS"
+      },
+      {
+        "date": "2024-12-31",
+        "eps": 0.08,
+        "source": "Yahoo Reported EPS"
+      },
+      {
+        "date": "2025-03-31",
+        "eps": 0.01,
+        "source": "Yahoo Reported EPS"
+      }
+    ],
+    "source": "Yahoo earnings dates Reported EPS"
+  },
+  "6894.TWO": {
+    "_cached_at": 1788105967.605523,
+    "data": [
+      {
+        "date": "2023-09-30",
+        "eps": 2.21,
+        "source": "Yahoo Reported EPS"
+      },
+      {
+        "date": "2023-12-31",
+        "eps": 2.16,
+        "source": "Yahoo Reported EPS"
+      },
+      {
+        "date": "2024-03-31",
+        "eps": 2.28,
+        "source": "Yahoo Reported EPS"
+      },
+      {
+        "date": "2026-03-31",
+        "eps": 4.0,
+        "source": "Yahoo Reported EPS"
+      },
+      {
+        "date": "2026-06-30",
+        "eps": 5.0,
+        "source": "Yahoo Reported EPS"
+      }
+    ],
+    "source": "Yahoo earnings dates Reported EPS"
+  },
+  "6922.TWO": {
+    "_cached_at": 1788105971.0275679,
+    "data": [
+      {
+        "date": "2025-06-30",
+        "eps": 0.52,
+        "source": "Yahoo Reported EPS"
+      },
+      {
+        "date": "2025-09-30",
+        "eps": 2.83,
+        "source": "Yahoo Reported EPS"
+      }
+    ],
+    "source": "Yahoo earnings dates Reported EPS"
   }
 }
