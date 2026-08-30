@@ -27,7 +27,7 @@
       "2024": 45.25,
       "2025": 65.47
     },
-    "_cached_at": 1788048231.3739026,
+    "_cached_at": 1788049103.752938,
     "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS"
   },
   "3711": {
@@ -65,7 +65,7 @@
       "2021": 2.25,
       "2025": 2.519576
     },
-    "_cached_at": 1788048240.0883267,
+    "_cached_at": 1788049112.650093,
     "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS"
   },
   "1301": {
@@ -1114,7 +1114,7 @@
       "2024": 1.67,
       "2025": 1.96639
     },
-    "_cached_at": 1788048266.2032177,
+    "_cached_at": 1788049140.7478704,
     "source": "Yahoo complete quarterly EPS"
   },
   "2912": {
@@ -1841,7 +1841,7 @@
       "2024": 23.31,
       "2025": 20.62
     },
-    "_cached_at": 1788048286.7107027,
+    "_cached_at": 1788049165.017515,
     "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS"
   },
   "6581": {
@@ -2457,7 +2457,7 @@
       "2023": 4.45,
       "2025": 8.37
     },
-    "_cached_at": 1788048264.7768672,
+    "_cached_at": 1788049138.4945986,
     "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS"
   },
   "2882": {
@@ -2840,7 +2840,7 @@
       "2024": 25.38,
       "2025": 38.15
     },
-    "_cached_at": 1788048291.1087055,
+    "_cached_at": 1788049169.8948107,
     "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS"
   },
   "3661": {
@@ -2869,7 +2869,7 @@
       "2024": 79.89,
       "2025": 67.51
     },
-    "_cached_at": 1788048271.6824985,
+    "_cached_at": 1788049147.5338387,
     "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS"
   }
 }
