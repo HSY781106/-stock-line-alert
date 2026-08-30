@@ -1,13 +1,13 @@
 {
   "2330": {
-    "fetched_at": "2026-08-30T20:40:25.100030+08:00",
+    "fetched_at": "2026-08-31T02:48:17.769088+08:00",
     "adjustment": 0,
     "events": [],
     "source": "Google News RSS",
     "lookback_days": 14
   },
   "3711": {
-    "fetched_at": "2026-08-30T20:40:28.623635+08:00",
+    "fetched_at": "2026-08-31T02:48:20.066794+08:00",
     "adjustment": 2,
     "events": [
       {
@@ -25,14 +25,14 @@
     "lookback_days": 14
   },
   "3706": {
-    "fetched_at": "2026-08-30T20:41:31.658707+08:00",
+    "fetched_at": "2026-08-31T02:49:08.868244+08:00",
     "adjustment": 0,
     "events": [],
     "source": "Google News RSS",
     "lookback_days": 14
   },
   "8271": {
-    "fetched_at": "2026-08-30T20:42:08.984765+08:00",
+    "fetched_at": "2026-08-31T02:49:42.801708+08:00",
     "adjustment": 2,
     "events": [
       {
