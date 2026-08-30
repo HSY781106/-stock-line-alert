@@ -30,7 +30,7 @@
     "meta": {
       "mops_attempted_at": 1787840323.1526902,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1788067088.9884803,
+      "updated_at": 1788067979.7420266,
       "first_year": 2001,
       "last_year": 2025,
       "count": 25,
@@ -92,7 +92,7 @@
     "meta": {
       "mops_attempted_at": 1787840330.862825,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1788067101.7347791,
+      "updated_at": 1788067989.9944742,
       "first_year": 2001,
       "last_year": 2025,
       "count": 18,
@@ -1657,7 +1657,7 @@
     "meta": {
       "mops_attempted_at": 1787840386.08517,
       "source": "Yahoo complete quarterly EPS",
-      "updated_at": 1788067133.4779847,
+      "updated_at": 1788068020.9538503,
       "first_year": 2001,
       "last_year": 2025,
       "count": 25,
@@ -2732,7 +2732,7 @@
     "meta": {
       "mops_attempted_at": 1787840417.6935625,
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1788067160.6714299,
+      "updated_at": 1788068047.530688,
       "first_year": 2001,
       "last_year": 2025,
       "count": 20,
@@ -3668,7 +3668,7 @@
     },
     "meta": {
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1788067131.2391222,
+      "updated_at": 1788068018.9351897,
       "first_year": 2001,
       "last_year": 2025,
       "count": 24,
@@ -4205,7 +4205,7 @@
     },
     "meta": {
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1788067166.298568,
+      "updated_at": 1788068053.1485255,
       "first_year": 2001,
       "last_year": 2025,
       "count": 19,
@@ -4245,7 +4245,7 @@
     },
     "meta": {
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1788067140.59816,
+      "updated_at": 1788068029.2672036,
       "first_year": 2001,
       "last_year": 2025,
       "count": 23,
