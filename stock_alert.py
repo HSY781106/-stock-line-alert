@@ -1,4 +1,12 @@
-# stock_alert.py V2.12.05
+# stock_alert.py V2.14.00
+# V2.14.00：重大消息面 + 事件分級 + 持股處置建議。
+#             基本面/技術/籌碼仍維持原模型；重大司法、監管、財報、
+#             產地/關稅、舞弊、內線等事件可對綜合分數做 -15~+5 調整。
+#             事件來源採 Google News 公開 RSS；只保留近14日、去重後的重大事件。
+#             「涉嫌/傳聞/調查」不視為定罪，但仍會視為事件風險；輸出會明確標示未證實。
+#             新聞資料快取6小時，避免 LINE/Actions 每次重複請求。
+#             舊版沒有重大消息面的股票，其原有評分邏輯不被新聞資料缺失強制扣分。
+#
 # V2.12.05：PEG近期優先/次產業校正/循環防極端值/失效才fallback；技術趨勢與Actions穩定版。V2.10.97 以25年/10年 CAGR 直接做估值成長率，
 #             對不同景氣階段的股票失真，造成 2303/3711/2330 PEG 全部偏高。
 #             本版改為「次產業分層 + 歷史穩健YoY中位數 + 5/10年CAGR + 統計可信度收縮」；
@@ -54,7 +62,7 @@
 # - 只抓本次 STOCKS 目標股所在大產業的候選股票
 # - 保留原本基本面 / 技術 / 籌碼 / 風險 / LINE 功能
 #
-# 股票跌幅 + 15分鐘區間最低價 + 動態估值 + 技術 + 籌碼 + 100分制加碼決策
+# 股票跌幅 + 15分鐘區間最低價 + 動態估值 + 技術 + 籌碼 + 重大消息面 + 100分制加碼決策
 # V2.10.40：以正式 V2.10.37 實際檔案為基底；LINE 查詢改採 A 方案
 #          + 查詢結果不再使用 Push，不消耗每月 Push 額度
 #          + Reply 僅立即回覆「分析頁面網址」；背景分析完成後寫入 Render 結果頁
@@ -73,6 +81,8 @@ import hashlib
 import base64
 import threading
 import io
+import xml.etree.ElementTree as ET
+from email.utils import parsedate_to_datetime
 
 from datetime import datetime, timedelta
 from urllib.parse import quote
@@ -116,8 +126,18 @@ EPS_HISTORY_ENGINE_CACHE_FILE = 'eps_history_engine_cache.json'
 EPS_HISTORY_MOPS_BATCH_CACHE_FILE = 'eps_mops_batch_history_cache.json'
 # V2.10.88：Goodinfo 一次取得多年年度 EPS，作為真正的25年歷史來源。
 EPS_HISTORY_GOODINFO_CACHE_FILE = 'eps_goodinfo_history_cache.json'
+# V2.14.00：重大消息面快取。以公司代號/名稱查詢公開新聞 RSS，
+# 只把近期且可辨識的重大事件轉成風險/利多調整，不把一般新聞當成評分。
+NEWS_CACHE_FILE = 'major_news_cache.json'
 
 UNIVERSE_CACHE_FILE = 'market_universe_cache.json'
+# V2.14.00：重大消息面參數
+NEWS_CACHE_HOURS = 6
+NEWS_LOOKBACK_DAYS = 14
+NEWS_MAX_ITEMS = 8
+NEWS_TIMEOUT = 6
+NEWS_MAX_ADJUSTMENT = 5
+NEWS_MIN_ADJUSTMENT = -15
 TWSE_PROFILE_CACHE_FILE = 'twse_profile_cache.json'
 TWSE_QUOTES_CACHE_FILE = 'twse_quotes_cache.json'
 
@@ -861,6 +881,327 @@ def save_json(f, d):
         )
 
     os.replace(t, f)
+
+
+# ============================================================
+# V2.14.00 重大消息面
+# ============================================================
+
+NEWS_NEGATIVE_PATTERNS = [
+    # 司法 / 公司治理 / 財務誠信
+    (re.compile(r'內線交易|內線買賣|內線案'), -12, '內線交易相關調查/案件'),
+    (re.compile(r'做假帳|假帳|財報不實|財務舞弊|會計舞弊|舞弊|掏空|詐欺'), -12, '財務誠信/舞弊相關事件'),
+    (re.compile(r'檢調|檢察官|地檢署|搜索|搜查|約談|帶回|偵辦|偵查|羈押|起訴'), -9, '檢調/司法調查'),
+    (re.compile(r'產地標示|洗產地|原產地|關稅規避'), -9, '產地/關稅合規事件'),
+    (re.compile(r'制裁|禁令|出口管制|違反法規|重大違規|遭主管機關處分'), -9, '監管/法規風險'),
+    (re.compile(r'重編財報|財報重編|會計師保留意見|無法表示意見'), -10, '財報/會計重大異常'),
+    (re.compile(r'破產|聲請重整|停業|下市|下櫃|信用違約|債務危機'), -15, '財務存續重大風險'),
+    (re.compile(r'重大訴訟|遭求償|巨額賠償|鉅額罰款'), -6, '重大訴訟/賠償'),
+    (re.compile(r'火災|爆炸|工安事故|停工|廠房事故|重大事故'), -6, '重大營運事故'),
+    (re.compile(r'撤銷認證|產品召回|召回|重大品質問題'), -6, '產品/品質重大事件'),
+    # 經營層重大異動
+    (re.compile(r'董事長請辭|總經理請辭|執行長請辭|財務長請辭|董座請辭'), -5, '高階主管重大異動'),
+]
+
+NEWS_POSITIVE_PATTERNS = [
+    (re.compile(r'重大合約|重大訂單|取得大單|拿下大單|長約|大客戶訂單'), 4, '重大訂單/合約'),
+    (re.compile(r'上修財測|上修展望|調升財測|調升展望'), 4, '公司上修展望'),
+    (re.compile(r'量產|大幅擴產|擴產|新廠|取得認證|通過認證'), 3, '擴產/認證/量產進展'),
+    (re.compile(r'重大合作|策略合作|合資|併購|收購'), 3, '重大合作/併購'),
+    (re.compile(r'新產品量產|新產品獲准|新產品上市'), 3, '新產品進展'),
+    (re.compile(r'庫藏股|買回庫藏股'), 2, '庫藏股計畫'),
+]
+
+def _news_parse_date(value):
+    try:
+        if not value:
+            return None
+        dt = parsedate_to_datetime(str(value))
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=TW_TZ)
+        return dt.astimezone(TW_TZ)
+    except Exception:
+        return None
+
+
+def _news_clean_text(value):
+    value = re.sub(r'<[^>]+>', ' ', str(value or ''))
+    value = html.unescape(value)
+    return re.sub(r'\s+', ' ', value).strip()
+
+
+def _news_event_score(title, description='', source=''):
+    """將新聞轉成保守的事件調整，不判定犯罪是否成立。"""
+    text = _news_clean_text(f'{title} {description}')
+    negative_hits = []
+    positive_hits = []
+
+    for pat, score, label in NEWS_NEGATIVE_PATTERNS:
+        if pat.search(text):
+            negative_hits.append((score, label))
+
+    for pat, score, label in NEWS_POSITIVE_PATTERNS:
+        if pat.search(text):
+            positive_hits.append((score, label))
+
+    # 司法/舞弊/內線/產地類事件即使是「涉嫌/傳聞」，也屬重大風險；
+    # 但輸出會標示「調查/未證實」，避免把新聞當成已定罪事實。
+    if negative_hits:
+        score, label = min(negative_hits, key=lambda x: x[0])
+        # 多個不同重大負面類別同時出現，最多加重至 -15。
+        distinct = {x[1] for x in negative_hits}
+        if len(distinct) >= 2:
+            score = min(score - 2, -15)
+        else:
+            score = max(score, NEWS_MIN_ADJUSTMENT)
+        status = '重大負面事件'
+        return int(max(NEWS_MIN_ADJUSTMENT, score)), label, status, negative_hits, positive_hits
+
+    if positive_hits:
+        score, label = max(positive_hits, key=lambda x: x[0])
+        return int(min(NEWS_MAX_ADJUSTMENT, score)), label, '重大正面事件', negative_hits, positive_hits
+
+    return 0, '', '', negative_hits, positive_hits
+
+
+def _news_recency_factor(dt, now=None):
+    if dt is None:
+        return 0.50
+    now = now or datetime.now(TW_TZ)
+    days = max(0.0, (now - dt).total_seconds() / 86400.0)
+    if days <= 2:
+        return 1.00
+    if days <= 7:
+        return 0.80
+    return 0.50
+
+
+def _news_rss_url(code, name):
+    # Google News 公開 RSS；不需要 API Key。
+    q = quote(f'"{code}" "{name}"', safe='')
+    return (
+        'https://news.google.com/rss/search?q=' + q +
+        '&hl=zh-TW&gl=TW&ceid=TW:zh-Hant'
+    )
+
+
+def fetch_major_news(code, name, force=False):
+    """V2.14.00：取得近14日重大新聞，失敗時安全回傳中性。"""
+    code = clean_code(code)
+    name = str(name or code).strip()
+    if not code:
+        return {'adjustment': 0, 'events': [], 'source': 'none'}
+
+    cache = load_json(NEWS_CACHE_FILE)
+    now = datetime.now(TW_TZ)
+    cached = cache.get(code) if isinstance(cache, dict) else None
+
+    if (not force and isinstance(cached, dict) and
+            cached.get('fetched_at')):
+        try:
+            fetched = datetime.fromisoformat(str(cached['fetched_at']))
+            if fetched.tzinfo is None:
+                fetched = fetched.replace(tzinfo=TW_TZ)
+            age = (now - fetched.astimezone(TW_TZ)).total_seconds() / 3600.0
+            if age <= NEWS_CACHE_HOURS:
+                return cached
+        except Exception:
+            pass
+
+    url = _news_rss_url(code, name)
+    events = []
+    try:
+        r = requests.get(
+            url,
+            timeout=NEWS_TIMEOUT,
+            headers={'User-Agent': 'Mozilla/5.0 stock-alert/2.13'}
+        )
+        r.raise_for_status()
+        root = ET.fromstring(r.content)
+
+        cutoff = now - timedelta(days=NEWS_LOOKBACK_DAYS)
+        seen = set()
+
+        for item in root.findall('.//item'):
+            title = _news_clean_text(item.findtext('title', ''))
+            description = _news_clean_text(item.findtext('description', ''))
+            source = _news_clean_text(item.findtext('source', ''))
+            link = _news_clean_text(item.findtext('link', ''))
+            dt = _news_parse_date(item.findtext('pubDate', ''))
+
+            if not title:
+                continue
+            if dt is not None and dt < cutoff:
+                continue
+
+            # 避免搜尋結果把別家公司/無關代號帶進來。
+            joined = f'{title} {description}'
+            if code not in joined and name not in joined:
+                continue
+
+            adj, label, status, neg, pos = _news_event_score(
+                title, description, source
+            )
+            if adj == 0:
+                continue
+
+            key = re.sub(r'\W+', '', title.lower())
+            if key in seen:
+                continue
+            seen.add(key)
+
+            factor = _news_recency_factor(dt, now)
+            adjusted = int(round(adj * factor))
+            if adj < 0:
+                adjusted = min(-1, adjusted)
+            elif adj > 0:
+                adjusted = max(1, adjusted)
+
+            events.append({
+                'title': title[:240],
+                'source': source[:80],
+                'date': dt.isoformat() if dt else '',
+                'link': link[:500],
+                'raw_adjustment': int(adj),
+                'adjustment': int(adjusted),
+                'label': label,
+                'status': status,
+            })
+
+        # 以「最嚴重事件」為主；若有多則同方向重大事件，最多再加重2分。
+        events.sort(
+            key=lambda x: (
+                x.get('adjustment', 0),
+                x.get('date', '')
+            )
+        )
+        if events:
+            negative = [x for x in events if x.get('adjustment', 0) < 0]
+            positive = [x for x in events if x.get('adjustment', 0) > 0]
+            if negative:
+                base = min(x['adjustment'] for x in negative)
+                extra = min(2, sum(1 for x in negative if x['adjustment'] <= -4) - 1)
+                total_adj = max(NEWS_MIN_ADJUSTMENT, base - max(0, extra))
+            else:
+                base = max(x['adjustment'] for x in positive)
+                extra = min(2, sum(1 for x in positive if x['adjustment'] >= 2) - 1)
+                total_adj = min(NEWS_MAX_ADJUSTMENT, base + max(0, extra))
+        else:
+            total_adj = 0
+
+        result = {
+            'fetched_at': now.isoformat(),
+            'adjustment': int(total_adj),
+            'events': events[:NEWS_MAX_ITEMS],
+            'source': 'Google News RSS',
+            'lookback_days': NEWS_LOOKBACK_DAYS,
+        }
+        if isinstance(cache, dict):
+            cache[code] = result
+            save_json(NEWS_CACHE_FILE, cache)
+        return result
+
+    except Exception as e:
+        print(
+            f'V2.14.00 重大消息面取得失敗 {code}: '
+            f'{type(e).__name__}: {e}',
+            flush=True
+        )
+        # 有舊快取就繼續使用；沒有則中性，不因新聞 API 異常扣分。
+        if isinstance(cached, dict) and isinstance(cached.get('events'), list):
+            return cached
+        return {
+            'fetched_at': now.isoformat(),
+            'adjustment': 0,
+            'events': [],
+            'source': 'unavailable',
+        }
+
+
+def score_news(code, name, force=False):
+    data = fetch_major_news(code, name, force=force)
+    adj = to_float(data.get('adjustment')) if isinstance(data, dict) else 0
+    adj = int(max(NEWS_MIN_ADJUSTMENT, min(NEWS_MAX_ADJUSTMENT, adj or 0)))
+    events = data.get('events', []) if isinstance(data, dict) else []
+    reasons = []
+    for x in events[:3]:
+        if x.get('adjustment', 0) < 0:
+            reasons.append(
+                f'⚠️ {x.get("label") or "重大負面事件"}'
+            )
+        elif x.get('adjustment', 0) > 0:
+            reasons.append(
+                f'🟢 {x.get("label") or "重大正面事件"}'
+            )
+    return adj, events, reasons
+
+
+def assess_event_disposition(news_events, tech, base_total, total):
+    """V2.14.00：把重大事件與技術破壞分開判斷，輸出「持股處置」而非只給加碼結論。
+
+    原則：
+    - 不把新聞中的「涉嫌/調查」當成已定罪。
+    - 重大事件本身先提高風險；若再出現技術/籌碼破壞，才升級到停損評估。
+    - 破產、債務違約等存續風險直接進入最高處置層級。
+    """
+    events = news_events if isinstance(news_events, list) else []
+    negative = [e for e in events if to_float(e.get('adjustment')) is not None and to_float(e.get('adjustment')) < 0]
+    if not negative:
+        # 沒有重大負面事件時，不讓一般評分直接變成「停損」。
+        if total >= 75:
+            return 0, '🟢 持有／可依原策略操作', '目前未偵測重大負面事件'
+        if total >= 60:
+            return 0, '🟡 持有觀察', '目前未偵測重大負面事件'
+        if total >= 40:
+            return 0, '🟠 暫緩加碼／持股觀察', '目前未偵測重大負面事件'
+        return 0, '🔴 不建議加碼／檢視持股風險', '綜合評分偏低，但非重大事件觸發停損'
+
+    text = ' '.join(
+        f"{e.get('title','')} {e.get('label','')}" for e in negative
+    )
+    # 存續風險：直接最高層級。
+    survival = bool(re.search(r'破產|重整|停業|下市|下櫃|信用違約|債務危機', text))
+    # 核心治理/財報風險：假帳、舞弊、重編、保留意見、內線交易等。
+    core_governance = bool(re.search(
+        r'假帳|財報不實|財務舞弊|會計舞弊|舞弊|掏空|詐欺|內線交易|重編財報|財報重編|保留意見|無法表示意見',
+        text
+    ))
+    investigation = bool(re.search(r'檢調|司法|搜索|搜查|約談|偵辦|偵查|起訴|產地|洗產地|關稅規避|重大違規|主管機關處分', text))
+
+    tech_text = ' '.join(str(tech.get(k) or '') for k in ('trend', 'price_source'))
+    tech_break = False
+    price = to_float(tech.get('price'))
+    ma20 = to_float(tech.get('ma20'))
+    ma60 = to_float(tech.get('ma60'))
+    rsi = to_float(tech.get('rsi'))
+    k = to_float(tech.get('k'))
+    d = to_float(tech.get('d'))
+    if price is not None and ma60 is not None and price < ma60:
+        tech_break = True
+    if price is not None and ma20 is not None and price < ma20 and rsi is not None and rsi < 40:
+        tech_break = True
+    if k is not None and d is not None and k < d and rsi is not None and rsi < 40:
+        tech_break = True
+    if re.search(r'空頭|弱勢|下跌|轉弱', tech_text):
+        tech_break = True
+
+    # 多個重大負面事件同時出現，也視為風險升級訊號。
+    severe_count = sum(
+        1 for e in negative
+        if abs(to_float(e.get('adjustment')) or 0) >= 8
+    )
+
+    if survival:
+        return 5, '🚨 優先出清評估', '公司存續／債務風險達最高警戒層級'
+    if core_governance and tech_break:
+        return 4, '🔴 停損／大幅減碼評估', '重大治理／財報事件 + 技術面同步破壞'
+    if core_governance and (severe_count >= 2 or total < 50):
+        return 4, '🔴 停損／大幅減碼評估', '重大治理／財報事件且整體風險偏高'
+    if core_governance or (investigation and tech_break):
+        return 3, '🔴 減碼／停損評估', '重大事件已進入公司治理／司法風險層級'
+    if investigation:
+        return 2, '🟠 暫緩加碼／持股觀察', '重大調查或合規事件，案件狀態仍應持續追蹤'
+    return 2, '🟠 暫緩加碼／持股觀察', '近期有重大負面事件'
 
 
 # ============================================================
@@ -2922,6 +3263,8 @@ def _drop_alert_analysis_message(name, symbol, u, day, week, cur, pc, wh, daily_
         factors = grab(r'加分因素：([^\n]+)')
         chips = grab(r'籌碼訊號：([^\n]+)')
         risks = grab(r'風險提醒：([^\n]+)')
+        holding = grab(r'持股處置：([^\n]+)')
+        event_level = grab(r'事件處置等級：([^\n]+)')
 
         triggers=[]
         if daily_triggered:
@@ -2939,6 +3282,8 @@ def _drop_alert_analysis_message(name, symbol, u, day, week, cur, pc, wh, daily_
             f'【當下加碼評估】\n'
             f'綜合評分：{total}\n'
             f'結論：{verdict}\n'
+            f'事件處置等級：{event_level}\n'
+            f'持股處置：{holding}\n'
             f'基本面：{fs}\n'
             f'技術面：{ts}\n'
             f'籌碼面：{cs}\n\n'
@@ -9193,14 +9538,25 @@ def analysis(
         margin
     )
 
+    # V2.14.00：重大消息面不改動原本四大模組的計分，
+    # 只做事件風險/利多調整，範圍 -15~+5，最後仍維持100分制。
+    news_adj, news_events, news_reasons = score_news(
+        code,
+        name,
+        force=False
+    )
+
+    base_total = (
+        fs
+        + ts
+        + cs
+        + (10 - risk)
+    )
     total = max(
         0,
         min(
             100,
-            fs
-            + ts
-            + cs
-            + (10 - risk)
+            base_total + news_adj
         )
     )
 
@@ -9233,6 +9589,19 @@ def analysis(
         verdict = (
             '🔴 不建議加碼'
         )
+
+    # V2.14.00：另外計算「持股處置」，避免把「是否加碼」與「已持有該怎麼做」混成同一個結論。
+    event_level, holding_action, holding_reason = assess_event_disposition(
+        news_events, tech, base_total, total
+    )
+
+    # 重大事件具覆蓋權：不允許高分股票在重大治理/存續風險下仍顯示可加碼。
+    if event_level >= 4:
+        verdict = '🔴 暫停加碼／重大事件風險'
+    elif event_level == 3:
+        verdict = '🟠 暫停加碼／重大事件觀察'
+    elif event_level == 2 and verdict.startswith('🟢'):
+        verdict = '🟠 暫緩加碼／重大事件觀察'
 
     interval = (
         u.get(
@@ -9443,9 +9812,19 @@ def analysis(
         f'風險扣分：-{risk}\n'
         f'{("、".join(rr) if rr else "目前無主要風險警訊")}\n\n'
 
+        f'【重大消息面】\n'
+        f'消息面調整：{news_adj:+d} 分\n'
+        f'{("；".join(news_reasons) if news_reasons else "近14日未偵測到重大事件")}\n'
+        f'{("近期重大事件：\\n" + "\\n".join((("• " + x.get("date","")[:10] + " " + x.get("title","")) for x in news_events[:3])) if news_events else "")}\n\n'
+
         f'【加碼決策】\n'
+        f'原始綜合分數：{base_total}/100\n'
+        f'消息面調整：{news_adj:+d}\n'
         f'綜合評分：{total}/100\n'
-        f'結論：{verdict}\n\n'
+        f'結論：{verdict}\n'
+        f'事件處置等級：{event_level}/5\n'
+        f'持股處置：{holding_action}\n'
+        f'處置理由：{holding_reason}\n\n'
 
         f'加分因素：'
         f'{"、".join(fr + tr) if fr + tr else "無"}\n'
@@ -10359,7 +10738,7 @@ def _scan_high_score_stocks(u, state):
     threshold = 90
 
     if not isinstance(u, dict) or not u:
-        print('⚠️ V2.10.79 高評分掃描：股票池為空，跳過', flush=True)
+        print('⚠️ V2.14.00 高評分掃描：股票池為空，跳過', flush=True)
         return []
 
     # --------------------------------------------------------
@@ -10555,7 +10934,7 @@ def _scan_high_score_stocks(u, state):
         })
 
     print(
-        f'V2.10.79 高評分第一階段：候選 {len(candidates)} 檔；'
+        f'V2.14.00 高評分第一階段：候選 {len(candidates)} 檔；'
         f'無技術快取 {skipped_no_tech} 檔；'
         f'耗時 {time.time()-started:.1f}s',
         flush=True
@@ -10617,30 +10996,56 @@ def _scan_high_score_stocks(u, state):
             ts, tr = score_tech(c['tech'])
             cs, cr = score_chip(c['inst'], c['margin'])
             risk, rr = score_risk(c['tech'], c['inst'], c['margin'])
-            total = max(0, min(100, fs + ts + cs + (10 - risk)))
+            base_total = fs + ts + cs + (10 - risk)
 
-            if total >= threshold:
+            # V2.14.00：只有理論上可能達到門檻的候選才查新聞，
+            # 避免全市場1985檔逐一打 RSS；重大負面事件會在這裡把分數拉回。
+            if base_total >= threshold - NEWS_MAX_ADJUSTMENT:
+                news_adj, news_events, news_reasons = score_news(
+                    c['code'],
+                    item.get('name') or c['code'],
+                    force=False
+                )
+            else:
+                news_adj, news_events, news_reasons = 0, [], []
+
+            total = max(0, min(100, base_total + news_adj))
+            event_level, holding_action, holding_reason = assess_event_disposition(
+                news_events, c['tech'], base_total, total
+            )
+
+            # V2.14.00：重大治理/存續事件不能只靠高分進入「>=90 高分股」。
+            if event_level >= 4:
+                total_for_rank = min(total, threshold - 1)
+            else:
+                total_for_rank = total
+
+            if total_for_rank >= threshold:
                 results.append({
                     'code': c['code'],
                     'name': item.get('name') or c['code'],
                     'symbol': c['symbol'],
-                    'score': int(total),
+                    'score': int(total_for_rank),
                     'fund': int(fs),
                     'tech': int(ts),
                     'chip': int(cs),
                     'risk': int(risk),
+                    'news_adjustment': int(news_adj),
+                    'news_events': news_events[:3],
+                    'event_level': int(event_level),
+                    'holding_action': holding_action,
                     'price': current_price,
-                    'reasons': fr + tr,
+                    'reasons': fr + tr + news_reasons,
                 })
         except Exception as e:
             print(
-                f'V2.10.79 高評分完整基本面失敗 {c.get("code")}: '
+                f'V2.14.00 高評分完整基本面失敗 {c.get("code")}: '
                 f'{type(e).__name__}: {e}',
                 flush=True
             )
         if idx % 10 == 0 or idx == len(candidates):
             print(
-                f'V2.10.79 高評分第二階段進度：{idx}/{len(candidates)}；'
+                f'V2.14.00 高評分第二階段進度：{idx}/{len(candidates)}；'
                 f'目前 >=90：{len(results)}',
                 flush=True
             )
@@ -10680,6 +11085,7 @@ def _scan_high_score_stocks(u, state):
             '【本次新進榜】\n' +
             '\n'.join(
                 f'{i}. {x["code"]} {x["name"]}｜{x["score"]}分'
+                f'（消息{x.get("news_adjustment", 0):+d}）'
                 for i, x in enumerate(new_rows, 1)
             ) +
             f'\n\n目前90分以上共 {len(results)} 檔\n\n' +
@@ -10691,19 +11097,19 @@ def _scan_high_score_stocks(u, state):
         )
         send_line(msg[:5000])
         print(
-            f'V2.10.79 高評分 LINE 已發送：新進榜 {len(new_rows)} 檔；'
+            f'V2.14.00 高評分 LINE 已發送：新進榜 {len(new_rows)} 檔；'
             f'目前 >=90 共 {len(results)} 檔',
             flush=True
         )
     else:
         print(
-            f'V2.10.79 高評分掃描完成：目前 >=90 共 {len(results)} 檔；'
+            f'V2.14.00 高評分掃描完成：目前 >=90 共 {len(results)} 檔；'
             f'本次新進榜 {len(new_codes)} 檔；不發送重複 LINE',
             flush=True
         )
 
     print(
-        f'V2.10.79 高評分掃描總耗時：{time.time()-started:.1f}s',
+        f'V2.14.00 高評分掃描總耗時：{time.time()-started:.1f}s',
         flush=True
     )
     return results
@@ -11012,7 +11418,7 @@ def run_alerts():
     try:
         _scan_high_score_stocks(u, state)
     except Exception as e:
-        print(f'⚠️ V2.10.79 高評分全市場掃描失敗：{type(e).__name__}: {e}', flush=True)
+        print(f'⚠️ V2.14.00 高評分全市場掃描失敗：{type(e).__name__}: {e}', flush=True)
         traceback.print_exc()
 
     save_json(
@@ -11072,10 +11478,10 @@ def main():
 
     else:
 
-        print('========== V2.12.05 RUN START ==========', flush=True)
+        print('========== V2.14.00 RUN START ==========', flush=True)
         print(f'執行時間（台灣）：{datetime.now(TW_TZ).strftime("%Y-%m-%d %H:%M:%S")}', flush=True)
         run_alerts()
-        print('========== V2.12.05 RUN END ==========', flush=True)
+        print('========== V2.14.00 RUN END ==========', flush=True)
 
 
 if __name__ == '__main__':
