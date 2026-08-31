@@ -1,5 +1,6 @@
-# stock_alert.py V2.14.05
-# V2.14.05：重大消息面「多公司新聞隔離」版。
+# stock_alert.py V2.14.06
+# V2.14.06：V2.14.05 完整覆蓋版；保留重大消息面「多公司新聞隔離」邏輯，
+#             修正 LINE 15 分鐘區間通知遺失「加碼分析／建議」問題，並修正目前價格不得使用過期市場股票池價格。
 #             重大消息評分只使用新聞標題，RSS description/snippet/延伸內容完全不參與評分。
 #             【核心規則】負面重大事件若同一標題涉及多家公司，且無法確認負面事件
 #             明確屬於目標公司，則該負面事件一律不採計；寧可漏報，不誤扣。
@@ -130,7 +131,7 @@ EPS_HISTORY_MOPS_BATCH_CACHE_FILE = 'eps_mops_batch_history_cache.json'
 EPS_HISTORY_GOODINFO_CACHE_FILE = 'eps_goodinfo_history_cache.json'
 # V2.14.00：重大消息面快取。以公司代號/名稱查詢公開新聞 RSS，
 # 只把近期且可辨識的重大事件轉成風險/利多調整，不把一般新聞當成評分。
-NEWS_CACHE_FILE = 'major_news_cache_v21405.json'
+NEWS_CACHE_FILE = 'major_news_cache_v21406.json'
 
 UNIVERSE_CACHE_FILE = 'market_universe_cache.json'
 # V2.14.00：重大消息面參數
@@ -2878,42 +2879,31 @@ def get_latest_intraday_price(symbol):
 
 
 def get_latest_price(symbol):
+    """V2.14.06：取得真正最新可用價格，不使用市場股票池的舊價格。
 
-    key = (
-        'latest',
-        symbol
-    )
-
+    優先順序：Yahoo 最新 1 分鐘 K 棒 Close -> 最新 5 分鐘 K 棒 Close
+    -> 最新日線 Close。這個函式是「目前價格」唯一共用入口，避免
+    market_universe_cache.json 的批次價格在盤後／跨執行時段被誤當成即時價。
+    """
+    key = ('latest', symbol)
     if key in RUN_CACHE:
         return RUN_CACHE[key]
 
-    d = yf_download(
-        symbol,
-        '5d',
-        '1d'
-    )
-
-    try:
-
-        v = (
-            float(
-                d['Close']
-                .dropna()
-                .iloc[-1]
-            )
-            if (
-                d is not None
-                and not d.empty
-            )
-            else None
-        )
-
-    except Exception:
-
-        v = None
+    v = None
+    for period, interval in (('1d', '1m'), ('1d', '5m'), ('5d', '1d')):
+        try:
+            d = yf_download(symbol, period, interval)
+            if d is None or d.empty or 'Close' not in d.columns:
+                continue
+            c = pd.to_numeric(d['Close'], errors='coerce').dropna()
+            if not c.empty:
+                v = float(c.iloc[-1])
+                if v > 0:
+                    break
+        except Exception as e:
+            print(f'V2.14.06 最新價格取得失敗 {symbol} [{interval}]：{type(e).__name__}: {e}', flush=True)
 
     RUN_CACHE[key] = v
-
     return v
 
 
@@ -3157,7 +3147,8 @@ def check_interval_low(
     name,
     symbol,
     state,
-    current_price=None
+    current_price=None,
+    u=None
 ):
 
     now = datetime.now(
@@ -3188,11 +3179,12 @@ def check_interval_low(
         )
     )
 
-    # 15 分鐘區間的「目前價格」優先使用 TWSE/TPEx 股票池官方最新價，
-    # 避免 Yahoo 日線收盤價或舊 K 棒造成與主分析價格不一致。
-    cur = to_float(current_price)
+    # V2.14.06：絕不優先使用 market_universe_cache 的批次價格。
+    # current_price 可能是舊快取值；目前價格一律以 Yahoo 最新可用盤中 Close 為準，
+    # 失敗時才退回日線 Close。
+    cur = get_latest_price(symbol)
     if cur is None:
-        cur = get_latest_price(symbol)
+        cur = to_float(current_price)
 
     stats = (
         get_interval_stats(
@@ -3252,20 +3244,47 @@ def check_interval_low(
 
         if drop <= DAILY_THRESHOLD:
 
-            send_line(
-                f'🔴 15分鐘區間低點通知\n\n'
+            # V2.14.06：15 分鐘區間通知恢復與「跌幅通知」相同的完整加碼分析。
+            # 同時把最新價格寫回本次分析用股票池，避免分析頁又顯示舊價格。
+            if isinstance(u, dict):
+                code = clean_code(symbol)
+                if isinstance(u.get(code), dict):
+                    u[code]['price'] = cur
+
+            analysis_text = None
+            if isinstance(u, dict) and u:
+                try:
+                    analysis_text = analysis(
+                        symbol,
+                        u,
+                        backfill=False,
+                        interval_result=result,
+                        line_light=True
+                    )
+                    if not analysis_text or analysis_text.startswith('❌'):
+                        analysis_text = None
+                except Exception as e:
+                    print(
+                        f'V2.14.06 15分鐘通知加碼分析失敗 {name}: '
+                        f'{type(e).__name__}: {e}',
+                        flush=True
+                    )
+
+            msg = (
+                f'🔴 15分鐘區間低點通知＋加碼評估\n\n'
                 f'標的：{name}\n'
-                f'上次執行：'
-                f'{stats["start"].strftime("%H:%M:%S")}\n'
-                f'本次執行：'
-                f'{now.strftime("%H:%M:%S")}\n'
-                f'期間最低：'
-                f'{stats["low"]:,.2f}\n'
-                f'目前價格：'
-                f'{cur:,.2f}\n'
-                f'區間跌幅：'
-                f'{drop:.2%}'
+                f'上次執行：{stats["start"].strftime("%H:%M:%S")}\n'
+                f'本次執行：{now.strftime("%H:%M:%S")}\n'
+                f'期間最低：{stats["low"]:,.2f}\n'
+                f'目前價格：{cur:,.2f}\n'
+                f'區間跌幅：{drop:.2%}'
             )
+            if analysis_text:
+                msg += '\n\n' + analysis_text
+            else:
+                msg += '\n\n⚠️ 本次完整加碼分析暫時無法取得，以上為區間跌幅通知。'
+
+            send_line(msg[:5000])
 
     elif not prev_t:
 
@@ -9463,10 +9482,10 @@ def analysis(
 
     if line_light:
         print(f'LINE輕量分析：基本面資料 {code}', flush=True)
-        yf_f = official_fundamental(symbol, off, current_price=to_float(u.get(code, {}).get('price')), market=market, industry=industry, subindustry=valuation_subindustry)
+        yf_f = official_fundamental(symbol, off, current_price=get_latest_price(symbol), market=market, industry=industry, subindustry=valuation_subindustry)
     else:
         yf_f = official_fundamental(
-            symbol, off, current_price=to_float(u.get(code, {}).get('price')), market=market, industry=industry, subindustry=valuation_subindustry
+            symbol, off, current_price=get_latest_price(symbol), market=market, industry=industry, subindustry=valuation_subindustry
         )
 
     pe = (
@@ -9686,14 +9705,7 @@ def analysis(
     elif event_level == 2 and verdict.startswith('🟢'):
         verdict = '🟠 暫緩加碼／重大事件觀察'
 
-    interval = (
-        u.get(
-            code,
-            {}
-        ).get(
-            'price'
-        )
-    )
+    interval = get_latest_price(symbol)
 
     # --------------------------------------------------------
     # Webhook / analyze 模式
@@ -9832,7 +9844,7 @@ def analysis(
     # --------------------------------------------------------
 
     return (
-        f'📊 股票加碼分析 V2.14.05\n\n'
+        f'📊 股票加碼分析 V2.14.06\n\n'
         f'標的：{name}（{code}）\n'
         f'市場：{market}\n'
         f'產業：{industry}\n'
@@ -11417,7 +11429,8 @@ def run_alerts():
                     name,
                     symbol,
                     state,
-                    item.get('price') if item else None
+                    None,
+                    u
                 )
             )
 
@@ -11561,10 +11574,10 @@ def main():
 
     else:
 
-        print('========== V2.14.00 RUN START ==========', flush=True)
+        print('========== V2.14.06 RUN START ==========', flush=True)
         print(f'執行時間（台灣）：{datetime.now(TW_TZ).strftime("%Y-%m-%d %H:%M:%S")}', flush=True)
         run_alerts()
-        print('========== V2.14.00 RUN END ==========', flush=True)
+        print('========== V2.14.06 RUN END ==========', flush=True)
 
 
 if __name__ == '__main__':
