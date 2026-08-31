@@ -34390,5 +34390,125 @@
       }
     ],
     "source": "Yahoo earnings dates Reported EPS"
+  },
+  "1336.TWO": {
+    "_cached_at": 1788192522.2091484,
+    "data": [
+      {
+        "date": "2008-03-31",
+        "eps": -0.37,
+        "source": "Yahoo Reported EPS"
+      }
+    ],
+    "source": "Yahoo earnings dates Reported EPS"
+  },
+  "3646.TWO": {
+    "_cached_at": 1788192538.6407921,
+    "data": [
+      {
+        "date": "2011-12-31",
+        "eps": 0.32,
+        "source": "Yahoo Reported EPS"
+      },
+      {
+        "date": "2012-03-31",
+        "eps": -0.5,
+        "source": "Yahoo Reported EPS"
+      },
+      {
+        "date": "2012-06-30",
+        "eps": -0.36,
+        "source": "Yahoo Reported EPS"
+      },
+      {
+        "date": "2012-09-30",
+        "eps": 0.16,
+        "source": "Yahoo Reported EPS"
+      }
+    ],
+    "source": "Yahoo earnings dates Reported EPS"
+  },
+  "3666.TWO": {
+    "_cached_at": 1788192541.572227,
+    "data": [
+      {
+        "date": "2014-12-31",
+        "eps": 1.0,
+        "source": "Yahoo Reported EPS"
+      },
+      {
+        "date": "2015-03-31",
+        "eps": -0.38,
+        "source": "Yahoo Reported EPS"
+      },
+      {
+        "date": "2015-12-31",
+        "eps": 0.94,
+        "source": "Yahoo Reported EPS"
+      },
+      {
+        "date": "2016-03-31",
+        "eps": 0.33,
+        "source": "Yahoo Reported EPS"
+      }
+    ],
+    "source": "Yahoo earnings dates Reported EPS"
+  },
+  "4207.TWO": {
+    "_cached_at": 1788192547.010452,
+    "data": [
+      {
+        "date": "2016-06-30",
+        "eps": 0.2,
+        "source": "Yahoo Reported EPS"
+      },
+      {
+        "date": "2016-09-30",
+        "eps": 0.21,
+        "source": "Yahoo Reported EPS"
+      },
+      {
+        "date": "2016-12-31",
+        "eps": 0.34,
+        "source": "Yahoo Reported EPS"
+      },
+      {
+        "date": "2017-03-31",
+        "eps": 0.35,
+        "source": "Yahoo Reported EPS"
+      }
+    ],
+    "source": "Yahoo earnings dates Reported EPS"
+  },
+  "5548.TWO": {
+    "_cached_at": 1788192558.349244,
+    "data": [],
+    "source": "Yahoo earnings dates Reported EPS"
+  },
+  "6275.TWO": {
+    "_cached_at": 1788192561.4637287,
+    "data": [
+      {
+        "date": "2007-06-30",
+        "eps": 0.37,
+        "source": "Yahoo Reported EPS"
+      },
+      {
+        "date": "2008-03-31",
+        "eps": 0.27,
+        "source": "Yahoo Reported EPS"
+      },
+      {
+        "date": "2008-06-30",
+        "eps": 0.01,
+        "source": "Yahoo Reported EPS"
+      },
+      {
+        "date": "2014-09-30",
+        "eps": 0.12,
+        "source": "Yahoo Reported EPS"
+      }
+    ],
+    "source": "Yahoo earnings dates Reported EPS"
   }
 }

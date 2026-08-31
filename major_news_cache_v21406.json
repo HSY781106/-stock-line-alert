@@ -72,5 +72,12 @@
     "events": [],
     "source": "Google News RSS",
     "lookback_days": 14
+  },
+  "4207": {
+    "fetched_at": "2026-09-01T00:09:07.459821+08:00",
+    "adjustment": 0,
+    "events": [],
+    "source": "Google News RSS",
+    "lookback_days": 14
   }
 }

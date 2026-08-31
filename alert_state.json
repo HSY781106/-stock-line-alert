@@ -16,7 +16,7 @@
       "weekly_alert": false
     },
     "QQQ": {
-      "date": "2026-08-31",
+      "date": "2026-09-01",
       "daily_alert": false,
       "weekly_alert": false
     },
@@ -46,9 +46,9 @@
       "last_interval_source": "Yahoo-5m"
     },
     "QQQ": {
-      "last_check": "2026-08-31T23:51:52.359599+08:00",
-      "last_price": 714.7999877929688,
-      "last_interval_low": 714.1400146484375,
+      "last_check": "2026-09-01T00:06:55.173459+08:00",
+      "last_price": 713.489990234375,
+      "last_interval_low": 713.4099731445312,
       "last_interval_source": "Yahoo-5m",
       "interval_alert": false
     },
@@ -60,7 +60,7 @@
     }
   },
   "high_score_alert": {
-    "date": "2026-08-31",
+    "date": "2026-09-01",
     "active": []
   }
 }
