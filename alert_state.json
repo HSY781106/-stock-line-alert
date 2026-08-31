@@ -46,10 +46,11 @@
       "last_interval_source": "Yahoo-5m"
     },
     "QQQ": {
-      "last_check": "2026-08-31T23:03:25.673299+08:00",
-      "last_price": 714.1799926757812,
-      "last_interval_low": 713.8900146484375,
-      "last_interval_source": "Yahoo-5m"
+      "last_check": "2026-08-31T23:41:13.086391+08:00",
+      "last_price": 713.9550170898438,
+      "last_interval_low": 713.8800048828125,
+      "last_interval_source": "Yahoo-5m",
+      "interval_alert": false
     },
     "台灣加權指數": {
       "last_check": "2026-08-31T23:03:26.423010+08:00",
