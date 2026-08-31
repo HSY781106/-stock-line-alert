@@ -1,5 +1,5 @@
-# stock_alert.py V2.14.06
-# V2.14.06：V2.14.05 完整覆蓋版；保留重大消息面「多公司新聞隔離」邏輯，
+# stock_alert.py V2.14.07
+# V2.14.07：V2.14.05 完整覆蓋版；保留重大消息面「多公司新聞隔離」邏輯，
 #             修正 LINE 15 分鐘區間通知遺失「加碼分析／建議」問題，並修正目前價格不得使用過期市場股票池價格。
 #             重大消息評分只使用新聞標題，RSS description/snippet/延伸內容完全不參與評分。
 #             【核心規則】負面重大事件若同一標題涉及多家公司，且無法確認負面事件
@@ -2879,7 +2879,7 @@ def get_latest_intraday_price(symbol):
 
 
 def get_latest_price(symbol):
-    """V2.14.06：取得真正最新可用價格，不使用市場股票池的舊價格。
+    """V2.14.07：取得真正最新可用價格，不使用市場股票池的舊價格。
 
     優先順序：Yahoo 最新 1 分鐘 K 棒 Close -> 最新 5 分鐘 K 棒 Close
     -> 最新日線 Close。這個函式是「目前價格」唯一共用入口，避免
@@ -2901,7 +2901,7 @@ def get_latest_price(symbol):
                 if v > 0:
                     break
         except Exception as e:
-            print(f'V2.14.06 最新價格取得失敗 {symbol} [{interval}]：{type(e).__name__}: {e}', flush=True)
+            print(f'V2.14.07 最新價格取得失敗 {symbol} [{interval}]：{type(e).__name__}: {e}', flush=True)
 
     RUN_CACHE[key] = v
     return v
@@ -3143,6 +3143,31 @@ def get_interval_stats(
     return None
 
 
+def is_market_session(symbol, now=None):
+    """V2.14.07：15分鐘即時流程只允許在指定市場時段執行。
+
+    台股：台灣時間 09:00-14:00（週一至週五）
+    美股：台灣時間 21:30-05:00（跨午夜；對應週一至週五美股交易日）
+    """
+    now = now or datetime.now(TW_TZ)
+    minutes = now.hour * 60 + now.minute
+    sym = str(symbol or '').upper()
+    is_tw = sym.endswith('.TW') or sym.endswith('.TWO') or sym.startswith('^TW')
+
+    if is_tw:
+        if now.weekday() >= 5:
+            return False
+        return 9 * 60 <= minutes < 14 * 60
+
+    # 美股 21:30-24:00 屬於當日；00:00-05:00 屬於前一個台灣日的美股交易時段。
+    if minutes >= 21 * 60 + 30:
+        return now.weekday() < 5
+    if minutes < 5 * 60:
+        return (now.weekday() - 1) % 7 < 5
+    return False
+
+
+
 def check_interval_low(
     name,
     symbol,
@@ -3154,6 +3179,15 @@ def check_interval_low(
     now = datetime.now(
         TW_TZ
     )
+
+    # V2.14.07：非指定交易時段完全跳過15分鐘區間通知。
+    if not is_market_session(symbol, now):
+        print(
+            f'⏸️ 非指定交易時段，跳過15分鐘區間通知：{name} '
+            f'{now.strftime("%Y-%m-%d %H:%M:%S")}',
+            flush=True
+        )
+        return None
 
     iso = now.isoformat()
 
@@ -3179,7 +3213,7 @@ def check_interval_low(
         )
     )
 
-    # V2.14.06：絕不優先使用 market_universe_cache 的批次價格。
+    # V2.14.07：絕不優先使用 market_universe_cache 的批次價格。
     # current_price 可能是舊快取值；目前價格一律以 Yahoo 最新可用盤中 Close 為準，
     # 失敗時才退回日線 Close。
     cur = get_latest_price(symbol)
@@ -3242,9 +3276,18 @@ def check_interval_low(
             f'（{stats.get("source","5m")}）'
         )
 
-        if drop <= DAILY_THRESHOLD:
+        # V2.14.07：15分鐘區間通知加入「跌破一次只通知一次」鎖存。
+        # 必須先回升到門檻以上，才會重新武裝；之後再次跌破才通知。
+        interval_alerted = bool(s.get('interval_alert', False))
+        interval_triggered = (
+            drop <= DAILY_THRESHOLD
+            and not interval_alerted
+        )
 
-            # V2.14.06：15 分鐘區間通知恢復與「跌幅通知」相同的完整加碼分析。
+        if interval_triggered:
+            s['interval_alert'] = True
+
+            # 15 分鐘區間通知沿用與跌幅通知相同的完整加碼分析。
             # 同時把最新價格寫回本次分析用股票池，避免分析頁又顯示舊價格。
             if isinstance(u, dict):
                 code = clean_code(symbol)
@@ -3265,7 +3308,7 @@ def check_interval_low(
                         analysis_text = None
                 except Exception as e:
                     print(
-                        f'V2.14.06 15分鐘通知加碼分析失敗 {name}: '
+                        f'V2.14.07 15分鐘通知加碼分析失敗 {name}: '
                         f'{type(e).__name__}: {e}',
                         flush=True
                     )
@@ -3326,6 +3369,10 @@ def check_interval_low(
         ] = stats.get(
             'source'
         )
+
+        # 只有跌幅回到門檻以上才解除鎖存。
+        if drop > DAILY_THRESHOLD:
+            s['interval_alert'] = False
 
     return result
 
@@ -3422,7 +3469,16 @@ def check_drop_alert(
     state,
     u=None
 ):
-    """V2.10.42：跌幅達標後，同一則 LINE 通知直接附上當下加碼評估。"""
+    """V2.14.07：只在指定市場時段執行跌幅通知。"""
+    now = datetime.now(TW_TZ)
+    if not is_market_session(symbol, now):
+        print(
+            f'⏸️ 非指定交易時段，跳過跌幅通知：{name} '
+            f'{now.strftime("%Y-%m-%d %H:%M:%S")}',
+            flush=True
+        )
+        return
+
     cur = get_latest_price(symbol)
     pc = get_previous_close(symbol)
     wh = get_week_high(symbol)
@@ -9844,7 +9900,7 @@ def analysis(
     # --------------------------------------------------------
 
     return (
-        f'📊 股票加碼分析 V2.14.06\n\n'
+        f'📊 股票加碼分析 V2.14.07\n\n'
         f'標的：{name}（{code}）\n'
         f'市場：{market}\n'
         f'產業：{industry}\n'
@@ -11574,10 +11630,10 @@ def main():
 
     else:
 
-        print('========== V2.14.06 RUN START ==========', flush=True)
+        print('========== V2.14.07 RUN START ==========', flush=True)
         print(f'執行時間（台灣）：{datetime.now(TW_TZ).strftime("%Y-%m-%d %H:%M:%S")}', flush=True)
         run_alerts()
-        print('========== V2.14.06 RUN END ==========', flush=True)
+        print('========== V2.14.07 RUN END ==========', flush=True)
 
 
 if __name__ == '__main__':
