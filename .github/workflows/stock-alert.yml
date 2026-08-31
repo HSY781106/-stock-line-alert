@@ -1,1 +1,122 @@
+name: Stock Alert V2.14.07
 
+on:
+  schedule:
+    # 台股：台灣 09:00-13:45
+    # UTC 01:00-05:45
+    - cron: '*/15 1-5 * * 1-5'
+
+    # 美股：台灣 21:30-21:45
+    # UTC 13:30-13:45
+    - cron: '30,45 13 * * 1-5'
+
+    # 美股：台灣 22:00-04:45
+    # UTC 14:00-20:45
+    - cron: '*/15 14-20 * * 1-5'
+
+    # 美股：台灣 05:00
+    # UTC 21:00
+    - cron: '0 21 * * 1-5'
+
+  workflow_dispatch:
+
+concurrency:
+  group: stock-alert-main
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  check-stock:
+    runs-on: ubuntu-latest
+    timeout-minutes: 13
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - name: Install packages
+        run: pip install -r requirements.txt
+
+      - name: Run Stock Alert V2.14.07
+        env:
+          LINE_CHANNEL_ACCESS_TOKEN: ${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }}
+          LINE_CHANNEL_SECRET: ${{ secrets.LINE_CHANNEL_SECRET }}
+        run: |
+          echo "========== V2.14.07 ACTION START =========="
+          echo "UTC: $(date -u '+%Y-%m-%d %H:%M:%S')"
+          echo "TAIWAN: $(TZ=Asia/Taipei date '+%Y-%m-%d %H:%M:%S')"
+          python stock_alert.py
+          echo "========== V2.14.07 ACTION END =========="
+
+      - name: Save generated state and caches
+        if: always()
+        shell: bash
+        run: |
+          set -e
+
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+
+          echo '========== 檢查狀態/快取 =========='
+          for f in \
+            alert_state.json \
+            pe_history.json \
+            chip_history.json \
+            line_fund_cache.json \
+            line_technical_cache.json \
+            line_chip_cache.json \
+            line_chip_summary_cache.json \
+            line_margin_cache.json \
+            line_pe_cache.json \
+            market_universe_cache.json \
+            twse_profile_cache.json \
+            twse_quotes_cache.json \
+            subindustry_cache.json \
+            eps_quarterly_cache.json \
+            eps_annual_history_cache.json \
+            eps_history_engine_cache.json \
+            eps_mops_batch_history_cache.json \
+            eps_goodinfo_history_cache.json; do
+            if [ -f "$f" ]; then
+              echo "存在：$f ($(wc -c < "$f") bytes)"
+            else
+              echo "不存在：$f"
+            fi
+          done
+
+          echo '========== Git 工作樹 =========='
+          git status --short
+
+          git add -A
+          if git diff --cached --quiet; then
+            echo '沒有需要提交的資料'
+            exit 0
+          fi
+
+          git stash push -u -m "stock-alert-v2.14.07-generated-state" || true
+
+          echo '========== 同步 GitHub 最新 main =========='
+          git fetch origin main
+          git rebase origin/main
+
+          echo '========== 還原本輪資料 =========='
+          git stash pop || true
+
+          git add -A
+          if git diff --cached --quiet; then
+            echo 'rebase 後沒有需要提交的資料'
+            exit 0
+          fi
+
+          git commit -m 'Update stock alert state and caches V2.14.07'
+          git push origin HEAD:main
