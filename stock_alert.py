@@ -1,11 +1,13 @@
-# stock_alert.py V2.14.00
-# V2.14.02：重大消息面新聞歸屬強化 + RSS description 污染隔離 + 事件分級 + 持股處置建議。
-#             基本面/技術/籌碼仍維持原模型；重大司法、監管、財報、
-#             產地/關稅、舞弊、內線等事件可對綜合分數做 -15~+5 調整。
-#             事件來源採 Google News 公開 RSS；只保留近14日、去重後的重大事件。
+# stock_alert.py V2.14.03
+# V2.14.03：重大消息面「標題唯一認定 + 公司歸屬隔離 + 舊快取失效 + 事件分級 + 持股處置」穩定版。
+#             重大消息評分只允許使用新聞標題中的目標公司事件，完全禁止 RSS description
+#             / snippet / 延伸新聞內容參與事件評分，避免「大立光；欣興檢調」等聚合標題串台。
+#             標題先依事件分隔符切片，再只分析包含目標股票代號/公司名稱的片段；
+#             若標題無法確認目標公司，該新聞不列入重大事件，寧可漏報也不誤扣。
+#             本版更換重大消息快取檔名，避免 V2.14.00~V2.14.02 的錯誤新聞事件沿用。
+#             重大司法、監管、財報、產地/關稅、舞弊、內線等事件可對綜合分數做 -15~+5 調整。
 #             「涉嫌/傳聞/調查」不視為定罪，但仍會視為事件風險；輸出會明確標示未證實。
-#             新聞資料快取6小時，避免 LINE/Actions 每次重複請求。
-#             舊版沒有重大消息面的股票，其原有評分邏輯不被新聞資料缺失強制扣分。
+#             新聞資料快取6小時；舊版沒有重大消息面的股票，其原有評分邏輯不被新聞資料缺失強制扣分。
 #
 # V2.12.05：PEG近期優先/次產業校正/循環防極端值/失效才fallback；技術趨勢與Actions穩定版。V2.10.97 以25年/10年 CAGR 直接做估值成長率，
 #             對不同景氣階段的股票失真，造成 2303/3711/2330 PEG 全部偏高。
@@ -128,7 +130,7 @@ EPS_HISTORY_MOPS_BATCH_CACHE_FILE = 'eps_mops_batch_history_cache.json'
 EPS_HISTORY_GOODINFO_CACHE_FILE = 'eps_goodinfo_history_cache.json'
 # V2.14.00：重大消息面快取。以公司代號/名稱查詢公開新聞 RSS，
 # 只把近期且可辨識的重大事件轉成風險/利多調整，不把一般新聞當成評分。
-NEWS_CACHE_FILE = 'major_news_cache.json'
+NEWS_CACHE_FILE = 'major_news_cache_v21403.json'
 
 UNIVERSE_CACHE_FILE = 'market_universe_cache.json'
 # V2.14.00：重大消息面參數
@@ -930,59 +932,41 @@ def _news_clean_text(value):
     return re.sub(r'\s+', ' ', value).strip()
 
 
-def _news_target_context(title, description, code, name):
-    """只保留與目標公司同一事件片段的文字，避免多公司新聞交叉污染。
+def _news_title_target_context(title, code, name):
+    """V2.14.03：只從「新聞標題」建立目標公司的事件片段。
 
-    例如："3008 大立光擴廠；欣興檢調黑天鵝"。
-    舊版會因整個標題同時出現 3008 與「檢調」而誤扣大立光；
-    本版先切分事件片段，再只分析包含目標公司代號/名稱的片段。
-    如果同一片段同時提到兩家公司與事件，則保留，因為該事件可能確實同時涉及兩家公司。
+    重要原則：RSS description/snippet/延伸新聞可能把其他公司的事件塞進來，
+    因此重大消息評分完全禁止使用 description。標題也必須先切片，
+    例如「3008 大立光...；欣興檢調黑天鵝」只讓前半段屬於 3008。
     """
     code = clean_code(code)
     name = str(name or '').strip()
     aliases = [x for x in (code, name) if x]
-    full = _news_clean_text(f'{title} {description}')
-    parts = re.split(r'[；;。！？!?\n\r|｜]+', full)
+    title = _news_clean_text(title)
+    if not title or not aliases:
+        return ''
+
+    # 先切常見的聚合/分欄分隔符。破折號不在這裡切，因為新聞標題常用它連接主標與副標。
+    parts = re.split(r'[；;。！？!?\n\r|｜]+', title)
     target_parts = []
     for part in parts:
-        part = part.strip()
-        if part and any(alias in part for alias in aliases):
+        part = part.strip(' -—–:：')
+        if not part:
+            continue
+        if any(alias in part for alias in aliases):
             target_parts.append(part)
     return '；'.join(target_parts)
 
 
 def _news_event_score(title, description='', source='', code='', name=''):
-    """將新聞轉成保守事件調整。
+    """V2.14.03：新聞事件評分「標題唯一認定制」。
 
-    V2.14.02 修正：RSS description 常會混入「相關新聞/延伸新聞」內容，
-    可能同時提到其他公司，例如「3008 大立光...；欣興檢調黑天鵝」。
-    因此「重大事件歸屬」以新聞標題為第一順位，description 僅在標題
-    無法判斷且目標公司與事件關鍵字非常接近時才作為備援。
-    這可以避免把別家公司事件污染到目標股。
+    description/source/link 一律不得參與重大事件判斷。
+    這是刻意的保守設計：對股票風險模型而言，寧可漏掉一則模糊新聞，
+    也不能因聚合網站把別家公司新聞塞進 description 而誤扣目標股票。
     """
-    clean_title = _news_clean_text(title)
-    clean_desc = _news_clean_text(description)
-
-    # ① 標題優先：重大事件必須在「包含目標公司」的標題片段內。
-    title_text = _news_target_context(clean_title, '', code, name)
-
-    # ② 若標題沒有目標公司但 RSS description 有明確事件，才允許備援。
-    #    description 只接受「目標名稱/代號」與事件關鍵字相距 60 字元內，
-    #    且不能只是「相關新聞」式的遠距提及。
-    text = title_text
-    if not text and clean_desc:
-        aliases = [x for x in (clean_code(code), str(name or '').strip()) if x]
-        if aliases:
-            for alias in aliases:
-                m = re.search(re.escape(alias), clean_desc)
-                if m:
-                    left = max(0, m.start() - 60)
-                    right = min(len(clean_desc), m.end() + 60)
-                    candidate = clean_desc[left:right]
-                    if any(p.search(candidate) for p, _, _ in NEWS_NEGATIVE_PATTERNS + NEWS_POSITIVE_PATTERNS):
-                        text = candidate
-                        break
-
+    # 重大消息只看標題，不看 RSS description。
+    text = _news_title_target_context(title, code, name)
     if not text:
         return 0, '', '', [], []
 
@@ -1011,7 +995,6 @@ def _news_event_score(title, description='', source='', code='', name=''):
         return int(min(NEWS_MAX_ADJUSTMENT, score)), label, '重大正面事件', negative_hits, positive_hits
 
     return 0, '', '', negative_hits, positive_hits
-
 
 def _news_recency_factor(dt, now=None):
     if dt is None:
@@ -1086,7 +1069,7 @@ def fetch_major_news(code, name, force=False):
             # V2.14.01：先確認新聞存在「目標公司自己的事件片段」。
             # 例如「3008 大立光擴廠；欣興檢調黑天鵝」時，欣興的司法事件
             # 不得因同一標題出現 3008 就套到大立光。
-            target_context = _news_target_context(title, description, code, name)
+            target_context = _news_title_target_context(title, code, name)
             if not target_context:
                 continue
 
@@ -1154,7 +1137,7 @@ def fetch_major_news(code, name, force=False):
 
     except Exception as e:
         print(
-            f'V2.14.02 重大消息面取得失敗 {code}: '
+            f'V2.14.03 重大消息面取得失敗 {code}: '
             f'{type(e).__name__}: {e}',
             flush=True
         )
@@ -9800,7 +9783,7 @@ def analysis(
     # --------------------------------------------------------
 
     return (
-        f'📊 股票加碼分析 V2.12.05\n\n'
+        f'📊 股票加碼分析 V2.14.03\n\n'
         f'標的：{name}（{code}）\n'
         f'市場：{market}\n'
         f'產業：{industry}\n'
@@ -10371,7 +10354,7 @@ def run_webhook_server():
         return (
             '<!doctype html><html><head><meta charset="utf-8">'
             '<meta name="viewport" content="width=device-width,initial-scale=1">'
-            '<title>Stock Alert V2.12.05</title>'
+            '<title>Stock Alert V2.14.03</title>'
             '<style>body{margin:0;padding:20px;background:#f6f7f9;color:#222}'
             '.card{max-width:900px;margin:auto;background:#fff;border-radius:14px;padding:20px;box-shadow:0 2px 12px #0001}'
             'a{word-break:break-all}</style></head><body><div class="card">'
