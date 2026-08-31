@@ -1,13 +1,24 @@
 {
   "2330": {
-    "fetched_at": "2026-08-31T02:48:17.769088+08:00",
-    "adjustment": 0,
-    "events": [],
+    "fetched_at": "2026-08-31T09:03:52.000863+08:00",
+    "adjustment": -12,
+    "events": [
+      {
+        "title": "2330 台積電 - 😵ABF龍頭欣興爆檢調搜索！傳涉假帳、內線交易與「洗產地」 - 股市爆料同學會 - CMoney",
+        "source": "CMoney",
+        "date": "2026-08-28T15:03:19+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE5oMWR1MTNSOWtFbGg3VWIxa0hmMDFwM01RSjJTalJfX0c5eWhUaEZaQmFiNWEydHo4a3pQcm01ODRlLWRhNk5FX1phMlJCU3pTRjV4LWJkMk0?oc=5",
+        "raw_adjustment": -15,
+        "adjustment": -12,
+        "label": "內線交易相關調查/案件",
+        "status": "重大負面事件"
+      }
+    ],
     "source": "Google News RSS",
     "lookback_days": 14
   },
   "3711": {
-    "fetched_at": "2026-08-31T02:48:20.066794+08:00",
+    "fetched_at": "2026-08-31T09:03:55.360807+08:00",
     "adjustment": 2,
     "events": [
       {
@@ -25,14 +36,14 @@
     "lookback_days": 14
   },
   "3706": {
-    "fetched_at": "2026-08-31T02:49:08.868244+08:00",
+    "fetched_at": "2026-08-31T09:04:55.066069+08:00",
     "adjustment": 0,
     "events": [],
     "source": "Google News RSS",
     "lookback_days": 14
   },
   "8271": {
-    "fetched_at": "2026-08-31T02:49:42.801708+08:00",
+    "fetched_at": "2026-08-31T09:05:31.323059+08:00",
     "adjustment": 2,
     "events": [
       {
