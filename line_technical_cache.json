@@ -24,7 +24,11 @@
     "recent_low": 2320.0,
     "price_source": "Yahoo 5分鐘即時",
     "_data_date": "2026-08-31",
+<<<<<<< Updated upstream
     "_cached_at": 1788162536.3027394
+=======
+    "_cached_at": 1788162752.323574
+>>>>>>> Stashed changes
   },
   "3711": {
     "k": 46.5956093338128,
@@ -38,7 +42,11 @@
     "recent_low": 584.0,
     "price_source": "Yahoo 5分鐘即時",
     "_data_date": "2026-08-31",
+<<<<<<< Updated upstream
     "_cached_at": 1788162538.5942776
+=======
+    "_cached_at": 1788162754.9588063
+>>>>>>> Stashed changes
   },
   "QQQ": {
     "k": 45.54965168032069,

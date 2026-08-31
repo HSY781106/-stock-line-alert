@@ -1,4 +1,5 @@
 {
+<<<<<<< Updated upstream
   "TPEX": {
     "00858": {
       "margin_change": null,
@@ -4903,6 +4904,9 @@
       "short_balance": null
     }
   },
+=======
+  "TPEX": {},
+>>>>>>> Stashed changes
   "TWSE": {
     "0050": {
       "margin_change": -128.0,
