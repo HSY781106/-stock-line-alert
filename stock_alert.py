@@ -1,5 +1,5 @@
 # stock_alert.py V2.14.00
-# V2.14.00：重大消息面 + 事件分級 + 持股處置建議。
+# V2.14.01：重大消息面公司歸屬修正版 + 事件分級 + 持股處置建議。
 #             基本面/技術/籌碼仍維持原模型；重大司法、監管、財報、
 #             產地/關稅、舞弊、內線等事件可對綜合分數做 -15~+5 調整。
 #             事件來源採 Google News 公開 RSS；只保留近14日、去重後的重大事件。
@@ -884,7 +884,7 @@ def save_json(f, d):
 
 
 # ============================================================
-# V2.14.00 重大消息面
+# V2.14.01 重大消息面：公司歸屬/多公司新聞隔離
 # ============================================================
 
 NEWS_NEGATIVE_PATTERNS = [
@@ -930,9 +930,32 @@ def _news_clean_text(value):
     return re.sub(r'\s+', ' ', value).strip()
 
 
-def _news_event_score(title, description='', source=''):
-    """將新聞轉成保守的事件調整，不判定犯罪是否成立。"""
-    text = _news_clean_text(f'{title} {description}')
+def _news_target_context(title, description, code, name):
+    """只保留與目標公司同一事件片段的文字，避免多公司新聞交叉污染。
+
+    例如："3008 大立光擴廠；欣興檢調黑天鵝"。
+    舊版會因整個標題同時出現 3008 與「檢調」而誤扣大立光；
+    本版先切分事件片段，再只分析包含目標公司代號/名稱的片段。
+    如果同一片段同時提到兩家公司與事件，則保留，因為該事件可能確實同時涉及兩家公司。
+    """
+    code = clean_code(code)
+    name = str(name or '').strip()
+    aliases = [x for x in (code, name) if x]
+    full = _news_clean_text(f'{title} {description}')
+    parts = re.split(r'[；;。！？!?\n\r|｜]+', full)
+    target_parts = []
+    for part in parts:
+        part = part.strip()
+        if part and any(alias in part for alias in aliases):
+            target_parts.append(part)
+    return '；'.join(target_parts)
+
+
+def _news_event_score(title, description='', source='', code='', name=''):
+    """將新聞轉成保守的事件調整；只分析歸屬目標公司的事件片段。"""
+    text = _news_target_context(title, description, code, name)
+    if not text:
+        return 0, '', '', [], []
     negative_hits = []
     positive_hits = []
 
@@ -1014,7 +1037,7 @@ def fetch_major_news(code, name, force=False):
         r = requests.get(
             url,
             timeout=NEWS_TIMEOUT,
-            headers={'User-Agent': 'Mozilla/5.0 stock-alert/2.13'}
+            headers={'User-Agent': 'Mozilla/5.0 stock-alert/2.14.01'}
         )
         r.raise_for_status()
         root = ET.fromstring(r.content)
@@ -1034,13 +1057,15 @@ def fetch_major_news(code, name, force=False):
             if dt is not None and dt < cutoff:
                 continue
 
-            # 避免搜尋結果把別家公司/無關代號帶進來。
-            joined = f'{title} {description}'
-            if code not in joined and name not in joined:
+            # V2.14.01：先確認新聞存在「目標公司自己的事件片段」。
+            # 例如「3008 大立光擴廠；欣興檢調黑天鵝」時，欣興的司法事件
+            # 不得因同一標題出現 3008 就套到大立光。
+            target_context = _news_target_context(title, description, code, name)
+            if not target_context:
                 continue
 
             adj, label, status, neg, pos = _news_event_score(
-                title, description, source
+                title, description, source, code=code, name=name
             )
             if adj == 0:
                 continue
