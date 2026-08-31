@@ -1,8 +1,18 @@
 {
   "2330": {
-    "fetched_at": "2026-08-31T15:52:32.423847+08:00",
-    "adjustment": 3,
+    "fetched_at": "2026-08-31T22:03:18.049927+08:00",
+    "adjustment": 4,
     "events": [
+      {
+        "title": "2330 台積電 - 輝達供不應求引爆AI 擴產浪潮，法人重壓散熱與記憶體引領台股衝高- 股市爆料同學會 - CMoney",
+        "source": "CMoney",
+        "date": "2026-08-28T12:03:30+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE1nZVY5WXpVUFdiWUx4cnNvdzQ5VVM4bThrSzFQaGJpcnlHYWtnUmRiMkxRWHVKNjIzOU1TNE5uaC1DWE9QU21jclp0MGl2N2dad09MUjVMdUY?oc=5",
+        "raw_adjustment": 3,
+        "adjustment": 2,
+        "label": "擴產/認證/量產進展",
+        "status": "重大正面事件"
+      },
       {
         "title": "2330 台積電 - 〈SEMICON〉徐國晉：矽光子2027年滲透率破5成 CPO今年下半年量產- 股市爆料同學會 - CMoney",
         "source": "CMoney",
@@ -18,7 +28,7 @@
     "lookback_days": 14
   },
   "3711": {
-    "fetched_at": "2026-08-31T15:52:35.042819+08:00",
+    "fetched_at": "2026-08-31T22:03:21.777839+08:00",
     "adjustment": 2,
     "events": [
       {
@@ -36,7 +46,7 @@
     "lookback_days": 14
   },
   "3706": {
-    "fetched_at": "2026-08-31T15:53:20.736747+08:00",
+    "fetched_at": "2026-08-31T22:04:39.591214+08:00",
     "adjustment": 0,
     "events": [],
     "source": "Google News RSS",
