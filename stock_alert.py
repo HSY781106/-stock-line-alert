@@ -1,5 +1,5 @@
 # stock_alert.py V2.14.00
-# V2.14.01：重大消息面公司歸屬修正版 + 事件分級 + 持股處置建議。
+# V2.14.02：重大消息面新聞歸屬強化 + RSS description 污染隔離 + 事件分級 + 持股處置建議。
 #             基本面/技術/籌碼仍維持原模型；重大司法、監管、財報、
 #             產地/關稅、舞弊、內線等事件可對綜合分數做 -15~+5 調整。
 #             事件來源採 Google News 公開 RSS；只保留近14日、去重後的重大事件。
@@ -952,10 +952,40 @@ def _news_target_context(title, description, code, name):
 
 
 def _news_event_score(title, description='', source='', code='', name=''):
-    """將新聞轉成保守的事件調整；只分析歸屬目標公司的事件片段。"""
-    text = _news_target_context(title, description, code, name)
+    """將新聞轉成保守事件調整。
+
+    V2.14.02 修正：RSS description 常會混入「相關新聞/延伸新聞」內容，
+    可能同時提到其他公司，例如「3008 大立光...；欣興檢調黑天鵝」。
+    因此「重大事件歸屬」以新聞標題為第一順位，description 僅在標題
+    無法判斷且目標公司與事件關鍵字非常接近時才作為備援。
+    這可以避免把別家公司事件污染到目標股。
+    """
+    clean_title = _news_clean_text(title)
+    clean_desc = _news_clean_text(description)
+
+    # ① 標題優先：重大事件必須在「包含目標公司」的標題片段內。
+    title_text = _news_target_context(clean_title, '', code, name)
+
+    # ② 若標題沒有目標公司但 RSS description 有明確事件，才允許備援。
+    #    description 只接受「目標名稱/代號」與事件關鍵字相距 60 字元內，
+    #    且不能只是「相關新聞」式的遠距提及。
+    text = title_text
+    if not text and clean_desc:
+        aliases = [x for x in (clean_code(code), str(name or '').strip()) if x]
+        if aliases:
+            for alias in aliases:
+                m = re.search(re.escape(alias), clean_desc)
+                if m:
+                    left = max(0, m.start() - 60)
+                    right = min(len(clean_desc), m.end() + 60)
+                    candidate = clean_desc[left:right]
+                    if any(p.search(candidate) for p, _, _ in NEWS_NEGATIVE_PATTERNS + NEWS_POSITIVE_PATTERNS):
+                        text = candidate
+                        break
+
     if not text:
         return 0, '', '', [], []
+
     negative_hits = []
     positive_hits = []
 
@@ -967,18 +997,14 @@ def _news_event_score(title, description='', source='', code='', name=''):
         if pat.search(text):
             positive_hits.append((score, label))
 
-    # 司法/舞弊/內線/產地類事件即使是「涉嫌/傳聞」，也屬重大風險；
-    # 但輸出會標示「調查/未證實」，避免把新聞當成已定罪事實。
     if negative_hits:
         score, label = min(negative_hits, key=lambda x: x[0])
-        # 多個不同重大負面類別同時出現，最多加重至 -15。
         distinct = {x[1] for x in negative_hits}
         if len(distinct) >= 2:
             score = min(score - 2, -15)
         else:
             score = max(score, NEWS_MIN_ADJUSTMENT)
-        status = '重大負面事件'
-        return int(max(NEWS_MIN_ADJUSTMENT, score)), label, status, negative_hits, positive_hits
+        return int(max(NEWS_MIN_ADJUSTMENT, score)), label, '重大負面事件', negative_hits, positive_hits
 
     if positive_hits:
         score, label = max(positive_hits, key=lambda x: x[0])
@@ -1128,7 +1154,7 @@ def fetch_major_news(code, name, force=False):
 
     except Exception as e:
         print(
-            f'V2.14.00 重大消息面取得失敗 {code}: '
+            f'V2.14.02 重大消息面取得失敗 {code}: '
             f'{type(e).__name__}: {e}',
             flush=True
         )
