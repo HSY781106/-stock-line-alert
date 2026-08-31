@@ -59,5 +59,19 @@
     ],
     "source": "Google News RSS",
     "lookback_days": 14
+  },
+  "1608": {
+    "fetched_at": "2026-08-31T16:09:46.250778+08:00",
+    "adjustment": 0,
+    "events": [],
+    "source": "Google News RSS",
+    "lookback_days": 14
+  },
+  "5386": {
+    "fetched_at": "2026-08-31T16:11:44.688602+08:00",
+    "adjustment": 0,
+    "events": [],
+    "source": "Google News RSS",
+    "lookback_days": 14
   }
 }
