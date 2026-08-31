@@ -46,9 +46,9 @@
       "last_interval_source": "Yahoo-5m"
     },
     "QQQ": {
-      "last_check": "2026-09-01T02:51:48.224035+08:00",
-      "last_price": 714.2957153320312,
-      "last_interval_low": 713.8491821289062,
+      "last_check": "2026-09-01T03:07:02.488705+08:00",
+      "last_price": 714.4099731445312,
+      "last_interval_low": 714.27001953125,
       "last_interval_source": "Yahoo-5m",
       "interval_alert": false
     },
