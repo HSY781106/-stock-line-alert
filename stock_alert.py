@@ -91,7 +91,7 @@ import io
 import xml.etree.ElementTree as ET
 from email.utils import parsedate_to_datetime
 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, time as dt_time
 from urllib.parse import quote
 from zoneinfo import ZoneInfo
 
@@ -3153,13 +3153,13 @@ def _market_session_key(symbol, now=None):
     sym = str(symbol or '').upper()
     if sym == 'QQQ' or not sym.endswith('.TW') and not sym.startswith('^'):
         # 美股盤：台灣 21:30～隔日 05:00；凌晨屬於前一晚的同一交易 session。
-        if now.time() >= time(21, 30):
+        if now.time() >= dt_time(21, 30):
             return now.date().isoformat()
-        if now.time() < time(5, 0):
+        if now.time() < dt_time(5, 0):
             return (now.date() - timedelta(days=1)).isoformat()
         return None
     # 台股：台灣 09:00～14:00。
-    if time(9, 0) <= now.time() < time(14, 0):
+    if dt_time(9, 0) <= now.time() < dt_time(14, 0):
         return now.date().isoformat()
     return None
 
@@ -10806,7 +10806,7 @@ def _is_taiwan_stock_session_open(now=None):
     不受美股/QQQ 21:30～05:00 時段影響。
     """
     now = now or datetime.now(TW_TZ)
-    return time(9, 0) <= now.time() < time(14, 0)
+    return dt_time(9, 0) <= now.time() < dt_time(14, 0)
 
 
 def _scan_high_score_stocks(u, state):
