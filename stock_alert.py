@@ -1,4 +1,4 @@
-# stock_alert.py V2.14.09
+# stock_alert.py V2.14.10
 # V2.14.08：V2.14.05 完整覆蓋版；保留重大消息面「多公司新聞隔離」邏輯，
 #             修正 LINE 15 分鐘區間通知遺失「加碼分析／建議」問題，並修正目前價格不得使用過期市場股票池價格。
 #             重大消息評分只使用新聞標題，RSS description/snippet/延伸內容完全不參與評分。
@@ -25,11 +25,12 @@
 #             已公布季度校正加入歷史校正倍率分布與收縮，避免單年度超預期過度放大；
 #             未公布季度輸出保守/基準/樂觀 EPS 情境，並避免使用當年度資料估計歷史季節性。
 #             p-value 不作為硬性淘汰條件；依統計證據調整年度趨勢權重。
-# V2.10.74：新增「全市場綜合評分 >= 90 分」批次掃描通知。
+# V2.10.74：新增「全市場綜合評分 >= 90 分」批次掃描通知（歷史版本；V2.14.10 已提高為95分）。
 #             使用本次 Actions 已建立的技術／法人／融資／PE／次產業快取，
 #             先以「技術＋籌碼＋風險」計算可達上限；只有理論上可能達到 90 分的股票，
 #             才進一步呼叫既有 official_fundamental() 補完整基本面，避免 1985 檔逐一完整分析。
-#             通知採「當日首次進榜／跌破90後重新進榜」邏輯，同一次執行只發一則彙整 LINE。
+#             （本版高分通知門檻已由90提高至95。）
+#             通知採「當日首次進榜／跌破95後重新進榜」邏輯，同一次執行只發一則彙整 LINE。
 #             不改動原有跌幅通知、15分鐘區間通知與目標股分析流程。
 # V2.10.73：LINE背景技術面強制即時刷新修正版。
 #             背景網頁分析（非 LINE 輕量模式）一律優先抓取最新可用 Yahoo 1d 日線，
@@ -10799,7 +10800,7 @@ def refresh_all_market_pe_history(pe_history, universe=None):
 
 
 def _is_taiwan_stock_session_open(now=None):
-    """V2.14.09：全市場高分掃描只允許台股盤中。
+    """V2.14.10：全市場高分掃描只允許台股盤中，且門檻為95分。
 
     台灣時間 09:00～14:00 才允許掃描。
     這是台股全市場高分通知的獨立交易時段控制，
@@ -10810,23 +10811,23 @@ def _is_taiwan_stock_session_open(now=None):
 
 
 def _scan_high_score_stocks(u, state):
-    """V2.14.09：全市場綜合評分 >= 90 分批次掃描。
+    """V2.14.10：全市場綜合評分 >= 95 分批次掃描。
 
     設計原則：
     1. 不對 1985 檔逐一執行完整 analysis()。
     2. 技術面直接讀 Actions 本次已建立的全市場技術快取。
     3. 法人／融資直接讀本次批次快取；PE／一年平均PE也只讀本次既有資料。
     4. 先計算「非基本面最高可得分」：技術 + 籌碼 + (10-風險)。
-       若連基本面滿分40都不可能達到90，直接淘汰，不呼叫 Yahoo 基本面。
-    5. 只有理論上可能 >=90 的候選股，才使用既有 official_fundamental() 補完整基本面。
-    6. 通知只針對「今日首次 >=90」或「曾低於90後重新 >=90」的股票，
+       若連基本面滿分40都不可能達到95，直接淘汰，不呼叫 Yahoo 基本面。
+    5. 只有理論上可能 >=95 的候選股，才使用既有 official_fundamental() 補完整基本面。
+    6. 通知只針對「今日首次 >=95」或「曾低於95後重新 >=95」的股票，
        同一次執行彙整成一則 LINE，避免每15分鐘洗版。
     """
     started = time.time()
-    threshold = 90
+    threshold = 95
 
     if not isinstance(u, dict) or not u:
-        print('⚠️ V2.14.00 高評分掃描：股票池為空，跳過', flush=True)
+        print('⚠️ V2.14.10 高評分掃描：股票池為空，跳過', flush=True)
         return []
 
     # --------------------------------------------------------
@@ -10937,7 +10938,7 @@ def _scan_high_score_stocks(u, state):
     skipped_no_tech = 0
 
     # --------------------------------------------------------
-    # 第一階段：只算非基本面。最大可能分數 < 90 就完全不用查基本面。
+    # 第一階段：只算非基本面。最大可能分數 < 95 就完全不用查基本面。
     # --------------------------------------------------------
     for code, item in u.items():
         if not isinstance(item, dict):
@@ -11029,7 +11030,7 @@ def _scan_high_score_stocks(u, state):
     )
 
     # --------------------------------------------------------
-    # 第二階段：只有「理論上可能 >=90」的股票才補完整基本面。
+    # 第二階段：只有「理論上可能 >=95」的股票才補完整基本面。
     # --------------------------------------------------------
     results = []
     for idx, c in enumerate(candidates, 1):
@@ -11127,21 +11128,21 @@ def _scan_high_score_stocks(u, state):
                 })
         except Exception as e:
             print(
-                f'V2.14.00 高評分完整基本面失敗 {c.get("code")}: '
+                f'V2.14.10 高評分完整基本面失敗 {c.get("code")}: '
                 f'{type(e).__name__}: {e}',
                 flush=True
             )
         if idx % 10 == 0 or idx == len(candidates):
             print(
-                f'V2.14.00 高評分第二階段進度：{idx}/{len(candidates)}；'
-                f'目前 >=90：{len(results)}',
+                f'V2.14.10 高評分第二階段進度：{idx}/{len(candidates)}；'
+                f'目前 >=95：{len(results)}',
                 flush=True
             )
 
     results.sort(key=lambda x: (-x['score'], x['code']))
 
     # --------------------------------------------------------
-    # 第三階段：每日去重；跌破90後重新站回90可再次通知。
+    # 第三階段：每日去重；跌破95後重新站回95可再次通知。
     # --------------------------------------------------------
     today = datetime.now(TW_TZ).strftime('%Y-%m-%d')
     hs = state.setdefault('high_score_alert', {})
@@ -11156,8 +11157,8 @@ def _scan_high_score_stocks(u, state):
     current_codes = {x['code'] for x in results}
     previous_active = set(hs.get('active') or [])
 
-    # 目前 <90 的股票從 active 移除；之後重新 >=90 就視為重新進榜。
-    # 不使用永久 notified 清單，確保「跌破90 → 再次站回90」仍會重新通知。
+    # 目前 <95 的股票從 active 移除；之後重新 >=95 就視為重新進榜。
+    # 不使用永久 notified 清單，確保「跌破95 → 再次站回95」仍會重新通知。
     reentries = current_codes - previous_active
     new_codes = [x['code'] for x in results if x['code'] in reentries]
 
@@ -11169,15 +11170,15 @@ def _scan_high_score_stocks(u, state):
         msg = (
             '🚨 全市場高評分股票通知 V2.10.75\n\n'
             f'執行時間：{datetime.now(TW_TZ).strftime("%Y-%m-%d %H:%M:%S")}\n'
-            '條件：綜合評分 ≥ 90 分\n\n'
+            '條件：綜合評分 ≥ 95 分\n\n'
             '【本次新進榜】\n' +
             '\n'.join(
                 f'{i}. {x["code"]} {x["name"]}｜{x["score"]}分'
                 f'（消息{x.get("news_adjustment", 0):+d}）'
                 for i, x in enumerate(new_rows, 1)
             ) +
-            f'\n\n目前90分以上共 {len(results)} 檔\n\n' +
-            '【目前90分以上】\n' +
+            f'\n\n目前95分以上共 {len(results)} 檔\n\n' +
+            '【目前95分以上】\n' +
             '\n'.join(
                 f'{i}. {x["code"]} {x["name"]}｜{x["score"]}分'
                 for i, x in enumerate(results, 1)
@@ -11185,19 +11186,19 @@ def _scan_high_score_stocks(u, state):
         )
         send_line(msg[:5000])
         print(
-            f'V2.14.00 高評分 LINE 已發送：新進榜 {len(new_rows)} 檔；'
-            f'目前 >=90 共 {len(results)} 檔',
+            f'V2.14.10 高評分 LINE 已發送：新進榜 {len(new_rows)} 檔；'
+            f'目前 >=95 共 {len(results)} 檔',
             flush=True
         )
     else:
         print(
-            f'V2.14.00 高評分掃描完成：目前 >=90 共 {len(results)} 檔；'
+            f'V2.14.10 高評分掃描完成：目前 >=95 共 {len(results)} 檔；'
             f'本次新進榜 {len(new_codes)} 檔；不發送重複 LINE',
             flush=True
         )
 
     print(
-        f'V2.14.00 高評分掃描總耗時：{time.time()-started:.1f}s',
+        f'V2.14.10 高評分掃描總耗時：{time.time()-started:.1f}s',
         flush=True
     )
     return results
@@ -11507,18 +11508,18 @@ def run_alerts():
 
             traceback.print_exc()
 
-    # V2.14.09：全市場 >=90 分彙整通知只允許台股盤中執行。
+    # V2.14.10：全市場 >=95 分彙整通知只允許台股盤中執行。
     # 晚上美股盤雖然 Action 仍會執行（供 QQQ/美股流程使用），但完全跳過台股高分掃描。
     if _is_taiwan_stock_session_open():
         try:
             _scan_high_score_stocks(u, state)
         except Exception as e:
-            print(f'⚠️ V2.14.09 高評分全市場掃描失敗：{type(e).__name__}: {e}', flush=True)
+            print(f'⚠️ V2.14.10 高評分全市場掃描失敗：{type(e).__name__}: {e}', flush=True)
             traceback.print_exc()
     else:
         print(
-            f'⏸️ V2.14.09 全市場高分通知：目前非台股交易時段（台灣時間 '
-            f'{datetime.now(TW_TZ).strftime("%H:%M:%S")}），跳過全市場 >=90 分掃描與 LINE 通知',
+            f'⏸️ V2.14.10 全市場高分通知：目前非台股交易時段（台灣時間 '
+            f'{datetime.now(TW_TZ).strftime("%H:%M:%S")}），跳過全市場 >=95 分掃描與 LINE 通知',
             flush=True
         )
 
@@ -11579,7 +11580,7 @@ def main():
 
     else:
 
-        print('========== V2.14.09 RUN START ==========', flush=True)
+        print('========== V2.14.10 RUN START ==========', flush=True)
         print(f'執行時間（台灣）：{datetime.now(TW_TZ).strftime("%Y-%m-%d %H:%M:%S")}', flush=True)
         run_alerts()
         print('========== V2.14.09 RUN END ==========', flush=True)
