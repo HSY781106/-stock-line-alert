@@ -1,6 +1,6 @@
 {
   "2330": {
-    "fetched_at": "2026-09-01T09:15:00.323141+08:00",
+    "fetched_at": "2026-09-01T21:35:26.968714+08:00",
     "adjustment": 3,
     "events": [
       {
@@ -18,7 +18,7 @@
     "lookback_days": 14
   },
   "3711": {
-    "fetched_at": "2026-09-01T09:15:05.293796+08:00",
+    "fetched_at": "2026-09-01T21:35:29.593666+08:00",
     "adjustment": 2,
     "events": [
       {
@@ -67,6 +67,24 @@
     "fetched_at": "2026-09-01T00:09:07.459821+08:00",
     "adjustment": 0,
     "events": [],
+    "source": "Google News RSS",
+    "lookback_days": 14
+  },
+  "4967": {
+    "fetched_at": "2026-09-01T21:37:15.313357+08:00",
+    "adjustment": 2,
+    "events": [
+      {
+        "title": "【13:14 即時新聞】十銓(4967)股價走強漲3.76%，擴產廠辦佈局＋多頭技術結構支撐偏多籌碼 - CMoney投資網誌",
+        "source": "CMoney投資網誌",
+        "date": "2026-08-21T15:00:00+08:00",
+        "link": "https://news.google.com/rss/articles/CBMijgFBVV95cUxQSWduekwxYTdJbFdmT3p6dWZObU9sekZuUER2NlVZblFmakJHSnYwNEZyRnk0QU9tOENMS0JESWlxQzZwN1M5THZ2QzFkRmEwb1VqNXExVkk1ZjFjRVBuVFFlWF9LUHVfcWxqblctd2RQeTVTQ1JKX2NoaE9VRWYtZmluUHpjbTZ3c1VaMkF3?oc=5",
+        "raw_adjustment": 3,
+        "adjustment": 2,
+        "label": "擴產/認證/量產進展",
+        "status": "重大正面事件"
+      }
+    ],
     "source": "Google News RSS",
     "lookback_days": 14
   }
