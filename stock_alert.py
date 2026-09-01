@@ -1,4 +1,4 @@
-# stock_alert.py V2.14.08
+# stock_alert.py V2.14.09
 # V2.14.08：V2.14.05 完整覆蓋版；保留重大消息面「多公司新聞隔離」邏輯，
 #             修正 LINE 15 分鐘區間通知遺失「加碼分析／建議」問題，並修正目前價格不得使用過期市場股票池價格。
 #             重大消息評分只使用新聞標題，RSS description/snippet/延伸內容完全不參與評分。
@@ -10,6 +10,10 @@
 #             事件分級與持股處置保留：重大事件可觸發暫緩加碼、減碼/停損評估、優先出清評估。
 #             本版更換重大消息快取檔名，避免舊版錯誤事件快取沿用。
 #
+# V2.14.09：全市場高分通知交易時段鎖定。
+#             「全市場綜合評分 >= 90 分」只允許台股盤中 09:00～14:00（台灣時間）執行；
+#             晚上美股盤 21:30～05:00 完全跳過台股全市場高分掃描，避免收盤後重新計分造成誤時通知與 LINE 額度浪費。
+#             即使手動 workflow_dispatch 在非台股盤中執行，也不會觸發全市場高分 LINE。
 # V2.12.05：PEG近期優先/次產業校正/循環防極端值/失效才fallback；技術趨勢與Actions穩定版。V2.10.97 以25年/10年 CAGR 直接做估值成長率，
 #             對不同景氣階段的股票失真，造成 2303/3711/2330 PEG 全部偏高。
 #             本版改為「次產業分層 + 歷史穩健YoY中位數 + 5/10年CAGR + 統計可信度收縮」；
@@ -10794,8 +10798,19 @@ def refresh_all_market_pe_history(pe_history, universe=None):
     return pe_history
 
 
+def _is_taiwan_stock_session_open(now=None):
+    """V2.14.09：全市場高分掃描只允許台股盤中。
+
+    台灣時間 09:00～14:00 才允許掃描。
+    這是台股全市場高分通知的獨立交易時段控制，
+    不受美股/QQQ 21:30～05:00 時段影響。
+    """
+    now = now or datetime.now(TW_TZ)
+    return time(9, 0) <= now.time() < time(14, 0)
+
+
 def _scan_high_score_stocks(u, state):
-    """V2.10.74：全市場綜合評分 >= 90 分批次掃描。
+    """V2.14.09：全市場綜合評分 >= 90 分批次掃描。
 
     設計原則：
     1. 不對 1985 檔逐一執行完整 analysis()。
@@ -11492,12 +11507,20 @@ def run_alerts():
 
             traceback.print_exc()
 
-    # V2.10.74：全市場 >=90 分彙整通知；使用本次 Actions 已建立快取，避免逐股完整 analysis。
-    try:
-        _scan_high_score_stocks(u, state)
-    except Exception as e:
-        print(f'⚠️ V2.14.00 高評分全市場掃描失敗：{type(e).__name__}: {e}', flush=True)
-        traceback.print_exc()
+    # V2.14.09：全市場 >=90 分彙整通知只允許台股盤中執行。
+    # 晚上美股盤雖然 Action 仍會執行（供 QQQ/美股流程使用），但完全跳過台股高分掃描。
+    if _is_taiwan_stock_session_open():
+        try:
+            _scan_high_score_stocks(u, state)
+        except Exception as e:
+            print(f'⚠️ V2.14.09 高評分全市場掃描失敗：{type(e).__name__}: {e}', flush=True)
+            traceback.print_exc()
+    else:
+        print(
+            f'⏸️ V2.14.09 全市場高分通知：目前非台股交易時段（台灣時間 '
+            f'{datetime.now(TW_TZ).strftime("%H:%M:%S")}），跳過全市場 >=90 分掃描與 LINE 通知',
+            flush=True
+        )
 
     save_json(
         STATE_FILE,
@@ -11556,10 +11579,10 @@ def main():
 
     else:
 
-        print('========== V2.14.08 RUN START ==========', flush=True)
+        print('========== V2.14.09 RUN START ==========', flush=True)
         print(f'執行時間（台灣）：{datetime.now(TW_TZ).strftime("%Y-%m-%d %H:%M:%S")}', flush=True)
         run_alerts()
-        print('========== V2.14.08 RUN END ==========', flush=True)
+        print('========== V2.14.09 RUN END ==========', flush=True)
 
 
 if __name__ == '__main__':
