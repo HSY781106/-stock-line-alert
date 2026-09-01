@@ -1,17 +1,17 @@
 {
   "drop_alert": {
     "0050 元大台灣50": {
-      "date": "2026-08-31",
+      "date": "2026-09-01",
       "daily_alert": false,
       "weekly_alert": false
     },
     "2330 台積電": {
-      "date": "2026-08-31",
+      "date": "2026-09-01",
       "daily_alert": false,
       "weekly_alert": false
     },
     "3711 日月光投控": {
-      "date": "2026-08-31",
+      "date": "2026-09-01",
       "daily_alert": true,
       "weekly_alert": false
     },
@@ -21,29 +21,32 @@
       "weekly_alert": false
     },
     "台灣加權指數": {
-      "date": "2026-08-31",
+      "date": "2026-09-01",
       "daily_alert": false,
       "weekly_alert": false
     }
   },
   "interval_low": {
     "0050 元大台灣50": {
-      "last_check": "2026-08-31T23:03:17.151813+08:00",
+      "last_check": "2026-09-01T09:14:56.665653+08:00",
       "last_price": 106.25,
       "last_interval_low": 106.05000305175781,
-      "last_interval_source": "Yahoo-5m"
+      "last_interval_source": "Yahoo-5m",
+      "interval_alert": false
     },
     "2330 台積電": {
-      "last_check": "2026-08-31T23:03:17.741297+08:00",
-      "last_price": 2420.0,
+      "last_check": "2026-09-01T09:14:57.409851+08:00",
+      "last_price": 2405.0,
       "last_interval_low": 2385.0,
-      "last_interval_source": "Yahoo-5m"
+      "last_interval_source": "Yahoo-5m",
+      "interval_alert": false
     },
     "3711 日月光投控": {
-      "last_check": "2026-08-31T23:03:21.534158+08:00",
-      "last_price": 621.0,
+      "last_check": "2026-09-01T09:15:06.750545+08:00",
+      "last_price": 584.0,
       "last_interval_low": 579.0,
-      "last_interval_source": "Yahoo-5m"
+      "last_interval_source": "Yahoo-5m",
+      "interval_alert": true
     },
     "QQQ": {
       "last_check": "2026-09-01T04:51:21.439220+08:00",
@@ -53,14 +56,17 @@
       "interval_alert": false
     },
     "台灣加權指數": {
-      "last_check": "2026-08-31T23:03:26.423010+08:00",
-      "last_price": 46128.46875,
+      "last_check": "2026-09-01T09:15:10.117990+08:00",
+      "last_price": 46331.44921875,
       "last_interval_low": 45893.671875,
-      "last_interval_source": "Yahoo-5m"
+      "last_interval_source": "Yahoo-5m",
+      "interval_alert": false
     }
   },
   "high_score_alert": {
     "date": "2026-09-01",
-    "active": []
+    "active": [
+      "1608"
+    ]
   }
 }
