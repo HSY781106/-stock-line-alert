@@ -1,21 +1,17 @@
-name: Stock Alert V2.14.07
+name: Stock Alert V2.14.08
 
 on:
   schedule:
-    # 台股：台灣 09:00-13:45
-    # UTC 01:00-05:45
+    # 台股：台灣時間 09:00～13:45（UTC 01:00～05:45）
     - cron: '*/15 1-5 * * 1-5'
 
-    # 美股：台灣 21:30-21:45
-    # UTC 13:30-13:45
+    # 美股：台灣時間 21:30～21:45（UTC 13:30～13:45）
     - cron: '30,45 13 * * 1-5'
 
-    # 美股：台灣 22:00-04:45
-    # UTC 14:00-20:45
+    # 美股：台灣時間 22:00～04:45（UTC 14:00～20:45）
     - cron: '*/15 14-20 * * 1-5'
 
-    # 美股：台灣 05:00
-    # UTC 21:00
+    # 美股：台灣時間 05:00（UTC 21:00）
     - cron: '0 21 * * 1-5'
 
   workflow_dispatch:
@@ -47,16 +43,16 @@ jobs:
       - name: Install packages
         run: pip install -r requirements.txt
 
-      - name: Run Stock Alert V2.14.07
+      - name: Run Stock Alert V2.14.08
         env:
           LINE_CHANNEL_ACCESS_TOKEN: ${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }}
           LINE_CHANNEL_SECRET: ${{ secrets.LINE_CHANNEL_SECRET }}
         run: |
-          echo "========== V2.14.07 ACTION START =========="
+          echo "========== V2.14.08 ACTION START =========="
           echo "UTC: $(date -u '+%Y-%m-%d %H:%M:%S')"
           echo "TAIWAN: $(TZ=Asia/Taipei date '+%Y-%m-%d %H:%M:%S')"
           python stock_alert.py
-          echo "========== V2.14.07 ACTION END =========="
+          echo "========== V2.14.08 ACTION END =========="
 
       - name: Save generated state and caches
         if: always()
@@ -103,7 +99,7 @@ jobs:
             exit 0
           fi
 
-          git stash push -u -m "stock-alert-v2.14.07-generated-state" || true
+          git stash push -u -m "stock-alert-v2.14.08-generated-state" || true
 
           echo '========== 同步 GitHub 最新 main =========='
           git fetch origin main
@@ -118,5 +114,5 @@ jobs:
             exit 0
           fi
 
-          git commit -m 'Update stock alert state and caches V2.14.07'
+          git commit -m 'Update stock alert state and caches V2.14.08'
           git push origin HEAD:main
