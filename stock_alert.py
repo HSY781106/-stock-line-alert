@@ -1,5 +1,5 @@
-# stock_alert.py V2.14.07
-# V2.14.07：V2.14.05 完整覆蓋版；保留重大消息面「多公司新聞隔離」邏輯，
+# stock_alert.py V2.14.08
+# V2.14.08：V2.14.05 完整覆蓋版；保留重大消息面「多公司新聞隔離」邏輯，
 #             修正 LINE 15 分鐘區間通知遺失「加碼分析／建議」問題，並修正目前價格不得使用過期市場股票池價格。
 #             重大消息評分只使用新聞標題，RSS description/snippet/延伸內容完全不參與評分。
 #             【核心規則】負面重大事件若同一標題涉及多家公司，且無法確認負面事件
@@ -2879,7 +2879,7 @@ def get_latest_intraday_price(symbol):
 
 
 def get_latest_price(symbol):
-    """V2.14.07：取得真正最新可用價格，不使用市場股票池的舊價格。
+    """V2.14.08：取得真正最新可用價格，不使用市場股票池的舊價格。
 
     優先順序：Yahoo 最新 1 分鐘 K 棒 Close -> 最新 5 分鐘 K 棒 Close
     -> 最新日線 Close。這個函式是「目前價格」唯一共用入口，避免
@@ -2901,7 +2901,7 @@ def get_latest_price(symbol):
                 if v > 0:
                     break
         except Exception as e:
-            print(f'V2.14.07 最新價格取得失敗 {symbol} [{interval}]：{type(e).__name__}: {e}', flush=True)
+            print(f'V2.14.08 最新價格取得失敗 {symbol} [{interval}]：{type(e).__name__}: {e}', flush=True)
 
     RUN_CACHE[key] = v
     return v
@@ -3143,29 +3143,25 @@ def get_interval_stats(
     return None
 
 
-def is_market_session(symbol, now=None):
-    """V2.14.07：15分鐘即時流程只允許在指定市場時段執行。
-
-    台股：台灣時間 09:00-14:00（週一至週五）
-    美股：台灣時間 21:30-05:00（跨午夜；對應週一至週五美股交易日）
-    """
+def _market_session_key(symbol, now=None):
+    """V2.14.08：依市場交易時段建立 session key，避免跨交易時段誤算15分鐘區間。"""
     now = now or datetime.now(TW_TZ)
-    minutes = now.hour * 60 + now.minute
     sym = str(symbol or '').upper()
-    is_tw = sym.endswith('.TW') or sym.endswith('.TWO') or sym.startswith('^TW')
+    if sym == 'QQQ' or not sym.endswith('.TW') and not sym.startswith('^'):
+        # 美股盤：台灣 21:30～隔日 05:00；凌晨屬於前一晚的同一交易 session。
+        if now.time() >= time(21, 30):
+            return now.date().isoformat()
+        if now.time() < time(5, 0):
+            return (now.date() - timedelta(days=1)).isoformat()
+        return None
+    # 台股：台灣 09:00～14:00。
+    if time(9, 0) <= now.time() < time(14, 0):
+        return now.date().isoformat()
+    return None
 
-    if is_tw:
-        if now.weekday() >= 5:
-            return False
-        return 9 * 60 <= minutes < 14 * 60
 
-    # 美股 21:30-24:00 屬於當日；00:00-05:00 屬於前一個台灣日的美股交易時段。
-    if minutes >= 21 * 60 + 30:
-        return now.weekday() < 5
-    if minutes < 5 * 60:
-        return (now.weekday() - 1) % 7 < 5
-    return False
-
+def _is_market_session_open(symbol, now=None):
+    return _market_session_key(symbol, now) is not None
 
 
 def check_interval_low(
@@ -3173,206 +3169,137 @@ def check_interval_low(
     symbol,
     state,
     current_price=None,
-    u=None
+    u=None,
+    drop_alert_triggered=False
 ):
+    """V2.14.08：真正的盤中區間警報。
 
-    now = datetime.now(
-        TW_TZ
-    )
-
-    # V2.14.07：非指定交易時段完全跳過15分鐘區間通知。
-    if not is_market_session(symbol, now):
-        print(
-            f'⏸️ 非指定交易時段，跳過15分鐘區間通知：{name} '
-            f'{now.strftime("%Y-%m-%d %H:%M:%S")}',
-            flush=True
-        )
-        return None
-
+    1. 不在該市場交易時段時完全不發15分鐘通知。
+    2. 跨交易 session 不沿用前一 session 的價格，第一筆只建立基準。
+    3. 15分鐘警報獨立 LOCK：跌破門檻後只通知一次，回升到門檻以上才解鎖。
+    4. 同一輪若「跌幅通知」已觸發，15分鐘通知不再重複發 LINE。
+    """
+    now = datetime.now(TW_TZ)
     iso = now.isoformat()
+    session_key = _market_session_key(symbol, now)
 
     s = (
         state
-        .setdefault(
-            'interval_low',
-            {}
-        )
-        .setdefault(
-            name,
-            {}
-        )
+        .setdefault('interval_low', {})
+        .setdefault(name, {})
     )
 
-    prev_t = s.get(
-        'last_check'
-    )
+    # 非交易時段：不抓區間、不通知、不改寫盤中基準。
+    if session_key is None:
+        print(f'⏸️ {name} 非指定交易時段，跳過15分鐘區間通知')
+        return None
 
-    prev_p = to_float(
-        s.get(
-            'last_price'
-        )
-    )
+    prev_t = s.get('last_check')
+    prev_p = to_float(s.get('last_price'))
+    prev_session = s.get('session_key')
 
-    # V2.14.07：絕不優先使用 market_universe_cache 的批次價格。
-    # current_price 可能是舊快取值；目前價格一律以 Yahoo 最新可用盤中 Close 為準，
-    # 失敗時才退回日線 Close。
+    # 只有同一交易 session 才能形成有效的15分鐘區間。
+    if prev_session != session_key:
+        prev_t = None
+        prev_p = None
+        s.update({
+            'session_key': session_key,
+            'last_check': iso,
+            'last_price': None,
+            'interval_alert': False
+        })
+        cur0 = get_latest_price(symbol)
+        if cur0 is None:
+            cur0 = to_float(current_price)
+        s['last_price'] = cur0
+        print(f'【15分鐘區間】{name} 新交易時段建立基準：{now.strftime("%H:%M:%S")}，目前價格：{fmt(cur0)}')
+        return None
+
     cur = get_latest_price(symbol)
     if cur is None:
         cur = to_float(current_price)
 
     stats = (
-        get_interval_stats(
-            symbol,
-            prev_t
-        )
-        if prev_t
-        and cur is not None
+        get_interval_stats(symbol, prev_t)
+        if prev_t and prev_p and cur is not None
         else None
     )
 
-    result = None
+    if not stats:
+        print(f'⚠️ 15分鐘資料暫時無法取得；保留上次執行基準：{prev_t}')
+        return None
 
-    if (
-        prev_t
-        and prev_p
-        and stats
-    ):
+    drop = stats['low'] / prev_p - 1
+    result = {
+        'previous_price': prev_p,
+        'interval_low': stats['low'],
+        'drop': drop,
+        'start': stats['start'].isoformat(),
+        'end': stats.get('end', now).isoformat(),
+        'source': stats.get('source')
+    }
 
-        drop = (
-            stats['low']
-            / prev_p
-            - 1
-        )
+    print(
+        f'【15分鐘區間】上次執行：{stats["start"].strftime("%H:%M:%S")} '
+        f'本次執行：{now.strftime("%H:%M:%S")} '
+        f'期間最低：{stats["low"]:,.2f} 目前價格：{cur:,.2f} '
+        f'區間跌幅：{drop:.2%}（{stats.get("source", "5m")}）'
+    )
 
-        result = {
-            'previous_price':
-                prev_p,
-            'interval_low':
-                stats['low'],
-            'drop':
-                drop,
-            'start':
-                stats['start'].isoformat(),
-            'end':
-                stats.get('end', now).isoformat(),
-            'source':
-                stats.get(
-                    'source'
+    # 15分鐘獨立 LOCK：跌破後鎖住；回升到門檻以上才解鎖。
+    interval_locked = bool(s.get('interval_alert'))
+    if drop > DAILY_THRESHOLD:
+        s['interval_alert'] = False
+        interval_locked = False
+
+    should_notify = drop <= DAILY_THRESHOLD and not interval_locked
+
+    # 同一輪已經送出跌幅通知，避免同一股票一次收到兩則幾乎相同的完整分析。
+    if should_notify and drop_alert_triggered:
+        print(f'⏭️ {name} 本輪已觸發跌幅通知，略過15分鐘重複LINE通知')
+        s['interval_alert'] = True
+    elif should_notify:
+        if isinstance(u, dict):
+            code = clean_code(symbol)
+            if isinstance(u.get(code), dict):
+                u[code]['price'] = cur
+
+        analysis_text = None
+        if isinstance(u, dict) and u:
+            try:
+                analysis_text = analysis(
+                    symbol, u, backfill=False, interval_result=result, line_light=True
                 )
-        }
+                if not analysis_text or analysis_text.startswith('❌'):
+                    analysis_text = None
+            except Exception as e:
+                print(f'V2.14.08 15分鐘通知加碼分析失敗 {name}: {type(e).__name__}: {e}', flush=True)
 
-        print(
-            f'【15分鐘區間】'
-            f'上次執行：'
-            f'{stats["start"].strftime("%H:%M:%S")} '
-            f'本次執行：'
-            f'{now.strftime("%H:%M:%S")} '
-            f'期間最低：'
-            f'{stats["low"]:,.2f} '
-            f'目前價格：'
-            f'{cur:,.2f} '
-            f'區間跌幅：'
-            f'{drop:.2%} '
-            f'（{stats.get("source","5m")}）'
+        msg = (
+            f'🔴 15分鐘區間低點通知＋加碼評估\n\n'
+            f'標的：{name}\n'
+            f'上次執行：{stats["start"].strftime("%H:%M:%S")}\n'
+            f'本次執行：{now.strftime("%H:%M:%S")}\n'
+            f'期間最低：{stats["low"]:,.2f}\n'
+            f'目前價格：{cur:,.2f}\n'
+            f'區間跌幅：{drop:.2%}'
         )
+        if analysis_text:
+            msg += '\n\n' + analysis_text
+        else:
+            msg += '\n\n⚠️ 本次完整加碼分析暫時無法取得，以上為區間跌幅通知。'
 
-        # V2.14.07：15分鐘區間通知加入「跌破一次只通知一次」鎖存。
-        # 必須先回升到門檻以上，才會重新武裝；之後再次跌破才通知。
-        interval_alerted = bool(s.get('interval_alert', False))
-        interval_triggered = (
-            drop <= DAILY_THRESHOLD
-            and not interval_alerted
-        )
+        send_line(msg[:5000])
+        s['interval_alert'] = True
 
-        if interval_triggered:
-            s['interval_alert'] = True
-
-            # 15 分鐘區間通知沿用與跌幅通知相同的完整加碼分析。
-            # 同時把最新價格寫回本次分析用股票池，避免分析頁又顯示舊價格。
-            if isinstance(u, dict):
-                code = clean_code(symbol)
-                if isinstance(u.get(code), dict):
-                    u[code]['price'] = cur
-
-            analysis_text = None
-            if isinstance(u, dict) and u:
-                try:
-                    analysis_text = analysis(
-                        symbol,
-                        u,
-                        backfill=False,
-                        interval_result=result,
-                        line_light=True
-                    )
-                    if not analysis_text or analysis_text.startswith('❌'):
-                        analysis_text = None
-                except Exception as e:
-                    print(
-                        f'V2.14.07 15分鐘通知加碼分析失敗 {name}: '
-                        f'{type(e).__name__}: {e}',
-                        flush=True
-                    )
-
-            msg = (
-                f'🔴 15分鐘區間低點通知＋加碼評估\n\n'
-                f'標的：{name}\n'
-                f'上次執行：{stats["start"].strftime("%H:%M:%S")}\n'
-                f'本次執行：{now.strftime("%H:%M:%S")}\n'
-                f'期間最低：{stats["low"]:,.2f}\n'
-                f'目前價格：{cur:,.2f}\n'
-                f'區間跌幅：{drop:.2%}'
-            )
-            if analysis_text:
-                msg += '\n\n' + analysis_text
-            else:
-                msg += '\n\n⚠️ 本次完整加碼分析暫時無法取得，以上為區間跌幅通知。'
-
-            send_line(msg[:5000])
-
-    elif not prev_t:
-
-        print(
-            f'【15分鐘區間】'
-            f'首次建立基準：'
-            f'{now.strftime("%H:%M:%S")}，'
-            f'目前價格：'
-            f'{fmt(cur)}'
-        )
-
-    elif prev_t and not stats:
-
-        print(
-            f'⚠️ 15分鐘資料暫時無法取得；'
-            f'保留上次執行基準：'
-            f'{prev_t}'
-        )
-
-    # 關鍵：
-    # 盤中資料失敗不得更新基準
-    if not prev_t or stats:
-
-        s.update({
-            'last_check':
-                iso,
-            'last_price':
-                cur
-        })
-
-    if stats:
-
-        s[
-            'last_interval_low'
-        ] = stats['low']
-
-        s[
-            'last_interval_source'
-        ] = stats.get(
-            'source'
-        )
-
-        # 只有跌幅回到門檻以上才解除鎖存。
-        if drop > DAILY_THRESHOLD:
-            s['interval_alert'] = False
+    # 有效盤中資料才更新下一輪基準。
+    s.update({
+        'session_key': session_key,
+        'last_check': iso,
+        'last_price': cur,
+        'last_interval_low': stats['low'],
+        'last_interval_source': stats.get('source')
+    })
 
     return result
 
@@ -3469,16 +3396,7 @@ def check_drop_alert(
     state,
     u=None
 ):
-    """V2.14.07：只在指定市場時段執行跌幅通知。"""
-    now = datetime.now(TW_TZ)
-    if not is_market_session(symbol, now):
-        print(
-            f'⏸️ 非指定交易時段，跳過跌幅通知：{name} '
-            f'{now.strftime("%Y-%m-%d %H:%M:%S")}',
-            flush=True
-        )
-        return
-
+    """V2.10.42：跌幅達標後，同一則 LINE 通知直接附上當下加碼評估。"""
     cur = get_latest_price(symbol)
     pc = get_previous_close(symbol)
     wh = get_week_high(symbol)
@@ -3509,7 +3427,9 @@ def check_drop_alert(
         s['weekly_alert'] = False
 
     # 同一次執行若同時達到單日/一週門檻，只發一則整合通知，避免 LINE 重複洗版。
-    if daily_triggered or weekly_triggered:
+    triggered_this_run = bool(daily_triggered or weekly_triggered)
+
+    if triggered_this_run:
         if isinstance(u, dict) and u:
             msg = _drop_alert_analysis_message(
                 name, symbol, u, day, week, cur, pc, wh,
@@ -3526,6 +3446,8 @@ def check_drop_alert(
                 f'🔴 跌幅通知\n\n標的：{name}\n目前價格：{cur:,.2f}\n單日跌幅：{day:.2%}'
             )
         send_line(msg)
+
+    return triggered_this_run
 
 
 # ============================================================
@@ -9900,7 +9822,7 @@ def analysis(
     # --------------------------------------------------------
 
     return (
-        f'📊 股票加碼分析 V2.14.07\n\n'
+        f'📊 股票加碼分析 V2.14.08\n\n'
         f'標的：{name}（{code}）\n'
         f'市場：{market}\n'
         f'產業：{industry}\n'
@@ -11466,12 +11388,16 @@ def run_alerts():
 
         try:
 
-            check_drop_alert(
+            drop_alert_triggered = check_drop_alert(
                 name,
                 symbol,
                 state,
                 u
             )
+
+            RUN_CACHE[
+                ('drop_alert_triggered', symbol)
+            ] = bool(drop_alert_triggered)
 
             RUN_CACHE[
                 (
@@ -11630,10 +11556,10 @@ def main():
 
     else:
 
-        print('========== V2.14.07 RUN START ==========', flush=True)
+        print('========== V2.14.08 RUN START ==========', flush=True)
         print(f'執行時間（台灣）：{datetime.now(TW_TZ).strftime("%Y-%m-%d %H:%M:%S")}', flush=True)
         run_alerts()
-        print('========== V2.14.07 RUN END ==========', flush=True)
+        print('========== V2.14.08 RUN END ==========', flush=True)
 
 
 if __name__ == '__main__':
