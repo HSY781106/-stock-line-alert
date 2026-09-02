@@ -1,5 +1,5 @@
 {
-  "cached_at": 1788225256.3178194,
+  "cached_at": 1788312585.124187,
   "data": [
     {
       "code": "1101",
@@ -1551,7 +1551,7 @@
       "industry": "建材營造",
       "market": "TWSE",
       "symbol": "1808.TW",
-      "capital": 8930317430.0
+      "capital": 7144253930.0
     },
     {
       "code": "1809",
@@ -3850,14 +3850,6 @@
       "capital": 16014144780.0
     },
     {
-      "code": "2867",
-      "name": "三商壽",
-      "industry": "金融業",
-      "market": "TWSE",
-      "symbol": "2867.TW",
-      "capital": 58995010440.0
-    },
-    {
       "code": "2880",
       "name": "華南金",
       "industry": "金融業",
@@ -4391,7 +4383,7 @@
       "industry": "通信網路業",
       "market": "TWSE",
       "symbol": "3045.TW",
-      "capital": 37232618110.0
+      "capital": 37234310150.0
     },
     {
       "code": "3046",
@@ -4452,7 +4444,7 @@
     {
       "code": "3054",
       "name": "立萬利",
-      "industry": "食品工業",
+      "industry": "電子通路業",
       "market": "TWSE",
       "symbol": "3054.TW",
       "capital": 806510410.0
@@ -5575,7 +5567,7 @@
       "industry": "化學工業",
       "market": "TWSE",
       "symbol": "4722.TW",
-      "capital": 1027849140.0
+      "capital": 1037650730.0
     },
     {
       "code": "4736",
@@ -6167,7 +6159,7 @@
       "industry": "金融業",
       "market": "TWSE",
       "symbol": "5876.TW",
-      "capital": 48616031400.0
+      "capital": 49102191710.0
     },
     {
       "code": "5880",
@@ -6751,7 +6743,7 @@
       "industry": "半導體業",
       "market": "TWSE",
       "symbol": "6451.TW",
-      "capital": 1147256070.0
+      "capital": 1177371930.0
     },
     {
       "code": "6456",
@@ -6815,7 +6807,7 @@
       "industry": "半導體業",
       "market": "TWSE",
       "symbol": "6515.TW",
-      "capital": 360380420.0
+      "capital": 364447820.0
     },
     {
       "code": "6525",
@@ -8527,7 +8519,7 @@
       "industry": "綠能環保",
       "market": "TWSE",
       "symbol": "9911.TW",
-      "capital": 2223895840.0
+      "capital": 2223322870.0
     },
     {
       "code": "9912",
