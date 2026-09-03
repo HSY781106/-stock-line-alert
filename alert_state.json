@@ -52,9 +52,9 @@
       "session_key": "2026-09-03"
     },
     "QQQ": {
-      "last_check": "2026-09-04T00:15:23.697109+08:00",
-      "last_price": 717.2540283203125,
-      "last_interval_low": 716.9332275390625,
+      "last_check": "2026-09-04T00:31:49.493035+08:00",
+      "last_price": 716.5999755859375,
+      "last_interval_low": 716.5999755859375,
       "last_interval_source": "Yahoo-5m",
       "interval_alert": false,
       "session_key": "2026-09-03"
