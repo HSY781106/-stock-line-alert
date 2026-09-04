@@ -27,7 +27,7 @@
       "2024": 45.25,
       "2025": 65.47
     },
-    "_cached_at": 1788489741.5209599,
+    "_cached_at": 1788490555.9579585,
     "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS"
   },
   "1229": {
@@ -278,7 +278,7 @@
       "2024": 14.55,
       "2025": 13.01
     },
-    "_cached_at": 1788489747.8796606,
+    "_cached_at": 1788490561.592245,
     "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS"
   }
 }
