@@ -1,13 +1,13 @@
 {
   "2330": {
-    "fetched_at": "2026-09-04T09:57:17.285291+08:00",
+    "fetched_at": "2026-09-04T21:36:02.697286+08:00",
     "adjustment": 0,
     "events": [],
     "source": "Google News RSS",
     "lookback_days": 14
   },
   "3711": {
-    "fetched_at": "2026-09-04T09:57:19.452736+08:00",
+    "fetched_at": "2026-09-04T21:36:04.887232+08:00",
     "adjustment": 2,
     "events": [
       {
