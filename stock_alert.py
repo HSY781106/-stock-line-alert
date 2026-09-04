@@ -1,4 +1,4 @@
-# stock_alert.py V2.14.10
+# stock_alert.py V2.14.11
 # V2.14.08：V2.14.05 完整覆蓋版；保留重大消息面「多公司新聞隔離」邏輯，
 #             修正 LINE 15 分鐘區間通知遺失「加碼分析／建議」問題，並修正目前價格不得使用過期市場股票池價格。
 #             重大消息評分只使用新聞標題，RSS description/snippet/延伸內容完全不參與評分。
@@ -10,6 +10,11 @@
 #             事件分級與持股處置保留：重大事件可觸發暫緩加碼、減碼/停損評估、優先出清評估。
 #             本版更換重大消息快取檔名，避免舊版錯誤事件快取沿用。
 #
+# V2.14.11：ETF 技術資料多源修正版。
+#             ETF 分析不再受 LINE 輕量快取缺資料限制；使用者查詢 ETF 時強制刷新技術資料。
+#             Yahoo yfinance 失敗/不足時追加 Yahoo Chart API 日線，再以 TWSE 官方日線備援。
+#             新 ETF 即使未滿 60 個交易日，也會盡可能計算 RSI/KD/MA20；MA60 不足則單獨顯示 N/A。
+#             ETF 綜合評分加入資料完整度；可用評分資料不足 60% 時不再顯示誤導性的正常分數。
 # V2.14.09：全市場高分通知交易時段鎖定。
 #             「全市場綜合評分 >= 90 分」只允許台股盤中 09:00～14:00（台灣時間）執行；
 #             晚上美股盤 21:30～05:00 完全跳過台股全市場高分掃描，避免收盤後重新計分造成誤時通知與 LINE 額度浪費。
@@ -7254,7 +7259,30 @@ def technical(symbol, force_refresh=False):
     else:
         c = None
 
-    # Yahoo 沒有至少 60 根日線才使用 TWSE 官方日線備援。
+    # V2.14.11：Yahoo yfinance 若失敗或歷史資料不足，先改用 Yahoo Chart API。
+    # 這對台股 ETF 特別重要：部分 ETF 的 yfinance download 可能偶發空資料，
+    # 但 Chart API 仍可正常取得 1d OHLC；成功後再交給同一套技術指標計算。
+    if c is None or len(c) < 60:
+        try:
+            chart = yahoo_chart_daily_fallback(symbol, '1y')
+            if chart is not None and not chart.empty:
+                chart_c = pd.to_numeric(chart['Close'], errors='coerce').dropna()
+                if c is None or len(chart_c) > len(c):
+                    d = chart
+                    c = chart_c
+                    print(
+                        f'V2.14.11 技術面 Yahoo Chart API 備援成功 {cache_key}：'
+                        f'{len(chart_c)} 根日線',
+                        flush=True
+                    )
+        except Exception as e:
+            print(
+                f'V2.14.11 技術面 Yahoo Chart API 備援失敗 {cache_key}：'
+                f'{type(e).__name__}',
+                flush=True
+            )
+
+    # Yahoo 兩條路徑仍沒有至少 60 根日線，才使用 TWSE 官方日線備援。
     if c is None or len(c) < 60:
         try:
             tw = _twse_history_fallback(
@@ -7262,7 +7290,15 @@ def technical(symbol, force_refresh=False):
                 3
             )
             if tw is not None and not tw.empty:
-                d = tw
+                tw_c = pd.to_numeric(tw['Close'], errors='coerce').dropna()
+                if c is None or len(tw_c) > len(c):
+                    d = tw
+                    c = tw_c
+                    print(
+                        f'V2.14.11 技術面 TWSE 官方日線備援成功 {cache_key}：'
+                        f'{len(tw_c)} 根日線',
+                        flush=True
+                    )
         except Exception as e:
             print(
                 f'V2.10.73 技術面 TWSE 備援失敗 {cache_key}：'
@@ -9270,6 +9306,12 @@ def yahoo_etf_profile(symbol):
     return out
 
 def score_etf(tech,p):
+    """V2.14.11：ETF 評分加入資料完整度，避免缺資料仍被正常化成高分。
+
+    評分項目總權重 100：RSI 20、KD 15、MA20 12、MA60 13、
+    殖利率 12、Beta 8、資產規模 10、共 90；保留原模型權重口徑，
+    以實際可取得項目的權重計算。當可用資料低於 60% 時，直接視為資料不足。
+    """
     score=0.0; avail=0.0; reasons=[]
     if tech.get('rsi') is not None:
         avail+=20; r=tech['rsi']; score+=20 if 40<=r<=60 else 15 if 30<=r<40 or 60<r<=70 else 8 if 25<=r<30 or 70<r<=75 else 3
@@ -9286,32 +9328,56 @@ def score_etf(tech,p):
         avail+=8; b=p['beta']; score+=8 if b<=1 else 6 if b<=1.2 else 4
     if p.get('assets') is not None:
         avail+=10; score+=10 if p['assets']>=1e10 else 7 if p['assets']>=1e9 else 4
-    if avail<=0: return 0,reasons
-    raw=score/avail*100; cap=100 if avail>=80 else 85 if avail>=60 else 70
-    return int(round(min(raw,cap))),reasons
+    completeness = (avail / 90.0 * 100.0) if avail > 0 else 0.0
+    if avail < 54.0:
+        return None,reasons,completeness
+    raw=score/avail*100
+    return int(round(raw)),reasons,completeness
 
 def etf_analysis(query):
     info=resolve_etf_query(query)
     if not info: return f'❌ 找不到 ETF：{query}'
     symbol=info['symbol']; code=next((k for k,v in ETF_MAP.items() if v is info), str(query).upper())
-    tech=technical(symbol)
+
+    # V2.14.11：ETF 查詢屬使用者主動分析，不再被 LINE_MODE_ACTIVE 的舊快取攔住。
+    # force_refresh 會走 Yahoo -> Yahoo Chart -> TWSE 官方日線多源路徑。
+    tech=technical(symbol, force_refresh=True)
     tp=to_float(tech.get('price')); ma20=to_float(tech.get('ma20')); ma60=to_float(tech.get('ma60'))
     bad_price=(tp is None) or (ma20 is not None and ma20>0 and abs(tp/ma20-1)>0.25) or (ma60 is not None and ma60>0 and abs(tp/ma60-1)>0.25)
     if bad_price:
-        d=yahoo_chart_daily_fallback(symbol,'6mo')
-        if d is not None and not d.empty: tech=_technical_from_df(d)
+        d=yahoo_chart_daily_fallback(symbol,'1y')
+        if d is not None and not d.empty:
+            alt=_technical_from_df(d)
+            # Chart API 只有在指標較完整時才覆蓋目前結果。
+            old_av=sum(1 for k in ('rsi','k','d','ma20','ma60') if tech.get(k) is not None)
+            new_av=sum(1 for k in ('rsi','k','d','ma20','ma60') if alt.get(k) is not None)
+            if new_av>=old_av:
+                tech=alt
+
     p=yahoo_etf_profile(symbol)
     price=to_float(tech.get('price')) or to_float(p.get('price')); nav=p.get('nav')
     premium=to_float(p.get('premium'))
     if premium is None and price and nav and nav>0:
         x=(price/nav-1)*100
         premium=x if -50<=x<=50 else None
-    score,reasons=score_etf(tech,p)
-    verdict='🟢 可分批配置' if score>=75 else '🟡 等待回檔/止跌' if score>=60 else '🟠 暫緩配置' if score>=40 else '🔴 不建議配置'
-    return (f'📊 ETF配置分析 V2.10.49\n\n標的：{info["name"]}（{code}）\n代號：{symbol}\n\n'
+    score,reasons,completeness=score_etf(tech,p)
+    if score is None:
+        verdict='⚪ 資料不足，暫不評估'
+        score_text='資料不足'
+    else:
+        verdict='🟢 可分批配置' if score>=75 else '🟡 等待回檔/止跌' if score>=60 else '🟠 暫緩配置' if score>=40 else '🔴 不建議配置'
+        score_text=f'{score}/100'
+
+    # 技術資料可用度單獨揭露，讓 N/A 的原因與評分可信度一眼可見。
+    tech_fields=['rsi','k','d','ma20','ma60']
+    tech_ok=sum(1 for k in tech_fields if tech.get(k) is not None)
+    tech_pct=int(round(tech_ok/len(tech_fields)*100))
+    return (f'📊 ETF配置分析 V2.14.11\n\n標的：{info["name"]}（{code}）\n代號：{symbol}\n\n'
             f'【ETF特性 40分】\nNAV：{fmt(nav)}\n溢價/折價：{fmt(premium)}%\n殖利率：{fmt(p.get("yield"))}%\nBeta：{fmt(p.get("beta"))}\n資產規模：{fmt(p.get("assets"),0)}\n\n'
-            f'【技術面 60分】\n價格：{fmt(price)}\nRSI：{fmt(tech.get("rsi"))}\nKD：K={fmt(tech.get("k"))} / D={fmt(tech.get("d"))}\nMA20：{fmt(tech.get("ma20"))}\nMA60：{fmt(tech.get("ma60"))}\n趨勢：{tech.get("trend") or "N/A"}\n\n'
-            f'【ETF綜合評分】\n綜合評分：{score}/100\n結論：{verdict}\n加分因素：{"、".join(reasons) if reasons else "無"}')
+            f'【技術面 60分】\n價格：{fmt(price)}\nRSI：{fmt(tech.get("rsi"))}\nKD：K={fmt(tech.get("k"))} / D={fmt(tech.get("d"))}\nMA20：{fmt(tech.get("ma20"))}\nMA60：{fmt(tech.get("ma60"))}\n趨勢：{tech.get("trend") or "N/A"}\n'
+            f'技術資料完整度：{tech_ok}/5（{tech_pct}%）\n評分資料完整度：{completeness:.0f}%\n\n'
+            f'【ETF綜合評分】\n綜合評分：{score_text}\n結論：{verdict}\n加分因素：{"、".join(reasons) if reasons else "無"}')
+
 
 def analysis(
     query,
