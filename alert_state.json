@@ -1,27 +1,27 @@
 {
   "drop_alert": {
     "0050 元大台灣50": {
-      "date": "2026-09-04",
+      "date": "2026-09-05",
       "daily_alert": false,
       "weekly_alert": false
     },
     "2330 台積電": {
-      "date": "2026-09-04",
+      "date": "2026-09-05",
       "daily_alert": false,
       "weekly_alert": false
     },
     "3711 日月光投控": {
-      "date": "2026-09-04",
+      "date": "2026-09-05",
       "daily_alert": false,
       "weekly_alert": false
     },
     "QQQ": {
-      "date": "2026-09-04",
+      "date": "2026-09-05",
       "daily_alert": false,
       "weekly_alert": false
     },
     "台灣加權指數": {
-      "date": "2026-09-04",
+      "date": "2026-09-05",
       "daily_alert": false,
       "weekly_alert": false
     }
@@ -52,9 +52,9 @@
       "session_key": "2026-09-04"
     },
     "QQQ": {
-      "last_check": "2026-09-04T23:55:28.560200+08:00",
-      "last_price": 717.489990234375,
-      "last_interval_low": 717.0,
+      "last_check": "2026-09-05T00:12:22.076460+08:00",
+      "last_price": 718.260009765625,
+      "last_interval_low": 717.4299926757812,
       "last_interval_source": "Yahoo-5m",
       "interval_alert": false,
       "session_key": "2026-09-04"
