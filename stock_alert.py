@@ -6740,7 +6740,7 @@ def _twse_history_fallback(code, months=3):
     from concurrent.futures import ThreadPoolExecutor, as_completed
 
     code = clean_code(code)
-    if not code or not code.isdigit():
+    if not code or not re.fullmatch(r'[0-9A-Z]{4,8}', str(code).upper()):
         return None
 
     today = datetime.now(TW_TZ).date()
@@ -9346,12 +9346,12 @@ def score_etf(tech,p):
     return int(round(raw)),reasons,completeness
 
 def etf_analysis(query):
+    """V2.14.13：ETF 完整雙層分析。第一層沿用 V2.14.13 ETF 評分；第二層加入獨立買點模型。"""
     info=resolve_etf_query(query)
     if not info: return f'❌ 找不到 ETF：{query}'
     symbol=info['symbol']; code=next((k for k,v in ETF_MAP.items() if v is info), str(query).upper())
 
-    # V2.14.11：ETF 查詢屬使用者主動分析，不再被 LINE_MODE_ACTIVE 的舊快取攔住。
-    # force_refresh 會走 Yahoo -> Yahoo Chart -> TWSE 官方日線多源路徑。
+    # 使用者主動查詢強制刷新，沿用 V2.14.11 的 Yahoo -> Chart -> TWSE 多源路徑。
     tech=technical(symbol, force_refresh=True)
     tp=to_float(tech.get('price')); ma20=to_float(tech.get('ma20')); ma60=to_float(tech.get('ma60'))
     bad_price=(tp is None) or (ma20 is not None and ma20>0 and abs(tp/ma20-1)>0.25) or (ma60 is not None and ma60>0 and abs(tp/ma60-1)>0.25)
@@ -9359,11 +9359,9 @@ def etf_analysis(query):
         d=yahoo_chart_daily_fallback(symbol,'1y')
         if d is not None and not d.empty:
             alt=_technical_from_df(d)
-            # Chart API 只有在指標較完整時才覆蓋目前結果。
-            old_av=sum(1 for k in ('rsi','k','d','ma20','ma60') if tech.get(k) is not None)
-            new_av=sum(1 for k in ('rsi','k','d','ma20','ma60') if alt.get(k) is not None)
-            if new_av>=old_av:
-                tech=alt
+            old_av=sum(1 for k in ('rsi','k','d','ma20','ma60','ret5','ret10','ret20') if tech.get(k) is not None)
+            new_av=sum(1 for k in ('rsi','k','d','ma20','ma60','ret5','ret10','ret20') if alt.get(k) is not None)
+            if new_av>=old_av: tech=alt
 
     p=yahoo_etf_profile(symbol)
     price=to_float(tech.get('price')) or to_float(p.get('price')); nav=p.get('nav')
@@ -9373,26 +9371,35 @@ def etf_analysis(query):
         premium=x if -50<=x<=50 else None
     score,reasons,completeness=score_etf(tech,p)
     if score is None:
-        verdict='⚪ 資料不足，暫不評估'
-        score_text='資料不足'
+        verdict='⚪ 資料不足，暫不評估'; score_text='資料不足'
     else:
         verdict='🟢 可分批配置' if score>=75 else '🟡 等待回檔/止跌' if score>=60 else '🟠 暫緩配置' if score>=40 else '🔴 不建議配置'
         score_text=f'{score}/100'
 
-    # 技術資料可用度單獨揭露，讓 N/A 的原因與評分可信度一眼可見。
+    # 第二層：與 ETF 配置評分完全獨立，只使用價格/技術結構。
+    tech_for_buy=dict(tech)
+    if price is not None: tech_for_buy['price']=price
+    buy=assess_buy_point(tech_for_buy)
+    z1='N/A' if not buy.get('zone1') else f'{buy["zone1"][0]:,.2f}～{buy["zone1"][1]:,.2f}'
+    z2='N/A' if not buy.get('zone2') else f'{buy["zone2"][0]:,.2f}～{buy["zone2"][1]:,.2f}'
+    inv=fmt(buy.get('invalidation'))
+    confirms='、'.join(buy.get('confirms') or []) or '尚無足夠止跌確認'
+    risks='、'.join(buy.get('risks') or []) or '無'
+
     tech_fields=['rsi','k','d','ma20','ma60']
     tech_ok=sum(1 for k in tech_fields if tech.get(k) is not None)
     tech_pct=int(round(tech_ok/len(tech_fields)*100))
-    return (f'📊 ETF配置分析 V2.14.11\n\n標的：{info["name"]}（{code}）\n代號：{symbol}\n\n'
-            f'【ETF特性 40分】\nNAV：{fmt(nav)}\n溢價/折價：{fmt(premium)}%\n殖利率：{fmt(p.get("yield"))}%\nBeta：{fmt(p.get("beta"))}\n資產規模：{fmt(p.get("assets"),0)}\n\n'
-            f'【技術面 60分】\n價格：{fmt(price)}\nRSI：{fmt(tech.get("rsi"))}\nKD：K={fmt(tech.get("k"))} / D={fmt(tech.get("d"))}\nMA20：{fmt(tech.get("ma20"))}\nMA60：{fmt(tech.get("ma60"))}\n趨勢：{tech.get("trend") or "N/A"}\n'
+    return (f'📊 ETF「投資價值 × 買點」雙層分析 V2.14.13\n\n標的：{info["name"]}（{code}）\n代號：{symbol}\n\n'
+            f'【第一層｜ETF投資價值】\nETF特性：40分\nNAV：{fmt(nav)}\n溢價/折價：{fmt(premium)}%\n殖利率：{fmt(p.get("yield"))}%\nBeta：{fmt(p.get("beta"))}\n資產規模：{fmt(p.get("assets"),0)}\n\n'
+            f'技術面：60分\n價格：{fmt(price)}\nRSI：{fmt(tech.get("rsi"))}\nKD：K={fmt(tech.get("k"))} / D={fmt(tech.get("d"))}\nMA20：{fmt(tech.get("ma20"))}\nMA60：{fmt(tech.get("ma60"))}\n趨勢：{tech.get("trend") or "N/A"}\n'
             f'技術資料完整度：{tech_ok}/5（{tech_pct}%）\n評分資料完整度：{completeness:.0f}%\n\n'
-            f'【ETF綜合評分】\n綜合評分：{score_text}\n結論：{verdict}\n加分因素：{"、".join(reasons) if reasons else "無"}')
+            f'ETF綜合評分：{score_text}\n配置結論：{verdict}\n加分因素：{"、".join(reasons) if reasons else "無"}\n\n'
+            f'【第二層｜🎯 買點評估】\n買點評分：{buy["score"]}/100\n目前買點：{buy["verdict"]}\n短中期趨勢：{buy["trend_state"]}\n5日報酬：{fmt((buy.get("ret5") or 0)*100)}%｜10日：{fmt((buy.get("ret10") or 0)*100)}%｜20日：{fmt((buy.get("ret20") or 0)*100)}%\n第一觀察買點：{z1}\n第二觀察買點：{z2}\n進場策略：{buy["entry"]}\n跌破參考：{inv}\n止跌確認：{confirms}\n風險：{risks}')
 
 
 
 def assess_buy_point(tech):
-    """V2.14.12：第二層買點模型，與投資價值分數完全分離。"""
+    """V2.14.13：第二層買點模型，與投資價值分數完全分離。"""
     t=tech if isinstance(tech,dict) else {}; p=to_float(t.get('price')); ma20=to_float(t.get('ma20')); ma60=to_float(t.get('ma60'))
     rv=to_float(t.get('rsi')); k=to_float(t.get('k')); d=to_float(t.get('d')); r5=to_float(t.get('ret5')); r10=to_float(t.get('ret10')); r20=to_float(t.get('ret20'))
     supports=[x for x in (to_float(t.get('recent_low')),to_float(t.get('low60')),ma20,ma60) if x and x>0]; score=0; confirms=[]; risks=[]
@@ -9436,6 +9443,11 @@ def analysis(
     line_light=False,
     force_technical_refresh=False
 ):
+    # V2.14.13：ETF（含 0050 / QQQ）沿用 ETF 專屬雙層模型；一般股票完全走原 V2.14.12 模型。
+    _etf_info = resolve_etf_query(query)
+    if _etf_info:
+        return etf_analysis(query)
+
     """V2.10.73：可由背景 LINE 分析單獨要求技術面即時刷新。
 
     force_technical_refresh=True 僅影響 technical()；其餘基本面、籌碼
@@ -9803,7 +9815,7 @@ def analysis(
     elif event_level == 2 and verdict.startswith('🟢'):
         verdict = '🟠 暫緩加碼／重大事件觀察'
 
-    # V2.14.12：第二層「現在能不能買」評估。
+    # V2.14.13：第二層「現在能不能買」評估。
     buy = assess_buy_point(tech)
     if event_level >= 3:
         buy['verdict']='🔴 暫不進場／重大事件風險'; buy['score']=min(buy['score'],39)
@@ -9953,7 +9965,7 @@ def analysis(
     # --------------------------------------------------------
 
     return (
-        f'📊 股票「投資價值 × 買點」雙層分析 V2.14.12\n\n'
+        f'📊 股票「投資價值 × 買點」雙層分析 V2.14.13\n\n'
         f'標的：{name}（{code}）\n'
         f'市場：{market}\n'
         f'產業：{industry}\n'
@@ -10412,7 +10424,7 @@ def handle_event(e, u):
     if text.lower() in {'help', '說明', '功能', '股票'}:
         ok = reply_line(
             token,
-            '📈 股票投資價值 × 買點雙層分析 Bot V2.14.12\n\n'
+            '📈 股票投資價值 × 買點雙層分析 Bot V2.14.13\n\n'
             '輸入股票代號、股票名稱或 ETF 代號即可查詢。\n'
             '例如：2330、台積電、3711、日月光投控、0050、00878、QQQ\n\n'
             '股票：基本面40 + 技術30 + 籌碼20 + 風險10。\n'
@@ -11245,7 +11257,7 @@ def _scan_high_score_stocks(u, state):
                 total_for_rank = total
 
             if total_for_rank >= threshold:
-                # V2.14.12：高分股通知也必須同時回答「值不值得投資」與「現在能不能買」。
+                # V2.14.13：高分股通知也必須同時回答「值不值得投資」與「現在能不能買」。
                 buy = assess_buy_point(c['tech'])
                 results.append({
                     'code': c['code'],
@@ -11311,7 +11323,7 @@ def _scan_high_score_stocks(u, state):
         by_code = {x['code']: x for x in results}
         new_rows = [by_code[x] for x in new_codes if x in by_code]
         msg = (
-            '🚨 全市場高評分股票通知 V2.14.12\n\n'
+            '🚨 全市場高評分股票通知 V2.14.13\n\n'
             f'執行時間：{datetime.now(TW_TZ).strftime("%Y-%m-%d %H:%M:%S")}\n'
             '條件：綜合評分 ≥ 95 分\n\n'
             '【本次新進榜】\n' +
@@ -11609,17 +11621,9 @@ def run_alerts():
                 'QQQ'
             ):
 
-                t = technical(
-                    symbol
-                )
-
                 print(
-                    f'\n📊 ETF分析\n'
-                    f'標的：{name}\n'
-                    f'目前價格：'
-                    f'{fmt(get_latest_price(symbol))}\n'
-                    f'RSI：'
-                    f'{fmt(t["rsi"])}'
+                    '\n'
+                    + etf_analysis(name)
                 )
 
             elif item:
