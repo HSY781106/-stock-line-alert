@@ -3329,7 +3329,7 @@ def _drop_alert_analysis_message(name, symbol, u, day, week, cur, pc, wh, daily_
             m = re.search(pattern, result, flags=re.I)
             return m.group(1).strip() if m else default
 
-        total = grab(r'綜合評分：([^\n]+)')
+        total = grab(r'(?:投資價值評分|綜合評分)：([^\n]+)')
         verdict = grab(r'結論：([^\n]+)')
         pe = grab(r'PE：([^\n]+)')
         one = grab(r'一年平均PE：([^\n]+)')
@@ -3341,6 +3341,12 @@ def _drop_alert_analysis_message(name, symbol, u, day, week, cur, pc, wh, daily_
         rsi = grab(r'RSI：([^\n]+)')
         kd = grab(r'KD：([^\n]+)')
         trend = grab(r'趨勢：([^\n]+)')
+        buy_score = grab(r'買點評分：([^\n]+)')
+        buy_verdict = grab(r'目前買點：([^\n]+)')
+        buy_trend = grab(r'短中期趨勢：([^\n]+)')
+        buy_z1 = grab(r'第一觀察買點：([^\n]+)')
+        buy_z2 = grab(r'第二觀察買點：([^\n]+)')
+        buy_entry = grab(r'進場策略：([^\n]+)')
         fs = grab(r'基本面得分：([^\n]+)')
         ts = grab(r'技術得分：([^\n]+)')
         cs = grab(r'籌碼得分：([^\n]+)')
@@ -3365,9 +3371,7 @@ def _drop_alert_analysis_message(name, symbol, u, day, week, cur, pc, wh, daily_
             f'前一交易日收盤：{pc:,.2f}\n'
             f'過去7日高點：{wh:,.2f}\n'
             f'觸發條件：{"、".join(triggers)}\n\n'
-            f'【當下加碼評估】\n'
-            f'綜合評分：{total}\n'
-            f'結論：{verdict}\n'
+            f'【第一層｜投資價值】\n'            f'投資價值評分：{total}\n'            f'投資價值結論：{verdict}\n\n'            f'【第二層｜🎯 買點評估】\n'            f'買點評分：{buy_score}\n目前買點：{buy_verdict}\n短中期趨勢：{buy_trend}\n'            f'第一觀察買點：{buy_z1}\n第二觀察買點：{buy_z2}\n進場策略：{buy_entry}\n'
             f'事件處置等級：{event_level}\n'
             f'持股處置：{holding}\n'
             f'基本面：{fs}\n'
@@ -6856,7 +6860,8 @@ def _technical_from_df(d):
         'trend': None,
         'distance_low': None,
         'price': None,
-        'recent_low': None
+        'recent_low': None,
+        'low60': None, 'ret5': None, 'ret10': None, 'ret20': None
     }
 
     if d is None or d.empty or 'Close' not in d.columns:
@@ -6889,6 +6894,12 @@ def _technical_from_df(d):
     if lo is not None and not pd.isna(lo):
         o['recent_low'] = float(lo)
         o['distance_low'] = o['price'] / float(lo) - 1 if float(lo) else None
+    if len(c) >= 60:
+        lo60=c.tail(60).min()
+        if lo60 is not None and not pd.isna(lo60): o['low60']=float(lo60)
+    for n,key in ((5,'ret5'),(10,'ret10'),(20,'ret20')):
+        if len(c)>n:
+            base=float(c.iloc[-n-1]); o[key]=o['price']/base-1 if base else None
 
     return o
 
@@ -6908,7 +6919,7 @@ def _load_technical_cache_entry(cache, key, max_age=72 * 3600):
         return None
 
     out = {}
-    for k in ['k', 'd', 'rsi', 'ma20', 'ma60', 'trend', 'distance_low', 'price', 'recent_low']:
+    for k in ['k', 'd', 'rsi', 'ma20', 'ma60', 'trend', 'distance_low', 'price', 'recent_low', 'low60', 'ret5', 'ret10', 'ret20']:
         if k == 'trend':
             out[k] = x.get(k)
         else:
@@ -9379,6 +9390,44 @@ def etf_analysis(query):
             f'【ETF綜合評分】\n綜合評分：{score_text}\n結論：{verdict}\n加分因素：{"、".join(reasons) if reasons else "無"}')
 
 
+
+def assess_buy_point(tech):
+    """V2.14.12：第二層買點模型，與投資價值分數完全分離。"""
+    t=tech if isinstance(tech,dict) else {}; p=to_float(t.get('price')); ma20=to_float(t.get('ma20')); ma60=to_float(t.get('ma60'))
+    rv=to_float(t.get('rsi')); k=to_float(t.get('k')); d=to_float(t.get('d')); r5=to_float(t.get('ret5')); r10=to_float(t.get('ret10')); r20=to_float(t.get('ret20'))
+    supports=[x for x in (to_float(t.get('recent_low')),to_float(t.get('low60')),ma20,ma60) if x and x>0]; score=0; confirms=[]; risks=[]
+    if r5 is not None: score+=10 if r5>=.03 else 8 if r5>=0 else 5 if r5>=-.03 else 2
+    if r10 is not None: score+=8 if r10>=.03 else 6 if r10>=0 else 3 if r10>=-.07 else 1
+    if r20 is not None: score+=7 if r20>=.03 else 5 if r20>=0 else 3 if r20>=-.08 else 1
+    if p is not None and ma20: x=p/ma20-1; score+=13 if x>=.02 else 10 if x>=-.02 else 6 if x>=-.06 else 2
+    if p is not None and ma60: x=p/ma60-1; score+=12 if x>=.02 else 9 if x>=-.02 else 5 if x>=-.08 else 1
+    if rv is not None: score+=15 if 45<=rv<=60 else 12 if 40<=rv<45 or 60<rv<=68 else 8 if 30<=rv<40 else 4 if rv<30 else 5
+    if k is not None and d is not None: score+=15 if k>d and k<80 else 11 if k>=d else 5
+    nearest=None
+    if p is not None and supports:
+        below=[x for x in supports if x<=p]; nearest=max(below) if below else min(supports); dist=abs(p/nearest-1); score+=20 if dist<=.015 else 16 if dist<=.03 else 11 if dist<=.06 else 5
+    if p is not None and ma20 and ma60:
+        if p>ma20 and p>ma60 and (r10 is None or r10>=0): trend='🟢 上升趨勢'
+        elif p>ma60 and p<ma20 and (r10 is None or r10<0): trend='🟡 上升趨勢中的回檔'
+        elif p<ma20 and p<ma60 and r10 is not None and r10<0 and (r20 is None or r20<0): trend='🔴 中期下降趨勢'
+        elif p<ma20 and r10 is not None and r10<0: trend='🔴 短期下降趨勢'
+        else: trend='🟠 震盪整理'
+    else: trend=str(t.get('trend') or '🟠 資料不足')
+    if rv is not None and rv>=40: confirms.append('RSI≥40')
+    if k is not None and d is not None and k>d: confirms.append('KD偏多')
+    if p is not None and ma20 and p>=ma20: confirms.append('站回MA20')
+    if r5 is not None and r5>=0: confirms.append('5日跌勢停止')
+    if len(confirms)>=2: score+=3
+    falling=bool(p is not None and ma20 and ma60 and p<ma20 and p<ma60 and r10 is not None and r10<-.03 and r20 is not None and r20<-.03)
+    if falling: score=min(score,39); risks.append('接刀保護：10日/20日同步下跌且跌破MA20/MA60')
+    score=int(max(0,min(100,round(score))))
+    verdict='🟢 現在可分批買進' if score>=75 and not falling else '🟡 可小量試單／等待確認' if score>=60 and not falling else '🟠 等待回檔止跌' if score>=40 else '🔴 暫不進場，避免接刀'
+    levels=sorted(set(supports),reverse=True); first=nearest; second=max([x for x in levels if first and x<first*.995],default=None)
+    z=lambda x:(x*.985,x*1.015) if x else None; z1=z(first); z2=z(second); invalid=(second or first)*.97 if (second or first) else None
+    entry='目前可分批，仍建議靠近支撐而非追高' if trend.startswith('🟢') and score>=75 else '優先等第一買點區止跌，再分批' if trend.startswith('🟡') else '目前不追價，等止跌確認後再進場'
+    return {'score':score,'verdict':verdict,'trend_state':trend,'entry':entry,'zone1':z1,'zone2':z2,'invalidation':invalid,'confirms':confirms,'risks':risks,'ret5':r5,'ret10':r10,'ret20':r20}
+
+
 def analysis(
     query,
     u,
@@ -9754,6 +9803,17 @@ def analysis(
     elif event_level == 2 and verdict.startswith('🟢'):
         verdict = '🟠 暫緩加碼／重大事件觀察'
 
+    # V2.14.12：第二層「現在能不能買」評估。
+    buy = assess_buy_point(tech)
+    if event_level >= 3:
+        buy['verdict']='🔴 暫不進場／重大事件風險'; buy['score']=min(buy['score'],39)
+    elif event_level == 2 and buy['verdict'].startswith('🟢'):
+        buy['verdict']='🟡 等待事件確認後再買'; buy['score']=min(buy['score'],59)
+    _z1=f"{fmt(buy['zone1'][0])}～{fmt(buy['zone1'][1])}" if buy.get('zone1') else 'N/A'
+    _z2=f"{fmt(buy['zone2'][0])}～{fmt(buy['zone2'][1])}" if buy.get('zone2') else 'N/A'
+    _confirm='、'.join(buy['confirms']) if buy['confirms'] else '尚未出現明確止跌確認'
+    _buyrisk='；'.join(buy['risks']) if buy['risks'] else '目前無明顯接刀訊號'
+
     interval = get_latest_price(symbol)
 
     # --------------------------------------------------------
@@ -9893,7 +9953,7 @@ def analysis(
     # --------------------------------------------------------
 
     return (
-        f'📊 股票加碼分析 V2.14.08\n\n'
+        f'📊 股票「投資價值 × 買點」雙層分析 V2.14.12\n\n'
         f'標的：{name}（{code}）\n'
         f'市場：{market}\n'
         f'產業：{industry}\n'
@@ -9969,6 +10029,15 @@ def analysis(
         f'事件處置等級：{event_level}/5\n'
         f'持股處置：{holding_action}\n'
         f'處置理由：{holding_reason}\n\n'
+
+        f'【第二層｜🎯 買點評估】\n'
+        f'買點評分：{buy["score"]}/100\n'
+        f'目前買點：{buy["verdict"]}\n'
+        f'短中期趨勢：{buy["trend_state"]}\n'
+        f'5日：{pct(buy["ret5"])}｜10日：{pct(buy["ret10"])}｜20日：{pct(buy["ret20"])}\n'
+        f'第一觀察買點：{_z1}\n第二觀察買點：{_z2}\n'
+        f'目前價格：{fmt(tech.get("price"))}\n失守參考：{fmt(buy["invalidation"])}\n'
+        f'進場策略：{buy["entry"]}\n止跌確認：{_confirm}\n買點風險：{_buyrisk}\n\n'
 
         f'加分因素：'
         f'{"、".join(fr + tr) if fr + tr else "無"}\n'
@@ -10343,7 +10412,7 @@ def handle_event(e, u):
     if text.lower() in {'help', '說明', '功能', '股票'}:
         ok = reply_line(
             token,
-            '📈 股票加碼分析 Bot V2.10.40\n\n'
+            '📈 股票投資價值 × 買點雙層分析 Bot V2.14.12\n\n'
             '輸入股票代號、股票名稱或 ETF 代號即可查詢。\n'
             '例如：2330、台積電、3711、日月光投控、0050、00878、QQQ\n\n'
             '股票：基本面40 + 技術30 + 籌碼20 + 風險10。\n'
@@ -11176,6 +11245,8 @@ def _scan_high_score_stocks(u, state):
                 total_for_rank = total
 
             if total_for_rank >= threshold:
+                # V2.14.12：高分股通知也必須同時回答「值不值得投資」與「現在能不能買」。
+                buy = assess_buy_point(c['tech'])
                 results.append({
                     'code': c['code'],
                     'name': item.get('name') or c['code'],
@@ -11190,6 +11261,12 @@ def _scan_high_score_stocks(u, state):
                     'event_level': int(event_level),
                     'holding_action': holding_action,
                     'price': current_price,
+                    'buy_score': int(buy['score']),
+                    'buy_verdict': buy['verdict'],
+                    'buy_trend': buy['trend_state'],
+                    'buy_zone1': (f"{fmt(buy['zone1'][0])}～{fmt(buy['zone1'][1])}" if buy.get('zone1') else 'N/A'),
+                    'buy_zone2': (f"{fmt(buy['zone2'][0])}～{fmt(buy['zone2'][1])}" if buy.get('zone2') else 'N/A'),
+                    'buy_entry': buy['entry'],
                     'reasons': fr + tr + news_reasons,
                 })
         except Exception as e:
@@ -11234,19 +11311,19 @@ def _scan_high_score_stocks(u, state):
         by_code = {x['code']: x for x in results}
         new_rows = [by_code[x] for x in new_codes if x in by_code]
         msg = (
-            '🚨 全市場高評分股票通知 V2.10.75\n\n'
+            '🚨 全市場高評分股票通知 V2.14.12\n\n'
             f'執行時間：{datetime.now(TW_TZ).strftime("%Y-%m-%d %H:%M:%S")}\n'
             '條件：綜合評分 ≥ 95 分\n\n'
             '【本次新進榜】\n' +
             '\n'.join(
-                f'{i}. {x["code"]} {x["name"]}｜{x["score"]}分'
-                f'（消息{x.get("news_adjustment", 0):+d}）'
+                f'{i}. {x["code"]} {x["name"]}｜投資{x["score"]}分｜買點{x.get("buy_score","N/A")}分'
+                f'（{x.get("buy_verdict","N/A")}｜消息{x.get("news_adjustment", 0):+d}）'
                 for i, x in enumerate(new_rows, 1)
             ) +
             f'\n\n目前95分以上共 {len(results)} 檔\n\n' +
             '【目前95分以上】\n' +
             '\n'.join(
-                f'{i}. {x["code"]} {x["name"]}｜{x["score"]}分'
+                f'{i}. {x["code"]} {x["name"]}｜投資{x["score"]}｜買點{x.get("buy_score","N/A")}｜{x.get("buy_verdict","N/A")}'
                 for i, x in enumerate(results, 1)
             )
         )
