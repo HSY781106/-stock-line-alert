@@ -1,18 +1,18 @@
 {
   "2330": {
-    "fetched_at": "2026-09-05T03:37:42.166532+08:00",
+    "fetched_at": "2026-09-05T13:02:54.285548+08:00",
     "adjustment": 0,
     "events": [],
     "source": "Google News RSS",
     "lookback_days": 14
   },
   "3711": {
-    "fetched_at": "2026-09-05T03:37:44.023966+08:00",
+    "fetched_at": "2026-09-05T13:02:57.260218+08:00",
     "adjustment": 2,
     "events": [
       {
-        "title": "3711 日月光投控- 封測五雄砸逾4,600億擴產應對AI 熱潮引爆產能需求- 股市爆料同學會 - CMoney",
-        "source": "CMoney",
+        "title": "3711 日月光投控- 封測五雄砸逾4,600億擴產應對AI 熱潮引爆產能需求- 股市爆料同學會 - cmoney.tw",
+        "source": "cmoney.tw",
         "date": "2026-08-23T20:03:20+08:00",
         "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTFBqUE1ZRzdrX3lTeE1OdlpMaGdiUEI4d2xVMEVHQU50c1VxaEE0aUxKMW56QUVIY3N2NUo3OFAzdDhhS0h6aEUtSGFOUzJZSjd3cTRFbjF4RFM?oc=5",
         "raw_adjustment": 3,
