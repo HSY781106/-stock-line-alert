@@ -65,26 +65,28 @@ jobs:
 
           echo '========== 檢查狀態/快取 =========='
 
-          for f \
-            alert_state.json \
-            pe_history.json \
-            chip_history.json \
-            line_fund_cache.json \
-            line_technical_cache.json \
-            line_chip_cache.json \
-            line_chip_summary_cache.json \
-            line_margin_cache.json \
-            line_pe_cache.json \
-            market_universe_cache.json \
-            twse_profile_cache.json \
-            twse_quotes_cache.json \
-            subindustry_cache.json \
-            eps_quarterly_cache.json \
-            eps_annual_history_cache.json \
-            eps_history_engine_cache.json \
-            eps_mops_batch_history_cache.json \
-            eps_goodinfo_history_cache.json; do
+          files=(
+            alert_state.json
+            pe_history.json
+            chip_history.json
+            line_fund_cache.json
+            line_technical_cache.json
+            line_chip_cache.json
+            line_chip_summary_cache.json
+            line_margin_cache.json
+            line_pe_cache.json
+            market_universe_cache.json
+            twse_profile_cache.json
+            twse_quotes_cache.json
+            subindustry_cache.json
+            eps_quarterly_cache.json
+            eps_annual_history_cache.json
+            eps_history_engine_cache.json
+            eps_mops_batch_history_cache.json
+            eps_goodinfo_history_cache.json
+          )
 
+          for f in "${files[@]}"; do
             if [ -f "$f" ]; then
               echo "存在：$f ($(wc -c < "$f") bytes)"
             else
