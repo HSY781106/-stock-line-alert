@@ -377,6 +377,43 @@ def resolve_etf_query(q):
     return None
 
 
+def resolve_us_stock_query(q):
+    """V2.14.14：LINE / analysis 可直接查詢一般美股。
+
+    支援 AAPL、NVDA、MSFT、NASDAQ:AAPL、$AAPL、AAPL.US，以及常見公司名稱。
+    不限制只能查固定清單；Yahoo/yfinance 負責確認實際是否存在。
+    ETF 會先由 resolve_etf_query() 攔截，因此不會誤走一般美股模型。
+    """
+    q=str(q or '').strip()
+    if not q:
+        return None
+    nq=q.upper().strip()
+    nq=re.sub(r'^(?:美股|US|NASDAQ|NYSE|AMEX)\s*[:：]?\s*','',nq)
+    nq=re.sub(r'^(?:NASDAQ|NYSE|AMEX)\s*[:：]\s*','',nq)
+    nq=re.sub(r'^\$','',nq)
+    nq=re.sub(r'\.US$','',nq)
+    token=re.split(r'[\s　,，/：:]+',nq)[0] if nq else ''
+    # 常見公司名稱，方便 LINE 不只輸入 ticker。
+    name_map={
+        'APPLE':'AAPL','APPLE INC':'AAPL','蘋果':'AAPL','蘋果公司':'AAPL',
+        'NVIDIA':'NVDA','NVIDIA CORPORATION':'NVDA','輝達':'NVDA',
+        'MICROSOFT':'MSFT','MICROSOFT CORPORATION':'MSFT','微軟':'MSFT',
+        'AMAZON':'AMZN','AMAZON.COM':'AMZN','亞馬遜':'AMZN',
+        'META':'META','META PLATFORMS':'META','臉書':'META',
+        'GOOGLE':'GOOGL','ALPHABET':'GOOGL','谷歌':'GOOGL',
+        'TESLA':'TSLA','特斯拉':'TSLA',
+        'BROADCOM':'AVGO','博通':'AVGO',
+        'AMD':'AMD','COSTCO':'COST','COSTCO WHOLESALE':'COST',
+    }
+    if nq in name_map: token=name_map[nq]
+    elif token in name_map: token=name_map[token]
+    if re.fullmatch(r'[A-Z][A-Z0-9.-]{0,9}',token):
+        # 排除明確 ETF；ETF resolver 已先處理，但保險起見再次排除。
+        if token in ETF_MAP: return None
+        return {'name':token,'symbol':token,'code':token,'market':'US','industry':'','subindustry':''}
+    return None
+
+
 # ============================================================
 # TWSE 官方產業代碼
 # ============================================================
@@ -9346,7 +9383,7 @@ def score_etf(tech,p):
     return int(round(raw)),reasons,completeness
 
 def etf_analysis(query):
-    """V2.14.13：ETF 完整雙層分析。第一層沿用 V2.14.13 ETF 評分；第二層加入獨立買點模型。"""
+    """V2.14.14：ETF 完整雙層分析。第一層沿用 V2.14.14 ETF 評分；第二層加入獨立買點模型。"""
     info=resolve_etf_query(query)
     if not info: return f'❌ 找不到 ETF：{query}'
     symbol=info['symbol']; code=next((k for k,v in ETF_MAP.items() if v is info), str(query).upper())
@@ -9389,7 +9426,7 @@ def etf_analysis(query):
     tech_fields=['rsi','k','d','ma20','ma60']
     tech_ok=sum(1 for k in tech_fields if tech.get(k) is not None)
     tech_pct=int(round(tech_ok/len(tech_fields)*100))
-    return (f'📊 ETF「投資價值 × 買點」雙層分析 V2.14.13\n\n標的：{info["name"]}（{code}）\n代號：{symbol}\n\n'
+    return (f'📊 ETF「投資價值 × 買點」雙層分析 V2.14.14\n\n標的：{info["name"]}（{code}）\n代號：{symbol}\n\n'
             f'【第一層｜ETF投資價值】\nETF特性：40分\nNAV：{fmt(nav)}\n溢價/折價：{fmt(premium)}%\n殖利率：{fmt(p.get("yield"))}%\nBeta：{fmt(p.get("beta"))}\n資產規模：{fmt(p.get("assets"),0)}\n\n'
             f'技術面：60分\n價格：{fmt(price)}\nRSI：{fmt(tech.get("rsi"))}\nKD：K={fmt(tech.get("k"))} / D={fmt(tech.get("d"))}\nMA20：{fmt(tech.get("ma20"))}\nMA60：{fmt(tech.get("ma60"))}\n趨勢：{tech.get("trend") or "N/A"}\n'
             f'技術資料完整度：{tech_ok}/5（{tech_pct}%）\n評分資料完整度：{completeness:.0f}%\n\n'
@@ -9399,7 +9436,7 @@ def etf_analysis(query):
 
 
 def assess_buy_point(tech):
-    """V2.14.13：第二層買點模型，與投資價值分數完全分離。"""
+    """V2.14.14：第二層買點模型，與投資價值分數完全分離。"""
     t=tech if isinstance(tech,dict) else {}; p=to_float(t.get('price')); ma20=to_float(t.get('ma20')); ma60=to_float(t.get('ma60'))
     rv=to_float(t.get('rsi')); k=to_float(t.get('k')); d=to_float(t.get('d')); r5=to_float(t.get('ret5')); r10=to_float(t.get('ret10')); r20=to_float(t.get('ret20'))
     supports=[x for x in (to_float(t.get('recent_low')),to_float(t.get('low60')),ma20,ma60) if x and x>0]; score=0; confirms=[]; risks=[]
@@ -9435,6 +9472,74 @@ def assess_buy_point(tech):
     return {'score':score,'verdict':verdict,'trend_state':trend,'entry':entry,'zone1':z1,'zone2':z2,'invalidation':invalid,'confirms':confirms,'risks':risks,'ret5':r5,'ret10':r10,'ret20':r20}
 
 
+
+def us_stock_analysis(query):
+    """V2.14.14：一般美股「投資價值 × 買點」雙層分析。
+
+    第一層：Yahoo 基本面 + 技術面，將可取得資料動態正規化到 100 分。
+    第二層：沿用 V2.14.12/13 的獨立買點模型，不與第一層互相污染。
+    不使用台股 T86/融資融券/台股官方 PE，避免把台股資料套到美股。
+    """
+    info=resolve_us_stock_query(query)
+    if not info:
+        return f'❌ 找不到美股：{query}'
+    symbol=info['symbol']
+    tech=technical(symbol, force_refresh=True)
+    price=to_float(tech.get('price'))
+    if price is None:
+        try:
+            qd=yf_download(symbol,period='1y',interval='1d')
+            if qd is not None and not qd.empty:
+                tech=_technical_from_df(qd)
+                price=to_float(tech.get('price'))
+        except Exception as e:
+            print(f'V2.14.14 美股技術資料失敗 {symbol}: {type(e).__name__}',flush=True)
+    fund=yahoo_light_fund(symbol,official={},current_price=price,market='US',industry='',subindustry='')
+    pe=to_float(fund.get('pe')); pb=to_float(fund.get('pb')); yld=to_float(fund.get('yield'))
+    growth=to_float(fund.get('eps_growth')); roe=to_float(fund.get('roe')); peg=to_float(fund.get('peg'))
+    # 美國股票沒有台股同業官方 PE，因此第一層基本面只採有效 Yahoo 指標，動態正規化。
+    fs=0.0; fav=0.0; freasons=[]
+    def add(v,w,points,reason=None):
+        nonlocal fs,fav
+        if v is None: return
+        fav+=w; fs+=points
+        if reason and points>=w*.65: freasons.append(reason)
+    if pe is not None and pe>0: add(pe,10,10 if pe<15 else 7.5 if pe<25 else 5 if pe<35 else 2 if pe<50 else 0,'本益比相對合理')
+    if peg is not None and peg>0: add(peg,8,8 if peg<1 else 6 if peg<1.5 else 4 if peg<2 else 1 if peg<3 else 0,'PEG具吸引力')
+    if pb is not None and pb>0: add(pb,6,6 if pb<2 else 4.5 if pb<4 else 3 if pb<6 else 1 if pb<10 else 0,'PB合理')
+    if yld is not None and yld>=0: add(yld,6,6 if yld>=4 else 4.5 if yld>=2 else 3 if yld>=1 else 1 if yld>0 else 0,'殖利率')
+    if roe is not None: add(roe,5,5 if roe>=25 else 4 if roe>=18 else 3 if roe>=12 else 1 if roe>0 else 0,'ROE良好')
+    if growth is not None: add(growth,5,5 if growth>=30 else 4 if growth>=15 else 3 if growth>0 else 1 if growth>-10 else 0,'獲利成長')
+    fundamental=int(round(fs/fav*40)) if fav else 0
+    ts,treasons=score_tech(tech)
+    risk,rr=score_risk({}, {'20d':None}, {'margin_change':None,'short_change':None})
+    # 美國沒有台股籌碼欄位；以技術風險補足可觀測的 10 分風險層。
+    risk=0; rr=[]
+    r=to_float(tech.get('rsi')); m20=to_float(tech.get('ma20')); m60=to_float(tech.get('ma60'))
+    if r is not None and r>70: risk+=3; rr.append('RSI過熱')
+    if to_float(tech.get('k')) is not None and to_float(tech.get('d')) is not None and to_float(tech.get('k'))>80 and to_float(tech.get('d'))>80: risk+=2; rr.append('KD高檔')
+    if price and m20 and price<m20: risk+=1; rr.append('跌破MA20')
+    if price and m60 and price<m60: risk+=1; rr.append('跌破MA60')
+    if to_float(tech.get('ret20')) is not None and to_float(tech.get('ret20'))<-.15: risk+=2; rr.append('20日跌幅偏大')
+    if to_float(tech.get('ret10')) is not None and to_float(tech.get('ret10'))<-.10: risk+=1; rr.append('10日跌幅偏大')
+    risk=min(10,risk)
+    first_score=fundamental+ts+(10-risk)
+    buy=assess_buy_point(tech)
+    def pct(v): return 'N/A' if v is None else f'{v*100:.2f}%'
+    z1='N/A' if not buy.get('zone1') else f'{buy["zone1"][0]:,.2f}～{buy["zone1"][1]:,.2f}'
+    z2='N/A' if not buy.get('zone2') else f'{buy["zone2"][0]:,.2f}～{buy["zone2"][1]:,.2f}'
+    return (f'📊 美股「投資價值 × 買點」雙層分析 V2.14.14\n\n標的：{symbol}\nYahoo代號：{symbol}\n\n'
+            f'【第一層｜投資價值】\n基本面：{fundamental}/40（有效資料 {int(round(fav/40*100)) if fav else 0}%）\n'
+            f'PE：{fmt(pe)}｜PB：{fmt(pb)}｜殖利率：{fmt(yld)}%\nEPS Growth：{fmt(growth)}%｜ROE：{fmt(roe)}%｜PEG：{fmt(peg)}\n'
+            f'技術面：{ts}/30\n價格：{fmt(price)}｜RSI：{fmt(r)}｜KD：K={fmt(tech.get("k"))} / D={fmt(tech.get("d"))}\n'
+            f'MA20：{fmt(m20)}｜MA60：{fmt(m60)}｜趨勢：{tech.get("trend") or "N/A"}\n'
+            f'風險：{risk}/10｜綜合投資價值：{first_score}/80（美股模型不套用台股籌碼）\n'
+            f'加分因素：{"、".join(freasons+treasons) if freasons+treasons else "無"}\n風險因素：{"、".join(rr) if rr else "無"}\n\n'
+            f'【第二層｜🎯 買點評估】\n買點評分：{buy["score"]}/100\n目前買點：{buy["verdict"]}\n短中期趨勢：{buy["trend_state"]}\n'
+            f'5日報酬：{pct(buy.get("ret5"))}｜10日：{pct(buy.get("ret10"))}｜20日：{pct(buy.get("ret20"))}\n'
+            f'第一觀察買點：{z1}\n第二觀察買點：{z2}\n進場策略：{buy["entry"]}\n跌破參考：{fmt(buy.get("invalidation"))}\n'
+            f'止跌確認：{"、".join(buy.get("confirms") or []) or "尚無足夠止跌確認"}\n風險：{"、".join(buy.get("risks") or []) or "無"}')
+
 def analysis(
     query,
     u,
@@ -9443,10 +9548,14 @@ def analysis(
     line_light=False,
     force_technical_refresh=False
 ):
-    # V2.14.13：ETF（含 0050 / QQQ）沿用 ETF 專屬雙層模型；一般股票完全走原 V2.14.12 模型。
+    # V2.14.14：ETF（含 0050 / QQQ）沿用 ETF 專屬雙層模型；一般股票完全走原 V2.14.12 模型。
     _etf_info = resolve_etf_query(query)
     if _etf_info:
         return etf_analysis(query)
+    # V2.14.14：LINE 查詢可直接輸入任意美股 ticker；ETF 已在上方優先攔截。
+    _us_info = resolve_us_stock_query(query)
+    if _us_info:
+        return us_stock_analysis(query)
 
     """V2.10.73：可由背景 LINE 分析單獨要求技術面即時刷新。
 
@@ -9815,7 +9924,7 @@ def analysis(
     elif event_level == 2 and verdict.startswith('🟢'):
         verdict = '🟠 暫緩加碼／重大事件觀察'
 
-    # V2.14.13：第二層「現在能不能買」評估。
+    # V2.14.14：第二層「現在能不能買」評估。
     buy = assess_buy_point(tech)
     if event_level >= 3:
         buy['verdict']='🔴 暫不進場／重大事件風險'; buy['score']=min(buy['score'],39)
@@ -9965,7 +10074,7 @@ def analysis(
     # --------------------------------------------------------
 
     return (
-        f'📊 股票「投資價值 × 買點」雙層分析 V2.14.13\n\n'
+        f'📊 股票「投資價值 × 買點」雙層分析 V2.14.14\n\n'
         f'標的：{name}（{code}）\n'
         f'市場：{market}\n'
         f'產業：{industry}\n'
@@ -10226,9 +10335,13 @@ def _background_line_analysis(text, target, u, event_id=None, result_id=None):
             RUN_CACHE['line_mode'] = True
             print('LINE背景分析：建立/載入市場資料', flush=True)
             etf=resolve_etf_query(text)
+            us=resolve_us_stock_query(text)
             if etf:
                 print(f'LINE背景分析：辨識為 ETF {etf["symbol"]}，跳過1985檔股票池', flush=True)
                 result=etf_analysis(text)
+            elif us:
+                print(f'LINE背景分析：辨識為美股 {us["symbol"]}，跳過1985檔股票池', flush=True)
+                result=us_stock_analysis(text)
             else:
                 query_u = u if isinstance(u, dict) and u else build_line_query_universe(text)
                 print(f'LINE背景分析：市場資料完成 {len(query_u)} 檔', flush=True)
@@ -10424,9 +10537,9 @@ def handle_event(e, u):
     if text.lower() in {'help', '說明', '功能', '股票'}:
         ok = reply_line(
             token,
-            '📈 股票投資價值 × 買點雙層分析 Bot V2.14.13\n\n'
+            '📈 股票投資價值 × 買點雙層分析 Bot V2.14.14\n\n'
             '輸入股票代號、股票名稱或 ETF 代號即可查詢。\n'
-            '例如：2330、台積電、3711、日月光投控、0050、00878、QQQ\n\n'
+            '例如：2330、台積電、3711、日月光投控、0050、00878、QQQ、AAPL、NVDA、MSFT\n\n'
             '股票：基本面40 + 技術30 + 籌碼20 + 風險10。\n'
             'ETF：ETF特性40 + 技術60。\n'
             '查詢結果會立即回覆 Render 分析頁網址，完整分析不使用 LINE Push。'
@@ -11257,7 +11370,7 @@ def _scan_high_score_stocks(u, state):
                 total_for_rank = total
 
             if total_for_rank >= threshold:
-                # V2.14.13：高分股通知也必須同時回答「值不值得投資」與「現在能不能買」。
+                # V2.14.14：高分股通知也必須同時回答「值不值得投資」與「現在能不能買」。
                 buy = assess_buy_point(c['tech'])
                 results.append({
                     'code': c['code'],
@@ -11323,7 +11436,7 @@ def _scan_high_score_stocks(u, state):
         by_code = {x['code']: x for x in results}
         new_rows = [by_code[x] for x in new_codes if x in by_code]
         msg = (
-            '🚨 全市場高評分股票通知 V2.14.13\n\n'
+            '🚨 全市場高評分股票通知 V2.14.14\n\n'
             f'執行時間：{datetime.now(TW_TZ).strftime("%Y-%m-%d %H:%M:%S")}\n'
             '條件：綜合評分 ≥ 95 分\n\n'
             '【本次新進榜】\n' +
