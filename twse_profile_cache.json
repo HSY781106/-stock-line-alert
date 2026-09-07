@@ -1,5 +1,5 @@
 {
-  "cached_at": 1788584055.4766808,
+  "cached_at": 1788743684.6344552,
   "data": [
     {
       "code": "1101",
@@ -1339,7 +1339,7 @@
     },
     {
       "code": "1721",
-      "name": "三晃",
+      "name": "國慶科技",
       "industry": "化學工業",
       "market": "TWSE",
       "symbol": "1721.TW",
@@ -2079,7 +2079,7 @@
       "industry": "汽車工業",
       "market": "TWSE",
       "symbol": "2247.TW",
-      "capital": 807087350.0
+      "capital": 807109260.0
     },
     {
       "code": "2248",
@@ -6855,7 +6855,7 @@
       "industry": "生技醫療",
       "market": "TWSE",
       "symbol": "6541.TW",
-      "capital": 2651253670.0
+      "capital": 2652163670.0
     },
     {
       "code": "6550",
@@ -7103,7 +7103,7 @@
       "industry": "半導體業",
       "market": "TWSE",
       "symbol": "6695.TW",
-      "capital": 1064776500.0
+      "capital": 1069476500.0
     },
     {
       "code": "6698",
@@ -7579,7 +7579,7 @@
     },
     {
       "code": "6949",
-      "name": "沛爾生醫-創",
+      "name": "沛爾生醫*-創",
       "industry": "生技醫療",
       "market": "TWSE",
       "symbol": "6949.TW",

@@ -27757,7 +27757,7 @@
     "source": "Yahoo earnings dates Reported EPS"
   },
   "9905.TW": {
-    "_cached_at": 1788093739.6918225,
+    "_cached_at": 1788744293.406784,
     "data": [
       {
         "date": "2010-03-31",
@@ -27776,7 +27776,7 @@
       },
       {
         "date": "2011-03-31",
-        "eps": 0.34,
+        "eps": 0.49,
         "source": "Yahoo Reported EPS"
       },
       {
@@ -28320,7 +28320,7 @@
     "source": "Yahoo earnings dates Reported EPS"
   },
   "6150.TWO": {
-    "_cached_at": 1788093765.0808594,
+    "_cached_at": 1788744296.7285922,
     "data": [],
     "source": "Yahoo earnings dates Reported EPS"
   },
