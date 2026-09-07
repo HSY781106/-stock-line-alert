@@ -378,7 +378,7 @@ def resolve_etf_query(q):
 
 
 def resolve_us_stock_query(q):
-    """V2.14.15：LINE / analysis 可直接查詢一般美股。
+    """V2.14.17：LINE / analysis 可直接查詢一般美股。
 
     支援 AAPL、NVDA、MSFT、NASDAQ:AAPL、$AAPL、AAPL.US，以及常見公司名稱。
     不限制只能查固定清單；Yahoo/yfinance 負責確認實際是否存在。
@@ -9383,7 +9383,7 @@ def score_etf(tech,p):
     return int(round(raw)),reasons,completeness
 
 def etf_analysis(query):
-    """V2.14.15：ETF 完整雙層分析。第一層沿用 V2.14.15 ETF 評分；第二層加入獨立買點模型。"""
+    """V2.14.17：ETF 完整雙層分析。第一層沿用 V2.14.17 ETF 評分；第二層加入獨立買點模型。"""
     info=resolve_etf_query(query)
     if not info: return f'❌ 找不到 ETF：{query}'
     symbol=info['symbol']; code=next((k for k,v in ETF_MAP.items() if v is info), str(query).upper())
@@ -9426,7 +9426,7 @@ def etf_analysis(query):
     tech_fields=['rsi','k','d','ma20','ma60']
     tech_ok=sum(1 for k in tech_fields if tech.get(k) is not None)
     tech_pct=int(round(tech_ok/len(tech_fields)*100))
-    return (f'📊 ETF「投資價值 × 買點」雙層分析 V2.14.15\n\n標的：{info["name"]}（{code}）\n代號：{symbol}\n\n'
+    return (f'📊 ETF「投資價值 × 買點」雙層分析 V2.14.17\n\n標的：{info["name"]}（{code}）\n代號：{symbol}\n\n'
             f'【第一層｜ETF投資價值】\nETF特性：40分\nNAV：{fmt(nav)}\n溢價/折價：{fmt(premium)}%\n殖利率：{fmt(p.get("yield"))}%\nBeta：{fmt(p.get("beta"))}\n資產規模：{fmt(p.get("assets"),0)}\n\n'
             f'技術面：60分\n價格：{fmt(price)}\nRSI：{fmt(tech.get("rsi"))}\nKD：K={fmt(tech.get("k"))} / D={fmt(tech.get("d"))}\nMA20：{fmt(tech.get("ma20"))}\nMA60：{fmt(tech.get("ma60"))}\n趨勢：{tech.get("trend") or "N/A"}\n'
             f'技術資料完整度：{tech_ok}/5（{tech_pct}%）\n評分資料完整度：{completeness:.0f}%\n\n'
@@ -9436,7 +9436,7 @@ def etf_analysis(query):
 
 
 def assess_buy_point(tech):
-    """V2.14.15：第二層買點模型，與投資價值分數完全分離。"""
+    """V2.14.17：第二層買點模型，與投資價值分數完全分離。"""
     t=tech if isinstance(tech,dict) else {}; p=to_float(t.get('price')); ma20=to_float(t.get('ma20')); ma60=to_float(t.get('ma60'))
     rv=to_float(t.get('rsi')); k=to_float(t.get('k')); d=to_float(t.get('d')); r5=to_float(t.get('ret5')); r10=to_float(t.get('ret10')); r20=to_float(t.get('ret20'))
     supports=[x for x in (to_float(t.get('recent_low')),to_float(t.get('low60')),ma20,ma60) if x and x>0]; score=0; confirms=[]; risks=[]
@@ -9474,7 +9474,7 @@ def assess_buy_point(tech):
 
 
 def us_stock_analysis(query):
-    """V2.14.15：一般美股「投資價值 × 買點」雙層分析。
+    """V2.14.17：一般美股「投資價值 × 買點」雙層分析。
 
     第一層：Yahoo 基本面 + 技術面，將可取得資料動態正規化到 100 分。
     第二層：沿用 V2.14.12/13 的獨立買點模型，不與第一層互相污染。
@@ -9493,7 +9493,7 @@ def us_stock_analysis(query):
                 tech=_technical_from_df(qd)
                 price=to_float(tech.get('price'))
         except Exception as e:
-            print(f'V2.14.15 美股技術資料失敗 {symbol}: {type(e).__name__}',flush=True)
+            print(f'V2.14.17 美股技術資料失敗 {symbol}: {type(e).__name__}',flush=True)
     fund=yahoo_light_fund(symbol,official={},current_price=price,market='US',industry='',subindustry='')
     pe=to_float(fund.get('pe')); pb=to_float(fund.get('pb')); yld=to_float(fund.get('yield'))
     growth=to_float(fund.get('eps_growth')); roe=to_float(fund.get('roe')); peg=to_float(fund.get('peg'))
@@ -9528,7 +9528,7 @@ def us_stock_analysis(query):
     def pct(v): return 'N/A' if v is None else f'{v*100:.2f}%'
     z1='N/A' if not buy.get('zone1') else f'{buy["zone1"][0]:,.2f}～{buy["zone1"][1]:,.2f}'
     z2='N/A' if not buy.get('zone2') else f'{buy["zone2"][0]:,.2f}～{buy["zone2"][1]:,.2f}'
-    return (f'📊 美股「投資價值 × 買點」雙層分析 V2.14.15\n\n標的：{symbol}\nYahoo代號：{symbol}\n\n'
+    return (f'📊 美股「投資價值 × 買點」雙層分析 V2.14.17\n\n標的：{symbol}\nYahoo代號：{symbol}\n\n'
             f'【第一層｜投資價值】\n基本面：{fundamental}/40（有效資料 {int(round(fav/40*100)) if fav else 0}%）\n'
             f'PE：{fmt(pe)}｜PB：{fmt(pb)}｜殖利率：{fmt(yld)}%\nEPS Growth：{fmt(growth)}%｜ROE：{fmt(roe)}%｜PEG：{fmt(peg)}\n'
             f'技術面：{ts}/30\n價格：{fmt(price)}｜RSI：{fmt(r)}｜KD：K={fmt(tech.get("k"))} / D={fmt(tech.get("d"))}\n'
@@ -9548,11 +9548,11 @@ def analysis(
     line_light=False,
     force_technical_refresh=False
 ):
-    # V2.14.15：ETF（含 0050 / QQQ）沿用 ETF 專屬雙層模型；一般股票完全走原 V2.14.12 模型。
+    # V2.14.17：ETF（含 0050 / QQQ）沿用 ETF 專屬雙層模型；一般股票完全走原 V2.14.12 模型。
     _etf_info = resolve_etf_query(query)
     if _etf_info:
         return etf_analysis(query)
-    # V2.14.15：LINE 查詢可直接輸入任意美股 ticker；ETF 已在上方優先攔截。
+    # V2.14.17：LINE 查詢可直接輸入任意美股 ticker；ETF 已在上方優先攔截。
     _us_info = resolve_us_stock_query(query)
     if _us_info:
         return us_stock_analysis(query)
@@ -9924,7 +9924,7 @@ def analysis(
     elif event_level == 2 and verdict.startswith('🟢'):
         verdict = '🟠 暫緩加碼／重大事件觀察'
 
-    # V2.14.15：第二層「現在能不能買」評估。
+    # V2.14.17：第二層「現在能不能買」評估。
     buy = assess_buy_point(tech)
     if event_level >= 3:
         buy['verdict']='🔴 暫不進場／重大事件風險'; buy['score']=min(buy['score'],39)
@@ -10074,7 +10074,7 @@ def analysis(
     # --------------------------------------------------------
 
     return (
-        f'📊 股票「投資價值 × 買點」雙層分析 V2.14.15\n\n'
+        f'📊 股票「投資價值 × 買點」雙層分析 V2.14.17\n\n'
         f'標的：{name}（{code}）\n'
         f'市場：{market}\n'
         f'產業：{industry}\n'
@@ -10537,7 +10537,7 @@ def handle_event(e, u):
     if text.lower() in {'help', '說明', '功能', '股票'}:
         ok = reply_line(
             token,
-            '📈 股票投資價值 × 買點雙層分析 Bot V2.14.15\n\n'
+            '📈 股票投資價值 × 買點雙層分析 Bot V2.14.17\n\n'
             '輸入股票代號、股票名稱或 ETF 代號即可查詢。\n'
             '例如：2330、台積電、3711、日月光投控、0050、00878、QQQ、AAPL、NVDA、MSFT\n\n'
             '股票：基本面40 + 技術30 + 籌碼20 + 風險10。\n'
@@ -11370,7 +11370,7 @@ def _scan_high_score_stocks(u, state):
                 total_for_rank = total
 
             if total_for_rank >= threshold:
-                # V2.14.15：高分股通知也必須同時回答「值不值得投資」與「現在能不能買」。
+                # V2.14.17：高分股通知也必須同時回答「值不值得投資」與「現在能不能買」。
                 buy = assess_buy_point(c['tech'])
                 results.append({
                     'code': c['code'],
@@ -11434,9 +11434,33 @@ def _scan_high_score_stocks(u, state):
 
     if new_codes and LINE_TOKEN:
         by_code = {x['code']: x for x in results}
-        new_rows = [by_code[x] for x in new_codes if x in by_code]
+        new_rows_raw = [by_code[x] for x in new_codes if x in by_code]
+
+        # V2.14.17：0050／2330／QQQ 若同時達到「買點 >=90 + 投資價值 >=90」，
+        # 由極佳買點通知專用流程處理；一般95分通知不再重複發送。
+        target_names = {'0050 元大台灣50', '2330 台積電', 'QQQ'}
+        new_rows = [
+            x for x in new_rows_raw
+            if not (
+                str(x.get('name') or '') in target_names
+                and to_float(x.get('buy_score')) is not None
+                and to_float(x.get('score')) is not None
+                and to_float(x.get('buy_score')) >= 90
+                and to_float(x.get('score')) >= 95
+            )
+        ]
+        suppressed_extreme = len(new_rows_raw) - len(new_rows)
+
+        if not new_rows:
+            if suppressed_extreme:
+                print(
+                    f'V2.14.17 一般95分通知略過 {suppressed_extreme} 檔極佳買點標的，改由極佳買點通知處理',
+                    flush=True
+                )
+            return results
+
         msg = (
-            '🚨 全市場高評分股票通知 V2.14.15\n\n'
+            '🚨 全市場高評分股票通知 V2.14.17\n\n'
             f'執行時間：{datetime.now(TW_TZ).strftime("%Y-%m-%d %H:%M:%S")}\n'
             '條件：綜合評分 ≥ 95 分\n\n'
             '【本次新進榜】\n' +
@@ -11473,11 +11497,15 @@ def _scan_high_score_stocks(u, state):
 
 
 
-def _notify_target_buy_point(name, symbol, state):
-    """V2.14.15：0050／2330／QQQ 買點 >=75 主動通知；<=60 解鎖。
+def _notify_target_buy_point(name, symbol, state, u=None):
+    """V2.14.17：0050／2330／QQQ 極佳買點通知。
 
-    與既有 95 分投資價值通知完全獨立，不修改雙層分析模型。
-    使用 state 持久化鎖定狀態，避免每 15 分鐘重複 LINE。
+    LINE 通知必須同時滿足：
+    1. 第二層買點分數 >=90
+    2. 第一層投資價值分數 >=95
+    3. 尚未處於通知鎖定狀態
+
+    買點 <=60 時解除鎖定。雙層分析模型本身不修改。
     """
     target_names = {
         '0050 元大台灣50',
@@ -11490,7 +11518,7 @@ def _notify_target_buy_point(name, symbol, state):
     try:
         tech = technical(symbol, force_refresh=True)
         if not isinstance(tech, dict):
-            print(f'⚠️ V2.14.15 {name} 買點通知：技術資料不足', flush=True)
+            print(f'⚠️ V2.14.17 {name} 極佳買點通知：技術資料不足', flush=True)
             return None
 
         buy = assess_buy_point(tech)
@@ -11498,6 +11526,23 @@ def _notify_target_buy_point(name, symbol, state):
             return None
 
         score = int(to_float(buy.get('score')) or 0)
+
+        # V2.14.17：取得既有第一層「投資價值」分數。
+        # analysis()/etf_analysis() 的輸出仍是完整文字結果，因此只解析「綜合評分」；
+        # 不另外建立第二套評分模型，避免與既有雙層模型產生分數口徑不一致。
+        investment_score = None
+        try:
+            if name in ('0050 元大台灣50', 'QQQ'):
+                full_result = etf_analysis(name)
+            else:
+                full_result = analysis(name, u, False)
+            if isinstance(full_result, str):
+                m = re.search(r'(?:ETF)?綜合評分：\s*(-?\d+(?:\.\d+)?)\s*/\s*100', full_result)
+                if m:
+                    investment_score = int(float(m.group(1)))
+        except Exception as e:
+            print(f'⚠️ V2.14.17 {name} 投資價值分數取得失敗：{type(e).__name__}: {e}', flush=True)
+
         today = datetime.now(TW_TZ).strftime('%Y-%m-%d')
         bp = state.setdefault('target_buy_point_alert', {})
         if not isinstance(bp, dict):
@@ -11509,36 +11554,36 @@ def _notify_target_buy_point(name, symbol, state):
             item = {}
             bp[name] = item
 
-        # 跨日保留「是否已通知」並不會造成隔天永久鎖死：
-        # 每日第一次執行時，若目前已低於解鎖線則直接解鎖；
-        # 若仍 >=75，沿用前一天鎖定，避免盤後/隔日重複洗版。
         locked = bool(item.get('locked', False))
         last_date = item.get('date')
         if last_date != today:
             item['date'] = today
+            # 跨日若已跌回解鎖線，直接清除舊鎖。
             if score <= 60:
                 locked = False
                 item['locked'] = False
 
-        # 跌回 60（含 60）解除鎖定；下一次重新 >=75 才會再通知。
+        # 買點 <=60：解除通知鎖；下一次重新同時 >=90 + 投資價值>=90 才通知。
         if score <= 60:
             item['locked'] = False
             print(
-                f'V2.14.15 {name} 買點 {score}：跌回60以下/等於60，解除通知鎖',
+                f'V2.14.17 {name} 買點 {score}：跌回60以下/等於60，解除通知鎖',
                 flush=True
             )
             return buy
 
-        # 已通知且仍高於解鎖線：不重複通知。
+        # 已通知且尚未跌回60：完全不重複 LINE。
         if locked:
             print(
-                f'V2.14.15 {name} 買點 {score}：已通知且尚未跌回60，不重複 LINE',
+                f'V2.14.17 {name} 買點 {score}、投資價值 '
+                f'{investment_score if investment_score is not None else "N/A"}：'
+                f'已通知且尚未跌回60，不重複 LINE',
                 flush=True
             )
             return buy
 
-        # 只有首次進入 >=75 才主動通知。
-        if score >= 75:
+        # 只有「超低點 + 嚴重低估」才消耗 LINE 額度。
+        if score >= 90 and investment_score is not None and investment_score >= 90:
             price = to_float(tech.get('price'))
             trend = buy.get('trend_state') or 'N/A'
             verdict = buy.get('verdict') or 'N/A'
@@ -11551,11 +11596,12 @@ def _notify_target_buy_point(name, symbol, state):
             z2 = f'{fmt(zone2[0])}～{fmt(zone2[1])}' if zone2 else 'N/A'
 
             msg = (
-                '🟢 好買點通知 V2.14.15\n\n'
+                '🔥 極佳買點通知 V2.14.17\n\n'
                 f'標的：{name}\n'
                 f'執行時間：{datetime.now(TW_TZ).strftime("%Y-%m-%d %H:%M:%S")}\n'
                 f'目前價格：{fmt(price)}\n'
-                f'買點分數：{score}/100\n'
+                f'買點分數：{score}/100（門檻 >=90）\n'
+                f'投資價值：{investment_score}/100（門檻 >=90）\n'
                 f'判定：{verdict}\n'
                 f'趨勢：{trend}\n'
                 f'5日：{fmt((ret5 or 0)*100)}%｜10日：{fmt((ret10 or 0)*100)}%｜20日：{fmt((ret20 or 0)*100)}%\n'
@@ -11568,28 +11614,31 @@ def _notify_target_buy_point(name, symbol, state):
             sent = send_line(msg[:5000])
             if not sent:
                 print(
-                    f'⚠️ V2.14.15 {name} 好買點 LINE 發送失敗，本次不鎖定，避免漏掉後續通知',
+                    f'⚠️ V2.14.17 {name} 極佳買點 LINE 發送失敗，本次不鎖定，避免漏掉後續通知',
                     flush=True
                 )
                 return buy
             item['locked'] = True
             item['notified_at'] = datetime.now(TW_TZ).strftime('%Y-%m-%d %H:%M:%S')
             item['notified_score'] = score
+            item['notified_investment_score'] = investment_score
             print(
-                f'🟢 V2.14.15 {name} 買點 {score} >=75，已發送好買點 LINE；'
-                f'後續須跌回 <=60 才解鎖',
+                f'🔥 V2.14.17 {name} 買點 {score} >=90 且投資價值 {investment_score} >=90，'
+                f'已發送極佳買點 LINE；後續須跌回買點 <=60 才解鎖',
                 flush=True
             )
         else:
             print(
-                f'V2.14.15 {name} 買點 {score}：未達75，不通知',
+                f'V2.14.17 {name} 買點 {score}、投資價值 '
+                f'{investment_score if investment_score is not None else "N/A"}：'
+                f'未同時達到買點>=90＋投資價值>=95，不通知',
                 flush=True
             )
 
         return buy
     except Exception as e:
         print(
-            f'⚠️ V2.14.15 {name} 買點通知失敗：{type(e).__name__}: {e}',
+            f'⚠️ V2.14.17 {name} 極佳買點通知失敗：{type(e).__name__}: {e}',
             flush=True
         )
         return None
@@ -11882,10 +11931,10 @@ def run_alerts():
                     f'跳過詳細估值'
                 )
 
-            # V2.14.15：指定目標股/ETF 另外判斷「買點 >=75」；
-            # 與既有全市場「投資價值 >=95」通知完全獨立。
+            # V2.14.17：指定目標股/ETF 僅在「買點 >=90 + 投資價值 >=90」時主動 LINE；
+            # 與既有全市場「投資價值 >=95」通知仍維持各自流程。
             if name in ('0050 元大台灣50', '2330 台積電', 'QQQ'):
-                _notify_target_buy_point(name, symbol, state)
+                _notify_target_buy_point(name, symbol, state, u)
 
         except Exception as e:
 
