@@ -28,25 +28,25 @@
   },
   "interval_low": {
     "0050 元大台灣50": {
-      "last_check": "2026-09-07T11:45:37.266493+08:00",
-      "last_price": 109.8499984741211,
-      "last_interval_low": 109.69999694824219,
+      "last_check": "2026-09-07T11:59:08.762900+08:00",
+      "last_price": 109.9000015258789,
+      "last_interval_low": 109.75,
       "last_interval_source": "Yahoo-5m",
       "interval_alert": false,
       "session_key": "2026-09-07"
     },
     "2330 台積電": {
-      "last_check": "2026-09-07T11:45:45.894094+08:00",
-      "last_price": 2445.0,
+      "last_check": "2026-09-07T11:59:19.217548+08:00",
+      "last_price": 2450.0,
       "last_interval_low": 2445.0,
       "last_interval_source": "Yahoo-5m",
       "interval_alert": false,
       "session_key": "2026-09-07"
     },
     "3711 日月光投控": {
-      "last_check": "2026-09-07T11:45:49.459681+08:00",
-      "last_price": 622.0,
-      "last_interval_low": 622.0,
+      "last_check": "2026-09-07T11:59:22.470649+08:00",
+      "last_price": 621.0,
+      "last_interval_low": 621.0,
       "last_interval_source": "Yahoo-5m",
       "interval_alert": false,
       "session_key": "2026-09-07"
@@ -60,9 +60,9 @@
       "session_key": "2026-09-04"
     },
     "台灣加權指數": {
-      "last_check": "2026-09-07T11:45:53.787310+08:00",
-      "last_price": 47233.73828125,
-      "last_interval_low": 47233.73828125,
+      "last_check": "2026-09-07T11:59:25.550874+08:00",
+      "last_price": 47272.12890625,
+      "last_interval_low": 47225.53125,
       "last_interval_source": "Yahoo-5m",
       "interval_alert": false,
       "session_key": "2026-09-07"
@@ -71,5 +71,25 @@
   "high_score_alert": {
     "date": "2026-09-07",
     "active": []
+  },
+  "target_buy_point_alert": {
+    "0050 元大台灣50": {
+      "date": "2026-09-07",
+      "locked": true,
+      "notified_at": "2026-09-07 11:59:19",
+      "notified_score": 87
+    },
+    "2330 台積電": {
+      "date": "2026-09-07",
+      "locked": true,
+      "notified_at": "2026-09-07 11:59:22",
+      "notified_score": 92
+    },
+    "QQQ": {
+      "date": "2026-09-07",
+      "locked": true,
+      "notified_at": "2026-09-07 11:59:25",
+      "notified_score": 86
+    }
   }
 }
