@@ -1,27 +1,27 @@
 {
   "drop_alert": {
     "0050 元大台灣50": {
-      "date": "2026-09-07",
+      "date": "2026-09-08",
       "daily_alert": false,
       "weekly_alert": false
     },
     "2330 台積電": {
-      "date": "2026-09-07",
+      "date": "2026-09-08",
       "daily_alert": false,
       "weekly_alert": false
     },
     "3711 日月光投控": {
-      "date": "2026-09-07",
+      "date": "2026-09-08",
       "daily_alert": false,
       "weekly_alert": false
     },
     "QQQ": {
-      "date": "2026-09-07",
+      "date": "2026-09-08",
       "daily_alert": false,
       "weekly_alert": false
     },
     "台灣加權指數": {
-      "date": "2026-09-07",
+      "date": "2026-09-08",
       "daily_alert": false,
       "weekly_alert": false
     }
@@ -52,7 +52,7 @@
       "session_key": "2026-09-07"
     },
     "QQQ": {
-      "last_check": "2026-09-07T23:56:19.788584+08:00",
+      "last_check": "2026-09-08T00:12:39.298061+08:00",
       "last_price": 719.0599975585938,
       "last_interval_low": 718.29248046875,
       "last_interval_source": "Yahoo-5m",
@@ -74,19 +74,19 @@
   },
   "target_buy_point_alert": {
     "0050 元大台灣50": {
-      "date": "2026-09-07",
+      "date": "2026-09-08",
       "locked": true,
       "notified_at": "2026-09-07 11:59:19",
       "notified_score": 87
     },
     "2330 台積電": {
-      "date": "2026-09-07",
+      "date": "2026-09-08",
       "locked": true,
       "notified_at": "2026-09-07 11:59:22",
       "notified_score": 92
     },
     "QQQ": {
-      "date": "2026-09-07",
+      "date": "2026-09-08",
       "locked": true,
       "notified_at": "2026-09-07 11:59:25",
       "notified_score": 86
