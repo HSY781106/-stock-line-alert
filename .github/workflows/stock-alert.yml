@@ -1,11 +1,19 @@
-name: Stock Alert V2.14.23
+name: Stock Alert V2.14.25
 
 on:
   schedule:
-    - cron: '*/15 1-5 * * 1-5'  # Taiwan 09:00-13:45 UTC
+    # 台股：09:00–13:00（UTC 01:00–05:00）
+    - cron: '*/15 1-5 * * 1-5'
+
+    # 台股：13:30、13:45
     - cron: '30,45 13 * * 1-5'
+
+    # 台股：14:00–20:00
     - cron: '*/15 14-20 * * 1-5'
+
+    # 美股：21:00
     - cron: '0 21 * * 1-5'
+
   workflow_dispatch:
 
 concurrency:
@@ -32,15 +40,17 @@ jobs:
           python-version: '3.12'
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: |
+          pip install -r requirements.txt
 
       - name: Run stock alert
         env:
           LINE_CHANNEL_ACCESS_TOKEN: ${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }}
           LINE_CHANNEL_SECRET: ${{ secrets.LINE_CHANNEL_SECRET }}
-        run: python stock_alert.py
+        run: |
+          python stock_alert.py
 
-      - name: Save generated state and caches
+      - name: Save state and caches
         if: always()
         run: |
           git config user.name "github-actions[bot]"
@@ -48,14 +58,8 @@ jobs:
 
           git add -A
 
-          git diff --cached --quiet || git commit -m "Update stock alert state and caches V2.14.23"
+          git diff --cached --quiet || git commit -m "Update V2.14.25 alert state and industry cache"
 
-          git fetch origin main
-          git rebase origin/main || (
-            git rebase --abort &&
-            git stash push -u -m "v21423-state" &&
-            git pull --rebase origin main &&
-            git stash pop
-          )
+          git pull --rebase origin main || true
 
           git push origin HEAD:main
