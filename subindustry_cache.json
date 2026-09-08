@@ -1,5 +1,5 @@
 {
-  "_cached_at": 1788839924.9828155,
+  "_cached_at": 1788841228.5812383,
   "source": "TPEx/TWSE Industry Value Chain",
   "source_url": "https://ic.tpex.org.tw/company_chain.php",
   "cache_days": 30,
@@ -8311,6 +8311,1062 @@
         {
           "industry": "醫療器材",
           "sub_industry": "生物檢測",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1762": {
+      "subindustries": [
+        "中藥材、西藥原料藥"
+      ],
+      "records": [
+        {
+          "industry": "製藥",
+          "sub_industry": "中藥材、西藥原料藥",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1773": {
+      "subindustries": [
+        "化學品(如光阻劑、靶材等)",
+        "接著劑(合成樹脂)"
+      ],
+      "records": [
+        {
+          "industry": "平面顯示器",
+          "sub_industry": "化學品(如光阻劑、靶材等)",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "石化及塑橡膠",
+          "sub_industry": "接著劑(合成樹脂)",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1776": {
+      "subindustries": [
+        "塑膠製品",
+        "接著劑(合成樹脂)",
+        "工業用合成樹脂"
+      ],
+      "records": [
+        {
+          "industry": "石化及塑橡膠",
+          "sub_industry": "塑膠製品",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "石化及塑橡膠",
+          "sub_industry": "接著劑(合成樹脂)",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "石化及塑橡膠",
+          "sub_industry": "工業用合成樹脂",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1777": {
+      "subindustries": [
+        "中藥材、西藥原料藥"
+      ],
+      "records": [
+        {
+          "industry": "製藥",
+          "sub_industry": "中藥材、西藥原料藥",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1780": {
+      "subindustries": [
+        "原料",
+        "加工製成品"
+      ],
+      "records": [
+        {
+          "industry": "食品生技",
+          "sub_industry": "原料",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "食品生技",
+          "sub_industry": "加工製成品",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1781": {
+      "subindustries": [
+        "體溫計、血壓計"
+      ],
+      "records": [
+        {
+          "industry": "醫療器材",
+          "sub_industry": "體溫計、血壓計",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1783": {
+      "subindustries": [
+        "醫療耗材"
+      ],
+      "records": [
+        {
+          "industry": "醫療器材",
+          "sub_industry": "醫療耗材",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1784": {
+      "subindustries": [
+        "幹細胞收集儲存",
+        "幹細胞開發",
+        "臨床實驗、移植技術、疾病治療"
+      ],
+      "records": [
+        {
+          "industry": "再生醫療",
+          "sub_industry": "幹細胞收集儲存",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "再生醫療",
+          "sub_industry": "幹細胞開發",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "再生醫療",
+          "sub_industry": "臨床實驗、移植技術、疾病治療",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1786": {
+      "subindustries": [
+        "原材料",
+        "中、西藥製劑",
+        "醫療耗材"
+      ],
+      "records": [
+        {
+          "industry": "製藥",
+          "sub_industry": "原材料",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "製藥",
+          "sub_industry": "中、西藥製劑",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "醫療器材",
+          "sub_industry": "醫療耗材",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1785": {
+      "subindustries": [
+        "化學品",
+        "硬碟機",
+        "化學品(如光阻劑、靶材等)",
+        "ITO靶材",
+        "濾波器、振盪器材料(鉭酸鋰／鈮酸鋰晶圓／片、石英基板、金屬及陶瓷封裝材料)",
+        "生產製程及檢測設備",
+        "環保潔能服務產業",
+        "其他",
+        "材料"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "化學品",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "硬碟機",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "平面顯示器",
+          "sub_industry": "化學品(如光阻劑、靶材等)",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "觸控面板",
+          "sub_industry": "ITO靶材",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "被動元件",
+          "sub_industry": "濾波器、振盪器材料(鉭酸鋰／鈮酸鋰晶圓／片、石英基板、金屬及陶瓷封裝材料)",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "印刷電路板",
+          "sub_industry": "生產製程及檢測設備",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "其他",
+          "sub_industry": "環保潔能服務產業",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "汽車",
+          "sub_industry": "其他",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "太陽能產業",
+          "sub_industry": "材料",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1788": {
+      "subindustries": [
+        "藥品代理銷售及通路",
+        "保健食品代理銷售及通路",
+        "醫療器材代理"
+      ],
+      "records": [
+        {
+          "industry": "製藥",
+          "sub_industry": "藥品代理銷售及通路",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "食品生技",
+          "sub_industry": "保健食品代理銷售及通路",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "醫療器材",
+          "sub_industry": "醫療器材代理",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1789": {
+      "subindustries": [
+        "中藥材、西藥原料藥"
+      ],
+      "records": [
+        {
+          "industry": "製藥",
+          "sub_industry": "中藥材、西藥原料藥",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1795": {
+      "subindustries": [
+        "中、西藥製劑",
+        "加工製成品",
+        "保健食品代理銷售及通路"
+      ],
+      "records": [
+        {
+          "industry": "製藥",
+          "sub_industry": "中、西藥製劑",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "食品生技",
+          "sub_industry": "加工製成品",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "食品生技",
+          "sub_industry": "保健食品代理銷售及通路",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1799": {
+      "subindustries": [
+        "中、西藥製劑",
+        "體溫計、血壓計"
+      ],
+      "records": [
+        {
+          "industry": "製藥",
+          "sub_industry": "中、西藥製劑",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "醫療器材",
+          "sub_industry": "體溫計、血壓計",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1796": {
+      "subindustries": [
+        "原料",
+        "加工製成品",
+        "保健食品代理銷售及通路"
+      ],
+      "records": [
+        {
+          "industry": "食品生技",
+          "sub_industry": "原料",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "食品生技",
+          "sub_industry": "加工製成品",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "食品生技",
+          "sub_industry": "保健食品代理銷售及通路",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1802": {
+      "subindustries": [
+        "玻璃纖維/玻纖布",
+        "建材原料"
+      ],
+      "records": [
+        {
+          "industry": "印刷電路板",
+          "sub_industry": "玻璃纖維/玻纖布",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "建材營造",
+          "sub_industry": "建材原料",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1805": {
+      "subindustries": [
+        "建設業"
+      ],
+      "records": [
+        {
+          "industry": "建材營造",
+          "sub_industry": "建設業",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1806": {
+      "subindustries": [
+        "建材原料"
+      ],
+      "records": [
+        {
+          "industry": "建材營造",
+          "sub_industry": "建材原料",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1808": {
+      "subindustries": [
+        "建設業"
+      ],
+      "records": [
+        {
+          "industry": "建材營造",
+          "sub_industry": "建設業",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1810": {
+      "subindustries": [
+        "建材原料"
+      ],
+      "records": [
+        {
+          "industry": "建材營造",
+          "sub_industry": "建材原料",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1809": {
+      "subindustries": [
+        "建材原料",
+        "個人、民間企業、政府機構",
+        "封裝/模組"
+      ],
+      "records": [
+        {
+          "industry": "建材營造",
+          "sub_industry": "建材原料",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "建材營造",
+          "sub_industry": "個人、民間企業、政府機構",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "LED照明產業",
+          "sub_industry": "封裝/模組",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1813": {
+      "subindustries": [
+        "隱型眼鏡、光學鏡片"
+      ],
+      "records": [
+        {
+          "industry": "醫療器材",
+          "sub_industry": "隱型眼鏡、光學鏡片",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1815": {
+      "subindustries": [
+        "玻璃纖維/玻纖布"
+      ],
+      "records": [
+        {
+          "industry": "印刷電路板",
+          "sub_industry": "玻璃纖維/玻纖布",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1817": {
+      "subindustries": [
+        "建材原料",
+        "貿易商、代理商、經銷商"
+      ],
+      "records": [
+        {
+          "industry": "建材營造",
+          "sub_industry": "建材原料",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "貿易百貨",
+          "sub_industry": "貿易商、代理商、經銷商",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1903": {
+      "subindustries": [
+        "工業用紙"
+      ],
+      "records": [
+        {
+          "industry": "造紙",
+          "sub_industry": "工業用紙",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1904": {
+      "subindustries": [
+        "紙漿、紙類原料",
+        "紙器及紙類製造印刷、加工",
+        "銷售、進出口業務",
+        "文化用紙",
+        "工業用紙",
+        "家庭用紙"
+      ],
+      "records": [
+        {
+          "industry": "造紙",
+          "sub_industry": "紙漿、紙類原料",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "造紙",
+          "sub_industry": "紙器及紙類製造印刷、加工",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "造紙",
+          "sub_industry": "銷售、進出口業務",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "造紙",
+          "sub_industry": "文化用紙",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "造紙",
+          "sub_industry": "工業用紙",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "造紙",
+          "sub_industry": "家庭用紙",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1905": {
+      "subindustries": [
+        "紙漿、紙類原料",
+        "銷售、進出口業務",
+        "文化用紙"
+      ],
+      "records": [
+        {
+          "industry": "造紙",
+          "sub_industry": "紙漿、紙類原料",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "造紙",
+          "sub_industry": "銷售、進出口業務",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "造紙",
+          "sub_industry": "文化用紙",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1906": {
+      "subindustries": [
+        "銷售、進出口業務"
+      ],
+      "records": [
+        {
+          "industry": "造紙",
+          "sub_industry": "銷售、進出口業務",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1907": {
+      "subindustries": [
+        "紙器及紙類製造印刷、加工",
+        "銷售、進出口業務",
+        "文化印刷業",
+        "文化用紙",
+        "工業用紙",
+        "家庭用紙"
+      ],
+      "records": [
+        {
+          "industry": "造紙",
+          "sub_industry": "紙器及紙類製造印刷、加工",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "造紙",
+          "sub_industry": "銷售、進出口業務",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "其他",
+          "sub_industry": "文化印刷業",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "造紙",
+          "sub_industry": "文化用紙",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "造紙",
+          "sub_industry": "工業用紙",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "造紙",
+          "sub_industry": "家庭用紙",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1909": {
+      "subindustries": [
+        "紙漿、紙類原料"
+      ],
+      "records": [
+        {
+          "industry": "造紙",
+          "sub_industry": "紙漿、紙類原料",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2002": {
+      "subindustries": [
+        "鋼胚",
+        "冷熱軋鋼板捲",
+        "線材盤元",
+        "棒鋼盤元(捲狀條鋼)"
+      ],
+      "records": [
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "鋼胚",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "冷熱軋鋼板捲",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "線材盤元",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "棒鋼盤元(捲狀條鋼)",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2006": {
+      "subindustries": [
+        "鋼胚",
+        "鋼筋"
+      ],
+      "records": [
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "鋼胚",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "鋼筋",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2008": {
+      "subindustries": [
+        "冷熱軋鋼板捲",
+        "製管"
+      ],
+      "records": [
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "冷熱軋鋼板捲",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "製管",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2007": {
+      "subindustries": [
+        "鋼筋",
+        "線材盤元",
+        "棒鋼盤元(捲狀條鋼)"
+      ],
+      "records": [
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "鋼筋",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "線材盤元",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "棒鋼盤元(捲狀條鋼)",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2009": {
+      "subindustries": [
+        "冷熱軋鋼板捲"
+      ],
+      "records": [
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "冷熱軋鋼板捲",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2010": {
+      "subindustries": [
+        "冷熱軋鋼板捲",
+        "棒鋼盤元(捲狀條鋼)",
+        "冷熱軋不鏽鋼板捲",
+        "不鏽鋼棒線",
+        "裁剪加工",
+        "金屬製品",
+        "模具",
+        "建築工程",
+        "結構工程"
+      ],
+      "records": [
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "冷熱軋鋼板捲",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "棒鋼盤元(捲狀條鋼)",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "冷熱軋不鏽鋼板捲",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "不鏽鋼棒線",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "裁剪加工",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "金屬製品",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "模具",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "建築工程",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "建材營造",
+          "sub_industry": "結構工程",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2012": {
+      "subindustries": [
+        "線材盤元",
+        "金屬製品",
+        "機械設備(如產業機械、精密機械、工具機)",
+        "模具",
+        "螺絲螺帽",
+        "鋼線鋼纜",
+        "其他配件"
+      ],
+      "records": [
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "線材盤元",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "金屬製品",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "機械設備(如產業機械、精密機械、工具機)",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "模具",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "螺絲螺帽",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "鋼線鋼纜",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "風力發電",
+          "sub_industry": "其他配件",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2013": {
+      "subindustries": [
+        "金屬製品",
+        "鋼材"
+      ],
+      "records": [
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "金屬製品",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "風力發電",
+          "sub_industry": "鋼材",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2014": {
+      "subindustries": [
+        "冷熱軋鋼板捲",
+        "製管"
+      ],
+      "records": [
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "冷熱軋鋼板捲",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "製管",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2015": {
+      "subindustries": [
+        "鋼胚",
+        "鋼筋",
+        "棒鋼盤元(捲狀條鋼)",
+        "金屬製品"
+      ],
+      "records": [
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "鋼胚",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "鋼筋",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "棒鋼盤元(捲狀條鋼)",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "金屬製品",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2017": {
+      "subindustries": [
+        "鋼筋",
+        "線材盤元",
+        "金屬製品",
+        "螺絲螺帽",
+        "鋼線鋼纜"
+      ],
+      "records": [
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "鋼筋",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "線材盤元",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "金屬製品",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "螺絲螺帽",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "鋼線鋼纜",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2020": {
+      "subindustries": [
+        "製管",
+        "建材原料",
+        "建設業"
+      ],
+      "records": [
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "製管",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "建材營造",
+          "sub_industry": "建材原料",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "建材營造",
+          "sub_industry": "建設業",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2022": {
+      "subindustries": [
+        "線材盤元",
+        "螺絲螺帽"
+      ],
+      "records": [
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "線材盤元",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "螺絲螺帽",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2023": {
+      "subindustries": [
+        "冷熱軋鋼板捲"
+      ],
+      "records": [
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "冷熱軋鋼板捲",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2024": {
+      "subindustries": [
+        "鋼線鋼纜"
+      ],
+      "records": [
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "鋼線鋼纜",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2025": {
+      "subindustries": [
+        "冷熱軋不鏽鋼板捲"
+      ],
+      "records": [
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "冷熱軋不鏽鋼板捲",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2027": {
+      "subindustries": [
+        "製管"
+      ],
+      "records": [
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "製管",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2028": {
+      "subindustries": [
+        "鋼胚",
+        "鋼筋",
+        "線材盤元",
+        "棒鋼盤元(捲狀條鋼)"
+      ],
+      "records": [
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "鋼胚",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "鋼筋",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "線材盤元",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "棒鋼盤元(捲狀條鋼)",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2029": {
+      "subindustries": [
+        "冷熱軋鋼板捲",
+        "建築工程"
+      ],
+      "records": [
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "冷熱軋鋼板捲",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "建築工程",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2030": {
+      "subindustries": [
+        "製管"
+      ],
+      "records": [
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "製管",
           "date": "2026-09-08"
         }
       ]
