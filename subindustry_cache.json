@@ -1,5 +1,5 @@
 {
-  "_cached_at": 1787543286.672712,
+  "_cached_at": 1788836301.8506954,
   "source": "TPEx/TWSE Industry Value Chain",
   "source_url": "https://ic.tpex.org.tw/company_chain.php",
   "cache_days": 30,
@@ -4061,6 +4061,930 @@
           "industry": "產業價值鏈資訊平台",
           "sub_industry": "產業鏈簡介",
           "date": "2026-08-24"
+        }
+      ]
+    },
+    "1102": {
+      "subindustries": [
+        "水泥熟料",
+        "風場開發",
+        "發電營運"
+      ],
+      "records": [
+        {
+          "industry": "水泥",
+          "sub_industry": "水泥熟料",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "風力發電",
+          "sub_industry": "風場開發",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "風力發電",
+          "sub_industry": "發電營運",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1101": {
+      "subindustries": [
+        "石灰石",
+        "水泥生料",
+        "水泥熟料",
+        "水泥成品",
+        "預拌混凝土"
+      ],
+      "records": [
+        {
+          "industry": "水泥",
+          "sub_industry": "石灰石",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "水泥",
+          "sub_industry": "水泥生料",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "水泥",
+          "sub_industry": "水泥熟料",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "水泥",
+          "sub_industry": "水泥成品",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "水泥",
+          "sub_industry": "預拌混凝土",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1103": {
+      "subindustries": [
+        "水泥成品",
+        "建設業",
+        "貨櫃運輸集散及倉儲",
+        "租賃業"
+      ],
+      "records": [
+        {
+          "industry": "水泥",
+          "sub_industry": "水泥成品",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "建材營造",
+          "sub_industry": "建設業",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "交通運輸及航運",
+          "sub_industry": "貨櫃運輸集散及倉儲",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "金融",
+          "sub_industry": "租賃業",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1104": {
+      "subindustries": [
+        "水泥成品",
+        "預拌混凝土"
+      ],
+      "records": [
+        {
+          "industry": "水泥",
+          "sub_industry": "水泥成品",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "水泥",
+          "sub_industry": "預拌混凝土",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1108": {
+      "subindustries": [
+        "石灰石",
+        "水泥生料",
+        "水泥熟料",
+        "水泥成品",
+        "預拌混凝土"
+      ],
+      "records": [
+        {
+          "industry": "水泥",
+          "sub_industry": "石灰石",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "水泥",
+          "sub_industry": "水泥生料",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "水泥",
+          "sub_industry": "水泥熟料",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "水泥",
+          "sub_industry": "水泥成品",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "水泥",
+          "sub_industry": "預拌混凝土",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1110": {
+      "subindustries": [
+        "水泥成品"
+      ],
+      "records": [
+        {
+          "industry": "水泥",
+          "sub_industry": "水泥成品",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1109": {
+      "subindustries": [
+        "石灰石",
+        "水泥生料",
+        "水泥熟料",
+        "水泥成品",
+        "預拌混凝土"
+      ],
+      "records": [
+        {
+          "industry": "水泥",
+          "sub_industry": "石灰石",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "水泥",
+          "sub_industry": "水泥生料",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "水泥",
+          "sub_industry": "水泥熟料",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "水泥",
+          "sub_industry": "水泥成品",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "水泥",
+          "sub_industry": "預拌混凝土",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1201": {
+      "subindustries": [
+        "冷凍、罐頭、脫水、醃漬食品",
+        "乳製品"
+      ],
+      "records": [
+        {
+          "industry": "食品",
+          "sub_industry": "冷凍、罐頭、脫水、醃漬食品",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "食品",
+          "sub_industry": "乳製品",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1210": {
+      "subindustries": [
+        "原物料",
+        "加工食品",
+        "冷凍、罐頭、脫水、醃漬食品"
+      ],
+      "records": [
+        {
+          "industry": "食品",
+          "sub_industry": "原物料",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "食品",
+          "sub_industry": "加工食品",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "食品",
+          "sub_industry": "冷凍、罐頭、脫水、醃漬食品",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1203": {
+      "subindustries": [
+        "冷凍、罐頭、脫水、醃漬食品"
+      ],
+      "records": [
+        {
+          "industry": "食品",
+          "sub_industry": "冷凍、罐頭、脫水、醃漬食品",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1215": {
+      "subindustries": [
+        "原物料",
+        "加工食品",
+        "冷凍、罐頭、脫水、醃漬食品"
+      ],
+      "records": [
+        {
+          "industry": "食品",
+          "sub_industry": "原物料",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "食品",
+          "sub_industry": "加工食品",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "食品",
+          "sub_industry": "冷凍、罐頭、脫水、醃漬食品",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1213": {
+      "subindustries": [
+        "其他"
+      ],
+      "records": [
+        {
+          "industry": "其他",
+          "sub_industry": "其他",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1217": {
+      "subindustries": [
+        "冷凍、罐頭、脫水、醃漬食品"
+      ],
+      "records": [
+        {
+          "industry": "食品",
+          "sub_industry": "冷凍、罐頭、脫水、醃漬食品",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1216": {
+      "subindustries": [
+        "原物料",
+        "加工食品",
+        "冷凍、罐頭、脫水、醃漬食品",
+        "乳製品"
+      ],
+      "records": [
+        {
+          "industry": "食品",
+          "sub_industry": "原物料",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "食品",
+          "sub_industry": "加工食品",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "食品",
+          "sub_industry": "冷凍、罐頭、脫水、醃漬食品",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "食品",
+          "sub_industry": "乳製品",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1218": {
+      "subindustries": [
+        "加工食品",
+        "冷凍、罐頭、脫水、醃漬食品"
+      ],
+      "records": [
+        {
+          "industry": "食品",
+          "sub_industry": "加工食品",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "食品",
+          "sub_industry": "冷凍、罐頭、脫水、醃漬食品",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1220": {
+      "subindustries": [
+        "原物料",
+        "加工食品",
+        "貿易商、代理商、經銷商"
+      ],
+      "records": [
+        {
+          "industry": "食品",
+          "sub_industry": "原物料",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "食品",
+          "sub_industry": "加工食品",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "貿易百貨",
+          "sub_industry": "貿易商、代理商、經銷商",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1219": {
+      "subindustries": [
+        "加工食品"
+      ],
+      "records": [
+        {
+          "industry": "食品",
+          "sub_industry": "加工食品",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1225": {
+      "subindustries": [
+        "原物料",
+        "加工食品"
+      ],
+      "records": [
+        {
+          "industry": "食品",
+          "sub_industry": "原物料",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "食品",
+          "sub_industry": "加工食品",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1229": {
+      "subindustries": [
+        "加工食品",
+        "系統整合"
+      ],
+      "records": [
+        {
+          "industry": "食品",
+          "sub_industry": "加工食品",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "雲端運算",
+          "sub_industry": "系統整合",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1227": {
+      "subindustries": [
+        "營養食品"
+      ],
+      "records": [
+        {
+          "industry": "食品",
+          "sub_industry": "營養食品",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1232": {
+      "subindustries": [
+        "原物料",
+        "加工食品"
+      ],
+      "records": [
+        {
+          "industry": "食品",
+          "sub_industry": "原物料",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "食品",
+          "sub_industry": "加工食品",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1231": {
+      "subindustries": [
+        "冷凍、罐頭、脫水、醃漬食品"
+      ],
+      "records": [
+        {
+          "industry": "食品",
+          "sub_industry": "冷凍、罐頭、脫水、醃漬食品",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1234": {
+      "subindustries": [
+        "冷凍、罐頭、脫水、醃漬食品"
+      ],
+      "records": [
+        {
+          "industry": "食品",
+          "sub_industry": "冷凍、罐頭、脫水、醃漬食品",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1233": {
+      "subindustries": [
+        "原物料",
+        "餐飲連鎖"
+      ],
+      "records": [
+        {
+          "industry": "食品",
+          "sub_industry": "原物料",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "食品",
+          "sub_industry": "餐飲連鎖",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1236": {
+      "subindustries": [
+        "乳製品"
+      ],
+      "records": [
+        {
+          "industry": "食品",
+          "sub_industry": "乳製品",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1235": {
+      "subindustries": [
+        "原物料"
+      ],
+      "records": [
+        {
+          "industry": "食品",
+          "sub_industry": "原物料",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1256": {
+      "subindustries": [
+        "加工食品"
+      ],
+      "records": [
+        {
+          "industry": "食品",
+          "sub_industry": "加工食品",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1259": {
+      "subindustries": [
+        "餐飲連鎖"
+      ],
+      "records": [
+        {
+          "industry": "食品",
+          "sub_industry": "餐飲連鎖",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1240": {
+      "subindustries": [
+        "農業科技業"
+      ],
+      "records": [
+        {
+          "industry": "其他",
+          "sub_industry": "農業科技業",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1264": {
+      "subindustries": [
+        "原物料"
+      ],
+      "records": [
+        {
+          "industry": "食品",
+          "sub_industry": "原物料",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1294": {
+      "subindustries": [
+        "原物料",
+        "加工食品"
+      ],
+      "records": [
+        {
+          "industry": "食品",
+          "sub_industry": "原物料",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "食品",
+          "sub_industry": "加工食品",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1268": {
+      "subindustries": [
+        "餐飲連鎖"
+      ],
+      "records": [
+        {
+          "industry": "食品",
+          "sub_industry": "餐飲連鎖",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1295": {
+      "subindustries": [
+        "原物料"
+      ],
+      "records": [
+        {
+          "industry": "食品",
+          "sub_industry": "原物料",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1301": {
+      "subindustries": [
+        "塑膠製品",
+        "人造纖維",
+        "石化原料(例如純對苯二甲酸、乙二醇、己內醯胺、丙烯腈等)"
+      ],
+      "records": [
+        {
+          "industry": "石化及塑橡膠",
+          "sub_industry": "塑膠製品",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "石化及塑橡膠",
+          "sub_industry": "人造纖維",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "紡織",
+          "sub_industry": "石化原料(例如純對苯二甲酸、乙二醇、己內醯胺、丙烯腈等)",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1304": {
+      "subindustries": [
+        "工業用合成樹脂"
+      ],
+      "records": [
+        {
+          "industry": "石化及塑橡膠",
+          "sub_industry": "工業用合成樹脂",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1303": {
+      "subindustries": [
+        "玻璃纖維/玻纖布",
+        "環氧樹脂",
+        "酚醛樹脂",
+        "銅箔",
+        "石化上游原料及相關鑽探設備",
+        "人造纖維",
+        "石化原料(例如純對苯二甲酸、乙二醇、己內醯胺、丙烯腈等)",
+        "人造纖維產品(例如尼龍纖維、聚酯纖維、嫘縈纖維等)",
+        "染整",
+        "電控元件",
+        "機械設備之沖壓零組件",
+        "銅箔基板"
+      ],
+      "records": [
+        {
+          "industry": "印刷電路板",
+          "sub_industry": "玻璃纖維/玻纖布",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "印刷電路板",
+          "sub_industry": "環氧樹脂",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "印刷電路板",
+          "sub_industry": "酚醛樹脂",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "印刷電路板",
+          "sub_industry": "銅箔",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "石化及塑橡膠",
+          "sub_industry": "石化上游原料及相關鑽探設備",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "石化及塑橡膠",
+          "sub_industry": "人造纖維",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "紡織",
+          "sub_industry": "石化原料(例如純對苯二甲酸、乙二醇、己內醯胺、丙烯腈等)",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "紡織",
+          "sub_industry": "人造纖維產品(例如尼龍纖維、聚酯纖維、嫘縈纖維等)",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "紡織",
+          "sub_industry": "染整",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電機機械",
+          "sub_industry": "電控元件",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電機機械",
+          "sub_industry": "機械設備之沖壓零組件",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "印刷電路板",
+          "sub_industry": "銅箔基板",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1305": {
+      "subindustries": [
+        "塑膠製品"
+      ],
+      "records": [
+        {
+          "industry": "石化及塑橡膠",
+          "sub_industry": "塑膠製品",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1308": {
+      "subindustries": [
+        "工業用合成樹脂"
+      ],
+      "records": [
+        {
+          "industry": "石化及塑橡膠",
+          "sub_industry": "工業用合成樹脂",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1307": {
+      "subindustries": [
+        "塑膠製品"
+      ],
+      "records": [
+        {
+          "industry": "石化及塑橡膠",
+          "sub_industry": "塑膠製品",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1310": {
+      "subindustries": [
+        "塑膠製品"
+      ],
+      "records": [
+        {
+          "industry": "石化及塑橡膠",
+          "sub_industry": "塑膠製品",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1309": {
+      "subindustries": [
+        "塑膠製品"
+      ],
+      "records": [
+        {
+          "industry": "石化及塑橡膠",
+          "sub_industry": "塑膠製品",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1312": {
+      "subindustries": [
+        "塑膠製品"
+      ],
+      "records": [
+        {
+          "industry": "石化及塑橡膠",
+          "sub_industry": "塑膠製品",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1313": {
+      "subindustries": [
+        "塑化劑(可塑劑)"
+      ],
+      "records": [
+        {
+          "industry": "石化及塑橡膠",
+          "sub_industry": "塑化劑(可塑劑)",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1314": {
+      "subindustries": [
+        "石化原料(例如純對苯二甲酸、乙二醇、己內醯胺、丙烯腈等)",
+        "PTA(對苯二甲酸)觸媒",
+        "工業用合成樹脂"
+      ],
+      "records": [
+        {
+          "industry": "紡織",
+          "sub_industry": "石化原料(例如純對苯二甲酸、乙二醇、己內醯胺、丙烯腈等)",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "石化及塑橡膠",
+          "sub_industry": "PTA(對苯二甲酸)觸媒",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "石化及塑橡膠",
+          "sub_industry": "工業用合成樹脂",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1315": {
+      "subindustries": [
+        "塑膠製品",
+        "成衣及其它家居紡織類品",
+        "手工具機"
+      ],
+      "records": [
+        {
+          "industry": "石化及塑橡膠",
+          "sub_industry": "塑膠製品",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "紡織",
+          "sub_industry": "成衣及其它家居紡織類品",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電機機械",
+          "sub_industry": "手工具機",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1316": {
+      "subindustries": [
+        "塑膠製品"
+      ],
+      "records": [
+        {
+          "industry": "石化及塑橡膠",
+          "sub_industry": "塑膠製品",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1319": {
+      "subindustries": [
+        "塑膠製品",
+        "鈑金",
+        "引擎蓋",
+        "保險桿"
+      ],
+      "records": [
+        {
+          "industry": "石化及塑橡膠",
+          "sub_industry": "塑膠製品",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "汽車",
+          "sub_industry": "鈑金",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "汽車",
+          "sub_industry": "引擎蓋",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "汽車",
+          "sub_industry": "保險桿",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1323": {
+      "subindustries": [
+        "塑膠製品"
+      ],
+      "records": [
+        {
+          "industry": "石化及塑橡膠",
+          "sub_industry": "塑膠製品",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1321": {
+      "subindustries": [
+        "塑膠製品"
+      ],
+      "records": [
+        {
+          "industry": "石化及塑橡膠",
+          "sub_industry": "塑膠製品",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1324": {
+      "subindustries": [
+        "塑膠製品"
+      ],
+      "records": [
+        {
+          "industry": "石化及塑橡膠",
+          "sub_industry": "塑膠製品",
+          "date": "2026-09-08"
         }
       ]
     }
