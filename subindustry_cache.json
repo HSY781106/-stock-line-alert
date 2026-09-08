@@ -1,5 +1,5 @@
 {
-  "_cached_at": 1788882966.2835386,
+  "_cached_at": 1788884051.7933433,
   "source": "TPEx/TWSE Industry Value Chain",
   "source_url": "https://ic.tpex.org.tw/company_chain.php",
   "cache_days": 30,
@@ -24983,6 +24983,870 @@
           "industry": "電機機械",
           "sub_industry": "金屬加工用機械",
           "date": "2026-09-08"
+        }
+      ]
+    },
+    "4534": {
+      "subindustries": [
+        "傳動元件",
+        "五金元件及零配件",
+        "手工具機",
+        "車用機械傳動設備及零配件"
+      ],
+      "records": [
+        {
+          "industry": "電機機械",
+          "sub_industry": "傳動元件",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "電機機械",
+          "sub_industry": "五金元件及零配件",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "電機機械",
+          "sub_industry": "手工具機",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "電機機械",
+          "sub_industry": "車用機械傳動設備及零配件",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4535": {
+      "subindustries": [
+        "機械設備之沖壓零組件",
+        "車用機械傳動設備及零配件",
+        "大功率鋰電池芯/模組、電池管理系統、動力馬達等零組件"
+      ],
+      "records": [
+        {
+          "industry": "電機機械",
+          "sub_industry": "機械設備之沖壓零組件",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "電機機械",
+          "sub_industry": "車用機械傳動設備及零配件",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "電動車輛產業",
+          "sub_industry": "大功率鋰電池芯/模組、電池管理系統、動力馬達等零組件",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4536": {
+      "subindustries": [
+        "休閒車業",
+        "其他"
+      ],
+      "records": [
+        {
+          "industry": "休閒娛樂",
+          "sub_industry": "休閒車業",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "其他",
+          "sub_industry": "其他",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4538": {
+      "subindustries": [
+        "鋼鑄鐵元件"
+      ],
+      "records": [
+        {
+          "industry": "電機機械",
+          "sub_industry": "鋼鑄鐵元件",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4540": {
+      "subindustries": [
+        "傳動元件"
+      ],
+      "records": [
+        {
+          "industry": "電機機械",
+          "sub_industry": "傳動元件",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4541": {
+      "subindustries": [
+        "其他"
+      ],
+      "records": [
+        {
+          "industry": "其他",
+          "sub_industry": "其他",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4542": {
+      "subindustries": [
+        "工業用設備",
+        "生產製程及檢測設備"
+      ],
+      "records": [
+        {
+          "industry": "觸控面板",
+          "sub_industry": "工業用設備",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "印刷電路板",
+          "sub_industry": "生產製程及檢測設備",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4543": {
+      "subindustries": [
+        "五金元件及零配件",
+        "冷凍空調設備及零件",
+        "金屬加工處理"
+      ],
+      "records": [
+        {
+          "industry": "電機機械",
+          "sub_industry": "五金元件及零配件",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "電機機械",
+          "sub_industry": "冷凍空調設備及零件",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "電機機械",
+          "sub_industry": "金屬加工處理",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4549": {
+      "subindustries": [
+        "電控元件",
+        "機電系統工程"
+      ],
+      "records": [
+        {
+          "industry": "電機機械",
+          "sub_industry": "電控元件",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "電機機械",
+          "sub_industry": "機電系統工程",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4550": {
+      "subindustries": [
+        "機電系統工程"
+      ],
+      "records": [
+        {
+          "industry": "電機機械",
+          "sub_industry": "機電系統工程",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4545": {
+      "subindustries": [
+        "金屬、塑膠模具",
+        "其他電腦及週邊設備之零組件",
+        "其他零組件"
+      ],
+      "records": [
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "金屬、塑膠模具",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "其他電腦及週邊設備之零組件",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "通信網路",
+          "sub_industry": "其他零組件",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4551": {
+      "subindustries": [
+        "其他"
+      ],
+      "records": [
+        {
+          "industry": "汽車",
+          "sub_industry": "其他",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4552": {
+      "subindustries": [
+        "產業鏈簡介"
+      ],
+      "records": [
+        {
+          "industry": "產業價值鏈資訊平台",
+          "sub_industry": "產業鏈簡介",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4555": {
+      "subindustries": [
+        "電控元件",
+        "油空壓元件"
+      ],
+      "records": [
+        {
+          "industry": "電機機械",
+          "sub_industry": "電控元件",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "電機機械",
+          "sub_industry": "油空壓元件",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4554": {
+      "subindustries": [
+        "其他"
+      ],
+      "records": [
+        {
+          "industry": "汽車",
+          "sub_industry": "其他",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4556": {
+      "subindustries": [
+        "其他"
+      ],
+      "records": [
+        {
+          "industry": "其他",
+          "sub_industry": "其他",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4557": {
+      "subindustries": [
+        "產業鏈簡介"
+      ],
+      "records": [
+        {
+          "industry": "產業價值鏈資訊平台",
+          "sub_industry": "產業鏈簡介",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4560": {
+      "subindustries": [
+        "產業鏈簡介"
+      ],
+      "records": [
+        {
+          "industry": "產業價值鏈資訊平台",
+          "sub_industry": "產業鏈簡介",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4558": {
+      "subindustries": [
+        "金屬加工處理",
+        "裝置/器材零組件"
+      ],
+      "records": [
+        {
+          "industry": "電機機械",
+          "sub_industry": "金屬加工處理",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "運動科技",
+          "sub_industry": "裝置/器材零組件",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4561": {
+      "subindustries": [
+        "傳動元件"
+      ],
+      "records": [
+        {
+          "industry": "電機機械",
+          "sub_industry": "傳動元件",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4562": {
+      "subindustries": [
+        "金屬加工用機械"
+      ],
+      "records": [
+        {
+          "industry": "電機機械",
+          "sub_industry": "金屬加工用機械",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4563": {
+      "subindustries": [
+        "金屬加工用機械"
+      ],
+      "records": [
+        {
+          "industry": "電機機械",
+          "sub_industry": "金屬加工用機械",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4564": {
+      "subindustries": [
+        "金屬加工處理"
+      ],
+      "records": [
+        {
+          "industry": "電機機械",
+          "sub_industry": "金屬加工處理",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4566": {
+      "subindustries": [
+        "車用機械傳動設備及零配件"
+      ],
+      "records": [
+        {
+          "industry": "電機機械",
+          "sub_industry": "車用機械傳動設備及零配件",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4569": {
+      "subindustries": [
+        "產業鏈簡介"
+      ],
+      "records": [
+        {
+          "industry": "產業價值鏈資訊平台",
+          "sub_industry": "產業鏈簡介",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4568": {
+      "subindustries": [
+        "傳動元件",
+        "油空壓元件"
+      ],
+      "records": [
+        {
+          "industry": "電機機械",
+          "sub_industry": "傳動元件",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "電機機械",
+          "sub_industry": "油空壓元件",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4572": {
+      "subindustries": [
+        "金屬加工處理"
+      ],
+      "records": [
+        {
+          "industry": "電機機械",
+          "sub_industry": "金屬加工處理",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4576": {
+      "subindustries": [
+        "傳動元件"
+      ],
+      "records": [
+        {
+          "industry": "電機機械",
+          "sub_industry": "傳動元件",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4571": {
+      "subindustries": [
+        "產業鏈簡介"
+      ],
+      "records": [
+        {
+          "industry": "產業價值鏈資訊平台",
+          "sub_industry": "產業鏈簡介",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4580": {
+      "subindustries": [
+        "鋼鑄鐵元件",
+        "傳動元件"
+      ],
+      "records": [
+        {
+          "industry": "電機機械",
+          "sub_industry": "鋼鑄鐵元件",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "電機機械",
+          "sub_industry": "傳動元件",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4577": {
+      "subindustries": [
+        "生產製程及檢測設備",
+        "其他電子產品及電子服務產業"
+      ],
+      "records": [
+        {
+          "industry": "印刷電路板",
+          "sub_industry": "生產製程及檢測設備",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "其他",
+          "sub_industry": "其他電子產品及電子服務產業",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4581": {
+      "subindustries": [
+        "產業鏈簡介"
+      ],
+      "records": [
+        {
+          "industry": "產業價值鏈資訊平台",
+          "sub_industry": "產業鏈簡介",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4583": {
+      "subindustries": [
+        "傳動元件"
+      ],
+      "records": [
+        {
+          "industry": "電機機械",
+          "sub_industry": "傳動元件",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4582": {
+      "subindustries": [
+        "機電系統工程",
+        "太陽能發電設備/系統及系統工程"
+      ],
+      "records": [
+        {
+          "industry": "電機機械",
+          "sub_industry": "機電系統工程",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "太陽能產業",
+          "sub_industry": "太陽能發電設備/系統及系統工程",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4584": {
+      "subindustries": [
+        "傳動元件",
+        "電控元件",
+        "油空壓元件",
+        "車用機械傳動設備及零配件"
+      ],
+      "records": [
+        {
+          "industry": "電機機械",
+          "sub_industry": "傳動元件",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "電機機械",
+          "sub_industry": "電控元件",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "電機機械",
+          "sub_industry": "油空壓元件",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "電機機械",
+          "sub_industry": "車用機械傳動設備及零配件",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4585": {
+      "subindustries": [
+        "應用/系統軟體設計開發",
+        "系統整合服務",
+        "其他電子產品及電子服務產業",
+        "系統整合",
+        "智慧設備",
+        "機器學習",
+        "電腦視覺"
+      ],
+      "records": [
+        {
+          "industry": "軟體服務",
+          "sub_industry": "應用/系統軟體設計開發",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "軟體服務",
+          "sub_industry": "系統整合服務",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "其他",
+          "sub_industry": "其他電子產品及電子服務產業",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "人工智慧",
+          "sub_industry": "系統整合",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "人工智慧",
+          "sub_industry": "智慧設備",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "人工智慧",
+          "sub_industry": "機器學習",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "人工智慧",
+          "sub_industry": "電腦視覺",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4588": {
+      "subindustries": [
+        "其他電子產品及電子服務產業",
+        "低壓AMI",
+        "能源管理服務",
+        "系統整合服務"
+      ],
+      "records": [
+        {
+          "industry": "其他",
+          "sub_industry": "其他電子產品及電子服務產業",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "智慧電網",
+          "sub_industry": "低壓AMI",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "智慧電網",
+          "sub_industry": "能源管理服務",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "智慧電網",
+          "sub_industry": "系統整合服務",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4590": {
+      "subindustries": [
+        "傳動元件",
+        "其他"
+      ],
+      "records": [
+        {
+          "industry": "電機機械",
+          "sub_industry": "傳動元件",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "汽車",
+          "sub_industry": "其他",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4609": {
+      "subindustries": [
+        "零售通路"
+      ],
+      "records": [
+        {
+          "industry": "貿易百貨",
+          "sub_industry": "零售通路",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4702": {
+      "subindustries": [
+        "貿易商、代理商、經銷商"
+      ],
+      "records": [
+        {
+          "industry": "貿易百貨",
+          "sub_industry": "貿易商、代理商、經銷商",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4706": {
+      "subindustries": [
+        "顏染料",
+        "化學助劑",
+        "其他"
+      ],
+      "records": [
+        {
+          "industry": "石化及塑橡膠",
+          "sub_industry": "顏染料",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "紡織",
+          "sub_industry": "化學助劑",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "其他",
+          "sub_industry": "其他",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4707": {
+      "subindustries": [
+        "界面活性劑"
+      ],
+      "records": [
+        {
+          "industry": "石化及塑橡膠",
+          "sub_industry": "界面活性劑",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4711": {
+      "subindustries": [
+        "接著劑(合成樹脂)"
+      ],
+      "records": [
+        {
+          "industry": "石化及塑橡膠",
+          "sub_industry": "接著劑(合成樹脂)",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4716": {
+      "subindustries": [
+        "工業用合成樹脂"
+      ],
+      "records": [
+        {
+          "industry": "石化及塑橡膠",
+          "sub_industry": "工業用合成樹脂",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4714": {
+      "subindustries": [
+        "塑膠製品",
+        "人造纖維",
+        "接著劑(合成樹脂)",
+        "建設業"
+      ],
+      "records": [
+        {
+          "industry": "石化及塑橡膠",
+          "sub_industry": "塑膠製品",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "石化及塑橡膠",
+          "sub_industry": "人造纖維",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "石化及塑橡膠",
+          "sub_industry": "接著劑(合成樹脂)",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "建材營造",
+          "sub_industry": "建設業",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4720": {
+      "subindustries": [
+        "化學品",
+        "化學品(如光阻劑、靶材等)",
+        "ITO導電薄膜",
+        "接著劑(合成樹脂)",
+        "輸送機械及零配件",
+        "醫療器材代理"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "化學品",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "平面顯示器",
+          "sub_industry": "化學品(如光阻劑、靶材等)",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "觸控面板",
+          "sub_industry": "ITO導電薄膜",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "石化及塑橡膠",
+          "sub_industry": "接著劑(合成樹脂)",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "電機機械",
+          "sub_industry": "輸送機械及零配件",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "醫療器材",
+          "sub_industry": "醫療器材代理",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4722": {
+      "subindustries": [
+        "化學品",
+        "化學品(如光阻劑、靶材等)"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "化學品",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "平面顯示器",
+          "sub_industry": "化學品(如光阻劑、靶材等)",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4721": {
+      "subindustries": [
+        "PTA(對苯二甲酸)觸媒",
+        "鋰電池材料"
+      ],
+      "records": [
+        {
+          "industry": "石化及塑橡膠",
+          "sub_industry": "PTA(對苯二甲酸)觸媒",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "電動車輛產業",
+          "sub_industry": "鋰電池材料",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4728": {
+      "subindustries": [
+        "醫療耗材"
+      ],
+      "records": [
+        {
+          "industry": "醫療器材",
+          "sub_industry": "醫療耗材",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4726": {
+      "subindustries": [
+        "中藥材、西藥原料藥",
+        "中、西藥製劑"
+      ],
+      "records": [
+        {
+          "industry": "製藥",
+          "sub_industry": "中藥材、西藥原料藥",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "製藥",
+          "sub_industry": "中、西藥製劑",
+          "date": "2026-09-09"
         }
       ]
     }
