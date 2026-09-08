@@ -1,5 +1,5 @@
 {
-  "_cached_at": 1788841228.5812383,
+  "_cached_at": 1788842680.861242,
   "source": "TPEx/TWSE Industry Value Chain",
   "source_url": "https://ic.tpex.org.tw/company_chain.php",
   "cache_days": 30,
@@ -9367,6 +9367,954 @@
         {
           "industry": "鋼鐵",
           "sub_industry": "製管",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2032": {
+      "subindustries": [
+        "裁剪加工"
+      ],
+      "records": [
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "裁剪加工",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2031": {
+      "subindustries": [
+        "裁剪加工",
+        "基礎工程",
+        "結構工程",
+        "太陽能發電設備/系統及系統工程",
+        "鋼材",
+        "塔架",
+        "其他配件"
+      ],
+      "records": [
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "裁剪加工",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "建材營造",
+          "sub_industry": "基礎工程",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "建材營造",
+          "sub_industry": "結構工程",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "太陽能產業",
+          "sub_industry": "太陽能發電設備/系統及系統工程",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "風力發電",
+          "sub_industry": "鋼材",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "風力發電",
+          "sub_industry": "塔架",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "風力發電",
+          "sub_industry": "其他配件",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2034": {
+      "subindustries": [
+        "冷熱軋不鏽鋼板捲",
+        "不鏽鋼型鋼",
+        "裁剪加工",
+        "製管"
+      ],
+      "records": [
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "冷熱軋不鏽鋼板捲",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "不鏽鋼型鋼",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "裁剪加工",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "製管",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2033": {
+      "subindustries": [
+        "鋼線鋼纜"
+      ],
+      "records": [
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "鋼線鋼纜",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2035": {
+      "subindustries": [
+        "不鏽鋼胚"
+      ],
+      "records": [
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "不鏽鋼胚",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2049": {
+      "subindustries": [
+        "傳動元件",
+        "工業型機器人"
+      ],
+      "records": [
+        {
+          "industry": "電機機械",
+          "sub_industry": "傳動元件",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "自動化",
+          "sub_industry": "工業型機器人",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2038": {
+      "subindustries": [
+        "鋼筋"
+      ],
+      "records": [
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "鋼筋",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2059": {
+      "subindustries": [
+        "其他電腦及週邊設備之零組件",
+        "其他電子產品及電子服務產業"
+      ],
+      "records": [
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "其他電腦及週邊設備之零組件",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "其他",
+          "sub_industry": "其他電子產品及電子服務產業",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2062": {
+      "subindustries": [
+        "其他"
+      ],
+      "records": [
+        {
+          "industry": "其他",
+          "sub_industry": "其他",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2061": {
+      "subindustries": [
+        "其他"
+      ],
+      "records": [
+        {
+          "industry": "其他",
+          "sub_industry": "其他",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2063": {
+      "subindustries": [
+        "不鏽鋼棒線",
+        "螺絲螺帽"
+      ],
+      "records": [
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "不鏽鋼棒線",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "螺絲螺帽",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2064": {
+      "subindustries": [
+        "線材盤元",
+        "棒鋼盤元(捲狀條鋼)",
+        "不鏽鋼棒線"
+      ],
+      "records": [
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "線材盤元",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "棒鋼盤元(捲狀條鋼)",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "不鏽鋼棒線",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2065": {
+      "subindustries": [
+        "螺絲螺帽"
+      ],
+      "records": [
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "螺絲螺帽",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2066": {
+      "subindustries": [
+        "五金元件及零配件",
+        "機械設備之沖壓零組件",
+        "車用機械傳動設備及零配件",
+        "大功率鋰電池芯/模組、電池管理系統、動力馬達等零組件"
+      ],
+      "records": [
+        {
+          "industry": "電機機械",
+          "sub_industry": "五金元件及零配件",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電機機械",
+          "sub_industry": "機械設備之沖壓零組件",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電機機械",
+          "sub_industry": "車用機械傳動設備及零配件",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電動車輛產業",
+          "sub_industry": "大功率鋰電池芯/模組、電池管理系統、動力馬達等零組件",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2069": {
+      "subindustries": [
+        "冷熱軋不鏽鋼板捲",
+        "裁剪加工"
+      ],
+      "records": [
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "冷熱軋不鏽鋼板捲",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "裁剪加工",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2067": {
+      "subindustries": [
+        "鋼鑄鐵元件",
+        "金屬加工處理"
+      ],
+      "records": [
+        {
+          "industry": "電機機械",
+          "sub_industry": "鋼鑄鐵元件",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電機機械",
+          "sub_industry": "金屬加工處理",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2070": {
+      "subindustries": [
+        "專用機械(如紡織成衣生產用機械、食品飲料生產用機械、農林用機械等)"
+      ],
+      "records": [
+        {
+          "industry": "電機機械",
+          "sub_industry": "專用機械(如紡織成衣生產用機械、食品飲料生產用機械、農林用機械等)",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2072": {
+      "subindustries": [
+        "其他配件"
+      ],
+      "records": [
+        {
+          "industry": "風力發電",
+          "sub_industry": "其他配件",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2101": {
+      "subindustries": [
+        "輪胎"
+      ],
+      "records": [
+        {
+          "industry": "汽車",
+          "sub_industry": "輪胎",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2073": {
+      "subindustries": [
+        "冷熱軋鋼板捲",
+        "鋼筋",
+        "線材盤元",
+        "棒鋼盤元(捲狀條鋼)"
+      ],
+      "records": [
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "冷熱軋鋼板捲",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "鋼筋",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "線材盤元",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "棒鋼盤元(捲狀條鋼)",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2102": {
+      "subindustries": [
+        "橡膠製品",
+        "其他",
+        "輪胎"
+      ],
+      "records": [
+        {
+          "industry": "石化及塑橡膠",
+          "sub_industry": "橡膠製品",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "其他",
+          "sub_industry": "其他",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "汽車",
+          "sub_industry": "輪胎",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2104": {
+      "subindustries": [
+        "橡塑膠添加劑"
+      ],
+      "records": [
+        {
+          "industry": "石化及塑橡膠",
+          "sub_industry": "橡塑膠添加劑",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2103": {
+      "subindustries": [
+        "橡膠製品"
+      ],
+      "records": [
+        {
+          "industry": "石化及塑橡膠",
+          "sub_industry": "橡膠製品",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2106": {
+      "subindustries": [
+        "橡膠製品",
+        "其他",
+        "輪胎",
+        "運動用品",
+        "大功率鋰電池芯/模組、電池管理系統、動力馬達等零組件"
+      ],
+      "records": [
+        {
+          "industry": "石化及塑橡膠",
+          "sub_industry": "橡膠製品",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "其他",
+          "sub_industry": "其他",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "汽車",
+          "sub_industry": "輪胎",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "運動科技",
+          "sub_industry": "運動用品",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電動車輛產業",
+          "sub_industry": "大功率鋰電池芯/模組、電池管理系統、動力馬達等零組件",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2105": {
+      "subindustries": [
+        "橡膠製品"
+      ],
+      "records": [
+        {
+          "industry": "石化及塑橡膠",
+          "sub_industry": "橡膠製品",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2107": {
+      "subindustries": [
+        "橡膠製品"
+      ],
+      "records": [
+        {
+          "industry": "石化及塑橡膠",
+          "sub_industry": "橡膠製品",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2108": {
+      "subindustries": [
+        "橡膠製品"
+      ],
+      "records": [
+        {
+          "industry": "石化及塑橡膠",
+          "sub_industry": "橡膠製品",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2109": {
+      "subindustries": [
+        "橡膠製品"
+      ],
+      "records": [
+        {
+          "industry": "石化及塑橡膠",
+          "sub_industry": "橡膠製品",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2114": {
+      "subindustries": [
+        "橡膠製品"
+      ],
+      "records": [
+        {
+          "industry": "石化及塑橡膠",
+          "sub_industry": "橡膠製品",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2115": {
+      "subindustries": [
+        "橡膠製品"
+      ],
+      "records": [
+        {
+          "industry": "石化及塑橡膠",
+          "sub_industry": "橡膠製品",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2201": {
+      "subindustries": [
+        "整車組裝、修理及技術服務"
+      ],
+      "records": [
+        {
+          "industry": "汽車",
+          "sub_industry": "整車組裝、修理及技術服務",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2206": {
+      "subindustries": [
+        "整車組裝、修理及技術服務",
+        "銷售、進出口業務"
+      ],
+      "records": [
+        {
+          "industry": "汽車",
+          "sub_industry": "整車組裝、修理及技術服務",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "汽車",
+          "sub_industry": "銷售、進出口業務",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2204": {
+      "subindustries": [
+        "整車組裝、修理及技術服務",
+        "銷售、進出口業務"
+      ],
+      "records": [
+        {
+          "industry": "汽車",
+          "sub_industry": "整車組裝、修理及技術服務",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "汽車",
+          "sub_industry": "銷售、進出口業務",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2207": {
+      "subindustries": [
+        "銷售、進出口業務",
+        "大功率鋰電池芯/模組、電池管理系統、動力馬達等零組件",
+        "電動汽車、電動機車、電動自行車"
+      ],
+      "records": [
+        {
+          "industry": "汽車",
+          "sub_industry": "銷售、進出口業務",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電動車輛產業",
+          "sub_industry": "大功率鋰電池芯/模組、電池管理系統、動力馬達等零組件",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電動車輛產業",
+          "sub_industry": "電動汽車、電動機車、電動自行車",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2208": {
+      "subindustries": [
+        "其他",
+        "風場營造"
+      ],
+      "records": [
+        {
+          "industry": "其他",
+          "sub_industry": "其他",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "風力發電",
+          "sub_industry": "風場營造",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2221": {
+      "subindustries": [
+        "金屬製品"
+      ],
+      "records": [
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "金屬製品",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2211": {
+      "subindustries": [
+        "金屬製品"
+      ],
+      "records": [
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "金屬製品",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2227": {
+      "subindustries": [
+        "整車組裝、修理及技術服務",
+        "銷售、進出口業務"
+      ],
+      "records": [
+        {
+          "industry": "汽車",
+          "sub_industry": "整車組裝、修理及技術服務",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "汽車",
+          "sub_industry": "銷售、進出口業務",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2230": {
+      "subindustries": [
+        "車用機械傳動設備及零配件",
+        "貿易商、代理商、經銷商"
+      ],
+      "records": [
+        {
+          "industry": "電機機械",
+          "sub_industry": "車用機械傳動設備及零配件",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "貿易百貨",
+          "sub_industry": "貿易商、代理商、經銷商",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2231": {
+      "subindustries": [
+        "整車組裝、修理及技術服務"
+      ],
+      "records": [
+        {
+          "industry": "汽車",
+          "sub_industry": "整車組裝、修理及技術服務",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2228": {
+      "subindustries": [
+        "其他"
+      ],
+      "records": [
+        {
+          "industry": "汽車",
+          "sub_industry": "其他",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2233": {
+      "subindustries": [
+        "傳動元件",
+        "五金元件及零配件",
+        "輸送機械及零配件",
+        "車用機械傳動設備及零配件",
+        "金屬加工處理"
+      ],
+      "records": [
+        {
+          "industry": "電機機械",
+          "sub_industry": "傳動元件",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電機機械",
+          "sub_industry": "五金元件及零配件",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電機機械",
+          "sub_industry": "輸送機械及零配件",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電機機械",
+          "sub_industry": "車用機械傳動設備及零配件",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電機機械",
+          "sub_industry": "金屬加工處理",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2235": {
+      "subindustries": [
+        "車用機械傳動設備及零配件",
+        "其他"
+      ],
+      "records": [
+        {
+          "industry": "電機機械",
+          "sub_industry": "車用機械傳動設備及零配件",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "汽車",
+          "sub_industry": "其他",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2236": {
+      "subindustries": [
+        "產業鏈簡介"
+      ],
+      "records": [
+        {
+          "industry": "產業價值鏈資訊平台",
+          "sub_industry": "產業鏈簡介",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2237": {
+      "subindustries": [
+        "電動汽車、電動機車、電動自行車"
+      ],
+      "records": [
+        {
+          "industry": "電動車輛產業",
+          "sub_industry": "電動汽車、電動機車、電動自行車",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2239": {
+      "subindustries": [
+        "保險桿",
+        "其他"
+      ],
+      "records": [
+        {
+          "industry": "汽車",
+          "sub_industry": "保險桿",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "汽車",
+          "sub_industry": "其他",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2241": {
+      "subindustries": [
+        "汽車零配件生產",
+        "整車組裝、修理及技術服務",
+        "銷售、進出口業務",
+        "車燈",
+        "輪胎",
+        "鈑金",
+        "鋁合金鋼圈",
+        "引擎蓋",
+        "保險桿",
+        "其他"
+      ],
+      "records": [
+        {
+          "industry": "汽車",
+          "sub_industry": "汽車零配件生產",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "汽車",
+          "sub_industry": "整車組裝、修理及技術服務",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "汽車",
+          "sub_industry": "銷售、進出口業務",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "汽車",
+          "sub_industry": "車燈",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "汽車",
+          "sub_industry": "輪胎",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "汽車",
+          "sub_industry": "鈑金",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "汽車",
+          "sub_industry": "鋁合金鋼圈",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "汽車",
+          "sub_industry": "引擎蓋",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "汽車",
+          "sub_industry": "保險桿",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "汽車",
+          "sub_industry": "其他",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2247": {
+      "subindustries": [
+        "銷售、進出口業務"
+      ],
+      "records": [
+        {
+          "industry": "汽車",
+          "sub_industry": "銷售、進出口業務",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2243": {
+      "subindustries": [
+        "產業鏈簡介"
+      ],
+      "records": [
+        {
+          "industry": "產業價值鏈資訊平台",
+          "sub_industry": "產業鏈簡介",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2248": {
+      "subindustries": [
+        "汽車零配件生產",
+        "傳動元件",
+        "車燈",
+        "輪胎",
+        "鈑金",
+        "鋁合金鋼圈",
+        "引擎蓋",
+        "保險桿",
+        "其他"
+      ],
+      "records": [
+        {
+          "industry": "汽車",
+          "sub_industry": "汽車零配件生產",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電機機械",
+          "sub_industry": "傳動元件",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "汽車",
+          "sub_industry": "車燈",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "汽車",
+          "sub_industry": "輪胎",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "汽車",
+          "sub_industry": "鈑金",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "汽車",
+          "sub_industry": "鋁合金鋼圈",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "汽車",
+          "sub_industry": "引擎蓋",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "汽車",
+          "sub_industry": "保險桿",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "汽車",
+          "sub_industry": "其他",
           "date": "2026-09-08"
         }
       ]
