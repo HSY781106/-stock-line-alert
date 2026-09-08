@@ -1,5 +1,5 @@
 {
-  "_cached_at": 1788898309.847674,
+  "_cached_at": 1788899299.7601774,
   "source": "TPEx/TWSE Industry Value Chain",
   "source_url": "https://ic.tpex.org.tw/company_chain.php",
   "cache_days": 30,
@@ -44750,6 +44750,904 @@
         {
           "industry": "其他",
           "sub_industry": "其他",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "8349": {
+      "subindustries": [
+        "螺絲螺帽",
+        "大功率鋰電池芯/模組、電池管理系統、動力馬達等零組件"
+      ],
+      "records": [
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "螺絲螺帽",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "電動車輛產業",
+          "sub_industry": "大功率鋰電池芯/模組、電池管理系統、動力馬達等零組件",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "8354": {
+      "subindustries": [
+        "其他"
+      ],
+      "records": [
+        {
+          "industry": "其他",
+          "sub_industry": "其他",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "8367": {
+      "subindustries": [
+        "貨櫃航運",
+        "散裝航運"
+      ],
+      "records": [
+        {
+          "industry": "交通運輸及航運",
+          "sub_industry": "貨櫃航運",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "交通運輸及航運",
+          "sub_industry": "散裝航運",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "8358": {
+      "subindustries": [
+        "銅箔",
+        "鋰電池材料"
+      ],
+      "records": [
+        {
+          "industry": "印刷電路板",
+          "sub_industry": "銅箔",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "電動車輛產業",
+          "sub_industry": "鋰電池材料",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "8374": {
+      "subindustries": [
+        "生產製程及檢測設備",
+        "其他電腦及週邊設備之零組件",
+        "手工具機",
+        "機電系統工程",
+        "其他電子產品及電子服務產業",
+        "系統整合",
+        "智慧設備",
+        "機器學習",
+        "電腦視覺",
+        "移動控制",
+        "設備管理軟體",
+        "營運管理軟體",
+        "虛擬化軟體",
+        "顧問諮詢",
+        "生產製程、檢測設備及原物料",
+        "太陽能發電設備/系統及系統工程",
+        "能源管理服務",
+        "系統整合服務",
+        "電力零售業"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "生產製程及檢測設備",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "其他電腦及週邊設備之零組件",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "平面顯示器",
+          "sub_industry": "生產製程及檢測設備",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "電機機械",
+          "sub_industry": "手工具機",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "電機機械",
+          "sub_industry": "機電系統工程",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "其他",
+          "sub_industry": "其他電子產品及電子服務產業",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "人工智慧",
+          "sub_industry": "系統整合",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "人工智慧",
+          "sub_industry": "智慧設備",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "人工智慧",
+          "sub_industry": "機器學習",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "人工智慧",
+          "sub_industry": "電腦視覺",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "人工智慧",
+          "sub_industry": "移動控制",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "雲端運算",
+          "sub_industry": "設備管理軟體",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "雲端運算",
+          "sub_industry": "營運管理軟體",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "雲端運算",
+          "sub_industry": "虛擬化軟體",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "雲端運算",
+          "sub_industry": "系統整合",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "雲端運算",
+          "sub_industry": "顧問諮詢",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "LED照明產業",
+          "sub_industry": "生產製程、檢測設備及原物料",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "太陽能產業",
+          "sub_industry": "太陽能發電設備/系統及系統工程",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "智慧電網",
+          "sub_industry": "能源管理服務",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "智慧電網",
+          "sub_industry": "系統整合服務",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "智慧電網",
+          "sub_industry": "電力零售業",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "8390": {
+      "subindustries": [
+        "環保潔能服務產業"
+      ],
+      "records": [
+        {
+          "industry": "其他",
+          "sub_industry": "環保潔能服務產業",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "8401": {
+      "subindustries": [
+        "文化印刷業"
+      ],
+      "records": [
+        {
+          "industry": "其他",
+          "sub_industry": "文化印刷業",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "8403": {
+      "subindustries": [
+        "藥品代理銷售及通路",
+        "保健食品代理銷售及通路",
+        "醫療器材代理",
+        "醫療院所、醫療器材專賣店、藥局等通路"
+      ],
+      "records": [
+        {
+          "industry": "製藥",
+          "sub_industry": "藥品代理銷售及通路",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "食品生技",
+          "sub_industry": "保健食品代理銷售及通路",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "醫療器材",
+          "sub_industry": "醫療器材代理",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "醫療器材",
+          "sub_industry": "醫療院所、醫療器材專賣店、藥局等通路",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "8409": {
+      "subindustries": [
+        "其他"
+      ],
+      "records": [
+        {
+          "industry": "醫療器材",
+          "sub_industry": "其他",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "8404": {
+      "subindustries": [
+        "成衣及其它家居紡織類品"
+      ],
+      "records": [
+        {
+          "industry": "紡織",
+          "sub_industry": "成衣及其它家居紡織類品",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "8410": {
+      "subindustries": [
+        "機殼"
+      ],
+      "records": [
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "機殼",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "8411": {
+      "subindustries": [
+        "金屬製品",
+        "其他"
+      ],
+      "records": [
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "金屬製品",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "其他",
+          "sub_industry": "其他",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "8415": {
+      "subindustries": [
+        "螺絲螺帽",
+        "零售通路"
+      ],
+      "records": [
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "螺絲螺帽",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "貿易百貨",
+          "sub_industry": "零售通路",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "8416": {
+      "subindustries": [
+        "系統整合服務"
+      ],
+      "records": [
+        {
+          "industry": "軟體服務",
+          "sub_industry": "系統整合服務",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "8421": {
+      "subindustries": [
+        "專用機械(如紡織成衣生產用機械、食品飲料生產用機械、農林用機械等)",
+        "其他"
+      ],
+      "records": [
+        {
+          "industry": "電機機械",
+          "sub_industry": "專用機械(如紡織成衣生產用機械、食品飲料生產用機械、農林用機械等)",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "其他",
+          "sub_industry": "其他",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "8422": {
+      "subindustries": [
+        "環保潔能服務產業"
+      ],
+      "records": [
+        {
+          "industry": "其他",
+          "sub_industry": "環保潔能服務產業",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "8424": {
+      "subindustries": [
+        "建材原料"
+      ],
+      "records": [
+        {
+          "industry": "建材營造",
+          "sub_industry": "建材原料",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "8423": {
+      "subindustries": [
+        "環保潔能服務產業"
+      ],
+      "records": [
+        {
+          "industry": "其他",
+          "sub_industry": "環保潔能服務產業",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "8429": {
+      "subindustries": [
+        "成衣及其它家居紡織類品",
+        "製造商"
+      ],
+      "records": [
+        {
+          "industry": "紡織",
+          "sub_industry": "成衣及其它家居紡織類品",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "貿易百貨",
+          "sub_industry": "製造商",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "8426": {
+      "subindustries": [
+        "其他"
+      ],
+      "records": [
+        {
+          "industry": "其他",
+          "sub_industry": "其他",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "8431": {
+      "subindustries": [
+        "電鍍材料",
+        "其他"
+      ],
+      "records": [
+        {
+          "industry": "連接器",
+          "sub_industry": "電鍍材料",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "其他",
+          "sub_industry": "其他",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "8432": {
+      "subindustries": [
+        "藥品代理銷售及通路"
+      ],
+      "records": [
+        {
+          "industry": "製藥",
+          "sub_industry": "藥品代理銷售及通路",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "8433": {
+      "subindustries": [
+        "貿易商、代理商、經銷商"
+      ],
+      "records": [
+        {
+          "industry": "貿易百貨",
+          "sub_industry": "貿易商、代理商、經銷商",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "8435": {
+      "subindustries": [
+        "環保潔能服務產業",
+        "其他"
+      ],
+      "records": [
+        {
+          "industry": "其他",
+          "sub_industry": "環保潔能服務產業",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "其他",
+          "sub_industry": "其他",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "8437": {
+      "subindustries": [
+        "其他"
+      ],
+      "records": [
+        {
+          "industry": "其他",
+          "sub_industry": "其他",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "8436": {
+      "subindustries": [
+        "加工製成品"
+      ],
+      "records": [
+        {
+          "industry": "食品生技",
+          "sub_industry": "加工製成品",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "8440": {
+      "subindustries": [
+        "環保潔能服務產業"
+      ],
+      "records": [
+        {
+          "industry": "其他",
+          "sub_industry": "環保潔能服務產業",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "8438": {
+      "subindustries": [
+        "生產製程及檢測設備",
+        "其他"
+      ],
+      "records": [
+        {
+          "industry": "印刷電路板",
+          "sub_industry": "生產製程及檢測設備",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "其他",
+          "sub_industry": "其他",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "8442": {
+      "subindustries": [
+        "產業鏈簡介"
+      ],
+      "records": [
+        {
+          "industry": "產業價值鏈資訊平台",
+          "sub_industry": "產業鏈簡介",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "8443": {
+      "subindustries": [
+        "零售通路"
+      ],
+      "records": [
+        {
+          "industry": "貿易百貨",
+          "sub_industry": "零售通路",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "8444": {
+      "subindustries": [
+        "其他"
+      ],
+      "records": [
+        {
+          "industry": "其他",
+          "sub_industry": "其他",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "8446": {
+      "subindustries": [
+        "文化印刷業",
+        "流行音樂及文化內容產業"
+      ],
+      "records": [
+        {
+          "industry": "其他",
+          "sub_industry": "文化印刷業",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "文化創意業",
+          "sub_industry": "流行音樂及文化內容產業",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "8450": {
+      "subindustries": [
+        "流行音樂及文化內容產業"
+      ],
+      "records": [
+        {
+          "industry": "文化創意業",
+          "sub_industry": "流行音樂及文化內容產業",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "8454": {
+      "subindustries": [
+        "物流倉儲服務",
+        "店點開設管理",
+        "一般零售",
+        "票券銷售",
+        "貿易商、代理商、經銷商",
+        "廣播電視/電影產業"
+      ],
+      "records": [
+        {
+          "industry": "電子商務",
+          "sub_industry": "物流倉儲服務",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "電子商務",
+          "sub_industry": "店點開設管理",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "電子商務",
+          "sub_industry": "一般零售",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "電子商務",
+          "sub_industry": "票券銷售",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "貿易百貨",
+          "sub_industry": "貿易商、代理商、經銷商",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "文化創意業",
+          "sub_industry": "廣播電視/電影產業",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "8455": {
+      "subindustries": [
+        "其他電腦及週邊設備之零組件"
+      ],
+      "records": [
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "其他電腦及週邊設備之零組件",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "8462": {
+      "subindustries": [
+        "娛樂服務業"
+      ],
+      "records": [
+        {
+          "industry": "休閒娛樂",
+          "sub_industry": "娛樂服務業",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "8463": {
+      "subindustries": [
+        "水泥生料",
+        "水泥熟料",
+        "水泥成品",
+        "建材原料",
+        "其他",
+        "其他配件"
+      ],
+      "records": [
+        {
+          "industry": "水泥",
+          "sub_industry": "水泥生料",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "水泥",
+          "sub_industry": "水泥熟料",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "水泥",
+          "sub_industry": "水泥成品",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "建材營造",
+          "sub_industry": "建材原料",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "其他",
+          "sub_industry": "其他",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "風力發電",
+          "sub_industry": "其他配件",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "8464": {
+      "subindustries": [
+        "其他"
+      ],
+      "records": [
+        {
+          "industry": "其他",
+          "sub_industry": "其他",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "8466": {
+      "subindustries": [
+        "產業鏈簡介"
+      ],
+      "records": [
+        {
+          "industry": "產業價值鏈資訊平台",
+          "sub_industry": "產業鏈簡介",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "8467": {
+      "subindustries": [
+        "產業鏈簡介"
+      ],
+      "records": [
+        {
+          "industry": "產業價值鏈資訊平台",
+          "sub_industry": "產業鏈簡介",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "8472": {
+      "subindustries": [
+        "原物料",
+        "一般零售",
+        "票券銷售",
+        "零售通路"
+      ],
+      "records": [
+        {
+          "industry": "食品",
+          "sub_industry": "原物料",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "電子商務",
+          "sub_industry": "一般零售",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "電子商務",
+          "sub_industry": "票券銷售",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "貿易百貨",
+          "sub_industry": "零售通路",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "8473": {
+      "subindustries": [
+        "環保潔能服務產業"
+      ],
+      "records": [
+        {
+          "industry": "其他",
+          "sub_industry": "環保潔能服務產業",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "8476": {
+      "subindustries": [
+        "環保潔能服務產業"
+      ],
+      "records": [
+        {
+          "industry": "其他",
+          "sub_industry": "環保潔能服務產業",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "8477": {
+      "subindustries": [
+        "一般零售"
+      ],
+      "records": [
+        {
+          "industry": "電子商務",
+          "sub_industry": "一般零售",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "8481": {
+      "subindustries": [
+        "高爾夫球具業",
+        "休閒車業",
+        "其他"
+      ],
+      "records": [
+        {
+          "industry": "休閒娛樂",
+          "sub_industry": "高爾夫球具業",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "休閒娛樂",
+          "sub_industry": "休閒車業",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "其他",
+          "sub_industry": "其他",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "8478": {
+      "subindustries": [
+        "其他"
+      ],
+      "records": [
+        {
+          "industry": "其他",
+          "sub_industry": "其他",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "8482": {
+      "subindustries": [
+        "產業鏈簡介"
+      ],
+      "records": [
+        {
+          "industry": "產業價值鏈資訊平台",
+          "sub_industry": "產業鏈簡介",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "8487": {
+      "subindustries": [
+        "廣播電視/電影產業"
+      ],
+      "records": [
+        {
+          "industry": "文化創意業",
+          "sub_industry": "廣播電視/電影產業",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "8489": {
+      "subindustries": [
+        "其他",
+        "數位內容產業"
+      ],
+      "records": [
+        {
+          "industry": "其他",
+          "sub_industry": "其他",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "文化創意業",
+          "sub_industry": "數位內容產業",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "8488": {
+      "subindustries": [
+        "產業鏈簡介"
+      ],
+      "records": [
+        {
+          "industry": "產業價值鏈資訊平台",
+          "sub_industry": "產業鏈簡介",
           "date": "2026-09-09"
         }
       ]
