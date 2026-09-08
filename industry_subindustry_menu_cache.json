@@ -1,5 +1,5 @@
 {
-  "_cached_at": 1788893816.6418927,
+  "_cached_at": 1788894781.6864207,
   "source": "subindustry_cache.json",
   "data": {
     "半導體": [
@@ -35,6 +35,7 @@
     ],
     "其他": [
       "3D工具",
+      "AGV及AMR",
       "ARSmartGlasses",
       "BaaS",
       "BIOS(嵌入式軟體)",
@@ -998,6 +999,7 @@
       "銷售、進出口業務"
     ],
     "自動化": [
+      "AGV及AMR",
       "HMI",
       "工業型機器人",
       "感測器",
