@@ -1,4 +1,4 @@
-# stock_alert.py V2.14.25
+# stock_alert.py V2.14.27
 # V2.14.08：V2.14.05 完整覆蓋版；保留重大消息面「多公司新聞隔離」邏輯，
 #             修正 LINE 15 分鐘區間通知遺失「加碼分析／建議」問題，並修正目前價格不得使用過期市場股票池價格。
 #             重大消息評分只使用新聞標題，RSS description/snippet/延伸內容完全不參與評分。
@@ -157,9 +157,32 @@ TWSE_QUOTES_CACHE_FILE = 'twse_quotes_cache.json'
 # V2.9.8 新增
 SUBINDUSTRY_CACHE_FILE = 'subindustry_cache.json'
 INDUSTRY_MENU_CACHE_FILE = 'industry_subindustry_menu_cache.json'
-# V2.14.25：LINE 產業查詢索引自動建置進度。GitHub Actions 每次執行分批補抓，LINE 不要求使用者提供股票代號。
+# V2.14.27：LINE 產業查詢索引自動建置進度。GitHub Actions 每次執行分批補抓，LINE 不要求使用者提供股票代號。
 INDUSTRY_MENU_REFRESH_STATE_FILE = 'industry_subindustry_refresh_state.json'
 INDUSTRY_MENU_AUTO_BATCH = 50
+
+# V2.14.27：LINE「川普 / Trump / Donald Trump」人物投資組合查詢。
+# 來源優先使用美國政府 OGE 最新年度公開財務揭露；若無法即時下載，
+# 讀取本機/ GitHub 已保存的 trump_portfolio_cache.json。
+TRUMP_PORTFOLIO_CACHE_FILE = 'trump_portfolio_cache.json'
+TRUMP_PORTFOLIO_CACHE_DAYS = 7
+TRUMP_OGE_ANNUAL_URLS = [
+    # OGE 2026/06/30 公告提供的 President Trump certified annual report。
+    'https://oge.box.com/shared/static/zycb5i2ny8kssm51uzqm8ygyq2zkpkqq.pdf',
+    # OGE Integrity 公開索引中的同一年度報告備援位置。
+    'https://extapps2.oge.gov/201/Presiden.nsf/PAS+Index/69AEAA9D7455ACD585258E27002DDEE1/$FILE/Donald-J-Trump-2026-278ANNUAL.pdf'
+]
+TRUMP_OGE_DISCLOSURE_PAGE = (
+    'https://www2.oge.gov/web/oge.nsf/Resources/'
+    'Now%2BAvailable%3A%2BThe%2BPresident%E2%80%99s%2Band%2BVice%2BPresident%E2%80%99s%2Bcertified%2Bannual%2Bfinancial%2Bdisclosure%2Breports'
+)
+TRUMP_PDF_TIMEOUT = 20
+TRUMP_MAX_HOLDINGS = 30
+TRUMP_NAME_ALIASES = {
+    '川普', '特朗普', '唐納德川普', '唐納德特朗普',
+    'DONALD TRUMP', 'DONALD J TRUMP', 'DONALD J. TRUMP',
+    'TRUMP', 'PRESIDENT TRUMP', 'DONALDTRUMP'
+}
 # V2.10.49：官方基本面快取
 # V2.10.56：不再使用 MOPS 基本面快取
 # MOPS_FUND_CACHE_FILE 保留名稱僅避免舊程式碼/舊快取造成相容性問題，但 V2.10.56 基本面主流程不讀寫。
@@ -2146,7 +2169,7 @@ def _fetch_missing_value_chains(codes):
     return result
 
 def _refresh_line_industry_menu_cache(u=None):
-    """V2.14.25：建立 LINE 大產業→官方細產業索引。
+    """V2.14.27：建立 LINE 大產業→官方細產業索引。
 
     注意：fetch_value_chain_for_stock() 的資料格式是
     {'subindustries': [...], 'records': [{'industry': ..., 'sub_industry': ...}, ...]}，
@@ -2201,7 +2224,7 @@ def _refresh_line_industry_menu_cache(u=None):
 
 
 def _auto_expand_subindustry_cache(u):
-    """V2.14.25：Actions 自動分批建立全市場次產業資料。
+    """V2.14.27：Actions 自動分批建立全市場次產業資料。
 
     不再要求 LINE 使用者先輸入股票代號。每次 GitHub Actions 執行，
     從完整市場股票池中找出尚未有官方次產業資料的股票，最多補抓
@@ -2260,12 +2283,12 @@ def _auto_expand_subindustry_cache(u):
         state['last_selected'] = len(selected)
 
         if selected:
-            print(f'V2.14.25 自動建立次產業：本次補抓 {len(selected)} 檔（全市場 {len(codes)} 檔）', flush=True)
+            print(f'V2.14.27 自動建立次產業：本次補抓 {len(selected)} 檔（全市場 {len(codes)} 檔）', flush=True)
             fetched = _fetch_missing_value_chains(selected)
             if isinstance(fetched, dict):
                 data.update(fetched)
             state['last_success'] = len(fetched) if isinstance(fetched, dict) else 0
-            print(f'V2.14.25 自動建立次產業：成功 {state["last_success"]}/{len(selected)} 檔', flush=True)
+            print(f'V2.14.27 自動建立次產業：成功 {state["last_success"]}/{len(selected)} 檔', flush=True)
         else:
             state['last_success'] = 0
 
@@ -2284,10 +2307,10 @@ def _auto_expand_subindustry_cache(u):
                 'data': data
             })
         _refresh_line_industry_menu_cache(u)
-        print(f'V2.14.25 次產業自動建置進度：{valid_count}/{len(codes)}（{state["coverage"]}%）', flush=True)
+        print(f'V2.14.27 次產業自動建置進度：{valid_count}/{len(codes)}（{state["coverage"]}%）', flush=True)
         return data
     except Exception as e:
-        print(f'V2.14.25 次產業自動建置失敗：{type(e).__name__}: {e}', flush=True)
+        print(f'V2.14.27 次產業自動建置失敗：{type(e).__name__}: {e}', flush=True)
         return data if 'data' in locals() and isinstance(data, dict) else {}
 
 def get_public_subindustry(u):
@@ -10701,25 +10724,53 @@ def _line_extract_analysis_scores(text):
 
 
 def _line_industry_build_subindustry_menu(parent, u):
-    """V2.14.25：優先讀 Actions 建好的大產業→細產業索引。"""
+    """V2.14.27：LINE 細產業選單加入 GitHub 遠端索引同步備援。"""
     parent_c = canonical_industry(parent)
     options = []
 
-    # 1. 優先使用專用 menu cache；這是 LINE webhook 的快速路徑。
-    menu_cache = load_json(INDUSTRY_MENU_CACHE_FILE)
-    menu_data = menu_cache.get('data', {}) if isinstance(menu_cache, dict) else {}
-    if isinstance(menu_data, dict):
+    def collect(menu_data):
+        found = False
+        if not isinstance(menu_data, dict):
+            return False
         for key, values in menu_data.items():
             if canonical_industry(key) != parent_c:
                 continue
+            found = True
             if not isinstance(values, list):
                 values = [values]
             for sub in values:
                 n = normalize_subindustry(sub)
                 if n and n not in options:
                     options.append(n)
+        return found
 
-    # 2. 相容舊快取：從 records 反查大產業。
+    menu_cache = load_json(INDUSTRY_MENU_CACHE_FILE)
+    menu_data = menu_cache.get('data', {}) if isinstance(menu_cache, dict) else {}
+    local_found = collect(menu_data)
+
+    # Render 本機快取若沒有這個大產業，直接讀 Actions 最新 GitHub 索引。
+    if not local_found or not options:
+        print(f'LINE產業選單：本機快取缺少「{parent_c}」，改讀 GitHub 最新索引', flush=True)
+        remote_menu = load_remote_json_cache(
+            INDUSTRY_MENU_CACHE_FILE,
+            timeout=LINE_REMOTE_CACHE_TIMEOUT
+        )
+        remote_data = remote_menu.get('data', {}) if isinstance(remote_menu, dict) else {}
+        if collect(remote_data):
+            try:
+                merged = dict(menu_data) if isinstance(menu_data, dict) else {}
+                if isinstance(remote_data, dict):
+                    merged.update(remote_data)
+                save_json(INDUSTRY_MENU_CACHE_FILE, {
+                    '_cached_at': time.time(),
+                    'source': 'GitHub Actions remote merge',
+                    'data': merged
+                })
+            except Exception as e:
+                print(f'LINE產業選單：遠端索引合併本機失敗：{e}', flush=True)
+            print(f'LINE產業選單：GitHub 找到「{parent_c}」{len(options)} 個細產業', flush=True)
+
+    # 相容舊快取：從 records 反查大產業。
     if not options:
         data = _line_industry_load_data()
         for info in data.values():
@@ -10738,7 +10789,7 @@ def _line_industry_build_subindustry_menu(parent, u):
                 if n and n not in options:
                     options.append(n)
 
-    # 3. 最後才從目前市場股票池反查。
+    # 最後從目前市場股票池反查。
     if not options and isinstance(u, dict):
         for item in u.values():
             if not isinstance(item, dict) or canonical_industry(item.get('industry')) != parent_c:
@@ -10883,7 +10934,7 @@ def _line_industry_query_result(text, target, u):
 
 
 def _line_industry_webhook_kind(text, target):
-    """V2.14.25：產業互動狀態不可綁死一般查詢。
+    """V2.14.27：產業互動狀態不可綁死一般查詢。
 
     重要：當使用者已進入「大產業 -> 次產業」選單後，仍必須可以：
     1. 輸入「取消／返回／退出」離開。
@@ -10897,7 +10948,7 @@ def _line_industry_webhook_kind(text, target):
     session = _line_industry_session_get(target)
 
     # --------------------------------------------------------
-    # V2.14.25：任何產業選單狀態都提供明確退出鍵。
+    # V2.14.27：任何產業選單狀態都提供明確退出鍵。
     # --------------------------------------------------------
     if session and norm in {_line_industry_norm(x) for x in (
         '取消', '返回', '上一層', '退出', '離開', '清除',
@@ -10910,7 +10961,7 @@ def _line_industry_webhook_kind(text, target):
         )
 
     # --------------------------------------------------------
-    # V2.14.25：選單中輸入「產業」= 回到第一層，而不是被當成
+    # V2.14.27：選單中輸入「產業」= 回到第一層，而不是被當成
     # 次產業名稱。
     # --------------------------------------------------------
     if norm in {_line_industry_norm('產業'), _line_industry_norm('產業查詢')}:
@@ -10920,7 +10971,7 @@ def _line_industry_webhook_kind(text, target):
         return 'options', _line_industry_options_message('產業', options)
 
     # --------------------------------------------------------
-    # V2.14.25：產業選單內輸入股票代號／美股 ticker，立即跳出
+    # V2.14.27：產業選單內輸入股票代號／美股 ticker，立即跳出
     # 產業 session，讓 handle_event 繼續走原本的股票/ETF分析流程。
     # --------------------------------------------------------
     if session:
@@ -10931,7 +10982,7 @@ def _line_industry_webhook_kind(text, target):
             return None, None
 
         # ----------------------------------------------------
-        # V2.14.25：使用者輸入另一個大產業時，直接切換，不要
+        # V2.14.27：使用者輸入另一個大產業時，直接切換，不要
         # 被目前次產業 session 卡住。
         # ----------------------------------------------------
         q_global = _line_industry_canonical_query(raw)
@@ -11042,8 +11093,15 @@ def _background_line_analysis(text, target, u, event_id=None, result_id=None):
             print('LINE背景分析：建立/載入市場資料', flush=True)
             etf=resolve_etf_query(text)
             us=resolve_us_stock_query(text)
-            industry_kind, industry_result = _line_industry_query_result(text, target, u)
-            if industry_kind == 'options':
+            if _is_trump_portfolio_query(text):
+                result = trump_portfolio_analysis()
+                print('LINE背景分析：辨識為川普公開投資組合查詢', flush=True)
+                industry_kind, industry_result = 'none', None
+            else:
+                industry_kind, industry_result = _line_industry_query_result(text, target, u)
+            if _is_trump_portfolio_query(text):
+                pass
+            elif industry_kind == 'options':
                 result = industry_result
                 print(f'LINE背景分析：辨識為產業選單 {text}', flush=True)
             elif industry_kind == 'result':
@@ -11227,6 +11285,159 @@ def release_line_memory():
         pass
 
 
+def _is_trump_portfolio_query(text):
+    """V2.14.27：辨識人物投資組合查詢。"""
+    raw = str(text or '').strip()
+    if not raw:
+        return False
+    compact = re.sub(r'[\s\-_.]+', '', raw.upper())
+    aliases = {re.sub(r'[\s\-_.]+', '', x.upper()) for x in TRUMP_NAME_ALIASES}
+    if compact in aliases:
+        return True
+    return any(x in raw.upper() for x in ('川普投資組合', '特朗普投资组合', 'TRUMP PORTFOLIO'))
+
+
+def _trump_value_upper(value_text):
+    s = str(value_text or '').replace(',', '').replace('$', '').upper().strip()
+    nums = [float(x) for x in re.findall(r'\d+(?:\.\d+)?', s)]
+    if not nums:
+        return 0.0
+    if 'M' in s:
+        return max(nums) * 1_000_000
+    if 'K' in s:
+        return max(nums) * 1_000
+    return max(nums)
+
+
+def _trump_clean_security_name(line):
+    s = re.sub(r'\s+', ' ', str(line or '')).strip()
+    s = re.sub(r'^\d+\s+', '', s)
+    s = re.sub(r'\s+(?:N/A|NA)\s+', ' ', s, flags=re.I)
+    return s
+
+
+def _trump_extract_holdings_from_pdf(pdf_bytes):
+    """V2.14.27：從 OGE Form 278e 擷取可辨識股票/ETF；價值只保留申報區間。"""
+    try:
+        from pypdf import PdfReader
+    except Exception as e:
+        raise RuntimeError(f'缺少 pypdf：{e}')
+
+    reader = PdfReader(io.BytesIO(pdf_bytes))
+    rows = []
+    value_re = re.compile(r'(\$?\s*[\d,]+\s*(?:-\s*\$?\s*[\d,]+)?|(?:None|N/A)\s*\([^)]*\))', re.I)
+    ticker_re = re.compile(r'\(([A-Z]{1,5}(?:\.[A-Z])?(?:-[A-Z])?)\)')
+    security_words = re.compile(r'\b(?:CORP|CORPORATION|INC|PLC|LTD|LLC|ETF|FUND|TRUST|SHARES|COMMON STOCK|ADR|REIT|TECHNOLOGIES|HOLDINGS|COMPANY|CO\.)\b', re.I)
+
+    for page_no, page in enumerate(reader.pages, 1):
+        try:
+            text = page.extract_text() or ''
+        except Exception:
+            continue
+        lines = [x.strip() for x in text.splitlines() if x and x.strip()]
+        for i, line in enumerate(lines):
+            if len(line) < 4 or not security_words.search(line):
+                continue
+            tm = ticker_re.search(line)
+            if not tm and i + 1 < len(lines): tm = ticker_re.search(lines[i + 1])
+            if not tm and i > 0: tm = ticker_re.search(lines[i - 1])
+            if not tm: continue
+            ticker = tm.group(1).upper()
+            if ticker in {'ETF','ADR','LLC','INC','CORP','COM','N/A','NONE'}: continue
+            value_text = ''
+            vm = value_re.search(line)
+            if vm: value_text = vm.group(1)
+            elif i + 1 < len(lines):
+                vm = value_re.search(lines[i + 1])
+                if vm: value_text = vm.group(1)
+            name = _trump_clean_security_name(line)
+            name = re.sub(r'\s*\([A-Z]{1,5}(?:\.[A-Z])?(?:-[A-Z])?\)', '', name).strip()
+            if len(name) < 3: continue
+            item = {
+                'ticker': ticker,
+                'name': name,
+                'value_range': value_text or '未辨識',
+                'value_upper': _trump_value_upper(value_text),
+                'page': page_no,
+                'source': 'US OGE Form 278e'
+            }
+            old = next((x for x in rows if x['ticker'] == ticker), None)
+            if old is None or item['value_upper'] > old['value_upper']:
+                if old is not None: rows.remove(old)
+                rows.append(item)
+    rows.sort(key=lambda x: (x.get('value_upper', 0), x.get('ticker', '')), reverse=True)
+    return rows[:TRUMP_MAX_HOLDINGS]
+
+
+def _load_trump_portfolio():
+    """V2.14.27：7 天快取；過期時更新 OGE 最新年度揭露。"""
+    cache = load_json(TRUMP_PORTFOLIO_CACHE_FILE)
+    cached_at = float(cache.get('_cached_at', 0)) if isinstance(cache, dict) else 0
+    data = cache.get('data', []) if isinstance(cache, dict) else []
+    if isinstance(data, list) and data and time.time() - cached_at < TRUMP_PORTFOLIO_CACHE_DAYS * 86400:
+        return data, cache.get('report_date') or '最新可用公開申報'
+    try:
+        print('Trump投資組合：下載 OGE 最新年度財務揭露', flush=True)
+        rows = []
+        last_error = None
+        used_url = ''
+        for annual_url in TRUMP_OGE_ANNUAL_URLS:
+            try:
+                r = requests.get(annual_url, timeout=TRUMP_PDF_TIMEOUT, headers={'User-Agent':'stock-alert/2.14.27'})
+                r.raise_for_status()
+                if not r.content.startswith(b'%PDF'):
+                    raise RuntimeError('回應不是 PDF')
+                rows = _trump_extract_holdings_from_pdf(r.content)
+                if rows:
+                    used_url = annual_url
+                    break
+                raise RuntimeError('PDF 未辨識到股票/ETF ticker')
+            except Exception as ex:
+                last_error = ex
+                print(f'Trump OGE來源失敗：{annual_url}：{type(ex).__name__}: {ex}', flush=True)
+        if not rows:
+            raise RuntimeError(f'所有 OGE 年報來源皆失敗：{last_error}')
+        save_json(TRUMP_PORTFOLIO_CACHE_FILE, {
+            '_cached_at': time.time(),
+            'report_date': '2025年度申報（2026-06-30認證）',
+            'source_url': used_url or TRUMP_OGE_ANNUAL_URLS[0],
+            'data': rows
+        })
+        return rows, '2025年度申報（2026-06-30認證）'
+    except Exception as e:
+        print(f'Trump投資組合：OGE更新失敗：{type(e).__name__}: {e}', flush=True)
+        if isinstance(data, list) and data:
+            return data, cache.get('report_date') or '快取資料'
+        remote = load_remote_json_cache(TRUMP_PORTFOLIO_CACHE_FILE, timeout=LINE_REMOTE_CACHE_TIMEOUT)
+        rd = remote.get('data', []) if isinstance(remote, dict) else []
+        if isinstance(rd, list) and rd:
+            return rd, remote.get('report_date') or 'GitHub快取資料'
+        raise
+
+
+def trump_portfolio_analysis():
+    """V2.14.27：LINE 查詢川普公開申報投資標的。"""
+    rows, report_date = _load_trump_portfolio()
+    if not rows:
+        return '❌ 目前無法取得川普最新公開財務揭露中的可辨識股票/ETF。'
+    lines = [
+        '🇺🇸 Donald Trump 公開申報投資標的', '',
+        f'📅 資料：{report_date}',
+        '📌 以下是公開財務揭露中可辨識的股票／ETF；不是即時持倉。',
+        '📌 OGE 資產價值依法以區間申報，不把區間當成精確市值。', ''
+    ]
+    for i, row in enumerate(rows, 1):
+        lines.append(f'{_line_industry_number_emoji(i)} {row.get("ticker","N/A")}｜{row.get("name","未辨識")[:70]}')
+        lines.append(f'   公開申報價值：{row.get("value_range") or "未辨識"}')
+        lines.append('')
+    lines.extend([
+        '━━━━━━━━━━━━━━',
+        '🔎 來源：U.S. Office of Government Ethics（OGE Form 278e）',
+        '⚠️ 公開申報具有時間延遲；本結果僅整理可從公開申報辨識的證券標的。'
+    ])
+    return '\n'.join(lines)[:5000]
+
+
 def handle_event(e, u):
     """V2.10.40：LINE A 方案。Reply 只回覆結果頁網址，完整分析不上 Push。"""
     if (
@@ -11250,13 +11461,14 @@ def handle_event(e, u):
     if text.lower() in {'help', '說明', '功能', '股票'}:
         ok = reply_line(
             token,
-            '📈 股票投資價值 × 買點雙層分析 Bot V2.14.21\n\n'
+            '📈 股票投資價值 × 買點雙層分析 Bot V2.14.27\n\n'
             '輸入股票代號、股票名稱或 ETF 代號即可查詢。\n'
             '例如：2330、台積電、3711、日月光投控、0050、00878、QQQ、AAPL、NVDA、MSFT\n\n'
             '股票：基本面40 + 技術30 + 籌碼20 + 風險10。\n'
             'ETF：ETF特性40 + 技術60。\n'
             '查詢結果會立即回覆 Render 分析頁網址，完整分析不使用 LINE Push。\n\n'
-            '🏭 產業查詢：輸入「產業」先選大產業，再選細產業；也可直接輸入「記憶體」或 SSD／NAND／DRAM／HBM。'
+            '🏭 產業查詢：輸入「產業」先選大產業，再選細產業；也可直接輸入「記憶體」或 SSD／NAND／DRAM／HBM。\n'
+            '🇺🇸 人物投資組合：輸入「川普」／Trump／Donald Trump，可查最新公開申報的股票／ETF 標的。'
         )
         if not ok:
             print('❌ LINE Help Reply失敗')
@@ -11267,6 +11479,19 @@ def handle_event(e, u):
             token,
             '❌ 無法取得 LINE 聊天室 ID，請確認 webhook source。'
         )
+        return
+
+    # V2.14.27：人物投資組合查詢直接交給背景分析，不建立 1985 檔市場股票池。
+    if _is_trump_portfolio_query(text):
+        _line_industry_session_clear(target)
+        result_id, result_url = _create_line_result(text, event_id)
+        ok = reply_line(token, f'🔎 收到「{text}」\n\n⏳ 正在讀取最新公開財務揭露。\n完整結果會直接更新到下面的分析頁：\n\n{result_url}')
+        if not ok:
+            print('⚠️ LINE 川普投資組合 Reply 失敗', flush=True)
+        try:
+            LINE_ANALYSIS_EXECUTOR.submit(_background_line_analysis, text, target, {}, event_id, result_id)
+        except Exception as e:
+            _update_line_result(result_id, 'error', f'❌ {text} 無法啟動分析工作：{e}')
         return
 
     # V2.14.21：Webhook 階段只辨識產業查詢，不執行 Top 3/股票分析，
@@ -12380,6 +12605,13 @@ def _notify_target_buy_point(name, symbol, state, u=None):
 
 
 def run_alerts():
+    # V2.14.27：Actions 順便維護川普公開投資組合快取；Render 查詢時可直接讀 GitHub，
+    # 不需要在 LINE webhook 期間下載 900+ 頁 OGE PDF。
+    try:
+        _load_trump_portfolio()
+    except Exception as e:
+        print(f'⚠️ Trump 公開投資組合快取更新失敗：{type(e).__name__}: {e}', flush=True)
+
 
     global RUN_CACHE
     global INSTITUTIONAL_CACHE
