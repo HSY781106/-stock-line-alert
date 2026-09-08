@@ -1,10 +1,10 @@
 {
   "cursor": 1956,
   "total_codes": 1984,
-  "last_run_at": 1788900204.759383,
-  "last_selected": 50,
-  "last_success": 50,
-  "covered_codes": 1956,
-  "coverage": 98.59,
-  "complete": false
+  "last_run_at": 1788900923.952096,
+  "last_selected": 28,
+  "last_success": 28,
+  "covered_codes": 1984,
+  "coverage": 100.0,
+  "complete": true
 }

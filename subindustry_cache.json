@@ -1,5 +1,5 @@
 {
-  "_cached_at": 1788900223.2443843,
+  "_cached_at": 1788900939.4629269,
   "source": "TPEx/TWSE Industry Value Chain",
   "source_url": "https://ic.tpex.org.tw/company_chain.php",
   "cache_days": 30,
@@ -46535,6 +46535,438 @@
         {
           "industry": "休閒娛樂",
           "sub_industry": "休閒車業",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "9924": {
+      "subindustries": [
+        "金屬製品",
+        "模具"
+      ],
+      "records": [
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "金屬製品",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "模具",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "9925": {
+      "subindustries": [
+        "其他"
+      ],
+      "records": [
+        {
+          "industry": "其他",
+          "sub_industry": "其他",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "9926": {
+      "subindustries": [
+        "天然瓦斯供應"
+      ],
+      "records": [
+        {
+          "industry": "油電燃氣",
+          "sub_industry": "天然瓦斯供應",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "9927": {
+      "subindustries": [
+        "其他"
+      ],
+      "records": [
+        {
+          "industry": "其他",
+          "sub_industry": "其他",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "9929": {
+      "subindustries": [
+        "文化印刷業"
+      ],
+      "records": [
+        {
+          "industry": "其他",
+          "sub_industry": "文化印刷業",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "9928": {
+      "subindustries": [
+        "廣播電視/電影產業"
+      ],
+      "records": [
+        {
+          "industry": "文化創意業",
+          "sub_industry": "廣播電視/電影產業",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "9931": {
+      "subindustries": [
+        "天然瓦斯供應"
+      ],
+      "records": [
+        {
+          "industry": "油電燃氣",
+          "sub_industry": "天然瓦斯供應",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "9930": {
+      "subindustries": [
+        "環保潔能服務產業"
+      ],
+      "records": [
+        {
+          "industry": "其他",
+          "sub_industry": "環保潔能服務產業",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "9933": {
+      "subindustries": [
+        "工程承攬",
+        "營造設置",
+        "其他配件"
+      ],
+      "records": [
+        {
+          "industry": "建材營造",
+          "sub_industry": "工程承攬",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "汽電共生",
+          "sub_industry": "營造設置",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "風力發電",
+          "sub_industry": "其他配件",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "9934": {
+      "subindustries": [
+        "其他"
+      ],
+      "records": [
+        {
+          "industry": "其他",
+          "sub_industry": "其他",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "9935": {
+      "subindustries": [
+        "其他"
+      ],
+      "records": [
+        {
+          "industry": "其他",
+          "sub_industry": "其他",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "9937": {
+      "subindustries": [
+        "加油站"
+      ],
+      "records": [
+        {
+          "industry": "油電燃氣",
+          "sub_industry": "加油站",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "9938": {
+      "subindustries": [
+        "其他"
+      ],
+      "records": [
+        {
+          "industry": "其他",
+          "sub_industry": "其他",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "9940": {
+      "subindustries": [
+        "其他"
+      ],
+      "records": [
+        {
+          "industry": "其他",
+          "sub_industry": "其他",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "9939": {
+      "subindustries": [
+        "塑膠製品"
+      ],
+      "records": [
+        {
+          "industry": "石化及塑橡膠",
+          "sub_industry": "塑膠製品",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "9942": {
+      "subindustries": [
+        "其他"
+      ],
+      "records": [
+        {
+          "industry": "汽車",
+          "sub_industry": "其他",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "9941": {
+      "subindustries": [
+        "其他"
+      ],
+      "records": [
+        {
+          "industry": "其他",
+          "sub_industry": "其他",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "9943": {
+      "subindustries": [
+        "娛樂服務業"
+      ],
+      "records": [
+        {
+          "industry": "休閒娛樂",
+          "sub_industry": "娛樂服務業",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "9944": {
+      "subindustries": [
+        "成衣及其它家居紡織類品",
+        "其他"
+      ],
+      "records": [
+        {
+          "industry": "紡織",
+          "sub_industry": "成衣及其它家居紡織類品",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "其他",
+          "sub_industry": "其他",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "9945": {
+      "subindustries": [
+        "結構工程",
+        "機電工程",
+        "工程設計",
+        "營造業",
+        "建設業",
+        "裝潢業",
+        "物業管理"
+      ],
+      "records": [
+        {
+          "industry": "建材營造",
+          "sub_industry": "結構工程",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "建材營造",
+          "sub_industry": "機電工程",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "建材營造",
+          "sub_industry": "工程設計",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "建材營造",
+          "sub_industry": "營造業",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "建材營造",
+          "sub_industry": "建設業",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "建材營造",
+          "sub_industry": "裝潢業",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "建材營造",
+          "sub_industry": "物業管理",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "9946": {
+      "subindustries": [
+        "建設業",
+        "零售通路"
+      ],
+      "records": [
+        {
+          "industry": "建材營造",
+          "sub_industry": "建設業",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "貿易百貨",
+          "sub_industry": "零售通路",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "9949": {
+      "subindustries": [
+        "文化印刷業",
+        "工藝產業"
+      ],
+      "records": [
+        {
+          "industry": "其他",
+          "sub_industry": "文化印刷業",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "文化創意業",
+          "sub_industry": "工藝產業",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "9950": {
+      "subindustries": [
+        "塑膠製品"
+      ],
+      "records": [
+        {
+          "industry": "石化及塑橡膠",
+          "sub_industry": "塑膠製品",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "9951": {
+      "subindustries": [
+        "車用機械傳動設備及零配件",
+        "其他"
+      ],
+      "records": [
+        {
+          "industry": "電機機械",
+          "sub_industry": "車用機械傳動設備及零配件",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "汽車",
+          "sub_industry": "其他",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "9955": {
+      "subindustries": [
+        "環保潔能服務產業"
+      ],
+      "records": [
+        {
+          "industry": "其他",
+          "sub_industry": "環保潔能服務產業",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "9958": {
+      "subindustries": [
+        "工程承攬",
+        "塔架",
+        "電纜",
+        "其他配件"
+      ],
+      "records": [
+        {
+          "industry": "建材營造",
+          "sub_industry": "工程承攬",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "風力發電",
+          "sub_industry": "塔架",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "風力發電",
+          "sub_industry": "電纜",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "風力發電",
+          "sub_industry": "其他配件",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "9962": {
+      "subindustries": [
+        "冷熱軋不鏽鋼板捲"
+      ],
+      "records": [
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "冷熱軋不鏽鋼板捲",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "9960": {
+      "subindustries": [
+        "高爾夫球具業"
+      ],
+      "records": [
+        {
+          "industry": "休閒娛樂",
+          "sub_industry": "高爾夫球具業",
           "date": "2026-09-09"
         }
       ]
