@@ -1,4 +1,4 @@
-name: Stock Alert V2.14.20
+name: Stock Alert V2.14.21
 
 on:
   schedule:
@@ -43,16 +43,16 @@ jobs:
       - name: Install packages
         run: pip install -r requirements.txt
 
-      - name: Run Stock Alert V2.14.20
+      - name: Run Stock Alert V2.14.21
         env:
           LINE_CHANNEL_ACCESS_TOKEN: ${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }}
           LINE_CHANNEL_SECRET: ${{ secrets.LINE_CHANNEL_SECRET }}
         run: |
-          echo "========== V2.14.20 ACTION START =========="
+          echo "========== V2.14.21 ACTION START =========="
           echo "UTC: $(date -u '+%Y-%m-%d %H:%M:%S')"
           echo "TAIWAN: $(TZ=Asia/Taipei date '+%Y-%m-%d %H:%M:%S')"
           python stock_alert.py
-          echo "========== V2.14.20 ACTION END =========="
+          echo "========== V2.14.21 ACTION END =========="
 
       - name: Save generated state and caches
         if: always()
@@ -79,6 +79,7 @@ jobs:
             twse_profile_cache.json
             twse_quotes_cache.json
             subindustry_cache.json
+            industry_subindustry_menu_cache.json
             eps_quarterly_cache.json
             eps_annual_history_cache.json
             eps_history_engine_cache.json
@@ -104,7 +105,7 @@ jobs:
             exit 0
           fi
 
-          git stash push -u -m "stock-alert-v2.14.18-generated-state" || true
+          git stash push -u -m "stock-alert-v2.14.21-generated-state" || true
 
           echo '========== 同步 GitHub 最新 main =========='
           git fetch origin main
@@ -120,5 +121,5 @@ jobs:
             exit 0
           fi
 
-          git commit -m 'Update stock alert state and caches V2.14.20'
+          git commit -m 'Update stock alert state and caches V2.14.21'
           git push origin HEAD:main
