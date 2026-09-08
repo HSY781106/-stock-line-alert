@@ -10584,11 +10584,35 @@ def _line_extract_analysis_scores(text):
 
 
 def _line_industry_build_subindustry_menu(parent, u):
-    """V2.14.21：依指定大產業動態取得官方次產業名稱。"""
-    data = _line_industry_load_data()
+    """V2.14.21：依指定大產業取得官方次產業名稱。
+
+    優先使用 Actions 建立的 industry_subindustry_menu_cache.json；
+    若該索引不存在，再由 subindustry_cache / 市場股票池反查。
+    """
     options = []
     parent_c = canonical_industry(parent)
-    # 先用既有快取。
+
+    # 第一優先：Actions 已建立的「大產業 -> 次產業」索引。
+    try:
+        menu_cache = load_json(INDUSTRY_MENU_CACHE_FILE)
+        menu_data = menu_cache.get('data', {}) if isinstance(menu_cache, dict) else {}
+        if isinstance(menu_data, dict):
+            for key, vals in menu_data.items():
+                if canonical_industry(key) != parent_c:
+                    continue
+                if isinstance(vals, list):
+                    for sub in vals:
+                        n = normalize_subindustry(sub)
+                        if n and n not in options:
+                            options.append(n)
+    except Exception as e:
+        print(f'V2.14.21 LINE產業選單索引讀取失敗：{type(e).__name__}: {e}', flush=True)
+
+    if options:
+        return sorted(options, key=lambda x: (_line_industry_norm(x), x))
+
+    data = _line_industry_load_data()
+    # 第二優先：既有次產業快取。
     for info in data.values():
         if not isinstance(info, dict):
             continue
@@ -10746,9 +10770,34 @@ def _line_industry_query_result(text, target, u):
 
 
 def _line_industry_webhook_kind(text, target):
-    """V2.14.21：Webhook 只回覆選單，不執行產業分析。"""
+    """V2.14.21：Webhook 只回覆選單，不執行產業分析。
+
+    V2.14.21 hotfix：進入選單後不能把使用者鎖死。
+    「取消／返回／退出」會清除狀態；4~6 碼股票代號、ETF、
+    美股 ticker 也會自動離開產業選單並交回一般查詢流程。
+    """
+    raw = str(text or '').strip()
+    norm = _line_industry_norm(raw)
+
+    # 明確離開互動式產業選單。
+    if norm in {_line_industry_norm(x) for x in ('取消', '返回', '退出', '離開', '清除', 'reset', 'cancel', 'back')}:
+        _line_industry_session_clear(target)
+        return 'help', (
+            '↩️ 已退出產業查詢。\n\n'
+            '現在可以直接輸入股票代號、股票名稱、ETF 或輸入「產業」重新開始。'
+        )
+
     session = _line_industry_session_get(target)
     if session:
+        # 4~6 碼純數字視為股票代號；不要被目前的細產業選單攔截。
+        if re.fullmatch(r'\d{4,6}', raw):
+            _line_industry_session_clear(target)
+            return None, None
+        # 常見 ETF / 美股 ticker 也允許直接跳出選單。
+        if re.fullmatch(r'[A-Za-z]{1,6}(?:[-.][A-Za-z0-9]{1,4})?', raw):
+            _line_industry_session_clear(target)
+            return None, None
+
         q2 = _line_industry_resolve_from_session(text, target)
         if q2:
             if q2.get('type') == 'parent':
@@ -11050,6 +11099,11 @@ def handle_event(e, u):
     # V2.14.21：Webhook 階段只辨識產業查詢，不執行 Top 3/股票分析，
     # 確保 LINE Reply 一定先送出；完整產業分析全部交給背景工作。
     industry_kind, industry_msg = _line_industry_webhook_kind(text, target)
+    if industry_kind == 'help':
+        ok = reply_line(token, industry_msg)
+        if not ok:
+            print('❌ LINE 產業查詢離開訊息 Reply 失敗', flush=True)
+        return
     if industry_kind == 'options':
         ok = reply_line(token, industry_msg)
         if not ok:
