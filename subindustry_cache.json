@@ -1,5 +1,5 @@
 {
-  "_cached_at": 1788887544.4141557,
+  "_cached_at": 1788888513.3515472,
   "source": "TPEx/TWSE Industry Value Chain",
   "source_url": "https://ic.tpex.org.tw/company_chain.php",
   "cache_days": 30,
@@ -29488,6 +29488,748 @@
         {
           "industry": "印刷電路板",
           "sub_industry": "銅箔基板",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "5508": {
+      "subindustries": [
+        "建設業"
+      ],
+      "records": [
+        {
+          "industry": "建材營造",
+          "sub_industry": "建設業",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "5511": {
+      "subindustries": [
+        "營造業"
+      ],
+      "records": [
+        {
+          "industry": "建材營造",
+          "sub_industry": "營造業",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "5512": {
+      "subindustries": [
+        "建設業"
+      ],
+      "records": [
+        {
+          "industry": "建材營造",
+          "sub_industry": "建設業",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "5514": {
+      "subindustries": [
+        "建設業"
+      ],
+      "records": [
+        {
+          "industry": "建材營造",
+          "sub_industry": "建設業",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "5516": {
+      "subindustries": [
+        "營造業"
+      ],
+      "records": [
+        {
+          "industry": "建材營造",
+          "sub_industry": "營造業",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "5515": {
+      "subindustries": [
+        "建材原料",
+        "營造業"
+      ],
+      "records": [
+        {
+          "industry": "建材營造",
+          "sub_industry": "建材原料",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "建材營造",
+          "sub_industry": "營造業",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "5519": {
+      "subindustries": [
+        "營造業",
+        "建設業"
+      ],
+      "records": [
+        {
+          "industry": "建材營造",
+          "sub_industry": "營造業",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "建材營造",
+          "sub_industry": "建設業",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "5520": {
+      "subindustries": [
+        "預拌混凝土"
+      ],
+      "records": [
+        {
+          "industry": "水泥",
+          "sub_industry": "預拌混凝土",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "5522": {
+      "subindustries": [
+        "建設業"
+      ],
+      "records": [
+        {
+          "industry": "建材營造",
+          "sub_industry": "建設業",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "5521": {
+      "subindustries": [
+        "營造業"
+      ],
+      "records": [
+        {
+          "industry": "建材營造",
+          "sub_industry": "營造業",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "5523": {
+      "subindustries": [
+        "建設業"
+      ],
+      "records": [
+        {
+          "industry": "建材營造",
+          "sub_industry": "建設業",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "5525": {
+      "subindustries": [
+        "建設業"
+      ],
+      "records": [
+        {
+          "industry": "建材營造",
+          "sub_industry": "建設業",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "5530": {
+      "subindustries": [
+        "建設業",
+        "其他"
+      ],
+      "records": [
+        {
+          "industry": "建材營造",
+          "sub_industry": "建設業",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "其他",
+          "sub_industry": "其他",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "5529": {
+      "subindustries": [
+        "建設業"
+      ],
+      "records": [
+        {
+          "industry": "建材營造",
+          "sub_industry": "建設業",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "5531": {
+      "subindustries": [
+        "建設業"
+      ],
+      "records": [
+        {
+          "industry": "建材營造",
+          "sub_industry": "建設業",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "5534": {
+      "subindustries": [
+        "建材原料"
+      ],
+      "records": [
+        {
+          "industry": "建材營造",
+          "sub_industry": "建材原料",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "5533": {
+      "subindustries": [
+        "建設業"
+      ],
+      "records": [
+        {
+          "industry": "建材營造",
+          "sub_industry": "建設業",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "5536": {
+      "subindustries": [
+        "生產製程及檢測設備",
+        "冷凍空調設備及零件",
+        "機電系統工程",
+        "機電工程",
+        "工程設計",
+        "工程承攬",
+        "其他電子產品及電子服務產業",
+        "電力設備",
+        "冷卻設備",
+        "系統整合",
+        "顧問諮詢",
+        "設備安裝服務",
+        "生產製程、檢測設備及原物料",
+        "太陽能發電設備/系統及系統工程"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "生產製程及檢測設備",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "平面顯示器",
+          "sub_industry": "生產製程及檢測設備",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "印刷電路板",
+          "sub_industry": "生產製程及檢測設備",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "電機機械",
+          "sub_industry": "冷凍空調設備及零件",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "電機機械",
+          "sub_industry": "機電系統工程",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "建材營造",
+          "sub_industry": "機電工程",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "建材營造",
+          "sub_industry": "工程設計",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "建材營造",
+          "sub_industry": "工程承攬",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "其他",
+          "sub_industry": "其他電子產品及電子服務產業",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "雲端運算",
+          "sub_industry": "電力設備",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "雲端運算",
+          "sub_industry": "冷卻設備",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "雲端運算",
+          "sub_industry": "系統整合",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "雲端運算",
+          "sub_industry": "顧問諮詢",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "雲端運算",
+          "sub_industry": "設備安裝服務",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "LED照明產業",
+          "sub_industry": "生產製程、檢測設備及原物料",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "太陽能產業",
+          "sub_industry": "太陽能發電設備/系統及系統工程",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "5538": {
+      "subindustries": [
+        "螺絲螺帽"
+      ],
+      "records": [
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "螺絲螺帽",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "5543": {
+      "subindustries": [
+        "建材原料",
+        "大功率鋰電池芯/模組、電池管理系統、動力馬達等零組件",
+        "電動汽車、電動機車、電動自行車",
+        "電池模組"
+      ],
+      "records": [
+        {
+          "industry": "建材營造",
+          "sub_industry": "建材原料",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "電動車輛產業",
+          "sub_industry": "大功率鋰電池芯/模組、電池管理系統、動力馬達等零組件",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "電動車輛產業",
+          "sub_industry": "電動汽車、電動機車、電動自行車",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "能源元件",
+          "sub_industry": "電池模組",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "5546": {
+      "subindustries": [
+        "產業鏈簡介"
+      ],
+      "records": [
+        {
+          "industry": "產業價值鏈資訊平台",
+          "sub_industry": "產業鏈簡介",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "5547": {
+      "subindustries": [
+        "營造業"
+      ],
+      "records": [
+        {
+          "industry": "建材營造",
+          "sub_industry": "營造業",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "5548": {
+      "subindustries": [
+        "營造業"
+      ],
+      "records": [
+        {
+          "industry": "建材營造",
+          "sub_industry": "營造業",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "5601": {
+      "subindustries": [
+        "貨櫃運輸集散及倉儲"
+      ],
+      "records": [
+        {
+          "industry": "交通運輸及航運",
+          "sub_industry": "貨櫃運輸集散及倉儲",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "5603": {
+      "subindustries": [
+        "貨櫃運輸集散及倉儲"
+      ],
+      "records": [
+        {
+          "industry": "交通運輸及航運",
+          "sub_industry": "貨櫃運輸集散及倉儲",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "5604": {
+      "subindustries": [
+        "其他"
+      ],
+      "records": [
+        {
+          "industry": "其他",
+          "sub_industry": "其他",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "5607": {
+      "subindustries": [
+        "貨櫃運輸集散及倉儲"
+      ],
+      "records": [
+        {
+          "industry": "交通運輸及航運",
+          "sub_industry": "貨櫃運輸集散及倉儲",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "5608": {
+      "subindustries": [
+        "散裝航運"
+      ],
+      "records": [
+        {
+          "industry": "交通運輸及航運",
+          "sub_industry": "散裝航運",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "5609": {
+      "subindustries": [
+        "海陸空貨運承攬"
+      ],
+      "records": [
+        {
+          "industry": "交通運輸及航運",
+          "sub_industry": "海陸空貨運承攬",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "5701": {
+      "subindustries": [
+        "娛樂服務業",
+        "旅館服務業"
+      ],
+      "records": [
+        {
+          "industry": "休閒娛樂",
+          "sub_industry": "娛樂服務業",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "休閒娛樂",
+          "sub_industry": "旅館服務業",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "5703": {
+      "subindustries": [
+        "旅館服務業"
+      ],
+      "records": [
+        {
+          "industry": "休閒娛樂",
+          "sub_industry": "旅館服務業",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "5704": {
+      "subindustries": [
+        "旅館服務業"
+      ],
+      "records": [
+        {
+          "industry": "休閒娛樂",
+          "sub_industry": "旅館服務業",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "5706": {
+      "subindustries": [
+        "旅遊服務業"
+      ],
+      "records": [
+        {
+          "industry": "休閒娛樂",
+          "sub_industry": "旅遊服務業",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "5864": {
+      "subindustries": [
+        "證券業"
+      ],
+      "records": [
+        {
+          "industry": "金融",
+          "sub_industry": "證券業",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "5871": {
+      "subindustries": [
+        "租賃業",
+        "太陽能電廠"
+      ],
+      "records": [
+        {
+          "industry": "金融",
+          "sub_industry": "租賃業",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "太陽能產業",
+          "sub_industry": "太陽能電廠",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "5876": {
+      "subindustries": [
+        "金控業/銀行業/保險業"
+      ],
+      "records": [
+        {
+          "industry": "金融",
+          "sub_industry": "金控業/銀行業/保險業",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "5878": {
+      "subindustries": [
+        "金控業/銀行業/保險業"
+      ],
+      "records": [
+        {
+          "industry": "金融",
+          "sub_industry": "金控業/銀行業/保險業",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "5880": {
+      "subindustries": [
+        "金控業/銀行業/保險業"
+      ],
+      "records": [
+        {
+          "industry": "金融",
+          "sub_industry": "金控業/銀行業/保險業",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "5902": {
+      "subindustries": [
+        "貿易商、代理商、經銷商"
+      ],
+      "records": [
+        {
+          "industry": "貿易百貨",
+          "sub_industry": "貿易商、代理商、經銷商",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "5903": {
+      "subindustries": [
+        "零售通路"
+      ],
+      "records": [
+        {
+          "industry": "貿易百貨",
+          "sub_industry": "零售通路",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "5904": {
+      "subindustries": [
+        "零售通路"
+      ],
+      "records": [
+        {
+          "industry": "貿易百貨",
+          "sub_industry": "零售通路",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "5905": {
+      "subindustries": [
+        "旅館服務業",
+        "零售通路"
+      ],
+      "records": [
+        {
+          "industry": "休閒娛樂",
+          "sub_industry": "旅館服務業",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "貿易百貨",
+          "sub_industry": "零售通路",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "5906": {
+      "subindustries": [
+        "貿易商、代理商、經銷商"
+      ],
+      "records": [
+        {
+          "industry": "貿易百貨",
+          "sub_industry": "貿易商、代理商、經銷商",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "5907": {
+      "subindustries": [
+        "零售通路"
+      ],
+      "records": [
+        {
+          "industry": "貿易百貨",
+          "sub_industry": "零售通路",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "6005": {
+      "subindustries": [
+        "證券業"
+      ],
+      "records": [
+        {
+          "industry": "金融",
+          "sub_industry": "證券業",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "6015": {
+      "subindustries": [
+        "證券業"
+      ],
+      "records": [
+        {
+          "industry": "金融",
+          "sub_industry": "證券業",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "6016": {
+      "subindustries": [
+        "證券業"
+      ],
+      "records": [
+        {
+          "industry": "金融",
+          "sub_industry": "證券業",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "6020": {
+      "subindustries": [
+        "證券業"
+      ],
+      "records": [
+        {
+          "industry": "金融",
+          "sub_industry": "證券業",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "6021": {
+      "subindustries": [
+        "證券業"
+      ],
+      "records": [
+        {
+          "industry": "金融",
+          "sub_industry": "證券業",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "6023": {
+      "subindustries": [
+        "期貨業"
+      ],
+      "records": [
+        {
+          "industry": "金融",
+          "sub_industry": "期貨業",
           "date": "2026-09-09"
         }
       ]
