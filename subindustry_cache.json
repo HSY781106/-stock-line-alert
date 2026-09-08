@@ -1,5 +1,5 @@
 {
-  "_cached_at": 1788847062.443999,
+  "_cached_at": 1788874669.8979044,
   "source": "TPEx/TWSE Industry Value Chain",
   "source_url": "https://ic.tpex.org.tw/company_chain.php",
   "cache_days": 30,
@@ -16504,6 +16504,714 @@
         {
           "industry": "食品",
           "sub_industry": "餐飲連鎖",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2756": {
+      "subindustries": [
+        "餐飲連鎖"
+      ],
+      "records": [
+        {
+          "industry": "食品",
+          "sub_industry": "餐飲連鎖",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2762": {
+      "subindustries": [
+        "產業鏈簡介"
+      ],
+      "records": [
+        {
+          "industry": "產業價值鏈資訊平台",
+          "sub_industry": "產業鏈簡介",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2801": {
+      "subindustries": [
+        "金控業/銀行業/保險業"
+      ],
+      "records": [
+        {
+          "industry": "金融",
+          "sub_industry": "金控業/銀行業/保險業",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2816": {
+      "subindustries": [
+        "金控業/銀行業/保險業"
+      ],
+      "records": [
+        {
+          "industry": "金融",
+          "sub_industry": "金控業/銀行業/保險業",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2812": {
+      "subindustries": [
+        "金控業/銀行業/保險業",
+        "證券業",
+        "租賃業"
+      ],
+      "records": [
+        {
+          "industry": "金融",
+          "sub_industry": "金控業/銀行業/保險業",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "金融",
+          "sub_industry": "證券業",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "金融",
+          "sub_industry": "租賃業",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2820": {
+      "subindustries": [
+        "金控業/銀行業/保險業"
+      ],
+      "records": [
+        {
+          "industry": "金融",
+          "sub_industry": "金控業/銀行業/保險業",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2832": {
+      "subindustries": [
+        "金控業/銀行業/保險業"
+      ],
+      "records": [
+        {
+          "industry": "金融",
+          "sub_industry": "金控業/銀行業/保險業",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2834": {
+      "subindustries": [
+        "金控業/銀行業/保險業",
+        "證券業",
+        "租賃業"
+      ],
+      "records": [
+        {
+          "industry": "金融",
+          "sub_industry": "金控業/銀行業/保險業",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "金融",
+          "sub_industry": "證券業",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "金融",
+          "sub_industry": "租賃業",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2836": {
+      "subindustries": [
+        "金控業/銀行業/保險業"
+      ],
+      "records": [
+        {
+          "industry": "金融",
+          "sub_industry": "金控業/銀行業/保險業",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2838": {
+      "subindustries": [
+        "金控業/銀行業/保險業",
+        "證券業"
+      ],
+      "records": [
+        {
+          "industry": "金融",
+          "sub_industry": "金控業/銀行業/保險業",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "金融",
+          "sub_industry": "證券業",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2845": {
+      "subindustries": [
+        "金控業/銀行業/保險業"
+      ],
+      "records": [
+        {
+          "industry": "金融",
+          "sub_industry": "金控業/銀行業/保險業",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2849": {
+      "subindustries": [
+        "金控業/銀行業/保險業"
+      ],
+      "records": [
+        {
+          "industry": "金融",
+          "sub_industry": "金控業/銀行業/保險業",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2850": {
+      "subindustries": [
+        "金控業/銀行業/保險業"
+      ],
+      "records": [
+        {
+          "industry": "金融",
+          "sub_industry": "金控業/銀行業/保險業",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2851": {
+      "subindustries": [
+        "金控業/銀行業/保險業"
+      ],
+      "records": [
+        {
+          "industry": "金融",
+          "sub_industry": "金控業/銀行業/保險業",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2852": {
+      "subindustries": [
+        "金控業/銀行業/保險業"
+      ],
+      "records": [
+        {
+          "industry": "金融",
+          "sub_industry": "金控業/銀行業/保險業",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2855": {
+      "subindustries": [
+        "證券業"
+      ],
+      "records": [
+        {
+          "industry": "金融",
+          "sub_industry": "證券業",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2880": {
+      "subindustries": [
+        "金控業/銀行業/保險業"
+      ],
+      "records": [
+        {
+          "industry": "金融",
+          "sub_industry": "金控業/銀行業/保險業",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2881": {
+      "subindustries": [
+        "金控業/銀行業/保險業"
+      ],
+      "records": [
+        {
+          "industry": "金融",
+          "sub_industry": "金控業/銀行業/保險業",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2882": {
+      "subindustries": [
+        "金控業/銀行業/保險業"
+      ],
+      "records": [
+        {
+          "industry": "金融",
+          "sub_industry": "金控業/銀行業/保險業",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2883": {
+      "subindustries": [
+        "金控業/銀行業/保險業"
+      ],
+      "records": [
+        {
+          "industry": "金融",
+          "sub_industry": "金控業/銀行業/保險業",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2884": {
+      "subindustries": [
+        "金控業/銀行業/保險業"
+      ],
+      "records": [
+        {
+          "industry": "金融",
+          "sub_industry": "金控業/銀行業/保險業",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2886": {
+      "subindustries": [
+        "金控業/銀行業/保險業"
+      ],
+      "records": [
+        {
+          "industry": "金融",
+          "sub_industry": "金控業/銀行業/保險業",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2885": {
+      "subindustries": [
+        "金控業/銀行業/保險業"
+      ],
+      "records": [
+        {
+          "industry": "金融",
+          "sub_industry": "金控業/銀行業/保險業",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2889": {
+      "subindustries": [
+        "金控業/銀行業/保險業"
+      ],
+      "records": [
+        {
+          "industry": "金融",
+          "sub_industry": "金控業/銀行業/保險業",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2887": {
+      "subindustries": [
+        "金控業/銀行業/保險業"
+      ],
+      "records": [
+        {
+          "industry": "金融",
+          "sub_industry": "金控業/銀行業/保險業",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2890": {
+      "subindustries": [
+        "金控業/銀行業/保險業"
+      ],
+      "records": [
+        {
+          "industry": "金融",
+          "sub_industry": "金控業/銀行業/保險業",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2891": {
+      "subindustries": [
+        "金控業/銀行業/保險業"
+      ],
+      "records": [
+        {
+          "industry": "金融",
+          "sub_industry": "金控業/銀行業/保險業",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2892": {
+      "subindustries": [
+        "金控業/銀行業/保險業"
+      ],
+      "records": [
+        {
+          "industry": "金融",
+          "sub_industry": "金控業/銀行業/保險業",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2897": {
+      "subindustries": [
+        "金控業/銀行業/保險業"
+      ],
+      "records": [
+        {
+          "industry": "金融",
+          "sub_industry": "金控業/銀行業/保險業",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2903": {
+      "subindustries": [
+        "零售通路"
+      ],
+      "records": [
+        {
+          "industry": "貿易百貨",
+          "sub_industry": "零售通路",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2901": {
+      "subindustries": [
+        "零售通路"
+      ],
+      "records": [
+        {
+          "industry": "貿易百貨",
+          "sub_industry": "零售通路",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2904": {
+      "subindustries": [
+        "其他"
+      ],
+      "records": [
+        {
+          "industry": "其他",
+          "sub_industry": "其他",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2905": {
+      "subindustries": [
+        "零售通路"
+      ],
+      "records": [
+        {
+          "industry": "貿易百貨",
+          "sub_industry": "零售通路",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2906": {
+      "subindustries": [
+        "貿易商、代理商、經銷商"
+      ],
+      "records": [
+        {
+          "industry": "貿易百貨",
+          "sub_industry": "貿易商、代理商、經銷商",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2908": {
+      "subindustries": [
+        "貿易商、代理商、經銷商"
+      ],
+      "records": [
+        {
+          "industry": "貿易百貨",
+          "sub_industry": "貿易商、代理商、經銷商",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2910": {
+      "subindustries": [
+        "建設業",
+        "零售通路"
+      ],
+      "records": [
+        {
+          "industry": "建材營造",
+          "sub_industry": "建設業",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "貿易百貨",
+          "sub_industry": "零售通路",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2911": {
+      "subindustries": [
+        "零售通路"
+      ],
+      "records": [
+        {
+          "industry": "貿易百貨",
+          "sub_industry": "零售通路",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2912": {
+      "subindustries": [
+        "零售通路"
+      ],
+      "records": [
+        {
+          "industry": "貿易百貨",
+          "sub_industry": "零售通路",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2915": {
+      "subindustries": [
+        "貿易商、代理商、經銷商",
+        "零售通路"
+      ],
+      "records": [
+        {
+          "industry": "貿易百貨",
+          "sub_industry": "貿易商、代理商、經銷商",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "貿易百貨",
+          "sub_industry": "零售通路",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2913": {
+      "subindustries": [
+        "原物料",
+        "加工食品",
+        "冷凍、罐頭、脫水、醃漬食品",
+        "貿易商、代理商、經銷商",
+        "零售通路",
+        "其他"
+      ],
+      "records": [
+        {
+          "industry": "食品",
+          "sub_industry": "原物料",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "食品",
+          "sub_industry": "加工食品",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "食品",
+          "sub_industry": "冷凍、罐頭、脫水、醃漬食品",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "貿易百貨",
+          "sub_industry": "貿易商、代理商、經銷商",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "貿易百貨",
+          "sub_industry": "零售通路",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "其他",
+          "sub_industry": "其他",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2916": {
+      "subindustries": [
+        "製造商",
+        "貿易商、代理商、經銷商"
+      ],
+      "records": [
+        {
+          "industry": "貿易百貨",
+          "sub_industry": "製造商",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "貿易百貨",
+          "sub_industry": "貿易商、代理商、經銷商",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2923": {
+      "subindustries": [
+        "建設業",
+        "物業管理"
+      ],
+      "records": [
+        {
+          "industry": "建材營造",
+          "sub_industry": "建設業",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "建材營造",
+          "sub_industry": "物業管理",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2926": {
+      "subindustries": [
+        "貿易商、代理商、經銷商",
+        "零售通路",
+        "創意生活產業"
+      ],
+      "records": [
+        {
+          "industry": "貿易百貨",
+          "sub_industry": "貿易商、代理商、經銷商",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "貿易百貨",
+          "sub_industry": "零售通路",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "文化創意業",
+          "sub_industry": "創意生活產業",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2924": {
+      "subindustries": [
+        "製造商",
+        "零售通路"
+      ],
+      "records": [
+        {
+          "industry": "貿易百貨",
+          "sub_industry": "製造商",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "貿易百貨",
+          "sub_industry": "零售通路",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2929": {
+      "subindustries": [
+        "成衣及其它家居紡織類品",
+        "製造商"
+      ],
+      "records": [
+        {
+          "industry": "紡織",
+          "sub_industry": "成衣及其它家居紡織類品",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "貿易百貨",
+          "sub_industry": "製造商",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2937": {
+      "subindustries": [
+        "零售通路"
+      ],
+      "records": [
+        {
+          "industry": "貿易百貨",
+          "sub_industry": "零售通路",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2939": {
+      "subindustries": [
+        "貿易商、代理商、經銷商"
+      ],
+      "records": [
+        {
+          "industry": "貿易百貨",
+          "sub_industry": "貿易商、代理商、經銷商",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2941": {
+      "subindustries": [
+        "零售通路"
+      ],
+      "records": [
+        {
+          "industry": "貿易百貨",
+          "sub_industry": "零售通路",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2945": {
+      "subindustries": [
+        "零售通路"
+      ],
+      "records": [
+        {
+          "industry": "貿易百貨",
+          "sub_industry": "零售通路",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2947": {
+      "subindustries": [
+        "零售通路"
+      ],
+      "records": [
+        {
+          "industry": "貿易百貨",
+          "sub_industry": "零售通路",
           "date": "2026-09-08"
         }
       ]

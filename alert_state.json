@@ -52,12 +52,12 @@
       "session_key": "2026-09-08"
     },
     "QQQ": {
-      "last_check": "2026-09-08T04:55:29.777058+08:00",
-      "last_price": 719.0599975585938,
+      "last_check": "2026-09-08T21:43:48.304953+08:00",
+      "last_price": 717.4400024414062,
       "last_interval_low": 718.29248046875,
       "last_interval_source": "Yahoo-5m",
       "interval_alert": false,
-      "session_key": "2026-09-07"
+      "session_key": "2026-09-08"
     },
     "台灣加權指數": {
       "last_check": "2026-09-08T13:58:37.284517+08:00",
