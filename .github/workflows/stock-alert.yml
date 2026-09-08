@@ -1,4 +1,4 @@
-name: Stock Alert V2.14.22
+name: Stock Alert V2.14.23
 
 on:
   schedule:
@@ -46,12 +46,16 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          # V2.14.22：除原有狀態/快取外，保存「全市場次產業自動建置」
-          # 的 menu cache 與 cursor，讓每次 Actions 接續補抓，不要求 LINE 使用者提供股票代號。
           git add -A
 
-          git diff --cached --quiet || git commit -m "Update stock alert state and caches V2.14.22"
+          git diff --cached --quiet || git commit -m "Update stock alert state and caches V2.14.23"
 
           git fetch origin main
-          git rebase origin/main || (git rebase --abort && git stash push -u -m "v21422-state" && git pull --rebase origin main && git stash pop)
+          git rebase origin/main || (
+            git rebase --abort &&
+            git stash push -u -m "v21423-state" &&
+            git pull --rebase origin main &&
+            git stash pop
+          )
+
           git push origin HEAD:main
