@@ -1,5 +1,5 @@
 {
-  "_cached_at": 1788884051.7933433,
+  "_cached_at": 1788885253.063456,
   "source": "TPEx/TWSE Industry Value Chain",
   "source_url": "https://ic.tpex.org.tw/company_chain.php",
   "cache_days": 30,
@@ -25846,6 +25846,1097 @@
         {
           "industry": "製藥",
           "sub_industry": "中、西藥製劑",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4735": {
+      "subindustries": [
+        "體溫計、血壓計"
+      ],
+      "records": [
+        {
+          "industry": "醫療器材",
+          "sub_industry": "體溫計、血壓計",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4729": {
+      "subindustries": [
+        "觸控面板",
+        "隱型眼鏡、光學鏡片"
+      ],
+      "records": [
+        {
+          "industry": "觸控面板",
+          "sub_industry": "觸控面板",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "醫療器材",
+          "sub_industry": "隱型眼鏡、光學鏡片",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4737": {
+      "subindustries": [
+        "生物檢測"
+      ],
+      "records": [
+        {
+          "industry": "醫療器材",
+          "sub_industry": "生物檢測",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4739": {
+      "subindustries": [
+        "濾波器、振盪器材料(鉭酸鋰／鈮酸鋰晶圓／片、石英基板、金屬及陶瓷封裝材料)",
+        "接著劑(合成樹脂)",
+        "化學助劑",
+        "PTA(對苯二甲酸)觸媒",
+        "鋰電池材料",
+        "原材料"
+      ],
+      "records": [
+        {
+          "industry": "被動元件",
+          "sub_industry": "濾波器、振盪器材料(鉭酸鋰／鈮酸鋰晶圓／片、石英基板、金屬及陶瓷封裝材料)",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "石化及塑橡膠",
+          "sub_industry": "接著劑(合成樹脂)",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "紡織",
+          "sub_industry": "化學助劑",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "石化及塑橡膠",
+          "sub_industry": "PTA(對苯二甲酸)觸媒",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "電動車輛產業",
+          "sub_industry": "鋰電池材料",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "能源元件",
+          "sub_industry": "原材料",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4736": {
+      "subindustries": [
+        "體溫計、血壓計"
+      ],
+      "records": [
+        {
+          "industry": "醫療器材",
+          "sub_industry": "體溫計、血壓計",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4741": {
+      "subindustries": [
+        "顏染料"
+      ],
+      "records": [
+        {
+          "industry": "石化及塑橡膠",
+          "sub_industry": "顏染料",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4744": {
+      "subindustries": [
+        "其他"
+      ],
+      "records": [
+        {
+          "industry": "醫療器材",
+          "sub_industry": "其他",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4743": {
+      "subindustries": [
+        "中藥材、西藥原料藥",
+        "中、西藥製劑",
+        "藥品代理銷售及通路"
+      ],
+      "records": [
+        {
+          "industry": "製藥",
+          "sub_industry": "中藥材、西藥原料藥",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "製藥",
+          "sub_industry": "中、西藥製劑",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "製藥",
+          "sub_industry": "藥品代理銷售及通路",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4745": {
+      "subindustries": [
+        "醫療器材代理",
+        "醫療院所、醫療器材專賣店、藥局等通路"
+      ],
+      "records": [
+        {
+          "industry": "醫療器材",
+          "sub_industry": "醫療器材代理",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "醫療器材",
+          "sub_industry": "醫療院所、醫療器材專賣店、藥局等通路",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4746": {
+      "subindustries": [
+        "中藥材、西藥原料藥"
+      ],
+      "records": [
+        {
+          "industry": "製藥",
+          "sub_industry": "中藥材、西藥原料藥",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4747": {
+      "subindustries": [
+        "中、西藥製劑",
+        "藥品代理銷售及通路"
+      ],
+      "records": [
+        {
+          "industry": "製藥",
+          "sub_industry": "中、西藥製劑",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "製藥",
+          "sub_industry": "藥品代理銷售及通路",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4754": {
+      "subindustries": [
+        "其他"
+      ],
+      "records": [
+        {
+          "industry": "其他",
+          "sub_industry": "其他",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4760": {
+      "subindustries": [
+        "IC封裝測試",
+        "電阻器材料(氧化鋁陶瓷基板、導電漿墨)",
+        "電容器材料(如電蝕／化成鋁箔、介面瓷粉)",
+        "電感器材料(如鐵氧體、導電漿墨)",
+        "封裝/模組",
+        "材料"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "IC封裝測試",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "被動元件",
+          "sub_industry": "電阻器材料(氧化鋁陶瓷基板、導電漿墨)",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "被動元件",
+          "sub_industry": "電容器材料(如電蝕／化成鋁箔、介面瓷粉)",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "被動元件",
+          "sub_industry": "電感器材料(如鐵氧體、導電漿墨)",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "LED照明產業",
+          "sub_industry": "封裝/模組",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "太陽能產業",
+          "sub_industry": "材料",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4755": {
+      "subindustries": [
+        "化學品",
+        "化學品(如光阻劑、靶材等)",
+        "塑膠材料",
+        "原物料",
+        "生產製程、檢測設備及原物料"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "化學品",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "平面顯示器",
+          "sub_industry": "化學品(如光阻劑、靶材等)",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "連接器",
+          "sub_industry": "塑膠材料",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "食品",
+          "sub_industry": "原物料",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "LED照明產業",
+          "sub_industry": "生產製程、檢測設備及原物料",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4763": {
+      "subindustries": [
+        "產業鏈簡介"
+      ],
+      "records": [
+        {
+          "industry": "產業價值鏈資訊平台",
+          "sub_industry": "產業鏈簡介",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4764": {
+      "subindustries": [
+        "化學品",
+        "膠材",
+        "環氧樹脂",
+        "聚亞醯胺樹脂",
+        "化學助劑",
+        "其他電子產品及電子服務產業",
+        "農業科技業",
+        "原材料",
+        "工業用合成樹脂",
+        "橡塑膠添加劑"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "化學品",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "觸控面板",
+          "sub_industry": "膠材",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "印刷電路板",
+          "sub_industry": "環氧樹脂",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "印刷電路板",
+          "sub_industry": "聚亞醯胺樹脂",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "紡織",
+          "sub_industry": "化學助劑",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "其他",
+          "sub_industry": "其他電子產品及電子服務產業",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "其他",
+          "sub_industry": "農業科技業",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "製藥",
+          "sub_industry": "原材料",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "石化及塑橡膠",
+          "sub_industry": "工業用合成樹脂",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "石化及塑橡膠",
+          "sub_industry": "橡塑膠添加劑",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4767": {
+      "subindustries": [
+        "接著劑(合成樹脂)"
+      ],
+      "records": [
+        {
+          "industry": "石化及塑橡膠",
+          "sub_industry": "接著劑(合成樹脂)",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4766": {
+      "subindustries": [
+        "接著劑(合成樹脂)"
+      ],
+      "records": [
+        {
+          "industry": "石化及塑橡膠",
+          "sub_industry": "接著劑(合成樹脂)",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4770": {
+      "subindustries": [
+        "生產製程及檢測設備",
+        "工業用合成樹脂"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "生產製程及檢測設備",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "平面顯示器",
+          "sub_industry": "生產製程及檢測設備",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "石化及塑橡膠",
+          "sub_industry": "工業用合成樹脂",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4771": {
+      "subindustries": [
+        "隱型眼鏡、光學鏡片"
+      ],
+      "records": [
+        {
+          "industry": "醫療器材",
+          "sub_industry": "隱型眼鏡、光學鏡片",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4768": {
+      "subindustries": [
+        "化學品",
+        "化學品(如光阻劑、靶材等)",
+        "光源/磊晶",
+        "太陽能電池"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "化學品",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "平面顯示器",
+          "sub_industry": "化學品(如光阻劑、靶材等)",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "LED照明產業",
+          "sub_industry": "光源/磊晶",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "太陽能產業",
+          "sub_industry": "太陽能電池",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4772": {
+      "subindustries": [
+        "生產製程及檢測設備",
+        "化學品",
+        "化學品(如光阻劑、靶材等)"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "生產製程及檢測設備",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "化學品",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "平面顯示器",
+          "sub_industry": "化學品(如光阻劑、靶材等)",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4804": {
+      "subindustries": [
+        "其他"
+      ],
+      "records": [
+        {
+          "industry": "其他",
+          "sub_industry": "其他",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4806": {
+      "subindustries": [
+        "廣播電視/電影產業"
+      ],
+      "records": [
+        {
+          "industry": "文化創意業",
+          "sub_industry": "廣播電視/電影產業",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4807": {
+      "subindustries": [
+        "製造商",
+        "貿易商、代理商、經銷商"
+      ],
+      "records": [
+        {
+          "industry": "貿易百貨",
+          "sub_industry": "製造商",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "貿易百貨",
+          "sub_industry": "貿易商、代理商、經銷商",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4903": {
+      "subindustries": [
+        "光通訊設備(如光纖電纜、光傳輸設備)"
+      ],
+      "records": [
+        {
+          "industry": "通信網路",
+          "sub_industry": "光通訊設備(如光纖電纜、光傳輸設備)",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4904": {
+      "subindustries": [
+        "無線通訊設備(如行動電話、衛星定位系統、衛星通訊設備、微波通訊設備、數位機上盒)",
+        "電信服務業",
+        "雲端應用服務",
+        "雲端平台",
+        "IaaS",
+        "PaaS",
+        "SaaS"
+      ],
+      "records": [
+        {
+          "industry": "通信網路",
+          "sub_industry": "無線通訊設備(如行動電話、衛星定位系統、衛星通訊設備、微波通訊設備、數位機上盒)",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "通信網路",
+          "sub_industry": "電信服務業",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "雲端運算",
+          "sub_industry": "雲端應用服務",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "大數據",
+          "sub_industry": "雲端平台",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "雲端運算",
+          "sub_industry": "IaaS",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "雲端運算",
+          "sub_industry": "PaaS",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "雲端運算",
+          "sub_industry": "SaaS",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4905": {
+      "subindustries": [
+        "網路設備(如數據機、網路卡、閘道器、路由器、網路電話)",
+        "光通訊設備(如光纖電纜、光傳輸設備)"
+      ],
+      "records": [
+        {
+          "industry": "通信網路",
+          "sub_industry": "網路設備(如數據機、網路卡、閘道器、路由器、網路電話)",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "通信網路",
+          "sub_industry": "光通訊設備(如光纖電纜、光傳輸設備)",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4906": {
+      "subindustries": [
+        "網路設備(如數據機、網路卡、閘道器、路由器、網路電話)"
+      ],
+      "records": [
+        {
+          "industry": "通信網路",
+          "sub_industry": "網路設備(如數據機、網路卡、閘道器、路由器、網路電話)",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4907": {
+      "subindustries": [
+        "建設業"
+      ],
+      "records": [
+        {
+          "industry": "建材營造",
+          "sub_industry": "建設業",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4908": {
+      "subindustries": [
+        "主/被動元件"
+      ],
+      "records": [
+        {
+          "industry": "通信網路",
+          "sub_industry": "主/被動元件",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4909": {
+      "subindustries": [
+        "印刷電路板",
+        "網路設備(如數據機、網路卡、閘道器、路由器、網路電話)",
+        "零組件/材料",
+        "硬板、軟板、IC載板製造",
+        "天線/射頻基頻",
+        "太陽能板/電池",
+        "感測器",
+        "微電子",
+        "金屬/燃料"
+      ],
+      "records": [
+        {
+          "industry": "通信網路",
+          "sub_industry": "印刷電路板",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "通信網路",
+          "sub_industry": "網路設備(如數據機、網路卡、閘道器、路由器、網路電話)",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "太空衛星科技",
+          "sub_industry": "零組件/材料",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "印刷電路板",
+          "sub_industry": "硬板、軟板、IC載板製造",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "太空衛星科技",
+          "sub_industry": "天線/射頻基頻",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "太空衛星科技",
+          "sub_industry": "太陽能板/電池",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "太空衛星科技",
+          "sub_industry": "感測器",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "太空衛星科技",
+          "sub_industry": "微電子",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "太空衛星科技",
+          "sub_industry": "金屬/燃料",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4911": {
+      "subindustries": [
+        "原材料",
+        "原料",
+        "加工製成品"
+      ],
+      "records": [
+        {
+          "industry": "製藥",
+          "sub_industry": "原材料",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "食品生技",
+          "sub_industry": "原料",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "食品生技",
+          "sub_industry": "加工製成品",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4912": {
+      "subindustries": [
+        "散熱片、風扇馬達、散熱模組"
+      ],
+      "records": [
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "散熱片、風扇馬達、散熱模組",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4915": {
+      "subindustries": [
+        "其他電腦及週邊設備",
+        "印表機、傳真機、掃瞄器、多功能事務機、投影機",
+        "其他電腦及週邊設備之零組件"
+      ],
+      "records": [
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "其他電腦及週邊設備",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "印表機、傳真機、掃瞄器、多功能事務機、投影機",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "其他電腦及週邊設備之零組件",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4916": {
+      "subindustries": [
+        "機殼",
+        "工業電腦",
+        "其他電腦及週邊設備"
+      ],
+      "records": [
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "機殼",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "工業電腦",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "其他電腦及週邊設備",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4924": {
+      "subindustries": [
+        "其他電腦及週邊設備",
+        "金屬、塑膠模具",
+        "其他電腦及週邊設備之零組件",
+        "燈具/應用"
+      ],
+      "records": [
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "其他電腦及週邊設備",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "金屬、塑膠模具",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "其他電腦及週邊設備之零組件",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "LED照明產業",
+          "sub_industry": "燈具/應用",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4927": {
+      "subindustries": [
+        "硬板、軟板、IC載板製造"
+      ],
+      "records": [
+        {
+          "industry": "印刷電路板",
+          "sub_industry": "硬板、軟板、IC載板製造",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4930": {
+      "subindustries": [
+        "原物料",
+        "製造商",
+        "貿易商、代理商、經銷商"
+      ],
+      "records": [
+        {
+          "industry": "食品",
+          "sub_industry": "原物料",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "貿易百貨",
+          "sub_industry": "製造商",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "貿易百貨",
+          "sub_industry": "貿易商、代理商、經銷商",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4933": {
+      "subindustries": [
+        "稜鏡片",
+        "擴散膜、增亮膜、導光板"
+      ],
+      "records": [
+        {
+          "industry": "平面顯示器",
+          "sub_industry": "稜鏡片",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "平面顯示器",
+          "sub_industry": "擴散膜、增亮膜、導光板",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4931": {
+      "subindustries": [
+        "電池",
+        "電力設備",
+        "大功率鋰電池芯/模組、電池管理系統、動力馬達等零組件",
+        "電池模組"
+      ],
+      "records": [
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "電池",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "雲端運算",
+          "sub_industry": "電力設備",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "電動車輛產業",
+          "sub_industry": "大功率鋰電池芯/模組、電池管理系統、動力馬達等零組件",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "能源元件",
+          "sub_industry": "電池模組",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4934": {
+      "subindustries": [
+        "太陽能電池",
+        "太陽能電池模組"
+      ],
+      "records": [
+        {
+          "industry": "太陽能產業",
+          "sub_industry": "太陽能電池",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "太陽能產業",
+          "sub_industry": "太陽能電池模組",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4938": {
+      "subindustries": [
+        "基板",
+        "主機板",
+        "機殼",
+        "筆記型電腦",
+        "桌上型電腦",
+        "其他零組件",
+        "網路設備(如數據機、網路卡、閘道器、路由器、網路電話)",
+        "無線通訊設備(如行動電話、衛星定位系統、衛星通訊設備、微波通訊設備、數位機上盒)"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "基板",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "主機板",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "機殼",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "筆記型電腦",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "桌上型電腦",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "平面顯示器",
+          "sub_industry": "其他零組件",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "通信網路",
+          "sub_industry": "網路設備(如數據機、網路卡、閘道器、路由器、網路電話)",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "通信網路",
+          "sub_industry": "無線通訊設備(如行動電話、衛星定位系統、衛星通訊設備、微波通訊設備、數位機上盒)",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4935": {
+      "subindustries": [
+        "其他電腦及週邊設備之零組件",
+        "擴散膜、增亮膜、導光板",
+        "塑膠製品",
+        "其他電子產品及電子服務產業",
+        "燈具/應用"
+      ],
+      "records": [
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "其他電腦及週邊設備之零組件",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "平面顯示器",
+          "sub_industry": "擴散膜、增亮膜、導光板",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "石化及塑橡膠",
+          "sub_industry": "塑膠製品",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "其他",
+          "sub_industry": "其他電子產品及電子服務產業",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "LED照明產業",
+          "sub_industry": "燈具/應用",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4939": {
+      "subindustries": [
+        "銅箔基板"
+      ],
+      "records": [
+        {
+          "industry": "印刷電路板",
+          "sub_industry": "銅箔基板",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4942": {
+      "subindustries": [
+        "其他零組件"
+      ],
+      "records": [
+        {
+          "industry": "平面顯示器",
+          "sub_industry": "其他零組件",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4946": {
+      "subindustries": [
+        "數位內容產業",
+        "營運發行"
+      ],
+      "records": [
+        {
+          "industry": "文化創意業",
+          "sub_industry": "數位內容產業",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "休閒娛樂",
+          "sub_industry": "營運發行",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4943": {
+      "subindustries": [
+        "連接器設計、組裝及製造"
+      ],
+      "records": [
+        {
+          "industry": "連接器",
+          "sub_industry": "連接器設計、組裝及製造",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4950": {
+      "subindustries": [
+        "不鏽鋼棒線",
+        "裁剪加工"
+      ],
+      "records": [
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "不鏽鋼棒線",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "裁剪加工",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    "4949": {
+      "subindustries": [
+        "生產製程及檢測設備",
+        "太陽能電池模組",
+        "太陽能發電設備/系統及系統工程"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "生產製程及檢測設備",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "太陽能產業",
+          "sub_industry": "太陽能電池模組",
+          "date": "2026-09-09"
+        },
+        {
+          "industry": "太陽能產業",
+          "sub_industry": "太陽能發電設備/系統及系統工程",
           "date": "2026-09-09"
         }
       ]
