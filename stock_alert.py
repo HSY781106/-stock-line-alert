@@ -1,4 +1,4 @@
-# stock_alert.py V2.14.20
+# stock_alert.py V2.14.21
 # V2.14.08：V2.14.05 完整覆蓋版；保留重大消息面「多公司新聞隔離」邏輯，
 #             修正 LINE 15 分鐘區間通知遺失「加碼分析／建議」問題，並修正目前價格不得使用過期市場股票池價格。
 #             重大消息評分只使用新聞標題，RSS description/snippet/延伸內容完全不參與評分。
@@ -156,6 +156,7 @@ TWSE_QUOTES_CACHE_FILE = 'twse_quotes_cache.json'
 
 # V2.9.8 新增
 SUBINDUSTRY_CACHE_FILE = 'subindustry_cache.json'
+INDUSTRY_MENU_CACHE_FILE = 'industry_subindustry_menu_cache.json'
 # V2.10.49：官方基本面快取
 # V2.10.56：不再使用 MOPS 基本面快取
 # MOPS_FUND_CACHE_FILE 保留名稱僅避免舊程式碼/舊快取造成相容性問題，但 V2.10.56 基本面主流程不讀寫。
@@ -312,7 +313,7 @@ LINE_RESULT_LOCK = threading.Lock()
 LINE_RESULT_CACHE = {}
 LINE_RESULT_MAX = 100
 
-# V2.14.20：LINE 互動式產業查詢狀態。只保存短暫的「大產業→次產業選擇」對話，
+# V2.14.21：LINE 互動式產業查詢狀態。只保存短暫的「大產業→次產業選擇」對話，
 # 不參與既有警報、極佳買點、第一層/第二層模型或 LINE Push 配額控制。
 LINE_INDUSTRY_SESSION_LOCK = threading.Lock()
 LINE_INDUSTRY_SESSIONS = {}
@@ -384,7 +385,7 @@ def resolve_etf_query(q):
 
 
 def resolve_us_stock_query(q):
-    """V2.14.20：LINE / analysis 可直接查詢一般美股。
+    """V2.14.21：LINE / analysis 可直接查詢一般美股。
 
     支援 AAPL、NVDA、MSFT、NASDAQ:AAPL、$AAPL、AAPL.US，以及常見公司名稱。
     不限制只能查固定清單；Yahoo/yfinance 負責確認實際是否存在。
@@ -2167,6 +2168,40 @@ def _fetch_missing_value_chains(codes):
 
     return result
 
+def _refresh_line_industry_menu_cache(u):
+    """V2.14.21：由既有官方次產業資料建立 LINE 大產業→細產業索引。"""
+    try:
+        cache = load_json(SUBINDUSTRY_CACHE_FILE)
+        data = cache.get('data', {}) if isinstance(cache, dict) else {}
+        if not isinstance(data, dict):
+            data = {}
+        index = {}
+        for info in data.values():
+            if not isinstance(info, dict):
+                continue
+            parent = canonical_industry(info.get('industry') or info.get('main_industry') or '')
+            if not parent:
+                continue
+            subs = info.get('subindustries', [])
+            if not isinstance(subs, list):
+                subs = [subs]
+            bucket = index.setdefault(parent, [])
+            for sub in subs:
+                n = normalize_subindustry(sub)
+                if n and n not in bucket:
+                    bucket.append(n)
+        for parent in index:
+            index[parent] = sorted(index[parent], key=lambda x: (_line_industry_norm(x), x))
+        save_json(INDUSTRY_MENU_CACHE_FILE, {
+            '_cached_at': time.time(),
+            'source': SUBINDUSTRY_CACHE_FILE,
+            'data': index
+        })
+        print(f'LINE產業選單索引：{len(index)} 個大產業', flush=True)
+    except Exception as e:
+        print(f'LINE產業選單索引建立失敗：{type(e).__name__}: {e}', flush=True)
+
+
 def get_public_subindustry(u):
     """
     V2.9.8 免費次產業來源：
@@ -2725,6 +2760,7 @@ def get_market_universe(
         # 仍重新補次產業。
 
         sub_data = get_public_subindustry(d)
+        _refresh_line_industry_menu_cache(d)
 
         d = attach_subindustries(
             d,
@@ -2738,6 +2774,7 @@ def get_market_universe(
     if u:
 
         sub_data = get_public_subindustry(u)
+        _refresh_line_industry_menu_cache(u)
 
         u = attach_subindustries(
             u,
@@ -2757,6 +2794,7 @@ def get_market_universe(
     if isinstance(d, dict):
 
         sub_data = get_public_subindustry(d)
+        _refresh_line_industry_menu_cache(d)
 
         d = attach_subindustries(
             d,
@@ -9389,7 +9427,7 @@ def score_etf(tech,p):
     return int(round(raw)),reasons,completeness
 
 def etf_analysis(query):
-    """V2.14.20：ETF 完整雙層分析。第一層沿用 V2.14.20 ETF 評分；第二層加入獨立買點模型。"""
+    """V2.14.21：ETF 完整雙層分析。第一層沿用 V2.14.21 ETF 評分；第二層加入獨立買點模型。"""
     info=resolve_etf_query(query)
     if not info: return f'❌ 找不到 ETF：{query}'
     symbol=info['symbol']; code=next((k for k,v in ETF_MAP.items() if v is info), str(query).upper())
@@ -9432,7 +9470,7 @@ def etf_analysis(query):
     tech_fields=['rsi','k','d','ma20','ma60']
     tech_ok=sum(1 for k in tech_fields if tech.get(k) is not None)
     tech_pct=int(round(tech_ok/len(tech_fields)*100))
-    return (f'📊 ETF「投資價值 × 買點」雙層分析 V2.14.20\n\n標的：{info["name"]}（{code}）\n代號：{symbol}\n\n'
+    return (f'📊 ETF「投資價值 × 買點」雙層分析 V2.14.21\n\n標的：{info["name"]}（{code}）\n代號：{symbol}\n\n'
             f'【第一層｜ETF投資價值】\nETF特性：40分\nNAV：{fmt(nav)}\n溢價/折價：{fmt(premium)}%\n殖利率：{fmt(p.get("yield"))}%\nBeta：{fmt(p.get("beta"))}\n資產規模：{fmt(p.get("assets"),0)}\n\n'
             f'技術面：60分\n價格：{fmt(price)}\nRSI：{fmt(tech.get("rsi"))}\nKD：K={fmt(tech.get("k"))} / D={fmt(tech.get("d"))}\nMA20：{fmt(tech.get("ma20"))}\nMA60：{fmt(tech.get("ma60"))}\n趨勢：{tech.get("trend") or "N/A"}\n'
             f'技術資料完整度：{tech_ok}/5（{tech_pct}%）\n評分資料完整度：{completeness:.0f}%\n\n'
@@ -9442,7 +9480,7 @@ def etf_analysis(query):
 
 
 def assess_buy_point(tech):
-    """V2.14.20：第二層買點模型，與投資價值分數完全分離。"""
+    """V2.14.21：第二層買點模型，與投資價值分數完全分離。"""
     t=tech if isinstance(tech,dict) else {}; p=to_float(t.get('price')); ma20=to_float(t.get('ma20')); ma60=to_float(t.get('ma60'))
     rv=to_float(t.get('rsi')); k=to_float(t.get('k')); d=to_float(t.get('d')); r5=to_float(t.get('ret5')); r10=to_float(t.get('ret10')); r20=to_float(t.get('ret20'))
     supports=[x for x in (to_float(t.get('recent_low')),to_float(t.get('low60')),ma20,ma60) if x and x>0]; score=0; confirms=[]; risks=[]
@@ -9480,7 +9518,7 @@ def assess_buy_point(tech):
 
 
 def us_stock_analysis(query):
-    """V2.14.20：一般美股「投資價值 × 買點」雙層分析。
+    """V2.14.21：一般美股「投資價值 × 買點」雙層分析。
 
     第一層：Yahoo 基本面 + 技術面，將可取得資料動態正規化到 100 分。
     第二層：沿用 V2.14.12/13 的獨立買點模型，不與第一層互相污染。
@@ -9499,7 +9537,7 @@ def us_stock_analysis(query):
                 tech=_technical_from_df(qd)
                 price=to_float(tech.get('price'))
         except Exception as e:
-            print(f'V2.14.20 美股技術資料失敗 {symbol}: {type(e).__name__}',flush=True)
+            print(f'V2.14.21 美股技術資料失敗 {symbol}: {type(e).__name__}',flush=True)
     fund=yahoo_light_fund(symbol,official={},current_price=price,market='US',industry='',subindustry='')
     pe=to_float(fund.get('pe')); pb=to_float(fund.get('pb')); yld=to_float(fund.get('yield'))
     growth=to_float(fund.get('eps_growth')); roe=to_float(fund.get('roe')); peg=to_float(fund.get('peg'))
@@ -9534,7 +9572,7 @@ def us_stock_analysis(query):
     def pct(v): return 'N/A' if v is None else f'{v*100:.2f}%'
     z1='N/A' if not buy.get('zone1') else f'{buy["zone1"][0]:,.2f}～{buy["zone1"][1]:,.2f}'
     z2='N/A' if not buy.get('zone2') else f'{buy["zone2"][0]:,.2f}～{buy["zone2"][1]:,.2f}'
-    return (f'📊 美股「投資價值 × 買點」雙層分析 V2.14.20\n\n標的：{symbol}\nYahoo代號：{symbol}\n\n'
+    return (f'📊 美股「投資價值 × 買點」雙層分析 V2.14.21\n\n標的：{symbol}\nYahoo代號：{symbol}\n\n'
             f'【第一層｜投資價值】\n基本面：{fundamental}/40（有效資料 {int(round(fav/40*100)) if fav else 0}%）\n'
             f'PE：{fmt(pe)}｜PB：{fmt(pb)}｜殖利率：{fmt(yld)}%\nEPS Growth：{fmt(growth)}%｜ROE：{fmt(roe)}%｜PEG：{fmt(peg)}\n'
             f'技術面：{ts}/30\n價格：{fmt(price)}｜RSI：{fmt(r)}｜KD：K={fmt(tech.get("k"))} / D={fmt(tech.get("d"))}\n'
@@ -9554,11 +9592,11 @@ def analysis(
     line_light=False,
     force_technical_refresh=False
 ):
-    # V2.14.20：ETF（含 0050 / QQQ）沿用 ETF 專屬雙層模型；一般股票完全走原 V2.14.12 模型。
+    # V2.14.21：ETF（含 0050 / QQQ）沿用 ETF 專屬雙層模型；一般股票完全走原 V2.14.12 模型。
     _etf_info = resolve_etf_query(query)
     if _etf_info:
         return etf_analysis(query)
-    # V2.14.20：LINE 查詢可直接輸入任意美股 ticker；ETF 已在上方優先攔截。
+    # V2.14.21：LINE 查詢可直接輸入任意美股 ticker；ETF 已在上方優先攔截。
     _us_info = resolve_us_stock_query(query)
     if _us_info:
         return us_stock_analysis(query)
@@ -9930,7 +9968,7 @@ def analysis(
     elif event_level == 2 and verdict.startswith('🟢'):
         verdict = '🟠 暫緩加碼／重大事件觀察'
 
-    # V2.14.20：第二層「現在能不能買」評估。
+    # V2.14.21：第二層「現在能不能買」評估。
     buy = assess_buy_point(tech)
     if event_level >= 3:
         buy['verdict']='🔴 暫不進場／重大事件風險'; buy['score']=min(buy['score'],39)
@@ -10080,7 +10118,7 @@ def analysis(
     # --------------------------------------------------------
 
     return (
-        f'📊 股票「投資價值 × 買點」雙層分析 V2.14.20\n\n'
+        f'📊 股票「投資價值 × 買點」雙層分析 V2.14.21\n\n'
         f'標的：{name}（{code}）\n'
         f'市場：{market}\n'
         f'產業：{industry}\n'
@@ -10323,28 +10361,33 @@ def line_target_from_event(e):
 
 
 # ============================================================
-# V2.14.20 LINE 互動式產業查詢
+# V2.14.21 LINE 互動式產業查詢
 # ============================================================
 
-# 目前「記憶體」可再細分的使用者選項。
-# 這裡只定義互動導覽，不定義股票名單；實際股票歸屬仍完全以
-# Actions 建立的動態次產業快取為準，因此不會把股票代碼硬編碼進模型。
-LINE_INDUSTRY_TREE = {
-    '記憶體': [
-        'NAND',
-        'DRAM',
-        'NOR',
-        '記憶體模組',
-        'SSD',
-        'HBM',
-        '記憶體控制IC',
-    ]
+# 第一層：官方大產業清單。股票歸屬仍來自動態市場資料，不硬編碼股票。
+LINE_INDUSTRY_ALIASES = {
+    '半導體': '半導體業',
+    '電子': '電子類',
+    'IC': '半導體業',
+    '晶片': '半導體業',
+    '金控': '金融業',
+    '金融': '金融業',
+    '航空': '航運業',
+    '航運': '航運業',
 }
 
-# V2.14.20：使用者選單名稱不一定等於 TPEx/TWSE「產業價值鏈」的正式節點名稱。
-# 官方公開資料目前常見「記憶體IC」、「IC模組」、「記憶體控制IC」、
-# 「磁碟儲存控制器IC」等節點，因此建立概念 -> 官方節點的語意對應。
-# 絕不建立股票代碼硬編碼；Top 3 仍由目前市值動態排序。
+# 「電子」不是 TWSE 單一大產業，輸入電子時讓使用者再選電子相關官方產業。
+LINE_ELECTRONIC_INDUSTRIES = [
+    '半導體業', '電腦及週邊設備業', '光電業', '通信網路業',
+    '電子零組件業', '電子通路業', '資訊服務業', '其他電子業',
+    '電子商務', '數位雲端', '數位經濟'
+]
+
+# 記憶體保留原本產品導覽；其他大產業的細分類完全由官方快取動態產生。
+LINE_INDUSTRY_TREE = {
+    '記憶體': ['NAND', 'DRAM', 'NOR', '記憶體模組', 'SSD', 'HBM', '記憶體控制IC'],
+}
+
 LINE_INDUSTRY_SOURCE_ALIASES = {
     'NAND': ['NAND', 'NAND Flash', '快閃記憶體', '記憶體IC', 'IC模組', '記憶體控制IC'],
     'DRAM': ['DRAM', '記憶體IC'],
@@ -10356,50 +10399,103 @@ LINE_INDUSTRY_SOURCE_ALIASES = {
 }
 
 
-def _line_industry_match_names(subindustry):
-    """V2.14.20：把 LINE 選單名稱轉成可比對的官方次產業名稱集合。"""
-    target = _line_industry_norm(subindustry)
-    aliases = LINE_INDUSTRY_SOURCE_ALIASES.get(str(subindustry).strip(), [subindustry])
-    names = {_line_industry_norm(x) for x in aliases if normalize_subindustry(x)}
-    names.add(target)
-    return names
-
-
 def _line_industry_norm(value):
     s = normalize_subindustry(value)
     s = s.upper().replace('：', ':').replace(' ', '')
     s = s.replace('記憶體控制 IC', '記憶體控制IC')
-    s = s.replace('記憶體控制IC', '記憶體控制IC')
     return s
 
 
-def _line_industry_canonical_query(text):
-    """V2.14.20：辨識大產業或最細次產業查詢。"""
+def _line_industry_canonical_parent(text):
     q = str(text or '').strip()
     q = re.sub(r'^(?:查詢|查|產業|產業查詢)\s*[:：]?\s*', '', q, flags=re.I).strip()
-    q = re.sub(r'^(?:產業[:：])', '', q, flags=re.I).strip()
     if not q:
         return None
-
     nq = _line_industry_norm(q)
-    for parent, options in LINE_INDUSTRY_TREE.items():
-        if nq == _line_industry_norm(parent):
-            return {'type': 'parent', 'name': parent, 'options': options}
-        for option in options:
-            if nq == _line_industry_norm(option):
-                return {'type': 'subindustry', 'name': option, 'parent': parent}
+    if nq in {_line_industry_norm('電子類'), _line_industry_norm('電子')}:
+        return '電子類'
+    for code, name in INDUSTRY_CODE_MAP.items():
+        if nq == _line_industry_norm(name):
+            return canonical_industry(name)
+    for alias, parent in LINE_INDUSTRY_ALIASES.items():
+        if nq == _line_industry_norm(alias):
+            return parent
+    if nq == _line_industry_norm('記憶體'):
+        return '記憶體'
+    return None
 
-    # 直接輸入其他目前快取裡存在的次產業，也可以直接查；
-    # 先讀本機/遠端快取的名稱，不建立任何股票代碼清單。
+
+def _line_industry_load_data():
     cache = load_json(SUBINDUSTRY_CACHE_FILE)
     data = cache.get('data', {}) if isinstance(cache, dict) else {}
     if not isinstance(data, dict) or not data:
         remote = load_remote_subindustry_cache()
-        rd = remote.get('data', {}) if isinstance(remote, dict) else {}
-        if isinstance(rd, dict):
-            data = rd
+        data = remote.get('data', {}) if isinstance(remote, dict) else {}
+    return data if isinstance(data, dict) else {}
+
+
+def _line_industry_parent_options():
+    names = []
+    for name in INDUSTRY_CODE_MAP.values():
+        name = canonical_industry(name)
+        if name not in names:
+            names.append(name)
+    # 產品型導覽保留；不把它當成官方 TWSE 大產業。
+    names.append('記憶體')
+    return names
+
+
+def _line_industry_options_message(parent, options=None, electronic=False):
+    if electronic:
+        options = LINE_ELECTRONIC_INDUSTRIES
+        title = '電子相關大產業'
+        hint = '請選擇下一層大產業。'
+    else:
+        options = options or LINE_INDUSTRY_TREE.get(parent, [])
+        title = parent
+        hint = '請選擇要查詢的細項產業。'
+    lines = [f'🔎 你選擇的是「{title}」', '', hint, '']
+    for i, option in enumerate(options, 1):
+        lines.append(f'{i}️⃣ {option}')
+    lines.extend(['', '👉 請直接輸入編號或名稱。', '⏱️ 此選擇有效 10 分鐘。'])
+    return '\n'.join(lines)[:4900]
+
+
+def _line_industry_set_session(target, parent, options, level='subindustry'):
+    if not target:
+        return
+    with LINE_INDUSTRY_SESSION_LOCK:
+        LINE_INDUSTRY_SESSIONS[str(target)] = {
+            'parent': parent,
+            'options': list(options or []),
+            'level': level,
+            'created_at': time.time(),
+        }
+
+
+def _line_industry_match_names(subindustry):
+    aliases = LINE_INDUSTRY_SOURCE_ALIASES.get(str(subindustry).strip(), [subindustry])
+    return {_line_industry_norm(x) for x in aliases if normalize_subindustry(x)} | {_line_industry_norm(subindustry)}
+
+
+def _line_industry_canonical_query(text):
+    q = str(text or '').strip()
+    q = re.sub(r'^(?:查詢|查|產業|產業查詢)\s*[:：]?\s*', '', q, flags=re.I).strip()
+    if not q:
+        return None
+    nq = _line_industry_norm(q)
+    # 記憶體產品導覽可直接進入。
+    if nq == _line_industry_norm('記憶體'):
+        return {'type': 'parent_product', 'name': '記憶體', 'options': LINE_INDUSTRY_TREE['記憶體']}
+    parent = _line_industry_canonical_parent(q)
+    if parent == '電子類':
+        return {'type': 'parent_group', 'name': '電子類', 'options': LINE_ELECTRONIC_INDUSTRIES}
+    if parent:
+        return {'type': 'parent', 'name': parent}
+    # 直接輸入目前快取中的官方次產業。
+    data = _line_industry_load_data()
     names = set()
-    for info in data.values() if isinstance(data, dict) else []:
+    for info in data.values():
         if not isinstance(info, dict):
             continue
         subs = info.get('subindustries', [])
@@ -10429,16 +10525,6 @@ def _line_industry_session_get(target):
         return dict(item)
 
 
-def _line_industry_session_set(target, parent):
-    if not target:
-        return
-    with LINE_INDUSTRY_SESSION_LOCK:
-        LINE_INDUSTRY_SESSIONS[str(target)] = {
-            'parent': parent,
-            'created_at': time.time(),
-        }
-
-
 def _line_industry_session_clear(target):
     if not target:
         return
@@ -10446,42 +10532,31 @@ def _line_industry_session_clear(target):
         LINE_INDUSTRY_SESSIONS.pop(str(target), None)
 
 
-def _line_industry_options_message(parent):
-    options = LINE_INDUSTRY_TREE.get(parent, [])
-    lines = [
-        f'🔎 你查詢的是「{parent}」',
-        '',
-        '請選擇要查詢的細項產業：',
-        '',
-    ]
-    for i, option in enumerate(options, 1):
-        lines.append(f'{i}️⃣ {option}')
-    lines.extend([
-        '',
-        '👉 請直接輸入編號或細項名稱。',
-        '例如：1、NAND、SSD、HBM',
-        '⏱️ 此選擇有效 10 分鐘。',
-    ])
-    return '\n'.join(lines)
-
-
 def _line_industry_resolve_from_session(text, target):
-    """V2.14.20：把「1」或細項名稱解析成實際次產業。"""
     session = _line_industry_session_get(target)
     if not session:
         return None
-    parent = session.get('parent') or ''
-    options = LINE_INDUSTRY_TREE.get(parent, [])
+    options = session.get('options') or []
     q = str(text or '').strip()
     if q.isdigit():
         i = int(q)
         if 1 <= i <= len(options):
-            return {'type': 'subindustry', 'name': options[i - 1], 'parent': parent}
+            chosen = options[i - 1]
+            if session.get('level') == 'parent':
+                return {'type': 'parent', 'name': chosen}
+            return {'type': 'subindustry', 'name': chosen, 'parent': session.get('parent') or ''}
     nq = _line_industry_norm(q)
     for option in options:
         if nq == _line_industry_norm(option):
-            return {'type': 'subindustry', 'name': option, 'parent': parent}
+            if session.get('level') == 'parent':
+                return {'type': 'parent', 'name': option}
+            return {'type': 'subindustry', 'name': option, 'parent': session.get('parent') or ''}
     return None
+
+
+def _line_industry_market_cap_100m(value):
+    v = to_float(value)
+    return None if v is None else v / 100000.0
 
 
 def _line_industry_market_cap_100m(value):
@@ -10508,17 +10583,90 @@ def _line_extract_analysis_scores(text):
     )
 
 
+def _line_industry_build_subindustry_menu(parent, u):
+    """V2.14.21：依指定大產業動態取得官方次產業名稱。"""
+    data = _line_industry_load_data()
+    options = []
+    parent_c = canonical_industry(parent)
+    # 先用既有快取。
+    for info in data.values():
+        if not isinstance(info, dict):
+            continue
+        industry = canonical_industry(info.get('industry') or info.get('main_industry') or '')
+        if parent_c and industry and industry != parent_c:
+            continue
+        subs = info.get('subindustries', [])
+        if not isinstance(subs, list):
+            subs = [subs]
+        for sub in subs:
+            n = normalize_subindustry(sub)
+            if n and n not in options:
+                options.append(n)
+    # 若快取項目沒有大產業欄位，從市場股票池反查。
+    if not options and isinstance(u, dict):
+        for item in u.values():
+            if not isinstance(item, dict):
+                continue
+            if canonical_industry(item.get('industry')) != parent_c:
+                continue
+            for sub in item.get('subindustries', []) or []:
+                n = normalize_subindustry(sub)
+                if n and n not in options:
+                    options.append(n)
+    return sorted(options, key=lambda x: (_line_industry_norm(x), x))
+
+
+def _line_industry_fetch_parent_data(parent, u):
+    """V2.14.21：背景工作才補抓指定大產業，避免 webhook/LINE Reply 被外部 API 卡住。"""
+    parent_c = canonical_industry(parent)
+    if not isinstance(u, dict) or not u or not parent_c:
+        return u, {}
+    data = _line_industry_load_data()
+    codes = []
+    for code, item in u.items():
+        if not isinstance(item, dict):
+            continue
+        if canonical_industry(item.get('industry')) != parent_c:
+            continue
+        c = clean_code(code)
+        if c.isdigit():
+            codes.append(c)
+    # 依市值先處理較大的公司；取 120 檔，避免一次掃全市場。
+    ranked = []
+    for c in codes:
+        item = u.get(c, {})
+        cap = to_float(item.get('market_cap')) if isinstance(item, dict) else None
+        ranked.append((cap or 0, c))
+    ranked.sort(reverse=True)
+    codes = [c for _, c in ranked[:120]]
+    missing = []
+    for c in codes:
+        info = data.get(c, {}) if isinstance(data, dict) else {}
+        subs = info.get('subindustries', []) if isinstance(info, dict) else []
+        if not any(normalize_subindustry(x) for x in (subs if isinstance(subs, list) else [subs])):
+            missing.append(c)
+    if missing:
+        print(f'V2.14.21 LINE產業：{parent_c} 快取缺少 {len(missing)} 檔，背景補抓', flush=True)
+        try:
+            fetched = _fetch_missing_value_chains(missing)
+            if isinstance(fetched, dict):
+                data.update(fetched)
+        except Exception as e:
+            print(f'V2.14.21 LINE產業背景補抓失敗：{type(e).__name__}: {e}', flush=True)
+    if data:
+        attach_subindustries(u, data)
+    return u, data
+
+
 def _line_industry_top3_analysis(subindustry, u):
-    """V2.14.20：依目前市值取次產業 Top 3，再套用既有雙層分析。"""
+    """V2.14.21：依目前市值取次產業 Top 3，再套用既有雙層分析。"""
     if not isinstance(u, dict) or not u:
         return f'❌ 目前無法取得市場股票資料，無法查詢「{subindustry}」。'
-
     target_subs = _line_industry_match_names(subindustry)
     candidates = []
     for code, item in u.items():
         if not isinstance(item, dict):
             continue
-        # 排除 ETF / 指數等非一般股票代號。
         c = clean_code(code)
         if not re.fullmatch(r'\d{4,6}[A-Z]?', c):
             continue
@@ -10526,129 +10674,129 @@ def _line_industry_top3_analysis(subindustry, u):
         if not isinstance(subs, list):
             subs = [subs]
         normalized = {_line_industry_norm(x) for x in subs if normalize_subindustry(x)}
-        # 使用者輸入的是概念型細項（例如 SSD），官方快取可能記成
-        # 「IC模組／記憶體控制IC／磁碟儲存控制器IC」，所以採語意對應。
         if not (normalized & target_subs):
             continue
         cap = to_float(item.get('market_cap'))
-        if cap is None or cap <= 0:
-            continue
-        candidates.append((cap, c, item))
-
+        if cap is not None and cap > 0:
+            candidates.append((cap, c, item))
     candidates.sort(key=lambda x: (-x[0], x[1]))
     top = candidates[:3]
     if not top:
-        return (
-            f'❌ 找不到「{subindustry}」的股票資料。\n\n'
-            '目前次產業快取可能尚未涵蓋這個分類，請稍後再試。'
-        )
-
+        return f'❌ 找不到「{subindustry}」的股票資料。\n\n可能是官方次產業快取尚未涵蓋，或該細產業目前沒有符合條件的上市櫃股票。'
     rows = []
     for rank, (cap, code, item) in enumerate(top, 1):
         name = str(item.get('name') or code).strip()
         symbol = item.get('symbol') or symbol_for(code, item.get('market'))
         price = to_float(item.get('price'))
-        first_score = None
-        buy_score = None
+        first_score = buy_score = None
         buy_verdict = 'N/A'
         try:
-            # 使用現有 analysis()，因此第一層/第二層完全沿用 V2.14.20，
-            # 這個功能只負責挑出 Top 3 與整理輸出。
-            detail = analysis(
-                f'{code} {name}',
-                u,
-                backfill=False,
-                line_light=True,
-                force_technical_refresh=True,
-            )
+            detail = analysis(f'{code} {name}', u, backfill=False, line_light=True, force_technical_refresh=True)
             first_score, buy_score, buy_verdict = _line_extract_analysis_scores(detail)
             pm = re.search(r'目前價格：\s*([0-9,]+(?:\.\d+)?)', detail)
             if pm:
                 price = to_float(pm.group(1))
         except Exception as e:
-            print(f'V2.14.20 產業 Top3 分析失敗 {code}: {type(e).__name__}: {e}', flush=True)
-
-        rows.append({
-            'rank': rank,
-            'code': code,
-            'name': name,
-            'price': price,
-            'market_cap': _line_industry_market_cap_100m(cap),
-            'first_score': first_score,
-            'buy_score': buy_score,
-            'buy_verdict': buy_verdict,
-        })
-
-    lines = [
-        f'🏆 {subindustry} 產業 Top 3',
-        '',
-        '📊 排名依目前市值由大到小',
-        '',
-    ]
+            print(f'V2.14.21 產業 Top3 分析失敗 {code}: {type(e).__name__}: {e}', flush=True)
+        rows.append({'rank': rank, 'code': code, 'name': name, 'price': price,
+                     'market_cap': _line_industry_market_cap_100m(cap),
+                     'first_score': first_score, 'buy_score': buy_score, 'buy_verdict': buy_verdict})
+    lines = [f'🏆 {subindustry} 產業 Top 3', '', '📊 排名依目前市值由大到小', '']
     medals = ['🥇', '🥈', '🥉']
     for row, medal in zip(rows, medals):
-        lines.extend([
-            '━━━━━━━━━━━━━━',
-            f'{medal} {row["rank"]}. {row["code"]} {row["name"]}',
-            f'目前價格：{fmt(row["price"])}',
-            f'市值：{fmt(row["market_cap"])} 億元' if row['market_cap'] is not None else '市值：N/A',
-            f'第一層投資價值：{row["first_score"]}/100' if row['first_score'] is not None else '第一層投資價值：N/A',
-            f'第二層買點分數：{row["buy_score"]}/100' if row['buy_score'] is not None else '第二層買點分數：N/A',
-            f'買點判定：{row["buy_verdict"]}',
-        ])
-    lines.extend([
-        '━━━━━━━━━━━━━━',
-        '',
-        f'📌 次產業：{subindustry}',
-        '📌 股票排名：目前市值',
-        '📌 投資價值／買點分數：沿用既有 V2.14.20 模型',
-    ])
+        lines.extend(['━━━━━━━━━━━━━━', f'{medal} {row["rank"]}. {row["code"]} {row["name"]}',
+                      f'目前價格：{fmt(row["price"])}',
+                      f'市值：{fmt(row["market_cap"])} 億元' if row['market_cap'] is not None else '市值：N/A',
+                      f'第一層投資價值：{row["first_score"]}/100' if row['first_score'] is not None else '第一層投資價值：N/A',
+                      f'第二層買點分數：{row["buy_score"]}/100' if row['buy_score'] is not None else '第二層買點分數：N/A',
+                      f'買點判定：{row["buy_verdict"]}'])
+    lines.extend(['━━━━━━━━━━━━━━', '', f'📌 次產業：{subindustry}', '📌 股票排名：目前市值', '📌 投資價值／買點分數：沿用既有 V2.14.21 模型'])
     return '\n'.join(lines)[:5000]
 
 
 def _line_industry_query_result(text, target, u):
-    """V2.14.20：背景工作用互動式產業查詢解析；實際分析只在背景執行。"""
+    """V2.14.21：背景解析產業三段式互動。"""
     q = _line_industry_canonical_query(text)
-    if q and q.get('type') == 'parent':
-        _line_industry_session_set(target, q['name'])
-        return 'options', _line_industry_options_message(q['name'])
-
+    if q and q.get('type') == 'parent_product':
+        _line_industry_set_session(target, q['name'], q['options'], 'subindustry')
+        return 'options', _line_industry_options_message(q['name'], q['options'])
+    if q and q.get('type') == 'parent_group':
+        _line_industry_set_session(target, q['name'], q['options'], 'parent')
+        return 'options', _line_industry_options_message(q['name'], q['options'], electronic=True)
     q2 = _line_industry_resolve_from_session(text, target)
     if q2:
         _line_industry_session_clear(target)
         q = q2
-
-    if q and q.get('type') == 'subindustry':
-        # 產業查詢需要完整次產業標記；優先使用現有市場快取與遠端次產業快取。
+    if q and q.get('type') == 'parent':
         query_u = u if isinstance(u, dict) and u else build_line_query_universe(text)
-        cache = load_json(SUBINDUSTRY_CACHE_FILE)
-        data = cache.get('data', {}) if isinstance(cache, dict) else {}
-        if not isinstance(data, dict) or not data:
-            remote = load_remote_subindustry_cache()
-            rd = remote.get('data', {}) if isinstance(remote, dict) else {}
-            if isinstance(rd, dict):
-                data = rd
-        if isinstance(data, dict) and data:
+        query_u, data = _line_industry_fetch_parent_data(q['name'], query_u)
+        options = _line_industry_build_subindustry_menu(q['name'], query_u)
+        if options:
+            _line_industry_set_session(target, q['name'], options, 'subindustry')
+            return 'options', _line_industry_options_message(q['name'], options)
+        return 'result', f'❌ 「{q["name"]}」目前沒有可用的官方細產業資料。'
+    if q and q.get('type') == 'subindustry':
+        query_u = u if isinstance(u, dict) and u else build_line_query_universe(text)
+        query_u, _ = _line_industry_fetch_parent_data(q.get('parent') or '', query_u) if q.get('parent') else (query_u, {})
+        data = _line_industry_load_data()
+        if data:
             query_u = attach_subindustries(query_u, data)
         return 'result', _line_industry_top3_analysis(q['name'], query_u)
     return None, None
 
 
 def _line_industry_webhook_kind(text, target):
-    """V2.14.20：Webhook 只辨識產業查詢，不做任何股票分析。"""
-    q = _line_industry_canonical_query(text)
-    if q and q.get('type') == 'parent':
-        _line_industry_session_set(target, q['name'])
-        return 'options', _line_industry_options_message(q['name'])
-    if q and q.get('type') == 'subindustry':
-        return 'result', q['name']
-    q2 = _line_industry_resolve_from_session(text, target)
-    if q2:
-        return 'result', q2['name']
-    # 已經在選擇細產業流程中，但輸入無效時，不要落入股票查詢。
+    """V2.14.21：Webhook 只回覆選單，不執行產業分析。"""
     session = _line_industry_session_get(target)
     if session:
-        return 'invalid', _line_industry_options_message(session.get('parent') or '記憶體')
+        q2 = _line_industry_resolve_from_session(text, target)
+        if q2:
+            if q2.get('type') == 'parent':
+                parent = q2['name']
+                # V2.14.21：大產業選擇後立即回覆第二層細產業。
+                # 僅讀 GitHub/Actions 已產生的 menu cache，不等待慢速 API。
+                u = build_line_query_universe(parent)
+                options = _line_industry_build_subindustry_menu(parent, u)
+                if options:
+                    _line_industry_set_session(target, parent, options, 'subindustry')
+                    return 'options', _line_industry_options_message(parent, options)
+                _line_industry_set_session(target, parent, [], 'subindustry')
+                return 'options', (
+                    f'🔎 你選擇的是「{parent}」\n\n'
+                    '⚠️ 目前次產業快取尚未建立完整。\n'
+                    '請稍後再試，或先直接輸入該產業股票代號讓系統建立資料。'
+                )
+            return 'result', q2['name']
+        return 'invalid', _line_industry_options_message(session.get('parent') or '產業', session.get('options') or [], electronic=session.get('parent') == '電子類' and session.get('level') == 'parent')
+    q = _line_industry_canonical_query(text)
+    if q and q.get('type') == 'parent_product':
+        _line_industry_set_session(target, q['name'], q['options'], 'subindustry')
+        return 'options', _line_industry_options_message(q['name'], q['options'])
+    if q and q.get('type') == 'parent_group':
+        _line_industry_set_session(target, q['name'], q['options'], 'parent')
+        return 'options', _line_industry_options_message(q['name'], q['options'], electronic=True)
+    if q and q.get('type') == 'parent':
+        # V2.14.21：直接輸入大產業也立即進入第二層細產業選單。
+        # 只使用 Actions 已發布的 menu cache，不在 webhook 內做慢速 API。
+        parent = q['name']
+        u = build_line_query_universe(parent)
+        options = _line_industry_build_subindustry_menu(parent, u)
+        if options:
+            _line_industry_set_session(target, parent, options, 'subindustry')
+            return 'options', _line_industry_options_message(parent, options)
+        _line_industry_set_session(target, parent, [], 'subindustry')
+        return 'options', (
+            f'🔎 你選擇的是「{parent}」\n\n'
+            '⚠️ 目前次產業快取尚未建立完整。\n'
+            '請稍後再試，或先直接輸入該產業的股票代號讓系統建立資料。'
+        )
+    if q and q.get('type') == 'subindustry':
+        return 'result', q['name']
+    # 單獨輸入「產業」：列出全部官方大產業。
+    if _line_industry_norm(text) in {_line_industry_norm('產業'), _line_industry_norm('產業查詢')}:
+        options = _line_industry_parent_options()
+        _line_industry_set_session(target, '產業', options, 'parent')
+        return 'options', _line_industry_options_message('產業', options)
     return None, None
 
 
@@ -10880,13 +11028,13 @@ def handle_event(e, u):
     if text.lower() in {'help', '說明', '功能', '股票'}:
         ok = reply_line(
             token,
-            '📈 股票投資價值 × 買點雙層分析 Bot V2.14.20\n\n'
+            '📈 股票投資價值 × 買點雙層分析 Bot V2.14.21\n\n'
             '輸入股票代號、股票名稱或 ETF 代號即可查詢。\n'
             '例如：2330、台積電、3711、日月光投控、0050、00878、QQQ、AAPL、NVDA、MSFT\n\n'
             '股票：基本面40 + 技術30 + 籌碼20 + 風險10。\n'
             'ETF：ETF特性40 + 技術60。\n'
             '查詢結果會立即回覆 Render 分析頁網址，完整分析不使用 LINE Push。\n\n'
-            '🏭 產業查詢：輸入「記憶體」會先選細項；也可直接輸入「SSD／NAND／DRAM／HBM」查詢。'
+            '🏭 產業查詢：輸入「產業」先選大產業，再選細產業；也可直接輸入「記憶體」或 SSD／NAND／DRAM／HBM。'
         )
         if not ok:
             print('❌ LINE Help Reply失敗')
@@ -10899,7 +11047,7 @@ def handle_event(e, u):
         )
         return
 
-    # V2.14.20：Webhook 階段只辨識產業查詢，不執行 Top 3/股票分析，
+    # V2.14.21：Webhook 階段只辨識產業查詢，不執行 Top 3/股票分析，
     # 確保 LINE Reply 一定先送出；完整產業分析全部交給背景工作。
     industry_kind, industry_msg = _line_industry_webhook_kind(text, target)
     if industry_kind == 'options':
@@ -11730,7 +11878,7 @@ def _scan_high_score_stocks(u, state):
                 total_for_rank = total
 
             if total_for_rank >= threshold:
-                # V2.14.20：高分股通知也必須同時回答「值不值得投資」與「現在能不能買」。
+                # V2.14.21：高分股通知也必須同時回答「值不值得投資」與「現在能不能買」。
                 buy = assess_buy_point(c['tech'])
                 results.append({
                     'code': c['code'],
@@ -11796,7 +11944,7 @@ def _scan_high_score_stocks(u, state):
         by_code = {x['code']: x for x in results}
         new_rows_raw = [by_code[x] for x in new_codes if x in by_code]
 
-        # V2.14.20：0050／2330／QQQ 若同時達到「買點 >=90 + 投資價值 >=90」，
+        # V2.14.21：0050／2330／QQQ 若同時達到「買點 >=90 + 投資價值 >=90」，
         # 由極佳買點通知專用流程處理；一般95分通知不再重複發送。
         target_names = {'0050 元大台灣50', '2330 台積電', 'QQQ'}
         new_rows = [
@@ -11814,13 +11962,13 @@ def _scan_high_score_stocks(u, state):
         if not new_rows:
             if suppressed_extreme:
                 print(
-                    f'V2.14.20 一般95分通知略過 {suppressed_extreme} 檔極佳買點標的，改由極佳買點通知處理',
+                    f'V2.14.21 一般95分通知略過 {suppressed_extreme} 檔極佳買點標的，改由極佳買點通知處理',
                     flush=True
                 )
             return results
 
         msg = (
-            '🚨 全市場高評分股票通知 V2.14.20\n\n'
+            '🚨 全市場高評分股票通知 V2.14.21\n\n'
             f'執行時間：{datetime.now(TW_TZ).strftime("%Y-%m-%d %H:%M:%S")}\n'
             '條件：綜合評分 ≥ 95 分\n\n'
             '【本次新進榜】\n' +
@@ -11858,7 +12006,7 @@ def _scan_high_score_stocks(u, state):
 
 
 def _notify_target_buy_point(name, symbol, state, u=None):
-    """V2.14.20：0050／2330／QQQ 極佳買點通知。
+    """V2.14.21：0050／2330／QQQ 極佳買點通知。
 
     LINE 通知必須同時滿足：
     1. 第二層買點分數 >=90
@@ -11878,7 +12026,7 @@ def _notify_target_buy_point(name, symbol, state, u=None):
     try:
         tech = technical(symbol, force_refresh=True)
         if not isinstance(tech, dict):
-            print(f'⚠️ V2.14.20 {name} 極佳買點通知：技術資料不足', flush=True)
+            print(f'⚠️ V2.14.21 {name} 極佳買點通知：技術資料不足', flush=True)
             return None
 
         buy = assess_buy_point(tech)
@@ -11887,7 +12035,7 @@ def _notify_target_buy_point(name, symbol, state, u=None):
 
         score = int(to_float(buy.get('score')) or 0)
 
-        # V2.14.20：取得既有第一層「投資價值」分數。
+        # V2.14.21：取得既有第一層「投資價值」分數。
         # analysis()/etf_analysis() 的輸出仍是完整文字結果，因此只解析「綜合評分」；
         # 不另外建立第二套評分模型，避免與既有雙層模型產生分數口徑不一致。
         investment_score = None
@@ -11901,7 +12049,7 @@ def _notify_target_buy_point(name, symbol, state, u=None):
                 if m:
                     investment_score = int(float(m.group(1)))
         except Exception as e:
-            print(f'⚠️ V2.14.20 {name} 投資價值分數取得失敗：{type(e).__name__}: {e}', flush=True)
+            print(f'⚠️ V2.14.21 {name} 投資價值分數取得失敗：{type(e).__name__}: {e}', flush=True)
 
         today = datetime.now(TW_TZ).strftime('%Y-%m-%d')
         bp = state.setdefault('target_buy_point_alert', {})
@@ -11927,7 +12075,7 @@ def _notify_target_buy_point(name, symbol, state, u=None):
         if score <= 60:
             item['locked'] = False
             print(
-                f'V2.14.20 {name} 買點 {score}：跌回60以下/等於60，解除通知鎖',
+                f'V2.14.21 {name} 買點 {score}：跌回60以下/等於60，解除通知鎖',
                 flush=True
             )
             return buy
@@ -11935,7 +12083,7 @@ def _notify_target_buy_point(name, symbol, state, u=None):
         # 已通知且尚未跌回60：完全不重複 LINE。
         if locked:
             print(
-                f'V2.14.20 {name} 買點 {score}、投資價值 '
+                f'V2.14.21 {name} 買點 {score}、投資價值 '
                 f'{investment_score if investment_score is not None else "N/A"}：'
                 f'已通知且尚未跌回60，不重複 LINE',
                 flush=True
@@ -11956,7 +12104,7 @@ def _notify_target_buy_point(name, symbol, state, u=None):
             z2 = f'{fmt(zone2[0])}～{fmt(zone2[1])}' if zone2 else 'N/A'
 
             msg = (
-                '🔥 極佳買點通知 V2.14.20\n\n'
+                '🔥 極佳買點通知 V2.14.21\n\n'
                 f'標的：{name}\n'
                 f'執行時間：{datetime.now(TW_TZ).strftime("%Y-%m-%d %H:%M:%S")}\n'
                 f'目前價格：{fmt(price)}\n'
@@ -11974,7 +12122,7 @@ def _notify_target_buy_point(name, symbol, state, u=None):
             sent = send_line(msg[:5000])
             if not sent:
                 print(
-                    f'⚠️ V2.14.20 {name} 極佳買點 LINE 發送失敗，本次不鎖定，避免漏掉後續通知',
+                    f'⚠️ V2.14.21 {name} 極佳買點 LINE 發送失敗，本次不鎖定，避免漏掉後續通知',
                     flush=True
                 )
                 return buy
@@ -11983,13 +12131,13 @@ def _notify_target_buy_point(name, symbol, state, u=None):
             item['notified_score'] = score
             item['notified_investment_score'] = investment_score
             print(
-                f'🔥 V2.14.20 {name} 買點 {score} >=90 且投資價值 {investment_score} >=90，'
+                f'🔥 V2.14.21 {name} 買點 {score} >=90 且投資價值 {investment_score} >=90，'
                 f'已發送極佳買點 LINE；後續須跌回買點 <=60 才解鎖',
                 flush=True
             )
         else:
             print(
-                f'V2.14.20 {name} 買點 {score}、投資價值 '
+                f'V2.14.21 {name} 買點 {score}、投資價值 '
                 f'{investment_score if investment_score is not None else "N/A"}：'
                 f'未同時達到買點>=90＋投資價值>=95，不通知',
                 flush=True
@@ -11998,7 +12146,7 @@ def _notify_target_buy_point(name, symbol, state, u=None):
         return buy
     except Exception as e:
         print(
-            f'⚠️ V2.14.20 {name} 極佳買點通知失敗：{type(e).__name__}: {e}',
+            f'⚠️ V2.14.21 {name} 極佳買點通知失敗：{type(e).__name__}: {e}',
             flush=True
         )
         return None
@@ -12291,7 +12439,7 @@ def run_alerts():
                     f'跳過詳細估值'
                 )
 
-            # V2.14.20：指定目標股/ETF 僅在「買點 >=90 + 投資價值 >=90」時主動 LINE；
+            # V2.14.21：指定目標股/ETF 僅在「買點 >=90 + 投資價值 >=90」時主動 LINE；
             # 與既有全市場「投資價值 >=95」通知仍維持各自流程。
             if name in ('0050 元大台灣50', '2330 台積電', 'QQQ'):
                 _notify_target_buy_point(name, symbol, state, u)
