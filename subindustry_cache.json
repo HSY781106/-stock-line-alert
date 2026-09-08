@@ -1,5 +1,5 @@
 {
-  "_cached_at": 1788843497.0072331,
+  "_cached_at": 1788844744.900788,
   "source": "TPEx/TWSE Industry Value Chain",
   "source_url": "https://ic.tpex.org.tw/company_chain.php",
   "cache_days": 30,
@@ -12845,6 +12845,1543 @@
         {
           "industry": "智慧電網",
           "sub_industry": "系統整合服務",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2399": {
+      "subindustries": [
+        "主機板",
+        "元件裝置"
+      ],
+      "records": [
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "主機板",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "區塊鏈",
+          "sub_industry": "元件裝置",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2397": {
+      "subindustries": [
+        "工業電腦",
+        "其他電腦及週邊設備",
+        "網路設備(如數據機、網路卡、閘道器、路由器、網路電話)",
+        "手工具機",
+        "機電系統工程",
+        "網路基礎設施"
+      ],
+      "records": [
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "工業電腦",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "其他電腦及週邊設備",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "通信網路",
+          "sub_industry": "網路設備(如數據機、網路卡、閘道器、路由器、網路電話)",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電機機械",
+          "sub_industry": "手工具機",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電機機械",
+          "sub_industry": "機電系統工程",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "資通訊安全",
+          "sub_industry": "網路基礎設施",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2402": {
+      "subindustries": [
+        "硬板、軟板、IC載板製造"
+      ],
+      "records": [
+        {
+          "industry": "印刷電路板",
+          "sub_industry": "硬板、軟板、IC載板製造",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2404": {
+      "subindustries": [
+        "其他電子產品及電子服務產業"
+      ],
+      "records": [
+        {
+          "industry": "其他",
+          "sub_industry": "其他電子產品及電子服務產業",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2405": {
+      "subindustries": [
+        "桌上型電腦",
+        "工業電腦",
+        "其他電腦及週邊設備"
+      ],
+      "records": [
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "桌上型電腦",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "工業電腦",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "其他電腦及週邊設備",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2406": {
+      "subindustries": [
+        "太陽能發電設備/系統及系統工程",
+        "太陽能電廠"
+      ],
+      "records": [
+        {
+          "industry": "太陽能產業",
+          "sub_industry": "太陽能發電設備/系統及系統工程",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "太陽能產業",
+          "sub_industry": "太陽能電廠",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2409": {
+      "subindustries": [
+        "面板",
+        "矽晶圓/矽晶片"
+      ],
+      "records": [
+        {
+          "industry": "平面顯示器",
+          "sub_industry": "面板",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "太陽能產業",
+          "sub_industry": "矽晶圓/矽晶片",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2412": {
+      "subindustries": [
+        "電信服務業",
+        "能源管理服務",
+        "系統整合服務"
+      ],
+      "records": [
+        {
+          "industry": "通信網路",
+          "sub_industry": "電信服務業",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "智慧電網",
+          "sub_industry": "能源管理服務",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "智慧電網",
+          "sub_industry": "系統整合服務",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2413": {
+      "subindustries": [
+        "電源供應器",
+        "光通訊設備(如光纖電纜、光傳輸設備)",
+        "電容器"
+      ],
+      "records": [
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "電源供應器",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "通信網路",
+          "sub_industry": "光通訊設備(如光纖電纜、光傳輸設備)",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "被動元件",
+          "sub_industry": "電容器",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2415": {
+      "subindustries": [
+        "金屬製品",
+        "其他電子產品及電子服務產業"
+      ],
+      "records": [
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "金屬製品",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "其他",
+          "sub_industry": "其他電子產品及電子服務產業",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2414": {
+      "subindustries": [
+        "其他電子產品及電子服務產業"
+      ],
+      "records": [
+        {
+          "industry": "其他",
+          "sub_industry": "其他電子產品及電子服務產業",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2417": {
+      "subindustries": [
+        "顯示卡",
+        "其他電腦及週邊設備",
+        "多功能視訊卡",
+        "安全監控系統",
+        "其他電腦及週邊設備之零組件"
+      ],
+      "records": [
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "顯示卡",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "其他電腦及週邊設備",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "多功能視訊卡",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "安全監控系統",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "其他電腦及週邊設備之零組件",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2419": {
+      "subindustries": [
+        "網路設備(如數據機、網路卡、閘道器、路由器、網路電話)"
+      ],
+      "records": [
+        {
+          "industry": "通信網路",
+          "sub_industry": "網路設備(如數據機、網路卡、閘道器、路由器、網路電話)",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2420": {
+      "subindustries": [
+        "電源供應器",
+        "其他電腦及週邊設備",
+        "其他電腦及週邊設備之零組件"
+      ],
+      "records": [
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "電源供應器",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "其他電腦及週邊設備",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "其他電腦及週邊設備之零組件",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2421": {
+      "subindustries": [
+        "散熱片、風扇馬達、散熱模組",
+        "車用機械傳動設備及零配件",
+        "冷卻設備",
+        "散熱元件/模組",
+        "大功率鋰電池芯/模組、電池管理系統、動力馬達等零組件"
+      ],
+      "records": [
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "散熱片、風扇馬達、散熱模組",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電機機械",
+          "sub_industry": "車用機械傳動設備及零配件",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "雲端運算",
+          "sub_industry": "冷卻設備",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "體驗科技",
+          "sub_industry": "散熱元件/模組",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電動車輛產業",
+          "sub_industry": "大功率鋰電池芯/模組、電池管理系統、動力馬達等零組件",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2423": {
+      "subindustries": [
+        "其他電子產品及電子服務產業"
+      ],
+      "records": [
+        {
+          "industry": "其他",
+          "sub_industry": "其他電子產品及電子服務產業",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2424": {
+      "subindustries": [
+        "安全監控系統",
+        "無線通訊設備(如行動電話、衛星定位系統、衛星通訊設備、微波通訊設備、數位機上盒)",
+        "建設業"
+      ],
+      "records": [
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "安全監控系統",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "通信網路",
+          "sub_industry": "無線通訊設備(如行動電話、衛星定位系統、衛星通訊設備、微波通訊設備、數位機上盒)",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "建材營造",
+          "sub_industry": "建設業",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2426": {
+      "subindustries": [
+        "精簡型電腦",
+        "生產製程、檢測設備及原物料",
+        "燈具/應用"
+      ],
+      "records": [
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "精簡型電腦",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "LED照明產業",
+          "sub_industry": "生產製程、檢測設備及原物料",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "LED照明產業",
+          "sub_industry": "燈具/應用",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2425": {
+      "subindustries": [
+        "主機板",
+        "顯示卡",
+        "伺服器",
+        "其他電腦及週邊設備"
+      ],
+      "records": [
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "主機板",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "顯示卡",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "伺服器",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "其他電腦及週邊設備",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2427": {
+      "subindustries": [
+        "金融提款機(ATM)",
+        "自動售票機",
+        "應用/系統軟體設計開發",
+        "系統整合服務",
+        "資料處理服務",
+        "通路經銷"
+      ],
+      "records": [
+        {
+          "industry": "觸控面板",
+          "sub_industry": "金融提款機(ATM)",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "觸控面板",
+          "sub_industry": "自動售票機",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "軟體服務",
+          "sub_industry": "應用/系統軟體設計開發",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "軟體服務",
+          "sub_industry": "系統整合服務",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "軟體服務",
+          "sub_industry": "資料處理服務",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "軟體服務",
+          "sub_industry": "通路經銷",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2428": {
+      "subindustries": [
+        "電阻器"
+      ],
+      "records": [
+        {
+          "industry": "被動元件",
+          "sub_industry": "電阻器",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2429": {
+      "subindustries": [
+        "其他零組件",
+        "觸控面板"
+      ],
+      "records": [
+        {
+          "industry": "平面顯示器",
+          "sub_industry": "其他零組件",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "觸控面板",
+          "sub_industry": "觸控面板",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2430": {
+      "subindustries": [
+        "筆記型電腦",
+        "桌上型電腦",
+        "精簡型電腦",
+        "伺服器",
+        "其他電腦及週邊設備",
+        "印表機、傳真機、掃瞄器、多功能事務機、投影機",
+        "零售通路"
+      ],
+      "records": [
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "筆記型電腦",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "桌上型電腦",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "精簡型電腦",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "伺服器",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "其他電腦及週邊設備",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "印表機、傳真機、掃瞄器、多功能事務機、投影機",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "貿易百貨",
+          "sub_industry": "零售通路",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2431": {
+      "subindustries": [
+        "電源供應器"
+      ],
+      "records": [
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "電源供應器",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2432": {
+      "subindustries": [
+        "產業鏈簡介"
+      ],
+      "records": [
+        {
+          "industry": "產業價值鏈資訊平台",
+          "sub_industry": "產業鏈簡介",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2433": {
+      "subindustries": [
+        "其他電子產品及電子服務產業"
+      ],
+      "records": [
+        {
+          "industry": "其他",
+          "sub_industry": "其他電子產品及電子服務產業",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2438": {
+      "subindustries": [
+        "光罩",
+        "燈具/應用"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "光罩",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "LED照明產業",
+          "sub_industry": "燈具/應用",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2439": {
+      "subindustries": [
+        "其他電腦及週邊設備之零組件",
+        "無線通訊設備(如行動電話、衛星定位系統、衛星通訊設備、微波通訊設備、數位機上盒)",
+        "電池模組"
+      ],
+      "records": [
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "其他電腦及週邊設備之零組件",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "通信網路",
+          "sub_industry": "無線通訊設備(如行動電話、衛星定位系統、衛星通訊設備、微波通訊設備、數位機上盒)",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "能源元件",
+          "sub_industry": "電池模組",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2440": {
+      "subindustries": [
+        "連接線"
+      ],
+      "records": [
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "連接線",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2442": {
+      "subindustries": [
+        "建設業"
+      ],
+      "records": [
+        {
+          "industry": "建材營造",
+          "sub_industry": "建設業",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2444": {
+      "subindustries": [
+        "其他電腦及週邊設備之零組件"
+      ],
+      "records": [
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "其他電腦及週邊設備之零組件",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2453": {
+      "subindustries": [
+        "應用/系統軟體設計開發",
+        "系統整合服務",
+        "資料處理服務",
+        "通路經銷",
+        "通訊",
+        "影像遙測",
+        "導航定位",
+        "交易平台",
+        "商業應用",
+        "錢包/資產管理",
+        "BaaS",
+        "系統整合",
+        "領域方案",
+        "底層平台",
+        "開發工具",
+        "監控管理",
+        "創投",
+        "顧問諮詢",
+        "媒體推廣",
+        "資安審計",
+        "保險",
+        "支付",
+        "數位銀行",
+        "監理法遵",
+        "理財投資",
+        "加密資產",
+        "數據分析",
+        "資料聚合",
+        "數位身分",
+        "領域解決方案",
+        "設備安裝服務",
+        "資安顧問服務",
+        "資料庫",
+        "分析工具",
+        "應用軟體",
+        "儲存處理"
+      ],
+      "records": [
+        {
+          "industry": "軟體服務",
+          "sub_industry": "應用/系統軟體設計開發",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "軟體服務",
+          "sub_industry": "系統整合服務",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "軟體服務",
+          "sub_industry": "資料處理服務",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "軟體服務",
+          "sub_industry": "通路經銷",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "太空衛星科技",
+          "sub_industry": "通訊",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "太空衛星科技",
+          "sub_industry": "影像遙測",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "太空衛星科技",
+          "sub_industry": "導航定位",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "區塊鏈",
+          "sub_industry": "交易平台",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "區塊鏈",
+          "sub_industry": "商業應用",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "區塊鏈",
+          "sub_industry": "錢包/資產管理",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "區塊鏈",
+          "sub_industry": "BaaS",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "區塊鏈",
+          "sub_industry": "系統整合",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "區塊鏈",
+          "sub_industry": "領域方案",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "區塊鏈",
+          "sub_industry": "底層平台",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "區塊鏈",
+          "sub_industry": "開發工具",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "區塊鏈",
+          "sub_industry": "監控管理",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "區塊鏈",
+          "sub_industry": "創投",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "區塊鏈",
+          "sub_industry": "顧問諮詢",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "區塊鏈",
+          "sub_industry": "媒體推廣",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "區塊鏈",
+          "sub_industry": "資安審計",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "金融科技",
+          "sub_industry": "保險",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "金融科技",
+          "sub_industry": "支付",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "金融科技",
+          "sub_industry": "數位銀行",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "金融科技",
+          "sub_industry": "監理法遵",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "金融科技",
+          "sub_industry": "理財投資",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "金融科技",
+          "sub_industry": "加密資產",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "金融科技",
+          "sub_industry": "數據分析",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "金融科技",
+          "sub_industry": "資料聚合",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "金融科技",
+          "sub_industry": "數位身分",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "人工智慧",
+          "sub_industry": "系統整合",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "人工智慧",
+          "sub_industry": "領域解決方案",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "雲端運算",
+          "sub_industry": "系統整合",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "雲端運算",
+          "sub_industry": "設備安裝服務",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "資通訊安全",
+          "sub_industry": "資安顧問服務",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "大數據",
+          "sub_industry": "系統整合",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "大數據",
+          "sub_industry": "顧問諮詢",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "大數據",
+          "sub_industry": "領域解決方案",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "大數據",
+          "sub_industry": "資料庫",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "大數據",
+          "sub_industry": "分析工具",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "大數據",
+          "sub_industry": "應用軟體",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "大數據",
+          "sub_industry": "儲存處理",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2455": {
+      "subindustries": [
+        "晶圓製造"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "晶圓製造",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2450": {
+      "subindustries": [
+        "無線通訊設備(如行動電話、衛星定位系統、衛星通訊設備、微波通訊設備、數位機上盒)"
+      ],
+      "records": [
+        {
+          "industry": "通信網路",
+          "sub_industry": "無線通訊設備(如行動電話、衛星定位系統、衛星通訊設備、微波通訊設備、數位機上盒)",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2457": {
+      "subindustries": [
+        "電源供應器",
+        "大功率鋰電池芯/模組、電池管理系統、動力馬達等零組件"
+      ],
+      "records": [
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "電源供應器",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電動車輛產業",
+          "sub_industry": "大功率鋰電池芯/模組、電池管理系統、動力馬達等零組件",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2460": {
+      "subindustries": [
+        "連接器設計、組裝及製造"
+      ],
+      "records": [
+        {
+          "industry": "連接器",
+          "sub_industry": "連接器設計、組裝及製造",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2459": {
+      "subindustries": [
+        "基板",
+        "IC通路",
+        "面板",
+        "散熱片、風扇馬達、散熱模組",
+        "光學鏡片、鏡頭",
+        "連接線",
+        "金屬、塑膠模具",
+        "其他電腦及週邊設備之零組件",
+        "驅動IC",
+        "其他零組件",
+        "控制IC",
+        "觸控面板",
+        "網路IC",
+        "主/被動元件",
+        "塑膠/金屬機殼",
+        "線材",
+        "電感器材料(如鐵氧體、導電漿墨)",
+        "濾波器、振盪器",
+        "連接器設計、組裝及製造",
+        "電控元件",
+        "機械設備之沖壓零組件",
+        "輸送機械及零配件",
+        "冷凍空調設備及零件",
+        "其他電子產品及電子服務產業",
+        "特殊照明業",
+        "農業科技業",
+        "車燈",
+        "其他",
+        "電力設備",
+        "裝置/器材顯示器",
+        "裝置/器材零組件",
+        "感測裝置",
+        "光學元件/模組",
+        "微型顯示器/光機引擎(LightEngine)",
+        "生產製程、檢測設備及原物料",
+        "大功率鋰電池芯/模組、電池管理系統、動力馬達等零組件",
+        "電池模組",
+        "高/低壓輸電設施",
+        "配電管理設施",
+        "塑化材料"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "基板",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "IC通路",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "面板",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "散熱片、風扇馬達、散熱模組",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "光學鏡片、鏡頭",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "連接線",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "金屬、塑膠模具",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "其他電腦及週邊設備之零組件",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "平面顯示器",
+          "sub_industry": "驅動IC",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "平面顯示器",
+          "sub_industry": "其他零組件",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "平面顯示器",
+          "sub_industry": "面板",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "觸控面板",
+          "sub_industry": "控制IC",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "觸控面板",
+          "sub_industry": "觸控面板",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "通信網路",
+          "sub_industry": "網路IC",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "通信網路",
+          "sub_industry": "主/被動元件",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "通信網路",
+          "sub_industry": "塑膠/金屬機殼",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "通信網路",
+          "sub_industry": "線材",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "通信網路",
+          "sub_industry": "其他零組件",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "被動元件",
+          "sub_industry": "電感器材料(如鐵氧體、導電漿墨)",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "被動元件",
+          "sub_industry": "濾波器、振盪器",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "連接器",
+          "sub_industry": "連接器設計、組裝及製造",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電機機械",
+          "sub_industry": "電控元件",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電機機械",
+          "sub_industry": "機械設備之沖壓零組件",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電機機械",
+          "sub_industry": "輸送機械及零配件",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電機機械",
+          "sub_industry": "冷凍空調設備及零件",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "其他",
+          "sub_industry": "其他電子產品及電子服務產業",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "其他",
+          "sub_industry": "特殊照明業",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "其他",
+          "sub_industry": "農業科技業",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "汽車",
+          "sub_industry": "車燈",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "汽車",
+          "sub_industry": "其他",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "雲端運算",
+          "sub_industry": "電力設備",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "運動科技",
+          "sub_industry": "裝置/器材顯示器",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "運動科技",
+          "sub_industry": "裝置/器材零組件",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "運動科技",
+          "sub_industry": "感測裝置",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "體驗科技",
+          "sub_industry": "光學元件/模組",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "體驗科技",
+          "sub_industry": "微型顯示器/光機引擎(LightEngine)",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "LED照明產業",
+          "sub_industry": "生產製程、檢測設備及原物料",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電動車輛產業",
+          "sub_industry": "大功率鋰電池芯/模組、電池管理系統、動力馬達等零組件",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "能源元件",
+          "sub_industry": "電池模組",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "智慧電網",
+          "sub_industry": "高/低壓輸電設施",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "智慧電網",
+          "sub_industry": "配電管理設施",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "醫療器材",
+          "sub_industry": "塑化材料",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2461": {
+      "subindustries": [
+        "其他"
+      ],
+      "records": [
+        {
+          "industry": "其他",
+          "sub_industry": "其他",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2464": {
+      "subindustries": [
+        "其他電腦及週邊設備",
+        "輸送機械及零配件",
+        "機電系統工程"
+      ],
+      "records": [
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "其他電腦及週邊設備",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電機機械",
+          "sub_industry": "輸送機械及零配件",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電機機械",
+          "sub_industry": "機電系統工程",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2462": {
+      "subindustries": [
+        "連接器設計、組裝及製造"
+      ],
+      "records": [
+        {
+          "industry": "連接器",
+          "sub_industry": "連接器設計、組裝及製造",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2466": {
+      "subindustries": [
+        "主/被動元件",
+        "環保潔能服務產業",
+        "其他"
+      ],
+      "records": [
+        {
+          "industry": "通信網路",
+          "sub_industry": "主/被動元件",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "其他",
+          "sub_industry": "環保潔能服務產業",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "其他",
+          "sub_industry": "其他",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2465": {
+      "subindustries": [
+        "顯示卡",
+        "精簡型電腦",
+        "營運發行",
+        "生物檢測"
+      ],
+      "records": [
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "顯示卡",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "精簡型電腦",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "休閒娛樂",
+          "sub_industry": "營運發行",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "醫療器材",
+          "sub_industry": "生物檢測",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2467": {
+      "subindustries": [
+        "生產製程及檢測設備"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "生產製程及檢測設備",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "平面顯示器",
+          "sub_industry": "生產製程及檢測設備",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "印刷電路板",
+          "sub_industry": "生產製程及檢測設備",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2471": {
+      "subindustries": [
+        "應用/系統軟體設計開發",
+        "系統整合服務",
+        "監理法遵",
+        "系統整合",
+        "資料安全",
+        "端點安全防護",
+        "資料庫"
+      ],
+      "records": [
+        {
+          "industry": "軟體服務",
+          "sub_industry": "應用/系統軟體設計開發",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "軟體服務",
+          "sub_industry": "系統整合服務",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "金融科技",
+          "sub_industry": "監理法遵",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "人工智慧",
+          "sub_industry": "系統整合",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "雲端運算",
+          "sub_industry": "系統整合",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "資通訊安全",
+          "sub_industry": "資料安全",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "資通訊安全",
+          "sub_industry": "端點安全防護",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "大數據",
+          "sub_industry": "系統整合",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "大數據",
+          "sub_industry": "資料庫",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2468": {
+      "subindustries": [
+        "應用/系統軟體設計開發",
+        "系統整合服務",
+        "資料處理服務",
+        "通路經銷"
+      ],
+      "records": [
+        {
+          "industry": "軟體服務",
+          "sub_industry": "應用/系統軟體設計開發",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "軟體服務",
+          "sub_industry": "系統整合服務",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "軟體服務",
+          "sub_industry": "資料處理服務",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "軟體服務",
+          "sub_industry": "通路經銷",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2472": {
+      "subindustries": [
+        "電容器"
+      ],
+      "records": [
+        {
+          "industry": "被動元件",
+          "sub_industry": "電容器",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2474": {
+      "subindustries": [
+        "機殼"
+      ],
+      "records": [
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "機殼",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2476": {
+      "subindustries": [
+        "其他零組件",
+        "主/被動元件",
+        "塑膠/金屬機殼",
+        "金屬材料",
+        "電鍍材料",
+        "塑膠材料",
+        "塑化材料"
+      ],
+      "records": [
+        {
+          "industry": "平面顯示器",
+          "sub_industry": "其他零組件",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "通信網路",
+          "sub_industry": "主/被動元件",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "通信網路",
+          "sub_industry": "塑膠/金屬機殼",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "連接器",
+          "sub_industry": "金屬材料",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "連接器",
+          "sub_industry": "電鍍材料",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "連接器",
+          "sub_industry": "塑膠材料",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "醫療器材",
+          "sub_industry": "塑化材料",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2477": {
+      "subindustries": [
+        "其他電子產品及電子服務產業"
+      ],
+      "records": [
+        {
+          "industry": "其他",
+          "sub_industry": "其他電子產品及電子服務產業",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2478": {
+      "subindustries": [
+        "其他電腦及週邊設備之零組件",
+        "其他零組件",
+        "主/被動元件",
+        "電阻器"
+      ],
+      "records": [
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "其他電腦及週邊設備之零組件",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "平面顯示器",
+          "sub_industry": "其他零組件",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "通信網路",
+          "sub_industry": "主/被動元件",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "被動元件",
+          "sub_industry": "電阻器",
           "date": "2026-09-08"
         }
       ]

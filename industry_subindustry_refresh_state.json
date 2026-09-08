@@ -1,10 +1,10 @@
 {
-  "cursor": 365,
+  "cursor": 424,
   "total_codes": 1984,
-  "last_run_at": 1788843477.5797188,
+  "last_run_at": 1788844724.3295374,
   "last_selected": 50,
   "last_success": 50,
-  "covered_codes": 556,
-  "coverage": 28.02,
+  "covered_codes": 606,
+  "coverage": 30.54,
   "complete": false
 }
