@@ -1,4 +1,4 @@
-# stock_alert.py V2.14.21
+# stock_alert.py V2.14.22
 # V2.14.08：V2.14.05 完整覆蓋版；保留重大消息面「多公司新聞隔離」邏輯，
 #             修正 LINE 15 分鐘區間通知遺失「加碼分析／建議」問題，並修正目前價格不得使用過期市場股票池價格。
 #             重大消息評分只使用新聞標題，RSS description/snippet/延伸內容完全不參與評分。
@@ -157,6 +157,9 @@ TWSE_QUOTES_CACHE_FILE = 'twse_quotes_cache.json'
 # V2.9.8 新增
 SUBINDUSTRY_CACHE_FILE = 'subindustry_cache.json'
 INDUSTRY_MENU_CACHE_FILE = 'industry_subindustry_menu_cache.json'
+# V2.14.22：LINE 產業查詢索引自動建置進度。GitHub Actions 每次執行分批補抓，LINE 不要求使用者提供股票代號。
+INDUSTRY_MENU_REFRESH_STATE_FILE = 'industry_subindustry_refresh_state.json'
+INDUSTRY_MENU_AUTO_BATCH = 50
 # V2.10.49：官方基本面快取
 # V2.10.56：不再使用 MOPS 基本面快取
 # MOPS_FUND_CACHE_FILE 保留名稱僅避免舊程式碼/舊快取造成相容性問題，但 V2.10.56 基本面主流程不讀寫。
@@ -2168,8 +2171,14 @@ def _fetch_missing_value_chains(codes):
 
     return result
 
-def _refresh_line_industry_menu_cache(u):
-    """V2.14.21：由既有官方次產業資料建立 LINE 大產業→細產業索引。"""
+def _refresh_line_industry_menu_cache(u=None):
+    """V2.14.22：建立 LINE 大產業→官方細產業索引。
+
+    注意：fetch_value_chain_for_stock() 的資料格式是
+    {'subindustries': [...], 'records': [{'industry': ..., 'sub_industry': ...}, ...]}，
+    大產業通常存在 records，而不是頂層 info['industry']。
+    舊版只讀頂層欄位會導致已抓到的資料也無法建立選單。
+    """
     try:
         cache = load_json(SUBINDUSTRY_CACHE_FILE)
         data = cache.get('data', {}) if isinstance(cache, dict) else {}
@@ -2179,17 +2188,30 @@ def _refresh_line_industry_menu_cache(u):
         for info in data.values():
             if not isinstance(info, dict):
                 continue
+            records = info.get('records', [])
+            if not isinstance(records, list):
+                records = []
+            for rec in records:
+                if not isinstance(rec, dict):
+                    continue
+                parent = canonical_industry(rec.get('industry') or rec.get('main_industry') or '')
+                sub = normalize_subindustry(rec.get('sub_industry') or rec.get('subindustry') or rec.get('node') or '')
+                if parent and sub:
+                    bucket = index.setdefault(parent, [])
+                    if sub not in bucket:
+                        bucket.append(sub)
+            # 相容舊快取：若有頂層 industry/main_industry，也一併處理。
             parent = canonical_industry(info.get('industry') or info.get('main_industry') or '')
-            if not parent:
-                continue
-            subs = info.get('subindustries', [])
-            if not isinstance(subs, list):
-                subs = [subs]
-            bucket = index.setdefault(parent, [])
-            for sub in subs:
-                n = normalize_subindustry(sub)
-                if n and n not in bucket:
-                    bucket.append(n)
+            if parent:
+                subs = info.get('subindustries', [])
+                if not isinstance(subs, list):
+                    subs = [subs]
+                for sub in subs:
+                    n = normalize_subindustry(sub)
+                    if n:
+                        bucket = index.setdefault(parent, [])
+                        if n not in bucket:
+                            bucket.append(n)
         for parent in index:
             index[parent] = sorted(index[parent], key=lambda x: (_line_industry_norm(x), x))
         save_json(INDUSTRY_MENU_CACHE_FILE, {
@@ -2197,10 +2219,102 @@ def _refresh_line_industry_menu_cache(u):
             'source': SUBINDUSTRY_CACHE_FILE,
             'data': index
         })
-        print(f'LINE產業選單索引：{len(index)} 個大產業', flush=True)
+        print(f'LINE產業選單索引：{len(index)} 個大產業、{sum(len(v) for v in index.values())} 個細產業', flush=True)
+        return index
     except Exception as e:
         print(f'LINE產業選單索引建立失敗：{type(e).__name__}: {e}', flush=True)
+        return {}
 
+
+def _auto_expand_subindustry_cache(u):
+    """V2.14.22：Actions 自動分批建立全市場次產業資料。
+
+    不再要求 LINE 使用者先輸入股票代號。每次 GitHub Actions 執行，
+    從完整市場股票池中找出尚未有官方次產業資料的股票，最多補抓
+    INDUSTRY_MENU_AUTO_BATCH 檔；下一次執行再接續。失敗股票不標記完成，
+    之後會再次嘗試。這樣可在不讓單次 Action 爆量的前提下逐步覆蓋全部產業。
+    """
+    if not isinstance(u, dict) or not u:
+        return {}
+    try:
+        cache = load_json(SUBINDUSTRY_CACHE_FILE)
+        data = cache.get('data', {}) if isinstance(cache, dict) else {}
+        if not isinstance(data, dict):
+            data = {}
+
+        codes = []
+        for code, item in u.items():
+            c = clean_code(code)
+            if not c.isdigit() or not isinstance(item, dict):
+                continue
+            if not canonical_industry(item.get('industry')):
+                continue
+            codes.append(c)
+        codes = sorted(set(codes))
+        if not codes:
+            _refresh_line_industry_menu_cache(u)
+            return data
+
+        def valid(code):
+            info = data.get(code)
+            if not isinstance(info, dict):
+                return False
+            subs = info.get('subindustries', [])
+            if not isinstance(subs, list):
+                subs = [subs]
+            return any(normalize_subindustry(x) for x in subs)
+
+        state = load_json(INDUSTRY_MENU_REFRESH_STATE_FILE)
+        if not isinstance(state, dict):
+            state = {}
+        cursor = int(state.get('cursor', 0) or 0) % len(codes)
+
+        selected = []
+        checked = 0
+        i = cursor
+        while checked < len(codes) and len(selected) < INDUSTRY_MENU_AUTO_BATCH:
+            c = codes[i]
+            if not valid(c):
+                selected.append(c)
+            i = (i + 1) % len(codes)
+            checked += 1
+
+        # 游標永遠往前推；失敗的股票下一輪繞回來仍會重試。
+        state['cursor'] = i
+        state['total_codes'] = len(codes)
+        state['last_run_at'] = time.time()
+        state['last_selected'] = len(selected)
+
+        if selected:
+            print(f'V2.14.22 自動建立次產業：本次補抓 {len(selected)} 檔（全市場 {len(codes)} 檔）', flush=True)
+            fetched = _fetch_missing_value_chains(selected)
+            if isinstance(fetched, dict):
+                data.update(fetched)
+            state['last_success'] = len(fetched) if isinstance(fetched, dict) else 0
+            print(f'V2.14.22 自動建立次產業：成功 {state["last_success"]}/{len(selected)} 檔', flush=True)
+        else:
+            state['last_success'] = 0
+
+        valid_count = sum(1 for c in codes if valid(c))
+        state['covered_codes'] = valid_count
+        state['coverage'] = round(valid_count / len(codes) * 100, 2) if codes else 0
+        state['complete'] = valid_count >= len(codes)
+        save_json(INDUSTRY_MENU_REFRESH_STATE_FILE, state)
+
+        if data:
+            save_json(SUBINDUSTRY_CACHE_FILE, {
+                '_cached_at': time.time(),
+                'source': 'TPEx/TWSE Industry Value Chain',
+                'source_url': VALUE_CHAIN_BASE,
+                'cache_days': SUBINDUSTRY_CACHE_DAYS,
+                'data': data
+            })
+        _refresh_line_industry_menu_cache(u)
+        print(f'V2.14.22 次產業自動建置進度：{valid_count}/{len(codes)}（{state["coverage"]}%）', flush=True)
+        return data
+    except Exception as e:
+        print(f'V2.14.22 次產業自動建置失敗：{type(e).__name__}: {e}', flush=True)
+        return data if 'data' in locals() and isinstance(data, dict) else {}
 
 def get_public_subindustry(u):
     """
@@ -2760,6 +2874,9 @@ def get_market_universe(
         # 仍重新補次產業。
 
         sub_data = get_public_subindustry(d)
+        auto_sub_data = _auto_expand_subindustry_cache(d)
+        if isinstance(auto_sub_data, dict) and auto_sub_data:
+            sub_data = auto_sub_data
         _refresh_line_industry_menu_cache(d)
 
         d = attach_subindustries(
@@ -2774,6 +2891,9 @@ def get_market_universe(
     if u:
 
         sub_data = get_public_subindustry(u)
+        auto_sub_data = _auto_expand_subindustry_cache(u)
+        if isinstance(auto_sub_data, dict) and auto_sub_data:
+            sub_data = auto_sub_data
         _refresh_line_industry_menu_cache(u)
 
         u = attach_subindustries(
@@ -2794,6 +2914,9 @@ def get_market_universe(
     if isinstance(d, dict):
 
         sub_data = get_public_subindustry(d)
+        auto_sub_data = _auto_expand_subindustry_cache(d)
+        if isinstance(auto_sub_data, dict) and auto_sub_data:
+            sub_data = auto_sub_data
         _refresh_line_industry_menu_cache(d)
 
         d = attach_subindustries(
@@ -10584,61 +10707,57 @@ def _line_extract_analysis_scores(text):
 
 
 def _line_industry_build_subindustry_menu(parent, u):
-    """V2.14.21：依指定大產業取得官方次產業名稱。
-
-    優先使用 Actions 建立的 industry_subindustry_menu_cache.json；
-    若該索引不存在，再由 subindustry_cache / 市場股票池反查。
-    """
-    options = []
+    """V2.14.22：優先讀 Actions 建好的大產業→細產業索引。"""
     parent_c = canonical_industry(parent)
+    options = []
 
-    # 第一優先：Actions 已建立的「大產業 -> 次產業」索引。
-    try:
-        menu_cache = load_json(INDUSTRY_MENU_CACHE_FILE)
-        menu_data = menu_cache.get('data', {}) if isinstance(menu_cache, dict) else {}
-        if isinstance(menu_data, dict):
-            for key, vals in menu_data.items():
-                if canonical_industry(key) != parent_c:
-                    continue
-                if isinstance(vals, list):
-                    for sub in vals:
-                        n = normalize_subindustry(sub)
-                        if n and n not in options:
-                            options.append(n)
-    except Exception as e:
-        print(f'V2.14.21 LINE產業選單索引讀取失敗：{type(e).__name__}: {e}', flush=True)
-
-    if options:
-        return sorted(options, key=lambda x: (_line_industry_norm(x), x))
-
-    data = _line_industry_load_data()
-    # 第二優先：既有次產業快取。
-    for info in data.values():
-        if not isinstance(info, dict):
-            continue
-        industry = canonical_industry(info.get('industry') or info.get('main_industry') or '')
-        if parent_c and industry and industry != parent_c:
-            continue
-        subs = info.get('subindustries', [])
-        if not isinstance(subs, list):
-            subs = [subs]
-        for sub in subs:
-            n = normalize_subindustry(sub)
-            if n and n not in options:
-                options.append(n)
-    # 若快取項目沒有大產業欄位，從市場股票池反查。
-    if not options and isinstance(u, dict):
-        for item in u.values():
-            if not isinstance(item, dict):
+    # 1. 優先使用專用 menu cache；這是 LINE webhook 的快速路徑。
+    menu_cache = load_json(INDUSTRY_MENU_CACHE_FILE)
+    menu_data = menu_cache.get('data', {}) if isinstance(menu_cache, dict) else {}
+    if isinstance(menu_data, dict):
+        for key, values in menu_data.items():
+            if canonical_industry(key) != parent_c:
                 continue
-            if canonical_industry(item.get('industry')) != parent_c:
-                continue
-            for sub in item.get('subindustries', []) or []:
+            if not isinstance(values, list):
+                values = [values]
+            for sub in values:
                 n = normalize_subindustry(sub)
                 if n and n not in options:
                     options.append(n)
-    return sorted(options, key=lambda x: (_line_industry_norm(x), x))
 
+    # 2. 相容舊快取：從 records 反查大產業。
+    if not options:
+        data = _line_industry_load_data()
+        for info in data.values():
+            if not isinstance(info, dict):
+                continue
+            records = info.get('records', [])
+            if not isinstance(records, list):
+                records = []
+            for rec in records:
+                if not isinstance(rec, dict):
+                    continue
+                industry = canonical_industry(rec.get('industry') or rec.get('main_industry') or '')
+                if industry != parent_c:
+                    continue
+                n = normalize_subindustry(rec.get('sub_industry') or rec.get('subindustry') or '')
+                if n and n not in options:
+                    options.append(n)
+
+    # 3. 最後才從目前市場股票池反查。
+    if not options and isinstance(u, dict):
+        for item in u.values():
+            if not isinstance(item, dict) or canonical_industry(item.get('industry')) != parent_c:
+                continue
+            subs = item.get('subindustries', []) or []
+            if not isinstance(subs, list):
+                subs = [subs]
+            for sub in subs:
+                n = normalize_subindustry(sub)
+                if n and n not in options:
+                    options.append(n)
+
+    return sorted(options, key=lambda x: (_line_industry_norm(x), x))
 
 def _line_industry_fetch_parent_data(parent, u):
     """V2.14.21：背景工作才補抓指定大產業，避免 webhook/LINE Reply 被外部 API 卡住。"""
@@ -10770,34 +10889,9 @@ def _line_industry_query_result(text, target, u):
 
 
 def _line_industry_webhook_kind(text, target):
-    """V2.14.21：Webhook 只回覆選單，不執行產業分析。
-
-    V2.14.21 hotfix：進入選單後不能把使用者鎖死。
-    「取消／返回／退出」會清除狀態；4~6 碼股票代號、ETF、
-    美股 ticker 也會自動離開產業選單並交回一般查詢流程。
-    """
-    raw = str(text or '').strip()
-    norm = _line_industry_norm(raw)
-
-    # 明確離開互動式產業選單。
-    if norm in {_line_industry_norm(x) for x in ('取消', '返回', '退出', '離開', '清除', 'reset', 'cancel', 'back')}:
-        _line_industry_session_clear(target)
-        return 'help', (
-            '↩️ 已退出產業查詢。\n\n'
-            '現在可以直接輸入股票代號、股票名稱、ETF 或輸入「產業」重新開始。'
-        )
-
+    """V2.14.22：Webhook 只回覆選單，不執行產業分析。"""
     session = _line_industry_session_get(target)
     if session:
-        # 4~6 碼純數字視為股票代號；不要被目前的細產業選單攔截。
-        if re.fullmatch(r'\d{4,6}', raw):
-            _line_industry_session_clear(target)
-            return None, None
-        # 常見 ETF / 美股 ticker 也允許直接跳出選單。
-        if re.fullmatch(r'[A-Za-z]{1,6}(?:[-.][A-Za-z0-9]{1,4})?', raw):
-            _line_industry_session_clear(target)
-            return None, None
-
         q2 = _line_industry_resolve_from_session(text, target)
         if q2:
             if q2.get('type') == 'parent':
@@ -10812,8 +10906,9 @@ def _line_industry_webhook_kind(text, target):
                 _line_industry_set_session(target, parent, [], 'subindustry')
                 return 'options', (
                     f'🔎 你選擇的是「{parent}」\n\n'
-                    '⚠️ 目前次產業快取尚未建立完整。\n'
-                    '請稍後再試，或先直接輸入該產業股票代號讓系統建立資料。'
+                    '⚠️ 此產業的官方細產業索引目前仍在自動建立中。\n'
+                    'GitHub Actions 會自動分批取得資料，不需要你提供股票代號。\n'
+                    '完成後重新輸入「產業」即可查詢。'
                 )
             return 'result', q2['name']
         return 'invalid', _line_industry_options_message(session.get('parent') or '產業', session.get('options') or [], electronic=session.get('parent') == '電子類' and session.get('level') == 'parent')
@@ -11099,11 +11194,6 @@ def handle_event(e, u):
     # V2.14.21：Webhook 階段只辨識產業查詢，不執行 Top 3/股票分析，
     # 確保 LINE Reply 一定先送出；完整產業分析全部交給背景工作。
     industry_kind, industry_msg = _line_industry_webhook_kind(text, target)
-    if industry_kind == 'help':
-        ok = reply_line(token, industry_msg)
-        if not ok:
-            print('❌ LINE 產業查詢離開訊息 Reply 失敗', flush=True)
-        return
     if industry_kind == 'options':
         ok = reply_line(token, industry_msg)
         if not ok:
