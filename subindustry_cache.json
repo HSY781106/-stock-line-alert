@@ -1,5 +1,5 @@
 {
-  "_cached_at": 1788837590.434692,
+  "_cached_at": 1788839088.810101,
   "source": "TPEx/TWSE Industry Value Chain",
   "source_url": "https://ic.tpex.org.tw/company_chain.php",
   "cache_days": 30,
@@ -5974,6 +5974,1068 @@
         {
           "industry": "紡織",
           "sub_industry": "成衣及其它家居紡織類品",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1470": {
+      "subindustries": [
+        "染整"
+      ],
+      "records": [
+        {
+          "industry": "紡織",
+          "sub_industry": "染整",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1471": {
+      "subindustries": [
+        "機殼",
+        "電源供應器"
+      ],
+      "records": [
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "機殼",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "電源供應器",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1473": {
+      "subindustries": [
+        "成衣及其它家居紡織類品"
+      ],
+      "records": [
+        {
+          "industry": "紡織",
+          "sub_industry": "成衣及其它家居紡織類品",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1472": {
+      "subindustries": [
+        "結構工程",
+        "機電工程",
+        "營造業",
+        "工程承攬"
+      ],
+      "records": [
+        {
+          "industry": "建材營造",
+          "sub_industry": "結構工程",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "建材營造",
+          "sub_industry": "機電工程",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "建材營造",
+          "sub_industry": "營造業",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "建材營造",
+          "sub_industry": "工程承攬",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1474": {
+      "subindustries": [
+        "織布"
+      ],
+      "records": [
+        {
+          "industry": "紡織",
+          "sub_industry": "織布",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1475": {
+      "subindustries": [
+        "染整"
+      ],
+      "records": [
+        {
+          "industry": "紡織",
+          "sub_industry": "染整",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1476": {
+      "subindustries": [
+        "織布",
+        "成衣及其它家居紡織類品"
+      ],
+      "records": [
+        {
+          "industry": "紡織",
+          "sub_industry": "織布",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "紡織",
+          "sub_industry": "成衣及其它家居紡織類品",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1477": {
+      "subindustries": [
+        "成衣及其它家居紡織類品"
+      ],
+      "records": [
+        {
+          "industry": "紡織",
+          "sub_industry": "成衣及其它家居紡織類品",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1504": {
+      "subindustries": [
+        "傳動元件",
+        "電控元件",
+        "冷凍空調設備及零件",
+        "機電系統工程",
+        "機電工程",
+        "移動控制",
+        "大功率鋰電池芯/模組、電池管理系統、動力馬達等零組件",
+        "監控系統",
+        "電力系統"
+      ],
+      "records": [
+        {
+          "industry": "電機機械",
+          "sub_industry": "傳動元件",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電機機械",
+          "sub_industry": "電控元件",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電機機械",
+          "sub_industry": "冷凍空調設備及零件",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電機機械",
+          "sub_industry": "機電系統工程",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "建材營造",
+          "sub_industry": "機電工程",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "人工智慧",
+          "sub_industry": "移動控制",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電動車輛產業",
+          "sub_industry": "大功率鋰電池芯/模組、電池管理系統、動力馬達等零組件",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "風力發電",
+          "sub_industry": "監控系統",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "風力發電",
+          "sub_industry": "電力系統",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1503": {
+      "subindustries": [
+        "安全監控系統",
+        "輸送機械及零配件",
+        "車用機械傳動設備及零配件",
+        "冷凍空調設備及零件",
+        "機電系統工程",
+        "機電工程",
+        "其他",
+        "大功率鋰電池芯/模組、電池管理系統、動力馬達等零組件",
+        "電力系統"
+      ],
+      "records": [
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "安全監控系統",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電機機械",
+          "sub_industry": "輸送機械及零配件",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電機機械",
+          "sub_industry": "車用機械傳動設備及零配件",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電機機械",
+          "sub_industry": "冷凍空調設備及零件",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電機機械",
+          "sub_industry": "機電系統工程",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "建材營造",
+          "sub_industry": "機電工程",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "汽車",
+          "sub_industry": "其他",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電動車輛產業",
+          "sub_industry": "大功率鋰電池芯/模組、電池管理系統、動力馬達等零組件",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "風力發電",
+          "sub_industry": "電力系統",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1506": {
+      "subindustries": [
+        "車用機械傳動設備及零配件",
+        "冷凍空調設備及零件",
+        "金屬加工處理",
+        "其他"
+      ],
+      "records": [
+        {
+          "industry": "電機機械",
+          "sub_industry": "車用機械傳動設備及零配件",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電機機械",
+          "sub_industry": "冷凍空調設備及零件",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電機機械",
+          "sub_industry": "金屬加工處理",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "汽車",
+          "sub_industry": "其他",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1512": {
+      "subindustries": [
+        "車用機械傳動設備及零配件",
+        "其他"
+      ],
+      "records": [
+        {
+          "industry": "電機機械",
+          "sub_industry": "車用機械傳動設備及零配件",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "汽車",
+          "sub_industry": "其他",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1513": {
+      "subindustries": [
+        "金屬加工用機械",
+        "冷凍空調設備及零件",
+        "機電系統工程",
+        "金屬加工處理",
+        "建設業",
+        "物業管理",
+        "太陽能發電設備/系統及系統工程",
+        "太陽能電廠",
+        "風場規劃",
+        "風場營造",
+        "高/低壓輸電設施",
+        "配電管理設施",
+        "高壓AMI",
+        "低壓AMI",
+        "能源管理服務",
+        "系統整合服務"
+      ],
+      "records": [
+        {
+          "industry": "電機機械",
+          "sub_industry": "金屬加工用機械",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電機機械",
+          "sub_industry": "冷凍空調設備及零件",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電機機械",
+          "sub_industry": "機電系統工程",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電機機械",
+          "sub_industry": "金屬加工處理",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "建材營造",
+          "sub_industry": "建設業",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "建材營造",
+          "sub_industry": "物業管理",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "太陽能產業",
+          "sub_industry": "太陽能發電設備/系統及系統工程",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "太陽能產業",
+          "sub_industry": "太陽能電廠",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "風力發電",
+          "sub_industry": "風場規劃",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "風力發電",
+          "sub_industry": "風場營造",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "智慧電網",
+          "sub_industry": "高/低壓輸電設施",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "智慧電網",
+          "sub_industry": "配電管理設施",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "智慧電網",
+          "sub_industry": "高壓AMI",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "智慧電網",
+          "sub_industry": "低壓AMI",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "智慧電網",
+          "sub_industry": "能源管理服務",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "智慧電網",
+          "sub_industry": "系統整合服務",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1514": {
+      "subindustries": [
+        "機電系統工程",
+        "配電系統",
+        "電力系統"
+      ],
+      "records": [
+        {
+          "industry": "電機機械",
+          "sub_industry": "機電系統工程",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "汽電共生",
+          "sub_industry": "配電系統",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "風力發電",
+          "sub_industry": "電力系統",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1515": {
+      "subindustries": [
+        "手工具機"
+      ],
+      "records": [
+        {
+          "industry": "電機機械",
+          "sub_industry": "手工具機",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1517": {
+      "subindustries": [
+        "車用機械傳動設備及零配件"
+      ],
+      "records": [
+        {
+          "industry": "電機機械",
+          "sub_industry": "車用機械傳動設備及零配件",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1516": {
+      "subindustries": [
+        "其他"
+      ],
+      "records": [
+        {
+          "industry": "其他",
+          "sub_industry": "其他",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1519": {
+      "subindustries": [
+        "機電系統工程",
+        "大功率鋰電池芯/模組、電池管理系統、動力馬達等零組件",
+        "配電系統",
+        "變壓器",
+        "電力系統",
+        "高/低壓輸電設施",
+        "配電管理設施",
+        "電網營造"
+      ],
+      "records": [
+        {
+          "industry": "電機機械",
+          "sub_industry": "機電系統工程",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電動車輛產業",
+          "sub_industry": "大功率鋰電池芯/模組、電池管理系統、動力馬達等零組件",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "汽電共生",
+          "sub_industry": "配電系統",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "汽電共生",
+          "sub_industry": "變壓器",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "風力發電",
+          "sub_industry": "電力系統",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "智慧電網",
+          "sub_industry": "高/低壓輸電設施",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "智慧電網",
+          "sub_industry": "配電管理設施",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "智慧電網",
+          "sub_industry": "電網營造",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1522": {
+      "subindustries": [
+        "車燈"
+      ],
+      "records": [
+        {
+          "industry": "汽車",
+          "sub_industry": "車燈",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1521": {
+      "subindustries": [
+        "車燈"
+      ],
+      "records": [
+        {
+          "industry": "汽車",
+          "sub_industry": "車燈",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1524": {
+      "subindustries": [
+        "鈑金"
+      ],
+      "records": [
+        {
+          "industry": "汽車",
+          "sub_industry": "鈑金",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1525": {
+      "subindustries": [
+        "其他"
+      ],
+      "records": [
+        {
+          "industry": "汽車",
+          "sub_industry": "其他",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1526": {
+      "subindustries": [
+        "傳動元件"
+      ],
+      "records": [
+        {
+          "industry": "電機機械",
+          "sub_industry": "傳動元件",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1527": {
+      "subindustries": [
+        "手工具機"
+      ],
+      "records": [
+        {
+          "industry": "電機機械",
+          "sub_industry": "手工具機",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1528": {
+      "subindustries": [
+        "生產製程及檢測設備",
+        "專用機械(如紡織成衣生產用機械、食品飲料生產用機械、農林用機械等)",
+        "貿易商、代理商、經銷商"
+      ],
+      "records": [
+        {
+          "industry": "印刷電路板",
+          "sub_industry": "生產製程及檢測設備",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電機機械",
+          "sub_industry": "專用機械(如紡織成衣生產用機械、食品飲料生產用機械、農林用機械等)",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "貿易百貨",
+          "sub_industry": "貿易商、代理商、經銷商",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1529": {
+      "subindustries": [
+        "機電系統工程",
+        "太陽能發電設備/系統及系統工程",
+        "太陽能電廠"
+      ],
+      "records": [
+        {
+          "industry": "電機機械",
+          "sub_industry": "機電系統工程",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "太陽能產業",
+          "sub_industry": "太陽能發電設備/系統及系統工程",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "太陽能產業",
+          "sub_industry": "太陽能電廠",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1530": {
+      "subindustries": [
+        "金屬加工用機械"
+      ],
+      "records": [
+        {
+          "industry": "電機機械",
+          "sub_industry": "金屬加工用機械",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1531": {
+      "subindustries": [
+        "專用機械(如紡織成衣生產用機械、食品飲料生產用機械、農林用機械等)"
+      ],
+      "records": [
+        {
+          "industry": "電機機械",
+          "sub_industry": "專用機械(如紡織成衣生產用機械、食品飲料生產用機械、農林用機械等)",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1532": {
+      "subindustries": [
+        "娛樂服務業",
+        "旅館服務業",
+        "鋼鑄鐵元件",
+        "建設業",
+        "零售通路"
+      ],
+      "records": [
+        {
+          "industry": "休閒娛樂",
+          "sub_industry": "娛樂服務業",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "休閒娛樂",
+          "sub_industry": "旅館服務業",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電機機械",
+          "sub_industry": "鋼鑄鐵元件",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "建材營造",
+          "sub_industry": "建設業",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "貿易百貨",
+          "sub_industry": "零售通路",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1533": {
+      "subindustries": [
+        "電控元件",
+        "手工具機",
+        "車用機械傳動設備及零配件",
+        "其他",
+        "大功率鋰電池芯/模組、電池管理系統、動力馬達等零組件"
+      ],
+      "records": [
+        {
+          "industry": "電機機械",
+          "sub_industry": "電控元件",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電機機械",
+          "sub_industry": "手工具機",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電機機械",
+          "sub_industry": "車用機械傳動設備及零配件",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "汽車",
+          "sub_industry": "其他",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電動車輛產業",
+          "sub_industry": "大功率鋰電池芯/模組、電池管理系統、動力馬達等零組件",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1535": {
+      "subindustries": [
+        "機電系統工程"
+      ],
+      "records": [
+        {
+          "industry": "電機機械",
+          "sub_industry": "機電系統工程",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1536": {
+      "subindustries": [
+        "傳動元件",
+        "其他",
+        "大功率鋰電池芯/模組、電池管理系統、動力馬達等零組件"
+      ],
+      "records": [
+        {
+          "industry": "電機機械",
+          "sub_industry": "傳動元件",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "汽車",
+          "sub_industry": "其他",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電動車輛產業",
+          "sub_industry": "大功率鋰電池芯/模組、電池管理系統、動力馬達等零組件",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1537": {
+      "subindustries": [
+        "其他電腦及週邊設備之零組件",
+        "五金元件及零配件",
+        "車用機械傳動設備及零配件",
+        "機電系統工程",
+        "大功率鋰電池芯/模組、電池管理系統、動力馬達等零組件"
+      ],
+      "records": [
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "其他電腦及週邊設備之零組件",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電機機械",
+          "sub_industry": "五金元件及零配件",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電機機械",
+          "sub_industry": "車用機械傳動設備及零配件",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電機機械",
+          "sub_industry": "機電系統工程",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電動車輛產業",
+          "sub_industry": "大功率鋰電池芯/模組、電池管理系統、動力馬達等零組件",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1538": {
+      "subindustries": [
+        "手工具機",
+        "車燈",
+        "燈具/應用"
+      ],
+      "records": [
+        {
+          "industry": "電機機械",
+          "sub_industry": "手工具機",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "汽車",
+          "sub_industry": "車燈",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "LED照明產業",
+          "sub_industry": "燈具/應用",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1539": {
+      "subindustries": [
+        "手工具機"
+      ],
+      "records": [
+        {
+          "industry": "電機機械",
+          "sub_industry": "手工具機",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1541": {
+      "subindustries": [
+        "手工具機"
+      ],
+      "records": [
+        {
+          "industry": "電機機械",
+          "sub_industry": "手工具機",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1540": {
+      "subindustries": [
+        "金屬加工用機械"
+      ],
+      "records": [
+        {
+          "industry": "電機機械",
+          "sub_industry": "金屬加工用機械",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1558": {
+      "subindustries": [
+        "專用機械(如紡織成衣生產用機械、食品飲料生產用機械、農林用機械等)",
+        "手工具機"
+      ],
+      "records": [
+        {
+          "industry": "電機機械",
+          "sub_industry": "專用機械(如紡織成衣生產用機械、食品飲料生產用機械、農林用機械等)",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電機機械",
+          "sub_industry": "手工具機",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1560": {
+      "subindustries": [
+        "五金元件及零配件"
+      ],
+      "records": [
+        {
+          "industry": "電機機械",
+          "sub_industry": "五金元件及零配件",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1565": {
+      "subindustries": [
+        "隱型眼鏡、光學鏡片"
+      ],
+      "records": [
+        {
+          "industry": "醫療器材",
+          "sub_industry": "隱型眼鏡、光學鏡片",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1563": {
+      "subindustries": [
+        "車用機械傳動設備及零配件",
+        "鋁合金鋼圈"
+      ],
+      "records": [
+        {
+          "industry": "電機機械",
+          "sub_industry": "車用機械傳動設備及零配件",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "汽車",
+          "sub_industry": "鋁合金鋼圈",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1568": {
+      "subindustries": [
+        "車用機械傳動設備及零配件",
+        "其他"
+      ],
+      "records": [
+        {
+          "industry": "電機機械",
+          "sub_industry": "車用機械傳動設備及零配件",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "汽車",
+          "sub_industry": "其他",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1569": {
+      "subindustries": [
+        "機殼",
+        "其他電腦及週邊設備之零組件"
+      ],
+      "records": [
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "機殼",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "其他電腦及週邊設備之零組件",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1570": {
+      "subindustries": [
+        "手工具機"
+      ],
+      "records": [
+        {
+          "industry": "電機機械",
+          "sub_industry": "手工具機",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1582": {
+      "subindustries": [
+        "機構樞紐",
+        "金屬、塑膠模具"
+      ],
+      "records": [
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "機構樞紐",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "金屬、塑膠模具",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1580": {
+      "subindustries": [
+        "專用機械(如紡織成衣生產用機械、食品飲料生產用機械、農林用機械等)"
+      ],
+      "records": [
+        {
+          "industry": "電機機械",
+          "sub_industry": "專用機械(如紡織成衣生產用機械、食品飲料生產用機械、農林用機械等)",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1583": {
+      "subindustries": [
+        "金屬加工用機械"
+      ],
+      "records": [
+        {
+          "industry": "電機機械",
+          "sub_industry": "金屬加工用機械",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1584": {
+      "subindustries": [
+        "其他"
+      ],
+      "records": [
+        {
+          "industry": "其他",
+          "sub_industry": "其他",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1586": {
+      "subindustries": [
+        "金屬、塑膠模具",
+        "其他電腦及週邊設備之零組件",
+        "機械設備之沖壓零組件",
+        "車用機械傳動設備及零配件"
+      ],
+      "records": [
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "金屬、塑膠模具",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "其他電腦及週邊設備之零組件",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電機機械",
+          "sub_industry": "機械設備之沖壓零組件",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電機機械",
+          "sub_industry": "車用機械傳動設備及零配件",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1587": {
+      "subindustries": [
+        "其他"
+      ],
+      "records": [
+        {
+          "industry": "汽車",
+          "sub_industry": "其他",
           "date": "2026-09-08"
         }
       ]
