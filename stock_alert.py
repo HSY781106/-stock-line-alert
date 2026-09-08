@@ -1,4 +1,4 @@
-# stock_alert.py V2.14.22
+# stock_alert.py V2.14.23
 # V2.14.08：V2.14.05 完整覆蓋版；保留重大消息面「多公司新聞隔離」邏輯，
 #             修正 LINE 15 分鐘區間通知遺失「加碼分析／建議」問題，並修正目前價格不得使用過期市場股票池價格。
 #             重大消息評分只使用新聞標題，RSS description/snippet/延伸內容完全不參與評分。
@@ -157,7 +157,7 @@ TWSE_QUOTES_CACHE_FILE = 'twse_quotes_cache.json'
 # V2.9.8 新增
 SUBINDUSTRY_CACHE_FILE = 'subindustry_cache.json'
 INDUSTRY_MENU_CACHE_FILE = 'industry_subindustry_menu_cache.json'
-# V2.14.22：LINE 產業查詢索引自動建置進度。GitHub Actions 每次執行分批補抓，LINE 不要求使用者提供股票代號。
+# V2.14.23：LINE 產業查詢索引自動建置進度。GitHub Actions 每次執行分批補抓，LINE 不要求使用者提供股票代號。
 INDUSTRY_MENU_REFRESH_STATE_FILE = 'industry_subindustry_refresh_state.json'
 INDUSTRY_MENU_AUTO_BATCH = 50
 # V2.10.49：官方基本面快取
@@ -2172,7 +2172,7 @@ def _fetch_missing_value_chains(codes):
     return result
 
 def _refresh_line_industry_menu_cache(u=None):
-    """V2.14.22：建立 LINE 大產業→官方細產業索引。
+    """V2.14.23：建立 LINE 大產業→官方細產業索引。
 
     注意：fetch_value_chain_for_stock() 的資料格式是
     {'subindustries': [...], 'records': [{'industry': ..., 'sub_industry': ...}, ...]}，
@@ -2227,7 +2227,7 @@ def _refresh_line_industry_menu_cache(u=None):
 
 
 def _auto_expand_subindustry_cache(u):
-    """V2.14.22：Actions 自動分批建立全市場次產業資料。
+    """V2.14.23：Actions 自動分批建立全市場次產業資料。
 
     不再要求 LINE 使用者先輸入股票代號。每次 GitHub Actions 執行，
     從完整市場股票池中找出尚未有官方次產業資料的股票，最多補抓
@@ -2286,12 +2286,12 @@ def _auto_expand_subindustry_cache(u):
         state['last_selected'] = len(selected)
 
         if selected:
-            print(f'V2.14.22 自動建立次產業：本次補抓 {len(selected)} 檔（全市場 {len(codes)} 檔）', flush=True)
+            print(f'V2.14.23 自動建立次產業：本次補抓 {len(selected)} 檔（全市場 {len(codes)} 檔）', flush=True)
             fetched = _fetch_missing_value_chains(selected)
             if isinstance(fetched, dict):
                 data.update(fetched)
             state['last_success'] = len(fetched) if isinstance(fetched, dict) else 0
-            print(f'V2.14.22 自動建立次產業：成功 {state["last_success"]}/{len(selected)} 檔', flush=True)
+            print(f'V2.14.23 自動建立次產業：成功 {state["last_success"]}/{len(selected)} 檔', flush=True)
         else:
             state['last_success'] = 0
 
@@ -2310,10 +2310,10 @@ def _auto_expand_subindustry_cache(u):
                 'data': data
             })
         _refresh_line_industry_menu_cache(u)
-        print(f'V2.14.22 次產業自動建置進度：{valid_count}/{len(codes)}（{state["coverage"]}%）', flush=True)
+        print(f'V2.14.23 次產業自動建置進度：{valid_count}/{len(codes)}（{state["coverage"]}%）', flush=True)
         return data
     except Exception as e:
-        print(f'V2.14.22 次產業自動建置失敗：{type(e).__name__}: {e}', flush=True)
+        print(f'V2.14.23 次產業自動建置失敗：{type(e).__name__}: {e}', flush=True)
         return data if 'data' in locals() and isinstance(data, dict) else {}
 
 def get_public_subindustry(u):
@@ -10707,7 +10707,7 @@ def _line_extract_analysis_scores(text):
 
 
 def _line_industry_build_subindustry_menu(parent, u):
-    """V2.14.22：優先讀 Actions 建好的大產業→細產業索引。"""
+    """V2.14.23：優先讀 Actions 建好的大產業→細產業索引。"""
     parent_c = canonical_industry(parent)
     options = []
 
@@ -10889,15 +10889,90 @@ def _line_industry_query_result(text, target, u):
 
 
 def _line_industry_webhook_kind(text, target):
-    """V2.14.22：Webhook 只回覆選單，不執行產業分析。"""
+    """V2.14.23：產業互動狀態不可綁死一般查詢。
+
+    重要：當使用者已進入「大產業 -> 次產業」選單後，仍必須可以：
+    1. 輸入「取消／返回／退出」離開。
+    2. 輸入「產業」重新回到大產業選單。
+    3. 輸入另一個大產業名稱直接切換。
+    4. 輸入 4~6 碼股票代號直接跳出產業選單，交給一般股票查詢。
+    5. 輸入美股 ticker 直接跳出產業選單。
+    """
+    raw = str(text or '').strip()
+    norm = _line_industry_norm(raw)
     session = _line_industry_session_get(target)
+
+    # --------------------------------------------------------
+    # V2.14.23：任何產業選單狀態都提供明確退出鍵。
+    # --------------------------------------------------------
+    if session and norm in {_line_industry_norm(x) for x in (
+        '取消', '返回', '上一層', '退出', '離開', '清除',
+        'reset', 'cancel', 'back', 'exit', 'clear'
+    )}:
+        _line_industry_session_clear(target)
+        return 'help', (
+            '↩️ 已退出產業查詢。\n\n'
+            '現在可以直接輸入股票代號、股票名稱、ETF 或輸入「產業」重新開始。'
+        )
+
+    # --------------------------------------------------------
+    # V2.14.23：選單中輸入「產業」= 回到第一層，而不是被當成
+    # 次產業名稱。
+    # --------------------------------------------------------
+    if norm in {_line_industry_norm('產業'), _line_industry_norm('產業查詢')}:
+        _line_industry_session_clear(target)
+        options = _line_industry_parent_options()
+        _line_industry_set_session(target, '產業', options, 'parent')
+        return 'options', _line_industry_options_message('產業', options)
+
+    # --------------------------------------------------------
+    # V2.14.23：產業選單內輸入股票代號／美股 ticker，立即跳出
+    # 產業 session，讓 handle_event 繼續走原本的股票/ETF分析流程。
+    # --------------------------------------------------------
     if session:
-        q2 = _line_industry_resolve_from_session(text, target)
+        if re.fullmatch(r'\d{4,6}', raw) or re.fullmatch(
+            r'[A-Za-z]{1,6}(?:[-.][A-Za-z0-9]{1,4})?', raw
+        ):
+            _line_industry_session_clear(target)
+            return None, None
+
+        # ----------------------------------------------------
+        # V2.14.23：使用者輸入另一個大產業時，直接切換，不要
+        # 被目前次產業 session 卡住。
+        # ----------------------------------------------------
+        q_global = _line_industry_canonical_query(raw)
+        if q_global and q_global.get('type') in {'parent', 'parent_group', 'parent_product'}:
+            _line_industry_session_clear(target)
+            q = q_global
+            if q.get('type') == 'parent_product':
+                _line_industry_set_session(target, q['name'], q['options'], 'subindustry')
+                return 'options', _line_industry_options_message(q['name'], q['options'])
+            if q.get('type') == 'parent_group':
+                _line_industry_set_session(target, q['name'], q['options'], 'parent')
+                return 'options', _line_industry_options_message(q['name'], q['options'], electronic=True)
+            parent = q['name']
+            u = build_line_query_universe(parent)
+            options = _line_industry_build_subindustry_menu(parent, u)
+            if options:
+                _line_industry_set_session(target, parent, options, 'subindustry')
+                return 'options', _line_industry_options_message(parent, options)
+            _line_industry_set_session(target, parent, [], 'subindustry')
+            return 'options', (
+                f'🔎 你選擇的是「{parent}」\n\n'
+                '⚠️ 此產業的官方細產業索引目前仍在自動建立中。\n'
+                'GitHub Actions 會自動分批取得資料，不需要你提供股票代號。\n'
+                '完成後重新輸入「產業」即可查詢。\n\n'
+                '若要離開目前選單，請輸入「取消」。'
+            )
+
+        # ----------------------------------------------------
+        # 原本的選項解析。空 options 時也不再讓使用者永久卡住；
+        # 可用「取消」或上面的股票代號/ticker bypass。
+        # ----------------------------------------------------
+        q2 = _line_industry_resolve_from_session(raw, target)
         if q2:
             if q2.get('type') == 'parent':
                 parent = q2['name']
-                # V2.14.21：大產業選擇後立即回覆第二層細產業。
-                # 僅讀 GitHub/Actions 已產生的 menu cache，不等待慢速 API。
                 u = build_line_query_universe(parent)
                 options = _line_industry_build_subindustry_menu(parent, u)
                 if options:
@@ -10908,11 +10983,21 @@ def _line_industry_webhook_kind(text, target):
                     f'🔎 你選擇的是「{parent}」\n\n'
                     '⚠️ 此產業的官方細產業索引目前仍在自動建立中。\n'
                     'GitHub Actions 會自動分批取得資料，不需要你提供股票代號。\n'
-                    '完成後重新輸入「產業」即可查詢。'
+                    '完成後重新輸入「產業」即可查詢。\n\n'
+                    '若要離開目前選單，請輸入「取消」。'
                 )
             return 'result', q2['name']
-        return 'invalid', _line_industry_options_message(session.get('parent') or '產業', session.get('options') or [], electronic=session.get('parent') == '電子類' and session.get('level') == 'parent')
-    q = _line_industry_canonical_query(text)
+
+        return 'invalid', _line_industry_options_message(
+            session.get('parent') or '產業',
+            session.get('options') or [],
+            electronic=session.get('parent') == '電子類' and session.get('level') == 'parent'
+        )
+
+    # --------------------------------------------------------
+    # 沒有 session：正常產業入口。
+    # --------------------------------------------------------
+    q = _line_industry_canonical_query(raw)
     if q and q.get('type') == 'parent_product':
         _line_industry_set_session(target, q['name'], q['options'], 'subindustry')
         return 'options', _line_industry_options_message(q['name'], q['options'])
@@ -10920,8 +11005,6 @@ def _line_industry_webhook_kind(text, target):
         _line_industry_set_session(target, q['name'], q['options'], 'parent')
         return 'options', _line_industry_options_message(q['name'], q['options'], electronic=True)
     if q and q.get('type') == 'parent':
-        # V2.14.21：直接輸入大產業也立即進入第二層細產業選單。
-        # 只使用 Actions 已發布的 menu cache，不在 webhook 內做慢速 API。
         parent = q['name']
         u = build_line_query_universe(parent)
         options = _line_industry_build_subindustry_menu(parent, u)
@@ -10931,13 +11014,14 @@ def _line_industry_webhook_kind(text, target):
         _line_industry_set_session(target, parent, [], 'subindustry')
         return 'options', (
             f'🔎 你選擇的是「{parent}」\n\n'
-            '⚠️ 目前次產業快取尚未建立完整。\n'
-            '請稍後再試，或先直接輸入該產業的股票代號讓系統建立資料。'
+            '⚠️ 此產業的官方細產業索引目前仍在自動建立中。\n'
+            'GitHub Actions 會自動分批取得資料，不需要你提供股票代號。\n'
+            '完成後重新輸入「產業」即可查詢。\n\n'
+            '若要離開目前選單，請輸入「取消」。'
         )
     if q and q.get('type') == 'subindustry':
         return 'result', q['name']
-    # 單獨輸入「產業」：列出全部官方大產業。
-    if _line_industry_norm(text) in {_line_industry_norm('產業'), _line_industry_norm('產業查詢')}:
+    if norm in {_line_industry_norm('產業'), _line_industry_norm('產業查詢')}:
         options = _line_industry_parent_options()
         _line_industry_set_session(target, '產業', options, 'parent')
         return 'options', _line_industry_options_message('產業', options)
@@ -11198,6 +11282,11 @@ def handle_event(e, u):
         ok = reply_line(token, industry_msg)
         if not ok:
             print('❌ LINE 產業選單 Reply 失敗', flush=True)
+        return
+    if industry_kind == 'help':
+        ok = reply_line(token, industry_msg)
+        if not ok:
+            print('❌ LINE 產業退出 Reply 失敗', flush=True)
         return
     if industry_kind == 'invalid':
         ok = reply_line(token, industry_msg)
