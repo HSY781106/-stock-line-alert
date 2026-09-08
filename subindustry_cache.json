@@ -1,5 +1,5 @@
 {
-  "_cached_at": 1788836301.8506954,
+  "_cached_at": 1788837590.434692,
   "source": "TPEx/TWSE Industry Value Chain",
   "source_url": "https://ic.tpex.org.tw/company_chain.php",
   "cache_days": 30,
@@ -4984,6 +4984,996 @@
         {
           "industry": "石化及塑橡膠",
           "sub_industry": "塑膠製品",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1326": {
+      "subindustries": [
+        "塑膠製品",
+        "人造纖維",
+        "石化原料(例如純對苯二甲酸、乙二醇、己內醯胺、丙烯腈等)",
+        "人造纖維產品(例如尼龍纖維、聚酯纖維、嫘縈纖維等)",
+        "紡紗",
+        "織布",
+        "染整",
+        "PTA(對苯二甲酸)觸媒"
+      ],
+      "records": [
+        {
+          "industry": "石化及塑橡膠",
+          "sub_industry": "塑膠製品",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "石化及塑橡膠",
+          "sub_industry": "人造纖維",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "紡織",
+          "sub_industry": "石化原料(例如純對苯二甲酸、乙二醇、己內醯胺、丙烯腈等)",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "紡織",
+          "sub_industry": "人造纖維產品(例如尼龍纖維、聚酯纖維、嫘縈纖維等)",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "紡織",
+          "sub_industry": "紡紗",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "紡織",
+          "sub_industry": "織布",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "紡織",
+          "sub_industry": "染整",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "石化及塑橡膠",
+          "sub_industry": "PTA(對苯二甲酸)觸媒",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1325": {
+      "subindustries": [
+        "塑膠製品"
+      ],
+      "records": [
+        {
+          "industry": "石化及塑橡膠",
+          "sub_industry": "塑膠製品",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1336": {
+      "subindustries": [
+        "金屬、塑膠模具",
+        "塑膠框",
+        "塑膠/金屬機殼"
+      ],
+      "records": [
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "金屬、塑膠模具",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "平面顯示器",
+          "sub_industry": "塑膠框",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "通信網路",
+          "sub_industry": "塑膠/金屬機殼",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1337": {
+      "subindustries": [
+        "塑膠製品"
+      ],
+      "records": [
+        {
+          "industry": "石化及塑橡膠",
+          "sub_industry": "塑膠製品",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1338": {
+      "subindustries": [
+        "其他"
+      ],
+      "records": [
+        {
+          "industry": "汽車",
+          "sub_industry": "其他",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1340": {
+      "subindustries": [
+        "塑膠製品"
+      ],
+      "records": [
+        {
+          "industry": "石化及塑橡膠",
+          "sub_industry": "塑膠製品",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1339": {
+      "subindustries": [
+        "塑膠製品",
+        "保險桿"
+      ],
+      "records": [
+        {
+          "industry": "石化及塑橡膠",
+          "sub_industry": "塑膠製品",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "汽車",
+          "sub_industry": "保險桿",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1341": {
+      "subindustries": [
+        "產業鏈簡介"
+      ],
+      "records": [
+        {
+          "industry": "產業價值鏈資訊平台",
+          "sub_industry": "產業鏈簡介",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1402": {
+      "subindustries": [
+        "塑膠製品",
+        "石化原料(例如純對苯二甲酸、乙二醇、己內醯胺、丙烯腈等)",
+        "人造纖維產品(例如尼龍纖維、聚酯纖維、嫘縈纖維等)",
+        "染整",
+        "成衣及其它家居紡織類品",
+        "建設業",
+        "工程承攬",
+        "PTA(對苯二甲酸)觸媒"
+      ],
+      "records": [
+        {
+          "industry": "石化及塑橡膠",
+          "sub_industry": "塑膠製品",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "紡織",
+          "sub_industry": "石化原料(例如純對苯二甲酸、乙二醇、己內醯胺、丙烯腈等)",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "紡織",
+          "sub_industry": "人造纖維產品(例如尼龍纖維、聚酯纖維、嫘縈纖維等)",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "紡織",
+          "sub_industry": "染整",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "紡織",
+          "sub_industry": "成衣及其它家居紡織類品",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "建材營造",
+          "sub_industry": "建設業",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "建材營造",
+          "sub_industry": "工程承攬",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "石化及塑橡膠",
+          "sub_industry": "PTA(對苯二甲酸)觸媒",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1342": {
+      "subindustries": [
+        "其他"
+      ],
+      "records": [
+        {
+          "industry": "其他",
+          "sub_industry": "其他",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1410": {
+      "subindustries": [
+        "IC封裝測試",
+        "塑膠製品",
+        "染整"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "IC封裝測試",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "石化及塑橡膠",
+          "sub_industry": "塑膠製品",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "紡織",
+          "sub_industry": "染整",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1409": {
+      "subindustries": [
+        "人造纖維",
+        "人造纖維產品(例如尼龍纖維、聚酯纖維、嫘縈纖維等)"
+      ],
+      "records": [
+        {
+          "industry": "石化及塑橡膠",
+          "sub_industry": "人造纖維",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "紡織",
+          "sub_industry": "人造纖維產品(例如尼龍纖維、聚酯纖維、嫘縈纖維等)",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1413": {
+      "subindustries": [
+        "人造纖維產品(例如尼龍纖維、聚酯纖維、嫘縈纖維等)",
+        "紡紗"
+      ],
+      "records": [
+        {
+          "industry": "紡織",
+          "sub_industry": "人造纖維產品(例如尼龍纖維、聚酯纖維、嫘縈纖維等)",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "紡織",
+          "sub_industry": "紡紗",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1414": {
+      "subindustries": [
+        "紡紗"
+      ],
+      "records": [
+        {
+          "industry": "紡織",
+          "sub_industry": "紡紗",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1416": {
+      "subindustries": [
+        "應用/系統軟體設計開發",
+        "建設業",
+        "其他"
+      ],
+      "records": [
+        {
+          "industry": "軟體服務",
+          "sub_industry": "應用/系統軟體設計開發",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "建材營造",
+          "sub_industry": "建設業",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "其他",
+          "sub_industry": "其他",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1417": {
+      "subindustries": [
+        "成衣及其它家居紡織類品"
+      ],
+      "records": [
+        {
+          "industry": "紡織",
+          "sub_industry": "成衣及其它家居紡織類品",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1418": {
+      "subindustries": [
+        "人造纖維產品(例如尼龍纖維、聚酯纖維、嫘縈纖維等)"
+      ],
+      "records": [
+        {
+          "industry": "紡織",
+          "sub_industry": "人造纖維產品(例如尼龍纖維、聚酯纖維、嫘縈纖維等)",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1419": {
+      "subindustries": [
+        "織布",
+        "染整",
+        "貿易商、代理商、經銷商",
+        "零售通路"
+      ],
+      "records": [
+        {
+          "industry": "紡織",
+          "sub_industry": "織布",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "紡織",
+          "sub_industry": "染整",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "貿易百貨",
+          "sub_industry": "貿易商、代理商、經銷商",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "貿易百貨",
+          "sub_industry": "零售通路",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1423": {
+      "subindustries": [
+        "天然纖維產品(例如純棉、純羊毛等)"
+      ],
+      "records": [
+        {
+          "industry": "紡織",
+          "sub_industry": "天然纖維產品(例如純棉、純羊毛等)",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1432": {
+      "subindustries": [
+        "娛樂服務業",
+        "染整"
+      ],
+      "records": [
+        {
+          "industry": "休閒娛樂",
+          "sub_industry": "娛樂服務業",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "紡織",
+          "sub_industry": "染整",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1434": {
+      "subindustries": [
+        "IC封裝測試",
+        "IC模組",
+        "塑膠製品",
+        "紡紗",
+        "織布",
+        "染整",
+        "加油站"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "IC封裝測試",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "半導體",
+          "sub_industry": "IC模組",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "石化及塑橡膠",
+          "sub_industry": "塑膠製品",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "紡織",
+          "sub_industry": "紡紗",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "紡織",
+          "sub_industry": "織布",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "紡織",
+          "sub_industry": "染整",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "油電燃氣",
+          "sub_industry": "加油站",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1435": {
+      "subindustries": [
+        "其他"
+      ],
+      "records": [
+        {
+          "industry": "其他",
+          "sub_industry": "其他",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1436": {
+      "subindustries": [
+        "建設業"
+      ],
+      "records": [
+        {
+          "industry": "建材營造",
+          "sub_industry": "建設業",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1437": {
+      "subindustries": [
+        "其他"
+      ],
+      "records": [
+        {
+          "industry": "其他",
+          "sub_industry": "其他",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1439": {
+      "subindustries": [
+        "建設業"
+      ],
+      "records": [
+        {
+          "industry": "建材營造",
+          "sub_industry": "建設業",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1438": {
+      "subindustries": [
+        "建設業"
+      ],
+      "records": [
+        {
+          "industry": "建材營造",
+          "sub_industry": "建設業",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1440": {
+      "subindustries": [
+        "人造纖維產品(例如尼龍纖維、聚酯纖維、嫘縈纖維等)",
+        "紡紗"
+      ],
+      "records": [
+        {
+          "industry": "紡織",
+          "sub_industry": "人造纖維產品(例如尼龍纖維、聚酯纖維、嫘縈纖維等)",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "紡織",
+          "sub_industry": "紡紗",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1441": {
+      "subindustries": [
+        "紡紗"
+      ],
+      "records": [
+        {
+          "industry": "紡織",
+          "sub_industry": "紡紗",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1442": {
+      "subindustries": [
+        "建設業"
+      ],
+      "records": [
+        {
+          "industry": "建材營造",
+          "sub_industry": "建設業",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1443": {
+      "subindustries": [
+        "其他"
+      ],
+      "records": [
+        {
+          "industry": "其他",
+          "sub_industry": "其他",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1444": {
+      "subindustries": [
+        "人造纖維產品(例如尼龍纖維、聚酯纖維、嫘縈纖維等)"
+      ],
+      "records": [
+        {
+          "industry": "紡織",
+          "sub_industry": "人造纖維產品(例如尼龍纖維、聚酯纖維、嫘縈纖維等)",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1445": {
+      "subindustries": [
+        "紡紗",
+        "織布"
+      ],
+      "records": [
+        {
+          "industry": "紡織",
+          "sub_industry": "紡紗",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "紡織",
+          "sub_industry": "織布",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1446": {
+      "subindustries": [
+        "織布",
+        "成衣及其它家居紡織類品"
+      ],
+      "records": [
+        {
+          "industry": "紡織",
+          "sub_industry": "織布",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "紡織",
+          "sub_industry": "成衣及其它家居紡織類品",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1449": {
+      "subindustries": [
+        "紡紗",
+        "織布",
+        "染整"
+      ],
+      "records": [
+        {
+          "industry": "紡織",
+          "sub_industry": "紡紗",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "紡織",
+          "sub_industry": "織布",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "紡織",
+          "sub_industry": "染整",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1447": {
+      "subindustries": [
+        "人造纖維產品(例如尼龍纖維、聚酯纖維、嫘縈纖維等)",
+        "紡紗",
+        "織布",
+        "染整"
+      ],
+      "records": [
+        {
+          "industry": "紡織",
+          "sub_industry": "人造纖維產品(例如尼龍纖維、聚酯纖維、嫘縈纖維等)",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "紡織",
+          "sub_industry": "紡紗",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "紡織",
+          "sub_industry": "織布",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "紡織",
+          "sub_industry": "染整",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1451": {
+      "subindustries": [
+        "紡紗",
+        "織布",
+        "染整",
+        "成衣及其它家居紡織類品"
+      ],
+      "records": [
+        {
+          "industry": "紡織",
+          "sub_industry": "紡紗",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "紡織",
+          "sub_industry": "織布",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "紡織",
+          "sub_industry": "染整",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "紡織",
+          "sub_industry": "成衣及其它家居紡織類品",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1452": {
+      "subindustries": [
+        "人造纖維產品(例如尼龍纖維、聚酯纖維、嫘縈纖維等)"
+      ],
+      "records": [
+        {
+          "industry": "紡織",
+          "sub_industry": "人造纖維產品(例如尼龍纖維、聚酯纖維、嫘縈纖維等)",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1453": {
+      "subindustries": [
+        "紡紗",
+        "建設業"
+      ],
+      "records": [
+        {
+          "industry": "紡織",
+          "sub_industry": "紡紗",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "建材營造",
+          "sub_industry": "建設業",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1454": {
+      "subindustries": [
+        "紡紗",
+        "織布",
+        "成衣及其它家居紡織類品"
+      ],
+      "records": [
+        {
+          "industry": "紡織",
+          "sub_industry": "紡紗",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "紡織",
+          "sub_industry": "織布",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "紡織",
+          "sub_industry": "成衣及其它家居紡織類品",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1455": {
+      "subindustries": [
+        "人造纖維產品(例如尼龍纖維、聚酯纖維、嫘縈纖維等)"
+      ],
+      "records": [
+        {
+          "industry": "紡織",
+          "sub_industry": "人造纖維產品(例如尼龍纖維、聚酯纖維、嫘縈纖維等)",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1456": {
+      "subindustries": [
+        "人造纖維產品(例如尼龍纖維、聚酯纖維、嫘縈纖維等)",
+        "天然纖維產品(例如純棉、純羊毛等)",
+        "紡紗",
+        "織布",
+        "建設業"
+      ],
+      "records": [
+        {
+          "industry": "紡織",
+          "sub_industry": "人造纖維產品(例如尼龍纖維、聚酯纖維、嫘縈纖維等)",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "紡織",
+          "sub_industry": "天然纖維產品(例如純棉、純羊毛等)",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "紡織",
+          "sub_industry": "紡紗",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "紡織",
+          "sub_industry": "織布",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "建材營造",
+          "sub_industry": "建設業",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1457": {
+      "subindustries": [
+        "人造纖維產品(例如尼龍纖維、聚酯纖維、嫘縈纖維等)",
+        "紡紗",
+        "染整"
+      ],
+      "records": [
+        {
+          "industry": "紡織",
+          "sub_industry": "人造纖維產品(例如尼龍纖維、聚酯纖維、嫘縈纖維等)",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "紡織",
+          "sub_industry": "紡紗",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "紡織",
+          "sub_industry": "染整",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1459": {
+      "subindustries": [
+        "人造纖維產品(例如尼龍纖維、聚酯纖維、嫘縈纖維等)"
+      ],
+      "records": [
+        {
+          "industry": "紡織",
+          "sub_industry": "人造纖維產品(例如尼龍纖維、聚酯纖維、嫘縈纖維等)",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1460": {
+      "subindustries": [
+        "紡紗",
+        "織布",
+        "染整",
+        "成衣及其它家居紡織類品"
+      ],
+      "records": [
+        {
+          "industry": "紡織",
+          "sub_industry": "紡紗",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "紡織",
+          "sub_industry": "織布",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "紡織",
+          "sub_industry": "染整",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "紡織",
+          "sub_industry": "成衣及其它家居紡織類品",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1463": {
+      "subindustries": [
+        "染整"
+      ],
+      "records": [
+        {
+          "industry": "紡織",
+          "sub_industry": "染整",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1464": {
+      "subindustries": [
+        "人造纖維產品(例如尼龍纖維、聚酯纖維、嫘縈纖維等)",
+        "紡紗",
+        "織布",
+        "染整"
+      ],
+      "records": [
+        {
+          "industry": "紡織",
+          "sub_industry": "人造纖維產品(例如尼龍纖維、聚酯纖維、嫘縈纖維等)",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "紡織",
+          "sub_industry": "紡紗",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "紡織",
+          "sub_industry": "織布",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "紡織",
+          "sub_industry": "染整",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1465": {
+      "subindustries": [
+        "人造纖維產品(例如尼龍纖維、聚酯纖維、嫘縈纖維等)",
+        "織布"
+      ],
+      "records": [
+        {
+          "industry": "紡織",
+          "sub_industry": "人造纖維產品(例如尼龍纖維、聚酯纖維、嫘縈纖維等)",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "紡織",
+          "sub_industry": "織布",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1467": {
+      "subindustries": [
+        "染整",
+        "成衣及其它家居紡織類品"
+      ],
+      "records": [
+        {
+          "industry": "紡織",
+          "sub_industry": "染整",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "紡織",
+          "sub_industry": "成衣及其它家居紡織類品",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1466": {
+      "subindustries": [
+        "人造纖維產品(例如尼龍纖維、聚酯纖維、嫘縈纖維等)"
+      ],
+      "records": [
+        {
+          "industry": "紡織",
+          "sub_industry": "人造纖維產品(例如尼龍纖維、聚酯纖維、嫘縈纖維等)",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "1468": {
+      "subindustries": [
+        "人造纖維產品(例如尼龍纖維、聚酯纖維、嫘縈纖維等)",
+        "化學助劑",
+        "織布",
+        "染整",
+        "成衣及其它家居紡織類品"
+      ],
+      "records": [
+        {
+          "industry": "紡織",
+          "sub_industry": "人造纖維產品(例如尼龍纖維、聚酯纖維、嫘縈纖維等)",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "紡織",
+          "sub_industry": "化學助劑",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "紡織",
+          "sub_industry": "織布",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "紡織",
+          "sub_industry": "染整",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "紡織",
+          "sub_industry": "成衣及其它家居紡織類品",
           "date": "2026-09-08"
         }
       ]
