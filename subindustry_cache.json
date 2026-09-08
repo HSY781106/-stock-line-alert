@@ -1,5 +1,5 @@
 {
-  "_cached_at": 1788846242.4875903,
+  "_cached_at": 1788847062.443999,
   "source": "TPEx/TWSE Industry Value Chain",
   "source_url": "https://ic.tpex.org.tw/company_chain.php",
   "cache_days": 30,
@@ -15862,6 +15862,648 @@
         {
           "industry": "交通運輸及航運",
           "sub_industry": "海陸空貨運承攬",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2609": {
+      "subindustries": [
+        "貨櫃航運"
+      ],
+      "records": [
+        {
+          "industry": "交通運輸及航運",
+          "sub_industry": "貨櫃航運",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2610": {
+      "subindustries": [
+        "海陸空大眾運輸"
+      ],
+      "records": [
+        {
+          "industry": "交通運輸及航運",
+          "sub_industry": "海陸空大眾運輸",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2612": {
+      "subindustries": [
+        "散裝航運",
+        "海陸空貨運承攬",
+        "貨櫃運輸集散及倉儲",
+        "海陸空大眾運輸"
+      ],
+      "records": [
+        {
+          "industry": "交通運輸及航運",
+          "sub_industry": "散裝航運",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "交通運輸及航運",
+          "sub_industry": "海陸空貨運承攬",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "交通運輸及航運",
+          "sub_industry": "貨櫃運輸集散及倉儲",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "交通運輸及航運",
+          "sub_industry": "海陸空大眾運輸",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2611": {
+      "subindustries": [
+        "貨櫃運輸集散及倉儲"
+      ],
+      "records": [
+        {
+          "industry": "交通運輸及航運",
+          "sub_industry": "貨櫃運輸集散及倉儲",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2613": {
+      "subindustries": [
+        "貨櫃運輸集散及倉儲"
+      ],
+      "records": [
+        {
+          "industry": "交通運輸及航運",
+          "sub_industry": "貨櫃運輸集散及倉儲",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2614": {
+      "subindustries": [
+        "散裝航運",
+        "零售通路"
+      ],
+      "records": [
+        {
+          "industry": "交通運輸及航運",
+          "sub_industry": "散裝航運",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "貿易百貨",
+          "sub_industry": "零售通路",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2615": {
+      "subindustries": [
+        "貨櫃航運"
+      ],
+      "records": [
+        {
+          "industry": "交通運輸及航運",
+          "sub_industry": "貨櫃航運",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2616": {
+      "subindustries": [
+        "貨櫃運輸集散及倉儲",
+        "加油站"
+      ],
+      "records": [
+        {
+          "industry": "交通運輸及航運",
+          "sub_industry": "貨櫃運輸集散及倉儲",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "油電燃氣",
+          "sub_industry": "加油站",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2617": {
+      "subindustries": [
+        "散裝航運"
+      ],
+      "records": [
+        {
+          "industry": "交通運輸及航運",
+          "sub_industry": "散裝航運",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2618": {
+      "subindustries": [
+        "海陸空大眾運輸"
+      ],
+      "records": [
+        {
+          "industry": "交通運輸及航運",
+          "sub_industry": "海陸空大眾運輸",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2630": {
+      "subindustries": [
+        "貨櫃運輸集散及倉儲"
+      ],
+      "records": [
+        {
+          "industry": "交通運輸及航運",
+          "sub_industry": "貨櫃運輸集散及倉儲",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2633": {
+      "subindustries": [
+        "海陸空大眾運輸"
+      ],
+      "records": [
+        {
+          "industry": "交通運輸及航運",
+          "sub_industry": "海陸空大眾運輸",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2634": {
+      "subindustries": [
+        "其他"
+      ],
+      "records": [
+        {
+          "industry": "其他",
+          "sub_industry": "其他",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2636": {
+      "subindustries": [
+        "海陸空貨運承攬"
+      ],
+      "records": [
+        {
+          "industry": "交通運輸及航運",
+          "sub_industry": "海陸空貨運承攬",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2637": {
+      "subindustries": [
+        "散裝航運"
+      ],
+      "records": [
+        {
+          "industry": "交通運輸及航運",
+          "sub_industry": "散裝航運",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2641": {
+      "subindustries": [
+        "散裝航運"
+      ],
+      "records": [
+        {
+          "industry": "交通運輸及航運",
+          "sub_industry": "散裝航運",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2640": {
+      "subindustries": [
+        "交易撮(媒)合"
+      ],
+      "records": [
+        {
+          "industry": "電子商務",
+          "sub_industry": "交易撮(媒)合",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2642": {
+      "subindustries": [
+        "海陸空貨運承攬"
+      ],
+      "records": [
+        {
+          "industry": "交通運輸及航運",
+          "sub_industry": "海陸空貨運承攬",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2645": {
+      "subindustries": [
+        "海陸空大眾運輸"
+      ],
+      "records": [
+        {
+          "industry": "交通運輸及航運",
+          "sub_industry": "海陸空大眾運輸",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2643": {
+      "subindustries": [
+        "海陸空貨運承攬"
+      ],
+      "records": [
+        {
+          "industry": "交通運輸及航運",
+          "sub_industry": "海陸空貨運承攬",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2646": {
+      "subindustries": [
+        "海陸空大眾運輸"
+      ],
+      "records": [
+        {
+          "industry": "交通運輸及航運",
+          "sub_industry": "海陸空大眾運輸",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2701": {
+      "subindustries": [
+        "娛樂服務業"
+      ],
+      "records": [
+        {
+          "industry": "休閒娛樂",
+          "sub_industry": "娛樂服務業",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2702": {
+      "subindustries": [
+        "旅館服務業"
+      ],
+      "records": [
+        {
+          "industry": "休閒娛樂",
+          "sub_industry": "旅館服務業",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2705": {
+      "subindustries": [
+        "娛樂服務業",
+        "旅館服務業"
+      ],
+      "records": [
+        {
+          "industry": "休閒娛樂",
+          "sub_industry": "娛樂服務業",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "休閒娛樂",
+          "sub_industry": "旅館服務業",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2706": {
+      "subindustries": [
+        "旅館服務業"
+      ],
+      "records": [
+        {
+          "industry": "休閒娛樂",
+          "sub_industry": "旅館服務業",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2704": {
+      "subindustries": [
+        "旅館服務業"
+      ],
+      "records": [
+        {
+          "industry": "休閒娛樂",
+          "sub_industry": "旅館服務業",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2707": {
+      "subindustries": [
+        "旅館服務業"
+      ],
+      "records": [
+        {
+          "industry": "休閒娛樂",
+          "sub_industry": "旅館服務業",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2712": {
+      "subindustries": [
+        "旅館服務業"
+      ],
+      "records": [
+        {
+          "industry": "休閒娛樂",
+          "sub_industry": "旅館服務業",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2718": {
+      "subindustries": [
+        "建設業"
+      ],
+      "records": [
+        {
+          "industry": "建材營造",
+          "sub_industry": "建設業",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2722": {
+      "subindustries": [
+        "旅館服務業"
+      ],
+      "records": [
+        {
+          "industry": "休閒娛樂",
+          "sub_industry": "旅館服務業",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2719": {
+      "subindustries": [
+        "旅遊服務業"
+      ],
+      "records": [
+        {
+          "industry": "休閒娛樂",
+          "sub_industry": "旅遊服務業",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2724": {
+      "subindustries": [
+        "其他"
+      ],
+      "records": [
+        {
+          "industry": "其他",
+          "sub_industry": "其他",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2723": {
+      "subindustries": [
+        "餐飲連鎖"
+      ],
+      "records": [
+        {
+          "industry": "食品",
+          "sub_industry": "餐飲連鎖",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2726": {
+      "subindustries": [
+        "餐飲連鎖"
+      ],
+      "records": [
+        {
+          "industry": "食品",
+          "sub_industry": "餐飲連鎖",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2729": {
+      "subindustries": [
+        "餐飲連鎖"
+      ],
+      "records": [
+        {
+          "industry": "食品",
+          "sub_industry": "餐飲連鎖",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2727": {
+      "subindustries": [
+        "餐飲連鎖"
+      ],
+      "records": [
+        {
+          "industry": "食品",
+          "sub_industry": "餐飲連鎖",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2732": {
+      "subindustries": [
+        "餐飲連鎖"
+      ],
+      "records": [
+        {
+          "industry": "食品",
+          "sub_industry": "餐飲連鎖",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2731": {
+      "subindustries": [
+        "旅遊服務業"
+      ],
+      "records": [
+        {
+          "industry": "休閒娛樂",
+          "sub_industry": "旅遊服務業",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2734": {
+      "subindustries": [
+        "旅遊服務業"
+      ],
+      "records": [
+        {
+          "industry": "休閒娛樂",
+          "sub_industry": "旅遊服務業",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2739": {
+      "subindustries": [
+        "旅館服務業"
+      ],
+      "records": [
+        {
+          "industry": "休閒娛樂",
+          "sub_industry": "旅館服務業",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2736": {
+      "subindustries": [
+        "旅館服務業"
+      ],
+      "records": [
+        {
+          "industry": "休閒娛樂",
+          "sub_industry": "旅館服務業",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2740": {
+      "subindustries": [
+        "餐飲連鎖"
+      ],
+      "records": [
+        {
+          "industry": "食品",
+          "sub_industry": "餐飲連鎖",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2743": {
+      "subindustries": [
+        "旅遊服務業"
+      ],
+      "records": [
+        {
+          "industry": "休閒娛樂",
+          "sub_industry": "旅遊服務業",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2748": {
+      "subindustries": [
+        "旅館服務業"
+      ],
+      "records": [
+        {
+          "industry": "休閒娛樂",
+          "sub_industry": "旅館服務業",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2745": {
+      "subindustries": [
+        "旅遊服務業"
+      ],
+      "records": [
+        {
+          "industry": "休閒娛樂",
+          "sub_industry": "旅遊服務業",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2751": {
+      "subindustries": [
+        "餐飲連鎖"
+      ],
+      "records": [
+        {
+          "industry": "食品",
+          "sub_industry": "餐飲連鎖",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2753": {
+      "subindustries": [
+        "加工食品",
+        "餐飲連鎖"
+      ],
+      "records": [
+        {
+          "industry": "食品",
+          "sub_industry": "加工食品",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "食品",
+          "sub_industry": "餐飲連鎖",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2752": {
+      "subindustries": [
+        "餐飲連鎖"
+      ],
+      "records": [
+        {
+          "industry": "食品",
+          "sub_industry": "餐飲連鎖",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2754": {
+      "subindustries": [
+        "餐飲連鎖"
+      ],
+      "records": [
+        {
+          "industry": "食品",
+          "sub_industry": "餐飲連鎖",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "2755": {
+      "subindustries": [
+        "餐飲連鎖"
+      ],
+      "records": [
+        {
+          "industry": "食品",
+          "sub_industry": "餐飲連鎖",
           "date": "2026-09-08"
         }
       ]
