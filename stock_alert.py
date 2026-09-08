@@ -1,4 +1,4 @@
-# stock_alert.py V2.14.23
+# stock_alert.py V2.14.25
 # V2.14.08：V2.14.05 完整覆蓋版；保留重大消息面「多公司新聞隔離」邏輯，
 #             修正 LINE 15 分鐘區間通知遺失「加碼分析／建議」問題，並修正目前價格不得使用過期市場股票池價格。
 #             重大消息評分只使用新聞標題，RSS description/snippet/延伸內容完全不參與評分。
@@ -157,7 +157,7 @@ TWSE_QUOTES_CACHE_FILE = 'twse_quotes_cache.json'
 # V2.9.8 新增
 SUBINDUSTRY_CACHE_FILE = 'subindustry_cache.json'
 INDUSTRY_MENU_CACHE_FILE = 'industry_subindustry_menu_cache.json'
-# V2.14.23：LINE 產業查詢索引自動建置進度。GitHub Actions 每次執行分批補抓，LINE 不要求使用者提供股票代號。
+# V2.14.25：LINE 產業查詢索引自動建置進度。GitHub Actions 每次執行分批補抓，LINE 不要求使用者提供股票代號。
 INDUSTRY_MENU_REFRESH_STATE_FILE = 'industry_subindustry_refresh_state.json'
 INDUSTRY_MENU_AUTO_BATCH = 50
 # V2.10.49：官方基本面快取
@@ -428,46 +428,20 @@ def resolve_us_stock_query(q):
 # TWSE 官方產業代碼
 # ============================================================
 
+# TWSE 官方上市公司產業類別（現行分類）
+# 來源：TWSE《上市公司產業類別劃分暨調整要點》及產業別代碼表。
+# 注意：13「電子工業」、32「文化創意」、33「農業科技」、34「電子商務」、39「數位經濟」
+# 等舊/非現行上市公司大產業分類不再作為 LINE 第一層。
 INDUSTRY_CODE_MAP = {
-    '01': '水泥工業',
-    '02': '食品工業',
-    '03': '塑膠工業',
-    '04': '紡織纖維',
-    '05': '電機機械',
-    '06': '電器電纜',
-    '08': '玻璃陶瓷',
-    '09': '造紙工業',
-    '10': '鋼鐵工業',
-    '11': '橡膠工業',
-    '12': '汽車工業',
-    '13': '電子工業',
-    '14': '建材營造',
-    '15': '航運業',
-    '16': '觀光餐旅',
-    '17': '金融業',
-    '18': '貿易百貨',
-    '19': '綜合',
-    '20': '其他',
-    '21': '化學工業',
-    '22': '生技醫療',
-    '23': '油電燃氣業',
-    '24': '半導體業',
-    '25': '電腦及週邊設備業',
-    '26': '光電業',
-    '27': '通信網路業',
-    '28': '電子零組件業',
-    '29': '電子通路業',
-    '30': '資訊服務業',
-    '31': '其他電子業',
-    '32': '文化創意業',
-    '33': '農業科技',
-    '34': '電子商務',
-    '35': '數位雲端',
-    '36': '運動休閒',
-    '37': '居家生活',
-    '38': '綠能環保',
-    '39': '數位經濟',
-    '40': '其他'
+    '01': '水泥工業', '02': '食品工業', '03': '塑膠工業', '04': '紡織纖維',
+    '05': '電機機械', '06': '電器電纜', '08': '玻璃陶瓷', '09': '造紙工業',
+    '10': '鋼鐵工業', '11': '橡膠工業', '12': '汽車工業', '14': '建材營造',
+    '15': '航運業', '16': '觀光餐旅', '17': '金融保險', '18': '貿易百貨',
+    '19': '綜合', '20': '其他', '21': '化學工業', '22': '生技醫療業',
+    '23': '油電燃氣業', '24': '半導體業', '25': '電腦及週邊設備業', '26': '光電業',
+    '27': '通信網路業', '28': '電子零組件業', '29': '電子通路業', '30': '資訊服務業',
+    '31': '其他電子業', '35': '綠能環保', '36': '數位雲端', '37': '運動休閒',
+    '38': '居家生活'
 }
 
 
@@ -2172,7 +2146,7 @@ def _fetch_missing_value_chains(codes):
     return result
 
 def _refresh_line_industry_menu_cache(u=None):
-    """V2.14.23：建立 LINE 大產業→官方細產業索引。
+    """V2.14.25：建立 LINE 大產業→官方細產業索引。
 
     注意：fetch_value_chain_for_stock() 的資料格式是
     {'subindustries': [...], 'records': [{'industry': ..., 'sub_industry': ...}, ...]}，
@@ -2227,7 +2201,7 @@ def _refresh_line_industry_menu_cache(u=None):
 
 
 def _auto_expand_subindustry_cache(u):
-    """V2.14.23：Actions 自動分批建立全市場次產業資料。
+    """V2.14.25：Actions 自動分批建立全市場次產業資料。
 
     不再要求 LINE 使用者先輸入股票代號。每次 GitHub Actions 執行，
     從完整市場股票池中找出尚未有官方次產業資料的股票，最多補抓
@@ -2286,12 +2260,12 @@ def _auto_expand_subindustry_cache(u):
         state['last_selected'] = len(selected)
 
         if selected:
-            print(f'V2.14.23 自動建立次產業：本次補抓 {len(selected)} 檔（全市場 {len(codes)} 檔）', flush=True)
+            print(f'V2.14.25 自動建立次產業：本次補抓 {len(selected)} 檔（全市場 {len(codes)} 檔）', flush=True)
             fetched = _fetch_missing_value_chains(selected)
             if isinstance(fetched, dict):
                 data.update(fetched)
             state['last_success'] = len(fetched) if isinstance(fetched, dict) else 0
-            print(f'V2.14.23 自動建立次產業：成功 {state["last_success"]}/{len(selected)} 檔', flush=True)
+            print(f'V2.14.25 自動建立次產業：成功 {state["last_success"]}/{len(selected)} 檔', flush=True)
         else:
             state['last_success'] = 0
 
@@ -2310,10 +2284,10 @@ def _auto_expand_subindustry_cache(u):
                 'data': data
             })
         _refresh_line_industry_menu_cache(u)
-        print(f'V2.14.23 次產業自動建置進度：{valid_count}/{len(codes)}（{state["coverage"]}%）', flush=True)
+        print(f'V2.14.25 次產業自動建置進度：{valid_count}/{len(codes)}（{state["coverage"]}%）', flush=True)
         return data
     except Exception as e:
-        print(f'V2.14.23 次產業自動建置失敗：{type(e).__name__}: {e}', flush=True)
+        print(f'V2.14.25 次產業自動建置失敗：{type(e).__name__}: {e}', flush=True)
         return data if 'data' in locals() and isinstance(data, dict) else {}
 
 def get_public_subindustry(u):
@@ -10543,6 +10517,19 @@ def _line_industry_canonical_parent(text):
     for alias, parent in LINE_INDUSTRY_ALIASES.items():
         if nq == _line_industry_norm(alias):
             return parent
+    # 舊名稱相容：不顯示於第一層，但使用者仍可直接輸入。
+    legacy = {
+        '金融業': '金融保險',
+        '金融': '金融保險',
+        '生技醫療': '生技醫療業',
+        '生技醫療業': '生技醫療業',
+        '觀光事業': '觀光餐旅',
+        '電子工業': '其他電子業',
+    }
+    if nq in {_line_industry_norm(k) for k in legacy}:
+        for k, v in legacy.items():
+            if nq == _line_industry_norm(k):
+                return v
     if nq == _line_industry_norm('記憶體'):
         return '記憶體'
     return None
@@ -10557,16 +10544,23 @@ def _line_industry_load_data():
     return data if isinstance(data, dict) else {}
 
 
-def _line_industry_parent_options():
-    names = []
-    for name in INDUSTRY_CODE_MAP.values():
-        name = canonical_industry(name)
-        if name not in names:
-            names.append(name)
-    # 產品型導覽保留；不把它當成官方 TWSE 大產業。
-    names.append('記憶體')
-    return names
+# LINE 第一層產業選單：固定顯示順序。記憶體保留為最後的產品導覽入口。
+LINE_INDUSTRY_PARENT_MENU = [
+    '水泥工業', '食品工業', '塑膠工業', '紡織纖維', '電機機械', '電器電纜',
+    '化學工業', '生技醫療業', '玻璃陶瓷', '造紙工業', '鋼鐵工業', '橡膠工業',
+    '汽車工業', '半導體業', '電腦及週邊設備業', '光電業', '通信網路業',
+    '電子零組件業', '電子通路業', '資訊服務業', '其他電子業', '建材營造',
+    '航運業', '觀光餐旅', '金融保險', '貿易百貨', '油電燃氣業', '綜合',
+    '綠能環保', '數位雲端', '運動休閒', '居家生活', '其他'
+]
 
+
+def _line_industry_parent_options():
+    return list(LINE_INDUSTRY_PARENT_MENU)
+
+def _line_industry_number_emoji(n):
+    """所有 LINE 選單編號統一使用 keycap emoji，例如 10=1️⃣0️⃣、38=3️⃣8️⃣。"""
+    return ''.join(ch + '\ufe0f\u20e3' for ch in str(int(n)))
 
 def _line_industry_options_message(parent, options=None, electronic=False):
     if electronic:
@@ -10579,7 +10573,7 @@ def _line_industry_options_message(parent, options=None, electronic=False):
         hint = '請選擇要查詢的細項產業。'
     lines = [f'🔎 你選擇的是「{title}」', '', hint, '']
     for i, option in enumerate(options, 1):
-        lines.append(f'{i}️⃣ {option}')
+        lines.append(f'{_line_industry_number_emoji(i)} {option}')
     lines.extend(['', '👉 請直接輸入編號或名稱。', '⏱️ 此選擇有效 10 分鐘。'])
     return '\n'.join(lines)[:4900]
 
@@ -10707,7 +10701,7 @@ def _line_extract_analysis_scores(text):
 
 
 def _line_industry_build_subindustry_menu(parent, u):
-    """V2.14.23：優先讀 Actions 建好的大產業→細產業索引。"""
+    """V2.14.25：優先讀 Actions 建好的大產業→細產業索引。"""
     parent_c = canonical_industry(parent)
     options = []
 
@@ -10889,7 +10883,7 @@ def _line_industry_query_result(text, target, u):
 
 
 def _line_industry_webhook_kind(text, target):
-    """V2.14.23：產業互動狀態不可綁死一般查詢。
+    """V2.14.25：產業互動狀態不可綁死一般查詢。
 
     重要：當使用者已進入「大產業 -> 次產業」選單後，仍必須可以：
     1. 輸入「取消／返回／退出」離開。
@@ -10903,7 +10897,7 @@ def _line_industry_webhook_kind(text, target):
     session = _line_industry_session_get(target)
 
     # --------------------------------------------------------
-    # V2.14.23：任何產業選單狀態都提供明確退出鍵。
+    # V2.14.25：任何產業選單狀態都提供明確退出鍵。
     # --------------------------------------------------------
     if session and norm in {_line_industry_norm(x) for x in (
         '取消', '返回', '上一層', '退出', '離開', '清除',
@@ -10916,7 +10910,7 @@ def _line_industry_webhook_kind(text, target):
         )
 
     # --------------------------------------------------------
-    # V2.14.23：選單中輸入「產業」= 回到第一層，而不是被當成
+    # V2.14.25：選單中輸入「產業」= 回到第一層，而不是被當成
     # 次產業名稱。
     # --------------------------------------------------------
     if norm in {_line_industry_norm('產業'), _line_industry_norm('產業查詢')}:
@@ -10926,7 +10920,7 @@ def _line_industry_webhook_kind(text, target):
         return 'options', _line_industry_options_message('產業', options)
 
     # --------------------------------------------------------
-    # V2.14.23：產業選單內輸入股票代號／美股 ticker，立即跳出
+    # V2.14.25：產業選單內輸入股票代號／美股 ticker，立即跳出
     # 產業 session，讓 handle_event 繼續走原本的股票/ETF分析流程。
     # --------------------------------------------------------
     if session:
@@ -10937,7 +10931,7 @@ def _line_industry_webhook_kind(text, target):
             return None, None
 
         # ----------------------------------------------------
-        # V2.14.23：使用者輸入另一個大產業時，直接切換，不要
+        # V2.14.25：使用者輸入另一個大產業時，直接切換，不要
         # 被目前次產業 session 卡住。
         # ----------------------------------------------------
         q_global = _line_industry_canonical_query(raw)
