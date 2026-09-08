@@ -1,5 +1,5 @@
 {
-  "_cached_at": 1788881632.4345815,
+  "_cached_at": 1788882966.2835386,
   "source": "TPEx/TWSE Industry Value Chain",
   "source_url": "https://ic.tpex.org.tw/company_chain.php",
   "cache_days": 30,
@@ -24160,6 +24160,828 @@
         {
           "industry": "製藥",
           "sub_industry": "中、西藥製劑",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "4169": {
+      "subindustries": [
+        "原材料",
+        "藥品代理銷售及通路",
+        "原料",
+        "保健食品代理銷售及通路",
+        "醫療耗材",
+        "生物檢測",
+        "醫療器材代理"
+      ],
+      "records": [
+        {
+          "industry": "製藥",
+          "sub_industry": "原材料",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "製藥",
+          "sub_industry": "藥品代理銷售及通路",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "食品生技",
+          "sub_industry": "原料",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "食品生技",
+          "sub_industry": "保健食品代理銷售及通路",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "醫療器材",
+          "sub_industry": "醫療耗材",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "醫療器材",
+          "sub_industry": "生物檢測",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "醫療器材",
+          "sub_industry": "醫療器材代理",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "4168": {
+      "subindustries": [
+        "中、西藥製劑"
+      ],
+      "records": [
+        {
+          "industry": "製藥",
+          "sub_industry": "中、西藥製劑",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "4171": {
+      "subindustries": [
+        "農業科技業",
+        "生物檢測"
+      ],
+      "records": [
+        {
+          "industry": "其他",
+          "sub_industry": "農業科技業",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "醫療器材",
+          "sub_industry": "生物檢測",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "4173": {
+      "subindustries": [
+        "藥品代理銷售及通路"
+      ],
+      "records": [
+        {
+          "industry": "製藥",
+          "sub_industry": "藥品代理銷售及通路",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "4175": {
+      "subindustries": [
+        "藥品代理銷售及通路",
+        "醫療器材代理銷售及通路",
+        "保健食品代理銷售及通路",
+        "醫療器材代理",
+        "醫療院所、醫療器材專賣店、藥局等通路"
+      ],
+      "records": [
+        {
+          "industry": "製藥",
+          "sub_industry": "藥品代理銷售及通路",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "醫療器材",
+          "sub_industry": "醫療器材代理銷售及通路",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "食品生技",
+          "sub_industry": "保健食品代理銷售及通路",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "醫療器材",
+          "sub_industry": "醫療器材代理",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "醫療器材",
+          "sub_industry": "醫療院所、醫療器材專賣店、藥局等通路",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "4174": {
+      "subindustries": [
+        "原材料"
+      ],
+      "records": [
+        {
+          "industry": "製藥",
+          "sub_industry": "原材料",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "4183": {
+      "subindustries": [
+        "電子零組件、塑膠零件、五金零件",
+        "塑化材料",
+        "金屬零件",
+        "醫療耗材",
+        "生物檢測",
+        "其他"
+      ],
+      "records": [
+        {
+          "industry": "醫療器材",
+          "sub_industry": "電子零組件、塑膠零件、五金零件",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "醫療器材",
+          "sub_industry": "塑化材料",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "醫療器材",
+          "sub_industry": "金屬零件",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "醫療器材",
+          "sub_industry": "醫療耗材",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "醫療器材",
+          "sub_industry": "生物檢測",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "醫療器材",
+          "sub_industry": "其他",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "4178": {
+      "subindustries": [
+        "幹細胞收集儲存",
+        "幹細胞開發",
+        "臨床實驗、移植技術、疾病治療"
+      ],
+      "records": [
+        {
+          "industry": "再生醫療",
+          "sub_industry": "幹細胞收集儲存",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "再生醫療",
+          "sub_industry": "幹細胞開發",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "再生醫療",
+          "sub_industry": "臨床實驗、移植技術、疾病治療",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "4188": {
+      "subindustries": [
+        "其他"
+      ],
+      "records": [
+        {
+          "industry": "醫療器材",
+          "sub_industry": "其他",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "4192": {
+      "subindustries": [
+        "中藥材、西藥原料藥",
+        "藥品代理銷售及通路"
+      ],
+      "records": [
+        {
+          "industry": "製藥",
+          "sub_industry": "中藥材、西藥原料藥",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "製藥",
+          "sub_industry": "藥品代理銷售及通路",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "4190": {
+      "subindustries": [
+        "產業鏈簡介"
+      ],
+      "records": [
+        {
+          "industry": "產業價值鏈資訊平台",
+          "sub_industry": "產業鏈簡介",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "4195": {
+      "subindustries": [
+        "其他",
+        "醫療器材代理銷售及通路",
+        "生物檢測",
+        "醫療器材代理",
+        "醫療院所、醫療器材專賣店、藥局等通路"
+      ],
+      "records": [
+        {
+          "industry": "其他",
+          "sub_industry": "其他",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "醫療器材",
+          "sub_industry": "醫療器材代理銷售及通路",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "醫療器材",
+          "sub_industry": "生物檢測",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "醫療器材",
+          "sub_industry": "醫療器材代理",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "醫療器材",
+          "sub_industry": "醫療院所、醫療器材專賣店、藥局等通路",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "4198": {
+      "subindustries": [
+        "生物檢測"
+      ],
+      "records": [
+        {
+          "industry": "醫療器材",
+          "sub_industry": "生物檢測",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "4205": {
+      "subindustries": [
+        "加工食品"
+      ],
+      "records": [
+        {
+          "industry": "食品",
+          "sub_industry": "加工食品",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "4207": {
+      "subindustries": [
+        "加工食品"
+      ],
+      "records": [
+        {
+          "industry": "食品",
+          "sub_industry": "加工食品",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "4303": {
+      "subindustries": [
+        "塑膠製品",
+        "人造纖維"
+      ],
+      "records": [
+        {
+          "industry": "石化及塑橡膠",
+          "sub_industry": "塑膠製品",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "石化及塑橡膠",
+          "sub_industry": "人造纖維",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "4304": {
+      "subindustries": [
+        "塑膠製品"
+      ],
+      "records": [
+        {
+          "industry": "石化及塑橡膠",
+          "sub_industry": "塑膠製品",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "4305": {
+      "subindustries": [
+        "塑膠製品"
+      ],
+      "records": [
+        {
+          "industry": "石化及塑橡膠",
+          "sub_industry": "塑膠製品",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "4401": {
+      "subindustries": [
+        "人造纖維產品(例如尼龍纖維、聚酯纖維、嫘縈纖維等)",
+        "紡紗",
+        "染整",
+        "運動用品"
+      ],
+      "records": [
+        {
+          "industry": "紡織",
+          "sub_industry": "人造纖維產品(例如尼龍纖維、聚酯纖維、嫘縈纖維等)",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "紡織",
+          "sub_industry": "紡紗",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "紡織",
+          "sub_industry": "染整",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "運動科技",
+          "sub_industry": "運動用品",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "4306": {
+      "subindustries": [
+        "塑膠製品"
+      ],
+      "records": [
+        {
+          "industry": "石化及塑橡膠",
+          "sub_industry": "塑膠製品",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "4402": {
+      "subindustries": [
+        "人造纖維產品(例如尼龍纖維、聚酯纖維、嫘縈纖維等)"
+      ],
+      "records": [
+        {
+          "industry": "紡織",
+          "sub_industry": "人造纖維產品(例如尼龍纖維、聚酯纖維、嫘縈纖維等)",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "4406": {
+      "subindustries": [
+        "人造纖維產品(例如尼龍纖維、聚酯纖維、嫘縈纖維等)"
+      ],
+      "records": [
+        {
+          "industry": "紡織",
+          "sub_industry": "人造纖維產品(例如尼龍纖維、聚酯纖維、嫘縈纖維等)",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "4414": {
+      "subindustries": [
+        "成衣及其它家居紡織類品"
+      ],
+      "records": [
+        {
+          "industry": "紡織",
+          "sub_industry": "成衣及其它家居紡織類品",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "4413": {
+      "subindustries": [
+        "成衣及其它家居紡織類品"
+      ],
+      "records": [
+        {
+          "industry": "紡織",
+          "sub_industry": "成衣及其它家居紡織類品",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "4416": {
+      "subindustries": [
+        "建設業"
+      ],
+      "records": [
+        {
+          "industry": "建材營造",
+          "sub_industry": "建設業",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "4417": {
+      "subindustries": [
+        "成衣及其它家居紡織類品"
+      ],
+      "records": [
+        {
+          "industry": "紡織",
+          "sub_industry": "成衣及其它家居紡織類品",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "4419": {
+      "subindustries": [
+        "餐飲連鎖"
+      ],
+      "records": [
+        {
+          "industry": "食品",
+          "sub_industry": "餐飲連鎖",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "4420": {
+      "subindustries": [
+        "人造纖維產品(例如尼龍纖維、聚酯纖維、嫘縈纖維等)"
+      ],
+      "records": [
+        {
+          "industry": "紡織",
+          "sub_industry": "人造纖維產品(例如尼龍纖維、聚酯纖維、嫘縈纖維等)",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "4426": {
+      "subindustries": [
+        "織布"
+      ],
+      "records": [
+        {
+          "industry": "紡織",
+          "sub_industry": "織布",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "4430": {
+      "subindustries": [
+        "其他"
+      ],
+      "records": [
+        {
+          "industry": "其他",
+          "sub_industry": "其他",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "4432": {
+      "subindustries": [
+        "成衣及其它家居紡織類品"
+      ],
+      "records": [
+        {
+          "industry": "紡織",
+          "sub_industry": "成衣及其它家居紡織類品",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "4438": {
+      "subindustries": [
+        "成衣及其它家居紡織類品",
+        "衛生用品"
+      ],
+      "records": [
+        {
+          "industry": "紡織",
+          "sub_industry": "成衣及其它家居紡織類品",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "醫療器材",
+          "sub_industry": "衛生用品",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "4433": {
+      "subindustries": [
+        "染整",
+        "成衣及其它家居紡織類品"
+      ],
+      "records": [
+        {
+          "industry": "紡織",
+          "sub_industry": "染整",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "紡織",
+          "sub_industry": "成衣及其它家居紡織類品",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "4440": {
+      "subindustries": [
+        "人造纖維產品(例如尼龍纖維、聚酯纖維、嫘縈纖維等)"
+      ],
+      "records": [
+        {
+          "industry": "紡織",
+          "sub_industry": "人造纖維產品(例如尼龍纖維、聚酯纖維、嫘縈纖維等)",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "4439": {
+      "subindustries": [
+        "產業鏈簡介"
+      ],
+      "records": [
+        {
+          "industry": "產業價值鏈資訊平台",
+          "sub_industry": "產業鏈簡介",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "4441": {
+      "subindustries": [
+        "成衣及其它家居紡織類品"
+      ],
+      "records": [
+        {
+          "industry": "紡織",
+          "sub_industry": "成衣及其它家居紡織類品",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "4442": {
+      "subindustries": [
+        "成衣及其它家居紡織類品"
+      ],
+      "records": [
+        {
+          "industry": "紡織",
+          "sub_industry": "成衣及其它家居紡織類品",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "4502": {
+      "subindustries": [
+        "車用機械傳動設備及零配件",
+        "鋁合金鋼圈"
+      ],
+      "records": [
+        {
+          "industry": "電機機械",
+          "sub_industry": "車用機械傳動設備及零配件",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "汽車",
+          "sub_industry": "鋁合金鋼圈",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "4503": {
+      "subindustries": [
+        "自動販賣機",
+        "金屬加工處理",
+        "金屬製品",
+        "大功率鋰電池芯/模組、電池管理系統、動力馬達等零組件"
+      ],
+      "records": [
+        {
+          "industry": "電機機械",
+          "sub_industry": "自動販賣機",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電機機械",
+          "sub_industry": "金屬加工處理",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "鋼鐵",
+          "sub_industry": "金屬製品",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電動車輛產業",
+          "sub_industry": "大功率鋰電池芯/模組、電池管理系統、動力馬達等零組件",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "4506": {
+      "subindustries": [
+        "機電系統工程"
+      ],
+      "records": [
+        {
+          "industry": "電機機械",
+          "sub_industry": "機電系統工程",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "4513": {
+      "subindustries": [
+        "金屬加工用機械"
+      ],
+      "records": [
+        {
+          "industry": "電機機械",
+          "sub_industry": "金屬加工用機械",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "4510": {
+      "subindustries": [
+        "金屬加工用機械"
+      ],
+      "records": [
+        {
+          "industry": "電機機械",
+          "sub_industry": "金屬加工用機械",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "4523": {
+      "subindustries": [
+        "車用機械傳動設備及零配件",
+        "冷凍空調設備及零件"
+      ],
+      "records": [
+        {
+          "industry": "電機機械",
+          "sub_industry": "車用機械傳動設備及零配件",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電機機械",
+          "sub_industry": "冷凍空調設備及零件",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "4526": {
+      "subindustries": [
+        "金屬加工用機械"
+      ],
+      "records": [
+        {
+          "industry": "電機機械",
+          "sub_industry": "金屬加工用機械",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "4528": {
+      "subindustries": [
+        "傳動元件",
+        "五金元件及零配件",
+        "車用機械傳動設備及零配件",
+        "金屬加工處理"
+      ],
+      "records": [
+        {
+          "industry": "電機機械",
+          "sub_industry": "傳動元件",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電機機械",
+          "sub_industry": "五金元件及零配件",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電機機械",
+          "sub_industry": "車用機械傳動設備及零配件",
+          "date": "2026-09-08"
+        },
+        {
+          "industry": "電機機械",
+          "sub_industry": "金屬加工處理",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "4527": {
+      "subindustries": [
+        "冷凍空調設備及零件"
+      ],
+      "records": [
+        {
+          "industry": "電機機械",
+          "sub_industry": "冷凍空調設備及零件",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "4529": {
+      "subindustries": [
+        "其他"
+      ],
+      "records": [
+        {
+          "industry": "其他",
+          "sub_industry": "其他",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "4530": {
+      "subindustries": [
+        "餐飲連鎖"
+      ],
+      "records": [
+        {
+          "industry": "食品",
+          "sub_industry": "餐飲連鎖",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "4532": {
+      "subindustries": [
+        "冷凍空調設備及零件"
+      ],
+      "records": [
+        {
+          "industry": "電機機械",
+          "sub_industry": "冷凍空調設備及零件",
+          "date": "2026-09-08"
+        }
+      ]
+    },
+    "4533": {
+      "subindustries": [
+        "金屬加工用機械"
+      ],
+      "records": [
+        {
+          "industry": "電機機械",
+          "sub_industry": "金屬加工用機械",
           "date": "2026-09-08"
         }
       ]
