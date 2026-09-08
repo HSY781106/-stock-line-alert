@@ -1,19 +1,10 @@
-name: Stock Alert V2.14.25
-
+name: Stock Alert V2.14.27
 on:
   schedule:
-    # 台股：09:00–13:00（UTC 01:00–05:00）
     - cron: '*/15 1-5 * * 1-5'
-
-    # 台股：13:30、13:45
     - cron: '30,45 13 * * 1-5'
-
-    # 台股：14:00–20:00
     - cron: '*/15 14-20 * * 1-5'
-
-    # 美股：21:00
     - cron: '0 21 * * 1-5'
-
   workflow_dispatch:
 
 concurrency:
@@ -40,26 +31,20 @@ jobs:
           python-version: '3.12'
 
       - name: Install dependencies
-        run: |
-          pip install -r requirements.txt
+        run: pip install -r requirements.txt pypdf
 
       - name: Run stock alert
         env:
           LINE_CHANNEL_ACCESS_TOKEN: ${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }}
           LINE_CHANNEL_SECRET: ${{ secrets.LINE_CHANNEL_SECRET }}
-        run: |
-          python stock_alert.py
+        run: python stock_alert.py
 
       - name: Save state and caches
         if: always()
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
           git add -A
-
-          git diff --cached --quiet || git commit -m "Update V2.14.25 alert state and industry cache"
-
+          git diff --cached --quiet || git commit -m "Update V2.14.27 alert state, industry cache and Trump portfolio"
           git pull --rebase origin main || true
-
           git push origin HEAD:main
