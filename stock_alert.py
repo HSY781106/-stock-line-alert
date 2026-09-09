@@ -161,12 +161,12 @@ INDUSTRY_MENU_CACHE_FILE = 'industry_subindustry_menu_cache.json'
 INDUSTRY_MENU_REFRESH_STATE_FILE = 'industry_subindustry_refresh_state.json'
 INDUSTRY_MENU_AUTO_BATCH = 50
 
-# V2.14.28：LINE「川普 / Trump / Donald Trump」人物投資組合查詢。
+# V2.14.38：修正 Open Cabinet CSV schema（camelCase midpoint/ISO date），不再依賴不存在的 asset_type。\n# 並以 ticker + 固定收益關鍵字可靠區分股票/ETF；強制刷新 Trump transaction/portfolio cache。\n# V2.14.28：LINE「川普 / Trump / Donald Trump」人物投資組合查詢。
 # 來源優先使用美國政府 OGE 最新年度公開財務揭露；若無法即時下載，
 # 讀取本機/ GitHub 已保存的 trump_portfolio_cache.json。
 TRUMP_PORTFOLIO_CACHE_FILE = 'trump_portfolio_cache.json'
 TRUMP_PORTFOLIO_CACHE_DAYS = 7
-TRUMP_PORTFOLIO_CACHE_VERSION = 6
+TRUMP_PORTFOLIO_CACHE_VERSION = 7
 TRUMP_OGE_ANNUAL_URLS = [
     # OGE 2026/06/30 公告提供的 President Trump certified annual report。
     'https://oge.box.com/shared/static/zycb5i2ny8kssm51uzqm8ygyq2zkpkqq.pdf',
@@ -181,7 +181,7 @@ TRUMP_PDF_TIMEOUT = 20
 TRUMP_MAX_HOLDINGS = 30
 TRUMP_TRANSACTION_CACHE_FILE = 'trump_transaction_cache.json'
 TRUMP_TRANSACTION_CACHE_DAYS = 2
-TRUMP_TRANSACTION_CACHE_VERSION = 9
+TRUMP_TRANSACTION_CACHE_VERSION = 10
 TRUMP_OGE_TRANSACTION_URLS = [
     # 2026-08-12：最新一批，涵蓋 2026-06-01～06-29 大量股票交易。
     'https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/2BF91F890F718ACB85258E5B002DE16B/%24FILE/Donald-J-Trump-08.12.2026-278T.pdf',
@@ -11826,7 +11826,7 @@ def _trump_extract_transactions_from_pdf(pdf_bytes, source_url=''):
 
 
 def _trump_open_cabinet_fallback():
-    """V2.14.37：OGE PDF 文字層/版型異常時的第二資料源。
+    """V2.14.38：OGE PDF 文字層/版型異常時的第二資料源。
 
     Open Cabinet 的交易資料由 OGE Form 278-T 公開申報整理而成；
     只在 OGE PDF 無法解析時使用，並保留 source_url 及 source=Open Cabinet。
@@ -11841,11 +11841,13 @@ def _trump_open_cabinet_fallback():
         import csv
         from io import StringIO
         rows=[]
+        raw_trump_rows=0
         reader=csv.DictReader(StringIO(r.content.decode('utf-8-sig','replace')))
         for item in reader:
             official=str(item.get('official') or item.get('officialName') or '').strip().upper()
             if not official.startswith('DONALD J. TRUMP') and 'DONALD J TRUMP' not in official:
                 continue
+            raw_trump_rows += 1
             side_raw=str(item.get('type') or item.get('transactionType') or '').strip().lower()
             if side_raw not in {'purchase','sale','buy','sell','bought','sold'}:
                 continue
@@ -11854,23 +11856,43 @@ def _trump_open_cabinet_fallback():
             ticker=str(item.get('ticker') or '').strip().upper()
             if not security and not ticker:
                 continue
-            # Open Cabinet 已將債券/票據分類；再用本程式自己的防呆規則做第二層過濾。
-            asset_type=str(item.get('asset_type') or item.get('assetType') or '').strip().lower()
-            if asset_type and any(x in asset_type for x in ('bond','note','preferred','municipal','corporate note')):
+            # V2.14.38：Open Cabinet 明確說明 OGE 沒有 structured asset_type；
+            # 固定收益類型由券名中的 coupon/maturity 推導，因此不能依賴 asset_type。
+            sec_upper=re.sub(r'\s+',' ',security).upper().strip()
+            fixed_income_terms=(
+                ' MUNICIPAL BOND',' CORPORATE NOTE',' NOTE ',' NTS ',' BOND ',
+                ' REV ',' REVENUE ',' DUE ',' YTM ',' B/E ',' DEBENTURE',
+                ' TREASURY',' T-BILL',' CERTIFICATE',' FIX-TO-FLOAT',
+                ' FIXED TO FLOAT',' ACCRUED INT',' REG INT',' DUE DATE',
+                ' ZERO COUPON',' COUPON'
+            )
+            if any(x in sec_upper for x in fixed_income_terms) or re.search(r'\d+(?:\.\d+)?\s*%',sec_upper):
                 continue
-            if not _trump_is_stock_or_etf_name(security):
-                # 有 ticker 時允許 ETF/股票名稱未含 INC/CORP 等字樣，但仍拒絕固定收益。
-                if not ticker or not _trump_is_stock_or_etf_name(security+' '+ticker):
+            # Open Cabinet 已提供 ticker 時，ticker 比 INC/CORP 關鍵字更可靠。
+            if ticker:
+                if not re.fullmatch(r'[A-Z]{1,6}(?:-[A-Z])?',ticker):
                     continue
-            dt=_trump_normalize_ocr_date(str(item.get('date') or item.get('tradeDate') or ''))
+            elif not _trump_is_stock_or_etf_name(security):
+                continue
+            raw_date=str(item.get('date') or item.get('tradeDate') or '').strip()
+            dt=_trump_normalize_ocr_date(raw_date)
             if not dt:
-                dt=_trump_normalize_transaction_date(str(item.get('date') or item.get('tradeDate') or ''))
+                dt=_trump_normalize_transaction_date(raw_date)
+            if not dt:
+                # V2.14.38：CSV 使用 ISO 日期（YYYY-MM-DD）時直接解析。
+                mi=re.fullmatch(r'(\d{4})-(\d{1,2})-(\d{1,2})',raw_date)
+                if mi:
+                    try:
+                        yy,mm,dd=map(int,mi.groups())
+                        dt=datetime(yy,mm,dd,tzinfo=TW_TZ).strftime('%Y-%m-%d')
+                    except Exception:
+                        dt=None
             if not dt:
                 continue
-            vr=str(item.get('amount_range') or item.get('amountRange') or item.get('amount') or '').strip()
+            vr=str(item.get('amount_range') or item.get('amountRange') or item.get('amount') or item.get('valueRange') or '').strip()
             if not vr:
                 continue
-            mid=to_float(item.get('midpoint_estimate') or item.get('midpoint') or item.get('value_midpoint'))
+            mid=to_float(item.get('midpoint_estimate') or item.get('midpointEstimate') or item.get('midpoint') or item.get('value_midpoint') or item.get('valueMidpoint'))
             if mid is None:
                 mid=_trump_value_midpoint(vr)
             if mid is None:
@@ -11889,7 +11911,7 @@ def _trump_open_cabinet_fallback():
             key=(row.get('ticker',''),row.get('side'),row.get('date'),row.get('security_name',''),row.get('value_range'))
             dedup[key]=row
         rows=list(dedup.values())
-        print(f'Trump 278-T Open Cabinet fallback：解析={len(rows)} 股票/ETF={len(rows)}',flush=True)
+        print(f'Trump 278-T Open Cabinet fallback：Trump原始交易={raw_trump_rows}；解析股票/ETF={len(rows)}',flush=True)
         return rows
     except Exception as e:
         print(f'Trump 278-T Open Cabinet fallback 失敗：{type(e).__name__}: {e}',flush=True)
@@ -11897,7 +11919,7 @@ def _trump_open_cabinet_fallback():
 
 
 def _load_trump_transactions():
-    """V2.14.36：交易 cache V9。Actions 產生的最新 cache 優先，Render 若本機
+    """V2.14.36：交易 cache V10。Actions 產生的最新 cache 優先，Render 若本機
     沒有有效 cache 則讀 GitHub raw；只有完全沒有有效資料時才重新抓 OGE PDF。"""
     required_sources=set(TRUMP_OGE_TRANSACTION_URLS)
 
@@ -11958,7 +11980,7 @@ def _load_trump_transactions():
         if fallback_rows:
             rows=fallback_rows
             diagnostics.append({'fallback':'open_cabinet','parsed':len(fallback_rows)})
-            print(f'Trump 278-T：V2.14.37 fallback 取代 PDF 解析結果，共 {len(rows)} 筆股票/ETF',flush=True)
+            print(f'Trump 278-T：V2.14.38 fallback 取代 PDF 解析結果，共 {len(rows)} 筆股票/ETF',flush=True)
 
     dedup={}
     for row in rows:
@@ -11971,7 +11993,7 @@ def _load_trump_transactions():
                  '_parsed_count':len(rows),'_stock_etf_count':sum(1 for x in rows if x.get('asset_type')=='stock_etf'),
                  'source_url':TRUMP_OGE_TRANSACTION_URLS,'diagnostics':diagnostics,'data':rows}
         save_json(TRUMP_TRANSACTION_CACHE_FILE,payload)
-        print(f'Trump 278-T：V9 合併後 {len(rows)} 筆；股票/ETF {payload["_stock_etf_count"]} 筆',flush=True)
+        print(f'Trump 278-T：V10 合併後 {len(rows)} 筆；股票/ETF {payload["_stock_etf_count"]} 筆',flush=True)
         return rows
 
     # 重要：解析失敗時絕不把空結果寫成有效 cache，也不把 V6 以下 cache 當成新版資料。
@@ -12109,6 +12131,8 @@ def _sanitize_trump_portfolio_rows(rows):
     for row in rows:
         if not isinstance(row,dict): continue
         name=str(row.get('name','')).strip()
+        # OGE 年度表部分 ETF 名稱後會帶 Yes/No 類欄位標記；不屬於證券名稱。
+        name=re.sub(r'\s+(?:Yes|No)$','',name,flags=re.I).strip()
         ticker=str(row.get('ticker','')).upper().strip()
         # 只接受可由安全 alias / 明確 ticker 辨識的股票或 ETF。
         # V2.14.37：年度報告某些固定收益列會把 coupon / DUE 直接附在公司名後，
