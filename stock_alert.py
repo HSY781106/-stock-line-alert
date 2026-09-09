@@ -1,4 +1,4 @@
-# stock_alert.py V2.14.41
+# stock_alert.py V2.14.42
 # V2.14.08：V2.14.05 完整覆蓋版；保留重大消息面「多公司新聞隔離」邏輯，
 #             修正 LINE 15 分鐘區間通知遺失「加碼分析／建議」問題，並修正目前價格不得使用過期市場股票池價格。
 #             重大消息評分只使用新聞標題，RSS description/snippet/延伸內容完全不參與評分。
@@ -183,11 +183,30 @@ TRUMP_MAX_HOLDINGS = 30
 TRUMP_TRANSACTION_CACHE_FILE = 'trump_transaction_cache.json'
 TRUMP_TRANSACTION_CACHE_DAYS = 2
 TRUMP_TRANSACTION_CACHE_VERSION = 12
-# V2.14.41：Trump 訊號拆成兩層：① OGE/Open Cabinet 官方已申報交易；② 最近 30 日公開新聞/市場動向。
+# V2.14.42：Trump 訊號拆成兩層：① OGE/Open Cabinet 官方已申報交易；② 最近 30 日公開新聞/市場動向。
 TRUMP_RECENT_NEWS_CACHE_HOURS = 6
 TRUMP_RECENT_NEWS_LOOKBACK_DAYS = 30
 TRUMP_RECENT_NEWS_MAX_ITEMS = 12
 _TRUMP_RECENT_NEWS_CACHE = {}
+
+# V2.14.42：獨立總經風險引擎。資料來源：FRED graph CSV + 台灣央行/主計總處公開 JSON。
+MACRO_CACHE_FILE = 'macro_systemic_cache_v21442.json'
+MACRO_CACHE_HOURS = 6
+MACRO_TIMEOUT = 10
+FRED_GRAPH_URL = 'https://fred.stlouisfed.org/graph/fredgraph.csv?id={series}'
+DGBAS_NEWS_JSON_URL = 'https://www.dgbas.gov.tw/OpenData.aspx?SN=5B2F388DBDFAF866'
+CBC_HOME_URL = 'https://www.cbc.gov.tw/tw/mp-1.html'
+
+MACRO_FRED_SERIES = {
+    'fed_rate': 'FEDFUNDS',
+    'us_cpi': 'CPIAUCSL',
+    'us_gdp_growth': 'A191RL1Q225SBEA',
+    'us_unemployment': 'UNRATE',
+    'us_gdp_growth': 'A191RL1Q225SBEA',
+    'us_10y': 'DGS10',
+    'us_curve_10y2y': 'T10Y2Y',
+}
+_MACRO_CACHE = {}
 TRUMP_OGE_TRANSACTION_URLS = [
     # 2026-08-12：最新一批，涵蓋 2026-06-01～06-29 大量股票交易。
     'https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/2BF91F890F718ACB85258E5B002DE16B/%24FILE/Donald-J-Trump-08.12.2026-278T.pdf',
@@ -6410,63 +6429,22 @@ def _eps_growth_from_quarterly_model(code, ts, now=None, market=None, industry=N
         return None,None
 
 def _format_eps_model_summary(detail):
-    """V2.12.05：精簡 LINE EPS 統計版面；資料與統計分區顯示。"""
-    if not isinstance(detail, dict):
-        return ''
-    if detail.get('model_skipped'):
-        reason=detail.get('skip_reason','資料不足')
-        cagr=to_float(detail.get('gate_cagr'))
-        yoy=detail.get('gate_yoy') or []
-        ctext=f'{cagr:.2f}%' if cagr is not None and math.isfinite(cagr) else 'N/A'
-        ytext='、'.join(f'{float(x):.1f}%' for x in yoy if to_float(x) is not None) or 'N/A'
-        return (f'【EPS統計驗證】\n'
-                f'模型：未通過EPS穩定性門檻，略過高成本Forward EPS＋Cycle模型\n'
-                f'原因：{reason}\n'
-                f'最近5年CAGR：{ctext}｜最近4年YoY：{ytext}\n'
-                f'PEG：N/A（獲利穩定性不足，不納入PEG估值）\n')
-    st=detail.get('annual_trend_stats') or {}
-    if not isinstance(st,dict): st={}
+    """V2.14.42：EPS模型保留完整計算，但前台只呈現決策有用資訊；統計回歸細節留後台。"""
+    if not isinstance(detail,dict): return ''
     def nf(v,d=2):
-        x=to_float(v)
-        return f'{x:.{d}f}' if x is not None and math.isfinite(x) else 'N/A'
-    p=to_float(st.get('p')); r2=to_float(st.get('r2')); n=st.get('n') or 'N/A'
-    ptxt=f'{p:.3f}' if p is not None and math.isfinite(p) else 'N/A'
-    rtxt=f'{r2:.2f}' if r2 is not None and math.isfinite(r2) else 'N/A'
-    annual_growth=to_float(detail.get('annual_trend_growth'))
-    recent_growth=to_float(detail.get('recent_trend_growth'))
-    valuation_growth=to_float(detail.get('valuation_growth'))
-    eps_growth=to_float(detail.get('growth'))
-    lines=['【EPS統計驗證】',
-           f'模型：{detail.get("eps_industry_model","一般型")}｜{detail.get("eps_industry_model_method","產業分層")}',
-           f'長期趨勢：{nf(annual_growth)}%｜近期10年：{nf(recent_growth if recent_growth is not None else annual_growth)}%｜{detail.get("trend_credibility","C")}級',
-           f'統計可信度：p={ptxt}｜R²={rtxt}｜n={n}']
-    beta=to_float(st.get('beta')); se=to_float(st.get('se')); t=to_float(st.get('t')); lo=to_float(st.get('ci_low')); hi=to_float(st.get('ci_high'))
-    if beta is not None or se is not None or t is not None:
-        lines.append(f'回歸：β={nf(beta,3)}｜SE={nf(se,3)}｜t={nf(t,2)}｜95% CI {nf(lo,3)}～{nf(hi,3)}')
-    sw=detail.get('seasonal_weights') or {}
-    q=[]
-    for i in range(1,5):
-        w=to_float(sw.get(i))
-        if w is not None: q.append(f'Q{i} {w*100:.1f}%')
-    if q: lines.append('季節分布：'+'｜'.join(q))
-    rw=to_float(detail.get('model_weight_regression')); tw=to_float(detail.get('model_weight_time_series'))
-    rb=detail.get('regression_backtest') or {}; tb=detail.get('time_series_stats') or {}
-    if rw is not None or tw is not None:
-        text=f'融合：回歸 {rw:.0%}' if rw is not None else '融合：回歸 N/A'
-        text+=f'＋時間序列 {tw:.0%}' if tw is not None else '＋時間序列 N/A'
-        rr=to_float(rb.get('backtest_rmse')); tr=to_float(tb.get('rmse'))
-        if rr is not None and tr is not None: text+=f'｜RMSE {rr:.2f}/{tr:.2f}'
-        lines.append(text)
-    fg=to_float(detail.get('forward_growth')); yg=to_float(detail.get('recent_growth_signal')); cg=to_float(detail.get('cycle_growth'))
-    if valuation_growth is not None:
-        lines.append(f'估值：Forward EPS {nf(fg)}%｜最新YTD {nf(yg)}%｜中週期 {nf(cg)}%')
-        lines.append(f'PEG正規化成長：{nf(valuation_growth)}%｜可信度：{detail.get("valuation_confidence","低")}｜Cycle權重：{to_float(detail.get("cycle_credibility_weight")):.0%}')
-    else:
-        lines.append(f'估值：Forward EPS {nf(fg)}%｜最新YTD {nf(yg)}%｜中週期 {nf(cg)}%')
-        lines.append('PEG正規化成長：N/A（主要模型不足，未硬算PEG）')
+        x=to_float(v); return f'{x:.{d}f}' if x is not None and math.isfinite(x) else 'N/A'
+    if detail.get('model_skipped'):
+        reason=detail.get('skip_reason','資料不足'); cagr=to_float(detail.get('gate_cagr'))
+        return f'📈 EPS模型：資料穩定性不足，採保守處理｜原因：{reason}｜5年CAGR：{nf(cagr)}%\n'
+    model=detail.get('eps_industry_model','一般型'); method=detail.get('eps_industry_model_method','產業分層')
+    grade=detail.get('trend_credibility','C'); annual=detail.get('annual_trend_growth'); recent=detail.get('recent_trend_growth')
+    fg=detail.get('forward_growth'); yg=detail.get('recent_growth_signal'); cg=detail.get('cycle_growth'); vg=detail.get('valuation_growth')
+    lines=[f'📈 EPS模型：{model}｜可信度 {grade}級｜歷史樣本 {detail.get("long_history_years", "N/A")}期',
+           f'長期趨勢 {nf(annual)}%｜近期趨勢 {nf(recent if recent is not None else annual)}%',
+           f'Forward EPS {nf(fg)}%｜最新YTD {nf(yg)}%｜中週期 {nf(cg)}%']
+    if vg is not None: lines.append(f'PEG正規化成長 {nf(vg)}%｜可信度 {detail.get("valuation_confidence","低")}')
     correction=to_float(detail.get('correction_factor'))
-    if correction is not None:
-        lines.append(f'已公布校正：{correction:.3f}｜樣本 {len(detail.get("correction_history") or [])}')
+    if correction is not None: lines.append(f'已公布校正 {correction:.3f}｜樣本 {len(detail.get("correction_history") or [])}')
     base=to_float(detail.get('current_annual')); cons=to_float(detail.get('conservative_annual')); opt=to_float(detail.get('optimistic_annual'))
     if base is not None: lines.append(f'全年EPS：保守 {nf(cons)}｜基準 {nf(base)}｜樂觀 {nf(opt)}')
     return '\n'.join(lines)+'\n'
@@ -9612,11 +9590,12 @@ def etf_analysis(query):
         premium=x if -50<=x<=50 else None
     score,reasons,completeness=score_etf(tech,p)
     trump=trump_stock_factor(symbol)
+    trump_theme=trump_theme_stock_factor(symbol, info.get('industry',''), info.get('subindustries',[]), info.get('name',''))
     if score is None:
         verdict='⚪ 資料不足，暫不評估'; score_text='資料不足'
     else:
         # V2.14.32：美股/ETF個別標的可納入川普直接交易曝險；第二層買點模型不受影響。
-        score=max(0,min(100,int(score)+int(trump.get('factor',0))))
+        score=max(0,min(100,int(score)+int(trump.get('factor',0))+int(trump_theme.get('factor',0))))
         verdict='🟢 可分批配置' if score>=75 else '🟡 等待回檔/止跌' if score>=60 else '🟠 暫緩配置' if score>=40 else '🔴 不建議配置'
         score_text=f'{score}/100'
 
@@ -9633,7 +9612,7 @@ def etf_analysis(query):
     tech_fields=['rsi','k','d','ma20','ma60']
     tech_ok=sum(1 for k in tech_fields if tech.get(k) is not None)
     tech_pct=int(round(tech_ok/len(tech_fields)*100))
-    return (f'📊 ETF「投資價值 × 買點」雙層分析 V2.14.21\n\n標的：{info["name"]}（{code}）\n代號：{symbol}\n\n'
+    return (f'📊 ETF「投資價值 × 買點」雙層分析 V2.14.42\n\n標的：{info["name"]}（{code}）\n代號：{symbol}\n\n'
             f'【第一層｜ETF投資價值】\nETF特性：40分\nNAV：{fmt(nav)}\n溢價/折價：{fmt(premium)}%\n殖利率：{fmt(p.get("yield"))}%\nBeta：{fmt(p.get("beta"))}\n資產規模：{fmt(p.get("assets"),0)}\n\n'
             f'技術面：60分\n價格：{fmt(price)}\nRSI：{fmt(tech.get("rsi"))}\nKD：K={fmt(tech.get("k"))} / D={fmt(tech.get("d"))}\nMA20：{fmt(tech.get("ma20"))}\nMA60：{fmt(tech.get("ma60"))}\n趨勢：{tech.get("trend") or "N/A"}\n'
             f'技術資料完整度：{tech_ok}/5（{tech_pct}%）\n評分資料完整度：{completeness:.0f}%\n\n'
@@ -10083,6 +10062,12 @@ def analysis(
     # V2.14.28：台股只使用川普整體股票資金風向。
     trump_global = trump_market_factor()
     trump_global_adj = int(trump_global.get('factor', 0))
+    trump_theme = trump_theme_stock_factor(symbol, industry, subindustries, name)
+    trump_theme_adj = int(trump_theme.get('factor', 0))
+
+    # V2.14.42：第三層外部環境——只把與該股票經營模式相關的台美總經因素納入。
+    macro = macro_stock_factor(industry, subindustries, name)
+    macro_adj = int(macro.get('factor', 0))
 
     base_total = (
         fs
@@ -10094,7 +10079,7 @@ def analysis(
         0,
         min(
             100,
-            base_total + news_adj + trump_global_adj
+            base_total + news_adj + trump_global_adj + trump_theme_adj + macro_adj
         )
     )
 
@@ -10291,99 +10276,47 @@ def analysis(
     # --------------------------------------------------------
 
     return (
-        f'📊 股票「投資價值 × 買點」雙層分析 V2.14.21\n\n'
-        f'標的：{name}（{code}）\n'
-        f'市場：{market}\n'
-        f'產業：{industry}\n'
-        f'次產業：{subindustry_display}\n\n'
-
-        f'【估值 / 基本面 40分】\n'
-        f'估值模型：{INDUSTRY_MODEL.get(industry, DEFAULT_MODEL).get("profile", "特殊型")}\n'
-        f'PE：{fmt(pe)}\n'
-        f'一年平均PE：{fmt(one)}'
-        f'（樣本 {sample}{("，" + one_label) if one_label else ""}）\n'
-        f'{"同次產業" if subindustries else "同大產業"}Top10平均PE：'
-        f'{fmt(peer_mean)}\n'
-        f'{"同次產業" if subindustries else "同大產業"}Top10中位數PE：'
-        f'{fmt(peer_med)}'
-        f'（有效 {len(vals)}/10）\n'
-        f'PB：{fmt(pb)}\n'
-        f'殖利率：{fmt(yld)}%\n'
-        f'EPS成長率：{fmt(yf_f["eps_growth"])}%\n'
+        f'📊 {name}（{code}）｜{market}\n'
+        f'━━━━━━━━━━━━━━━━━━━━\n'
+        f'🎯 綜合評分：{total}/100　{verdict}\n'
+        f'目前價格：{fmt(tech.get("price"))}　趨勢：{tech.get("trend") or "N/A"}\n\n'
+        f'💰 基本面　{fs}/40\n'
+        f'PE {fmt(pe)}｜1Y PE {fmt(one)}｜同業中位數 {fmt(peer_med)}\n'
+        f'PB {fmt(pb)}｜殖利率 {fmt(yld)}%｜ROE {fmt(yf_f["roe"])}%\n'
+        f'EPS成長 {fmt(yf_f["eps_growth"])}%｜PEG {fmt(yf_f["peg"])}\n'
         f'{_format_eps_model_summary(yf_f.get("eps_model_detail"))}\n'
-        f'{("PEG：" + fmt(yf_f["peg"]) + "\n") if _available_metrics.get("peg", False) else ""}'
-        f'ROE：{fmt(yf_f["roe"])}%\n'
-        f'基本面得分：{fs}/40\n'
-        f'{fund_weight_text}\n\n'
-        f'【{peer_mode}】\n'
-        f'{peer_text}\n\n'
-
-        f'【技術面 30分】\n'
-        f'最新價格：{fmt(tech.get("price"))}\n'
-        f'價格來源：{tech.get("price_source") or "N/A"}\n'
-        f'RSI：{fmt(tech["rsi"])}\n'
-        f'KD：'
-        f'K={fmt(tech["k"])} / '
-        f'D={fmt(tech["d"])}\n'
-        f'MA20：{fmt(tech["ma20"])}\n'
-        f'MA60：{fmt(tech["ma60"])}\n'
-        f'趨勢：'
-        f'{tech["trend"] or "N/A"}\n'
-        f'距20日低點：'
-        f'{pct(tech["distance_low"])}\n'
-        f'技術得分：{ts}/30\n\n'
-
-        f'【籌碼面 20分】\n'
-        f'法人最新：'
-        f'{fmt(inst["latest"],0)} 股\n'
-        f'法人5日：'
-        f'{fmt(inst["5d"],0)} 股\n'
-        f'法人20日：'
-        f'{fmt(inst["20d"],0)} 股\n'
-        f'融資變化：'
-        f'{fmt(margin["margin_change"],0)} 張\n'
-        f'融資餘額：'
-        f'{fmt(margin["margin_balance"],0)} 張\n'
-        f'融券變化：'
-        f'{fmt(margin["short_change"],0)} 張\n'
-        f'融券餘額：'
-        f'{fmt(margin["short_balance"],0)} 張\n'
-        f'籌碼得分：{cs}/20\n\n'
-
-        f'【風險 10分】\n'
-        f'風險扣分：-{risk}\n'
+        f'📈 技術面　{ts}/30\n'
+        f'RSI {fmt(tech["rsi"])}｜KD {fmt(tech["k"])} / {fmt(tech["d"])}｜MA20 {fmt(tech["ma20"])}｜MA60 {fmt(tech["ma60"])}\n'
+        f'距20日低點 {pct(tech["distance_low"])}\n\n'
+        f'🏦 籌碼面　{cs}/20\n'
+        f'法人：1日 {fmt(inst["latest"],0)}｜5日 {fmt(inst["5d"],0)}｜20日 {fmt(inst["20d"],0)}\n'
+        f'融資：{fmt(margin["margin_change"],0)} 張（餘額 {fmt(margin["margin_balance"],0)}）｜融券：{fmt(margin["short_change"],0)} 張\n\n'
+        f'⚠️ 風險　{10-risk}/10\n'
         f'{("、".join(rr) if rr else "目前無主要風險警訊")}\n\n'
-
-        f'【重大消息面】\n'
-        f'消息面調整：{news_adj:+d} 分\n'
+        f'📰 重大消息　{news_adj:+d}\n'
         f'{("；".join(news_reasons) if news_reasons else "近14日未偵測到重大事件")}\n'
-        f'{("近期重大事件：\\n" + "\\n".join((("• " + x.get("date","")[:10] + " " + x.get("title","")) for x in news_events[:3])) if news_events else "")}\n\n'
-
-        f'【加碼決策】\n'
-        f'原始綜合分數：{base_total}/100\n'
-        f'消息面調整：{news_adj:+d}\n'
-        f'綜合評分：{total}/100\n'
-        f'結論：{verdict}\n'
-        f'事件處置等級：{event_level}/5\n'
-        f'持股處置：{holding_action}\n'
-        f'處置理由：{holding_reason}\n\n'
-
-        f'【第二層｜🎯 買點評估】\n'
-        f'買點評分：{buy["score"]}/100\n'
-        f'目前買點：{buy["verdict"]}\n'
-        f'短中期趨勢：{buy["trend_state"]}\n'
-        f'5日：{pct(buy["ret5"])}｜10日：{pct(buy["ret10"])}｜20日：{pct(buy["ret20"])}\n'
+        f'{("近期：" + "；".join(x.get("date","")[:10]+" "+x.get("title","") for x in news_events[:3])) if news_events else ""}\n\n'
+        f'🏭 產業環境　{("次產業：" + subindustry_display)}\n'
+        f'估值比較：{("同次產業" if subindustries else "同大產業")}中位數 PE {fmt(peer_med)}；本股 {fmt(pe)}\n\n'
+        f'🇺🇸 Trump　{trump_global.get("factor",0):+d}　{trump_global.get("state","無資料")}\n'
+        f'產業政策：{trump_theme_adj:+d}　{trump_theme.get("state","無資料")}\n'
+        f'Trump主題：{("、".join(trump_theme.get("reasons") or []) or "目前無直接相關產業政策訊號")}\n'
+        f'🌎 總經　{macro_adj:+d}　{macro.get("state","無資料")}\n'
+        f'總經類型：{macro.get("profile","一般市場型")}\n'
+        f'總經重點：{("、".join(macro.get("reasons") or []) or "目前沒有需要特別調整的相關總經因素")}\n\n'
+        f'🎯 第二層｜買點 {buy["score"]}/100　{buy["verdict"]}\n'
+        f'5日 {pct(buy["ret5"])}｜10日 {pct(buy["ret10"])}｜20日 {pct(buy["ret20"])}\n'
         f'第一觀察買點：{_z1}\n第二觀察買點：{_z2}\n'
-        f'目前價格：{fmt(tech.get("price"))}\n失守參考：{fmt(buy["invalidation"])}\n'
-        f'進場策略：{buy["entry"]}\n止跌確認：{_confirm}\n買點風險：{_buyrisk}\n\n'
-
-        f'加分因素：'
-        f'{"、".join(fr + tr) if fr + tr else "無"}\n'
-        f'籌碼訊號：'
-        f'{"、".join(cr) if cr else "無"}\n'
-        f'風險提醒：'
-        f'{"、".join(rr) if rr else "目前無主要風險警訊"}'
+        f'目前價格：{fmt(tech.get("price"))}｜失守參考：{fmt(buy["invalidation"])}\n'
+        f'策略：{buy["entry"]}\n止跌確認：{_confirm}\n買點風險：{_buyrisk}\n\n'
+        f'📌 最終建議：{verdict}\n'
+        f'原始分數 {base_total}/100｜消息 {news_adj:+d}｜Trump資金 {trump_global_adj:+d}｜Trump產業 {trump_theme_adj:+d}｜總經 {macro_adj:+d}\n'
+        f'事件處置：{holding_action}｜{holding_reason}\n\n'
+        f'加分因素：{("、".join(fr + tr) if fr + tr else "無")}\n'
+        f'風險提醒：{("、".join(rr) if rr else "目前無主要風險警訊")}\n\n'
+        f'🔬 詳細模型：統計回歸、R²、p-value、β、SE、CI、RMSE、季節分布與實際配分仍保留於後台計算；前台不重複展開。'
     )
+
 
 
 # ============================================================
@@ -12200,78 +12133,251 @@ def _trump_news_company_name(symbol):
     return sym
 
 
-def _trump_recent_news_fetch(symbol=''):
-    """V2.14.41：第二層——最近 30 日公開新聞/市場動向。
-    只採計標題明確涉及 Trump 本人股票/投資/交易/持倉的文章；一般政策新聞不當成交易訊號。
-    """
-    global _TRUMP_RECENT_NEWS_CACHE
-    key=str(symbol or '').upper().strip() or '__MARKET__'
-    now_ts=time.time()
-    cached=_TRUMP_RECENT_NEWS_CACHE.get(key)
-    if isinstance(cached,dict) and now_ts-float(cached.get('cached_at',0) or 0)<TRUMP_RECENT_NEWS_CACHE_HOURS*3600:
-        return cached.get('data',{})
-    company=_trump_news_company_name(key) if key!='__MARKET__' else ''
-    q='Trump stock investment shares portfolio trade holdings' if key=='__MARKET__' else f'Trump {company} stock investment shares trade'
-    rss_url='https://news.google.com/rss/search?q='+quote(q)+'&hl=en-US&gl=US&ceid=US:en'
-    out={'query':q,'source_url':rss_url,'items':[],'raw_items':0,'qualified_items':0,'positive':0,'negative':0,'neutral':0,'score':0,'latest_published':'','error':''}
-    try:
-        r=requests.get(rss_url,timeout=12,headers={'User-Agent':'stock-alert/2.14.41'})
-        r.raise_for_status()
-        root=ET.fromstring(r.content)
-        cutoff=datetime.now(TW_TZ)-timedelta(days=TRUMP_RECENT_NEWS_LOOKBACK_DAYS)
-        raw=[]
-        for item in root.findall('.//item'):
-            title=(item.findtext('title') or '').strip(); link=(item.findtext('link') or '').strip(); pub=(item.findtext('pubDate') or '').strip()
-            if not title: continue
-            dt=None
-            try: dt=parsedate_to_datetime(pub).astimezone(TW_TZ)
-            except Exception: pass
-            raw.append((dt,title,link,pub))
-        out['raw_items']=len(raw)
-        positive_words=('bought','buy','buys','purchase','purchased','invested','investment','acquired','stake','shares in','added to','increased holdings','added shares')
-        negative_words=('sold','sell','sells','sale','divested','divest','reduced holdings','trimmed','dumped','exited','disposed')
-        personal_words=('trump bought','trump purchased','trump invested','trump investment','trump sold','trump sells','trump sale','trump shares','trump stake','trump portfolio','trump holdings','trump trade','trump trades','trump trading','president trump bought','president trump sold','trump financial disclosure')
-        seen=set()
-        for dt,title,link,pub in sorted(raw,key=lambda x:x[0] or datetime.min.replace(tzinfo=TW_TZ),reverse=True):
-            if dt is not None and dt<cutoff: continue
-            low=title.lower()
-            if key!='__MARKET__':
-                terms=[key.lower()]
-                if company: terms.append(company.lower())
-                if not any(t and t in low for t in terms): continue
-            if not any(w in low for w in personal_words): continue
-            if not any(w in low for w in positive_words+negative_words): continue
-            norm=re.sub(r'\W+',' ',title.lower()).strip()
-            if norm in seen: continue
-            seen.add(norm)
-            if any(w in low for w in negative_words): side='negative'; score=-1
-            elif any(w in low for w in positive_words): side='positive'; score=1
-            else: side='neutral'; score=0
-            if side=='positive' and not any(w in low for w in ('bought','buy','purchase','purchased','invested','acquired','added to','added shares','increased holdings','stake','shares in')):
-                side='neutral'; score=0
-            out['items'].append({'title':title[:300],'link':link,'published':dt.isoformat() if dt else pub,'side':side,'score':score,'source':'Google News RSS'})
-            out[side]+=1
-            if len(out['items'])>=TRUMP_RECENT_NEWS_MAX_ITEMS: break
-        out['qualified_items']=len(out['items'])
-        if out['items']: out['latest_published']=out['items'][0].get('published','')
-        out['score']=max(-4,min(4,sum(int(x.get('score',0)) for x in out['items'])))
-    except Exception as e:
-        out['error']=f'{type(e).__name__}: {e}'
-    _TRUMP_RECENT_NEWS_CACHE[key]={'cached_at':now_ts,'data':out}
+def _macro_fred_latest(series_id, derive_yoy=False):
+    """V2.14.42：FRED graph CSV；必要時由月度/季資料計算 YoY，避免把指數/水位誤當成成長率。"""
+    url=FRED_GRAPH_URL.format(series=quote(series_id))
+    r=requests.get(url,timeout=MACRO_TIMEOUT,headers={'User-Agent':'stock-alert/2.14.42'})
+    r.raise_for_status()
+    df=pd.read_csv(pd.io.common.StringIO(r.text))
+    if df.empty or len(df.columns)<2: return None,None
+    value_col=df.columns[-1]; df[value_col]=pd.to_numeric(df[value_col],errors='coerce'); df=df.dropna(subset=[value_col]).reset_index(drop=True)
+    if df.empty: return None,None
+    if derive_yoy:
+        # FRED monthly CPI：12期；若資料頻率不同則退回最新值，不猜頻率。
+        if len(df)>=13:
+            latest=float(df.iloc[-1][value_col]); prev=float(df.iloc[-13][value_col])
+            if prev!=0: return (latest/prev-1)*100, str(df.iloc[-1].iloc[0])
+    row=df.iloc[-1]; return float(row[value_col]),str(row.iloc[0])
+
+
+def _macro_dgbas_latest():
+    """V2.14.42：主計總處公開 JSON，從最新新聞稿抓 GDP/CPI/就業等已發布值。"""
+    out={'gdp_yoy':None,'cpi_yoy':None,'unemployment':None,'sources':[],'published':{}}
+    r=requests.get(DGBAS_NEWS_JSON_URL,timeout=MACRO_TIMEOUT,headers={'User-Agent':'stock-alert/2.14.42'})
+    r.raise_for_status(); data=r.json()
+    if not isinstance(data,list): return out
+    for x in data:
+        title=str(x.get('title') or '')
+        content=re.sub(r'<[^>]+>',' ',str(x.get('內容') or ''))
+        text=title+' '+content
+        src=str(x.get('Source') or '')
+        date=str(x.get('張貼日期') or '')
+        if out['gdp_yoy'] is None and ('GDP' in title.upper() or '經濟成長率' in title):
+            m=re.search(r'(?:yoy為|yoy為|yoy)\s*([0-9]+(?:\.[0-9]+)?)',text,re.I)
+            if m: out['gdp_yoy']=float(m.group(1)); out['sources'].append(src); out['published']['gdp']=date
+        if out['cpi_yoy'] is None and 'CPI' in title.upper():
+            m=re.search(r'(?:年增率漲|年增率為|年增)\s*([0-9]+(?:\.[0-9]+)?)',text)
+            if m: out['cpi_yoy']=float(m.group(1)); out['sources'].append(src); out['published']['cpi']=date
+        if out['unemployment'] is None and ('失業率' in title):
+            m=re.search(r'失業率為\s*([0-9]+(?:\.[0-9]+)?)%',text)
+            if m: out['unemployment']=float(m.group(1)); out['sources'].append(src); out['published']['unemployment']=date
+        if out['gdp_yoy'] is not None and out['cpi_yoy'] is not None and out['unemployment'] is not None:
+            break
     return out
 
 
+def _macro_cbc_latest():
+    """V2.14.42：央行首頁重要指標；先切出指標區段，再取該區段最後一個數值，避免把日期誤當資料。"""
+    out={'usd_twd':None,'m2_yoy':None,'overnight':None,'discount_rate':None,'source':CBC_HOME_URL}
+    r=requests.get(CBC_HOME_URL,timeout=MACRO_TIMEOUT,headers={'User-Agent':'stock-alert/2.14.42'})
+    r.raise_for_status(); text=re.sub(r'<[^>]+>',' ',r.text); text=re.sub(r'\s+',' ',text)
+    labels=['新臺幣/美元銀行間收盤匯率','貨幣總計數M2年增率','金融業隔夜拆款利率','重貼現率']
+    patterns={'新臺幣/美元銀行間收盤匯率':'usd_twd','貨幣總計數M2年增率':'m2_yoy','金融業隔夜拆款利率':'overnight','重貼現率':'discount_rate'}
+    positions=[]
+    for lab in labels:
+        i=text.find(lab)
+        if i>=0: positions.append((i,lab))
+    positions.sort()
+    for idx,(pos,lab) in enumerate(positions):
+        endpos=positions[idx+1][0] if idx+1<len(positions) else min(len(text),pos+180)
+        seg=text[pos:endpos]
+        nums=re.findall(r'(?<!\d)([0-9]+(?:\.[0-9]+)?)(?:%)?',seg)
+        if not nums: continue
+        # 第一個數字常是日期年份；對所有指標取最後一個數值。
+        out[patterns[lab]]=float(nums[-1])
+    return out
+
+
+def macro_fetch(force=False):
+    """V2.14.42：台美總經資料中心；失敗單項不污染其他指標。"""
+    now=time.time(); cached=load_json(MACRO_CACHE_FILE)
+    if not force and isinstance(cached,dict) and cached.get('data') and now-float(cached.get('_cached_at',0) or 0)<MACRO_CACHE_HOURS*3600:
+        return cached.get('data',{})
+    d={'updated_at':datetime.now(TW_TZ).isoformat(),'us':{},'taiwan':{},'sources':{},'errors':[]}
+    for key,sid in MACRO_FRED_SERIES.items():
+        try:
+            v,dt=_macro_fred_latest(sid, derive_yoy=(key=='us_cpi')); d['us'][key]={'value':v,'date':dt,'series':sid, 'unit':'YoY %' if key=='us_cpi' else ''}
+        except Exception as e: d['errors'].append(f'FRED {sid}: {type(e).__name__}: {e}')
+    try:
+        tw=_macro_dgbas_latest(); d['taiwan'].update({k:tw.get(k) for k in ('gdp_yoy','cpi_yoy','unemployment')}); d['sources']['dgbas']=DGBAS_NEWS_JSON_URL
+    except Exception as e: d['errors'].append(f'DGBAS: {type(e).__name__}: {e}')
+    try:
+        twc=_macro_cbc_latest(); d['taiwan'].update(twc); d['sources']['cbc']=CBC_HOME_URL
+    except Exception as e: d['errors'].append(f'CBC: {type(e).__name__}: {e}')
+    # 所有來源都失敗時不建立空快取，下一次仍可重試；部分來源成功則保留可用資料。
+    success_count=sum(1 for v in d.get('us',{}).values() if isinstance(v,dict) and v.get('value') is not None) + sum(1 for k in ('gdp_yoy','cpi_yoy','unemployment','usd_twd','m2_yoy','overnight','discount_rate') if d.get('taiwan',{}).get(k) is not None)
+    if success_count>0:
+        payload={'_cached_at':now,'_version':1,'data':d}; save_json(MACRO_CACHE_FILE,payload)
+    return d
+
+
+def macro_profile_for_stock(industry, subindustries=None, name=''):
+    """V2.14.42：只挑與個股經營模式有關的總經變數，避免所有股票套同一套指標。"""
+    text=' '.join([str(industry or ''),str(name or '')]+[str(x) for x in (subindustries or [])]).lower()
+    tech=any(k in text for k in ('半導體','電子','電腦','光電','通信','伺服器','ic','ai'))
+    export=tech or any(k in text for k in ('鋼鐵','塑化','紡織','航運','機械','化學','汽車','零組件'))
+    financial=any(k in text for k in ('金融','銀行','保險','證券'))
+    domestic=any(k in text for k in ('食品','觀光','零售','通路','百貨','餐飲','營建','生技','醫療')) and not export
+    if financial: profile='金融敏感型'; keys=['fed_rate','us_10y','us_curve_10y2y','tw_rate','usd_twd','vix']
+    elif tech: profile='科技／出口敏感型'; keys=['us_gdp_growth','us_cpi','fed_rate','us_10y','us_curve_10y2y','tw_gdp','tw_cpi','tw_m2','usd_twd','vix']
+    elif export: profile='出口／景氣循環型'; keys=['us_gdp_growth','us_cpi','fed_rate','us_10y','tw_gdp','tw_cpi','usd_twd','vix']
+    elif domestic: profile='內需型'; keys=['tw_gdp','tw_cpi','tw_unemployment','tw_rate','tw_m2']
+    else: profile='一般市場型'; keys=['us_gdp_growth','fed_rate','us_10y','tw_gdp','tw_cpi','usd_twd','vix']
+    return profile,keys
+
+
+def macro_stock_factor(industry, subindustries=None, name=''):
+    """V2.14.42：將總經轉成個股相關的 -3~+3 輔助調整；資料不足時不硬算。"""
+    d=macro_fetch(); us=d.get('us',{}); tw=d.get('taiwan',{})
+    profile,keys=macro_profile_for_stock(industry,subindustries,name); score=0; reasons=[]
+    _macro_text=' '.join([str(industry or ''),str(name or '')]+[str(x) for x in (subindustries or [])]).lower()
+    export=any(k in _macro_text for k in ('半導體','電子','電腦','光電','通信','伺服器','ic','ai','鋼鐵','塑化','紡織','航運','機械','化學','汽車','零組件'))
+    def val(k):
+        if k.startswith('tw_'):
+            return {'tw_gdp':tw.get('gdp_yoy'),'tw_cpi':tw.get('cpi_yoy'),'tw_unemployment':tw.get('unemployment'),'tw_rate':tw.get('discount_rate'),'tw_m2':tw.get('m2_yoy')}.get(k)
+        if k=='usd_twd': return tw.get('usd_twd')
+        if k=='vix':
+            try: return float(yf.Ticker('^VIX').fast_info.get('last_price'))
+            except Exception: return None
+        z=us.get(k,{}); return z.get('value') if isinstance(z,dict) else None
+    # Growth
+    g=val('us_gdp_growth'); tg=val('tw_gdp')
+    if 'us_gdp_growth' in keys and g is not None:
+        if g>=3: score+=1; reasons.append('美國景氣穩健')
+        elif g<1: score-=1; reasons.append('美國景氣放緩')
+    if 'tw_gdp' in keys and tg is not None:
+        if tg>=4: score+=1; reasons.append('台灣景氣強')
+        elif tg<2: score-=1; reasons.append('台灣景氣放緩')
+    # Rates / inflation
+    fed=val('fed_rate'); ten=val('us_10y'); cpi=val('us_cpi'); twcpi=val('tw_cpi')
+    if 'fed_rate' in keys and fed is not None and fed>=4.5: score-=1; reasons.append('美國利率偏高')
+    if 'us_10y' in keys and ten is not None and ten>=4.5: score-=1; reasons.append('美債殖利率偏高')
+    if 'us_cpi' in keys and cpi is not None:
+        # CPI level不是直接通膨率，不能拿指數值當通膨率；故僅作資料展示，不參與此處評分。
+        pass
+    if 'tw_cpi' in keys and twcpi is not None and twcpi>=3: score-=1; reasons.append('台灣通膨偏高')
+    fx=val('usd_twd')
+    if 'usd_twd' in keys and fx is not None and export and fx>=32: score+=1; reasons.append('台幣偏弱有利出口換匯')
+    vix=val('vix')
+    if 'vix' in keys and vix is not None and vix>=25: score-=1; reasons.append('市場波動偏高')
+    # curve only as risk flag
+    curve=val('us_curve_10y2y')
+    if 'us_curve_10y2y' in keys and curve is not None and curve<-0.5: score-=1; reasons.append('美國殖利率曲線偏弱')
+    score=max(-3,min(3,score))
+    if score>=2: state='🟢 總經環境偏正面'
+    elif score>0: state='🟢 總經環境略偏正面'
+    elif score==0: state='🟡 總經環境中性'
+    elif score>-2: state='🟠 總經環境略偏負面'
+    else: state='🔴 總經環境偏負面'
+    return {'factor':score,'state':state,'profile':profile,'reasons':reasons[:5],'data':d,'keys':keys}
+
+
+def _trump_recent_news_fetch(symbol=''):
+    """V2.14.42：第二層 Trump 市場影響引擎。
+    同時追蹤：個人交易、政策/言論、政府投資、產業主題；政策不冒充 278-T 交易。
+    """
+    global _TRUMP_RECENT_NEWS_CACHE
+    key=str(symbol or '').upper().strip() or '__MARKET__'; now_ts=time.time()
+    cached=_TRUMP_RECENT_NEWS_CACHE.get(key)
+    if isinstance(cached,dict) and now_ts-float(cached.get('cached_at',0) or 0)<TRUMP_RECENT_NEWS_CACHE_HOURS*3600: return cached.get('data',{})
+    company=_trump_news_company_name(key) if key!='__MARKET__' else ''
+    queries=[f'Trump {company} stock investment shares trade' if key!='__MARKET__' else 'Trump investment stock policy market']
+    if key=='__MARKET__':
+        queries += ['Trump magnets rare earth critical minerals policy','Trump semiconductor AI chip investment tariff','Trump defense drone aerospace investment','Trump energy oil gas nuclear policy']
+    out={'query':' | '.join(queries),'items':[],'raw_items':0,'qualified_items':0,'positive':0,'negative':0,'neutral':0,'score':0,'themes':{},'error':''}
+    seen=set(); cutoff=datetime.now(TW_TZ)-timedelta(days=TRUMP_RECENT_NEWS_LOOKBACK_DAYS)
+    try:
+        for q in queries:
+            rss_url='https://news.google.com/rss/search?q='+quote(q)+'&hl=en-US&gl=US&ceid=US:en'
+            r=requests.get(rss_url,timeout=12,headers={'User-Agent':'stock-alert/2.14.42'}); r.raise_for_status(); root=ET.fromstring(r.content)
+            raw=[]
+            for item in root.findall('.//item'):
+                title=(item.findtext('title') or '').strip(); link=(item.findtext('link') or '').strip(); pub=(item.findtext('pubDate') or '').strip()
+                if not title: continue
+                dt=None
+                try: dt=parsedate_to_datetime(pub).astimezone(TW_TZ)
+                except Exception: pass
+                raw.append((dt,title,link,pub))
+            out['raw_items']+=len(raw)
+            for dt,title,link,pub in sorted(raw,key=lambda x:x[0] or datetime.min.replace(tzinfo=TW_TZ),reverse=True):
+                if dt is not None and dt<cutoff: continue
+                low=title.lower(); norm=re.sub(r'\W+',' ',low).strip()
+                if norm in seen: continue
+                theme=None
+                if any(w in low for w in ('magnet','rare earth','critical mineral','neodymium')): theme='稀土／磁鐵／關鍵礦物'
+                elif any(w in low for w in ('semiconductor','chip','tsmc','artificial intelligence','ai infrastructure')): theme='半導體／AI'
+                elif any(w in low for w in ('defense','defence','drone','military','aerospace')): theme='國防／無人機／航太'
+                elif any(w in low for w in ('oil','gas','nuclear','energy')): theme='能源'
+                elif any(w in low for w in ('spacex','space','satellite')): theme='太空／衛星'
+                elif any(w in low for w in ('tariff','trade war','import duty')): theme='關稅／貿易'
+                elif any(w in low for w in ('crypto','bitcoin','ethereum')): theme='加密資產'
+                personal=any(w in low for w in ('trump bought','trump purchased','trump invested','trump sold','trump shares','trump stake','trump holdings','financial disclosure'))
+                policy=any(w in low for w in ('trump','president trump')) and theme is not None
+                if key!='__MARKET__':
+                    terms=[key.lower()] + ([company.lower()] if company else [])
+                    relevant=any(t and t in low for t in terms) or (theme in ('半導體／AI','稀土／磁鐵／關鍵礦物','國防／無人機／航太','能源','太空／衛星','關稅／貿易','加密資產') and any(x in low for x in terms))
+                    if not relevant: continue
+                    # 個股查詢：仍需標的直接提及，避免把整個產業新聞誤套到個股。
+                    if not any(t and t in low for t in terms): continue
+                if not personal and not policy: continue
+                seen.add(norm)
+                side='neutral'; score=0
+                if any(w in low for w in ('invest','investment','bought','purchase','deal','fund','award','support','back','build','expand')): side='positive'; score=1
+                if any(w in low for w in ('ban','restrict','tariff','sanction','cut','halt','delay','lawsuit','investigation')): side='negative'; score=-1
+                item={'title':title[:300],'link':link,'published':dt.isoformat() if dt else pub,'side':side,'score':score,'theme':theme or 'Trump政策/市場動向','source':'Google News RSS'}
+                out['items'].append(item); out[side]+=1
+                if theme: out['themes'][theme]=int(out['themes'].get(theme,0))+1
+                if len(out['items'])>=TRUMP_RECENT_NEWS_MAX_ITEMS: break
+            if len(out['items'])>=TRUMP_RECENT_NEWS_MAX_ITEMS: break
+        out['qualified_items']=len(out['items']); out['score']=max(-4,min(4,sum(int(x.get('score',0)) for x in out['items']))); out['source']='Google News RSS / public market news'
+    except Exception as e: out['error']=f'{type(e).__name__}: {e}'
+    _TRUMP_RECENT_NEWS_CACHE[key]={'cached_at':now_ts,'data':out}; return out
+
+
 def trump_recent_news_factor(symbol=''):
-    """V2.14.41：第二層近期新聞/市場動向獨立訊號，不覆蓋第一層官方交易訊號。"""
+    """V2.14.42：第二層近期新聞/市場動向獨立訊號，不覆蓋第一層官方交易訊號。"""
     d=_trump_recent_news_fetch(symbol); score=int(d.get('score',0) or 0)
     if d.get('error'): state='⚪ 近期公開新聞資料暫不可用'
-    elif not d.get('items'): state='⚪ 最近30日沒有明確的 Trump 個人交易新聞'
+    elif not d.get('items'): state='⚪ 最近30日沒有可辨識的 Trump 交易／政策市場訊號'
     elif score>=3: state='🟢 近期公開資訊偏買進/增加曝險'
     elif score>0: state='🟢 近期公開資訊略偏正面'
     elif score<=-3: state='🔴 近期公開資訊偏賣出/降低曝險'
     elif score<0: state='🔴 近期公開資訊略偏負面'
     else: state='⚪ 近期公開資訊中性'
     return {'factor':score,'state':state,'items':d.get('items',[]),'positive':d.get('positive',0),'negative':d.get('negative',0),'neutral':d.get('neutral',0),'qualified_items':d.get('qualified_items',0),'latest_published':d.get('latest_published',''),'query':d.get('query',''),'source_url':d.get('source_url',''),'error':d.get('error','')}
+
+
+def trump_theme_stock_factor(symbol='', industry='', subindustries=None, name=''):
+    """V2.14.42：把 Trump 第二層產業政策映射到真正相關的股票/ETF。"""
+    d=trump_recent_news_factor('__MARKET__'); text=' '.join([str(industry or ''),str(name or ''),str(symbol or '')]+[str(x) for x in (subindustries or [])]).lower()
+    themes=d.get('items') or []; score=0; reasons=[]
+    def relevant(theme):
+        if theme=='半導體／AI': return any(k in text for k in ('半導體','電子','電腦','伺服器','ai','chip','tsmc','2330','3711','qqq','0050'))
+        if theme=='稀土／磁鐵／關鍵礦物': return any(k in text for k in ('稀土','磁鐵','金屬','材料','電機','馬達','汽車','航太','國防','工業','能源','鋼鐵','chemical','2408','3037','2308'))
+        if theme=='國防／無人機／航太': return any(k in text for k in ('國防','航太','無人機','航空','軍工','電子','雷達','太空','aerospace','defense'))
+        if theme=='能源': return any(k in text for k in ('能源','石油','天然氣','電力','核能','化學','塑化'))
+        if theme=='太空／衛星': return any(k in text for k in ('太空','衛星','航太','通信','電子'))
+        if theme=='關稅／貿易': return any(k in text for k in ('出口','電子','半導體','鋼鐵','塑化','機械','汽車','航運','紡織','貿易'))
+        if theme=='加密資產': return any(k in text for k in ('金融','銀行','證券','加密','crypto','bitcoin'))
+        return False
+    for x in themes:
+        theme=x.get('theme')
+        if theme and relevant(theme):
+            sc=int(x.get('score',0) or 0)
+            if sc: score += 1 if sc>0 else -1; reasons.append(theme + ('偏正面' if sc>0 else '偏負面'))
+    score=max(-2,min(2,score))
+    state='🟢 Trump相關產業政策偏正面' if score>0 else '🔴 Trump相關產業政策偏負面' if score<0 else '⚪ Trump相關產業政策影響中性/不足'
+    return {'factor':score,'state':state,'reasons':list(dict.fromkeys(reasons))[:4],'items':[x for x in themes if x.get('theme') and relevant(x.get('theme'))][:5]}
 
 
 def _sanitize_trump_portfolio_rows(rows):
@@ -12582,7 +12688,7 @@ def run_webhook_server():
         return (
             '<!doctype html><html><head><meta charset="utf-8">'
             '<meta name="viewport" content="width=device-width,initial-scale=1">'
-            '<title>Stock Alert V2.14.32</title>'
+            '<title>Stock Alert V2.14.42</title>'
             '<style>body{margin:0;padding:20px;background:#f6f7f9;color:#222}'
             '.card{max-width:900px;margin:auto;background:#fff;border-radius:14px;padding:20px;box-shadow:0 2px 12px #0001}'
             'a{word-break:break-all}</style></head><body><div class="card">'
@@ -12614,7 +12720,7 @@ def run_webhook_server():
             body=(
                 '<div class="card"><h1>📊 產業分析</h1><p class="muted">選擇大產業 → 次產業，系統依目前資料找出次產業市值 Top 3 並分析。</p>'
                 '<form method="get"><label>① 選擇大產業</label><select name="parent">'+opts+'</select><button type="submit">下一步：選擇次產業</button></form></div>'
-                '<div class="nav"><a href="/trump">🇺🇸 川普風向</a><a href="/">首頁</a></div>'
+                '<div class="nav"><a href="/trump">🇺🇸 川普風向</a><a href="/macro">🌎 總經風險</a><a href="/">首頁</a></div>'
             )
             return _web_page('產業分析',body)
         try:
@@ -12643,6 +12749,29 @@ def run_webhook_server():
         )
         return _web_page('產業分析結果',body)
 
+    @app.get('/macro')
+    def macro_page():
+        try:
+            d=macro_fetch(force=True); us=d.get('us',{}); tw=d.get('taiwan',{})
+            def mv(k):
+                x=us.get(k,{}); return x.get('value') if isinstance(x,dict) else None
+            body=['<div class="card"><h1>🌎 台美總經／系統性風險</h1>', '<p class="muted">本頁獨立於 Trump；個股分析只取與自身產業/營收模式相關的指標。</p>']
+            body.append('<h2>🇺🇸 美國</h2>')
+            for label,key in [('GDP成長率','us_gdp_growth'),('Fed利率','fed_rate'),('CPI指數','us_cpi'),('失業率','us_unemployment'),('10Y殖利率','us_10y'),('10Y-2Y','us_curve_10y2y')]:
+                v=mv(key); body.append(f'<p><b>{label}</b>：{("N/A" if v is None else f"{v:.2f}")}</p>')
+            body.append('<h2>🇹🇼 台灣</h2>')
+            for label,key,suf in [('GDP YoY','gdp_yoy','%'),('CPI YoY','cpi_yoy','%'),('失業率','unemployment','%'),('重貼現率','discount_rate','%'),('M2年增','m2_yoy','%'),('USD/TWD','usd_twd','')]:
+                v=tw.get(key); body.append(f'<p><b>{label}</b>：{("N/A" if v is None else f"{v:.2f}{suf}")}</p>')
+            try:
+                v=to_float(yf.Ticker('^VIX').fast_info.get('last_price')); body.append(f'<p><b>VIX</b>：{("N/A" if v is None else f"{v:.2f}")}</p>')
+            except Exception: body.append('<p><b>VIX</b>：N/A</p>')
+            body.append('<p class="muted">資料來源：FRED、台灣央行、主計總處公開資料。更新：'+html.escape(str(d.get('updated_at','')))+'</p>')
+            body.append('<h2>📌 個股使用方式</h2><p>科技/出口股偏重美國景氣、Fed、10Y、台灣GDP、匯率；內需股偏重台灣GDP、CPI、失業率、利率；金融股偏重Fed、10Y與殖利率曲線。</p>')
+            body.append('<div class="nav"><a href="/industry">🏭 產業</a><a href="/trump">🇺🇸 Trump</a><a href="/">首頁</a></div>')
+            return _web_page('總經風險', ''.join(body))
+        except Exception as ex:
+            return _web_page('總經風險', f'<div class="card"><h1>🌎 總經資料暫不可用</h1><p>{html.escape(type(ex).__name__)}：{html.escape(str(ex))}</p><div class="nav"><a href="/">首頁</a></div></div>'),200
+
     @app.get('/trump')
     def trump_page():
         try:
@@ -12657,9 +12786,9 @@ def run_webhook_server():
         rows.append(f'<p>近180日淨買賣（主訊號）：{factor.get("net180",0):,.0f}<br>近30日：{factor.get("net30",0):,.0f}<br>近60日：{factor.get("net60",0):,.0f}<br>近90日：{factor.get("net90",0):,.0f}</p>')
         rows.append(f'<p class="muted">近180日股票／ETF交易：{factor.get("valid_transaction_count",0)} 筆；買進：{factor.get("buy_count",0)}；賣出：{factor.get("sell_count",0)}<br>資料庫已解析交易總筆數：{factor.get("transaction_count",0)}</p></div>')
         news=trump_recent_news_factor()
-        rows.append('<div class="card"><h2>🟡 第二層｜最近30日公開市場／新聞動向</h2>')
+        rows.append('<div class="card"><h2>🟡 第二層｜最近30日 Trump 政策／交易／產業動向</h2>')
         rows.append(f'<p><b>{html.escape(news.get("state","⚪ 無資料"))}</b>　輔助調整：<b>{int(news.get("factor",0)):+d}</b></p>')
-        rows.append(f'<p class="muted">符合條件：{int(news.get("qualified_items",0))} 篇；正面：{int(news.get("positive",0))}；負面：{int(news.get("negative",0))}；中性：{int(news.get("neutral",0))}<br>⚠️ 此層是近期公開新聞，不是官方 278-T 交易資料。</p>')
+        rows.append(f'<p class="muted">符合條件：{int(news.get("qualified_items",0))} 篇；正面：{int(news.get("positive",0))}；負面：{int(news.get("negative",0))}；中性：{int(news.get("neutral",0))}<br>⚠️ 本層包含官方交易以外的政策／言論／政府投資；政策訊號不等於 Trump 個人持股。</p>')
         for ni in news.get('items',[])[:6]:
             icon='🟢' if ni.get('side')=='positive' else '🔴' if ni.get('side')=='negative' else '⚪'
             rows.append(f'<p>{icon} {html.escape(str(ni.get("title","")))}<br><span class="muted">{html.escape(str(ni.get("published","")))}｜Google News RSS</span></p>')
@@ -12674,7 +12803,7 @@ def run_webhook_server():
         rows.append('</div>')
         if err: rows.append(f'<div class="card"><p>⚠️ {html.escape(err)}</p></div>')
         rows.append('<div class="card"><h2>🔎 查詢任一美股／ETF的川普直接曝險</h2><form method="get" action="/trump-stock"><input name="symbol" placeholder="例如 DELL、NVDA、QQQ、SPY（不限於川普持股）" required><button type="submit">查詢個別標的</button></form></div>')
-        rows.append('<div class="nav"><a href="/industry">🏭 產業分析</a><a href="/">首頁</a></div>')
+        rows.append('<div class="nav"><a href="/industry">🏭 產業分析</a><a href="/macro">🌎 總經</a><a href="/">首頁</a></div>')
         return _web_page('川普投資風向', ''.join(rows))
 
     @app.get('/trump-stock')
@@ -12688,8 +12817,8 @@ def run_webhook_server():
               f'<p><b>{html.escape(str(factor.get("state","無資料")))}</b>　調整：<b>{int(factor.get("factor",0)):+d}</b></p>'
               f'<p>近180日可辨識直接交易：{int(factor.get("transactions",0))} 筆（歷史共 {int(factor.get("all_transactions",0))} 筆）<br>公開持倉：{"有" if factor.get("held") else "無／未辨識"}</p>' +
               ('<p><b>最近交易明細</b></p>' + ''.join(f'<p>{html.escape(str(x.get("date","")))}｜{"買進" if x.get("side")=="buy" else "賣出"}｜{html.escape(str(x.get("value_range","")))}</p>' for x in factor.get("latest_transactions",[])[:5]) + '<p class="muted">這是公開申報資料訊號，不代表即時交易，也不代表投資建議。</p></div>') +
-              f'<div class="card"><h2>🟡 第二層｜最近30日 {html.escape(symbol)} 相關公開資訊</h2><p><b>{html.escape(news.get("state","⚪ 無資料"))}</b>　輔助調整：<b>{int(news.get("factor",0)):+d}</b></p>' + ''.join(f'<p>{"🟢" if x.get("side")=="positive" else "🔴" if x.get("side")=="negative" else "⚪"} {html.escape(str(x.get("title","")))}<br><span class="muted">{html.escape(str(x.get("published","")))}</span></p>' for x in news.get('items',[])[:6]) + '<p class="muted">⚠️ 第二層是公開新聞/市場動向，不等於 Trump 官方已申報交易。</p></div>' +
-              '<div class="nav"><a href="/trump">← 川普總覽</a><a href="/industry">🏭 產業分析</a></div>')
+              f'<div class="card"><h2>🟡 第二層｜最近30日 {html.escape(symbol)} 相關 Trump 政策／市場資訊</h2><p><b>{html.escape(news.get("state","⚪ 無資料"))}</b>　輔助調整：<b>{int(news.get("factor",0)):+d}</b></p>' + ''.join(f'<p>{"🟢" if x.get("side")=="positive" else "🔴" if x.get("side")=="negative" else "⚪"} {html.escape(str(x.get("title","")))}<br><span class="muted">{html.escape(str(x.get("published","")))}</span></p>' for x in news.get('items',[])[:6]) + '<p class="muted">⚠️ 政策／市場資訊不等於 Trump 官方已申報交易；278-T 仍為第一層主訊號。</p></div>' +
+              '<div class="nav"><a href="/trump">← 川普總覽</a><a href="/industry">🏭 產業分析</a><a href="/macro">🌎 總經</a></div>')
         return _web_page('川普個別標的',body)
 
     @app.post('/callback')
