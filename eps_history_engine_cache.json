@@ -29,7 +29,7 @@
     },
     "meta": {
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1788916590.1154506,
+      "updated_at": 1788917682.4338658,
       "first_year": 2001,
       "last_year": 2025,
       "count": 25,
@@ -413,15 +413,15 @@
       "2025": 1.56
     },
     "meta": {
-      "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS + Goodinfo public annual EPS via Jina Reader",
-      "updated_at": 1788916608.8309588,
+      "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
+      "updated_at": 1788917699.788069,
       "first_year": 2001,
       "last_year": 2025,
       "count": 18,
       "target_first_year": 2001,
       "target_last_year": 2025,
       "target_years": 25,
-      "fetched_this_run": 12,
+      "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
       "mops_retry_after": null
     }
@@ -455,15 +455,15 @@
       "2025": 3.8
     },
     "meta": {
-      "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS + Goodinfo public annual EPS via Jina Reader",
-      "updated_at": 1788916612.4724116,
+      "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
+      "updated_at": 1788917700.499248,
       "first_year": 2001,
       "last_year": 2025,
       "count": 25,
       "target_first_year": 2001,
       "target_last_year": 2025,
       "target_years": 25,
-      "fetched_this_run": 13,
+      "fetched_this_run": 0,
       "goodinfo_fetched_this_run": 0,
       "mops_retry_after": null
     }
