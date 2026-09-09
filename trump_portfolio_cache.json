@@ -1,47 +1,277 @@
 {
-  "_version": 2,
-  "_cached_at": 1788921847.5212262,
+  "_version": 3,
+  "_cached_at": 1788925495.542989,
   "report_date": "2025年度申報（2026-06-30認證）",
   "source_url": "https://oge.box.com/shared/static/zycb5i2ny8kssm51uzqm8ygyq2zkpkqq.pdf",
   "data": [
     {
-      "ticker": "PA",
-      "name": "CONAGRA BRANDS INC N/A None (or less than $1,001) None (or less than $201)",
-      "value_range": "1117 ",
-      "value_upper": 1117.0,
-      "page": 142,
+      "row_no": 19,
+      "name": "U.S. BROKERAGE ACCOUNT MONEY MARKET ACCOUNT (CASH) #15",
+      "value_range": "$25,000,001 - $50,000,000",
+      "page": 158,
+      "ticker": "CASH",
+      "value_upper": 50000000.0,
       "source": "US OGE Form 278e"
     },
     {
-      "ticker": "DEL",
-      "name": "WILLIAMS SONOMA INC N/A $1,001 - $15,000 None (or less than $201)",
-      "value_range": "382 ",
-      "value_upper": 382.0,
-      "page": 31,
+      "row_no": 140,
+      "name": "TESLA INC",
+      "value_range": "$5,000,001 - $25,000,000",
+      "page": 72,
+      "ticker": "TSLA",
+      "value_upper": 25000000.0,
       "source": "US OGE Form 278e"
     },
     {
-      "ticker": "NEW",
-      "name": "VALERO ENERGY CORP NEW N/A $1,001 - $15,000 None (or less than $201)",
-      "value_range": "362 ",
-      "value_upper": 362.0,
-      "page": 30,
+      "row_no": 1446,
+      "name": "SPDR S&P 500 ETF Yes",
+      "value_range": "$5,000,001 - $25,000,000",
+      "page": 114,
+      "ticker": "SPY",
+      "value_upper": 25000000.0,
       "source": "US OGE Form 278e"
     },
     {
-      "ticker": "THE",
-      "name": "L3HARRIS TECHNOLOGIES INC N/A $15,001 - $50,000 None (or less than $201)",
-      "value_range": "258 ",
-      "value_upper": 258.0,
-      "page": 13,
+      "row_no": 255,
+      "name": "NVIDIA CORP",
+      "value_range": "$5,000,001 - $25,000,000",
+      "page": 74,
+      "ticker": "NVDA",
+      "value_upper": 25000000.0,
       "source": "US OGE Form 278e"
     },
     {
-      "ticker": "REIT",
-      "name": "HOWMET AEROSPACE INC N/A $15,001 - $50,000 None (or less than $201)",
-      "value_range": "208 ",
-      "value_upper": 208.0,
-      "page": 26,
+      "row_no": 380,
+      "name": "MICROSOFT CORP",
+      "value_range": "$5,000,001 - $25,000,000",
+      "page": 77,
+      "ticker": "MSFT",
+      "value_upper": 25000000.0,
+      "source": "US OGE Form 278e"
+    },
+    {
+      "row_no": 353,
+      "name": "META PLATFORMS INC",
+      "value_range": "$5,000,001 - $25,000,000",
+      "page": 77,
+      "ticker": "META",
+      "value_upper": 25000000.0,
+      "source": "US OGE Form 278e"
+    },
+    {
+      "row_no": 348,
+      "name": "ALPHABET INC CLASS C",
+      "value_range": "$5,000,001 - $25,000,000",
+      "page": 77,
+      "ticker": "GOOGL",
+      "value_upper": 25000000.0,
+      "source": "US OGE Form 278e"
+    },
+    {
+      "row_no": 375,
+      "name": "BROADCOM INC",
+      "value_range": "$5,000,001 - $25,000,000",
+      "page": 77,
+      "ticker": "AVGO",
+      "value_upper": 25000000.0,
+      "source": "US OGE Form 278e"
+    },
+    {
+      "row_no": 141,
+      "name": "AMAZON COM INC",
+      "value_range": "$5,000,001 - $25,000,000",
+      "page": 72,
+      "ticker": "AMZN",
+      "value_upper": 25000000.0,
+      "source": "US OGE Form 278e"
+    },
+    {
+      "row_no": 374,
+      "name": "APPLE INC",
+      "value_range": "$5,000,001 - $25,000,000",
+      "page": 77,
+      "ticker": "AAPL",
+      "value_upper": 25000000.0,
+      "source": "US OGE Form 278e"
+    },
+    {
+      "row_no": 379,
+      "name": "EXXON MOBIL CORP",
+      "value_range": "$1,000,001 - $5,000,000",
+      "page": 77,
+      "ticker": "XOM",
+      "value_upper": 5000000.0,
+      "source": "US OGE Form 278e"
+    },
+    {
+      "row_no": 285,
+      "name": "WALMART INC",
+      "value_range": "$1,000,001 - $5,000,000",
+      "page": 75,
+      "ticker": "WMT",
+      "value_upper": 5000000.0,
+      "source": "US OGE Form 278e"
+    },
+    {
+      "row_no": 355,
+      "name": "WELLS FARGO & CO NEW",
+      "value_range": "$1,000,001 - $5,000,000",
+      "page": 77,
+      "ticker": "WFC",
+      "value_upper": 5000000.0,
+      "source": "US OGE Form 278e"
+    },
+    {
+      "row_no": 881,
+      "name": "VERIZON COMMUNICATIONS I",
+      "value_range": "$1,000,001 - $5,000,000",
+      "page": 101,
+      "ticker": "VZ",
+      "value_upper": 5000000.0,
+      "source": "US OGE Form 278e"
+    },
+    {
+      "row_no": 675,
+      "name": "VANGUARD TOTAL STOCK MARKET ETF Yes",
+      "value_range": "$1,000,001 - $5,000,000",
+      "page": 96,
+      "ticker": "VTI",
+      "value_upper": 5000000.0,
+      "source": "US OGE Form 278e"
+    },
+    {
+      "row_no": 337,
+      "name": "RTX CORP",
+      "value_range": "$1,000,001 - $5,000,000",
+      "page": 76,
+      "ticker": "RTX",
+      "value_upper": 5000000.0,
+      "source": "US OGE Form 278e"
+    },
+    {
+      "row_no": 997,
+      "name": "QUALCOMM INC 2.15%30 DUE 05/20/30",
+      "value_range": "$1,000,001 - $5,000,000",
+      "page": 103,
+      "ticker": "QCOM",
+      "value_upper": 5000000.0,
+      "source": "US OGE Form 278e"
+    },
+    {
+      "row_no": 138,
+      "name": "PALANTIR TECHNOLOGIES INC",
+      "value_range": "$1,000,001 - $5,000,000",
+      "page": 72,
+      "ticker": "PLTR",
+      "value_upper": 5000000.0,
+      "source": "US OGE Form 278e"
+    },
+    {
+      "row_no": 366,
+      "name": "PROCTER & GAMBLE CO/THE",
+      "value_range": "$1,000,001 - $5,000,000",
+      "page": 77,
+      "ticker": "PG",
+      "value_upper": 5000000.0,
+      "source": "US OGE Form 278e"
+    },
+    {
+      "row_no": 315,
+      "name": "ORACLE CORP",
+      "value_range": "$1,000,001 - $5,000,000",
+      "page": 76,
+      "ticker": "ORCL",
+      "value_upper": 5000000.0,
+      "source": "US OGE Form 278e"
+    },
+    {
+      "row_no": 5,
+      "name": "***NETFLIX INC REG S DUE 11/15/2029 5.375 REG INT ON 854000 BND REC 12/01/25 PAY 12/15/25",
+      "value_range": "$1,000,001 - $5,000,000",
+      "page": 7,
+      "ticker": "NFLX",
+      "value_upper": 5000000.0,
+      "source": "US OGE Form 278e"
+    },
+    {
+      "row_no": 345,
+      "name": "MORGAN STANLEY",
+      "value_range": "$1,000,001 - $5,000,000",
+      "page": 77,
+      "ticker": "MS",
+      "value_upper": 5000000.0,
+      "source": "US OGE Form 278e"
+    },
+    {
+      "row_no": 836,
+      "name": "MCDONALDS CORP",
+      "value_range": "$1,000,001 - $5,000,000",
+      "page": 100,
+      "ticker": "MCD",
+      "value_upper": 5000000.0,
+      "source": "US OGE Form 278e"
+    },
+    {
+      "row_no": 1007,
+      "name": "LOCKHEED MARTIN CORP",
+      "value_range": "$1,000,001 - $5,000,000",
+      "page": 104,
+      "ticker": "LMT",
+      "value_upper": 5000000.0,
+      "source": "US OGE Form 278e"
+    },
+    {
+      "row_no": 370,
+      "name": "COCA-COLA CO",
+      "value_range": "$1,000,001 - $5,000,000",
+      "page": 77,
+      "ticker": "KO",
+      "value_upper": 5000000.0,
+      "source": "US OGE Form 278e"
+    },
+    {
+      "row_no": 372,
+      "name": "JPMORGAN CHASE & CO",
+      "value_range": "$1,000,001 - $5,000,000",
+      "page": 77,
+      "ticker": "JPM",
+      "value_upper": 5000000.0,
+      "source": "US OGE Form 278e"
+    },
+    {
+      "row_no": 376,
+      "name": "JOHNSON & JOHNSON",
+      "value_range": "$1,000,001 - $5,000,000",
+      "page": 77,
+      "ticker": "JNJ",
+      "value_upper": 5000000.0,
+      "source": "US OGE Form 278e"
+    },
+    {
+      "row_no": 712,
+      "name": "ISHARES CORE S&P 500 ETF Yes",
+      "value_range": "$1,000,001 - $5,000,000",
+      "page": 63,
+      "ticker": "IVV",
+      "value_upper": 5000000.0,
+      "source": "US OGE Form 278e"
+    },
+    {
+      "row_no": 45,
+      "name": "INTEL CORP 3.75%27 DUE 08/05/27",
+      "value_range": "$1,000,001 - $5,000,000",
+      "page": 80,
+      "ticker": "INTC",
+      "value_upper": 5000000.0,
+      "source": "US OGE Form 278e"
+    },
+    {
+      "row_no": 373,
+      "name": "HOME DEPOT INC/THE",
+      "value_range": "$1,000,001 - $5,000,000",
+      "page": 77,
+      "ticker": "HD",
+      "value_upper": 5000000.0,
       "source": "US OGE Form 278e"
     }
   ]
