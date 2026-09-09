@@ -1,4 +1,4 @@
-# stock_alert.py V2.14.38
+# stock_alert.py V2.14.40
 # V2.14.08：V2.14.05 完整覆蓋版；保留重大消息面「多公司新聞隔離」邏輯，
 #             修正 LINE 15 分鐘區間通知遺失「加碼分析／建議」問題，並修正目前價格不得使用過期市場股票池價格。
 #             重大消息評分只使用新聞標題，RSS description/snippet/延伸內容完全不參與評分。
@@ -182,7 +182,7 @@ TRUMP_PDF_TIMEOUT = 20
 TRUMP_MAX_HOLDINGS = 30
 TRUMP_TRANSACTION_CACHE_FILE = 'trump_transaction_cache.json'
 TRUMP_TRANSACTION_CACHE_DAYS = 2
-TRUMP_TRANSACTION_CACHE_VERSION = 11
+TRUMP_TRANSACTION_CACHE_VERSION = 12
 TRUMP_OGE_TRANSACTION_URLS = [
     # 2026-08-12：最新一批，涵蓋 2026-06-01～06-29 大量股票交易。
     'https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/2BF91F890F718ACB85258E5B002DE16B/%24FILE/Donald-J-Trump-08.12.2026-278T.pdf',
@@ -11827,40 +11827,44 @@ def _trump_extract_transactions_from_pdf(pdf_bytes, source_url=''):
 
 
 def _trump_open_cabinet_fallback():
-    """V2.14.39：OGE PDF 文字層/版型異常時的第二資料源。
+    """V2.14.40：直接使用 Open Cabinet 已發布的 Trump 官方結構化 JSON。
 
-    Open Cabinet 的交易資料由 OGE Form 278-T 公開申報整理而成；
-    只在 OGE PDF 無法解析時使用，並保留 source_url 及 source=Open Cabinet。
-    這可處理 2026-08-12 這份約 26MB、pypdf/pdfplumber 均無法可靠讀取的
-    大型申報檔，避免整批 6 月股票交易變成 0 筆。
+    V2.14.39 的致命問題不是 fallback 順序，而是誤讀 Open Cabinet CSV 的欄位：
+    all-transactions.csv 的實際 schema 與舊版假設不同，導致 Trump 原始交易被判成 0。
+    V2.14.40 改用 Open Cabinet GitHub repository 的官方 Trump JSON，該檔就是網站
+    /officials/trump-donald-j 使用的 published source of truth；不再依賴猜測 CSV 欄位。
     """
-    url='https://open-cabinet.org/data/all-transactions.csv'
+    json_url='https://raw.githubusercontent.com/tbrown034/open-cabinet/main/data/officials/trump-donald-j.json'
+    page_url='https://open-cabinet.org/officials/trump-donald-j'
     _trump_open_cabinet_fallback.last_raw_count=0
     try:
-        r=requests.get(url,timeout=max(TRUMP_PDF_TIMEOUT,60),
-                       headers={'User-Agent':'stock-alert/2.14.39'})
+        r=requests.get(json_url,timeout=max(TRUMP_PDF_TIMEOUT,60),
+                       headers={'User-Agent':'stock-alert/2.14.40','Accept':'application/json,text/plain,*/*'})
         r.raise_for_status()
-        import csv
-        from io import StringIO
+        payload=r.json()
+        tx=payload.get('transactions',[]) if isinstance(payload,dict) else []
+        if not isinstance(tx,list):
+            raise RuntimeError('Open Cabinet Trump JSON transactions 不是 list')
+        raw_trump_rows=len(tx)
         rows=[]
-        raw_trump_rows=0
-        reader=csv.DictReader(StringIO(r.content.decode('utf-8-sig','replace')))
-        for item in reader:
-            official=str(item.get('official') or item.get('officialName') or '').strip().upper()
-            if not official.startswith('DONALD J. TRUMP') and 'DONALD J TRUMP' not in official:
+        excluded_fixed_income=0
+        excluded_non_trade=0
+        unresolved=0
+        for item in tx:
+            if not isinstance(item,dict):
                 continue
-            raw_trump_rows += 1
-            side_raw=str(item.get('type') or item.get('transactionType') or '').strip().lower()
+            side_raw=str(item.get('type') or '').strip().lower()
             if side_raw not in {'purchase','sale','buy','sell','bought','sold'}:
+                excluded_non_trade += 1
                 continue
             side='sell' if side_raw in {'sale','sell','sold'} else 'buy'
-            security=str(item.get('asset_description') or item.get('assetDescription') or item.get('description') or '').strip()
+            security=str(item.get('description') or '').strip()
             ticker=str(item.get('ticker') or '').strip().upper()
             if not security and not ticker:
                 continue
-            # V2.14.39：Open Cabinet 明確說明 OGE 沒有 structured asset_type；
-            # 固定收益類型由券名中的 coupon/maturity 推導，因此不能依賴 asset_type。
             sec_upper=re.sub(r'\s+',' ',security).upper().strip()
+            # Open Cabinet 已將固定收益交易保留在同一份 published JSON；
+            # 市場股票風向只納入股票/ETF，不把債券、現金等算進去。
             fixed_income_terms=(
                 ' MUNICIPAL BOND',' CORPORATE NOTE',' NOTE ',' NTS ',' BOND ',
                 ' REV ',' REVENUE ',' DUE ',' YTM ',' B/E ',' DEBENTURE',
@@ -11868,73 +11872,89 @@ def _trump_open_cabinet_fallback():
                 ' FIXED TO FLOAT',' ACCRUED INT',' REG INT',' DUE DATE',
                 ' ZERO COUPON',' COUPON'
             )
+            non_equity_terms=(
+                'CASH','MONEY MARKET','BROKERAGE ACCOUNT MONEY MARKET',
+                'CASH ACCOUNT','CRYPTO','DIGITAL ASSET','OPTION','WARRANT',
+                'FUTURE CONTRACT','FUTURES CONTRACT'
+            )
             if any(x in sec_upper for x in fixed_income_terms) or re.search(r'\d+(?:\.\d+)?\s*%',sec_upper):
+                excluded_fixed_income += 1
                 continue
-            # Open Cabinet 已提供 ticker 時，ticker 比 INC/CORP 關鍵字更可靠。
-            if ticker:
-                if not re.fullmatch(r'[A-Z]{1,6}(?:-[A-Z])?',ticker):
-                    continue
-            elif not _trump_is_stock_or_etf_name(security):
+            if any(x in sec_upper for x in non_equity_terms):
+                excluded_fixed_income += 1
                 continue
-            raw_date=str(item.get('date') or item.get('tradeDate') or '').strip()
-            dt=_trump_normalize_ocr_date(raw_date)
+            candidate=ticker or _trump_transaction_candidate_ticker(security) or _trump_guess_ticker(security)
+            # 有 ticker 時只接受合理的美股/ETF ticker；Open Cabinet 的 Trump JSON
+            # 目前 ticker 多數為 null，所以公司名稱 alias/括號 ticker 是主要補值來源。
+            if candidate and not re.fullmatch(r'[A-Z]{1,6}(?:[.-][A-Z])?(?:-[A-Z])?',candidate):
+                candidate=''
+            if not candidate and not _trump_is_stock_or_etf_name(security):
+                # Open Cabinet 的 published JSON 沒有 asset_type；對明確公司名稱
+                # （例如 ABBOTT LABS）由 alias 判斷，其他無法確認的列保留為未知股票
+                # 會破壞市場統計，因此這裡要求至少有公司/基金型態證據。
+                unresolved += 1
+                continue
+            raw_date=str(item.get('date') or '').strip()
+            dt=None
+            mi=re.fullmatch(r'(\d{4})-(\d{1,2})-(\d{1,2})',raw_date)
+            if mi:
+                try:
+                    yy,mm,dd=map(int,mi.groups())
+                    dt=datetime(yy,mm,dd,tzinfo=TW_TZ).strftime('%Y-%m-%d')
+                except Exception:
+                    dt=None
             if not dt:
-                dt=_trump_normalize_transaction_date(raw_date)
-            if not dt:
-                # V2.14.38：CSV 使用 ISO 日期（YYYY-MM-DD）時直接解析。
-                mi=re.fullmatch(r'(\d{4})-(\d{1,2})-(\d{1,2})',raw_date)
-                if mi:
-                    try:
-                        yy,mm,dd=map(int,mi.groups())
-                        dt=datetime(yy,mm,dd,tzinfo=TW_TZ).strftime('%Y-%m-%d')
-                    except Exception:
-                        dt=None
+                dt=_trump_normalize_ocr_date(raw_date) or _trump_normalize_transaction_date(raw_date)
             if not dt:
                 continue
-            vr=str(item.get('amount_range') or item.get('amountRange') or item.get('amount') or item.get('valueRange') or '').strip()
+            vr=str(item.get('amount') or item.get('valueRange') or item.get('amount_range') or '').strip()
             if not vr:
                 continue
-            mid=to_float(item.get('midpoint_estimate') or item.get('midpointEstimate') or item.get('midpoint') or item.get('value_midpoint') or item.get('valueMidpoint'))
+            mid=_trump_value_midpoint(vr)
             if mid is None:
-                mid=_trump_value_midpoint(vr)
+                mid=to_float(item.get('midpointEstimate') or item.get('valueMidpoint') or item.get('midpoint'))
             if mid is None:
                 continue
-            if not ticker:
-                ticker=_trump_transaction_candidate_ticker(security) or _trump_guess_ticker(security)
             rows.append({
-                'ticker':ticker,'side':side,'date':dt,'value_range':vr,
+                'ticker':candidate,'side':side,'date':dt,'value_range':vr,
                 'value_midpoint':mid,'security_name':security[:200],
                 'asset_type':'stock_etf','source':'Open Cabinet / US OGE Form 278-T',
-                'source_url':url
+                'source_url':str(item.get('sourceUrl') or page_url)
             })
-        # 去重，並保留 ticker/公司名稱可辨識的股票與 ETF。
         dedup={}
         for row in rows:
             key=(row.get('ticker',''),row.get('side'),row.get('date'),row.get('security_name',''),row.get('value_range'))
             dedup[key]=row
         rows=list(dedup.values())
         _trump_open_cabinet_fallback.last_raw_count=raw_trump_rows
-        print(f'Trump 278-T Open Cabinet fallback：Trump原始交易={raw_trump_rows}；解析股票/ETF={len(rows)}',flush=True)
+        _trump_open_cabinet_fallback.last_diagnostics={
+            'raw_trump_rows':raw_trump_rows,
+            'parsed_stock_etf':len(rows),
+            'excluded_fixed_income_or_non_equity':excluded_fixed_income,
+            'unresolved_company_rows':unresolved,
+            'source_url':json_url
+        }
+        print(f'Trump 278-T Open Cabinet JSON：Trump原始交易={raw_trump_rows}；解析股票/ETF={len(rows)}；固定收益/非股票排除={excluded_fixed_income}；未辨識公司列={unresolved}',flush=True)
         return rows
     except Exception as e:
-        print(f'Trump 278-T Open Cabinet fallback 失敗：{type(e).__name__}: {e}',flush=True)
+        print(f'Trump 278-T Open Cabinet JSON 失敗：{type(e).__name__}: {e}',flush=True)
         return []
 
 
 def _load_trump_transactions():
-    """V2.14.39：Open Cabinet 優先取得最新 Trump 278-T 交易。
+    """V2.14.40：Open Cabinet published JSON 優先取得最新 Trump 278-T 交易。
 
-    問題根因：舊版先讀 GitHub V10 cache；該 cache 雖然只有 515 筆，
-    但仍被 valid_cache() 判定有效，因此永遠不會走 Open Cabinet fallback。
+    問題根因：V2.14.39 雖然改成 Open Cabinet 優先，但使用錯誤的 CSV schema，導致 Trump 原始交易被判為 0。
+    
     本版改為：
       1. 先使用「已驗證的 Open Cabinet cache」；
-      2. 若沒有，再直接抓 Open Cabinet 最新 CSV；
+      2. 若沒有，再直接抓 Open Cabinet published Trump JSON；
       3. Open Cabinet 失敗才抓 OGE PDF；
       4. PDF 只作 fallback，不把可能不完整的 PDF 結果標成權威完整 cache；
-      5. 最後才允許使用舊 GitHub cache 作 emergency fallback。
+      5. 最後才允許使用舊 GitHub V12 cache 作 emergency fallback。
     """
     required_sources=set(TRUMP_OGE_TRANSACTION_URLS)
-    open_cabinet_url='https://open-cabinet.org/data/all-transactions.csv'
+    open_cabinet_url='https://raw.githubusercontent.com/tbrown034/open-cabinet/main/data/officials/trump-donald-j.json'
 
     def valid_cache(c, require_open_cabinet=True):
         if not isinstance(c,dict): return False
@@ -11959,19 +11979,20 @@ def _load_trump_transactions():
             '_stock_etf_count':sum(1 for x in rows if x.get('asset_type')=='stock_etf'),
             '_raw_trump_rows':int(raw_count or 0),
             '_data_source':'open_cabinet',
-            'source_url':[open_cabinet_url]+TRUMP_OGE_TRANSACTION_URLS,
-            'diagnostics':[{'source':'Open Cabinet','raw_trump_rows':int(raw_count or 0),
-                            'parsed_stock_etf':len(rows)}],
+            'source_url':[open_cabinet_url,'https://open-cabinet.org/officials/trump-donald-j']+TRUMP_OGE_TRANSACTION_URLS,
+            'diagnostics':[{'source':'Open Cabinet published Trump JSON','raw_trump_rows':int(raw_count or 0),
+                            'parsed_stock_etf':len(rows),
+                            'detail':getattr(_trump_open_cabinet_fallback,'last_diagnostics',{})}],
             'data':rows
         }
         save_json(TRUMP_TRANSACTION_CACHE_FILE,payload)
         return payload
 
-    # 1) 只有 Open Cabinet 來源才視為 V11 的權威完整 cache。
+    # 1) 只有 Open Cabinet published JSON 才視為 V12 的權威完整 cache。
     local=load_json(TRUMP_TRANSACTION_CACHE_FILE)
     if valid_cache(local, require_open_cabinet=True):
         data=local.get('data',[])
-        print(f'Trump 278-T：使用 Open Cabinet V11 cache，共 {len(data)} 筆',flush=True)
+        print(f'Trump 278-T：使用 Open Cabinet V12 cache，共 {len(data)} 筆',flush=True)
         return data
 
     # 2) Render/LINE：同樣只接受 Open Cabinet 產生的 V11 remote cache。
@@ -11981,7 +12002,7 @@ def _load_trump_transactions():
             data=remote.get('data',[])
             try: save_json(TRUMP_TRANSACTION_CACHE_FILE,remote)
             except Exception: pass
-            print(f'Trump 278-T：使用 GitHub Open Cabinet 最新 V11 cache，共 {len(data)} 筆',flush=True)
+            print(f'Trump 278-T：使用 GitHub Open Cabinet 最新 V12 cache，共 {len(data)} 筆',flush=True)
             return data
     except Exception as e:
         print(f'Trump 278-T：GitHub V11 cache 讀取失敗：{type(e).__name__}: {e}',flush=True)
@@ -11989,13 +12010,12 @@ def _load_trump_transactions():
     # 3) 直接抓 Open Cabinet。這是 V2.14.39 的主資料源，不能再放在 PDF 後面。
     fallback_rows=_trump_open_cabinet_fallback()
     if fallback_rows:
-        # raw count 是 8,940 左右時，代表抓到目前 Trump 的完整資料集；
-        # 不硬編碼期待筆數，只要資料源本身回傳有效 Trump rows 即接受。
+        # raw count 來自 Open Cabinet published Trump JSON；不硬編碼交易筆數。
         try:
             remote_payload=save_authoritative(fallback_rows, getattr(_trump_open_cabinet_fallback,'last_raw_count',0), open_cabinet_url)
         except Exception:
             remote_payload=None
-        print(f'Trump 278-T：V2.14.39 使用 Open Cabinet 主資料源，共 {len(fallback_rows)} 筆股票/ETF',flush=True)
+        print(f'Trump 278-T：V2.14.40 使用 Open Cabinet published JSON 主資料源，共 {len(fallback_rows)} 筆股票/ETF',flush=True)
         return fallback_rows
 
     # 4) Open Cabinet 暫時不可用時，再抓 OGE PDF；第一份若解析不到，仍允許其他 PDF。
@@ -12003,7 +12023,7 @@ def _load_trump_transactions():
     for source_index,url in enumerate(TRUMP_OGE_TRANSACTION_URLS):
         try:
             r=requests.get(url,timeout=max(TRUMP_PDF_TIMEOUT,60),
-                           headers={'User-Agent':'stock-alert/2.14.39'})
+                           headers={'User-Agent':'stock-alert/2.14.40'})
             r.raise_for_status()
             if not r.content.startswith(b'%PDF'):
                 raise RuntimeError('回應不是 PDF')
@@ -12029,7 +12049,7 @@ def _load_trump_transactions():
 
     # 5) PDF 是 emergency fallback：有資料就回傳，但不覆蓋權威 Open Cabinet cache。
     if rows:
-        print(f'Trump 278-T：V2.14.39 PDF emergency fallback，共 {len(rows)} 筆股票/ETF；不建立權威 V11 cache',flush=True)
+        print(f'Trump 278-T：V2.14.39 PDF emergency fallback，共 {len(rows)} 筆股票/ETF；不建立權威 V12 cache',flush=True)
         return rows
 
     # 6) 所有即時來源都失敗，最後才容許舊 GitHub cache 救命；明確標記 emergency。
@@ -12037,7 +12057,7 @@ def _load_trump_transactions():
         remote=load_remote_json_cache(TRUMP_TRANSACTION_CACHE_FILE,timeout=LINE_REMOTE_CACHE_TIMEOUT)
         if valid_cache(remote, require_open_cabinet=False):
             data=remote.get('data',[])
-            print(f'⚠️ Trump 278-T：即時來源全部失敗，使用 emergency cache V11，共 {len(data)} 筆',flush=True)
+            print(f'⚠️ Trump 278-T：即時來源全部失敗，使用 emergency cache V12，共 {len(data)} 筆',flush=True)
             return data
     except Exception as e:
         print(f'Trump 278-T：emergency cache 讀取失敗：{type(e).__name__}: {e}',flush=True)
@@ -13936,10 +13956,10 @@ def main():
 
     else:
 
-        print('========== V2.14.39 RUN START ==========', flush=True)
+        print('========== V2.14.40 RUN START ==========', flush=True)
         print(f'執行時間（台灣）：{datetime.now(TW_TZ).strftime("%Y-%m-%d %H:%M:%S")}', flush=True)
         run_alerts()
-        print('========== V2.14.39 RUN END ==========', flush=True)
+        print('========== V2.14.40 RUN END ==========', flush=True)
 
 
 if __name__ == '__main__':
