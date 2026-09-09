@@ -10714,14 +10714,50 @@ def _line_extract_analysis_scores(text):
 
 
 def _line_industry_build_subindustry_menu(parent, u):
-    """V2.14.28：LINE 細產業選單加入 GitHub 遠端索引同步備援。"""
+    """V2.14.44：次產業選單必須維持「大產業→官方次產業」一對一階層。
+
+    舊版先讀 industry_subindustry_menu_cache，若舊快取曾混入跨產業次產業，
+    就會出現「水泥工業 → 建設業」這類錯配。現在優先由 subindustry_cache 的
+    records 重新建立 parent/sub 關係；只有完全沒有 records 才退回舊索引。
+    """
     parent_c = canonical_industry(parent)
     options = []
 
+    data = _line_industry_load_data()
+    if isinstance(data, dict) and data:
+        for info in data.values():
+            if not isinstance(info, dict):
+                continue
+            records = info.get('records', [])
+            if isinstance(records, list) and records:
+                for rec in records:
+                    if not isinstance(rec, dict):
+                        continue
+                    rec_parent = canonical_industry(rec.get('industry') or rec.get('main_industry') or '')
+                    if rec_parent != parent_c:
+                        continue
+                    n = normalize_subindustry(rec.get('sub_industry') or rec.get('subindustry') or rec.get('node') or '')
+                    if n and n not in options:
+                        options.append(n)
+            else:
+                info_parent = canonical_industry(info.get('industry') or info.get('main_industry') or '')
+                if info_parent != parent_c:
+                    continue
+                subs = info.get('subindustries', []) or []
+                if not isinstance(subs, list):
+                    subs = [subs]
+                for sub in subs:
+                    n = normalize_subindustry(sub)
+                    if n and n not in options:
+                        options.append(n)
+        if options:
+            return sorted(options, key=lambda x: (_line_industry_norm(x), x))
+
+    # 舊快取／GitHub 索引僅作最後備援，不再優先於官方 records。
     def collect(menu_data):
-        found = False
         if not isinstance(menu_data, dict):
             return False
+        found = False
         for key, values in menu_data.items():
             if canonical_industry(key) != parent_c:
                 continue
@@ -10736,51 +10772,15 @@ def _line_industry_build_subindustry_menu(parent, u):
 
     menu_cache = load_json(INDUSTRY_MENU_CACHE_FILE)
     menu_data = menu_cache.get('data', {}) if isinstance(menu_cache, dict) else {}
-    local_found = collect(menu_data)
+    if collect(menu_data) and options:
+        return sorted(options, key=lambda x: (_line_industry_norm(x), x))
 
-    # Render 本機快取若沒有這個大產業，直接讀 Actions 最新 GitHub 索引。
-    if not local_found or not options:
-        print(f'LINE產業選單：本機快取缺少「{parent_c}」，改讀 GitHub 最新索引', flush=True)
-        remote_menu = load_remote_json_cache(
-            INDUSTRY_MENU_CACHE_FILE,
-            timeout=LINE_REMOTE_CACHE_TIMEOUT
-        )
-        remote_data = remote_menu.get('data', {}) if isinstance(remote_menu, dict) else {}
-        if collect(remote_data):
-            try:
-                merged = dict(menu_data) if isinstance(menu_data, dict) else {}
-                if isinstance(remote_data, dict):
-                    merged.update(remote_data)
-                save_json(INDUSTRY_MENU_CACHE_FILE, {
-                    '_cached_at': time.time(),
-                    'source': 'GitHub Actions remote merge',
-                    'data': merged
-                })
-            except Exception as e:
-                print(f'LINE產業選單：遠端索引合併本機失敗：{e}', flush=True)
-            print(f'LINE產業選單：GitHub 找到「{parent_c}」{len(options)} 個細產業', flush=True)
+    remote_menu = load_remote_json_cache(INDUSTRY_MENU_CACHE_FILE, timeout=LINE_REMOTE_CACHE_TIMEOUT)
+    remote_data = remote_menu.get('data', {}) if isinstance(remote_menu, dict) else {}
+    if collect(remote_data) and options:
+        return sorted(options, key=lambda x: (_line_industry_norm(x), x))
 
-    # 相容舊快取：從 records 反查大產業。
-    if not options:
-        data = _line_industry_load_data()
-        for info in data.values():
-            if not isinstance(info, dict):
-                continue
-            records = info.get('records', [])
-            if not isinstance(records, list):
-                records = []
-            for rec in records:
-                if not isinstance(rec, dict):
-                    continue
-                industry = canonical_industry(rec.get('industry') or rec.get('main_industry') or '')
-                if industry != parent_c:
-                    continue
-                n = normalize_subindustry(rec.get('sub_industry') or rec.get('subindustry') or '')
-                if n and n not in options:
-                    options.append(n)
-
-    # 最後從目前市場股票池反查。
-    if not options and isinstance(u, dict):
+    if isinstance(u, dict):
         for item in u.values():
             if not isinstance(item, dict) or canonical_industry(item.get('industry')) != parent_c:
                 continue
@@ -10791,7 +10791,6 @@ def _line_industry_build_subindustry_menu(parent, u):
                 n = normalize_subindustry(sub)
                 if n and n not in options:
                     options.append(n)
-
     return sorted(options, key=lambda x: (_line_industry_norm(x), x))
 
 def _line_industry_fetch_parent_data(parent, u):
@@ -12224,7 +12223,16 @@ def macro_fetch(force=False):
     # 所有來源都失敗時不建立空快取，下一次仍可重試；部分來源成功則保留可用資料。
     success_count=sum(1 for v in d.get('us',{}).values() if isinstance(v,dict) and v.get('value') is not None) + sum(1 for k in ('gdp_yoy','cpi_yoy','unemployment','usd_twd','m2_yoy','overnight','discount_rate') if d.get('taiwan',{}).get(k) is not None)
     if success_count>0:
-        payload={'_cached_at':now,'_version':1,'data':d}; save_json(MACRO_CACHE_FILE,payload)
+        payload={'_cached_at':now,'_version':2,'data':d}; save_json(MACRO_CACHE_FILE,payload)
+        return d
+    # V2.14.44：網頁／Render 不應因外部宏觀資料源暫時逾時而整頁空白。
+    # 若本次全部來源失敗，保留上一份可用快取並標示為 stale。
+    if isinstance(cached,dict) and isinstance(cached.get('data'),dict) and cached.get('data'):
+        stale=dict(cached.get('data') or {})
+        stale['_stale']=True
+        stale['_stale_cached_at']=cached.get('_cached_at')
+        stale['errors']=d.get('errors',[])
+        return stale
     return d
 
 
@@ -12720,7 +12728,7 @@ def run_webhook_server():
         return (
             '<!doctype html><html><head><meta charset="utf-8">'
             '<meta name="viewport" content="width=device-width,initial-scale=1">'
-            '<title>Stock Alert V2.14.43</title>'
+            '<title>Stock Alert V2.14.44</title>'
             '<style>body{margin:0;padding:20px;background:#f6f7f9;color:#222}'
             '.card{max-width:900px;margin:auto;background:#fff;border-radius:14px;padding:20px;box-shadow:0 2px 12px #0001}'
             'a{word-break:break-all}</style></head><body><div class="card">'
@@ -12738,7 +12746,7 @@ def run_webhook_server():
             'h1{font-size:24px;margin:4px 0 14px}h2{font-size:18px;margin:0 0 12px}p{line-height:1.6}'
             'select,input,button{width:100%;box-sizing:border-box;font-size:16px;padding:12px;border:1px solid #d1d5db;border-radius:10px;margin:6px 0 12px;background:#fff}'
             'button{background:#111827;color:#fff;border:0;font-weight:700}.muted{color:#6b7280;font-size:13px}'
-            'pre{white-space:pre-wrap;line-height:1.55;font-family:inherit}.nav{display:flex;gap:8px}.nav a{flex:1;text-align:center;padding:10px;border-radius:10px;background:#eef2ff;color:#111827;text-decoration:none}'
+            'pre{white-space:pre-wrap;line-height:1.55;font-family:inherit}.industry-result{line-height:1.75;word-break:break-word}.industry-result a{font-weight:700}.nav{display:flex;gap:8px}.nav a{flex:1;text-align:center;padding:10px;border-radius:10px;background:#eef2ff;color:#111827;text-decoration:none}'
             '</style></head><body><div class="wrap">' + body + '</div></body></html>'
         )
 
@@ -12775,9 +12783,11 @@ def run_webhook_server():
             result=_line_industry_top3_analysis(sub,u,html_links=True,parent=parent)
         except Exception as ex:
             result=f'❌ 分析失敗：{type(ex).__name__}: {ex}'
+        # V2.14.44：保留 Top3 內的 /stock 超連結，但把換行轉成真正的 HTML 換行，避免手機瀏覽器全部擠成一行。
+        result_html = str(result).replace('\n', '<br>')
         body=(
-            f'<div class="card"><h1>📊 {html.escape(sub)}</h1><div class="muted">大產業：{html.escape(parent)}</div><div>{result}</div></div>'
-            '<div class="nav"><a href="/industry">← 再查一次</a><a href="/trump">🇺🇸 川普</a></div>'
+            f'<div class="card"><h1>📊 {html.escape(sub)}</h1><div class="muted">大產業：{html.escape(parent)}</div><div class="industry-result">{result_html}</div></div>'
+            '<div class="nav"><a href="/industry">← 再查一次</a><a href="/trump">🇺🇸 川普</a><a href="/macro">🌎 總經</a></div>'
         )
         return _web_page('產業分析結果',body)
 
@@ -12799,10 +12809,11 @@ def run_webhook_server():
     @app.get('/macro')
     def macro_page():
         try:
-            d=macro_fetch(force=True); us=d.get('us',{}); tw=d.get('taiwan',{})
+            d=macro_fetch(force=False); us=d.get('us',{}); tw=d.get('taiwan',{})
             def mv(k):
                 x=us.get(k,{}); return x.get('value') if isinstance(x,dict) else None
             body=['<div class="card"><h1>🌎 台美總經／系統性風險</h1>', '<p class="muted">本頁獨立於 Trump；個股分析只取與自身產業/營收模式相關的指標。</p>']
+            if d.get('_stale'): body.append('<p class="muted">⚠️ 即時來源暫時無法更新，以下顯示最近一次成功快取；不影響頁面瀏覽。</p>')
             body.append('<h2>🇺🇸 美國</h2>')
             for label,key in [('GDP成長率','us_gdp_growth'),('Fed利率','fed_rate'),('CPI指數','us_cpi'),('失業率','us_unemployment'),('10Y殖利率','us_10y'),('10Y-2Y','us_curve_10y2y')]:
                 v=mv(key); body.append(f'<p><b>{label}</b>：{("N/A" if v is None else f"{v:.2f}")}</p>')
@@ -14233,10 +14244,10 @@ def main():
 
     else:
 
-        print('========== V2.14.43 RUN START ==========', flush=True)
+        print('========== V2.14.44 RUN START ==========', flush=True)
         print(f'執行時間（台灣）：{datetime.now(TW_TZ).strftime("%Y-%m-%d %H:%M:%S")}', flush=True)
         run_alerts()
-        print('========== V2.14.43 RUN END ==========', flush=True)
+        print('========== V2.14.44 RUN END ==========', flush=True)
 
 
 if __name__ == '__main__':
