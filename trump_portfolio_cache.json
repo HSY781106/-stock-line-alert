@@ -1,91 +1,12 @@
 {
-  "_cached_at": 1788916519.4598331,
+  "_version": 2,
+  "_cached_at": 1788921847.5212262,
   "report_date": "2025年度申報（2026-06-30認證）",
   "source_url": "https://oge.box.com/shared/static/zycb5i2ny8kssm51uzqm8ygyq2zkpkqq.pdf",
   "data": [
     {
-      "ticker": "UKIPO",
-      "name": "DTTM Operations LLC United Kingdom",
-      "value_range": "00912629648",
-      "value_upper": 912629648.0,
-      "page": 910,
-      "source": "US OGE Form 278e"
-    },
-    {
-      "ticker": "HKIPD",
-      "name": "DTTM Operations LLC Hong Kong",
-      "value_range": " 301000187",
-      "value_upper": 301000187.0,
-      "page": 897,
-      "source": "US OGE Form 278e"
-    },
-    {
-      "ticker": "SATMO",
-      "name": "DTTM Operations LLC Saudi Arabia",
-      "value_range": " 142807750 ",
-      "value_upper": 142807750.0,
-      "page": 905,
-      "source": "US OGE Form 278e"
-    },
-    {
-      "ticker": "EUIPO",
-      "name": "DTTM Operations LLC European Union",
-      "value_range": " 12629648",
-      "value_upper": 12629648.0,
-      "page": 895,
-      "source": "US OGE Form 278e"
-    },
-    {
-      "ticker": "JPO",
-      "name": "DTTM Operations LLC Japan TRUMP TOWER Registered 5218523",
-      "value_range": " 5218523",
-      "value_upper": 5218523.0,
-      "page": 901,
-      "source": "US OGE Form 278e"
-    },
-    {
-      "ticker": "IPI",
-      "name": "DTTM Operations LLC India TRUMP HOME Registered 1624713",
-      "value_range": " 1624713",
-      "value_upper": 1624713.0,
-      "page": 898,
-      "source": "US OGE Form 278e"
-    },
-    {
-      "ticker": "CIPO",
-      "name": "DTTM Operations LLC Canada TRUMP HOME Registered TMA895292",
-      "value_range": "895292",
-      "value_upper": 895292.0,
-      "page": 883,
-      "source": "US OGE Form 278e"
-    },
-    {
-      "ticker": "CSC",
-      "name": "Fees $ 425,000 DJT Holdings LLC: 99% & Trump Chicago Residential",
-      "value_range": "$ 425,000 ",
-      "value_upper": 425000.0,
-      "page": 862,
-      "source": "US OGE Form 278e"
-    },
-    {
-      "ticker": "MD",
-      "name": "TARGET CORP Purchase 10/28/2025 $100,001 - $250,000",
-      "value_range": "1805 ",
-      "value_upper": 1805.0,
-      "page": 374,
-      "source": "US OGE Form 278e"
-    },
-    {
-      "ticker": "THE",
-      "name": "UNITEDHEALTH GROUP INC sale 11/5/2025 $1,001 - $15,000",
-      "value_range": "1646 ",
-      "value_upper": 1646.0,
-      "page": 212,
-      "source": "US OGE Form 278e"
-    },
-    {
       "ticker": "PA",
-      "name": "CONAGRA BRANDS INC None (or less than $1,001) None (or less than $201)",
+      "name": "CONAGRA BRANDS INC N/A None (or less than $1,001) None (or less than $201)",
       "value_range": "1117 ",
       "value_upper": 1117.0,
       "page": 142,
@@ -93,7 +14,7 @@
     },
     {
       "ticker": "DEL",
-      "name": "WILLIAMS SONOMA INC $1,001 - $15,000 None (or less than $201)",
+      "name": "WILLIAMS SONOMA INC N/A $1,001 - $15,000 None (or less than $201)",
       "value_range": "382 ",
       "value_upper": 382.0,
       "page": 31,
@@ -101,42 +22,26 @@
     },
     {
       "ticker": "NEW",
-      "name": "VALERO ENERGY CORP NEW $1,001 - $15,000 None (or less than $201)",
+      "name": "VALERO ENERGY CORP NEW N/A $1,001 - $15,000 None (or less than $201)",
       "value_range": "362 ",
       "value_upper": 362.0,
       "page": 30,
       "source": "US OGE Form 278e"
     },
     {
+      "ticker": "THE",
+      "name": "L3HARRIS TECHNOLOGIES INC N/A $15,001 - $50,000 None (or less than $201)",
+      "value_range": "258 ",
+      "value_upper": 258.0,
+      "page": 13,
+      "source": "US OGE Form 278e"
+    },
+    {
       "ticker": "REIT",
-      "name": "HOWMET AEROSPACE INC $15,001 - $50,000 None (or less than $201)",
+      "name": "HOWMET AEROSPACE INC N/A $15,001 - $50,000 None (or less than $201)",
       "value_range": "208 ",
       "value_upper": 208.0,
       "page": 26,
-      "source": "US OGE Form 278e"
-    },
-    {
-      "ticker": "EIF",
-      "name": "income is $0 - $200 or if the asset qualifies as an excepted investment fund.",
-      "value_range": "$0 - $200",
-      "value_upper": 200.0,
-      "page": 926,
-      "source": "US OGE Form 278e"
-    },
-    {
-      "ticker": "DE",
-      "name": "DT Marks Budapest Member Corp See Line 73 No DTTM Operations Managing Member Corp - Managing",
-      "value_range": " 73 ",
-      "value_upper": 73.0,
-      "page": 852,
-      "source": "US OGE Form 278e"
-    },
-    {
-      "ticker": "CASH",
-      "name": "DONALD J. TRUMP REVOCABLE TRUST",
-      "value_range": "8 ",
-      "value_upper": 8.0,
-      "page": 158,
       "source": "US OGE Form 278e"
     }
   ]

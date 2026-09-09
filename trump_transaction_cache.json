@@ -1,267 +1,4329 @@
 {
-  "_cached_at": 1788920268.4448912,
-  "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/2BF91F890F718ACB85258E5B002DE16B/%24FILE/Donald-J-Trump-08.12.2026-278T.pdf",
+  "_version": 3,
+  "_cached_at": 1788921874.1416209,
+  "source_url": [
+    "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+  ],
   "data": [
     {
-      "ticker": "COST",
+      "ticker": "",
       "side": "buy",
-      "date": "2026-10-02",
+      "date": "2026-03-27",
+      "value_range": "4634153032-00500",
+      "value_midpoint": 2317076766.0,
+      "page": 2,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-02-10",
+      "value_range": "$1000001-$5000",
+      "value_midpoint": 502500.5,
+      "page": 2,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "NVDA",
+      "side": "buy",
+      "date": "2026-02-10",
+      "value_range": "$1,000,001-$5,000,000",
+      "value_midpoint": 3000000.5,
+      "page": 2,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-02-10",
+      "value_range": "$1,000,001-$5,000,000",
+      "value_midpoint": 3000000.5,
+      "page": 2,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-02-10",
+      "value_range": "001-$5,000,000",
+      "value_midpoint": 2500000.5,
+      "page": 2,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-02-10",
       "value_range": "$1,000,001-$5",
       "value_midpoint": 500003.0,
       "page": 2,
-      "source": "US OGE Form 278-T"
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "ORCL",
+      "side": "buy",
+      "date": "2026-03-17",
+      "value_range": "$1,000,001-$5,000,000",
+      "value_midpoint": 3000000.5,
+      "page": 2,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "MSFT",
+      "side": "buy",
+      "date": "2026-02-10",
+      "value_range": "001-$5,000",
+      "value_midpoint": 2500.5,
+      "page": 2,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
     },
     {
       "ticker": "",
       "side": "buy",
-      "date": "2026-10-02",
+      "date": "2026-02-10",
+      "value_range": "000,001-$5",
+      "value_midpoint": 3.0,
+      "page": 2,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "AMZN",
+      "side": "buy",
+      "date": "2026-03-19",
+      "value_range": "$1,000,001-$5,000",
+      "value_midpoint": 502500.5,
+      "page": 2,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-02-10",
+      "value_range": "$1,000,001-$5,000",
+      "value_midpoint": 502500.5,
+      "page": 2,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "COST",
+      "side": "buy",
+      "date": "2026-02-10",
+      "value_range": "$1,000,001-$5",
+      "value_midpoint": 500003.0,
+      "page": 2,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "DELL",
+      "side": "buy",
+      "date": "2026-02-10",
+      "value_range": "$1,000,001-$5,000,000",
+      "value_midpoint": 3000000.5,
+      "page": 2,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "VOO",
+      "side": "buy",
+      "date": "2026-01-12",
+      "value_range": "001-$5",
+      "value_midpoint": 3.0,
+      "page": 3,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-01-12",
+      "value_range": "001-$5",
+      "value_midpoint": 3.0,
+      "page": 3,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "NVDA",
+      "side": "buy",
+      "date": "2026-02-10",
+      "value_range": "$500,001-$1,000,000",
+      "value_midpoint": 750000.5,
+      "page": 3,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "AMD",
+      "side": "buy",
+      "date": "2026-01-06",
+      "value_range": "$500,001-$1,000,000",
+      "value_midpoint": 750000.5,
+      "page": 3,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-02-10",
+      "value_range": "$500,001-$1,000,000",
+      "value_midpoint": 750000.5,
+      "page": 4,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-01-12",
+      "value_range": "$500,001-$1,000,000",
+      "value_midpoint": 750000.5,
+      "page": 3,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "GOOGL",
+      "side": "buy",
+      "date": "2026-03-02",
+      "value_range": "$500,001-$1",
+      "value_midpoint": 250001.0,
+      "page": 3,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-02-10",
+      "value_range": "$500,001-$1",
+      "value_midpoint": 250001.0,
+      "page": 3,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-04",
+      "value_range": "$500,001-$1,000,000",
+      "value_midpoint": 750000.5,
+      "page": 4,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-17",
+      "value_range": "$500,001-$1,000,000",
+      "value_midpoint": 750000.5,
+      "page": 4,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-10",
+      "value_range": "$500,001-$1,000,000",
+      "value_midpoint": 750000.5,
+      "page": 3,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-02-10",
+      "value_range": "$500,001-$1,000",
+      "value_midpoint": 250500.5,
+      "page": 3,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-17",
+      "value_range": "$500.001-$1.000",
+      "value_midpoint": 250.5005,
+      "page": 4,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-02-10",
+      "value_range": "$500.001-$1.000",
+      "value_midpoint": 250.5005,
+      "page": 4,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-17",
       "value_range": "$500,001-$1,",
       "value_midpoint": 250001.0,
       "page": 4,
-      "source": "US OGE Form 278-T"
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
     },
     {
       "ticker": "",
       "side": "buy",
-      "date": "2026-11-03",
+      "date": "2026-02-10",
+      "value_range": "$500,001-$1,",
+      "value_midpoint": 250001.0,
+      "page": 4,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-01-06",
+      "value_range": "001-$1",
+      "value_midpoint": 1.0,
+      "page": 4,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-01-12",
+      "value_range": "$250,001-$500",
+      "value_midpoint": 125250.5,
+      "page": 4,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-01-07",
+      "value_range": "$250,001-$500",
+      "value_midpoint": 125250.5,
+      "page": 4,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-18",
+      "value_range": "001-$250,000",
+      "value_midpoint": 125000.5,
+      "page": 9,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-30",
+      "value_range": "$100,001-$250,000",
+      "value_midpoint": 175000.5,
+      "page": 9,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-23",
+      "value_range": "$100,001-$250,000",
+      "value_midpoint": 175000.5,
+      "page": 9,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-02",
+      "value_range": "$100,001-$250,000",
+      "value_midpoint": 175000.5,
+      "page": 9,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-02",
+      "value_range": "$100,001-$250",
+      "value_midpoint": 50125.5,
+      "page": 9,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-02-10",
+      "value_range": "$100,001-$250",
+      "value_midpoint": 50125.5,
+      "page": 9,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-17",
+      "value_range": "$100,001-$250",
+      "value_midpoint": 50125.5,
+      "page": 9,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "AMD",
+      "side": "buy",
+      "date": "2026-03-02",
+      "value_range": "$100,001-$250,000",
+      "value_midpoint": 175000.5,
+      "page": 9,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-17",
+      "value_range": "$100,001-$250,000",
+      "value_midpoint": 175000.5,
+      "page": 9,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-01-06",
+      "value_range": "$100,001-$250,000",
+      "value_midpoint": 175000.5,
+      "page": 11,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "PLTR",
+      "side": "buy",
+      "date": "2026-03-18",
+      "value_range": "$100,001-$250,000",
+      "value_midpoint": 175000.5,
+      "page": 9,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-02-12",
+      "value_range": "$100,001-$250,000",
+      "value_midpoint": 175000.5,
+      "page": 9,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-01-12",
+      "value_range": "$100,001-$250",
+      "value_midpoint": 50125.5,
+      "page": 9,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-01-15",
+      "value_range": "$100,001-$250,000",
+      "value_midpoint": 175000.5,
+      "page": 9,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-01-06",
+      "value_range": "$100,001-$250",
+      "value_midpoint": 50125.5,
+      "page": 11,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-23",
+      "value_range": "$100,001-$250",
+      "value_midpoint": 50125.5,
+      "page": 9,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "COST",
+      "side": "buy",
+      "date": "2026-01-06",
+      "value_range": "$100,001-$250,00",
+      "value_midpoint": 62500.5,
+      "page": 9,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "NFLX",
+      "side": "buy",
+      "date": "2026-03-02",
+      "value_range": "001-$250,000",
+      "value_midpoint": 125000.5,
+      "page": 9,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "META",
+      "side": "buy",
+      "date": "2026-03-11",
+      "value_range": "$100,001-$250,000",
+      "value_midpoint": 175000.5,
+      "page": 11,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-23",
+      "value_range": "001-$250,000",
+      "value_midpoint": 125000.5,
+      "page": 11,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-17",
+      "value_range": "001-$250,000",
+      "value_midpoint": 125000.5,
+      "page": 11,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-01-23",
+      "value_range": "001-$250,000",
+      "value_midpoint": 125000.5,
+      "page": 11,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-01-23",
+      "value_range": "$100,001-$250",
+      "value_midpoint": 50125.5,
+      "page": 11,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-23",
+      "value_range": "001-$250",
+      "value_midpoint": 125.5,
+      "page": 11,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-18",
+      "value_range": "$100,001-$250",
+      "value_midpoint": 50125.5,
+      "page": 11,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-01-06",
+      "value_range": "$100.001-$250,000",
+      "value_midpoint": 125050.0005,
+      "page": 11,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-18",
+      "value_range": "$100,001-$250,000",
+      "value_midpoint": 175000.5,
+      "page": 11,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-25",
+      "value_range": "$100,001-$250",
+      "value_midpoint": 50125.5,
+      "page": 11,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-25",
+      "value_range": "$100,001-$250,000",
+      "value_midpoint": 175000.5,
+      "page": 11,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-10",
+      "value_range": "$100,001-$250,000",
+      "value_midpoint": 175000.5,
+      "page": 11,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "NVDA",
+      "side": "buy",
+      "date": "2026-03-17",
+      "value_range": "$100,001-$250,000",
+      "value_midpoint": 175000.5,
+      "page": 11,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-04",
+      "value_range": "$50,001-$100,000",
+      "value_midpoint": 75000.5,
+      "page": 21,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-18",
+      "value_range": "$50,001-$100,000",
+      "value_midpoint": 75000.5,
+      "page": 20,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-01-06",
+      "value_range": "$50,001-$100",
+      "value_midpoint": 25050.5,
+      "page": 13,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-18",
+      "value_range": "001-$100",
+      "value_midpoint": 50.5,
+      "page": 16,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-30",
+      "value_range": "001-$100",
+      "value_midpoint": 50.5,
+      "page": 13,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-30",
+      "value_range": "$50,001-$100,000",
+      "value_midpoint": 75000.5,
+      "page": 20,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-10",
+      "value_range": "$50,001-$100",
+      "value_midpoint": 25050.5,
+      "page": 13,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "PLTR",
+      "side": "buy",
+      "date": "2026-03-02",
+      "value_range": "001-$100",
+      "value_midpoint": 50.5,
+      "page": 13,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "PLTR",
+      "side": "buy",
+      "date": "2026-03-02",
+      "value_range": "$50,001-$100",
+      "value_midpoint": 25050.5,
+      "page": 13,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-04",
+      "value_range": "001-$100000",
+      "value_midpoint": 50000.5,
+      "page": 13,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-04",
+      "value_range": "$50,001-$100",
+      "value_midpoint": 25050.5,
+      "page": 20,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-17",
+      "value_range": "001-$100",
+      "value_midpoint": 50.5,
+      "page": 13,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-23",
+      "value_range": "$50,001-$100",
+      "value_midpoint": 25050.5,
+      "page": 13,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-02-12",
+      "value_range": "001-$100",
+      "value_midpoint": 50.5,
+      "page": 18,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-23",
+      "value_range": "001-$100000",
+      "value_midpoint": 50000.5,
+      "page": 16,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-01-08",
+      "value_range": "$50,001-$100,000",
+      "value_midpoint": 75000.5,
+      "page": 16,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-30",
+      "value_range": "$50,001-$100",
+      "value_midpoint": 25050.5,
+      "page": 18,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-11",
+      "value_range": "$50,001-$100,000",
+      "value_midpoint": 75000.5,
+      "page": 21,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-11",
+      "value_range": "001-$100",
+      "value_midpoint": 50.5,
+      "page": 18,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-02-10",
+      "value_range": "$50,001-$100",
+      "value_midpoint": 25050.5,
+      "page": 16,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-01-12",
+      "value_range": "001-$100",
+      "value_midpoint": 50.5,
+      "page": 16,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-02",
+      "value_range": "001-$100",
+      "value_midpoint": 50.5,
+      "page": 16,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "NVDA",
+      "side": "buy",
+      "date": "2026-02-12",
+      "value_range": "$50,001-$100.000",
+      "value_midpoint": 25050.5,
+      "page": 16,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "NVDA",
+      "side": "buy",
+      "date": "2026-03-23",
+      "value_range": "$50,001-$100",
+      "value_midpoint": 25050.5,
+      "page": 16,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-17",
+      "value_range": "$50,001-$100",
+      "value_midpoint": 25050.5,
+      "page": 16,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-02",
+      "value_range": "$50,001-$1",
+      "value_midpoint": 25001.0,
+      "page": 16,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-02",
+      "value_range": "$50,001-$100,000",
+      "value_midpoint": 75000.5,
+      "page": 16,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-30",
+      "value_range": "001-$100,000",
+      "value_midpoint": 50000.5,
+      "page": 16,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-02-12",
+      "value_range": "$50,001-$100,000",
+      "value_midpoint": 75000.5,
+      "page": 20,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-01-12",
+      "value_range": "$50,001-$100",
+      "value_midpoint": 25050.5,
+      "page": 18,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-01-12",
+      "value_range": "$50,001-$100,000",
+      "value_midpoint": 75000.5,
+      "page": 18,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-02",
+      "value_range": "$50,001-$100",
+      "value_midpoint": 25050.5,
+      "page": 18,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-01-07",
+      "value_range": "$50,001-$100,000",
+      "value_midpoint": 75000.5,
+      "page": 18,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-18",
+      "value_range": "$50,001-$100",
+      "value_midpoint": 25050.5,
+      "page": 18,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "AAPL",
+      "side": "buy",
+      "date": "2026-03-02",
+      "value_range": "$50,001-$100,000",
+      "value_midpoint": 75000.5,
+      "page": 18,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "AAPL",
+      "side": "buy",
+      "date": "2026-03-17",
+      "value_range": "$50,001-$100,000",
+      "value_midpoint": 75000.5,
+      "page": 18,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-01-12",
+      "value_range": "$50001-$100000",
+      "value_midpoint": 75000.5,
+      "page": 18,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-23",
+      "value_range": "001-$100,000",
+      "value_midpoint": 50000.5,
+      "page": 18,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-02",
+      "value_range": "001-$100,00",
+      "value_midpoint": 5000.5,
+      "page": 18,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-01-26",
+      "value_range": "001-$100,000",
+      "value_midpoint": 50000.5,
+      "page": 19,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "BRK-B",
+      "side": "buy",
+      "date": "2026-03-11",
+      "value_range": "$50,001-$100,000",
+      "value_midpoint": 75000.5,
+      "page": 19,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "BRK-B",
+      "side": "buy",
+      "date": "2026-03-11",
+      "value_range": "001-$100",
+      "value_midpoint": 50.5,
+      "page": 19,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-02-10",
+      "value_range": "001-$100,000",
+      "value_midpoint": 50000.5,
+      "page": 19,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-02-10",
+      "value_range": "$50,001-$1",
+      "value_midpoint": 25001.0,
+      "page": 19,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-01-06",
+      "value_range": "001-$100,000",
+      "value_midpoint": 50000.5,
+      "page": 20,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "GOOGL",
+      "side": "buy",
+      "date": "2026-03-23",
+      "value_range": "$50,001-$100,000",
+      "value_midpoint": 75000.5,
+      "page": 20,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-02-28",
+      "value_range": "$50,001-$100,000",
+      "value_midpoint": 75000.5,
+      "page": 20,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-23",
+      "value_range": "$50,001-$100,000",
+      "value_midpoint": 75000.5,
+      "page": 20,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-12",
+      "value_range": "001-$100",
+      "value_midpoint": 50.5,
+      "page": 21,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-04",
+      "value_range": "001-$100",
+      "value_midpoint": 50.5,
+      "page": 20,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-23",
+      "value_range": "001-$100",
+      "value_midpoint": 50.5,
+      "page": 21,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-17",
+      "value_range": "$50,001-$100,000",
+      "value_midpoint": 75000.5,
+      "page": 21,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-04",
+      "value_range": "$15,001-$50,000",
+      "value_midpoint": 32500.5,
+      "page": 49,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-02-02",
+      "value_range": "$15,001-$50,000",
+      "value_midpoint": 32500.5,
+      "page": 21,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-02-10",
+      "value_range": "$15,001-$50,000",
+      "value_midpoint": 32500.5,
+      "page": 21,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-10",
+      "value_range": "$15,001-$50,000",
+      "value_midpoint": 32500.5,
+      "page": 21,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "AMD",
+      "side": "buy",
+      "date": "2026-03-25",
+      "value_range": "$15,001-$50",
+      "value_midpoint": 7525.5,
+      "page": 21,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-30",
+      "value_range": "$15,001-$50,000",
+      "value_midpoint": 32500.5,
+      "page": 49,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-02",
+      "value_range": "001-$50",
+      "value_midpoint": 25.5,
+      "page": 43,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-30",
+      "value_range": "001-$50",
+      "value_midpoint": 25.5,
+      "page": 22,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-12",
+      "value_range": "$15,001-$50",
+      "value_midpoint": 7525.5,
+      "page": 34,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-01-12",
+      "value_range": "$15,001-$50",
+      "value_midpoint": 7525.5,
+      "page": 22,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-01-12",
+      "value_range": "001-$50,000",
+      "value_midpoint": 25000.5,
+      "page": 22,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-30",
+      "value_range": "$15,001-$50",
+      "value_midpoint": 7525.5,
+      "page": 49,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-25",
+      "value_range": "001-$50",
+      "value_midpoint": 25.5,
+      "page": 24,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-25",
+      "value_range": "001-$50,000",
+      "value_midpoint": 25000.5,
+      "page": 24,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-25",
+      "value_range": "$15,001-$50,000",
+      "value_midpoint": 32500.5,
+      "page": 24,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-16",
+      "value_range": "$15,001-$50.000",
+      "value_midpoint": 7525.5,
+      "page": 27,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-16",
+      "value_range": "$15,001-$50,000",
+      "value_midpoint": 32500.5,
+      "page": 27,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-02",
+      "value_range": "$15,001-$50",
+      "value_midpoint": 7525.5,
+      "page": 43,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-02",
+      "value_range": "$15,001-$50,000",
+      "value_midpoint": 32500.5,
+      "page": 43,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-16",
+      "value_range": "$15,001-$50",
+      "value_midpoint": 7525.5,
+      "page": 27,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-23",
+      "value_range": "$15,001-$50",
+      "value_midpoint": 7525.5,
+      "page": 27,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-23",
+      "value_range": "$15,001-$50,000",
+      "value_midpoint": 32500.5,
+      "page": 31,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-01-23",
+      "value_range": "$15,001-$50",
+      "value_midpoint": 7525.5,
+      "page": 43,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-23",
+      "value_range": "$15,001-$50.000",
+      "value_midpoint": 7525.5,
+      "page": 31,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-02-26",
+      "value_range": "$15,001-$50",
+      "value_midpoint": 7525.5,
+      "page": 31,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-30",
+      "value_range": "$15,001-$50.000",
+      "value_midpoint": 7525.5,
+      "page": 31,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-12",
+      "value_range": "$15,001-$50,000",
+      "value_midpoint": 32500.5,
+      "page": 34,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-12",
+      "value_range": "$15,001-$50.000",
+      "value_midpoint": 7525.5,
+      "page": 34,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-02-12",
+      "value_range": "$15,001-$50,000",
+      "value_midpoint": 32500.5,
+      "page": 50,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "ORCL",
+      "side": "buy",
+      "date": "2026-03-12",
+      "value_range": "$15,001-$50,000",
+      "value_midpoint": 32500.5,
+      "page": 34,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "ORCL",
+      "side": "buy",
+      "date": "2026-03-12",
+      "value_range": "$15,001-$50",
+      "value_midpoint": 7525.5,
+      "page": 34,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-12",
+      "value_range": "$15.001-$50",
+      "value_midpoint": 32.5005,
+      "page": 34,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-12",
+      "value_range": "001-$50",
+      "value_midpoint": 25.5,
+      "page": 34,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "PLTR",
+      "side": "buy",
+      "date": "2026-03-12",
+      "value_range": "$15,001-$50.000",
+      "value_midpoint": 7525.5,
+      "page": 34,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "PLTR",
+      "side": "buy",
+      "date": "2025-01-06",
+      "value_range": "$15,001-$50.000",
+      "value_midpoint": 7525.5,
+      "page": 34,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-02",
+      "value_range": "$15.001-$50",
+      "value_midpoint": 32.5005,
+      "page": 34,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-04",
+      "value_range": "001-$50,000",
+      "value_midpoint": 25000.5,
+      "page": 34,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-12",
+      "value_range": "001-$50,000",
+      "value_midpoint": 25000.5,
+      "page": 34,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-11",
+      "value_range": "$15,001-$50",
+      "value_midpoint": 7525.5,
+      "page": 38,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "PLTR",
+      "side": "buy",
+      "date": "2026-03-11",
       "value_range": "$15,001-$50,000",
       "value_midpoint": 32500.5,
       "page": 38,
-      "source": "US OGE Form 278-T"
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-11",
+      "value_range": "$15001-$50,000",
+      "value_midpoint": 32500.5,
+      "page": 38,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-11",
+      "value_range": "$15,001-$50,000",
+      "value_midpoint": 32500.5,
+      "page": 38,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-11",
+      "value_range": "001-$50",
+      "value_midpoint": 25.5,
+      "page": 38,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-04",
+      "value_range": "$15,001-$50",
+      "value_midpoint": 7525.5,
+      "page": 43,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-11",
+      "value_range": "001-$50.000",
+      "value_midpoint": 25.5,
+      "page": 38,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-11",
+      "value_range": "$15001-$50000",
+      "value_midpoint": 32500.5,
+      "page": 38,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-11",
+      "value_range": "001-$50,000",
+      "value_midpoint": 25000.5,
+      "page": 38,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-02-26",
+      "value_range": "001-$50",
+      "value_midpoint": 25.5,
+      "page": 38,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-30",
+      "value_range": "001-$50.000",
+      "value_midpoint": 25.5,
+      "page": 43,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-02",
+      "value_range": "001-$50.000",
+      "value_midpoint": 25.5,
+      "page": 43,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-04",
+      "value_range": "$15001-$50000",
+      "value_midpoint": 32500.5,
+      "page": 43,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-01-23",
+      "value_range": "001-$50",
+      "value_midpoint": 25.5,
+      "page": 43,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-30",
+      "value_range": "$15,001-$50,00",
+      "value_midpoint": 10000.5,
+      "page": 43,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-02",
+      "value_range": "$15,001-$50,00",
+      "value_midpoint": 10000.5,
+      "page": 43,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-02",
+      "value_range": "$15001-$50000",
+      "value_midpoint": 32500.5,
+      "page": 43,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-23",
+      "value_range": "$15001-$50000",
+      "value_midpoint": 32500.5,
+      "page": 43,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "AAPL",
+      "side": "buy",
+      "date": "2026-03-30",
+      "value_range": "001-$50,000",
+      "value_midpoint": 25000.5,
+      "page": 43,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-01-23",
+      "value_range": "$15001-$50000",
+      "value_midpoint": 32500.5,
+      "page": 43,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-30",
+      "value_range": "$15001-$50000",
+      "value_midpoint": 32500.5,
+      "page": 43,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-04",
+      "value_range": "$15,001-$50.000",
+      "value_midpoint": 7525.5,
+      "page": 45,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-02-26",
+      "value_range": "$15,001-$50,000",
+      "value_midpoint": 32500.5,
+      "page": 50,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-01-08",
+      "value_range": "$15,001-$50,000",
+      "value_midpoint": 32500.5,
+      "page": 49,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-02-26",
+      "value_range": "$15.001-$50,000",
+      "value_midpoint": 25007.5005,
+      "page": 49,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-30",
+      "value_range": "$15.001-$50,000",
+      "value_midpoint": 25007.5005,
+      "page": 49,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "TSLA",
+      "side": "buy",
+      "date": "2026-03-23",
+      "value_range": "$15,001-$50,000",
+      "value_midpoint": 32500.5,
+      "page": 49,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-01-21",
+      "value_range": "$15,001-$50,000",
+      "value_midpoint": 32500.5,
+      "page": 49,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-01-23",
+      "value_range": "$15.001-$50,000",
+      "value_midpoint": 25007.5005,
+      "page": 50,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-01-26",
+      "value_range": "$15,001-$50,000",
+      "value_midpoint": 32500.5,
+      "page": 50,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-01-30",
+      "value_range": "$15,001-$50,000",
+      "value_midpoint": 32500.5,
+      "page": 50,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-02-12",
+      "value_range": "$15,001-$50",
+      "value_midpoint": 7525.5,
+      "page": 50,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-01-26",
+      "value_range": "15,001-$50,000",
+      "value_midpoint": 32500.5,
+      "page": 50,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-01-26",
+      "value_range": "$15,001-$50",
+      "value_midpoint": 7525.5,
+      "page": 50,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "PLTR",
+      "side": "buy",
+      "date": "2026-01-06",
+      "value_range": "$1,001-$15",
+      "value_midpoint": 508.0,
+      "page": 52,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "PLTR",
+      "side": "buy",
+      "date": "2026-02-23",
+      "value_range": "$1,001-$15",
+      "value_midpoint": 508.0,
+      "page": 52,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-02-23",
+      "value_range": "$1,001-$15",
+      "value_midpoint": 508.0,
+      "page": 61,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "MSFT",
+      "side": "buy",
+      "date": "2026-01-23",
+      "value_range": "$1.001-$15,000",
+      "value_midpoint": 7500.5005,
+      "page": 52,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "MSFT",
+      "side": "buy",
+      "date": "2026-02-12",
+      "value_range": "$1.001-$15,000",
+      "value_midpoint": 7500.5005,
+      "page": 52,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-17",
+      "value_range": "$1,001-$15.000",
+      "value_midpoint": 508.0,
+      "page": 60,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-02-23",
+      "value_range": "$1.001-$15",
+      "value_midpoint": 8.0005,
+      "page": 52,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-01-06",
+      "value_range": "$1.001-$15",
+      "value_midpoint": 8.0005,
+      "page": 52,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-23",
+      "value_range": "$1,001-$15,000",
+      "value_midpoint": 8000.5,
+      "page": 61,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-01-23",
+      "value_range": "$1.001-$15",
+      "value_midpoint": 8.0005,
+      "page": 52,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-01-23",
+      "value_range": "$1,001-$15.000",
+      "value_midpoint": 508.0,
+      "page": 52,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "META",
+      "side": "buy",
+      "date": "2026-02-23",
+      "value_range": "$1,001-$15,000",
+      "value_midpoint": 8000.5,
+      "page": 52,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "MSFT",
+      "side": "buy",
+      "date": "2026-03-23",
+      "value_range": "$1,001-$15,000",
+      "value_midpoint": 8000.5,
+      "page": 52,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "MSFT",
+      "side": "buy",
+      "date": "2026-02-19",
+      "value_range": "$1.001-$15.000",
+      "value_midpoint": 8.0005,
+      "page": 52,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-17",
+      "value_range": "1.001-$15,000",
+      "value_midpoint": 7500.5005,
+      "page": 57,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-17",
+      "value_range": "1,001-$15",
+      "value_midpoint": 508.0,
+      "page": 55,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-17",
+      "value_range": "$1,001-$15,000",
+      "value_midpoint": 8000.5,
+      "page": 61,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-01-21",
+      "value_range": "$1,001-$15",
+      "value_midpoint": 508.0,
+      "page": 70,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-04",
+      "value_range": "$1,001-$15,000",
+      "value_midpoint": 8000.5,
+      "page": 55,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-01-23",
+      "value_range": "$1,001-$15,",
+      "value_midpoint": 508.0,
+      "page": 55,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-17",
+      "value_range": "1,001-$15,000",
+      "value_midpoint": 8000.5,
+      "page": 56,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-23",
+      "value_range": "$1,001-$15.000",
+      "value_midpoint": 508.0,
+      "page": 59,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "WMT",
+      "side": "buy",
+      "date": "2026-03-23",
+      "value_range": "$1,001-$15,000",
+      "value_midpoint": 8000.5,
+      "page": 55,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "WMT",
+      "side": "buy",
+      "date": "2026-03-17",
+      "value_range": "$1,001-$15,000",
+      "value_midpoint": 8000.5,
+      "page": 55,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-17",
+      "value_range": "1.001-$15.000",
+      "value_midpoint": 8.0005,
+      "page": 55,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-01-23",
+      "value_range": "$1,001-$15",
+      "value_midpoint": 508.0,
+      "page": 55,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-01-21",
+      "value_range": "$1,001-$15000",
+      "value_midpoint": 8000.5,
+      "page": 55,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-01-23",
+      "value_range": "$1,001-$15,000",
+      "value_midpoint": 8000.5,
+      "page": 61,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "COST",
+      "side": "buy",
+      "date": "2026-02-23",
+      "value_range": "$1,001-$15,000",
+      "value_midpoint": 8000.5,
+      "page": 55,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "COST",
+      "side": "buy",
+      "date": "2026-03-17",
+      "value_range": "$1,001-$15,000",
+      "value_midpoint": 8000.5,
+      "page": 55,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-02-23",
+      "value_range": "$1,001-$15,000",
+      "value_midpoint": 8000.5,
+      "page": 60,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-26",
+      "value_range": "$1,001-$15,000",
+      "value_midpoint": 8000.5,
+      "page": 59,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "NFLX",
+      "side": "buy",
+      "date": "2026-02-12",
+      "value_range": "$1,001-$15,000",
+      "value_midpoint": 8000.5,
+      "page": 55,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-17",
+      "value_range": "1001-$15000",
+      "value_midpoint": 8000.5,
+      "page": 56,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-23",
+      "value_range": "001-$15",
+      "value_midpoint": 8.0,
+      "page": 56,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-23",
+      "value_range": "$1001-$15000",
+      "value_midpoint": 8000.5,
+      "page": 56,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "NVDA",
+      "side": "buy",
+      "date": "2026-02-23",
+      "value_range": "001-$15",
+      "value_midpoint": 8.0,
+      "page": 56,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "NVDA",
+      "side": "buy",
+      "date": "2026-02-19",
+      "value_range": "001-$15",
+      "value_midpoint": 8.0,
+      "page": 56,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-23",
+      "value_range": "$1,001-$15000",
+      "value_midpoint": 8000.5,
+      "page": 56,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-17",
+      "value_range": "$1,001-$15000",
+      "value_midpoint": 8000.5,
+      "page": 56,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-17",
+      "value_range": "001-$15",
+      "value_midpoint": 8.0,
+      "page": 61,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-23",
+      "value_range": "$1,001-$15",
+      "value_midpoint": 508.0,
+      "page": 61,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-17",
+      "value_range": "1,001-$15000",
+      "value_midpoint": 8000.5,
+      "page": 56,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-02-12",
+      "value_range": "1,001-$15000",
+      "value_midpoint": 8000.5,
+      "page": 56,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-23",
+      "value_range": "1,001-$15",
+      "value_midpoint": 508.0,
+      "page": 56,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-01-23",
+      "value_range": "001-$15000",
+      "value_midpoint": 7500.5,
+      "page": 56,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-26",
+      "value_range": "001-$15000",
+      "value_midpoint": 7500.5,
+      "page": 56,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-23",
+      "value_range": "1001-$15000",
+      "value_midpoint": 8000.5,
+      "page": 56,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-26",
+      "value_range": "1001-$15000",
+      "value_midpoint": 8000.5,
+      "page": 56,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-02-23",
+      "value_range": "001-$15,000",
+      "value_midpoint": 7500.5,
+      "page": 56,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-02-19",
+      "value_range": "$1001-$15000",
+      "value_midpoint": 8000.5,
+      "page": 56,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-02-19",
+      "value_range": "$1,001-$15,000",
+      "value_midpoint": 8000.5,
+      "page": 60,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-17",
+      "value_range": "$1,001-$15",
+      "value_midpoint": 508.0,
+      "page": 61,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-26",
+      "value_range": "$1,001-$15",
+      "value_midpoint": 508.0,
+      "page": 71,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-02-23",
+      "value_range": "$1,001-$15.000",
+      "value_midpoint": 508.0,
+      "page": 59,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-01-21",
+      "value_range": "$1,001-$15.000",
+      "value_midpoint": 508.0,
+      "page": 59,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-01-21",
+      "value_range": "$1,001-$15,000",
+      "value_midpoint": 8000.5,
+      "page": 61,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-26",
+      "value_range": "$1,001-$15.000",
+      "value_midpoint": 508.0,
+      "page": 59,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-02-19",
+      "value_range": "$1,001-$15.000",
+      "value_midpoint": 508.0,
+      "page": 59,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "ORCL",
+      "side": "buy",
+      "date": "2026-03-17",
+      "value_range": "$1,001-$15",
+      "value_midpoint": 508.0,
+      "page": 60,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "ORCL",
+      "side": "buy",
+      "date": "2026-03-23",
+      "value_range": "$1,001-$15",
+      "value_midpoint": 508.0,
+      "page": 60,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-17",
+      "value_range": "001-$15,000",
+      "value_midpoint": 7500.5,
+      "page": 60,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-02-19",
+      "value_range": "$1,001-$15",
+      "value_midpoint": 508.0,
+      "page": 61,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-02-23",
+      "value_range": "$1.001-$15,000",
+      "value_midpoint": 7500.5005,
+      "page": 60,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-23",
+      "value_range": "$1.001-$15,000",
+      "value_midpoint": 7500.5005,
+      "page": 60,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-02-12",
+      "value_range": "$1.001-$15,000",
+      "value_midpoint": 7500.5005,
+      "page": 60,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-02-12",
+      "value_range": "$1,001-$15.000",
+      "value_midpoint": 508.0,
+      "page": 60,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-02-12",
+      "value_range": "$1,001-$15,000",
+      "value_midpoint": 8000.5,
+      "page": 60,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-23",
+      "value_range": "$1.001-$15",
+      "value_midpoint": 8.0005,
+      "page": 61,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "AMD",
+      "side": "buy",
+      "date": "2026-02-19",
+      "value_range": "$1,001-$15,000",
+      "value_midpoint": 8000.5,
+      "page": 60,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-01-12",
+      "value_range": "$1,001-$15,000",
+      "value_midpoint": 8000.5,
+      "page": 61,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-17",
+      "value_range": "$1.001-$15,000",
+      "value_midpoint": 7500.5005,
+      "page": 61,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-02-19",
+      "value_range": "$1.001-$15,000",
+      "value_midpoint": 7500.5005,
+      "page": 61,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-02-12",
+      "value_range": "$1,001-$15",
+      "value_midpoint": 508.0,
+      "page": 70,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-17",
+      "value_range": "$1.001-$15.000",
+      "value_midpoint": 8.0005,
+      "page": 61,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-02-19",
+      "value_range": "001-$15",
+      "value_midpoint": 8.0,
+      "page": 70,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-01-21",
+      "value_range": "$1001-$15",
+      "value_midpoint": 508.0,
+      "page": 70,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-26",
+      "value_range": "$1001-$15000",
+      "value_midpoint": 8000.5,
+      "page": 70,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-01-21",
+      "value_range": "001-$15",
+      "value_midpoint": 8.0,
+      "page": 70,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-02-23",
+      "value_range": "$1,001-$15000",
+      "value_midpoint": 8000.5,
+      "page": 70,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-01-21",
+      "value_range": "$1001-$15000",
+      "value_midpoint": 8000.5,
+      "page": 70,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-04",
+      "value_range": "$1,001-$15000",
+      "value_midpoint": 8000.5,
+      "page": 70,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-02-12",
+      "value_range": "001-$15,000",
+      "value_midpoint": 7500.5,
+      "page": 70,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-02-12",
+      "value_range": "001-$15",
+      "value_midpoint": 8.0,
+      "page": 70,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-02-23",
+      "value_range": "001-$15",
+      "value_midpoint": 8.0,
+      "page": 70,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-01-12",
+      "value_range": "001-$1",
+      "value_midpoint": 1.0,
+      "page": 71,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-02-23",
+      "value_range": "$1001-$1",
+      "value_midpoint": 501.0,
+      "page": 71,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-02-23",
+      "value_range": "001-$1",
+      "value_midpoint": 1.0,
+      "page": 71,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-02-23",
+      "value_range": "1,001-$1",
+      "value_midpoint": 501.0,
+      "page": 71,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-01-21",
+      "value_range": "001-$1",
+      "value_midpoint": 1.0,
+      "page": 71,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "buy",
+      "date": "2026-03-26",
+      "value_range": "1,001-$1",
+      "value_midpoint": 501.0,
+      "page": 71,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
     },
     {
       "ticker": "",
       "side": "sell",
-      "date": "2026-12-02",
-      "value_range": "$1,001-$15,000",
-      "value_midpoint": 8000.5,
+      "date": "2026-02-19",
+      "value_range": "$1,001-$15.000",
+      "value_midpoint": 508.0,
       "page": 73,
-      "source": "US OGE Form 278-T"
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
     },
     {
       "ticker": "",
       "side": "sell",
-      "date": "2026-12-01",
-      "value_range": "$1,001-$15,000",
-      "value_midpoint": 8000.5,
+      "date": "2026-03-17",
+      "value_range": "$1,001-$15.000",
+      "value_midpoint": 508.0,
       "page": 73,
-      "source": "US OGE Form 278-T"
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
     },
     {
       "ticker": "",
       "side": "sell",
-      "date": "2026-12-01",
+      "date": "2026-02-23",
       "value_range": "$1,001-$15,000",
       "value_midpoint": 8000.5,
-      "page": 74,
-      "source": "US OGE Form 278-T"
+      "page": 88,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
     },
     {
       "ticker": "",
       "side": "sell",
-      "date": "2026-12-01",
+      "date": "2026-02-12",
       "value_range": "$1,001-$15,000",
       "value_midpoint": 8000.5,
-      "page": 74,
-      "source": "US OGE Form 278-T"
+      "page": 88,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
     },
     {
       "ticker": "",
       "side": "sell",
-      "date": "2026-12-02",
-      "value_range": "$1,001-$15",
-      "value_midpoint": 508.0,
-      "page": 74,
-      "source": "US OGE Form 278-T"
-    },
-    {
-      "ticker": "",
-      "side": "sell",
-      "date": "2026-12-02",
-      "value_range": "$1,001-$15",
-      "value_midpoint": 508.0,
-      "page": 74,
-      "source": "US OGE Form 278-T"
-    },
-    {
-      "ticker": "",
-      "side": "sell",
-      "date": "2028-12-02",
+      "date": "2026-01-21",
       "value_range": "$1,001-$15,000",
       "value_midpoint": 8000.5,
-      "page": 74,
-      "source": "US OGE Form 278-T"
-    },
-    {
-      "ticker": "",
-      "side": "sell",
-      "date": "2026-12-01",
-      "value_range": "$1,001-$15",
-      "value_midpoint": 508.0,
-      "page": 74,
-      "source": "US OGE Form 278-T"
-    },
-    {
-      "ticker": "",
-      "side": "sell",
-      "date": "2026-12-01",
-      "value_range": "$1,001-$15",
-      "value_midpoint": 508.0,
       "page": 77,
-      "source": "US OGE Form 278-T"
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
     },
     {
       "ticker": "",
       "side": "sell",
-      "date": "2026-12-02",
+      "date": "2026-01-12",
       "value_range": "$1,001-$15,000",
       "value_midpoint": 8000.5,
-      "page": 78,
-      "source": "US OGE Form 278-T"
+      "page": 88,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
     },
     {
       "ticker": "",
       "side": "sell",
-      "date": "2026-12-02",
+      "date": "2026-03-26",
+      "value_range": "$1,001-$15,000",
+      "value_midpoint": 8000.5,
+      "page": 82,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-01-21",
+      "value_range": "$1.001-$15",
+      "value_midpoint": 8.0005,
+      "page": 73,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-02-12",
+      "value_range": "$1.001-$15",
+      "value_midpoint": 8.0005,
+      "page": 73,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-01-06",
+      "value_range": "$1.001-$15,000",
+      "value_midpoint": 7500.5005,
+      "page": 73,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-03-26",
+      "value_range": "$1.001-$15,000",
+      "value_midpoint": 7500.5005,
+      "page": 73,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-02-12",
+      "value_range": "1.001-$15,000",
+      "value_midpoint": 7500.5005,
+      "page": 73,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-03-26",
+      "value_range": "1.001-$15,000",
+      "value_midpoint": 7500.5005,
+      "page": 73,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-01-21",
+      "value_range": "$1,001-$15",
+      "value_midpoint": 508.0,
+      "page": 74,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-02-12",
+      "value_range": "$1,001-$15",
+      "value_midpoint": 508.0,
+      "page": 84,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-03-26",
+      "value_range": "$1,001-$15",
+      "value_midpoint": 508.0,
+      "page": 78,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-01-12",
+      "value_range": "$1,001-$15",
+      "value_midpoint": 508.0,
+      "page": 88,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-03-30",
+      "value_range": "$1,001-$15,000",
+      "value_midpoint": 8000.5,
+      "page": 88,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-01-26",
+      "value_range": "$1,001-$15,000",
+      "value_midpoint": 8000.5,
+      "page": 82,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-02-23",
+      "value_range": "$1,001-$15",
+      "value_midpoint": 508.0,
+      "page": 84,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-01-23",
+      "value_range": "$1,001-$15,000",
+      "value_midpoint": 8000.5,
+      "page": 77,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-03-26",
+      "value_range": "2-02",
+      "value_midpoint": 2.0,
+      "page": 78,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-01-26",
+      "value_range": "2-02",
+      "value_midpoint": 2.0,
+      "page": 78,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-01-26",
+      "value_range": "$1,001-$15",
+      "value_midpoint": 508.0,
+      "page": 88,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-02-12",
+      "value_range": "001-$15000",
+      "value_midpoint": 7500.5,
+      "page": 81,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-03-30",
+      "value_range": "001-$15.000",
+      "value_midpoint": 8.0,
+      "page": 81,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-02-23",
+      "value_range": "$1.001-$15000",
+      "value_midpoint": 7500.5005,
+      "page": 81,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-02-12",
+      "value_range": "001-$15",
+      "value_midpoint": 8.0,
+      "page": 81,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-03-26",
+      "value_range": "001-$15",
+      "value_midpoint": 8.0,
+      "page": 81,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-03-26",
+      "value_range": "$1.001-$15000",
+      "value_midpoint": 7500.5005,
+      "page": 81,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-01-21",
+      "value_range": "001-$15",
+      "value_midpoint": 8.0,
+      "page": 81,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-01-26",
+      "value_range": "$1001-$15000",
+      "value_midpoint": 8000.5,
+      "page": 81,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-02-23",
+      "value_range": "$1,001-$15.000",
+      "value_midpoint": 508.0,
+      "page": 81,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-01-21",
+      "value_range": "$1,001-$15000",
+      "value_midpoint": 8000.5,
+      "page": 81,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-02-19",
+      "value_range": "$1001-$15000",
+      "value_midpoint": 8000.5,
+      "page": 81,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-02-23",
+      "value_range": "001-$15000",
+      "value_midpoint": 7500.5,
+      "page": 81,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-02-23",
+      "value_range": "$1.001-$15.000",
+      "value_midpoint": 8.0005,
+      "page": 82,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-02-19",
+      "value_range": "$1,001-$15",
+      "value_midpoint": 508.0,
+      "page": 82,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-03-17",
+      "value_range": "$1,001-$15,000",
+      "value_midpoint": 8000.5,
+      "page": 84,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-03-17",
+      "value_range": "$1,001-$15",
+      "value_midpoint": 508.0,
+      "page": 84,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-02-12",
+      "value_range": "$1,001-$15.000",
+      "value_midpoint": 508.0,
+      "page": 88,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-03-18",
       "value_range": "$1,001-$15.000",
       "value_midpoint": 508.0,
       "page": 82,
-      "source": "US OGE Form 278-T"
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
     },
     {
       "ticker": "",
       "side": "sell",
-      "date": "2026-12-01",
-      "value_range": "$1,001-$15",
+      "date": "2026-03-26",
+      "value_range": "$1,001-$15.000",
       "value_midpoint": 508.0,
       "page": 82,
-      "source": "US OGE Form 278-T"
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-02-26",
+      "value_range": "$1,001-$15,000",
+      "value_midpoint": 8000.5,
+      "page": 84,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-03-28",
+      "value_range": "$1,001-$15,000",
+      "value_midpoint": 8000.5,
+      "page": 84,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-02-02",
+      "value_range": "$1.001-$15,000",
+      "value_midpoint": 7500.5005,
+      "page": 82,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-01-22",
+      "value_range": "$1.001-$15,000",
+      "value_midpoint": 7500.5005,
+      "page": 82,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
     },
     {
       "ticker": "AMZN",
       "side": "sell",
-      "date": "2026-12-02",
-      "value_range": "$1,001-$15.000",
-      "value_midpoint": 508.0,
-      "page": 84,
-      "source": "US OGE Form 278-T"
-    },
-    {
-      "ticker": "",
-      "side": "sell",
-      "date": "2026-12-02",
+      "date": "2026-02-12",
       "value_range": "$1,001-$15,000",
       "value_midpoint": 8000.5,
       "page": 84,
-      "source": "US OGE Form 278-T"
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "AMZN",
+      "side": "sell",
+      "date": "2026-02-12",
+      "value_range": "$1,001-$15.000",
+      "value_midpoint": 508.0,
+      "page": 84,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
     },
     {
       "ticker": "",
       "side": "sell",
-      "date": "2026-12-01",
+      "date": "2026-03-17",
+      "value_range": "$1.001-$15.000",
+      "value_midpoint": 8.0005,
+      "page": 84,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-03-18",
+      "value_range": "$1,001-$15,000",
+      "value_midpoint": 8000.5,
+      "page": 88,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-03-30",
+      "value_range": "$1,001-$15",
+      "value_midpoint": 508.0,
+      "page": 84,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-02-23",
+      "value_range": "001-$15,000",
+      "value_midpoint": 7500.5,
+      "page": 84,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "PLTR",
+      "side": "sell",
+      "date": "2026-01-12",
+      "value_range": "$1,001-$15,000",
+      "value_midpoint": 8000.5,
+      "page": 84,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "PLTR",
+      "side": "sell",
+      "date": "2026-02-12",
+      "value_range": "$1,001-$15,000",
+      "value_midpoint": 8000.5,
+      "page": 84,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "PLTR",
+      "side": "sell",
+      "date": "2026-02-12",
+      "value_range": "$1,001-$15.000",
+      "value_midpoint": 508.0,
+      "page": 84,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-01-12",
+      "value_range": "001-$15",
+      "value_midpoint": 8.0,
+      "page": 85,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-01-12",
+      "value_range": "001-$15,000",
+      "value_midpoint": 7500.5,
+      "page": 85,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-03-30",
+      "value_range": "$1,001-$15.000",
+      "value_midpoint": 508.0,
+      "page": 88,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-02-26",
       "value_range": "$1,001-$15",
       "value_midpoint": 508.0,
       "page": 88,
-      "source": "US OGE Form 278-T"
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
     },
     {
       "ticker": "",
       "side": "sell",
-      "date": "2026-12-01",
+      "date": "2026-02-26",
+      "value_range": "001-$50.000",
+      "value_midpoint": 25.5,
+      "page": 91,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-03-18",
       "value_range": "$15,001-$50",
       "value_midpoint": 7525.5,
       "page": 93,
-      "source": "US OGE Form 278-T"
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
     },
     {
       "ticker": "",
       "side": "sell",
-      "date": "2026-12-02",
+      "date": "2026-03-06",
+      "value_range": "$15,001-$50,000",
+      "value_midpoint": 32500.5,
+      "page": 91,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-03-18",
+      "value_range": "001-$50",
+      "value_midpoint": 25.5,
+      "page": 91,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-03-18",
+      "value_range": "001-$50,000",
+      "value_midpoint": 25000.5,
+      "page": 91,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-01-12",
+      "value_range": "$15,001-$50,000",
+      "value_midpoint": 32500.5,
+      "page": 99,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-01-26",
+      "value_range": "$15,001-$50,000",
+      "value_midpoint": 32500.5,
+      "page": 99,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-03-17",
+      "value_range": "$15,001-$50",
+      "value_midpoint": 7525.5,
+      "page": 93,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-01-12",
+      "value_range": "$15,001-$50",
+      "value_midpoint": 7525.5,
+      "page": 93,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-02-12",
+      "value_range": "$15,001-$50",
+      "value_midpoint": 7525.5,
+      "page": 99,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-03-30",
+      "value_range": "$15,001-$50",
+      "value_midpoint": 7525.5,
+      "page": 93,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-03-30",
+      "value_range": "$15,001-$50,000",
+      "value_midpoint": 32500.5,
+      "page": 101,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-03-23",
+      "value_range": "$15,001-$50,000",
+      "value_midpoint": 32500.5,
+      "page": 101,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-03-30",
+      "value_range": "001-$50",
+      "value_midpoint": 25.5,
+      "page": 93,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-02-12",
+      "value_range": "$15,001-$50,000",
+      "value_midpoint": 32500.5,
+      "page": 99,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "TSLA",
+      "side": "sell",
+      "date": "2026-02-19",
       "value_range": "$15,001-$50,000",
       "value_midpoint": 32500.5,
       "page": 93,
-      "source": "US OGE Form 278-T"
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
     },
     {
       "ticker": "",
       "side": "sell",
-      "date": "2026-06-01",
+      "date": "2026-03-31",
+      "value_range": "$15,001-$50,000",
+      "value_midpoint": 32500.5,
+      "page": 93,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-02-26",
+      "value_range": "$15,001-$50,000",
+      "value_midpoint": 32500.5,
+      "page": 101,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-03-18",
+      "value_range": "$15,001-$50,000",
+      "value_midpoint": 32500.5,
+      "page": 93,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-03-27",
+      "value_range": "$15,001-$50",
+      "value_midpoint": 7525.5,
+      "page": 93,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-01-22",
+      "value_range": "$15,001-$50,000",
+      "value_midpoint": 32500.5,
+      "page": 93,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2025-03-18",
+      "value_range": "$15,001-$50,000",
+      "value_midpoint": 32500.5,
+      "page": 99,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-03-18",
+      "value_range": "15.001-$50,000",
+      "value_midpoint": 25007.5005,
+      "page": 101,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-03-30",
+      "value_range": "15,001-$50.000",
+      "value_midpoint": 7525.5,
+      "page": 101,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-03-30",
+      "value_range": "15.001-$50,000",
+      "value_midpoint": 25007.5005,
+      "page": 101,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-03-27",
+      "value_range": "15,001-$50,000",
+      "value_midpoint": 32500.5,
+      "page": 101,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-03-27",
+      "value_range": "$15,001-$50,000",
+      "value_midpoint": 32500.5,
+      "page": 101,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-02-26",
+      "value_range": "15,001-$50",
+      "value_midpoint": 7525.5,
+      "page": 101,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-03-18",
+      "value_range": "$15,001-$50.000",
+      "value_midpoint": 7525.5,
+      "page": 101,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-03-30",
+      "value_range": "15,001-$50",
+      "value_midpoint": 7525.5,
+      "page": 101,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-03-23",
+      "value_range": "15.001-$50,000",
+      "value_midpoint": 25007.5005,
+      "page": 101,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-01-12",
+      "value_range": "15,001-$50.000",
+      "value_midpoint": 7525.5,
+      "page": 101,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-01-12",
+      "value_range": "15,001-$50,000",
+      "value_midpoint": 32500.5,
+      "page": 101,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-03-18",
+      "value_range": "15,001-$50,000",
+      "value_midpoint": 32500.5,
+      "page": 101,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-02-28",
+      "value_range": "15.001-$50.000",
+      "value_midpoint": 32.5005,
+      "page": 101,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-03-23",
+      "value_range": "15.001-$50.000",
+      "value_midpoint": 32.5005,
+      "page": 101,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-01-12",
+      "value_range": "$50,001-$100,000",
+      "value_midpoint": 75000.5,
+      "page": 103,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-01-12",
+      "value_range": "$50,001-$100",
+      "value_midpoint": 25050.5,
+      "page": 103,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-01-28",
+      "value_range": "$50,001-$100",
+      "value_midpoint": 25050.5,
+      "page": 104,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-02-10",
+      "value_range": "$50,001-$100",
+      "value_midpoint": 25050.5,
+      "page": 104,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-02-12",
+      "value_range": "$50,001-$100,000",
+      "value_midpoint": 75000.5,
+      "page": 104,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-03-18",
       "value_range": "$50,001-$100,000",
       "value_midpoint": 75000.5,
       "page": 105,
-      "source": "US OGE Form 278-T"
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
     },
     {
       "ticker": "",
       "side": "sell",
-      "date": "2026-10-02",
+      "date": "2026-01-06",
+      "value_range": "$50,001-$100,000",
+      "value_midpoint": 75000.5,
+      "page": 105,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-03-30",
+      "value_range": "$50,001-$100,000",
+      "value_midpoint": 75000.5,
+      "page": 105,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-03-17",
+      "value_range": "$50,001-$100,000",
+      "value_midpoint": 75000.5,
+      "page": 105,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-03-06",
+      "value_range": "$50,001-$100,000",
+      "value_midpoint": 75000.5,
+      "page": 105,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "BRK-B",
+      "side": "sell",
+      "date": "2026-03-18",
+      "value_range": "$50,001-$100,000",
+      "value_midpoint": 75000.5,
+      "page": 105,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "NFLX",
+      "side": "sell",
+      "date": "2026-03-18",
+      "value_range": "$50,001-$100,000",
+      "value_midpoint": 75000.5,
+      "page": 105,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-03-27",
+      "value_range": "$100,001-$250",
+      "value_midpoint": 50125.5,
+      "page": 106,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-03-30",
+      "value_range": "$100,001-$250,000",
+      "value_midpoint": 175000.5,
+      "page": 105,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-03-30",
+      "value_range": "$100,001-$250",
+      "value_midpoint": 50125.5,
+      "page": 105,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-03-18",
+      "value_range": "$100,001-$250,000",
+      "value_midpoint": 175000.5,
+      "page": 105,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-03-18",
+      "value_range": "$100,001-$250",
+      "value_midpoint": 50125.5,
+      "page": 106,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-03-18",
+      "value_range": "100,001-$250,000",
+      "value_midpoint": 175000.5,
+      "page": 105,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-02-10",
       "value_range": "$100,001-$250,000",
       "value_midpoint": 175000.5,
       "page": 109,
-      "source": "US OGE Form 278-T"
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
     },
     {
       "ticker": "",
       "side": "sell",
-      "date": "2026-10-02",
+      "date": "2026-03-27",
+      "value_range": "$100,001-$250,000",
+      "value_midpoint": 175000.5,
+      "page": 106,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-03-17",
+      "value_range": "$100,001-$250,000",
+      "value_midpoint": 175000.5,
+      "page": 108,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-02-12",
+      "value_range": "$100,001-$250,000",
+      "value_midpoint": 175000.5,
+      "page": 106,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-02-24",
+      "value_range": "$100,001-$250",
+      "value_midpoint": 50125.5,
+      "page": 106,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "PLTR",
+      "side": "sell",
+      "date": "2026-02-12",
+      "value_range": "$100,001-$250,000",
+      "value_midpoint": 175000.5,
+      "page": 108,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "PLTR",
+      "side": "sell",
+      "date": "2026-02-10",
+      "value_range": "$100,001-$250,000",
+      "value_midpoint": 175000.5,
+      "page": 108,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-01-08",
+      "value_range": "$100,001-$250,000",
+      "value_midpoint": 175000.5,
+      "page": 108,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-03-06",
+      "value_range": "$100,001-$250,000",
+      "value_midpoint": 175000.5,
+      "page": 108,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-03-17",
+      "value_range": "$100.001-$250.000",
+      "value_midpoint": 175.0005,
+      "page": 108,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-03-23",
+      "value_range": "$100,001-$250,000",
+      "value_midpoint": 175000.5,
+      "page": 108,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-03-17",
+      "value_range": "$100.001-$250,000",
+      "value_midpoint": 125050.0005,
+      "page": 108,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-03-17",
+      "value_range": "$100.001-$250",
+      "value_midpoint": 175.0005,
+      "page": 108,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-01-06",
       "value_range": "$100,001-$250,000",
       "value_midpoint": 175000.5,
       "page": 109,
-      "source": "US OGE Form 278-T"
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
     },
     {
       "ticker": "",
       "side": "sell",
-      "date": "2026-10-02",
+      "date": "2026-02-23",
       "value_range": "$100,001-$250,000",
       "value_midpoint": 175000.5,
       "page": 109,
-      "source": "US OGE Form 278-T"
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
     },
     {
       "ticker": "",
       "side": "sell",
-      "date": "2026-10-02",
+      "date": "2026-01-14",
       "value_range": "$100,001-$250,000",
       "value_midpoint": 175000.5,
       "page": 109,
-      "source": "US OGE Form 278-T"
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
     },
     {
       "ticker": "",
       "side": "sell",
-      "date": "2026-12-02",
+      "date": "2026-02-02",
+      "value_range": "$100,001-$250,000",
+      "value_midpoint": 175000.5,
+      "page": 109,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-01-30",
+      "value_range": "$100,001-$250,000",
+      "value_midpoint": 175000.5,
+      "page": 109,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "NFLX",
+      "side": "sell",
+      "date": "2026-01-26",
       "value_range": "$250,001-$500,000",
       "value_midpoint": 375000.5,
       "page": 109,
-      "source": "US OGE Form 278-T"
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
     },
     {
-      "ticker": "",
+      "ticker": "NFLX",
       "side": "sell",
-      "date": "2026-06-01",
+      "date": "2026-01-12",
       "value_range": "$250,001-$500,000",
       "value_midpoint": 375000.5,
       "page": 109,
-      "source": "US OGE Form 278-T"
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
     },
     {
       "ticker": "",
       "side": "sell",
-      "date": "2026-10-02",
-      "value_range": "$250,001-$500",
-      "value_midpoint": 125250.5,
-      "page": 110,
-      "source": "US OGE Form 278-T"
+      "date": "2026-02-12",
+      "value_range": "$250,001-$500,000",
+      "value_midpoint": 375000.5,
+      "page": 109,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "META",
+      "side": "sell",
+      "date": "2026-03-18",
+      "value_range": "$250,001-$500,000",
+      "value_midpoint": 375000.5,
+      "page": 109,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "WMT",
+      "side": "sell",
+      "date": "2026-02-24",
+      "value_range": "$250,001-$500,000",
+      "value_midpoint": 375000.5,
+      "page": 109,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
     },
     {
       "ticker": "",
       "side": "sell",
-      "date": "2026-06-01",
+      "date": "2026-02-10",
+      "value_range": "$250,001-$500,000",
+      "value_midpoint": 375000.5,
+      "page": 109,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-03-17",
+      "value_range": "$250,001-$500,000",
+      "value_midpoint": 375000.5,
+      "page": 109,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "NVDA",
+      "side": "sell",
+      "date": "2026-01-06",
+      "value_range": "$250,001-$500,000",
+      "value_midpoint": 375000.5,
+      "page": 109,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "NVDA",
+      "side": "sell",
+      "date": "2026-02-12",
+      "value_range": "$250,001-$500,000",
+      "value_midpoint": 375000.5,
+      "page": 109,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-01-22",
+      "value_range": "$250,001-$500,000",
+      "value_midpoint": 375000.5,
+      "page": 109,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-01-06",
+      "value_range": "$250,001-$500,000",
+      "value_midpoint": 375000.5,
+      "page": 109,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-02-10",
       "value_range": "$250,001-$500",
       "value_midpoint": 125250.5,
       "page": 110,
-      "source": "US OGE Form 278-T"
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-03-18",
+      "value_range": "$250,001-$500",
+      "value_midpoint": 125250.5,
+      "page": 110,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-01-06",
+      "value_range": "$250,001-$500",
+      "value_midpoint": 125250.5,
+      "page": 110,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-03-27",
+      "value_range": "$500,001-$1,000,000",
+      "value_midpoint": 750000.5,
+      "page": 110,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-03-17",
+      "value_range": "$500.001-$1",
+      "value_midpoint": 250.5005,
+      "page": 110,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-01-23",
+      "value_range": "$1,000,001-$5,000",
+      "value_midpoint": 502500.5,
+      "page": 112,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-03-17",
+      "value_range": "$1,000,001-$5,000",
+      "value_midpoint": 502500.5,
+      "page": 112,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "",
+      "side": "sell",
+      "date": "2026-01-23",
+      "value_range": "$1,000,001-$5",
+      "value_midpoint": 500003.0,
+      "page": 112,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "SPY",
+      "side": "sell",
+      "date": "2026-01-29",
+      "value_range": "$1,000,001-$5,000,000",
+      "value_midpoint": 3000000.5,
+      "page": 112,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "VOO",
+      "side": "sell",
+      "date": "2026-03-19",
+      "value_range": "$1,000,001-$5",
+      "value_midpoint": 500003.0,
+      "page": 112,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
+    },
+    {
+      "ticker": "AMD",
+      "side": "sell",
+      "date": "2026-02-10",
+      "value_range": "$50,001-$100,000",
+      "value_midpoint": 75000.5,
+      "page": 112,
+      "source": "US OGE Form 278-T",
+      "source_url": "https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf"
     }
   ]
 }
