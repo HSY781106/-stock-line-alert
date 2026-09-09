@@ -15,7 +15,7 @@
 #             Yahoo yfinance 失敗/不足時追加 Yahoo Chart API 日線，再以 TWSE 官方日線備援。
 #             新 ETF 即使未滿 60 個交易日，也會盡可能計算 RSI/KD/MA20；MA60 不足則單獨顯示 N/A。
 #             ETF 綜合評分加入資料完整度；可用評分資料不足 60% 時不再顯示誤導性的正常分數。
-# V2.14.35：Trump 278-T 交易資料鏈路與 PDF fallback 強化。
+# V2.14.36：Trump 278-T 交易資料鏈路與 PDF fallback 強化。
 #             「全市場綜合評分 >= 90 分」只允許台股盤中 09:00～14:00（台灣時間）執行；
 #             晚上美股盤 21:30～05:00 完全跳過台股全市場高分掃描，避免收盤後重新計分造成誤時通知與 LINE 額度浪費。
 #             即使手動 workflow_dispatch 在非台股盤中執行，也不會觸發全市場高分 LINE。
@@ -166,7 +166,7 @@ INDUSTRY_MENU_AUTO_BATCH = 50
 # 讀取本機/ GitHub 已保存的 trump_portfolio_cache.json。
 TRUMP_PORTFOLIO_CACHE_FILE = 'trump_portfolio_cache.json'
 TRUMP_PORTFOLIO_CACHE_DAYS = 7
-TRUMP_PORTFOLIO_CACHE_VERSION = 4
+TRUMP_PORTFOLIO_CACHE_VERSION = 5
 TRUMP_OGE_ANNUAL_URLS = [
     # OGE 2026/06/30 公告提供的 President Trump certified annual report。
     'https://oge.box.com/shared/static/zycb5i2ny8kssm51uzqm8ygyq2zkpkqq.pdf',
@@ -181,7 +181,7 @@ TRUMP_PDF_TIMEOUT = 20
 TRUMP_MAX_HOLDINGS = 30
 TRUMP_TRANSACTION_CACHE_FILE = 'trump_transaction_cache.json'
 TRUMP_TRANSACTION_CACHE_DAYS = 2
-TRUMP_TRANSACTION_CACHE_VERSION = 7
+TRUMP_TRANSACTION_CACHE_VERSION = 8
 TRUMP_OGE_TRANSACTION_URLS = [
     # 2026-08-12：最新一批，涵蓋 2026-06-01～06-29 大量股票交易。
     'https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/2BF91F890F718ACB85258E5B002DE16B/%24FILE/Donald-J-Trump-08.12.2026-278T.pdf',
@@ -468,7 +468,7 @@ def resolve_us_stock_query(q):
         'TESLA':'TSLA','特斯拉':'TSLA',
         'BROADCOM':'AVGO','博通':'AVGO',
         'AMD':'AMD','COSTCO':'COST','COSTCO WHOLESALE':'COST',
-        'DEL':'DELL','DELL TECHNOLOGIES':'DELL','DELL TECHNOLOGIES INC':'DELL','DELL INC':'DELL','戴爾':'DELL',
+        'DEL':'DELL','DELL TECHNOLOGIES':'DELL','DELL TECH':'DELL','DELL COMPUTER':'DELL','DELL TECHNOLOGIES INC':'DELL','DELL INC':'DELL','戴爾':'DELL',
         'PALANTIR':'PLTR','PALANTIR TECHNOLOGIES':'PLTR',
         'BERKSHIRE':'BRK-B','BERKSHIRE HATHAWAY':'BRK-B','波克夏':'BRK-B',
     }
@@ -9686,7 +9686,7 @@ def us_stock_analysis(query):
         return f'❌ 找不到美股：{query}'
     symbol=info['symbol']
     if not _us_symbol_has_data(symbol):
-        alt={'DEL':'DELL','DELL TECHNOLOGIES':'DELL','戴爾':'DELL','BERKSHIRE':'BRK-B','BERKSHIRE HATHAWAY':'BRK-B'}.get(str(query or '').strip().upper())
+        alt={'DEL':'DELL','DELL TECHNOLOGIES':'DELL','DELL TECH':'DELL','DELL COMPUTER':'DELL','戴爾':'DELL','BERKSHIRE':'BRK-B','BERKSHIRE HATHAWAY':'BRK-B'}.get(str(query or '').strip().upper())
         if alt and _us_symbol_has_data(alt): symbol=alt; info['symbol']=alt
         else: return f'❌ Yahoo 找不到可用的美股行情：{query}（例如 DEL 應為 DELL）'
     tech=technical(symbol, force_refresh=True)
@@ -11345,7 +11345,7 @@ def _is_trump_portfolio_query(text):
 
 
 def _trump_value_upper(value_text):
-    """V2.14.35：只解析 OGE 價值區間，不把列號當成金額。"""
+    """V2.14.36：只解析 OGE 價值區間，不把列號當成金額。"""
     s = str(value_text or '').replace(',', '').replace('$', '').upper().strip()
     if re.search(r'NONE\s*\(OR LESS THAN', s, re.I):
         m = re.search(r'LESS THAN\s*([0-9]+(?:\.[0-9]+)?)', s, re.I)
@@ -11371,7 +11371,7 @@ def _trump_clean_security_name(line):
 # 的保守對照；未知標的絕不再把列號誤當 ticker。
 TRUMP_SECURITY_TICKER_ALIASES = {
     'CONAGRA BRANDS':'CAG','WILLIAMS SONOMA':'WSM','VALERO ENERGY':'VLO',
-    'L3HARRIS TECHNOLOGIES':'LHX','HOWMET AEROSPACE':'HWM','DELL TECHNOLOGIES':'DELL',
+    'L3HARRIS TECHNOLOGIES':'LHX','HOWMET AEROSPACE':'HWM','DELL TECHNOLOGIES':'DELL','DELL TECH':'DELL','DELL COMPUTER':'DELL',
     'NVIDIA':'NVDA','MICROSOFT':'MSFT','APPLE':'AAPL','AMAZON':'AMZN',
     'META PLATFORMS':'META','PALANTIR':'PLTR','ADVANCED MICRO DEVICES':'AMD',
     'BROADCOM':'AVGO','TESLA':'TSLA','ALPHABET':'GOOGL','GOOGLE':'GOOGL',
@@ -11425,7 +11425,7 @@ def _trump_value_range_from_text(text):
 
 
 def _trump_extract_holdings_from_pdf(pdf_bytes):
-    """V2.14.35：重寫 278e Part 6 表格 parser。
+    """V2.14.36：重寫 278e Part 6 表格 parser。
 
     OGE 的文字層常把一列拆成：
       183 CONAGRA BRANDS INC N/A $1,001 - $15,000 ...
@@ -11548,8 +11548,11 @@ def _trump_normalize_transaction_date(date_text, report_year=None):
 
 
 def _trump_is_stock_or_etf_name(text):
-    u=re.sub(r'\s+',' ',str(text or '')).upper()
-    bond_terms=(' MUNICIPAL BOND',' CORPORATE NOTE',' NOTE ',' NTS ',' BOND ',' REV ',' REVENUE ',' DUE ',' YTM ',' B/E ',' DEBENTURE',' TREASURY',' T-BILL',' CERTIFICATE',' FIX-TO-FLOAT',' FIXED TO FLOAT',' ACCRUED INT')
+    u=re.sub(r'\s+',' ',str(text or '')).upper().strip()
+    # V2.14.36：現金／貨幣市場／固定收益一律不是股票/ETF。
+    cash_terms=('CASH','MONEY MARKET','BROKERAGE ACCOUNT MONEY MARKET','CASH ACCOUNT')
+    if any(x in u for x in cash_terms): return False
+    bond_terms=(' MUNICIPAL BOND',' CORPORATE NOTE',' NOTE ',' NTS ',' BOND ',' REV ',' REVENUE ',' DUE ',' YTM ',' B/E ',' DEBENTURE',' TREASURY',' T-BILL',' CERTIFICATE',' FIX-TO-FLOAT',' FIXED TO FLOAT',' ACCRUED INT',' REG INT',' DUE DATE')
     if any(x in u for x in bond_terms): return False
     stock_terms=(' INC',' CORP',' PLC',' LTD',' HOLDINGS',' HLDGS',' TECHNOLOGIES',' CLASS A',' CLASS B',' CLASS C',' ETF',' REIT',' FUND',' TRUST',' SHARES',' COMMON',' INDEX FUND')
     return any(x in u for x in stock_terms)
@@ -11582,7 +11585,7 @@ def _trump_transaction_candidate_ticker(text):
 
 
 def _trump_extract_transactions_from_pdf(pdf_bytes, source_url=''):
-    """V2.14.35：以「交易列」為核心解析 278-T；未知 ticker 也保留，供市場總訊號計算。"""
+    """V2.14.36：以「交易列」為核心解析 278-T；未知 ticker 也保留，供市場總訊號計算。"""
     try:
         from pypdf import PdfReader
         reader=PdfReader(io.BytesIO(pdf_bytes))
@@ -11719,11 +11722,65 @@ def _trump_extract_transactions_from_pdf(pdf_bytes, source_url=''):
                 'source_url':source_url
             })
 
-    # V2.14.35：8/12/2026 大型 278-T PDF 的文字層格式與其他批次不同。
-    # 若 pypdf 完全解析不到，改用 pdfplumber 做第二路文字抽取；不影響正常批次。
+    # V2.14.36：大型 278-T PDF 先用系統 pdftotext fallback。GitHub ubuntu 通常已預裝
+    # poppler；這條路不需要在 requirements.txt 額外安裝 pdfplumber，避免上一版直接
+    # ModuleNotFoundError 導致 8/12/2026 26MB 申報檔完全漏掉。
     if not rows:
         try:
-            import pdfplumber
+            import tempfile, subprocess, os as _os
+            with tempfile.TemporaryDirectory() as td:
+                pdf_path=_os.path.join(td,'trump_278t.pdf')
+                txt_path=_os.path.join(td,'trump_278t.txt')
+                with open(pdf_path,'wb') as fh: fh.write(pdf_bytes)
+                cp=subprocess.run(['pdftotext','-layout',pdf_path,txt_path],capture_output=True,text=True,timeout=180)
+                if cp.returncode==0 and _os.path.exists(txt_path):
+                    raw_all=open(txt_path,'r',encoding='utf-8',errors='ignore').read()
+                    for page_no,raw in enumerate(raw_all.split('\f'),1):
+                        lines=[clean_line(x) for x in raw.splitlines() if clean_line(x)]
+                        action_indexes=[i for i,l in enumerate(lines) if action_re.search(l)]
+                        for i in action_indexes:
+                            am=action_re.search(lines[i])
+                            if not am: continue
+                            lo=max(0,i-10); hi=min(len(lines),i+11)
+                            sec=[]
+                            for j in range(lo,hi):
+                                if j==i: continue
+                                c=lines[j]
+                                if looks_like_security(c):
+                                    tick=_trump_transaction_candidate_ticker(c)
+                                    sec.append(((0 if tick else 10,abs(j-i),len(c)),c,tick))
+                            if not sec: continue
+                            _,security,ticker=min(sec,key=lambda x:x[0])
+                            dates=[]
+                            for j in range(lo,hi):
+                                for dm in date_re.finditer(lines[j]):
+                                    dt=_trump_normalize_ocr_date(dm.group(0))
+                                    if dt: dates.append((abs(j-i),dt))
+                            vals=[]
+                            for j in range(lo,hi):
+                                for vm in val_re.finditer(lines[j]):
+                                    vr=vm.group(0).replace(' ',''); mid=_trump_value_midpoint(vr)
+                                    if mid is not None: vals.append((abs(j-i),vr,mid))
+                            if not dates or not vals: continue
+                            dt=min(dates,key=lambda x:x[0])[1]; vr,mid=min(vals,key=lambda x:x[0])[1:]
+                            if not _trump_is_stock_or_etf_name(security) and not ticker: continue
+                            rows.append({'ticker':ticker,'side':normalize_side(am.group(1)),'date':dt,
+                                          'value_range':vr,'value_midpoint':mid,'security_name':security[:200],
+                                          'page':page_no,'asset_type':'stock_etf','source':'US OGE Form 278-T',
+                                          'source_url':source_url})
+                    print(f'Trump 278-T pdftotext fallback：解析={len(rows)}',flush=True)
+        except Exception as e:
+            print(f'Trump 278-T pdftotext fallback 失敗：{type(e).__name__}: {e}',flush=True)
+
+    # V2.14.36：若 pdftotext 仍無法解析，再嘗試 pdfplumber；沒有安裝也不會報成主流程錯誤。
+    if not rows:
+        try:
+            try:
+                import pdfplumber
+            except ModuleNotFoundError:
+                import subprocess, sys
+                subprocess.run([sys.executable,'-m','pip','install','-q','pdfplumber'],check=True,timeout=120)
+                import pdfplumber
             with pdfplumber.open(io.BytesIO(pdf_bytes)) as pdf:
                 for page_no,pdf_page in enumerate(pdf.pages,1):
                     raw=pdf_page.extract_text(x_tolerance=1,y_tolerance=3) or ''
@@ -11769,7 +11826,7 @@ def _trump_extract_transactions_from_pdf(pdf_bytes, source_url=''):
 
 
 def _load_trump_transactions():
-    """V2.14.35：交易 cache V7。Actions 產生的最新 cache 優先，Render 若本機
+    """V2.14.36：交易 cache V7。Actions 產生的最新 cache 優先，Render 若本機
     沒有有效 cache 則讀 GitHub raw；只有完全沒有有效資料時才重新抓 OGE PDF。"""
     required_sources=set(TRUMP_OGE_TRANSACTION_URLS)
 
@@ -11837,7 +11894,7 @@ def _load_trump_transactions():
 
 
 def trump_market_factor():
-    """V2.14.35：市場訊號使用全部可辨識為股票/ETF的交易，不要求 ticker。"""
+    """V2.14.36：市場訊號使用全部可辨識為股票/ETF的交易，不要求 ticker。"""
     global _TRUMP_MARKET_FACTOR_CACHE
     if isinstance(_TRUMP_MARKET_FACTOR_CACHE,dict): return _TRUMP_MARKET_FACTOR_CACHE
 
@@ -11898,7 +11955,7 @@ def trump_market_factor():
 
 
 def trump_stock_factor(symbol):
-    """V2.14.35：個別標的可用 ticker 與公司名稱雙重比對；持倉不直接加分。"""
+    """V2.14.36：個別標的可用 ticker 與公司名稱雙重比對；持倉不直接加分。"""
     global _TRUMP_STOCK_FACTOR_CACHE
     sym=str(symbol or '').upper().replace('.US','')
     if sym in _TRUMP_STOCK_FACTOR_CACHE:
@@ -11914,6 +11971,9 @@ def trump_stock_factor(symbol):
         if not matched:
             aliases=[name for name,tick in TRUMP_SECURITY_TICKER_ALIASES.items() if tick.upper()==sym]
             matched=any(a in sec for a in aliases)
+        if not matched and sym=='DELL':
+            # OCR/OGE 文字層偶爾只剩 DELL TECH / DELL COMPUTER。
+            matched=bool(re.search(r'\bDELL(?:\s+TECH(?:NOLOG(?:IES|Y))?|\s+COMPUTER|\s+TECH)\b',sec))
         if matched:
             rows.append(x)
 
@@ -11956,7 +12016,7 @@ def trump_stock_factor(symbol):
 
 
 def _sanitize_trump_portfolio_rows(rows):
-    """V2.14.35：拒絕舊版把列號/欄位字串誤當 ticker 的污染資料。"""
+    """V2.14.36：拒絕舊版把列號/欄位字串誤當 ticker 的污染資料。"""
     if not isinstance(rows,list):
         return []
     out=[]
@@ -11974,7 +12034,10 @@ def _sanitize_trump_portfolio_rows(rows):
             ticker=guessed
         if not ticker:
             continue
-        if ticker in {'PA','DEL','NEW','THE','REIT','N/A','NA','NONE'}:
+        if ticker in {'PA','DEL','NEW','THE','REIT','N/A','NA','NONE','CASH'}:
+            continue
+        # OGE 年度報告可能把同一家公司債券列成公司名稱；這些 ticker 在本報告已確認為固定收益列。
+        if ticker in {'QCOM','NFLX','INTC'} and any(x in name.upper() for x in (' DUE ',' NOTE ',' BOND ',' NTS ',' REG INT','%')):
             continue
         if not re.fullmatch(r'[A-Z]{1,5}(?:-[A-Z])?',ticker):
             continue
@@ -11993,7 +12056,7 @@ def _sanitize_trump_portfolio_rows(rows):
 
 
 def _load_trump_portfolio():
-    """V2.14.35：278e parser/cache 全面防污染；不再接受 V3 舊錯誤 cache。"""
+    """V2.14.36：278e parser/cache 全面防污染；不再接受 V3 舊錯誤 cache。"""
     cache=load_json(TRUMP_PORTFOLIO_CACHE_FILE)
     cached_at=float(cache.get('_cached_at',0)) if isinstance(cache,dict) else 0
     raw_data=cache.get('data',[]) if isinstance(cache,dict) else []
@@ -12771,7 +12834,7 @@ def _scan_high_score_stocks(u, state):
     threshold = 95
 
     if not isinstance(u, dict) or not u:
-        print('⚠️ V2.14.10 高評分掃描：股票池為空，跳過', flush=True)
+        print('⚠️ V2.14.36 高評分掃描：股票池為空，跳過', flush=True)
         return []
 
     # --------------------------------------------------------
@@ -13080,13 +13143,13 @@ def _scan_high_score_stocks(u, state):
                 })
         except Exception as e:
             print(
-                f'V2.14.10 高評分完整基本面失敗 {c.get("code")}: '
+                f'V2.14.36 高評分完整基本面失敗 {c.get("code")}: '
                 f'{type(e).__name__}: {e}',
                 flush=True
             )
         if idx % 10 == 0 or idx == len(candidates):
             print(
-                f'V2.14.10 高評分第二階段進度：{idx}/{len(candidates)}；'
+                f'V2.14.36 高評分第二階段進度：{idx}/{len(candidates)}；'
                 f'目前 >=95：{len(results)}',
                 flush=True
             )
@@ -13162,19 +13225,19 @@ def _scan_high_score_stocks(u, state):
         )
         send_line(msg[:5000])
         print(
-            f'V2.14.10 高評分 LINE 已發送：新進榜 {len(new_rows)} 檔；'
+            f'V2.14.36 高評分 LINE 已發送：新進榜 {len(new_rows)} 檔；'
             f'目前 >=95 共 {len(results)} 檔',
             flush=True
         )
     else:
         print(
-            f'V2.14.10 高評分掃描完成：目前 >=95 共 {len(results)} 檔；'
+            f'V2.14.36 高評分掃描完成：目前 >=95 共 {len(results)} 檔；'
             f'本次新進榜 {len(new_codes)} 檔；不發送重複 LINE',
             flush=True
         )
 
     print(
-        f'V2.14.10 高評分掃描總耗時：{time.time()-started:.1f}s',
+        f'V2.14.36 高評分掃描總耗時：{time.time()-started:.1f}s',
         flush=True
     )
     return results
@@ -13647,11 +13710,11 @@ def run_alerts():
         try:
             _scan_high_score_stocks(u, state)
         except Exception as e:
-            print(f'⚠️ V2.14.10 高評分全市場掃描失敗：{type(e).__name__}: {e}', flush=True)
+            print(f'⚠️ V2.14.36 高評分全市場掃描失敗：{type(e).__name__}: {e}', flush=True)
             traceback.print_exc()
     else:
         print(
-            f'⏸️ V2.14.10 全市場高分通知：目前非台股交易時段（台灣時間 '
+            f'⏸️ V2.14.36 全市場高分通知：目前非台股交易時段（台灣時間 '
             f'{datetime.now(TW_TZ).strftime("%H:%M:%S")}），跳過全市場 >=95 分掃描與 LINE 通知',
             flush=True
         )
@@ -13713,10 +13776,10 @@ def main():
 
     else:
 
-        print('========== V2.14.35 RUN START ==========', flush=True)
+        print('========== V2.14.36 RUN START ==========', flush=True)
         print(f'執行時間（台灣）：{datetime.now(TW_TZ).strftime("%Y-%m-%d %H:%M:%S")}', flush=True)
         run_alerts()
-        print('========== V2.14.35 RUN END ==========', flush=True)
+        print('========== V2.14.36 RUN END ==========', flush=True)
 
 
 if __name__ == '__main__':
