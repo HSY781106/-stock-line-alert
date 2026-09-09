@@ -166,7 +166,7 @@ INDUSTRY_MENU_AUTO_BATCH = 50
 # 讀取本機/ GitHub 已保存的 trump_portfolio_cache.json。
 TRUMP_PORTFOLIO_CACHE_FILE = 'trump_portfolio_cache.json'
 TRUMP_PORTFOLIO_CACHE_DAYS = 7
-TRUMP_PORTFOLIO_CACHE_VERSION = 3
+TRUMP_PORTFOLIO_CACHE_VERSION = 4
 TRUMP_OGE_ANNUAL_URLS = [
     # OGE 2026/06/30 公告提供的 President Trump certified annual report。
     'https://oge.box.com/shared/static/zycb5i2ny8kssm51uzqm8ygyq2zkpkqq.pdf',
@@ -181,7 +181,7 @@ TRUMP_PDF_TIMEOUT = 20
 TRUMP_MAX_HOLDINGS = 30
 TRUMP_TRANSACTION_CACHE_FILE = 'trump_transaction_cache.json'
 TRUMP_TRANSACTION_CACHE_DAYS = 2
-TRUMP_TRANSACTION_CACHE_VERSION = 5
+TRUMP_TRANSACTION_CACHE_VERSION = 6
 TRUMP_OGE_TRANSACTION_URLS = [
     # 2026-08-12：最新一批，涵蓋 2026-06-01～06-29 大量股票交易。
     'https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/2BF91F890F718ACB85258E5B002DE16B/%24FILE/Donald-J-Trump-08.12.2026-278T.pdf',
@@ -11345,7 +11345,7 @@ def _is_trump_portfolio_query(text):
 
 
 def _trump_value_upper(value_text):
-    """V2.14.33：只解析 OGE 價值區間，不把列號當成金額。"""
+    """V2.14.34：只解析 OGE 價值區間，不把列號當成金額。"""
     s = str(value_text or '').replace(',', '').replace('$', '').upper().strip()
     if re.search(r'NONE\s*\(OR LESS THAN', s, re.I):
         m = re.search(r'LESS THAN\s*([0-9]+(?:\.[0-9]+)?)', s, re.I)
@@ -11425,7 +11425,7 @@ def _trump_value_range_from_text(text):
 
 
 def _trump_extract_holdings_from_pdf(pdf_bytes):
-    """V2.14.33：重寫 278e Part 6 表格 parser。
+    """V2.14.34：重寫 278e Part 6 表格 parser。
 
     OGE 的文字層常把一列拆成：
       183 CONAGRA BRANDS INC N/A $1,001 - $15,000 ...
@@ -11582,129 +11582,242 @@ def _trump_transaction_candidate_ticker(text):
 
 
 def _trump_extract_transactions_from_pdf(pdf_bytes, source_url=''):
-    """V2.14.33：重寫 278-T parser；以 action/date/value/security 四欄交叉定位。"""
+    """V2.14.34：以「交易列」為核心解析 278-T；未知 ticker 也保留，供市場總訊號計算。"""
     try:
         from pypdf import PdfReader
         reader=PdfReader(io.BytesIO(pdf_bytes))
     except Exception as e:
-        print(f'Trump 278-T 解析器不可用：{type(e).__name__}: {e}',flush=True); return []
-    date_re=re.compile(r'\b\d{1,2}[/-]\d{1,2}[/-]\d{2,4}\b|\b\d{1,2}/\d{2}\d?\d{4}\b')
-    action_re=re.compile(r'\b(purchase|purchased|buy|bought|sale|sell|sold|ourchase|purchaso|purchaoe|durchaso|dunchaso|ounchaso|oun:haso|oun:hase|lounchaso|lourchaso)\b',re.I)
-    val_re=re.compile(r'\$?\s*[0-9][0-9,]*(?:\.[0-9]+)?\s*(?:[-–—]\s*\$?\s*[0-9][0-9,]*(?:\.[0-9]+)?)',re.I)
+        print(f'Trump 278-T 解析器不可用：{type(e).__name__}: {e}',flush=True)
+        return []
+
+    date_re=re.compile(
+        r'\b\d{1,2}[/-]\d{1,2}[/-]\d{2,4}\b|\b\d{1,2}/\d{2}\d?\d{4}\b'
+    )
+    action_re=re.compile(
+        r'\b(purchase|purchased|buy|bought|sale|sell|sold|ourchase|purchaso|'
+        r'purchaoe|durchaso|dunchaso|ounchaso|oun:haso|oun:hase|lounchaso|'
+        r'lourchaso)\b', re.I
+    )
+    val_re=re.compile(
+        r'\$?\s*[0-9][0-9,]*(?:\.[0-9]+)?\s*(?:[-–—]\s*\$?[0-9][0-9,]*(?:\.[0-9]+)?)',
+        re.I
+    )
+    rowno_re=re.compile(r'^\s*\d{1,5}(?:\s+.*)?$')
+    junk_re=re.compile(
+        r'^(?:date|security|type|amount|purchase|sale|yes|no|page|part|'
+        r'description|eif|value|income|transaction)\b', re.I
+    )
+
+    def clean_line(x):
+        return re.sub(r'\s+', ' ', str(x or '')).strip()
+
+    def looks_like_security(s):
+        u=clean_line(s).upper()
+        if not u or junk_re.search(u): return False
+        if action_re.search(u): return False
+        if date_re.search(u) and val_re.search(u) is None:
+            # 公司名稱可能含數字，但純日期列不是 security。
+            if re.fullmatch(r'[\d/.\- ]+', u): return False
+        # 優先已知 ticker/company alias；否則接受常見證券名稱詞。
+        if _trump_transaction_candidate_ticker(u): return True
+        return _trump_is_stock_or_etf_name(u)
+
+    def normalize_side(word):
+        return 'sell' if str(word or '').lower() in {'sale','sell','sold'} else 'buy'
+
     rows=[]
     for page_no,page in enumerate(reader.pages,1):
-        try: text=page.extract_text() or ''
-        except Exception: continue
-        lines=[re.sub(r'\s+',' ',x).strip() for x in text.splitlines() if str(x).strip()]
-        for i,line in enumerate(lines):
-            am=action_re.search(line)
+        try:
+            raw=page.extract_text() or ''
+        except Exception:
+            continue
+        lines=[clean_line(x) for x in raw.splitlines() if clean_line(x)]
+
+        action_indexes=[i for i,l in enumerate(lines) if action_re.search(l)]
+        for i in action_indexes:
+            am=action_re.search(lines[i])
             if not am: continue
-            # 真實 OGE 文字層可能把 security/date/value 分散到相鄰列；取前後各 2 行。
-            lo=max(0,i-3); hi=min(len(lines),i+4); block=' '.join(lines[lo:hi])
-            # OGE 278-T 文字層常見欄位順序是 Date / Security / Type / Amount，
-            # 但 OCR/表格抽取也可能把 action 放在日期前。因此日期必須在整個 block
-            # 中找，再選離 action 最近且可驗證的日期，而不是硬性要求「action 後」。
-            current_date_matches=[]
-            for dm0 in date_re.finditer(line):
-                dt0=_trump_normalize_ocr_date(dm0.group(0))
-                if dt0: current_date_matches.append((dm0,dt0))
-            if current_date_matches:
-                dm,dt=current_date_matches[0]
+
+            # 真實 278-T 常見為 Date / Security / Type / Amount，
+            # 也可能被 PDF extractor 拆成數行；只在同一個小區域找欄位，
+            # 並以「最近距離」而非 block 第一個日期/金額決定。
+            # 以 278-T 的列號切出「單筆交易區塊」，避免把下一筆交易的
+            # security / value 誤配到目前 action（這是 V2.14.33 的主要污染來源）。
+            row_bounds=[k for k,l in enumerate(lines) if rowno_re.match(l)]
+            if row_bounds:
+                prev=max((k for k in row_bounds if k<=i), default=0)
+                nxt=min((k for k in row_bounds if k>i), default=len(lines))
+                lo=max(0,prev); hi=min(len(lines),nxt)
             else:
-                date_matches=[]
-                for dm0 in date_re.finditer(block):
-                    dt0=_trump_normalize_ocr_date(dm0.group(0))
-                    if dt0: date_matches.append((abs(dm0.start()-am.start()),dm0,dt0))
-                if not date_matches: continue
-                _,dm,dt=min(date_matches,key=lambda x:x[0])
-            vm=val_re.search(line[dm.end():]) or val_re.search(line) or val_re.search(block)
-            if not vm: continue
-            side_word=am.group(1).lower(); side='sell' if side_word in {'sale','sell','sold'} else 'buy'
-            ticker=_trump_transaction_candidate_ticker(line)
-            if not ticker:
-                # 若 security 被拆到相鄰列，按距離由近到遠尋找，不在整個 block 任意抓第一個 ticker。
-                nearby=[]
-                for j in range(lo,hi):
-                    if j==i: continue
-                    nearby.append((abs(j-i), lines[j]))
-                for _,cand in sorted(nearby,key=lambda x:x[0]):
-                    ticker=_trump_transaction_candidate_ticker(cand)
-                    if ticker: break
-            if not ticker: continue
-            security=re.sub(r'\s+',' ',block).strip()
-            classification_text=line if _trump_transaction_candidate_ticker(line) else block
-            asset_type='stock_etf' if _trump_is_stock_or_etf_name(classification_text) else 'other'
-            if asset_type!='stock_etf': continue
-            vr=vm.group(0).replace(' ',''); mid=_trump_value_midpoint(vr)
-            if mid is None: continue
-            rows.append({'ticker':ticker,'side':side,'date':dt,'value_range':vr,'value_midpoint':mid,
-                         'security_name':security[:160],'page':page_no,'asset_type':asset_type,
-                         'source':'US OGE Form 278-T','source_url':source_url})
+                lo=max(0,i-8); hi=min(len(lines),i+9)
+
+            # 1) security：優先找包含已知公司/ticker 的行；其次找股票/ETF樣式。
+            security_candidates=[]
+            for j in range(lo,hi):
+                if j==i: continue
+                cand=lines[j]
+                if not looks_like_security(cand): continue
+                tick=_trump_transaction_candidate_ticker(cand)
+                score=(0 if tick else 10, abs(j-i), len(cand))
+                # 避免把頁首頁尾、其他交易的欄位當 security。
+                security_candidates.append((score,j,cand,tick))
+            if looks_like_security(lines[i].replace(am.group(0),'').strip()):
+                cand=lines[i].replace(am.group(0),'').strip()
+                security_candidates.append(((0 if _trump_transaction_candidate_ticker(cand) else 10,0,len(cand)),i,cand,
+                                            _trump_transaction_candidate_ticker(cand)))
+            if not security_candidates:
+                continue
+            _, sec_idx, security, ticker=min(security_candidates,key=lambda x:x[0])
+
+            # 2) date：優先同一行；否則找距離 action 最近、且不是明顯表頭日期。
+            date_candidates=[]
+            for j in range(lo,hi):
+                for dm in date_re.finditer(lines[j]):
+                    dt=_trump_normalize_ocr_date(dm.group(0))
+                    if dt:
+                        date_candidates.append((abs(j-i), j, dt, dm.start()))
+            if not date_candidates:
+                continue
+            _, date_idx, dt, _ = min(date_candidates,key=lambda x:(x[0], abs(x[1]-sec_idx)))
+            # 避免抓到其他交易列的日期：security/date/action 最好落在同一小群組。
+            if abs(date_idx-sec_idx)>5 and abs(date_idx-i)>5:
+                continue
+
+            # 3) amount：找距離 action 最近的 value range；避免用其他交易的金額。
+            val_candidates=[]
+            for j in range(lo,hi):
+                for vm in val_re.finditer(lines[j]):
+                    vr=vm.group(0).replace(' ','')
+                    mid=_trump_value_midpoint(vr)
+                    if mid is not None:
+                        val_candidates.append((abs(j-i), abs(j-sec_idx), j, vr, mid))
+            if not val_candidates:
+                continue
+            _, _, value_idx, vr, mid=min(val_candidates,key=lambda x:(x[0],x[1]))
+            if abs(value_idx-sec_idx)>6 and abs(value_idx-i)>6:
+                continue
+
+            side=normalize_side(am.group(1))
+            asset_type='stock_etf' if _trump_is_stock_or_etf_name(security) else 'other'
+
+            # 如果 security 本身是已知 ticker/company，即使名稱分類詞不足，也視為股票/ETF。
+            if ticker:
+                asset_type='stock_etf'
+            if asset_type!='stock_etf':
+                continue
+
+            rows.append({
+                'ticker':ticker,
+                'side':side,
+                'date':dt,
+                'value_range':vr,
+                'value_midpoint':mid,
+                'security_name':security[:200],
+                'page':page_no,
+                'asset_type':'stock_etf',
+                'source':'US OGE Form 278-T',
+                'source_url':source_url
+            })
+
+    # 去重；ticker 可以為空，因為未知 ticker 的股票交易仍應進入「全球市場」訊號。
     dedup={}
     for row in rows:
-        key=(row['ticker'],row['side'],row['date'],row['value_range'])
+        key=(row.get('ticker',''),row.get('side'),row.get('date'),row.get('security_name',''),row.get('value_range'))
         dedup[key]=row
     return list(dedup.values())
 
 
 def _load_trump_transactions():
-    """V2.14.33：不再快取空結果；每份 OGE 都留下解析診斷。"""
+    """V2.14.34：只接受 V6 完整來源 cache；重新解析後保留未知 ticker 股票交易。"""
     cache=load_json(TRUMP_TRANSACTION_CACHE_FILE)
     cached_at=float(cache.get('_cached_at',0)) if isinstance(cache,dict) else 0
     data=cache.get('data',[]) if isinstance(cache,dict) else []
     cache_version=int(cache.get('_version',0)) if isinstance(cache,dict) else 0
-    # V5 cache 只有在「來源完整 + 非空」時才可短路。
     cached_sources=set(cache.get('source_url',[]) or []) if isinstance(cache,dict) else set()
     required_sources=set(TRUMP_OGE_TRANSACTION_URLS)
+
     if (cache_version==TRUMP_TRANSACTION_CACHE_VERSION and isinstance(data,list) and data
         and required_sources.issubset(cached_sources)
         and time.time()-cached_at<TRUMP_TRANSACTION_CACHE_DAYS*86400):
         return data
+
     rows=[]; diagnostics=[]
     for url in TRUMP_OGE_TRANSACTION_URLS:
         try:
-            r=requests.get(url,timeout=TRUMP_PDF_TIMEOUT,headers={'User-Agent':'stock-alert/2.14.33'})
+            r=requests.get(url,timeout=TRUMP_PDF_TIMEOUT,
+                           headers={'User-Agent':'stock-alert/2.14.34'})
             r.raise_for_status()
-            if not r.content.startswith(b'%PDF'): raise RuntimeError('回應不是 PDF')
+            if not r.content.startswith(b'%PDF'):
+                raise RuntimeError('回應不是 PDF')
             parsed=_trump_extract_transactions_from_pdf(r.content,url)
             stock_count=sum(1 for x in parsed if x.get('asset_type')=='stock_etf')
-            diagnostics.append({'url':url,'status':r.status_code,'bytes':len(r.content),'parsed':len(parsed),'stock_etf':stock_count})
+            known_ticker=sum(1 for x in parsed if x.get('ticker'))
+            diagnostics.append({
+                'url':url,'status':r.status_code,'bytes':len(r.content),
+                'parsed':len(parsed),'stock_etf':stock_count,'known_ticker':known_ticker
+            })
             if parsed: rows.extend(parsed)
-            print(f'Trump 278-T：{url[-70:]} HTTP={r.status_code} bytes={len(r.content)} 解析={len(parsed)} 股票ETF={stock_count}',flush=True)
+            print(
+                f'Trump 278-T：{url[-70:]} HTTP={r.status_code} bytes={len(r.content)} '
+                f'解析={len(parsed)} 股票ETF={stock_count} 已辨識Ticker={known_ticker}',
+                flush=True
+            )
         except Exception as e:
             diagnostics.append({'url':url,'error':f'{type(e).__name__}: {e}'})
             print(f'Trump 278-T來源失敗：{url}：{type(e).__name__}: {e}',flush=True)
+
     dedup={}
-    for row in rows: dedup[(row.get('ticker'),row.get('side'),row.get('date'),row.get('value_range'))]=row
+    for row in rows:
+        key=(row.get('ticker',''),row.get('side'),row.get('date'),
+             row.get('security_name',''),row.get('value_range'))
+        dedup[key]=row
     rows=list(dedup.values())
+
     if rows:
-        save_json(TRUMP_TRANSACTION_CACHE_FILE,{'_version':TRUMP_TRANSACTION_CACHE_VERSION,'_cached_at':time.time(),
-            'source_url':TRUMP_OGE_TRANSACTION_URLS,'diagnostics':diagnostics,'data':rows})
+        save_json(TRUMP_TRANSACTION_CACHE_FILE,{
+            '_version':TRUMP_TRANSACTION_CACHE_VERSION,
+            '_cached_at':time.time(),
+            'source_url':TRUMP_OGE_TRANSACTION_URLS,
+            'diagnostics':diagnostics,
+            'data':rows
+        })
         return rows
-    # 新抓取全失敗時，保留「舊的非空有效 cache」，但絕不把空 cache 當成功。
-    if isinstance(data,list) and data and cache_version in {4,TRUMP_TRANSACTION_CACHE_VERSION}:
+
+    # 不再使用 V4/V5 舊交易 cache；避免舊 parser 的錯誤結果繼續污染新版。
+    if isinstance(data,list) and data and cache_version==TRUMP_TRANSACTION_CACHE_VERSION:
         return data
     return []
 
 
 def trump_market_factor():
-    """V2.14.33：180日股票/ETF交易為主訊號；無有效交易時一律 0。"""
+    """V2.14.34：市場訊號使用全部可辨識為股票/ETF的交易，不要求 ticker。"""
     global _TRUMP_MARKET_FACTOR_CACHE
     if isinstance(_TRUMP_MARKET_FACTOR_CACHE,dict): return _TRUMP_MARKET_FACTOR_CACHE
-    tx=_load_trump_transactions(); now=datetime.now(TW_TZ).date()
-    nets={30:0.0,60:0.0,90:0.0,180:0.0}; counts={w:[0,0] for w in nets}; weighted=0.0; valid=0
+
+    tx=_load_trump_transactions()
+    now=datetime.now(TW_TZ).date()
+    nets={30:0.0,60:0.0,90:0.0,180:0.0}
+    counts={w:[0,0] for w in nets}
+    weighted=0.0
+    valid=0
+
     for row in tx:
         if row.get('asset_type')!='stock_etf': continue
-        try: age=(now-datetime.fromisoformat(row.get('date','')).date()).days
-        except Exception: continue
+        try:
+            age=(now-datetime.fromisoformat(row.get('date','')).date()).days
+        except Exception:
+            continue
         if not 0<=age<=180: continue
-        v=to_float(row.get('value_midpoint')) or 0; sign=1 if row.get('side')=='buy' else -1 if row.get('side')=='sell' else 0
+        v=to_float(row.get('value_midpoint')) or 0
+        sign=1 if row.get('side')=='buy' else -1 if row.get('side')=='sell' else 0
+        if not sign or not v: continue
         for w in nets:
             if age<=w:
                 nets[w]+=sign*v
-                if sign>0: counts[w][0]+=1
-                elif sign<0: counts[w][1]+=1
-        weighted+=sign*v*(1 if age<=30 else .7 if age<=90 else .4); valid+=1 if sign else 0
+                counts[w][0 if sign>0 else 1]+=1
+        weighted += sign*v*(1 if age<=30 else .7 if age<=90 else .4)
+        valid += 1
+
     signal=0
     if weighted>100_000_000: signal=4
     elif weighted>25_000_000: signal=3
@@ -11714,28 +11827,65 @@ def trump_market_factor():
     elif weighted<-25_000_000: signal=-3
     elif weighted<-5_000_000: signal=-2
     elif weighted<0: signal=-1
-    if valid and nets[90]*weighted>0: signal += 1 if signal>0 else -1
+
+    if valid and nets[90]*weighted>0:
+        signal += 1 if signal>0 else -1
+
     factor=max(-TRUMP_FACTOR_MAX,min(TRUMP_FACTOR_MAX,int(signal))) if valid else 0
-    state='⚪ 資料不足' if not valid else ('🟢 明顯增加股票曝險' if factor>=5 else '🟢 小幅增加股票曝險' if factor>=2 else '🔴 明顯降低股票曝險' if factor<=-5 else '🔴 小幅降低股票曝險' if factor<=-2 else '⚪ 中性')
-    _TRUMP_MARKET_FACTOR_CACHE={'factor':factor,'state':state,'net30':nets[30],'net60':nets[60],'net90':nets[90],'net180':nets[180],
-        'buy_count':counts[180][0],'sell_count':counts[180][1],'transaction_count':len(tx),'valid_transaction_count':valid,'weighted180':weighted}
+    state=(
+        '⚪ 資料不足' if not valid else
+        '🟢 明顯增加股票曝險' if factor>=5 else
+        '🟢 小幅增加股票曝險' if factor>=2 else
+        '🔴 明顯降低股票曝險' if factor<=-5 else
+        '🔴 小幅降低股票曝險' if factor<=-2 else '⚪ 中性'
+    )
+
+    _TRUMP_MARKET_FACTOR_CACHE={
+        'factor':factor,'state':state,
+        'net30':nets[30],'net60':nets[60],'net90':nets[90],'net180':nets[180],
+        'buy_count':counts[180][0],'sell_count':counts[180][1],
+        'transaction_count':len(tx),'valid_transaction_count':valid,
+        'window_counts':counts,'weighted180':weighted
+    }
     return _TRUMP_MARKET_FACTOR_CACHE
 
 
 def trump_stock_factor(symbol):
-    """V2.14.33：持倉只是「有無持倉」，絕不直接產生買進分數。"""
+    """V2.14.34：個別標的可用 ticker 與公司名稱雙重比對；持倉不直接加分。"""
     global _TRUMP_STOCK_FACTOR_CACHE
     sym=str(symbol or '').upper().replace('.US','')
-    if sym in _TRUMP_STOCK_FACTOR_CACHE: return _TRUMP_STOCK_FACTOR_CACHE[sym]
-    tx=_load_trump_transactions(); rows=[x for x in tx if str(x.get('ticker','')).upper()==sym and x.get('asset_type')=='stock_etf']
-    portfolio,_=_load_trump_portfolio(); held=next((x for x in portfolio if str(x.get('ticker','')).upper()==sym),None)
-    now=datetime.now(TW_TZ).date(); recent=[]; net=0.0
+    if sym in _TRUMP_STOCK_FACTOR_CACHE:
+        return _TRUMP_STOCK_FACTOR_CACHE[sym]
+
+    tx=_load_trump_transactions()
+    rows=[]
+    for x in tx:
+        if x.get('asset_type')!='stock_etf': continue
+        xt=str(x.get('ticker','')).upper()
+        sec=str(x.get('security_name','')).upper()
+        matched=(xt==sym)
+        if not matched:
+            aliases=[name for name,tick in TRUMP_SECURITY_TICKER_ALIASES.items() if tick.upper()==sym]
+            matched=any(a in sec for a in aliases)
+        if matched:
+            rows.append(x)
+
+    portfolio,_=_load_trump_portfolio()
+    held=next((x for x in portfolio if str(x.get('ticker','')).upper()==sym),None)
+
+    now=datetime.now(TW_TZ).date()
+    recent=[]; net=0.0
     for x in rows:
-        try: age=(now-datetime.fromisoformat(x.get('date','')).date()).days
-        except Exception: continue
+        try:
+            age=(now-datetime.fromisoformat(x.get('date','')).date()).days
+        except Exception:
+            continue
         if 0<=age<=180:
-            recent.append(x); v=to_float(x.get('value_midpoint')) or 0; weight=1 if age<=30 else .7 if age<=90 else .4
+            recent.append(x)
+            v=to_float(x.get('value_midpoint')) or 0
+            weight=1 if age<=30 else .7 if age<=90 else .4
             net += v*weight if x.get('side')=='buy' else -v*weight
+
     if not recent:
         factor=0
         state='⚪ 無近期交易訊號'
@@ -11747,38 +11897,99 @@ def trump_stock_factor(symbol):
     elif net<-25_000_000: factor=-5; state='🔴 偏賣出'
     elif net<-5_000_000: factor=-3; state='🔴 小幅偏賣出'
     else: factor=-1; state='🔴 微幅偏賣出'
+
     recent.sort(key=lambda x:x.get('date',''),reverse=True)
-    return_value={'factor':factor,'state':state,'transactions':len(recent),'all_transactions':len(rows),'held':bool(held),'weighted_net':net,
-        'latest_transactions':recent[:10],'holding':held or {}}
+    return_value={
+        'factor':factor,'state':state,'transactions':len(recent),
+        'all_transactions':len(rows),'held':bool(held),'weighted_net':net,
+        'latest_transactions':recent[:10],'holding':held or {}
+    }
     _TRUMP_STOCK_FACTOR_CACHE[sym]=return_value
     return return_value
 
 
+def _sanitize_trump_portfolio_rows(rows):
+    """V2.14.34：拒絕舊版把列號/欄位字串誤當 ticker 的污染資料。"""
+    if not isinstance(rows,list):
+        return []
+    out=[]
+    seen=set()
+    for row in rows:
+        if not isinstance(row,dict): continue
+        name=str(row.get('name','')).strip()
+        ticker=str(row.get('ticker','')).upper().strip()
+        # 只接受可由安全 alias / 明確 ticker 辨識的股票或 ETF。
+        guessed=_trump_guess_ticker(name)
+        if guessed:
+            ticker=guessed
+        if not ticker:
+            continue
+        if ticker in {'PA','DEL','NEW','THE','REIT','N/A','NA','NONE'}:
+            continue
+        if not re.fullmatch(r'[A-Z]{1,5}(?:-[A-Z])?',ticker):
+            continue
+        vr=str(row.get('value_range','')).strip()
+        if not vr: continue
+        key=ticker
+        if key in seen: continue
+        seen.add(key)
+        clean=dict(row)
+        clean['ticker']=ticker
+        clean['name']=name
+        clean['value_upper']=_trump_value_upper(vr)
+        out.append(clean)
+    out.sort(key=lambda x:(x.get('value_upper',0),x.get('ticker','')),reverse=True)
+    return out[:TRUMP_MAX_HOLDINGS]
+
+
 def _load_trump_portfolio():
-    """V2.14.33：278e 解析失敗時不接受疑似錯誤舊 cache。"""
-    cache=load_json(TRUMP_PORTFOLIO_CACHE_FILE); cached_at=float(cache.get('_cached_at',0)) if isinstance(cache,dict) else 0
-    data=cache.get('data',[]) if isinstance(cache,dict) else []; cache_version=int(cache.get('_version',0)) if isinstance(cache,dict) else 0
-    if cache_version==TRUMP_PORTFOLIO_CACHE_VERSION and isinstance(data,list) and data and time.time()-cached_at<TRUMP_PORTFOLIO_CACHE_DAYS*86400:
+    """V2.14.34：278e parser/cache 全面防污染；不再接受 V3 舊錯誤 cache。"""
+    cache=load_json(TRUMP_PORTFOLIO_CACHE_FILE)
+    cached_at=float(cache.get('_cached_at',0)) if isinstance(cache,dict) else 0
+    raw_data=cache.get('data',[]) if isinstance(cache,dict) else []
+    data=_sanitize_trump_portfolio_rows(raw_data)
+    cache_version=int(cache.get('_version',0)) if isinstance(cache,dict) else 0
+
+    if (cache_version==TRUMP_PORTFOLIO_CACHE_VERSION and data
+        and time.time()-cached_at<TRUMP_PORTFOLIO_CACHE_DAYS*86400):
         return data,cache.get('report_date') or '最新可用公開申報'
+
     errors=[]
     for annual_url in TRUMP_OGE_ANNUAL_URLS:
         try:
-            r=requests.get(annual_url,timeout=TRUMP_PDF_TIMEOUT,headers={'User-Agent':'stock-alert/2.14.33'}); r.raise_for_status()
-            if not r.content.startswith(b'%PDF'): raise RuntimeError('回應不是 PDF')
-            rows=_trump_extract_holdings_from_pdf(r.content)
+            r=requests.get(annual_url,timeout=TRUMP_PDF_TIMEOUT,
+                           headers={'User-Agent':'stock-alert/2.14.34'})
+            r.raise_for_status()
+            if not r.content.startswith(b'%PDF'):
+                raise RuntimeError('回應不是 PDF')
+            rows=_sanitize_trump_portfolio_rows(_trump_extract_holdings_from_pdf(r.content))
             if rows:
-                save_json(TRUMP_PORTFOLIO_CACHE_FILE,{'_version':TRUMP_PORTFOLIO_CACHE_VERSION,'_cached_at':time.time(),
-                    'report_date':'2025年度申報（2026-06-30認證）','source_url':annual_url,'data':rows})
+                save_json(TRUMP_PORTFOLIO_CACHE_FILE,{
+                    '_version':TRUMP_PORTFOLIO_CACHE_VERSION,
+                    '_cached_at':time.time(),
+                    'report_date':'2025年度申報（2026-06-30認證）',
+                    'source_url':annual_url,
+                    'data':rows
+                })
                 return rows,'2025年度申報（2026-06-30認證）'
             errors.append(f'{annual_url}: parser 0')
-        except Exception as e: errors.append(f'{annual_url}: {type(e).__name__}: {e}')
+        except Exception as e:
+            errors.append(f'{annual_url}: {type(e).__name__}: {e}')
+
     print('Trump投資組合更新失敗：'+' | '.join(errors),flush=True)
-    if cache_version==TRUMP_PORTFOLIO_CACHE_VERSION and isinstance(data,list) and data:
+
+    # 本機只有 V4 且內容通過 sanitize 才可退回。
+    if cache_version==TRUMP_PORTFOLIO_CACHE_VERSION and data:
         return data,cache.get('report_date') or '快取資料'
+
+    # 遠端 cache 也必須 sanitize；絕不再把 PA/DEL/NEW/THE/REIT 等污染資料帶回 LINE。
     remote=load_remote_json_cache(TRUMP_PORTFOLIO_CACHE_FILE,timeout=LINE_REMOTE_CACHE_TIMEOUT)
-    rd=remote.get('data',[]) if isinstance(remote,dict) else []
-    if isinstance(rd,list) and rd: return rd,remote.get('report_date') or 'GitHub快取資料'
+    rd=_sanitize_trump_portfolio_rows(remote.get('data',[]) if isinstance(remote,dict) else [])
+    if rd:
+        return rd,remote.get('report_date') or 'GitHub快取資料'
+
     raise RuntimeError('OGE 278e 無法取得可辨識持倉：'+' | '.join(errors))
+
 
 def trump_portfolio_analysis():
     """V2.14.28：LINE 查詢川普公開申報投資標的。"""
