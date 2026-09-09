@@ -1,4 +1,4 @@
-# stock_alert.py V2.14.40
+# stock_alert.py V2.14.41
 # V2.14.08：V2.14.05 完整覆蓋版；保留重大消息面「多公司新聞隔離」邏輯，
 #             修正 LINE 15 分鐘區間通知遺失「加碼分析／建議」問題，並修正目前價格不得使用過期市場股票池價格。
 #             重大消息評分只使用新聞標題，RSS description/snippet/延伸內容完全不參與評分。
@@ -183,6 +183,11 @@ TRUMP_MAX_HOLDINGS = 30
 TRUMP_TRANSACTION_CACHE_FILE = 'trump_transaction_cache.json'
 TRUMP_TRANSACTION_CACHE_DAYS = 2
 TRUMP_TRANSACTION_CACHE_VERSION = 12
+# V2.14.41：Trump 訊號拆成兩層：① OGE/Open Cabinet 官方已申報交易；② 最近 30 日公開新聞/市場動向。
+TRUMP_RECENT_NEWS_CACHE_HOURS = 6
+TRUMP_RECENT_NEWS_LOOKBACK_DAYS = 30
+TRUMP_RECENT_NEWS_MAX_ITEMS = 12
+_TRUMP_RECENT_NEWS_CACHE = {}
 TRUMP_OGE_TRANSACTION_URLS = [
     # 2026-08-12：最新一批，涵蓋 2026-06-01～06-29 大量股票交易。
     'https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/2BF91F890F718ACB85258E5B002DE16B/%24FILE/Donald-J-Trump-08.12.2026-278T.pdf',
@@ -12186,6 +12191,89 @@ def trump_stock_factor(symbol):
     return return_value
 
 
+
+def _trump_news_company_name(symbol):
+    sym=str(symbol or '').upper().replace('.US','').strip()
+    for name,tick in TRUMP_SECURITY_TICKER_ALIASES.items():
+        if tick.upper()==sym:
+            return name
+    return sym
+
+
+def _trump_recent_news_fetch(symbol=''):
+    """V2.14.41：第二層——最近 30 日公開新聞/市場動向。
+    只採計標題明確涉及 Trump 本人股票/投資/交易/持倉的文章；一般政策新聞不當成交易訊號。
+    """
+    global _TRUMP_RECENT_NEWS_CACHE
+    key=str(symbol or '').upper().strip() or '__MARKET__'
+    now_ts=time.time()
+    cached=_TRUMP_RECENT_NEWS_CACHE.get(key)
+    if isinstance(cached,dict) and now_ts-float(cached.get('cached_at',0) or 0)<TRUMP_RECENT_NEWS_CACHE_HOURS*3600:
+        return cached.get('data',{})
+    company=_trump_news_company_name(key) if key!='__MARKET__' else ''
+    q='Trump stock investment shares portfolio trade holdings' if key=='__MARKET__' else f'Trump {company} stock investment shares trade'
+    rss_url='https://news.google.com/rss/search?q='+quote(q)+'&hl=en-US&gl=US&ceid=US:en'
+    out={'query':q,'source_url':rss_url,'items':[],'raw_items':0,'qualified_items':0,'positive':0,'negative':0,'neutral':0,'score':0,'latest_published':'','error':''}
+    try:
+        r=requests.get(rss_url,timeout=12,headers={'User-Agent':'stock-alert/2.14.41'})
+        r.raise_for_status()
+        root=ET.fromstring(r.content)
+        cutoff=datetime.now(TW_TZ)-timedelta(days=TRUMP_RECENT_NEWS_LOOKBACK_DAYS)
+        raw=[]
+        for item in root.findall('.//item'):
+            title=(item.findtext('title') or '').strip(); link=(item.findtext('link') or '').strip(); pub=(item.findtext('pubDate') or '').strip()
+            if not title: continue
+            dt=None
+            try: dt=parsedate_to_datetime(pub).astimezone(TW_TZ)
+            except Exception: pass
+            raw.append((dt,title,link,pub))
+        out['raw_items']=len(raw)
+        positive_words=('bought','buy','buys','purchase','purchased','invested','investment','acquired','stake','shares in','added to','increased holdings','added shares')
+        negative_words=('sold','sell','sells','sale','divested','divest','reduced holdings','trimmed','dumped','exited','disposed')
+        personal_words=('trump bought','trump purchased','trump invested','trump investment','trump sold','trump sells','trump sale','trump shares','trump stake','trump portfolio','trump holdings','trump trade','trump trades','trump trading','president trump bought','president trump sold','trump financial disclosure')
+        seen=set()
+        for dt,title,link,pub in sorted(raw,key=lambda x:x[0] or datetime.min.replace(tzinfo=TW_TZ),reverse=True):
+            if dt is not None and dt<cutoff: continue
+            low=title.lower()
+            if key!='__MARKET__':
+                terms=[key.lower()]
+                if company: terms.append(company.lower())
+                if not any(t and t in low for t in terms): continue
+            if not any(w in low for w in personal_words): continue
+            if not any(w in low for w in positive_words+negative_words): continue
+            norm=re.sub(r'\W+',' ',title.lower()).strip()
+            if norm in seen: continue
+            seen.add(norm)
+            if any(w in low for w in negative_words): side='negative'; score=-1
+            elif any(w in low for w in positive_words): side='positive'; score=1
+            else: side='neutral'; score=0
+            if side=='positive' and not any(w in low for w in ('bought','buy','purchase','purchased','invested','acquired','added to','added shares','increased holdings','stake','shares in')):
+                side='neutral'; score=0
+            out['items'].append({'title':title[:300],'link':link,'published':dt.isoformat() if dt else pub,'side':side,'score':score,'source':'Google News RSS'})
+            out[side]+=1
+            if len(out['items'])>=TRUMP_RECENT_NEWS_MAX_ITEMS: break
+        out['qualified_items']=len(out['items'])
+        if out['items']: out['latest_published']=out['items'][0].get('published','')
+        out['score']=max(-4,min(4,sum(int(x.get('score',0)) for x in out['items'])))
+    except Exception as e:
+        out['error']=f'{type(e).__name__}: {e}'
+    _TRUMP_RECENT_NEWS_CACHE[key]={'cached_at':now_ts,'data':out}
+    return out
+
+
+def trump_recent_news_factor(symbol=''):
+    """V2.14.41：第二層近期新聞/市場動向獨立訊號，不覆蓋第一層官方交易訊號。"""
+    d=_trump_recent_news_fetch(symbol); score=int(d.get('score',0) or 0)
+    if d.get('error'): state='⚪ 近期公開新聞資料暫不可用'
+    elif not d.get('items'): state='⚪ 最近30日沒有明確的 Trump 個人交易新聞'
+    elif score>=3: state='🟢 近期公開資訊偏買進/增加曝險'
+    elif score>0: state='🟢 近期公開資訊略偏正面'
+    elif score<=-3: state='🔴 近期公開資訊偏賣出/降低曝險'
+    elif score<0: state='🔴 近期公開資訊略偏負面'
+    else: state='⚪ 近期公開資訊中性'
+    return {'factor':score,'state':state,'items':d.get('items',[]),'positive':d.get('positive',0),'negative':d.get('negative',0),'neutral':d.get('neutral',0),'qualified_items':d.get('qualified_items',0),'latest_published':d.get('latest_published',''),'query':d.get('query',''),'source_url':d.get('source_url',''),'error':d.get('error','')}
+
+
 def _sanitize_trump_portfolio_rows(rows):
     """V2.14.38：拒絕舊版把列號/欄位字串誤當 ticker 的污染資料。"""
     if not isinstance(rows,list):
@@ -12568,6 +12656,15 @@ def run_webhook_server():
         rows.append(f'<div class="card"><h1>🇺🇸 川普投資風向</h1><p><b>{html.escape(factor.get("state","⚪ 資料不足"))}</b>　全球股票風向調整：<b>{int(factor.get("factor",0)):+d}</b></p>')
         rows.append(f'<p>近180日淨買賣（主訊號）：{factor.get("net180",0):,.0f}<br>近30日：{factor.get("net30",0):,.0f}<br>近60日：{factor.get("net60",0):,.0f}<br>近90日：{factor.get("net90",0):,.0f}</p>')
         rows.append(f'<p class="muted">近180日股票／ETF交易：{factor.get("valid_transaction_count",0)} 筆；買進：{factor.get("buy_count",0)}；賣出：{factor.get("sell_count",0)}<br>資料庫已解析交易總筆數：{factor.get("transaction_count",0)}</p></div>')
+        news=trump_recent_news_factor()
+        rows.append('<div class="card"><h2>🟡 第二層｜最近30日公開市場／新聞動向</h2>')
+        rows.append(f'<p><b>{html.escape(news.get("state","⚪ 無資料"))}</b>　輔助調整：<b>{int(news.get("factor",0)):+d}</b></p>')
+        rows.append(f'<p class="muted">符合條件：{int(news.get("qualified_items",0))} 篇；正面：{int(news.get("positive",0))}；負面：{int(news.get("negative",0))}；中性：{int(news.get("neutral",0))}<br>⚠️ 此層是近期公開新聞，不是官方 278-T 交易資料。</p>')
+        for ni in news.get('items',[])[:6]:
+            icon='🟢' if ni.get('side')=='positive' else '🔴' if ni.get('side')=='negative' else '⚪'
+            rows.append(f'<p>{icon} {html.escape(str(ni.get("title","")))}<br><span class="muted">{html.escape(str(ni.get("published","")))}｜Google News RSS</span></p>')
+        if news.get('error'): rows.append(f'<p class="muted">⚠️ 第二層資料取得失敗：{html.escape(str(news.get("error")))}</p>')
+        rows.append('</div>')
         rows.append('<div class="card"><h2>📋 公開申報股票／ETF</h2>')
         rows.append(f'<p class="muted">資料：{html.escape(str(report_date))}。OGE 價值為申報區間，不代表即時市值。</p>')
         if portfolio:
@@ -12586,10 +12683,12 @@ def run_webhook_server():
         if not symbol:
             return _web_page('川普個股', '<div class="card"><h1>🇺🇸 川普個別標的</h1><form method="get"><input name="symbol" placeholder="DELL / NVDA / QQQ" required><button>查詢</button></form></div>')
         factor=trump_stock_factor(symbol)
+        news=trump_recent_news_factor(symbol)
         body=(f'<div class="card"><h1>🇺🇸 {html.escape(symbol)}｜川普直接曝險</h1>'
               f'<p><b>{html.escape(str(factor.get("state","無資料")))}</b>　調整：<b>{int(factor.get("factor",0)):+d}</b></p>'
               f'<p>近180日可辨識直接交易：{int(factor.get("transactions",0))} 筆（歷史共 {int(factor.get("all_transactions",0))} 筆）<br>公開持倉：{"有" if factor.get("held") else "無／未辨識"}</p>' +
               ('<p><b>最近交易明細</b></p>' + ''.join(f'<p>{html.escape(str(x.get("date","")))}｜{"買進" if x.get("side")=="buy" else "賣出"}｜{html.escape(str(x.get("value_range","")))}</p>' for x in factor.get("latest_transactions",[])[:5]) + '<p class="muted">這是公開申報資料訊號，不代表即時交易，也不代表投資建議。</p></div>') +
+              f'<div class="card"><h2>🟡 第二層｜最近30日 {html.escape(symbol)} 相關公開資訊</h2><p><b>{html.escape(news.get("state","⚪ 無資料"))}</b>　輔助調整：<b>{int(news.get("factor",0)):+d}</b></p>' + ''.join(f'<p>{"🟢" if x.get("side")=="positive" else "🔴" if x.get("side")=="negative" else "⚪"} {html.escape(str(x.get("title","")))}<br><span class="muted">{html.escape(str(x.get("published","")))}</span></p>' for x in news.get('items',[])[:6]) + '<p class="muted">⚠️ 第二層是公開新聞/市場動向，不等於 Trump 官方已申報交易。</p></div>' +
               '<div class="nav"><a href="/trump">← 川普總覽</a><a href="/industry">🏭 產業分析</a></div>')
         return _web_page('川普個別標的',body)
 
@@ -13587,12 +13686,14 @@ def run_alerts():
     global SUBINDUSTRY_CACHE
     global _TRUMP_MARKET_FACTOR_CACHE
     global _TRUMP_STOCK_FACTOR_CACHE
+    global _TRUMP_RECENT_NEWS_CACHE
 
     RUN_CACHE = {}
     INSTITUTIONAL_CACHE = {}
     MARGIN_CACHE = {}
     _TRUMP_MARKET_FACTOR_CACHE = None
     _TRUMP_STOCK_FACTOR_CACHE = {}
+    _TRUMP_RECENT_NEWS_CACHE = {}
 
     started = time.time()
 
