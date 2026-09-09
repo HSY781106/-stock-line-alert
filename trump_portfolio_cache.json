@@ -1,6 +1,6 @@
 {
-  "_version": 6,
-  "_cached_at": 1788928282.9781647,
+  "_version": 7,
+  "_cached_at": 1788928991.0603251,
   "report_date": "2025年度申報（2026-06-30認證）",
   "source_url": "https://oge.box.com/shared/static/zycb5i2ny8kssm51uzqm8ygyq2zkpkqq.pdf",
   "data": [
@@ -15,7 +15,7 @@
     },
     {
       "row_no": 1446,
-      "name": "SPDR S&P 500 ETF Yes",
+      "name": "SPDR S&P 500 ETF",
       "value_range": "$5,000,001 - $25,000,000",
       "page": 114,
       "ticker": "SPY",
@@ -105,7 +105,7 @@
     },
     {
       "row_no": 675,
-      "name": "VANGUARD TOTAL STOCK MARKET ETF Yes",
+      "name": "VANGUARD TOTAL STOCK MARKET ETF",
       "value_range": "$1,000,001 - $5,000,000",
       "page": 96,
       "ticker": "VTI",
@@ -159,7 +159,7 @@
     },
     {
       "row_no": 712,
-      "name": "ISHARES CORE S&P 500 ETF Yes",
+      "name": "ISHARES CORE S&P 500 ETF",
       "value_range": "$1,000,001 - $5,000,000",
       "page": 63,
       "ticker": "IVV",
