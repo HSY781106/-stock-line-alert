@@ -1,4 +1,4 @@
-# stock_alert.py V2.14.27
+# stock_alert.py V2.14.28
 # V2.14.08：V2.14.05 完整覆蓋版；保留重大消息面「多公司新聞隔離」邏輯，
 #             修正 LINE 15 分鐘區間通知遺失「加碼分析／建議」問題，並修正目前價格不得使用過期市場股票池價格。
 #             重大消息評分只使用新聞標題，RSS description/snippet/延伸內容完全不參與評分。
@@ -157,11 +157,11 @@ TWSE_QUOTES_CACHE_FILE = 'twse_quotes_cache.json'
 # V2.9.8 新增
 SUBINDUSTRY_CACHE_FILE = 'subindustry_cache.json'
 INDUSTRY_MENU_CACHE_FILE = 'industry_subindustry_menu_cache.json'
-# V2.14.27：LINE 產業查詢索引自動建置進度。GitHub Actions 每次執行分批補抓，LINE 不要求使用者提供股票代號。
+# V2.14.28：LINE 產業查詢索引自動建置進度。GitHub Actions 每次執行分批補抓，LINE 不要求使用者提供股票代號。
 INDUSTRY_MENU_REFRESH_STATE_FILE = 'industry_subindustry_refresh_state.json'
 INDUSTRY_MENU_AUTO_BATCH = 50
 
-# V2.14.27：LINE「川普 / Trump / Donald Trump」人物投資組合查詢。
+# V2.14.28：LINE「川普 / Trump / Donald Trump」人物投資組合查詢。
 # 來源優先使用美國政府 OGE 最新年度公開財務揭露；若無法即時下載，
 # 讀取本機/ GitHub 已保存的 trump_portfolio_cache.json。
 TRUMP_PORTFOLIO_CACHE_FILE = 'trump_portfolio_cache.json'
@@ -178,6 +178,16 @@ TRUMP_OGE_DISCLOSURE_PAGE = (
 )
 TRUMP_PDF_TIMEOUT = 20
 TRUMP_MAX_HOLDINGS = 30
+TRUMP_TRANSACTION_CACHE_FILE = 'trump_transaction_cache.json'
+TRUMP_TRANSACTION_CACHE_DAYS = 2
+TRUMP_OGE_TRANSACTION_URLS = [
+    'https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/2BF91F890F718ACB85258E5B002DE16B/%24FILE/Donald-J-Trump-08.12.2026-278T.pdf',
+    'https://extapps2.oge.gov/201/Presiden.nsf/PAS%2BIndex/405E4EC4E27BE8D185258DF7002DD1C0/%24FILE/Trump%2C%20Donald%20J.-05.08.2026-278T%282%29.pdf'
+]
+TRUMP_FACTOR_MAX = 8
+TRUMP_FACTOR_LOOKBACK_DAYS = 180
+_TRUMP_MARKET_FACTOR_CACHE = None
+_TRUMP_STOCK_FACTOR_CACHE = {}
 TRUMP_NAME_ALIASES = {
     '川普', '特朗普', '唐納德川普', '唐納德特朗普',
     'DONALD TRUMP', 'DONALD J TRUMP', 'DONALD J. TRUMP',
@@ -410,6 +420,18 @@ def resolve_etf_query(q):
     return None
 
 
+def _us_symbol_has_data(symbol):
+    """V2.14.28：確認 Yahoo 是否真的有可用行情，避免不存在 ticker 產生假 0 分。"""
+    try:
+        d=yf_download(symbol, '10d', '1d')
+        if d is not None and not d.empty and 'Close' in d.columns:
+            c=pd.to_numeric(d['Close'], errors='coerce').dropna()
+            return bool(len(c))
+    except Exception as e:
+        print(f'V2.14.28 美股ticker驗證失敗 {symbol}: {type(e).__name__}', flush=True)
+    return False
+
+
 def resolve_us_stock_query(q):
     """V2.14.21：LINE / analysis 可直接查詢一般美股。
 
@@ -437,6 +459,9 @@ def resolve_us_stock_query(q):
         'TESLA':'TSLA','特斯拉':'TSLA',
         'BROADCOM':'AVGO','博通':'AVGO',
         'AMD':'AMD','COSTCO':'COST','COSTCO WHOLESALE':'COST',
+        'DEL':'DELL','DELL TECHNOLOGIES':'DELL','DELL TECHNOLOGIES INC':'DELL','DELL INC':'DELL','戴爾':'DELL',
+        'PALANTIR':'PLTR','PALANTIR TECHNOLOGIES':'PLTR',
+        'BERKSHIRE':'BRK-B','BERKSHIRE HATHAWAY':'BRK-B','波克夏':'BRK-B',
     }
     if nq in name_map: token=name_map[nq]
     elif token in name_map: token=name_map[token]
@@ -2169,7 +2194,7 @@ def _fetch_missing_value_chains(codes):
     return result
 
 def _refresh_line_industry_menu_cache(u=None):
-    """V2.14.27：建立 LINE 大產業→官方細產業索引。
+    """V2.14.28：建立 LINE 大產業→官方細產業索引。
 
     注意：fetch_value_chain_for_stock() 的資料格式是
     {'subindustries': [...], 'records': [{'industry': ..., 'sub_industry': ...}, ...]}，
@@ -2224,7 +2249,7 @@ def _refresh_line_industry_menu_cache(u=None):
 
 
 def _auto_expand_subindustry_cache(u):
-    """V2.14.27：Actions 自動分批建立全市場次產業資料。
+    """V2.14.28：Actions 自動分批建立全市場次產業資料。
 
     不再要求 LINE 使用者先輸入股票代號。每次 GitHub Actions 執行，
     從完整市場股票池中找出尚未有官方次產業資料的股票，最多補抓
@@ -2283,12 +2308,12 @@ def _auto_expand_subindustry_cache(u):
         state['last_selected'] = len(selected)
 
         if selected:
-            print(f'V2.14.27 自動建立次產業：本次補抓 {len(selected)} 檔（全市場 {len(codes)} 檔）', flush=True)
+            print(f'V2.14.28 自動建立次產業：本次補抓 {len(selected)} 檔（全市場 {len(codes)} 檔）', flush=True)
             fetched = _fetch_missing_value_chains(selected)
             if isinstance(fetched, dict):
                 data.update(fetched)
             state['last_success'] = len(fetched) if isinstance(fetched, dict) else 0
-            print(f'V2.14.27 自動建立次產業：成功 {state["last_success"]}/{len(selected)} 檔', flush=True)
+            print(f'V2.14.28 自動建立次產業：成功 {state["last_success"]}/{len(selected)} 檔', flush=True)
         else:
             state['last_success'] = 0
 
@@ -2307,10 +2332,10 @@ def _auto_expand_subindustry_cache(u):
                 'data': data
             })
         _refresh_line_industry_menu_cache(u)
-        print(f'V2.14.27 次產業自動建置進度：{valid_count}/{len(codes)}（{state["coverage"]}%）', flush=True)
+        print(f'V2.14.28 次產業自動建置進度：{valid_count}/{len(codes)}（{state["coverage"]}%）', flush=True)
         return data
     except Exception as e:
-        print(f'V2.14.27 次產業自動建置失敗：{type(e).__name__}: {e}', flush=True)
+        print(f'V2.14.28 次產業自動建置失敗：{type(e).__name__}: {e}', flush=True)
         return data if 'data' in locals() and isinstance(data, dict) else {}
 
 def get_public_subindustry(u):
@@ -9648,6 +9673,10 @@ def us_stock_analysis(query):
     if not info:
         return f'❌ 找不到美股：{query}'
     symbol=info['symbol']
+    if not _us_symbol_has_data(symbol):
+        alt={'DEL':'DELL','DELL TECHNOLOGIES':'DELL','戴爾':'DELL','BERKSHIRE':'BRK-B','BERKSHIRE HATHAWAY':'BRK-B'}.get(str(query or '').strip().upper())
+        if alt and _us_symbol_has_data(alt): symbol=alt; info['symbol']=alt
+        else: return f'❌ Yahoo 找不到可用的美股行情：{query}（例如 DEL 應為 DELL）'
     tech=technical(symbol, force_refresh=True)
     price=to_float(tech.get('price'))
     if price is None:
@@ -9687,7 +9716,8 @@ def us_stock_analysis(query):
     if to_float(tech.get('ret20')) is not None and to_float(tech.get('ret20'))<-.15: risk+=2; rr.append('20日跌幅偏大')
     if to_float(tech.get('ret10')) is not None and to_float(tech.get('ret10'))<-.10: risk+=1; rr.append('10日跌幅偏大')
     risk=min(10,risk)
-    first_score=fundamental+ts+(10-risk)
+    trump=trump_stock_factor(symbol)
+    first_score=max(0,min(80,fundamental+ts+(10-risk)+trump.get('factor',0)))
     buy=assess_buy_point(tech)
     def pct(v): return 'N/A' if v is None else f'{v*100:.2f}%'
     z1='N/A' if not buy.get('zone1') else f'{buy["zone1"][0]:,.2f}～{buy["zone1"][1]:,.2f}'
@@ -9697,7 +9727,8 @@ def us_stock_analysis(query):
             f'PE：{fmt(pe)}｜PB：{fmt(pb)}｜殖利率：{fmt(yld)}%\nEPS Growth：{fmt(growth)}%｜ROE：{fmt(roe)}%｜PEG：{fmt(peg)}\n'
             f'技術面：{ts}/30\n價格：{fmt(price)}｜RSI：{fmt(r)}｜KD：K={fmt(tech.get("k"))} / D={fmt(tech.get("d"))}\n'
             f'MA20：{fmt(m20)}｜MA60：{fmt(m60)}｜趨勢：{tech.get("trend") or "N/A"}\n'
-            f'風險：{risk}/10｜綜合投資價值：{first_score}/80（美股模型不套用台股籌碼）\n'
+            f'風險：{risk}/10｜Trump直接曝險：{trump.get("factor",0):+d}｜綜合投資價值：{first_score}/80（美股模型不套用台股籌碼）\n'
+            f'Trump訊號：{trump.get("state","無資料")}｜近180日直接交易：{trump.get("transactions",0)}筆\n'
             f'加分因素：{"、".join(freasons+treasons) if freasons+treasons else "無"}\n風險因素：{"、".join(rr) if rr else "無"}\n\n'
             f'【第二層｜🎯 買點評估】\n買點評分：{buy["score"]}/100\n目前買點：{buy["verdict"]}\n短中期趨勢：{buy["trend_state"]}\n'
             f'5日報酬：{pct(buy.get("ret5"))}｜10日：{pct(buy.get("ret10"))}｜20日：{pct(buy.get("ret20"))}\n'
@@ -10031,6 +10062,10 @@ def analysis(
         force=False
     )
 
+    # V2.14.28：台股只使用川普整體股票資金風向。
+    trump_global = trump_market_factor()
+    trump_global_adj = int(trump_global.get('factor', 0))
+
     base_total = (
         fs
         + ts
@@ -10041,7 +10076,7 @@ def analysis(
         0,
         min(
             100,
-            base_total + news_adj
+            base_total + news_adj + trump_global_adj
         )
     )
 
@@ -10724,7 +10759,7 @@ def _line_extract_analysis_scores(text):
 
 
 def _line_industry_build_subindustry_menu(parent, u):
-    """V2.14.27：LINE 細產業選單加入 GitHub 遠端索引同步備援。"""
+    """V2.14.28：LINE 細產業選單加入 GitHub 遠端索引同步備援。"""
     parent_c = canonical_industry(parent)
     options = []
 
@@ -10934,7 +10969,7 @@ def _line_industry_query_result(text, target, u):
 
 
 def _line_industry_webhook_kind(text, target):
-    """V2.14.27：產業互動狀態不可綁死一般查詢。
+    """V2.14.28：產業互動狀態不可綁死一般查詢。
 
     重要：當使用者已進入「大產業 -> 次產業」選單後，仍必須可以：
     1. 輸入「取消／返回／退出」離開。
@@ -10948,7 +10983,7 @@ def _line_industry_webhook_kind(text, target):
     session = _line_industry_session_get(target)
 
     # --------------------------------------------------------
-    # V2.14.27：任何產業選單狀態都提供明確退出鍵。
+    # V2.14.28：任何產業選單狀態都提供明確退出鍵。
     # --------------------------------------------------------
     if session and norm in {_line_industry_norm(x) for x in (
         '取消', '返回', '上一層', '退出', '離開', '清除',
@@ -10961,7 +10996,7 @@ def _line_industry_webhook_kind(text, target):
         )
 
     # --------------------------------------------------------
-    # V2.14.27：選單中輸入「產業」= 回到第一層，而不是被當成
+    # V2.14.28：選單中輸入「產業」= 回到第一層，而不是被當成
     # 次產業名稱。
     # --------------------------------------------------------
     if norm in {_line_industry_norm('產業'), _line_industry_norm('產業查詢')}:
@@ -10971,7 +11006,7 @@ def _line_industry_webhook_kind(text, target):
         return 'options', _line_industry_options_message('產業', options)
 
     # --------------------------------------------------------
-    # V2.14.27：產業選單內輸入股票代號／美股 ticker，立即跳出
+    # V2.14.28：產業選單內輸入股票代號／美股 ticker，立即跳出
     # 產業 session，讓 handle_event 繼續走原本的股票/ETF分析流程。
     # --------------------------------------------------------
     if session:
@@ -10982,7 +11017,7 @@ def _line_industry_webhook_kind(text, target):
             return None, None
 
         # ----------------------------------------------------
-        # V2.14.27：使用者輸入另一個大產業時，直接切換，不要
+        # V2.14.28：使用者輸入另一個大產業時，直接切換，不要
         # 被目前次產業 session 卡住。
         # ----------------------------------------------------
         q_global = _line_industry_canonical_query(raw)
@@ -11286,7 +11321,7 @@ def release_line_memory():
 
 
 def _is_trump_portfolio_query(text):
-    """V2.14.27：辨識人物投資組合查詢。"""
+    """V2.14.28：辨識人物投資組合查詢。"""
     raw = str(text or '').strip()
     if not raw:
         return False
@@ -11317,7 +11352,7 @@ def _trump_clean_security_name(line):
 
 
 def _trump_extract_holdings_from_pdf(pdf_bytes):
-    """V2.14.27：從 OGE Form 278e 擷取可辨識股票/ETF；價值只保留申報區間。"""
+    """V2.14.28：從 OGE Form 278e 擷取可辨識股票/ETF；價值只保留申報區間。"""
     try:
         from pypdf import PdfReader
     except Exception as e:
@@ -11369,8 +11404,121 @@ def _trump_extract_holdings_from_pdf(pdf_bytes):
     return rows[:TRUMP_MAX_HOLDINGS]
 
 
+def _trump_value_midpoint(value_text):
+    nums=[float(x.replace(',', '')) for x in re.findall(r'\$?([0-9][0-9,]*(?:\.[0-9]+)?)', str(value_text or ''))]
+    return (nums[0]+nums[1])/2.0 if len(nums)>=2 else None
+
+def _trump_extract_transactions_from_pdf(pdf_bytes):
+    """V2.14.28：解析 OGE 278-T 交易，使用申報區間中位數估算資金方向。"""
+    try:
+        from pypdf import PdfReader
+        reader=PdfReader(io.BytesIO(pdf_bytes))
+    except Exception as e:
+        print(f'Trump 278-T 解析器不可用：{type(e).__name__}: {e}', flush=True); return []
+    rows=[]
+    date_re=re.compile(r'\b(\d{1,2})[/-](\d{1,2})[/-](\d{2,4})\b')
+    val_re=re.compile(r'\$\s*[0-9][0-9,]*(?:\.[0-9]+)?\s*(?:[-–—]\s*\$?[0-9][0-9,]*(?:\.[0-9]+)?)')
+    action_re=re.compile(r'\b(buy|purchase|purchased|sale|sell|sold)\b', re.I)
+    ticker_re=re.compile(r'\(([A-Z]{1,5}(?:-[A-Z])?)\)\b')
+    for page_no,page in enumerate(reader.pages,1):
+        try: text=page.extract_text() or ''
+        except Exception: continue
+        for raw in text.splitlines():
+            line=re.sub(r'\s+',' ',raw).strip(); am=action_re.search(line); dm=date_re.search(line); vm=val_re.search(line)
+            if not(am and dm and vm): continue
+            side='sell' if am.group(1).lower() in {'sale','sell','sold'} else 'buy'
+            tm=ticker_re.search(line); ticker=tm.group(1) if tm else ''
+            if not ticker:
+                _aliases={
+                    'DELL TECHNOLOGIES':'DELL','NVIDIA':'NVDA','MICROSOFT':'MSFT','APPLE':'AAPL',
+                    'AMAZON':'AMZN','META PLATFORMS':'META','PALANTIR':'PLTR','ADVANCED MICRO DEVICES':'AMD',
+                    'BROADCOM':'AVGO','TESLA':'TSLA','ALPHABET':'GOOGL','GOOGLE':'GOOGL','ORACLE':'ORCL',
+                    'BERKSHIRE HATHAWAY':'BRK-B','COSTCO':'COST','WALMART':'WMT','NETFLIX':'NFLX',
+                    'SPDR S&P 500':'SPY','INVESCO QQQ':'QQQ','VANGUARD S&P 500':'VOO'
+                }
+                for _name,_ticker in _aliases.items():
+                    if _name in line.upper(): ticker=_ticker; break
+            d,m,y=dm.groups(); y=int(y); y+=2000 if y<100 else 0
+            try: dt=datetime(y,int(m),int(d),tzinfo=TW_TZ)
+            except Exception: continue
+            vr=vm.group(0).replace(' ',''); mid=_trump_value_midpoint(vr)
+            if mid is None: continue
+            rows.append({'ticker':ticker,'side':side,'date':dt.strftime('%Y-%m-%d'),'value_range':vr,'value_midpoint':mid,'page':page_no,'source':'US OGE Form 278-T'})
+    return rows
+
+def _load_trump_transactions():
+    """V2.14.28：2天快取 278-T；失敗不阻塞分析。"""
+    cache=load_json(TRUMP_TRANSACTION_CACHE_FILE); cached_at=float(cache.get('_cached_at',0)) if isinstance(cache,dict) else 0
+    data=cache.get('data',[]) if isinstance(cache,dict) else []
+    if isinstance(data,list) and time.time()-cached_at<TRUMP_TRANSACTION_CACHE_DAYS*86400: return data
+    rows=[]
+    for url in TRUMP_OGE_TRANSACTION_URLS:
+        try:
+            r=requests.get(url,timeout=TRUMP_PDF_TIMEOUT,headers={'User-Agent':'stock-alert/2.14.28'}); r.raise_for_status()
+            if not r.content.startswith(b'%PDF'): raise RuntimeError('回應不是 PDF')
+            rows=_trump_extract_transactions_from_pdf(r.content)
+            if rows: break
+        except Exception as e: print(f'Trump 278-T來源失敗：{type(e).__name__}: {e}',flush=True)
+    if rows:
+        save_json(TRUMP_TRANSACTION_CACHE_FILE,{'_cached_at':time.time(),'source_url':TRUMP_OGE_TRANSACTION_URLS[0],'data':rows}); print(f'Trump 278-T：解析 {len(rows)} 筆交易',flush=True); return rows
+    return data if isinstance(data,list) else []
+
+def trump_market_factor():
+    """V2.14.28：台股用川普整體股票資金風向，不用個股交易。"""
+    global _TRUMP_MARKET_FACTOR_CACHE
+    if isinstance(_TRUMP_MARKET_FACTOR_CACHE, dict): return _TRUMP_MARKET_FACTOR_CACHE
+    tx=_load_trump_transactions(); now=datetime.now(TW_TZ).date(); nets={30:0.0,60:0.0,90:0.0}; buy_n=sell_n=0
+    for row in tx:
+        try: age=(now-datetime.fromisoformat(row.get('date','')).date()).days
+        except Exception: continue
+        if age<0 or age>90: continue
+        v=to_float(row.get('value_midpoint')) or 0; sign=1 if row.get('side')=='buy' else -1 if row.get('side')=='sell' else 0
+        if sign>0: buy_n+=1
+        elif sign<0: sell_n+=1
+        for w in nets:
+            if age<=w: nets[w]+=sign*v
+    signal=0
+    if nets[90]>0: signal+=5
+    elif nets[90]<0: signal-=5
+    if abs(nets[90])>=100_000_000: signal += 2 if nets[90]>0 else -2
+    elif abs(nets[90])>=25_000_000: signal += 1 if nets[90]>0 else -1
+    if nets[30]>0: signal+=1
+    elif nets[30]<0: signal-=1
+    factor=max(-8,min(8,int(signal)))
+    state='🟢 明顯增加股票曝險' if factor>=5 else '🟢 小幅增加股票曝險' if factor>=2 else '🔴 明顯降低股票曝險' if factor<=-5 else '🔴 小幅降低股票曝險' if factor<=-2 else '⚪ 中性／資料不足'
+    _TRUMP_MARKET_FACTOR_CACHE={'factor':factor,'state':state,'net30':nets[30],'net60':nets[60],'net90':nets[90],'buy_count':buy_n,'sell_count':sell_n,'transaction_count':len(tx)}
+    return _TRUMP_MARKET_FACTOR_CACHE
+
+def trump_stock_factor(symbol):
+    """V2.14.28：美股個股/ETF直接 Trump 交易訊號，最多±8。"""
+    global _TRUMP_STOCK_FACTOR_CACHE
+    sym=str(symbol or '').upper().replace('.US','')
+    if sym in _TRUMP_STOCK_FACTOR_CACHE: return _TRUMP_STOCK_FACTOR_CACHE[sym]
+    tx=_load_trump_transactions(); rows=[x for x in tx if str(x.get('ticker','')).upper()==sym]
+    portfolio,_=_load_trump_portfolio(); held=next((x for x in portfolio if str(x.get('ticker','')).upper()==sym),None)
+    if not rows and not held:
+        out={'factor':0,'state':'無直接公開持倉／交易資料','transactions':0}; _TRUMP_STOCK_FACTOR_CACHE[sym]=out; return out
+    now=datetime.now(TW_TZ).date(); net=0
+    for x in rows:
+        try: age=(now-datetime.fromisoformat(x.get('date','')).date()).days
+        except Exception: continue
+        if 0<=age<=180:
+            v=to_float(x.get('value_midpoint')) or 0; weight=1 if age<=30 else .7 if age<=90 else .4; net += v*weight if x.get('side')=='buy' else -v*weight
+    if net>100_000_000: factor=8
+    elif net>25_000_000: factor=5
+    elif net>5_000_000: factor=3
+    elif net>0: factor=1
+    elif net<-100_000_000: factor=-8
+    elif net<-25_000_000: factor=-5
+    elif net<-5_000_000: factor=-3
+    elif net<0: factor=-1
+    else: factor=1 if held else 0
+    out={'factor':factor,'state':'🟢 近期偏買進' if factor>0 else '🔴 近期偏賣出' if factor<0 else '⚪ 中性','transactions':len(rows),'held':bool(held)}
+    _TRUMP_STOCK_FACTOR_CACHE[sym]=out
+    return out
+
 def _load_trump_portfolio():
-    """V2.14.27：7 天快取；過期時更新 OGE 最新年度揭露。"""
+    """V2.14.28：7 天快取；過期時更新 OGE 最新年度揭露。"""
     cache = load_json(TRUMP_PORTFOLIO_CACHE_FILE)
     cached_at = float(cache.get('_cached_at', 0)) if isinstance(cache, dict) else 0
     data = cache.get('data', []) if isinstance(cache, dict) else []
@@ -11416,7 +11564,7 @@ def _load_trump_portfolio():
 
 
 def trump_portfolio_analysis():
-    """V2.14.27：LINE 查詢川普公開申報投資標的。"""
+    """V2.14.28：LINE 查詢川普公開申報投資標的。"""
     rows, report_date = _load_trump_portfolio()
     if not rows:
         return '❌ 目前無法取得川普最新公開財務揭露中的可辨識股票/ETF。'
@@ -11461,7 +11609,7 @@ def handle_event(e, u):
     if text.lower() in {'help', '說明', '功能', '股票'}:
         ok = reply_line(
             token,
-            '📈 股票投資價值 × 買點雙層分析 Bot V2.14.27\n\n'
+            '📈 股票投資價值 × 買點雙層分析 Bot V2.14.28\n\n'
             '輸入股票代號、股票名稱或 ETF 代號即可查詢。\n'
             '例如：2330、台積電、3711、日月光投控、0050、00878、QQQ、AAPL、NVDA、MSFT\n\n'
             '股票：基本面40 + 技術30 + 籌碼20 + 風險10。\n'
@@ -11481,7 +11629,7 @@ def handle_event(e, u):
         )
         return
 
-    # V2.14.27：人物投資組合查詢直接交給背景分析，不建立 1985 檔市場股票池。
+    # V2.14.28：人物投資組合查詢直接交給背景分析，不建立 1985 檔市場股票池。
     if _is_trump_portfolio_query(text):
         _line_industry_session_clear(target)
         result_id, result_url = _create_line_result(text, event_id)
@@ -12605,10 +12753,11 @@ def _notify_target_buy_point(name, symbol, state, u=None):
 
 
 def run_alerts():
-    # V2.14.27：Actions 順便維護川普公開投資組合快取；Render 查詢時可直接讀 GitHub，
+    # V2.14.28：Actions 順便維護川普公開投資組合快取；Render 查詢時可直接讀 GitHub，
     # 不需要在 LINE webhook 期間下載 900+ 頁 OGE PDF。
     try:
         _load_trump_portfolio()
+        _load_trump_transactions()
     except Exception as e:
         print(f'⚠️ Trump 公開投資組合快取更新失敗：{type(e).__name__}: {e}', flush=True)
 
@@ -12617,10 +12766,14 @@ def run_alerts():
     global INSTITUTIONAL_CACHE
     global MARGIN_CACHE
     global SUBINDUSTRY_CACHE
+    global _TRUMP_MARKET_FACTOR_CACHE
+    global _TRUMP_STOCK_FACTOR_CACHE
 
     RUN_CACHE = {}
     INSTITUTIONAL_CACHE = {}
     MARGIN_CACHE = {}
+    _TRUMP_MARKET_FACTOR_CACHE = None
+    _TRUMP_STOCK_FACTOR_CACHE = {}
 
     started = time.time()
 
