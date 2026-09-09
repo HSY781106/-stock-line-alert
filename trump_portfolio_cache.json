@@ -1,18 +1,9 @@
 {
-  "_version": 4,
-  "_cached_at": 1788925927.8112187,
+  "_version": 5,
+  "_cached_at": 1788927416.1638036,
   "report_date": "2025年度申報（2026-06-30認證）",
   "source_url": "https://oge.box.com/shared/static/zycb5i2ny8kssm51uzqm8ygyq2zkpkqq.pdf",
   "data": [
-    {
-      "row_no": 19,
-      "name": "U.S. BROKERAGE ACCOUNT MONEY MARKET ACCOUNT (CASH) #15",
-      "value_range": "$25,000,001 - $50,000,000",
-      "page": 158,
-      "ticker": "CASH",
-      "value_upper": 50000000.0,
-      "source": "US OGE Form 278e"
-    },
     {
       "row_no": 140,
       "name": "TESLA INC",
@@ -113,24 +104,6 @@
       "source": "US OGE Form 278e"
     },
     {
-      "row_no": 355,
-      "name": "WELLS FARGO & CO NEW",
-      "value_range": "$1,000,001 - $5,000,000",
-      "page": 77,
-      "ticker": "WFC",
-      "value_upper": 5000000.0,
-      "source": "US OGE Form 278e"
-    },
-    {
-      "row_no": 881,
-      "name": "VERIZON COMMUNICATIONS I",
-      "value_range": "$1,000,001 - $5,000,000",
-      "page": 101,
-      "ticker": "VZ",
-      "value_upper": 5000000.0,
-      "source": "US OGE Form 278e"
-    },
-    {
       "row_no": 675,
       "name": "VANGUARD TOTAL STOCK MARKET ETF Yes",
       "value_range": "$1,000,001 - $5,000,000",
@@ -149,15 +122,6 @@
       "source": "US OGE Form 278e"
     },
     {
-      "row_no": 997,
-      "name": "QUALCOMM INC 2.15%30 DUE 05/20/30",
-      "value_range": "$1,000,001 - $5,000,000",
-      "page": 103,
-      "ticker": "QCOM",
-      "value_upper": 5000000.0,
-      "source": "US OGE Form 278e"
-    },
-    {
       "row_no": 138,
       "name": "PALANTIR TECHNOLOGIES INC",
       "value_range": "$1,000,001 - $5,000,000",
@@ -167,38 +131,11 @@
       "source": "US OGE Form 278e"
     },
     {
-      "row_no": 366,
-      "name": "PROCTER & GAMBLE CO/THE",
-      "value_range": "$1,000,001 - $5,000,000",
-      "page": 77,
-      "ticker": "PG",
-      "value_upper": 5000000.0,
-      "source": "US OGE Form 278e"
-    },
-    {
       "row_no": 315,
       "name": "ORACLE CORP",
       "value_range": "$1,000,001 - $5,000,000",
       "page": 76,
       "ticker": "ORCL",
-      "value_upper": 5000000.0,
-      "source": "US OGE Form 278e"
-    },
-    {
-      "row_no": 5,
-      "name": "***NETFLIX INC REG S DUE 11/15/2029 5.375 REG INT ON 854000 BND REC 12/01/25 PAY 12/15/25",
-      "value_range": "$1,000,001 - $5,000,000",
-      "page": 7,
-      "ticker": "NFLX",
-      "value_upper": 5000000.0,
-      "source": "US OGE Form 278e"
-    },
-    {
-      "row_no": 345,
-      "name": "MORGAN STANLEY",
-      "value_range": "$1,000,001 - $5,000,000",
-      "page": 77,
-      "ticker": "MS",
       "value_upper": 5000000.0,
       "source": "US OGE Form 278e"
     },
@@ -221,47 +158,11 @@
       "source": "US OGE Form 278e"
     },
     {
-      "row_no": 370,
-      "name": "COCA-COLA CO",
-      "value_range": "$1,000,001 - $5,000,000",
-      "page": 77,
-      "ticker": "KO",
-      "value_upper": 5000000.0,
-      "source": "US OGE Form 278e"
-    },
-    {
-      "row_no": 372,
-      "name": "JPMORGAN CHASE & CO",
-      "value_range": "$1,000,001 - $5,000,000",
-      "page": 77,
-      "ticker": "JPM",
-      "value_upper": 5000000.0,
-      "source": "US OGE Form 278e"
-    },
-    {
-      "row_no": 376,
-      "name": "JOHNSON & JOHNSON",
-      "value_range": "$1,000,001 - $5,000,000",
-      "page": 77,
-      "ticker": "JNJ",
-      "value_upper": 5000000.0,
-      "source": "US OGE Form 278e"
-    },
-    {
       "row_no": 712,
       "name": "ISHARES CORE S&P 500 ETF Yes",
       "value_range": "$1,000,001 - $5,000,000",
       "page": 63,
       "ticker": "IVV",
-      "value_upper": 5000000.0,
-      "source": "US OGE Form 278e"
-    },
-    {
-      "row_no": 45,
-      "name": "INTEL CORP 3.75%27 DUE 08/05/27",
-      "value_range": "$1,000,001 - $5,000,000",
-      "page": 80,
-      "ticker": "INTC",
       "value_upper": 5000000.0,
       "source": "US OGE Form 278e"
     },
