@@ -1,15 +1,15 @@
 {
-  "_cached_at": 1788970856.9144204,
-  "_version": 1,
+  "_cached_at": 1788992428.1769423,
+  "_version": 3,
   "data": {
-    "updated_at": "2026-09-10T00:20:56.914474+08:00",
+    "updated_at": "2026-09-10T06:20:28.177098+08:00",
     "us": {},
     "taiwan": {
-      "usd_twd": 601.9,
-      "m2_yoy": 2.0,
+      "usd_twd": 31.505,
+      "m2_yoy": 7.42,
       "overnight": 0.824,
-      "discount_rate": 32.0,
-      "source": "https://www.cbc.gov.tw/tw/mp-1.html"
+      "discount_rate": 2.0,
+      "source": "https://www.cbc.gov.tw/app.asp?xdUrl=appKeyIndicators.asp"
     },
     "sources": {
       "cbc": "https://www.cbc.gov.tw/tw/mp-1.html"
@@ -21,6 +21,7 @@
       "FRED UNRATE: ReadTimeout: HTTPSConnectionPool(host='fred.stlouisfed.org', port=443): Read timed out. (read timeout=10)",
       "FRED DGS10: ReadTimeout: HTTPSConnectionPool(host='fred.stlouisfed.org', port=443): Read timed out. (read timeout=10)",
       "FRED T10Y2Y: ReadTimeout: HTTPSConnectionPool(host='fred.stlouisfed.org', port=443): Read timed out. (read timeout=10)",
+      "FRED VIXCLS: ReadTimeout: HTTPSConnectionPool(host='fred.stlouisfed.org', port=443): Read timed out. (read timeout=10)",
       "DGBAS: TooManyRedirects: Exceeded 30 redirects."
     ]
   }
