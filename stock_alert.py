@@ -10701,7 +10701,11 @@ def _line_extract_analysis_scores(text):
     if not m1:
         m1 = re.search(r'綜合評分：\s*(\d+)', s)
     m2 = re.search(r'買點評分：\s*(\d+)', s)
+    if not m2:
+        m2 = re.search(r'第二層｜買點\s*([0-9]+)\s*/\s*100', s)
     mv = re.search(r'目前買點：([^\n]+)', s)
+    if not mv:
+        mv = re.search(r'第二層｜買點\s*[0-9]+\s*/\s*100\s+([^\n]+)', s)
     return (
         int(m1.group(1)) if m1 else None,
         int(m2.group(1)) if m2 else None,
@@ -10832,7 +10836,7 @@ def _line_industry_fetch_parent_data(parent, u):
     return u, data
 
 
-def _line_industry_top3_analysis(subindustry, u):
+def _line_industry_top3_analysis(subindustry, u, html_links=False, parent=None):
     """V2.14.21：依目前市值取次產業 Top 3，再套用既有雙層分析。"""
     if not isinstance(u, dict) or not u:
         return f'❌ 目前無法取得市場股票資料，無法查詢「{subindustry}」。'
@@ -10843,6 +10847,9 @@ def _line_industry_top3_analysis(subindustry, u):
             continue
         c = clean_code(code)
         if not re.fullmatch(r'\d{4,6}[A-Z]?', c):
+            continue
+        # V2.14.43：次產業查詢必須同時符合所選大產業，避免舊快取/別名造成跨產業誤配。
+        if parent and canonical_industry(item.get('industry')) != canonical_industry(parent):
             continue
         subs = item.get('subindustries') or []
         if not isinstance(subs, list):
@@ -10878,7 +10885,7 @@ def _line_industry_top3_analysis(subindustry, u):
     lines = [f'🏆 {subindustry} 產業 Top 3', '', '📊 排名依目前市值由大到小', '']
     medals = ['🥇', '🥈', '🥉']
     for row, medal in zip(rows, medals):
-        lines.extend(['━━━━━━━━━━━━━━', f'{medal} {row["rank"]}. {row["code"]} {row["name"]}',
+        lines.extend(['━━━━━━━━━━━━━━', (f'{medal} {row["rank"]}. <a href="/stock?symbol={html.escape(str(row["code"]))}" target="_blank">{html.escape(str(row["code"]))} {html.escape(str(row["name"]))}</a>' if html_links else f'{medal} {row["rank"]}. {row["code"]} {row["name"]}'),
                       f'目前價格：{fmt(row["price"])}',
                       f'市值：{fmt(row["market_cap"])} 億元' if row['market_cap'] is not None else '市值：N/A',
                       f'第一層投資價值：{row["first_score"]}/100' if row['first_score'] is not None else '第一層投資價值：N/A',
@@ -10915,7 +10922,7 @@ def _line_industry_query_result(text, target, u):
         data = _line_industry_load_data()
         if data:
             query_u = attach_subindustries(query_u, data)
-        return 'result', _line_industry_top3_analysis(q['name'], query_u)
+        return 'result', _line_industry_top3_analysis(q['name'], query_u, parent=q.get('parent'))
     return None, None
 
 
@@ -12344,6 +12351,31 @@ def _trump_recent_news_fetch(symbol=''):
     _TRUMP_RECENT_NEWS_CACHE[key]={'cached_at':now_ts,'data':out}; return out
 
 
+def _trump_translate_title(title):
+    """V2.14.43：將 Trump 第二層新聞標題翻成繁中；翻譯失敗保留原文。"""
+    text = str(title or '').strip()
+    if not text or not re.search(r'[A-Za-z]', text):
+        return text
+    try:
+        cache = globals().setdefault('_TRUMP_TRANSLATION_CACHE', {})
+        key = text[:500]
+        if key in cache:
+            return cache[key]
+        url = 'https://translate.googleapis.com/translate_a/single'
+        params = {'client':'gtx','sl':'auto','tl':'zh-TW','dt':'t','q':text[:500]}
+        r = requests.get(url, params=params, timeout=6)
+        r.raise_for_status()
+        payload = r.json()
+        translated = ''.join(str(x[0]) for x in (payload[0] if isinstance(payload, list) and payload else []) if isinstance(x, list) and x)
+        translated = translated.strip() or text
+        cache[key] = translated
+        if len(cache) > 200:
+            cache.pop(next(iter(cache)))
+        return translated
+    except Exception:
+        return text
+
+
 def trump_recent_news_factor(symbol=''):
     """V2.14.42：第二層近期新聞/市場動向獨立訊號，不覆蓋第一層官方交易訊號。"""
     d=_trump_recent_news_fetch(symbol); score=int(d.get('score',0) or 0)
@@ -12641,7 +12673,7 @@ def run_webhook_server():
             '<div class="card"><h1>📈 Stock Alert</h1>'
             '<p>台股／美股即時分析、產業分析與川普公開申報風向。</p></div>'
             '<div class="card"><h2>快速入口</h2>'
-            '<div class="nav"><a href="/industry">🏭 產業分析</a><a href="/trump">🇺🇸 川普投資風向</a></div>'
+            '<div class="nav"><a href="/industry">🏭 產業分析</a><a href="/trump">🇺🇸 川普投資風向</a><a href="/macro">🌎 總經風險</a></div>'
             '</div>'
         )
         return _web_page('Stock Alert',body), 200
@@ -12688,7 +12720,7 @@ def run_webhook_server():
         return (
             '<!doctype html><html><head><meta charset="utf-8">'
             '<meta name="viewport" content="width=device-width,initial-scale=1">'
-            '<title>Stock Alert V2.14.42</title>'
+            '<title>Stock Alert V2.14.43</title>'
             '<style>body{margin:0;padding:20px;background:#f6f7f9;color:#222}'
             '.card{max-width:900px;margin:auto;background:#fff;border-radius:14px;padding:20px;box-shadow:0 2px 12px #0001}'
             'a{word-break:break-all}</style></head><body><div class="card">'
@@ -12740,14 +12772,29 @@ def run_webhook_server():
             )
             return _web_page('產業分析',body)
         try:
-            result=_line_industry_top3_analysis(sub,u)
+            result=_line_industry_top3_analysis(sub,u,html_links=True,parent=parent)
         except Exception as ex:
             result=f'❌ 分析失敗：{type(ex).__name__}: {ex}'
         body=(
-            f'<div class="card"><h1>📊 {html.escape(sub)}</h1><div class="muted">大產業：{html.escape(parent)}</div><pre>{html.escape(str(result))}</pre></div>'
+            f'<div class="card"><h1>📊 {html.escape(sub)}</h1><div class="muted">大產業：{html.escape(parent)}</div><div>{result}</div></div>'
             '<div class="nav"><a href="/industry">← 再查一次</a><a href="/trump">🇺🇸 川普</a></div>'
         )
         return _web_page('產業分析結果',body)
+
+    @app.get('/stock')
+    def direct_stock_page():
+        """V2.14.43：產業 Top3 可直接點擊代號/名稱開完整分析，不必先回 LINE。"""
+        symbol = str(request.args.get('symbol') or '').strip()
+        if not symbol:
+            return _web_page('個股分析', '<div class="card"><h1>📊 個股分析</h1><form method="get"><input name="symbol" placeholder="例如 2330、3711、NVDA、QQQ" required><button type="submit">查詢完整分析</button></form></div>')
+        try:
+            query_u = build_line_query_universe(symbol)
+            result = analysis(symbol, query_u, backfill=False, line_light=True, force_technical_refresh=True)
+            body = (f'<div class="card"><pre>{html.escape(str(result))}</pre></div>'
+                    '<div class="nav"><a href="/industry">🏭 產業</a><a href="/macro">🌎 總經</a><a href="/trump">🇺🇸 Trump</a><a href="/">首頁</a></div>')
+            return _web_page(f'{symbol} 完整分析', body)
+        except Exception as ex:
+            return _web_page('個股分析失敗', f'<div class="card"><h1>❌ 分析失敗</h1><pre>{html.escape(type(ex).__name__ + ": " + str(ex))}</pre></div><div class="nav"><a href="/industry">← 產業分析</a></div>'), 500
 
     @app.get('/macro')
     def macro_page():
@@ -12791,7 +12838,7 @@ def run_webhook_server():
         rows.append(f'<p class="muted">符合條件：{int(news.get("qualified_items",0))} 篇；正面：{int(news.get("positive",0))}；負面：{int(news.get("negative",0))}；中性：{int(news.get("neutral",0))}<br>⚠️ 本層包含官方交易以外的政策／言論／政府投資；政策訊號不等於 Trump 個人持股。</p>')
         for ni in news.get('items',[])[:6]:
             icon='🟢' if ni.get('side')=='positive' else '🔴' if ni.get('side')=='negative' else '⚪'
-            rows.append(f'<p>{icon} {html.escape(str(ni.get("title","")))}<br><span class="muted">{html.escape(str(ni.get("published","")))}｜Google News RSS</span></p>')
+            rows.append(f'<p>{icon} {html.escape(_trump_translate_title(ni.get("title","")))}<br><span class="muted">{html.escape(str(ni.get("published","")))}｜Google News RSS</span></p>')
         if news.get('error'): rows.append(f'<p class="muted">⚠️ 第二層資料取得失敗：{html.escape(str(news.get("error")))}</p>')
         rows.append('</div>')
         rows.append('<div class="card"><h2>📋 公開申報股票／ETF</h2>')
@@ -14186,10 +14233,10 @@ def main():
 
     else:
 
-        print('========== V2.14.40 RUN START ==========', flush=True)
+        print('========== V2.14.43 RUN START ==========', flush=True)
         print(f'執行時間（台灣）：{datetime.now(TW_TZ).strftime("%Y-%m-%d %H:%M:%S")}', flush=True)
         run_alerts()
-        print('========== V2.14.40 RUN END ==========', flush=True)
+        print('========== V2.14.43 RUN END ==========', flush=True)
 
 
 if __name__ == '__main__':
