@@ -1,4 +1,4 @@
-# stock_alert.py V2.14.28
+# stock_alert.py V2.14.29
 # V2.14.08：V2.14.05 完整覆蓋版；保留重大消息面「多公司新聞隔離」邏輯，
 #             修正 LINE 15 分鐘區間通知遺失「加碼分析／建議」問題，並修正目前價格不得使用過期市場股票池價格。
 #             重大消息評分只使用新聞標題，RSS description/snippet/延伸內容完全不參與評分。
@@ -9596,9 +9596,12 @@ def etf_analysis(query):
         x=(price/nav-1)*100
         premium=x if -50<=x<=50 else None
     score,reasons,completeness=score_etf(tech,p)
+    trump=trump_stock_factor(symbol)
     if score is None:
         verdict='⚪ 資料不足，暫不評估'; score_text='資料不足'
     else:
+        # V2.14.29：美股/ETF個別標的可納入川普直接交易曝險；第二層買點模型不受影響。
+        score=max(0,min(100,int(score)+int(trump.get('factor',0))))
         verdict='🟢 可分批配置' if score>=75 else '🟡 等待回檔/止跌' if score>=60 else '🟠 暫緩配置' if score>=40 else '🔴 不建議配置'
         score_text=f'{score}/100'
 
@@ -9619,7 +9622,7 @@ def etf_analysis(query):
             f'【第一層｜ETF投資價值】\nETF特性：40分\nNAV：{fmt(nav)}\n溢價/折價：{fmt(premium)}%\n殖利率：{fmt(p.get("yield"))}%\nBeta：{fmt(p.get("beta"))}\n資產規模：{fmt(p.get("assets"),0)}\n\n'
             f'技術面：60分\n價格：{fmt(price)}\nRSI：{fmt(tech.get("rsi"))}\nKD：K={fmt(tech.get("k"))} / D={fmt(tech.get("d"))}\nMA20：{fmt(tech.get("ma20"))}\nMA60：{fmt(tech.get("ma60"))}\n趨勢：{tech.get("trend") or "N/A"}\n'
             f'技術資料完整度：{tech_ok}/5（{tech_pct}%）\n評分資料完整度：{completeness:.0f}%\n\n'
-            f'ETF綜合評分：{score_text}\n配置結論：{verdict}\n加分因素：{"、".join(reasons) if reasons else "無"}\n\n'
+            f'ETF綜合評分：{score_text}\n配置結論：{verdict}\n加分因素：{"、".join(reasons) if reasons else "無"}\nTrump直接曝險：{trump.get("factor",0):+d}｜{trump.get("state","無資料")}\n\n'
             f'【第二層｜🎯 買點評估】\n買點評分：{buy["score"]}/100\n目前買點：{buy["verdict"]}\n短中期趨勢：{buy["trend_state"]}\n5日報酬：{fmt((buy.get("ret5") or 0)*100)}%｜10日：{fmt((buy.get("ret10") or 0)*100)}%｜20日：{fmt((buy.get("ret20") or 0)*100)}%\n第一觀察買點：{z1}\n第二觀察買點：{z2}\n進場策略：{buy["entry"]}\n跌破參考：{inv}\n止跌確認：{confirms}\n風險：{risks}')
 
 
@@ -11703,7 +11706,7 @@ def run_webhook_server():
     app = Flask(__name__)
 
     print('================================')
-    print('LINE Webhook Server V2.10.28')
+    print('LINE Webhook Server V2.14.29')
     print('模式：LINE A 方案｜Reply 結果頁網址 + 背景分析 + Render 完整結果頁｜查詢不 Push')
     print('================================')
 
@@ -11722,7 +11725,7 @@ def run_webhook_server():
 
     @app.get('/')
     def health():
-        return 'stock_alert V2.10.37 OK', 200
+        return 'stock_alert V2.14.29 OK', 200
 
     @app.get('/health')
     def health2():
@@ -11766,13 +11769,104 @@ def run_webhook_server():
         return (
             '<!doctype html><html><head><meta charset="utf-8">'
             '<meta name="viewport" content="width=device-width,initial-scale=1">'
-            '<title>Stock Alert V2.14.05</title>'
+            '<title>Stock Alert V2.14.29</title>'
             '<style>body{margin:0;padding:20px;background:#f6f7f9;color:#222}'
             '.card{max-width:900px;margin:auto;background:#fff;border-radius:14px;padding:20px;box-shadow:0 2px 12px #0001}'
             'a{word-break:break-all}</style></head><body><div class="card">'
             + body +
             '</div></body></html>', 200
         )
+
+    def _web_page(title, body):
+        return (
+            '<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8">'
+            '<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">'
+            f'<title>{html.escape(title)}</title>'
+            '<style>body{margin:0;background:#f3f5f7;color:#1f2937;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}'
+            '.wrap{max-width:760px;margin:0 auto;padding:18px}.card{background:#fff;border-radius:16px;padding:18px;margin:12px 0;box-shadow:0 2px 14px #00000012}'
+            'h1{font-size:24px;margin:4px 0 14px}h2{font-size:18px;margin:0 0 12px}p{line-height:1.6}'
+            'select,input,button{width:100%;box-sizing:border-box;font-size:16px;padding:12px;border:1px solid #d1d5db;border-radius:10px;margin:6px 0 12px;background:#fff}'
+            'button{background:#111827;color:#fff;border:0;font-weight:700}.muted{color:#6b7280;font-size:13px}'
+            'pre{white-space:pre-wrap;line-height:1.55;font-family:inherit}.nav{display:flex;gap:8px}.nav a{flex:1;text-align:center;padding:10px;border-radius:10px;background:#eef2ff;color:#111827;text-decoration:none}'
+            '</style></head><body><div class="wrap">' + body + '</div></body></html>'
+        )
+
+    @app.get('/industry')
+    def industry_page():
+        parent = str(request.args.get('parent') or '').strip()
+        sub = str(request.args.get('sub') or '').strip()
+        if not parent:
+            options = _line_industry_parent_options()
+            opts=''.join(f'<option value="{html.escape(x)}">{html.escape(x)}</option>' for x in options)
+            body=(
+                '<div class="card"><h1>📊 產業分析</h1><p class="muted">選擇大產業 → 次產業，系統依目前資料找出次產業市值 Top 3 並分析。</p>'
+                '<form method="get"><label>① 選擇大產業</label><select name="parent">'+opts+'</select><button type="submit">下一步：選擇次產業</button></form></div>'
+                '<div class="nav"><a href="/trump">🇺🇸 川普風向</a><a href="/">首頁</a></div>'
+            )
+            return _web_page('產業分析',body)
+        try:
+            u=build_line_query_universe(parent)
+            options=_line_industry_build_subindustry_menu(parent,u)
+        except Exception as ex:
+            return _web_page('產業分析',f'<div class="card"><h1>❌ 產業資料取得失敗</h1><pre>{html.escape(str(ex))}</pre></div>'),500
+        if not options:
+            return _web_page('產業分析',f'<div class="card"><h1>❌ {html.escape(parent)}</h1><p>目前沒有可用的官方細產業資料。</p><a href="/industry">← 重新選擇</a></div>'),200
+        if not sub:
+            opts=''.join(f'<option value="{html.escape(x)}">{html.escape(x)}</option>' for x in options)
+            body=(
+                f'<div class="card"><h1>📊 {html.escape(parent)}</h1><p class="muted">請選擇次產業。</p>'
+                '<form method="get"><input type="hidden" name="parent" value="'+html.escape(parent)+'">'
+                '<label>② 選擇次產業</label><select name="sub">'+opts+'</select><button type="submit">🔍 開始分析</button></form></div>'
+                '<div class="nav"><a href="/industry">← 重新選大產業</a><a href="/trump">🇺🇸 川普</a></div>'
+            )
+            return _web_page('產業分析',body)
+        try:
+            result=_line_industry_top3_analysis(sub,u)
+        except Exception as ex:
+            result=f'❌ 分析失敗：{type(ex).__name__}: {ex}'
+        body=(
+            f'<div class="card"><h1>📊 {html.escape(sub)}</h1><div class="muted">大產業：{html.escape(parent)}</div><pre>{html.escape(str(result))}</pre></div>'
+            '<div class="nav"><a href="/industry">← 再查一次</a><a href="/trump">🇺🇸 川普</a></div>'
+        )
+        return _web_page('產業分析結果',body)
+
+    @app.get('/trump')
+    def trump_page():
+        try:
+            factor=trump_market_factor()
+            portfolio,report_date=_load_trump_portfolio()
+        except Exception as ex:
+            factor={'factor':0,'state':'⚪ 資料不足'}; portfolio=[]; report_date='資料取得失敗'; err=str(ex)
+        else:
+            err=''
+        rows=[]
+        rows.append(f'<div class="card"><h1>🇺🇸 川普投資風向</h1><p><b>{html.escape(factor.get("state","⚪ 資料不足"))}</b>　全球股票風向調整：<b>{int(factor.get("factor",0)):+d}</b></p>')
+        rows.append(f'<p>近30日淨買賣：{factor.get("net30",0):,.0f}<br>近60日：{factor.get("net60",0):,.0f}<br>近90日：{factor.get("net90",0):,.0f}</p>')
+        rows.append(f'<p class="muted">交易筆數：{factor.get("transaction_count",0)}；買進：{factor.get("buy_count",0)}；賣出：{factor.get("sell_count",0)}</p></div>')
+        rows.append('<div class="card"><h2>📋 公開申報股票／ETF</h2>')
+        rows.append(f'<p class="muted">資料：{html.escape(str(report_date))}。OGE 價值為申報區間，不代表即時市值。</p>')
+        if portfolio:
+            for r in portfolio:
+                rows.append(f'<p><b>{html.escape(str(r.get("ticker","N/A")))}</b>｜{html.escape(str(r.get("name","未辨識")))[:80]}<br>申報價值：{html.escape(str(r.get("value_range","未辨識")))}</p>')
+        else: rows.append('<p>目前沒有可辨識的股票／ETF資料。</p>')
+        rows.append('</div>')
+        if err: rows.append(f'<div class="card"><p>⚠️ {html.escape(err)}</p></div>')
+        rows.append('<div class="card"><h2>🔎 查詢美股／ETF的川普直接曝險</h2><form method="get" action="/trump-stock"><input name="symbol" placeholder="例如 DELL、NVDA、QQQ、SPY" required><button type="submit">查詢個別標的</button></form></div>')
+        rows.append('<div class="nav"><a href="/industry">🏭 產業分析</a><a href="/">首頁</a></div>')
+        return _web_page('川普投資風向', ''.join(rows))
+
+    @app.get('/trump-stock')
+    def trump_stock_page():
+        symbol=str(request.args.get('symbol') or '').strip().upper()
+        if not symbol:
+            return _web_page('川普個股', '<div class="card"><h1>🇺🇸 川普個別標的</h1><form method="get"><input name="symbol" placeholder="DELL / NVDA / QQQ" required><button>查詢</button></form></div>')
+        factor=trump_stock_factor(symbol)
+        body=(f'<div class="card"><h1>🇺🇸 {html.escape(symbol)}｜川普直接曝險</h1>'
+              f'<p><b>{html.escape(str(factor.get("state","無資料")))}</b>　調整：<b>{int(factor.get("factor",0)):+d}</b></p>'
+              f'<p>近180日可辨識直接交易：{int(factor.get("transactions",0))} 筆<br>公開持倉：{"有" if factor.get("held") else "無／未辨識"}</p>'
+              '<p class="muted">這是公開申報資料訊號，不代表即時交易，也不代表投資建議。</p></div>'
+              '<div class="nav"><a href="/trump">← 川普總覽</a><a href="/industry">🏭 產業分析</a></div>')
+        return _web_page('川普個別標的',body)
 
     @app.post('/callback')
     def cb():
