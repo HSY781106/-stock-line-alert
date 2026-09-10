@@ -11,17 +11,17 @@
       "weekly_alert": false
     },
     "3711 日月光投控": {
-      "date": "2026-09-10",
+      "date": "2026-09-11",
       "daily_alert": false,
       "weekly_alert": false
     },
     "QQQ": {
-      "date": "2026-09-10",
+      "date": "2026-09-11",
       "daily_alert": false,
       "weekly_alert": false
     },
     "台灣加權指數": {
-      "date": "2026-09-10",
+      "date": "2026-09-11",
       "daily_alert": false,
       "weekly_alert": false
     }
@@ -52,9 +52,9 @@
       "session_key": "2026-09-10"
     },
     "QQQ": {
-      "last_check": "2026-09-10T23:51:28.512199+08:00",
-      "last_price": 710.7550048828125,
-      "last_interval_low": 710.6099853515625,
+      "last_check": "2026-09-11T00:00:36.550993+08:00",
+      "last_price": 710.5850219726562,
+      "last_interval_low": 709.9199829101562,
       "last_interval_source": "Yahoo-5m",
       "interval_alert": false,
       "session_key": "2026-09-10"
@@ -80,13 +80,13 @@
       "notified_score": 87
     },
     "2330 台積電": {
-      "date": "2026-09-10",
+      "date": "2026-09-11",
       "locked": true,
       "notified_at": "2026-09-07 11:59:22",
       "notified_score": 92
     },
     "QQQ": {
-      "date": "2026-09-10",
+      "date": "2026-09-11",
       "locked": true,
       "notified_at": "2026-09-07 11:59:25",
       "notified_score": 86
