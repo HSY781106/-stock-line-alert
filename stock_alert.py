@@ -1,4 +1,7 @@
-# stock_alert.py V2.15.5
+# stock_alert.py V2.15.6
+# V2.15.6：外部產業網頁正確性＋效能修正版：官方價值鏈候選池改為資料驅動，不再只依賴同大產業 Top120；
+#             個股對應產業 Top3 與指定次產業 Top3 共用官方次產業候選邏輯；修正市值顯示單位 1000 倍錯誤；
+#             加入短期 Web 產業分析快取，降低重複查詢延遲；保留既有分析模型與 LINE 流程。
 # V2.15.5：外部產業網頁修正版：官方價值鏈 parent 與 TWSE 大產業名稱採語意對應；
 #             /industry 新增台股代碼／公司名稱直接查詢對應官方次產業 Top 3；不改 LINE 產業聊天室流程。
 # V2.14.08：V2.14.05 完整覆蓋版；保留重大消息面「多公司新聞隔離」邏輯，
@@ -404,6 +407,11 @@ LINE_INDUSTRY_SESSION_LOCK = threading.Lock()
 LINE_INDUSTRY_SESSIONS = {}
 LINE_INDUSTRY_SESSION_TTL = 10 * 60
 
+# V2.15.6：Render 產業頁短期分析快取。只快取已完成的 Top3 detail，避免使用者
+# 反覆切換同一產業／個股時重新觸發 3 次完整技術刷新；TTL 到期仍會重新取得最新資料。
+WEB_INDUSTRY_ANALYSIS_CACHE = {}
+WEB_INDUSTRY_ANALYSIS_CACHE_TTL = 5 * 60
+WEB_INDUSTRY_ANALYSIS_CACHE_LOCK = threading.Lock()
 
 
 # ============================================================
@@ -10712,17 +10720,14 @@ def _line_industry_resolve_from_session(text, target):
 
 
 def _line_industry_market_cap_100m(value):
-    v = to_float(value)
-    return None if v is None else v / 100000.0
+    """V2.15.6：將市場股票池 market_cap（新台幣元）轉成「億元」。
 
-
-def _line_industry_market_cap_100m(value):
-    """市場股票池的 market_cap 口徑轉成新台幣億元。"""
+    build_universe() 的 TWSE market_cap 是以資本額（元）與收盤價推導出的
+    新台幣元；TPEx 官方市值資料亦以元為主要口徑。1 億元 = 100,000,000 元。
+    舊版誤除以 100,000，導致 1101 台泥顯示約 1,911,487 億元，放大 1000 倍。
+    """
     v = to_float(value)
-    if v is None:
-        return None
-    # TWSE/TPEx universe 的 market_cap 為千元新台幣口徑；100,000 千元 = 1 億元。
-    return v / 100000.0
+    return None if v is None else v / 100000000.0
 
 
 def _line_extract_analysis_scores(text):
@@ -10856,45 +10861,135 @@ def _line_industry_build_subindustry_menu(parent, u):
     return sorted(set(options),key=lambda x:(_line_industry_norm(x),x))
 
 def _line_industry_fetch_parent_data(parent, u):
-    """V2.14.21：背景工作才補抓指定大產業，避免 webhook/LINE Reply 被外部 API 卡住。"""
+    """V2.15.6：只在官方次產業資料不足時補抓同大產業候選。
+
+    舊版固定只處理市值 Top120，容易讓官方資料完整性被「市值排名」綁死。
+    新版先讀既有官方快取；真的不足時才以市值較高者優先補抓，並把結果寫回
+    同一份 subindustry cache。這個函式不負責分析 Top3，因此不會重複跑分析模型。
+    """
     parent_c = canonical_industry(parent)
     if not isinstance(u, dict) or not u or not parent_c:
         return u, {}
     data = _line_industry_load_data()
-    codes = []
-    for code, item in u.items():
+    if not isinstance(data, dict):
+        data = {}
+
+    # 先把目前快取資料掛回市場池；若候選已完整，不發任何官方網路請求。
+    if data:
+        attach_subindustries(u, data)
+
+    # 只找尚未有官方次產業資料的同大產業股票。
+    missing = []
+    for c, item in u.items():
         if not isinstance(item, dict):
             continue
         if canonical_industry(item.get('industry')) != parent_c:
             continue
-        c = clean_code(code)
-        if c.isdigit():
-            codes.append(c)
-    # 依市值先處理較大的公司；取 120 檔，避免一次掃全市場。
-    ranked = []
-    for c in codes:
-        item = u.get(c, {})
-        cap = to_float(item.get('market_cap')) if isinstance(item, dict) else None
-        ranked.append((cap or 0, c))
-    ranked.sort(reverse=True)
-    codes = [c for _, c in ranked[:120]]
-    missing = []
-    for c in codes:
-        info = data.get(c, {}) if isinstance(data, dict) else {}
+        cc = clean_code(c)
+        if not re.fullmatch(r'\d{4,6}[A-Z]?', cc):
+            continue
+        info = data.get(cc, {}) if isinstance(data, dict) else {}
         subs = info.get('subindustries', []) if isinstance(info, dict) else []
         if not any(normalize_subindustry(x) for x in (subs if isinstance(subs, list) else [subs])):
-            missing.append(c)
-    if missing:
-        print(f'V2.14.21 LINE產業：{parent_c} 快取缺少 {len(missing)} 檔，背景補抓', flush=True)
+            missing.append(item)
+
+    # V2.15.6：保留效能上限，但由 120 提高至 200；且只有缺資料才會觸發。
+    # 已有官方資料不會因排名被重新抓取。
+    missing.sort(key=lambda x: to_float(x.get('market_cap')) or 0, reverse=True)
+    targets = [clean_code(x.get('code')) for x in missing[:200]]
+    if targets:
+        print(f'V2.15.6 產業官方資料補抓：{parent_c} 缺少 {len(missing)} 檔，實際補抓 {len(targets)} 檔', flush=True)
         try:
-            fetched = _fetch_missing_value_chains(missing)
-            if isinstance(fetched, dict):
+            fetched = _fetch_missing_value_chains(targets)
+            if isinstance(fetched, dict) and fetched:
                 data.update(fetched)
+                attach_subindustries(u, data)
         except Exception as e:
-            print(f'V2.14.21 LINE產業背景補抓失敗：{type(e).__name__}: {e}', flush=True)
-    if data:
-        attach_subindustries(u, data)
+            print(f'V2.15.6 產業官方資料補抓失敗：{type(e).__name__}: {e}', flush=True)
     return u, data
+
+
+def _line_industry_official_candidates(subindustries, parent, u, data):
+    """V2.15.6：依官方價值鏈 records/subindustries 建立候選代號。
+
+    不以「目前是否已掛到 u 的 subindustries」作唯一判斷；直接讀官方 records，
+    因此不會因舊版 Top120 快取策略漏掉合法候選。若官方資料尚未涵蓋某檔，
+    u 內已有的官方掛載資料仍可作備援。
+    """
+    target = {_line_industry_norm(x) for x in (subindustries or []) if normalize_subindustry(x)}
+    parent_c = canonical_industry(parent) if parent else ''
+    if not target or not isinstance(u, dict):
+        return []
+    hits = {}
+
+    if isinstance(data, dict):
+        for code, info in data.items():
+            if not isinstance(info, dict):
+                continue
+            cc = clean_code(code)
+            if not re.fullmatch(r'\d{4,6}[A-Z]?', cc):
+                continue
+            stock = u.get(cc) or {}
+            if parent_c and canonical_industry(stock.get('industry') or '') != parent_c:
+                continue
+            matched = False
+            records = info.get('records', [])
+            if not isinstance(records, list):
+                records = []
+            for rec in records:
+                if not isinstance(rec, dict):
+                    continue
+                rp = rec.get('industry') or rec.get('main_industry') or ''
+                if parent_c and not _line_industry_value_chain_parent_match(rp, parent_c):
+                    continue
+                sub = normalize_subindustry(rec.get('sub_industry') or rec.get('subindustry') or rec.get('node') or '')
+                if _line_industry_norm(sub) in target:
+                    matched = True
+                    break
+            if not matched:
+                subs = info.get('subindustries', [])
+                subs = subs if isinstance(subs, list) else [subs]
+                if any(_line_industry_norm(x) in target for x in subs if normalize_subindustry(x)):
+                    # 舊快取若沒有 records，改以市場池的正式大產業確認 parent。
+                    matched = not parent_c or canonical_industry(stock.get('industry') or info.get('industry') or '') == parent_c
+            if matched and to_float(stock.get('market_cap')) is not None:
+                hits[cc] = stock
+
+    # 備援：u 已經有官方 subindustries 的股票也納入。
+    for cc, stock in u.items():
+        if not isinstance(stock, dict):
+            continue
+        c = clean_code(cc)
+        if c in hits or (parent_c and canonical_industry(stock.get('industry') or '') != parent_c):
+            continue
+        subs = stock.get('subindustries') or []
+        subs = subs if isinstance(subs, list) else [subs]
+        if any(_line_industry_norm(x) in target for x in subs if normalize_subindustry(x)):
+            cap = to_float(stock.get('market_cap'))
+            if cap is not None and cap > 0:
+                hits[c] = stock
+
+    out = [(to_float(stock.get('market_cap')) or 0, c, stock) for c, stock in hits.items()]
+    out.sort(key=lambda x: (-x[0], x[1]))
+    return out
+
+
+def _line_industry_analysis_cached(code, name, u):
+    """V2.15.6：產業頁 5 分鐘分析快取。"""
+    key = clean_code(code)
+    now = time.time()
+    with WEB_INDUSTRY_ANALYSIS_CACHE_LOCK:
+        cached = WEB_INDUSTRY_ANALYSIS_CACHE.get(key)
+        if isinstance(cached, dict) and now - float(cached.get('ts', 0)) < WEB_INDUSTRY_ANALYSIS_CACHE_TTL:
+            return cached.get('detail', ''), True
+    detail = analysis(f'{key} {name}', u, backfill=False, line_light=True, force_technical_refresh=True)
+    with WEB_INDUSTRY_ANALYSIS_CACHE_LOCK:
+        WEB_INDUSTRY_ANALYSIS_CACHE[key] = {'ts': now, 'detail': detail}
+        if len(WEB_INDUSTRY_ANALYSIS_CACHE) > 100:
+            old = sorted(WEB_INDUSTRY_ANALYSIS_CACHE.items(), key=lambda kv: kv[1].get('ts', 0))[:20]
+            for k, _ in old:
+                WEB_INDUSTRY_ANALYSIS_CACHE.pop(k, None)
+    return detail, False
 
 
 def _line_industry_top3_analysis(subindustry, u, html_links=False, parent=None):
@@ -10905,26 +11000,12 @@ def _line_industry_top3_analysis(subindustry, u, html_links=False, parent=None):
     if forced_parent:
         parent = forced_parent
     target_subs = _line_industry_match_names(subindustry)
-    candidates = []
-    for code, item in u.items():
-        if not isinstance(item, dict):
-            continue
-        c = clean_code(code)
-        if not re.fullmatch(r'\d{4,6}[A-Z]?', c):
-            continue
-        # V2.14.43：次產業查詢必須同時符合所選大產業，避免舊快取/別名造成跨產業誤配。
-        if parent and canonical_industry(item.get('industry')) != canonical_industry(parent):
-            continue
-        subs = item.get('subindustries') or []
-        if not isinstance(subs, list):
-            subs = [subs]
-        normalized = {_line_industry_norm(x) for x in subs if normalize_subindustry(x)}
-        if not (normalized & target_subs):
-            continue
-        cap = to_float(item.get('market_cap'))
-        if cap is not None and cap > 0:
-            candidates.append((cap, c, item))
-    candidates.sort(key=lambda x: (-x[0], x[1]))
+    data = _line_industry_load_data()
+    candidates = _line_industry_official_candidates(target_subs, parent, u, data)
+    # 快取不足時才補抓同大產業，避免每次進頁都先打大量官方 API。
+    if len(candidates) < 3 and parent:
+        u, data = _line_industry_fetch_parent_data(parent, u)
+        candidates = _line_industry_official_candidates(target_subs, parent, u, data)
     top = candidates[:3]
     if not top:
         return f'❌ 找不到「{subindustry}」的股票資料。\n\n可能是官方次產業快取尚未涵蓋，或該細產業目前沒有符合條件的上市櫃股票。'
@@ -13117,14 +13198,8 @@ def _web_direct_industry_stock_result(query, u):
             except Exception as ex:
                 print(f'V2.15.5 外部產業直接查詢補抓失敗 {code}: {type(ex).__name__}: {ex}', flush=True)
 
-        # 目標股取得官方節點後，再補齊同大產業的主要市值股票，避免
-        # 直接查詢因只抓到目標股而把 Top3 錯誤變成只有 1 檔。
-        try:
-            u, parent_data = _line_industry_fetch_parent_data(parent, u)
-            if isinstance(parent_data, dict) and parent_data:
-                data.update(parent_data)
-        except Exception as ex:
-            print(f'V2.15.5 外部產業直接查詢同業資料補抓失敗 {parent}: {type(ex).__name__}: {ex}', flush=True)
+        # V2.15.6：不先無條件掃 parent Top120。先以官方 records 建立候選，
+        # 只有不足 3 檔時才補抓同大產業資料。
 
         # 快取已有資料時，仍重新掛回 u，確保後續 Top3 能看到官方節點。
         if isinstance(data, dict) and data:
@@ -13143,24 +13218,15 @@ def _web_direct_industry_stock_result(query, u):
 
         # Top3 是「官方次產業聯集」，不是把多個節點任意選一個。
         target_subs = {_line_industry_norm(x) for x in subs}
-        candidates = []
-        for c, stock in u.items():
-            if not isinstance(stock, dict):
-                continue
-            cc = clean_code(c)
-            if not re.fullmatch(r'\d{4,6}[A-Z]?', cc):
-                continue
-            if canonical_industry(stock.get('industry') or '') != parent:
-                continue
-            stock_subs = stock.get('subindustries') or []
-            stock_subs = stock_subs if isinstance(stock_subs, list) else [stock_subs]
-            normalized = {_line_industry_norm(x) for x in stock_subs if normalize_subindustry(x)}
-            if not (normalized & target_subs):
-                continue
-            cap = to_float(stock.get('market_cap'))
-            if cap is not None and cap > 0:
-                candidates.append((cap, cc, stock))
-        candidates.sort(key=lambda x: (-x[0], x[1]))
+        candidates = _line_industry_official_candidates(target_subs, parent, u, data)
+        if len(candidates) < 3:
+            try:
+                u, parent_data = _line_industry_fetch_parent_data(parent, u)
+                if isinstance(parent_data, dict) and parent_data:
+                    data.update(parent_data)
+            except Exception as ex:
+                print(f'V2.15.6 外部產業直接查詢官方候選補抓失敗 {parent}: {type(ex).__name__}: {ex}', flush=True)
+            candidates = _line_industry_official_candidates(target_subs, parent, u, data)
         top = candidates[:3]
         if not top:
             return f'❌ 找不到「{code} {item.get("name") or ""}」所屬官方次產業的股票資料。'
@@ -13172,7 +13238,7 @@ def _web_direct_industry_stock_result(query, u):
             first_score=buy_score=None
             buy_verdict='N/A'
             try:
-                detail=analysis(f'{cc} {name}',u,backfill=False,line_light=True,force_technical_refresh=True)
+                detail,_cache_hit=_line_industry_analysis_cached(cc,name,u)
                 first_score,buy_score,buy_verdict=_line_extract_analysis_scores(detail)
                 pm=re.search(r'目前價格：\s*([0-9,]+(?:\.\d+)?)',detail)
                 if pm:
@@ -13212,7 +13278,7 @@ def run_webhook_server():
     app = Flask(__name__)
 
     print('================================')
-    print('LINE Webhook Server V2.15.5')
+    print('LINE Webhook Server V2.15.6')
     print('模式：LINE A 方案｜Reply 結果頁網址 + 背景分析 + Render 完整結果頁｜查詢不 Push')
     print('================================')
 
@@ -13282,7 +13348,7 @@ def run_webhook_server():
         return (
             '<!doctype html><html><head><meta charset="utf-8">'
             '<meta name="viewport" content="width=device-width,initial-scale=1">'
-            '<title>Stock Alert V2.15.5</title>'
+            '<title>Stock Alert V2.15.6</title>'
             '<style>body{margin:0;padding:20px;background:#f6f7f9;color:#222}'
             '.card{max-width:900px;margin:auto;background:#fff;border-radius:14px;padding:20px;box-shadow:0 2px 12px #0001}'
             'a{word-break:break-all}</style></head><body><div class="card">'
@@ -14903,10 +14969,10 @@ def main():
 
     else:
 
-        print('========== V2.15.5 RUN START ==========', flush=True)
+        print('========== V2.15.6 RUN START ==========', flush=True)
         print(f'執行時間（台灣）：{datetime.now(TW_TZ).strftime("%Y-%m-%d %H:%M:%S")}', flush=True)
         run_alerts()
-        print('========== V2.15.5 RUN END ==========', flush=True)
+        print('========== V2.15.6 RUN END ==========', flush=True)
 
 
 if __name__ == '__main__':
