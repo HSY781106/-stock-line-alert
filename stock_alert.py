@@ -1,4 +1,4 @@
-# stock_alert.py V2.17.1
+# stock_alert.py V2.17.7
 # V2.17.1：AI 僅在「已達到 LINE 發送門檻」後啟用；其餘每15分鐘掃描完全不呼叫 AI。
 # V2.17.0 功能全部保留：Gemini Free 主力 + Mistral/Groq Free 備援、重大消息、Trump 語意、總經預測。
 # V2.15.6：外部產業網頁正確性＋效能修正版：官方價值鏈候選池改為資料驅動，不再只依賴同大產業 Top120；
@@ -231,6 +231,7 @@ AI_NEWS_CACHE_HOURS = float(os.getenv('AI_NEWS_CACHE_HOURS', '168') or 168)
 AI_MACRO_CACHE_HOURS = float(os.getenv('AI_MACRO_CACHE_HOURS', '6') or 6)
 AI_TRUMP_CACHE_HOURS = float(os.getenv('AI_TRUMP_CACHE_HOURS', '6') or 6)
 AI_WEB_ANALYSIS_ENABLED = os.getenv('AI_WEB_ANALYSIS_ENABLED', '1').strip().lower() not in ('0','false','no','off')
+AI_WEB_TIMEOUT = float(os.getenv('AI_WEB_TIMEOUT', '12') or 12)
 AI_QUOTA_STATE_FILE = 'ai_quota_state_v2175.json'
 AI_MAX_OUTPUT_TOKENS = int(os.getenv('AI_MAX_OUTPUT_TOKENS', '700') or 700)
 AI_RETRY_ON_FAILURE = os.getenv('AI_RETRY_ON_FAILURE', '0').strip().lower() in ('1','true','yes','on')
@@ -416,7 +417,7 @@ LINE_ANALYSIS_LOCK = threading.Lock()
 # 不再用 daemon=True 的裸 Thread，降低 Render request 結束後背景工作
 # 被直接終止的風險。Reply token 僅用於立即回覆結果頁網址，背景分析不再依賴 replyToken。
 # 完整結果寫入 Render /line-result/<id>，不使用 Push。
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import ThreadPoolExecutor, as_completed
 LINE_ANALYSIS_EXECUTOR = ThreadPoolExecutor(
     max_workers=1,
     thread_name_prefix='line-analysis'
@@ -1113,41 +1114,132 @@ def _ai_compact_payload(obj, max_chars=18000):
 
 
 def _ai_macro_summary(info):
-    """V2.17.6：把總經數據轉成真正的人話版投資判讀。以資料 fingerprint 做跨請求共用快取。"""
+    """V2.17.7：總經 Web AI。使用明確 JSON Schema，避免 Gemini 回傳不可解析文字。"""
     if not _ai_web_enabled('macro') or not isinstance(info,dict):
         return None
     data=info.get('data',{}) or {}
-    payload={'regime':info.get('regime',{}),'scenarios':info.get('scenarios',[]),
-             'implications':info.get('implications',[]),'forecasts':info.get('forecasts',{}),
-             'news':(info.get('news',{}) or {}).get('items',[])[:10],'data':data}
+    payload={
+        'regime':info.get('regime',{}),
+        'scenarios':info.get('scenarios',[]),
+        'implications':info.get('implications',[]),
+        'forecasts':info.get('forecasts',{}),
+        'news':(info.get('news',{}) or {}).get('items',[])[:10],
+        'data':data
+    }
     fp=hashlib.sha256(_ai_compact_payload(payload,40000).encode('utf-8')).hexdigest()[:24]
+    schema={
+        'type':'object',
+        'properties':{
+            'headline':{'type':'string'},
+            'regime':{'type':'string','enum':['偏多','中性','偏空','混合']},
+            'summary':{'type':'string'},
+            'key_drivers':{'type':'array','items':{'type':'string'},'maxItems':4},
+            'taiwan_tech':{'type':'string'},
+            'taiwan_financial':{'type':'string'},
+            'taiwan_domestic':{'type':'string'},
+            'us_equity':{'type':'string'},
+            'watch_items':{'type':'array','items':{'type':'string'},'maxItems':6},
+            'risk_flags':{'type':'array','items':{'type':'string'},'maxItems':6}
+        },
+        'required':['headline','regime','summary','key_drivers','taiwan_tech','taiwan_financial','taiwan_domestic','us_equity','watch_items','risk_flags'],
+        'additionalProperties':False
+    }
     prompt=(
-        '請根據提供的台美總經、金融市場、事件與統計預測資料，做保守的投資人版綜合判讀。\n'
-        '不要逐項重述數據，而要回答：目前總體環境偏多、偏空或混合？最重要的2到4個驅動因素是什麼？\n'
-        '對台股、台灣科技/半導體、金融、內需，以及美股/QQQ各自的主要影響？\n'
-        '未來1到3個月最需要觀察哪些變數、什麼情況會讓判斷轉向？\n'
-        '嚴格區分「資料已觀察到的事實」與「推論」，不要把統計預測寫成確定事件。\n'
-        '輸出 JSON：{"headline":"繁中一句話","regime":"偏多|中性|偏空|混合","summary":"80-180字","key_drivers":["..."],"taiwan_tech":"...","taiwan_financial":"...","taiwan_domestic":"...","us_equity":"...","watch_items":["..."],"risk_flags":["..."]}'
+        '請根據提供的台美總經、金融市場、事件與統計預測資料，做保守的投資人版綜合判讀。'
+        '不要逐項重述數據，而要回答：目前總體環境偏多、偏空或混合？最重要的2到4個驅動因素是什麼？'
+        '對台股、台灣科技/半導體、金融、內需，以及美股/QQQ各自的主要影響？'
+        '未來1到3個月最需要觀察哪些變數、什麼情況會讓判斷轉向？'
+        '嚴格區分資料已觀察到的事實與推論，不把統計預測寫成確定事件。'
     )
-    return _ai_call_json('你是保守的總經投資研究員。只做資料綜合與情境分析，不保證報酬。',prompt+'\n資料：'+_ai_compact_payload(payload),cache_key='macro_web:'+fp,ttl_hours=AI_MACRO_CACHE_HOURS)
-
+    print(f'V2.17.7 Web AI：開始總經分析｜cache=macro_web:{fp}',flush=True)
+    result=_ai_call_json(
+        '你是保守的總經投資研究員。只做資料綜合與情境分析，不保證報酬。',
+        prompt+'\n資料：'+_ai_compact_payload(payload),
+        cache_key='macro_web:'+fp,
+        ttl_hours=AI_MACRO_CACHE_HOURS,
+        response_schema=schema,
+        timeout=AI_WEB_TIMEOUT
+    )
+    print(f'V2.17.7 Web AI：總經分析{"成功" if isinstance(result,dict) else "失敗/無結果"}',flush=True)
+    return result
 
 def _ai_trump_summary(news, factor=None, portfolio=None):
-    """V2.17.6：把 Trump 政策／新聞／公開交易資料轉成政策→產業→市場的人話分析。"""
+    """V2.17.7：Trump Web AI。除總結外，產出代表性標的傳導，避免頁面只有通用框架。"""
     if not _ai_web_enabled('trump'):
         return None
-    payload={'market_factor':factor or {},'news':(news or {}).get('items',[])[:12],
-             'portfolio':(portfolio or [])[:40]}
-    fp=hashlib.sha256(_ai_compact_payload(payload,40000).encode('utf-8')).hexdigest()[:24]
+    portfolio=portfolio or []
+    # 一般總覽只分析少量代表性標的，避免把 1984 檔股票變成大量 AI request。
+    candidates=[
+        {'symbol':'0050','name':'元大台灣50','type':'ETF'},
+        {'symbol':'2330','name':'台積電','type':'TWSE'},
+        {'symbol':'3711','name':'日月光投控','type':'TWSE'},
+        {'symbol':'QQQ','name':'Invesco QQQ','type':'US ETF'}
+    ]
+    for r in portfolio[:12]:
+        if isinstance(r,dict):
+            t=str(r.get('ticker') or '').upper().strip()
+            n=str(r.get('name') or '').strip()
+            if t and not any(c['symbol']==t for c in candidates):
+                candidates.append({'symbol':t,'name':n[:80] or t,'type':'Trump申報標的'})
+    payload={
+        'market_factor':factor or {},
+        'news':(news or {}).get('items',[])[:12],
+        'portfolio':portfolio[:40],
+        'representative_candidates':candidates[:16]
+    }
+    fp=hashlib.sha256(_ai_compact_payload(payload,50000).encode('utf-8')).hexdigest()[:24]
+    schema={
+        'type':'object',
+        'properties':{
+            'headline':{'type':'string'},
+            'stance':{'type':'string','enum':['偏多','中性','偏空','混合']},
+            'summary':{'type':'string'},
+            'policy_drivers':{'type':'array','items':{'type':'string'},'maxItems':6},
+            'semiconductor_ai':{'type':'string'},
+            'taiwan_export':{'type':'string'},
+            'us_equity':{'type':'string'},
+            'policy_stage':{'type':'string'},
+            'certainty':{'type':'string','enum':['高','中','低']},
+            'watch_items':{'type':'array','items':{'type':'string'},'maxItems':6},
+            'risk_flags':{'type':'array','items':{'type':'string'},'maxItems':6},
+            'stock_impacts':{
+                'type':'array','maxItems':8,
+                'items':{
+                    'type':'object',
+                    'properties':{
+                        'symbol':{'type':'string'},
+                        'direction':{'type':'string','enum':['正面','中性','負面','待確認']},
+                        'channel':{'type':'string'},
+                        'reason':{'type':'string'},
+                        'confidence':{'type':'number','minimum':0,'maximum':1}
+                    },
+                    'required':['symbol','direction','channel','reason','confidence'],
+                    'additionalProperties':False
+                }
+            }
+        },
+        'required':['headline','stance','summary','policy_drivers','semiconductor_ai','taiwan_export','us_equity','policy_stage','certainty','watch_items','risk_flags','stock_impacts'],
+        'additionalProperties':False
+    }
     prompt=(
-        '請綜合 Trump 最新政策/關稅/政府投資/市場新聞與公開申報交易資料，做投資人版判讀。\n'
-        '重點不是重述新聞，而是說明政策目前處於威脅、討論、宣布、執行、暫緩或豁免哪個階段，並判斷確定性。\n'
-        '分析政策如何傳導到半導體/AI、電子製造、能源、國防、金融、一般美股與台股出口產業。\n'
-        '特別避免把 Trump 個人公開持倉與政策新聞混為同一件事；若證據不足要明確說不知道。\n'
-        '輸出 JSON：{"headline":"繁中一句話","stance":"偏多|中性|偏空|混合","summary":"80-180字","policy_drivers":["..."],"semiconductor_ai":"...","taiwan_export":"...","us_equity":"...","policy_stage":"...","certainty":"高|中|低","watch_items":["..."],"risk_flags":["..."]}'
+        '請綜合 Trump 最新政策/關稅/政府投資/市場新聞與公開申報交易資料，做投資人版判讀。'
+        '重點不是重述新聞，而是說明政策目前處於威脅、討論、宣布、執行、暫緩或豁免哪個階段，並判斷確定性。'
+        '分析政策如何傳導到半導體/AI、電子製造、能源、國防、金融、一般美股與台股出口產業。'
+        '特別避免把 Trump 個人公開持倉與政策新聞混為同一件事；若證據不足要明確說不知道。'
+        '只可從 representative_candidates 選出有足夠證據的代表性標的；不要自行創造 ticker。'
+        'stock_impacts 必須說明政策→產業/成本/需求→標的的傳導理由。'
     )
-    return _ai_call_json('你是保守的美國政策與市場研究員。區分事實、政策階段與推論，不把新聞當成確定股價預測。',prompt+'\n資料：'+_ai_compact_payload(payload),cache_key='trump_web:'+fp,ttl_hours=AI_TRUMP_CACHE_HOURS)
-
+    print(f'V2.17.7 Web AI：開始Trump分析｜cache=trump_web:{fp}',flush=True)
+    result=_ai_call_json(
+        '你是保守的美國政策與市場研究員。區分事實、政策階段與推論，不把新聞當成確定股價預測。',
+        prompt+'\n資料：'+_ai_compact_payload(payload),
+        cache_key='trump_web:'+fp,
+        ttl_hours=AI_TRUMP_CACHE_HOURS,
+        response_schema=schema,
+        timeout=AI_WEB_TIMEOUT
+    )
+    print(f'V2.17.7 Web AI：Trump分析{"成功" if isinstance(result,dict) else "失敗/無結果"}',flush=True)
+    return result
 
 def _ai_extract_text(payload):
     try:
@@ -1215,9 +1307,9 @@ def _ai_mark_provider_quota_exhausted(provider, reason='quota'):
         d['exhausted']=sorted(exhausted)
         d['reason_'+provider]=str(reason)[:300]
         save_json(AI_QUOTA_STATE_FILE,d)
-        print(f'V2.17.6 AI：{provider} 今日免費額度/配額已耗盡，今天後續不再呼叫 {provider}', flush=True)
+        print(f'V2.17.7 AI：{provider} 今日免費額度/配額已耗盡，今天後續不再呼叫 {provider}', flush=True)
     except Exception as e:
-        print(f'V2.17.6 AI：無法保存 {provider} quota 狀態：{type(e).__name__}: {e}', flush=True)
+        print(f'V2.17.7 AI：無法保存 {provider} quota 狀態：{type(e).__name__}: {e}', flush=True)
 
 
 def _ai_provider_order():
@@ -1259,14 +1351,14 @@ def _ai_extract_chat_text(payload):
     return ''
 
 
-def _ai_call_provider(provider, system_prompt, user_prompt):
+def _ai_call_provider(provider, system_prompt, user_prompt, response_schema=None, timeout=None):
     key=_ai_provider_key(provider)
     if not key:
         return None
     # V2.17.4：所有結構化 AI 任務都明確要求「只回傳 JSON object」。
     structured_instruction=(
         str(system_prompt or '').rstrip() +
-        '\n\n【V2.17.6 輸出格式硬性規則】\n'
+        '\n\n【V2.17.7 輸出格式硬性規則】\n'
         '你必須只輸出一個合法 JSON object。\n'
         '不得輸出 Markdown、```、前言、後記、解釋文字或 JSON 以外的任何字元。\n'
         'JSON 必須能被標準 json.loads() 直接解析；不可省略必要欄位。'
@@ -1281,6 +1373,8 @@ def _ai_call_provider(provider, system_prompt, user_prompt):
                 'maxOutputTokens':AI_MAX_OUTPUT_TOKENS
             }
         }
+        if isinstance(response_schema, dict):
+            payload['generationConfig']['responseSchema'] = response_schema
         headers={'x-goog-api-key':key,'Content-Type':'application/json'}
     elif provider=='mistral':
         url='https://api.mistral.ai/v1/chat/completions'
@@ -1306,7 +1400,7 @@ def _ai_call_provider(provider, system_prompt, user_prompt):
             'response_format':{'type':'json_object'}
         }
         headers={'Authorization':f'Bearer {key}','Content-Type':'application/json'}
-    r=requests.post(url,headers=headers,json=payload,timeout=AI_TIMEOUT)
+    r=requests.post(url,headers=headers,json=payload,timeout=(timeout if timeout is not None else AI_TIMEOUT))
     if r.status_code>=400:
         body=r.text[:400].replace('\n',' ')
         raise RuntimeError(f'HTTP {r.status_code}: {body}')
@@ -1318,7 +1412,7 @@ def _ai_call_provider(provider, system_prompt, user_prompt):
     return parsed
 
 
-def _ai_call_json(system_prompt, user_prompt, cache_key='', ttl_hours=72):
+def _ai_call_json(system_prompt, user_prompt, cache_key='', ttl_hours=72, response_schema=None, timeout=None):
     """V2.17.4：Gemini Free 主力 + Mistral/Groq Free 備援。
     - 不記錄任何 API key
     - cache hit 不重複呼叫
@@ -1326,13 +1420,13 @@ def _ai_call_json(system_prompt, user_prompt, cache_key='', ttl_hours=72):
     - 任何 AI 失敗都 fallback，不阻斷主流程
     """
     if not any(_ai_provider_key(p) for p in _ai_provider_order()):
-        print('V2.17.6 AI：未設定 Gemini/Mistral/Groq API Key，使用規則 fallback', flush=True)
+        print('V2.17.7 AI：未設定 Gemini/Mistral/Groq API Key，使用規則 fallback', flush=True)
         return None
     now=time.time()
     if cache_key:
         c=_AI_SEMANTIC_RUN_CACHE.get(cache_key)
         if isinstance(c,dict) and now-float(c.get('ts',0) or 0)<ttl_hours*3600:
-            print('V2.17.6 AI：memory cache hit', flush=True)
+            print('V2.17.7 AI：memory cache hit', flush=True)
             return c.get('data')
         disk=load_json(AI_NEWS_CACHE_FILE)
         if isinstance(disk,dict):
@@ -1341,18 +1435,18 @@ def _ai_call_json(system_prompt, user_prompt, cache_key='', ttl_hours=72):
                 data=d.get('data')
                 if isinstance(data,dict):
                     _AI_SEMANTIC_RUN_CACHE[cache_key]={'ts':float(d.get('ts',now) or now),'data':data}
-                    print('V2.17.6 AI：disk cache hit', flush=True)
+                    print('V2.17.7 AI：disk cache hit', flush=True)
                     return data
     providers=[p for p in _ai_provider_order() if _ai_provider_key(p) and not _ai_provider_quota_exhausted(p)]
     if not providers:
-        print('V2.17.6 AI：所有已設定免費供應商今日均已耗盡配額，完全停用 AI，使用規則 fallback', flush=True)
+        print('V2.17.7 AI：所有已設定免費供應商今日均已耗盡配額，完全停用 AI，使用規則 fallback', flush=True)
         return None
     attempts=2 if AI_RETRY_ON_FAILURE else 1
     for provider in providers:
         for attempt in range(1,attempts+1):
             try:
-                print(f'V2.17.6 AI：provider={provider} request {attempt}/{attempts}', flush=True)
-                data=_ai_call_provider(provider,system_prompt,user_prompt)
+                print(f'V2.17.7 AI：provider={provider} request {attempt}/{attempts}', flush=True)
+                data=_ai_call_provider(provider,system_prompt,user_prompt,response_schema=response_schema,timeout=timeout)
                 if cache_key:
                     _AI_SEMANTIC_RUN_CACHE[cache_key]={'ts':time.time(),'data':data}
                     disk=load_json(AI_NEWS_CACHE_FILE)
@@ -1362,19 +1456,19 @@ def _ai_call_json(system_prompt, user_prompt, cache_key='', ttl_hours=72):
                         old=sorted(disk,key=lambda z:float(disk[z].get('ts',0) if isinstance(disk[z],dict) else 0))
                         for k in old[:-500]: disk.pop(k,None)
                     save_json(AI_NEWS_CACHE_FILE,disk)
-                print(f'V2.17.6 AI：SUCCESS｜provider={provider}', flush=True)
+                print(f'V2.17.7 AI：SUCCESS｜provider={provider}', flush=True)
                 return data
             except Exception as e:
                 msg=str(e)
-                print(f'V2.17.6 AI：FAIL｜provider={provider}｜{type(e).__name__}: {e}', flush=True)
+                print(f'V2.17.7 AI：FAIL｜provider={provider}｜{type(e).__name__}: {e}', flush=True)
                 # V2.17.4：不只 503/429。任何傳輸、逾時、空回覆、JSON 格式或 schema 異常，
                 # 都代表本次 provider 不可靠；立即熔斷該 provider，避免同一 RUN 再浪費免費 request。
                 if re.search(r'429|quota|rate.?limit|resource.?exhausted|too many requests|exceed', msg, flags=re.I):
                     _ai_mark_provider_quota_exhausted(provider, msg)
                 AI_PROVIDER_DISABLED_THIS_RUN.add(provider)
-                print(f'V2.17.6 AI：熔斷 {provider}｜本次 RUN 後續不再重試，避免浪費免費 request', flush=True)
+                print(f'V2.17.7 AI：熔斷 {provider}｜本次 RUN 後續不再重試，避免浪費免費 request', flush=True)
                 break
-    print('V2.17.6 AI：所有免費供應商均失敗，使用規則 fallback', flush=True)
+    print('V2.17.7 AI：所有免費供應商均失敗，使用規則 fallback', flush=True)
     return None
 
 
@@ -1394,7 +1488,7 @@ def _ai_runtime_status():
 
 def _print_ai_runtime_status():
     st=_ai_runtime_status()
-    print('========== V2.17.6 AI STATUS ==========', flush=True)
+    print('========== V2.17.7 AI STATUS ==========', flush=True)
     print(f"Gemini API Key：{'已設定' if st['gemini'] else '未設定'}｜模型：{GEMINI_MODEL}", flush=True)
     print(f"Mistral API Key：{'已設定' if st['mistral'] else '未設定'}｜模型：{MISTRAL_MODEL}", flush=True)
     print(f"Groq API Key：{'已設定' if st['groq'] else '未設定'}｜模型：{GROQ_MODEL}", flush=True)
@@ -1453,7 +1547,7 @@ def _ai_classify_news_events(code,name,events):
 
 
 def _ai_classify_trump_items(symbol,industry,name,items):
-    if not items or not _ai_enabled('trump'): return []
+    if not items or not (_ai_enabled('trump') or _ai_web_enabled('trump')): return []
     rows=[]
     for i,x in enumerate(items[:AI_MAX_TRUMP_PER_BATCH]):
         rows.append({'id':i,'title':str(x.get('title',''))[:500],'theme':x.get('theme',''),'side_rule':x.get('side','neutral')})
@@ -14240,6 +14334,16 @@ def run_webhook_server():
             for key,label in (("semiconductor_ai","半導體／AI"),("taiwan_export","台灣出口"),("us_equity","美股"),("policy_stage","政策階段"),("certainty","確定性")):
                 if ai_trump.get(key): rows.append(f'<p><b>{label}</b>：{html.escape(str(ai_trump.get(key)))}</p>')
             if ai_trump.get("watch_items"): rows.append('<p><b>接下來觀察：</b>'+html.escape('、'.join(map(str,ai_trump.get("watch_items")[:6])))+'</p>')
+            impacts=ai_trump.get('stock_impacts') if isinstance(ai_trump.get('stock_impacts'),list) else []
+            if impacts:
+                rows.append('<p><b>代表性標的傳導：</b></p>')
+                for si in impacts[:8]:
+                    rows.append(
+                        f'<p>• <b>{html.escape(str(si.get("symbol","")))}</b>｜'
+                        f'{html.escape(str(si.get("direction","待確認")))}｜'
+                        f'{html.escape(str(si.get("channel","")))}<br>'
+                        f'<span class="muted">{html.escape(str(si.get("reason","")))}</span></p>'
+                    )
             rows.append('</div>')
         # V2.15.4：Trump Intelligence；把政策事件與交易訊號分離，並提供產業／估值傳導。
         rows.append('<div class="card"><h2>🧠 Trump Intelligence｜政策 → 產業 → 股票</h2>')
