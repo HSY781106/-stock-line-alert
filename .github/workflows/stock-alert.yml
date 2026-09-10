@@ -1,50 +1,132 @@
-name: Stock Alert V2.14.28
+name: Stock Alert V2.17.1
+
 on:
-  schedule:
-    - cron: '*/15 1-5 * * 1-5'
-    - cron: '30,45 13 * * 1-5'
-    - cron: '*/15 14-20 * * 1-5'
-    - cron: '0 21 * * 1-5'
   workflow_dispatch:
+  schedule:
+    - cron: '*/15 * * * *'
 
 concurrency:
   group: stock-alert-main
   cancel-in-progress: true
 
-permissions:
-  contents: write
-
 jobs:
-  check-stock:
+  run-stock-alert:
     runs-on: ubuntu-latest
-    timeout-minutes: 13
+    timeout-minutes: 15
+
+    env:
+      LINE_CHANNEL_ACCESS_TOKEN: ${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }}
+      LINE_CHANNEL_SECRET: ${{ secrets.LINE_CHANNEL_SECRET }}
+
+      # =========================
+      # Gemini AI（主要）
+      # =========================
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      GEMINI_MODEL: gemini-3.7-flash
+
+      # =========================
+      # Mistral AI（免費備援，可不設定）
+      # =========================
+      MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
+      MISTRAL_MODEL: mistral-small-latest
+
+      # =========================
+      # Groq AI（免費備援，可不設定）
+      # =========================
+      GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+      GROQ_MODEL: openai/gpt-oss-20b
+
+      # =========================
+      # AI Provider
+      # =========================
+      AI_PROVIDER: gemini
+      AI_FALLBACK_PROVIDERS: mistral,groq
+
+      # =========================
+      # AI 功能
+      # =========================
+      AI_ENABLE_NEWS: '1'
+      AI_ENABLE_TRUMP: '1'
+
+      # 綜合結論開啟
+      # 但只有真正達到 LINE 通知門檻時才會啟用 AI
+      AI_ENABLE_FINAL_SUMMARY: '1'
+
+      # 每次 GitHub Actions 執行的 AI 呼叫上限
+      AI_DAILY_MAX_CALLS: '8'
+
+      # AI 最大輸出
+      AI_MAX_OUTPUT_TOKENS: '700'
+
+      # 不主動重試，降低免費額度消耗
+      AI_RETRY_ON_FAILURE: '0'
+
+      # AI 新聞快取 7 天
+      AI_NEWS_CACHE_HOURS: '168'
+
+      # AI timeout
+      AI_TIMEOUT: '15'
 
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: '3.11'
 
       - name: Install dependencies
-        run: pip install -r requirements.txt pypdf
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests pandas numpy yfinance beautifulsoup4 lxml flask gunicorn
+
+      - name: Check status/cache
+        run: |
+          echo "========== 檢查狀態/快取 =========="
+          if [ -f alert_state.json ]; then
+            echo "alert_state.json：存在"
+          else
+            echo "alert_state.json：不存在，首次執行"
+          fi
+
+          if [ -f pe_history.json ]; then
+            echo "pe_history.json：存在"
+          else
+            echo "pe_history.json：不存在，首次執行"
+          fi
+
+          if [ -f chip_history.json ]; then
+            echo "chip_history.json：存在"
+          else
+            echo "chip_history.json：不存在，首次執行"
+          fi
+
+          echo "==================================="
 
       - name: Run stock alert
-        env:
-          LINE_CHANNEL_ACCESS_TOKEN: ${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }}
-          LINE_CHANNEL_SECRET: ${{ secrets.LINE_CHANNEL_SECRET }}
-        run: python stock_alert.py
+        run: |
+          python stock_alert.py
 
-      - name: Save state and caches
+      - name: Commit state/cache changes
         if: always()
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A
-          git diff --cached --quiet || git commit -m "Update V2.14.28 alert state, industry cache and Trump factor"
-          git pull --rebase origin main || true
-          git push origin HEAD:main
+
+          git add \
+            alert_state.json \
+            pe_history.json \
+            chip_history.json \
+            line_fund_cache.json \
+            macro_history.json \
+            ai_news_cache.json \
+            ai_trump_cache.json \
+            2>/dev/null || true
+
+          if git diff --cached --quiet; then
+            echo "沒有需要提交的狀態/快取變更"
+          else
+            git commit -m "Update V2.17.1 alert state, AI cache, macro history and alert-gated AI"
+            git push
+          fi
