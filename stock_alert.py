@@ -1,4 +1,5 @@
-# stock_alert.py V2.15.6
+# stock_alert.py V2.16.0
+# V2.16.0：AI 語意引擎升級：重大消息、Trump 第二/三層、完整投資結論；總經 1/3/6M 歷史預測修正版。
 # V2.15.6：外部產業網頁正確性＋效能修正版：官方價值鏈候選池改為資料驅動，不再只依賴同大產業 Top120；
 #             個股對應產業 Top3 與指定次產業 Top3 共用官方次產業候選邏輯；修正市值顯示單位 1000 倍錯誤；
 #             加入短期 Web 產業分析快取，降低重複查詢延遲；保留既有分析模型與 LINE 流程。
@@ -200,7 +201,7 @@ MACRO_CACHE_HOURS = 6
 MACRO_CACHE_VERSION = 8
 # V2.15.4：Macro & Policy Intelligence；保留舊總經快取格式，但另建歷史/事件快取。
 MACRO_HISTORY_FILE = 'macro_intelligence_history_v2150.json'
-MACRO_HISTORY_VERSION = 1
+MACRO_HISTORY_VERSION = 2
 MACRO_HISTORY_MAX_DAYS = 730
 MACRO_NEWS_CACHE_FILE = 'macro_news_cache_v2150.json'
 MACRO_NEWS_CACHE_HOURS = 3
@@ -208,6 +209,23 @@ MACRO_FORECAST_HORIZONS = (1, 3, 6)
 MACRO_FORECAST_MIN_POINTS = 8
 MACRO_NEWS_MAX_ITEMS = 12
 MACRO_TIMEOUT = 10
+
+# ============================================================
+# V2.16.0 AI 語意引擎
+# - 可選：GitHub Actions / Render 設定 OPENAI_API_KEY 即啟用
+# - 未設定或 AI 失敗時，安全退回既有規則模型，不阻斷主流程
+# - 一次批次分析新聞，並以 cache 避免每 15 分鐘重複呼叫
+# ============================================================
+AI_API_KEY = os.getenv('OPENAI_API_KEY', '').strip()
+AI_MODEL = os.getenv('OPENAI_MODEL', 'gpt-5.6-luna').strip()
+AI_TIMEOUT = int(os.getenv('OPENAI_TIMEOUT', '18') or 18)
+AI_NEWS_CACHE_FILE = 'ai_semantic_cache_v2160.json'
+AI_NEWS_CACHE_HOURS = float(os.getenv('AI_NEWS_CACHE_HOURS', '72') or 72)
+AI_MAX_NEWS_PER_BATCH = int(os.getenv('AI_MAX_NEWS_PER_BATCH', '8') or 8)
+AI_MAX_TRUMP_PER_BATCH = int(os.getenv('AI_MAX_TRUMP_PER_BATCH', '10') or 10)
+AI_ENABLE_FINAL_SUMMARY = os.getenv('AI_ENABLE_FINAL_SUMMARY', '1').strip().lower() not in ('0','false','no','off')
+AI_ENABLE_NEWS = os.getenv('AI_ENABLE_NEWS', '1').strip().lower() not in ('0','false','no','off')
+AI_ENABLE_TRUMP = os.getenv('AI_ENABLE_TRUMP', '1').strip().lower() not in ('0','false','no','off')
 FRED_GRAPH_URL = 'https://fred.stlouisfed.org/graph/fredgraph.csv?id={series}'
 DGBAS_NEWS_JSON_URL = 'https://www.dgbas.gov.tw/OpenData.aspx?SN=5B2F388DBDFAF866'
 CBC_HOME_URL = 'https://www.cbc.gov.tw/tw/mp-1.html'
@@ -381,7 +399,7 @@ LINE_ANALYSIS_LOCK = threading.Lock()
 # 不再用 daemon=True 的裸 Thread，降低 Render request 結束後背景工作
 # 被直接終止的風險。Reply token 僅用於立即回覆結果頁網址，背景分析不再依賴 replyToken。
 # 完整結果寫入 Render /line-result/<id>，不使用 Push。
-from concurrent.futures import ThreadPoolExecutor, as_completed
+from concurrent.futures import ThreadPoolExecutor
 LINE_ANALYSIS_EXECUTOR = ThreadPoolExecutor(
     max_workers=1,
     thread_name_prefix='line-analysis'
@@ -1033,6 +1051,183 @@ def save_json(f, d):
 
 
 # ============================================================
+# V2.16.0 AI 語意判斷共用引擎
+# ============================================================
+_AI_SEMANTIC_RUN_CACHE = {}
+
+def _ai_enabled(kind='all'):
+    if not AI_API_KEY:
+        return False
+    if kind == 'news' and not AI_ENABLE_NEWS:
+        return False
+    if kind == 'trump' and not AI_ENABLE_TRUMP:
+        return False
+    return True
+
+
+def _ai_extract_text(payload):
+    try:
+        outs = payload.get('output', []) if isinstance(payload, dict) else []
+        chunks=[]
+        for item in outs:
+            for c in item.get('content', []) if isinstance(item,dict) else []:
+                if isinstance(c,dict) and c.get('text'):
+                    chunks.append(str(c['text']))
+        if chunks:
+            return '\n'.join(chunks).strip()
+    except Exception:
+        pass
+    # 相容部分 Responses/舊端點回傳格式
+    try:
+        return str(payload.get('output_text') or '').strip()
+    except Exception:
+        return ''
+
+
+def _ai_json(text):
+    text=str(text or '').strip()
+    if not text:
+        return None
+    text=re.sub(r'^```(?:json)?\s*|\s*```$','',text.strip(),flags=re.I|re.S).strip()
+    try:
+        return json.loads(text)
+    except Exception:
+        m=re.search(r'\{.*\}',text,re.S)
+        if m:
+            try: return json.loads(m.group(0))
+            except Exception: return None
+    return None
+
+
+def _ai_call_json(system_prompt, user_prompt, cache_key='', ttl_hours=72):
+    if not AI_API_KEY:
+        return None
+    now=time.time()
+    if cache_key:
+        c=_AI_SEMANTIC_RUN_CACHE.get(cache_key)
+        if isinstance(c,dict) and now-float(c.get('ts',0) or 0)<ttl_hours*3600:
+            return c.get('data')
+        disk=load_json(AI_NEWS_CACHE_FILE)
+        if isinstance(disk,dict):
+            x=disk.get(cache_key)
+            if isinstance(x,dict) and now-float(x.get('ts',0) or 0)<ttl_hours*3600:
+                _AI_SEMANTIC_RUN_CACHE[cache_key]=x
+                return x.get('data')
+    payload={
+        'model':AI_MODEL,
+        'input':[
+            {'role':'system','content':[{'type':'input_text','text':system_prompt}]},
+            {'role':'user','content':[{'type':'input_text','text':user_prompt}]}
+        ],
+        'temperature':0.1,
+        'max_output_tokens':1200
+    }
+    try:
+        r=requests.post('https://api.openai.com/v1/responses',headers={
+            'Authorization':f'Bearer {AI_API_KEY}','Content-Type':'application/json'
+        },json=payload,timeout=AI_TIMEOUT)
+        r.raise_for_status()
+        data=_ai_json(_ai_extract_text(r.json()))
+        if isinstance(data,dict) and cache_key:
+            _AI_SEMANTIC_RUN_CACHE[cache_key]={'ts':now,'data':data}
+            disk=load_json(AI_NEWS_CACHE_FILE)
+            if not isinstance(disk,dict): disk={}
+            # 控制 cache 大小：只保留最近 500 筆
+            disk[cache_key]={'ts':now,'data':data}
+            if len(disk)>500:
+                for k in sorted(disk,key=lambda z:float(disk[z].get('ts',0) if isinstance(disk[z],dict) else 0))[:-500]: disk.pop(k,None)
+            save_json(AI_NEWS_CACHE_FILE,disk)
+        return data
+    except Exception as e:
+        print(f'V2.16.0 AI 呼叫失敗：{type(e).__name__}: {e}',flush=True)
+        return None
+
+
+def _ai_classify_news_events(code,name,events):
+    """以完整語意判斷利多/中性/利空，不以單一關鍵字決策。"""
+    if not events or not _ai_enabled('news'): return []
+    rows=[]
+    for i,x in enumerate(events[:AI_MAX_NEWS_PER_BATCH]):
+        rows.append({'id':i,'title':str(x.get('title',''))[:500],'date':str(x.get('date',''))[:40],'source':str(x.get('source',''))[:80]})
+    prompt=(
+        f'標的：{name}（{code}）。請逐則判斷新聞對該公司的近期投資影響。\n'
+        '不要用單一關鍵字判斷，必須理解完整句子、否定詞、延後、低於預期、旺季不旺等上下文。\n'
+        '「量產／擴產／認證／訂單」本身不代表利多；若是延後、低於預期、需求疲弱，應判為利空。\n'
+        '若新聞涉及多家公司，只判斷明確屬於目標公司的事件；不確定則 neutral。\n'
+        '輸出 JSON：{"items":[{"id":0,"direction":"positive|neutral|negative","score":-5到5,"confidence":0到1,"reason":"繁中短句","relevant":true或false}]}。\n'
+        f'新聞：{json.dumps(rows,ensure_ascii=False)}'
+    )
+    data=_ai_call_json(
+        '你是保守的台股新聞事件分析器。你的任務是語意分類，不是預測股價。若證據不足，寧可 neutral。',
+        prompt,
+        cache_key='news:'+clean_code(code)+':'+hashlib.sha256(json.dumps(rows,ensure_ascii=False,sort_keys=True).encode('utf-8')).hexdigest()[:24],
+        ttl_hours=AI_NEWS_CACHE_HOURS
+    )
+    return data.get('items',[]) if isinstance(data,dict) and isinstance(data.get('items'),list) else []
+
+
+def _ai_classify_trump_items(symbol,industry,name,items):
+    if not items or not _ai_enabled('trump'): return []
+    rows=[]
+    for i,x in enumerate(items[:AI_MAX_TRUMP_PER_BATCH]):
+        rows.append({'id':i,'title':str(x.get('title',''))[:500],'theme':x.get('theme',''),'side_rule':x.get('side','neutral')})
+    prompt=(
+        f'標的：{name or symbol}（{symbol}），產業：{industry or "未知"}。\n'
+        '這些是 Trump 相關新聞。請判斷政策/言論對該標的的直接或產業傳導影響。\n'
+        '區分「口頭威脅／考慮／正式宣布／已執行／豁免／暫緩」，不要把 tariff 這個字直接等同重大利空。\n'
+        '同時判斷新聞是否真的與該標的有關；不確定則 neutral。\n'
+        '輸出 JSON：{"items":[{"id":0,"direction":"positive|neutral|negative","score":-4到4,"confidence":0到1,"policy_stage":"threat|considering|announced|implemented|exempted|paused|unknown","reason":"繁中短句","relevant":true或false}]}。\n'
+        f'新聞：{json.dumps(rows,ensure_ascii=False)}'
+    )
+    data=_ai_call_json(
+        '你是保守的 Trump 政策與產業傳導分析器。只判斷方向、強度與確定性，不預測股價百分比。',
+        prompt,
+        cache_key='trump:'+str(symbol).upper()+':'+hashlib.sha256(json.dumps(rows,ensure_ascii=False,sort_keys=True).encode('utf-8')).hexdigest()[:24],
+        ttl_hours=AI_NEWS_CACHE_HOURS
+    )
+    return data.get('items',[]) if isinstance(data,dict) and isinstance(data.get('items'),list) else []
+
+
+def _ai_final_investment_summary(ctx):
+    if not AI_ENABLE_FINAL_SUMMARY or not _ai_enabled('all'):
+        return None
+    compact=json.dumps(ctx,ensure_ascii=False,default=str)[:14000]
+    prompt=(
+        '請整合以下已經由量化模型計算完成的結果。不要重新計算分數，也不要捏造缺失資料。\n'
+        '請特別找出各層結論不一致的「最大矛盾」，並區分「投資價值」與「目前買點」。\n'
+        '固定輸出 JSON：{"recommendation":"🟢 積極加碼|🟢 分批加碼|🟡 小量試單|🟡 等待更佳買點|🟠 暫停加碼|🔴 不宜加碼|🔴 減碼/停損觀察",'
+        '"confidence":0到1,"core":"繁中一句","strengths":["..."],"risks":["..."],"conflict":"...","next_watch":["..."],"reason":"繁中2-4句"}\n'
+        '若重大事件或資料品質不足，必須降低建議積極度。\n資料：'+compact
+    )
+    return _ai_call_json(
+        '你是保守的投資決策摘要器。只整合既有數據，不得自行增加事實。',prompt,
+        cache_key='final:'+str(ctx.get('code',''))+':'+str(ctx.get('snapshot_key','')),
+        ttl_hours=6
+    )
+
+
+def _format_ai_final_summary(x):
+    if not isinstance(x,dict): return ''
+    rec=str(x.get('recommendation') or '').strip()
+    core=str(x.get('core') or '').strip()
+    strengths=x.get('strengths') if isinstance(x.get('strengths'),list) else []
+    risks=x.get('risks') if isinstance(x.get('risks'),list) else []
+    conflict=str(x.get('conflict') or '').strip()
+    nxt=x.get('next_watch') if isinstance(x.get('next_watch'),list) else []
+    reason=str(x.get('reason') or '').strip()
+    conf=x.get('confidence')
+    try: conf=f'{float(conf)*100:.0f}%'
+    except Exception: conf='N/A'
+    return ('🤖 AI 綜合投資結論\n'
+            f'建議：{rec or "資料不足"}｜信心：{conf}\n'
+            f'核心：{core or "N/A"}\n'
+            f'🟢 優勢：{"、".join(map(str,strengths[:3])) or "無"}\n'
+            f'🔴 風險：{"、".join(map(str,risks[:3])) or "無"}\n'
+            f'⚠️ 最大矛盾：{conflict or "無明顯矛盾"}\n'
+            f'👀 下一步：{"、".join(map(str,nxt[:3])) or "持續觀察各層訊號"}\n'
+            f'判讀：{reason or "N/A"}')
+
+# ============================================================
 # V2.14.01 重大消息面：公司歸屬/多公司新聞隔離
 # ============================================================
 
@@ -1050,6 +1245,13 @@ NEWS_NEGATIVE_PATTERNS = [
     (re.compile(r'撤銷認證|產品召回|召回|重大品質問題'), -6, '產品/品質重大事件'),
     # 經營層重大異動
     (re.compile(r'董事長請辭|總經理請辭|執行長請辭|財務長請辭|董座請辭'), -5, '高階主管重大異動'),
+    # V2.16.0：語意負向上下文；避免「量產／擴產」單字把利空新聞誤判成利多。
+    (re.compile(r'跌停|大跌|重挫|暴跌|崩跌'), -5, '股價重大下跌'),
+    (re.compile(r'不如預期|低於預期|未達預期|不及預期|旺季不旺'), -4, '營運低於預期'),
+    (re.compile(r'需求疲弱|需求下滑|需求不振|需求低迷|訂單下滑|訂單減少|訂單不如預期'), -4, '需求/訂單轉弱'),
+    (re.compile(r'營收下滑|營收衰退|獲利下滑|獲利衰退|毛利率下滑|成長放緩'), -4, '營運/獲利轉弱'),
+    (re.compile(r'下修|調降展望|降評|目標價下調|修正壓力|面臨修正'), -4, '展望/評價轉弱'),
+    (re.compile(r'量產延後|量產遞延|量產沒那麼快|量產不如預期|商業化延後|進度落後|驗證延後|良率偏低|良率不佳'), -4, '量產/驗證進度不如預期'),
 ]
 
 NEWS_POSITIVE_PATTERNS = [
@@ -1272,8 +1474,8 @@ def fetch_major_news(code, name, force=False):
             adj, label, status, neg, pos = _news_event_score(
                 title, description, source, code=code, name=name
             )
-            if adj == 0:
-                continue
+            # V2.16.0：AI 語意引擎需要看到「沒有命中規則、但可能重要」的新聞。
+            # 仍限制在目標公司事件片段，避免把其他公司的新聞送給 AI。
 
             key = re.sub(r'\W+', '', title.lower())
             if key in seen:
@@ -1350,19 +1552,45 @@ def fetch_major_news(code, name, force=False):
 
 def score_news(code, name, force=False):
     data = fetch_major_news(code, name, force=force)
+    events = data.get('events', []) if isinstance(data, dict) else []
+    ai_items = _ai_classify_news_events(code, name, events) if events else []
+    if ai_items:
+        by_id={int(x.get('id')):x for x in ai_items if isinstance(x,dict) and str(x.get('id','')).isdigit()}
+        for i,x in enumerate(events):
+            a=by_id.get(i)
+            if not a or a.get('relevant') is False: continue
+            try: conf=float(a.get('confidence',0) or 0)
+            except Exception: conf=0.0
+            direction=str(a.get('direction','neutral')).lower()
+            try: raw=float(a.get('score',0) or 0)
+            except Exception: raw=0.0
+            if conf < 0.70: direction='neutral'; raw=0
+            raw=max(-5,min(5,raw))
+            if direction=='negative': raw=min(-1,raw)
+            elif direction=='positive': raw=max(1,raw)
+            else: raw=0
+            x['ai_direction']=direction; x['ai_score']=int(round(raw)); x['ai_confidence']=round(conf,3); x['ai_reason']=str(a.get('reason',''))[:180]
+            dt=_news_parse_date(x.get('date',''))
+            adj=int(round(raw*_news_recency_factor(dt, datetime.now(TW_TZ)))) if raw else 0
+            if adj<0: adj=min(-1,adj)
+            elif adj>0: adj=max(1,adj)
+            x['adjustment']=adj
+        negatives=[x['adjustment'] for x in events if x.get('adjustment',0)<0]
+        positives=[x['adjustment'] for x in events if x.get('adjustment',0)>0]
+        if negatives: adj=max(NEWS_MIN_ADJUSTMENT,min(-1,min(negatives)))
+        elif positives: adj=min(NEWS_MAX_ADJUSTMENT,max(1,max(positives)))
+        else: adj=0
+        reasons=[]
+        for x in sorted(events,key=lambda z:(z.get('adjustment',0),z.get('date','')))[:3]:
+            if x.get('adjustment',0)!=0:
+                reasons.append(f'AI {"利空" if x["adjustment"]<0 else "利多"} {x["adjustment"]:+d}｜{x.get("ai_reason") or x.get("label") or "語意判讀"}')
+        return int(adj), events, reasons
     adj = to_float(data.get('adjustment')) if isinstance(data, dict) else 0
     adj = int(max(NEWS_MIN_ADJUSTMENT, min(NEWS_MAX_ADJUSTMENT, adj or 0)))
-    events = data.get('events', []) if isinstance(data, dict) else []
-    reasons = []
+    reasons=[]
     for x in events[:3]:
-        if x.get('adjustment', 0) < 0:
-            reasons.append(
-                f'⚠️ {x.get("label") or "重大負面事件"}'
-            )
-        elif x.get('adjustment', 0) > 0:
-            reasons.append(
-                f'🟢 {x.get("label") or "重大正面事件"}'
-            )
+        if x.get('adjustment',0)<0: reasons.append(f'⚠️ {x.get("label") or "重大負面事件"}')
+        elif x.get('adjustment',0)>0: reasons.append(f'🟢 {x.get("label") or "重大正面事件"}')
     return adj, events, reasons
 
 
@@ -10314,6 +10542,32 @@ def analysis(
         fund_weight_text = "本產業實際配分：N/A（無有效基本面指標）"
 
     # --------------------------------------------------------
+    # V2.16.0 AI 最終整合：只讀取各層既有結果，不改動量化分數。
+    # --------------------------------------------------------
+    ai_final_text=''
+    if AI_ENABLE_FINAL_SUMMARY:
+        _snapshot={
+            'code':code,'name':name,'total':total,'base_total':base_total,
+            'fundamental':fs,'technical':ts,'chips':cs,'risk':risk,
+            'news':news_adj,'news_events':[{'title':x.get('title',''),'adjustment':x.get('adjustment',0),'ai_direction':x.get('ai_direction'),'ai_reason':x.get('ai_reason')} for x in news_events[:5]],
+            'trump_global':trump_global_adj,'trump_industry':trump_theme_adj,
+            'trump_reasons':trump_theme.get('reasons',[]),'macro':macro_adj,'macro_reasons':macro.get('reasons',[]),
+            'investment_value_verdict':verdict,'buy_score':buy.get('score'),'buy_verdict':buy.get('verdict'),'buy_entry':buy.get('entry'),
+            'event_level':event_level,'holding_action':holding_action,'holding_reason':holding_reason,
+            'snapshot_key':hashlib.sha256(json.dumps({'t':total,'f':fs,'ts':ts,'cs':cs,'r':risk,'n':news_adj,'tg':trump_global_adj,'ti':trump_theme_adj,'m':macro_adj,'b':buy.get('score')},sort_keys=True).encode('utf-8')).hexdigest()[:24]
+        }
+        try:
+            ai_final=_ai_final_investment_summary(_snapshot)
+            ai_final_text=_format_ai_final_summary(ai_final)
+        except Exception as e:
+            print(f'V2.16.0 AI 最終結論失敗：{type(e).__name__}: {e}',flush=True)
+    if not ai_final_text and AI_ENABLE_FINAL_SUMMARY:
+        # 沒有 API key 時仍提供 deterministic 摘要，避免畫面留白。
+        _conflict='投資價值與買點不同步' if ((fs>=24 and buy.get('score',0)<60) or (fs<24 and buy.get('score',0)>=60)) else '各層訊號大致一致'
+        ai_final_text=(f'🤖 綜合結論（規則 fallback）\n建議：{verdict}\n核心：投資價值 {fs}/40、買點 {buy.get("score",0)}/100、總分 {total}/100。\n'
+                       f'⚠️ 最大矛盾：{_conflict}\n👀 下一步：{_confirm}；{_buyrisk}')
+
+    # --------------------------------------------------------
     # Output
     # --------------------------------------------------------
 
@@ -10354,6 +10608,7 @@ def analysis(
         f'📌 最終建議：{verdict}\n'
         f'原始分數 {base_total}/100｜消息 {news_adj:+d}｜Trump資金 {trump_global_adj:+d}｜Trump產業 {trump_theme_adj:+d}｜總經 {macro_adj:+d}\n'
         f'事件處置：{holding_action}｜{holding_reason}\n\n'
+        f'{ai_final_text}\n\n'
         f'加分因素：{("、".join(fr + tr) if fr + tr else "無")}\n'
         f'風險提醒：{("、".join(rr) if rr else "目前無主要風險警訊")}\n\n'
         f'🔬 詳細模型：統計回歸、R²、p-value、β、SE、CI、RMSE、季節分布與實際配分仍保留於後台計算；前台不重複展開。'
@@ -12524,11 +12779,13 @@ def _macro_history_append(d):
 
 
 def _macro_series_history(series_key, d=None, min_points=MACRO_FORECAST_MIN_POINTS):
-    """V2.15.4：歷史 FRED 只允許本次 process 一次批次嘗試，失敗後絕不重試。"""
+    """V2.16.0：歷史序列修正版。
+    批次 FRED 不足時，改以「每個 series 一次」並行抓取最近 84 筆；
+    因此不會因批次 CSV 異常而退回 n=1，1/3/6M 也不再全部等於現在值。
+    """
     global _MACRO_FRED_HISTORY_CACHE, _MACRO_FRED_HISTORY_ATTEMPTED, _MACRO_HISTORY_RUN_CACHE
     if _MACRO_HISTORY_RUN_CACHE is None:
-        hist=load_json(MACRO_HISTORY_FILE)
-        vals_by_key={}
+        hist=load_json(MACRO_HISTORY_FILE); vals_by_key={}
         if isinstance(hist,dict):
             keys=list(MACRO_FRED_SERIES.keys())+['gdp_yoy','cpi_yoy','unemployment','discount_rate','m2_yoy','usd_twd','overnight']
             for x in hist.get('items',[]):
@@ -12541,14 +12798,16 @@ def _macro_series_history(series_key, d=None, min_points=MACRO_FORECAST_MIN_POIN
         _MACRO_HISTORY_RUN_CACHE=vals_by_key
     vals=list((_MACRO_HISTORY_RUN_CACHE or {}).get(series_key,[]))
     if len(vals)>=min_points: return vals
-    if series_key in MACRO_FRED_SERIES and not _MACRO_FRED_HISTORY_ATTEMPTED:
+    if series_key not in MACRO_FRED_SERIES: return vals
+
+    # 本次 process 只做一次歷史批次；批次不足時並行單序列補抓。
+    if not _MACRO_FRED_HISTORY_ATTEMPTED:
         _MACRO_FRED_HISTORY_ATTEMPTED=True
+        cache={}
         try:
-            ids=','.join(MACRO_FRED_SERIES.values())
-            r=requests.get('https://fred.stlouisfed.org/graph/fredgraph.csv',params={'id':ids},timeout=max(8,MACRO_TIMEOUT),headers={'User-Agent':'Mozilla/5.0 stock-alert/2.15.3','Accept':'text/csv,*/*'},verify=False)
-            r.raise_for_status()
-            df=pd.read_csv(pd.io.common.StringIO(r.text))
-            cache={}
+            ids=','.join(dict.fromkeys(MACRO_FRED_SERIES.values()))
+            r=requests.get('https://fred.stlouisfed.org/graph/fredgraph.csv',params={'id':ids},timeout=max(8,MACRO_TIMEOUT),headers={'User-Agent':'Mozilla/5.0 stock-alert/2.16.0','Accept':'text/csv,*/*'},verify=False)
+            r.raise_for_status(); df=pd.read_csv(pd.io.common.StringIO(r.text))
             if len(df.columns)>=2:
                 date_col=df.columns[0]
                 for key,sid in MACRO_FRED_SERIES.items():
@@ -12556,12 +12815,36 @@ def _macro_series_history(series_key, d=None, min_points=MACRO_FORECAST_MIN_POIN
                     tmp=pd.to_numeric(df[sid],errors='coerce')
                     pairs=[(str(dt),float(v)) for dt,v in zip(df[date_col],tmp) if pd.notna(v)][-84:]
                     if key=='us_cpi' and len(pairs)>=13:
-                        raw=[v for _,v in pairs]; pairs=[(pairs[i][0],(raw[i]/raw[i-12]-1)*100) for i in range(12,len(raw)) if raw[i-12]!=0]
+                        raw=[v for _,v in pairs]
+                        pairs=[(pairs[i][0],(raw[i]/raw[i-12]-1)*100) for i in range(12,len(raw)) if raw[i-12]!=0]
                     if pairs: cache[key]=pairs
-            _MACRO_FRED_HISTORY_CACHE=cache
         except Exception as e:
-            print(f'V2.15.4 FRED歷史批次略過：{type(e).__name__}: {e}',flush=True)
-            _MACRO_FRED_HISTORY_CACHE={}
+            print(f'V2.16.0 FRED多序列歷史不足：{type(e).__name__}: {e}',flush=True)
+
+        def fetch_one(item):
+            key,sid=item
+            try:
+                rr=requests.get('https://fred.stlouisfed.org/graph/fredgraph.csv',params={'id':sid},timeout=max(6,MACRO_TIMEOUT),headers={'User-Agent':'Mozilla/5.0 stock-alert/2.16.0','Accept':'text/csv,*/*'},verify=False)
+                rr.raise_for_status(); dd=pd.read_csv(pd.io.common.StringIO(rr.text))
+                if len(dd.columns)<2: return key,[]
+                dc=dd.columns[0]; col=sid if sid in dd.columns else dd.columns[1]
+                tmp=pd.to_numeric(dd[col],errors='coerce')
+                pairs=[(str(dt),float(v)) for dt,v in zip(dd[dc],tmp) if pd.notna(v)][-84:]
+                if key=='us_cpi' and len(pairs)>=13:
+                    raw=[v for _,v in pairs]; pairs=[(pairs[i][0],(raw[i]/raw[i-12]-1)*100) for i in range(12,len(raw)) if raw[i-12]!=0]
+                return key,pairs
+            except Exception as e:
+                print(f'V2.16.0 FRED單序列失敗 {key}: {type(e).__name__}',flush=True); return key,[]
+
+        need=[(k,v) for k,v in MACRO_FRED_SERIES.items() if len(cache.get(k,[]))<min_points]
+        try:
+            with ThreadPoolExecutor(max_workers=min(7,max(1,len(need)))) as ex:
+                for key,pairs in ex.map(fetch_one,need):
+                    if pairs: cache[key]=pairs
+        except Exception as e:
+            print(f'V2.16.0 FRED並行補抓失敗：{type(e).__name__}: {e}',flush=True)
+        _MACRO_FRED_HISTORY_CACHE=cache
+
     return (_MACRO_FRED_HISTORY_CACHE or {}).get(series_key,vals)
 
 
@@ -12575,7 +12858,9 @@ def _macro_forecast_one(series_key, current, horizon, d=None):
     if not vals: return {'value':None,'low':None,'high':None,'confidence':0,'n':0,'method':'無資料'}
     n=len(vals); arr=np.array(vals[-60:],dtype=float)
     if n<MACRO_FORECAST_MIN_POINTS:
-        pred=float(arr[-1]); sd=float(np.std(arr)) if len(arr)>1 else 0.0; conf=25
+        # V2.16.0：樣本不足時不再假裝 1/3/6M 是有效預測。
+        # 直接回傳 N/A，讓前台清楚顯示「歷史樣本不足」，避免三個 horizon 全部複製目前值。
+        return {'value':None,'low':None,'high':None,'confidence':0,'n':n,'method':'歷史樣本不足，暫不預測'}
     else:
         # OLS trend over time, then shrink strongly toward recent mean to avoid runaway extrapolation.
         x=np.arange(len(arr),dtype=float)
@@ -12956,16 +13241,33 @@ def _trump_translate_title(title):
 
 
 def trump_recent_news_factor(symbol=''):
-    """V2.14.42：第二層近期新聞/市場動向獨立訊號，不覆蓋第一層官方交易訊號。"""
-    d=_trump_recent_news_fetch(symbol); score=int(d.get('score',0) or 0)
+    """V2.16.0：第二層 Trump；AI 語意判斷政策階段、方向與確定性，規則模型作 fallback。"""
+    d=_trump_recent_news_fetch(symbol); items=d.get('items',[]) or []; score=int(d.get('score',0) or 0)
+    ai_items=_ai_classify_trump_items(symbol,'','',items) if items else []
+    if ai_items:
+        by_id={int(x.get('id')):x for x in ai_items if isinstance(x,dict) and str(x.get('id','')).isdigit()}
+        vals=[]
+        for i,x in enumerate(items):
+            a=by_id.get(i)
+            if not a or a.get('relevant') is False: continue
+            try: conf=float(a.get('confidence',0) or 0); raw=float(a.get('score',0) or 0)
+            except Exception: conf=0; raw=0
+            if conf<0.70: raw=0
+            raw=max(-4,min(4,raw)); direction=str(a.get('direction','neutral')).lower()
+            if direction=='negative': raw=min(-1,raw)
+            elif direction=='positive': raw=max(1,raw)
+            else: raw=0
+            x['ai_direction']=direction; x['ai_score']=int(round(raw)); x['ai_confidence']=round(conf,3); x['ai_reason']=str(a.get('reason',''))[:180]; x['policy_stage']=str(a.get('policy_stage','unknown'))
+            vals.append(x['ai_score'])
+        if vals: score=max(-4,min(4,sum(vals)))
     if d.get('error'): state='⚪ 近期公開新聞資料暫不可用'
-    elif not d.get('items'): state='⚪ 最近30日沒有可辨識的 Trump 交易／政策市場訊號'
-    elif score>=3: state='🟢 近期公開資訊偏買進/增加曝險'
+    elif not items: state='⚪ 最近30日沒有可辨識的 Trump 交易／政策市場訊號'
+    elif score>=3: state='🟢 近期公開資訊偏正面'
     elif score>0: state='🟢 近期公開資訊略偏正面'
-    elif score<=-3: state='🔴 近期公開資訊偏賣出/降低曝險'
+    elif score<=-3: state='🔴 近期公開資訊偏負面'
     elif score<0: state='🔴 近期公開資訊略偏負面'
     else: state='⚪ 近期公開資訊中性'
-    return {'factor':score,'state':state,'items':d.get('items',[]),'positive':d.get('positive',0),'negative':d.get('negative',0),'neutral':d.get('neutral',0),'qualified_items':d.get('qualified_items',0),'latest_published':d.get('latest_published',''),'query':d.get('query',''),'source_url':d.get('source_url',''),'error':d.get('error','')}
+    return {'factor':score,'state':state,'items':items,'positive':d.get('positive',0),'negative':d.get('negative',0),'neutral':d.get('neutral',0),'qualified_items':d.get('qualified_items',0),'latest_published':d.get('latest_published',''),'query':d.get('query',''),'source_url':d.get('source_url',''),'error':d.get('error','')}
 
 
 def trump_theme_stock_factor(symbol='', industry='', subindustries=None, name=''):
@@ -12984,8 +13286,10 @@ def trump_theme_stock_factor(symbol='', industry='', subindustries=None, name=''
     for x in themes:
         theme=x.get('theme')
         if theme and relevant(theme):
-            sc=int(x.get('score',0) or 0)
-            if sc: score += 1 if sc>0 else -1; reasons.append(theme + ('偏正面' if sc>0 else '偏負面'))
+            sc=int(x.get('ai_score',x.get('score',0)) or 0)
+            if sc:
+                score += 1 if sc>0 else -1
+                reasons.append(theme + ('偏正面' if sc>0 else '偏負面') + (('｜'+str(x.get('ai_reason'))) if x.get('ai_reason') else ''))
     score=max(-2,min(2,score))
     state='🟢 Trump相關產業政策偏正面' if score>0 else '🔴 Trump相關產業政策偏負面' if score<0 else '⚪ Trump相關產業政策影響中性/不足'
     return {'factor':score,'state':state,'reasons':list(dict.fromkeys(reasons))[:4],'items':[x for x in themes if x.get('theme') and relevant(x.get('theme'))][:5]}
