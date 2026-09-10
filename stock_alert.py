@@ -193,7 +193,7 @@ _TRUMP_RECENT_NEWS_CACHE = {}
 MACRO_CACHE_FILE = 'macro_systemic_cache_v21442.json'
 MACRO_CACHE_HOURS = 6
 MACRO_CACHE_VERSION = 8
-# V2.15.2：Macro & Policy Intelligence；保留舊總經快取格式，但另建歷史/事件快取。
+# V2.15.3：Macro & Policy Intelligence；保留舊總經快取格式，但另建歷史/事件快取。
 MACRO_HISTORY_FILE = 'macro_intelligence_history_v2150.json'
 MACRO_HISTORY_VERSION = 1
 MACRO_HISTORY_MAX_DAYS = 730
@@ -734,7 +734,10 @@ def canonical_industry(v):
         '電腦及週邊設備': '電腦及週邊設備業',
         '生技醫療業': '生技醫療',
         '醫療保健業': '醫療保健',
-        '觀光事業': '觀光餐旅'
+        '觀光事業': '觀光餐旅',
+        # V2.15.3：官方產業資料常以「建設業／營建業」記錄，LINE 第一層使用「建材營造」。
+        '建設業': '建材營造',
+        '營建業': '建材營造'
     }
 
     return aliases.get(s, s or '其他')
@@ -9514,7 +9517,7 @@ def yahoo_etf_profile(symbol):
 
     is_tw=str(symbol).upper().endswith(('.TW','.TWO'))
     if is_tw:
-        # V2.15.2：TWSE feed 的 e=market price 可能與同一執行中的即時行情不同步。
+        # V2.15.3：TWSE feed 的 e=market price 可能與同一執行中的即時行情不同步。
         # 因此「目前價格」以本函式前面取得的即時行情為唯一權威；TWSE 只提供 NAV / assets。
         # premium 不直接採用 TWSE 的 g，最後一律用「即時價格 ÷ NAV - 1」重新計算。
         twse=_twse_etf_nav_fallback(symbol)
@@ -9543,7 +9546,7 @@ def yahoo_etf_profile(symbol):
     if out.get('yield') is not None and not (0<=out['yield']<=30): out['yield']=None
     if out.get('beta') is not None and not (-5<=out['beta']<=5): out['beta']=None
     if out.get('expense') is not None and not (0<=out['expense']<=10): out['expense']=None; out['expense_source']=None
-    # V2.15.2：只要同時有 authoritative live price + NAV，就強制重算折溢價。
+    # V2.15.3：只要同時有 authoritative live price + NAV，就強制重算折溢價。
     # 不接受 TWSE g 或 Yahoo 舊 premium，避免 price/NAV/premium 三者互相矛盾。
     if out.get('price') is not None and out.get('nav') is not None and out['nav']>0:
         prem=(out['price']/out['nav']-1)*100
@@ -10735,7 +10738,7 @@ def _line_extract_analysis_scores(text):
     )
 
 
-# V2.15.2：官方產業價值鏈的「次產業」與 TWSE 大產業不是一對一字串關係。
+# V2.15.3：官方產業價值鏈的「次產業」與 TWSE 大產業不是一對一字串關係。
 # 明確的官方節點若被舊快取掛到錯誤 parent，必須以正確 parent 為準。
 LINE_SUBINDUSTRY_PARENT_OVERRIDES = {
     _line_industry_norm('建設業'): '建材營造',
@@ -10747,7 +10750,7 @@ def _line_industry_parent_for_subindustry(subindustry):
 
 
 def _line_industry_build_subindustry_menu(parent, u):
-    """V2.15.2：次產業選單必須維持「大產業→官方次產業」一對一階層。
+    """V2.15.3：次產業選單必須維持「大產業→官方次產業」一對一階層。
 
     舊版先讀 industry_subindustry_menu_cache，若舊快取曾混入跨產業次產業，
     就會出現「水泥工業 → 建設業」這類錯配。現在優先由 subindustry_cache 的
@@ -10792,7 +10795,7 @@ def _line_industry_build_subindustry_menu(parent, u):
         if options:
             return sorted(options, key=lambda x: (_line_industry_norm(x), x))
 
-    # V2.15.2：不再使用扁平舊 menu cache 或 u.subindustries 反推 parent。
+    # V2.15.3：不再使用扁平舊 menu cache 或 u.subindustries 反推 parent。
     # 這兩種資料沒有可靠 parent 關聯，是過去「水泥工業→建設業」污染的來源。
     # 只有明確的 parent override 才可作最後備援。
     for sub_norm, forced_parent in LINE_SUBINDUSTRY_PARENT_OVERRIDES.items():
@@ -12155,7 +12158,7 @@ def _trump_news_company_name(symbol):
 
 
 def _macro_fred_batch_latest():
-    """V2.15.2：一次請求 FRED 全部美國指標，避免 7 個序列各自 timeout。"""
+    """V2.15.3：一次請求 FRED 全部美國指標，避免 7 個序列各自 timeout。"""
     series_ids=list(MACRO_FRED_SERIES.values())
     # FRED graph endpoint 支援以逗號分隔的多序列 CSV。
     url='https://fred.stlouisfed.org/graph/fredgraph.csv?id='+quote(','.join(series_ids))
@@ -12192,7 +12195,7 @@ def _macro_fred_batch_latest():
     return out
 
 def _macro_fred_latest(series_id, derive_yoy=False):
-    """V2.15.2：保留單序列 API 相容介面，實際優先使用 batch 結果。"""
+    """V2.15.3：保留單序列 API 相容介面，實際優先使用 batch 結果。"""
     url='https://fred.stlouisfed.org/graph/fredgraph.csv?id='+quote(series_id)
     last_err=None
     for verify in (True, False):
@@ -12212,7 +12215,7 @@ def _macro_fred_latest(series_id, derive_yoy=False):
 
 
 def _macro_dgbas_latest():
-    """V2.15.2：主計總處採獨立指標解析；解析失敗時保留最近官方已知值，不再整組 N/A。"""
+    """V2.15.3：主計總處採獨立指標解析；解析失敗時保留最近官方已知值，不再整組 N/A。"""
     out={'gdp_yoy':None,'cpi_yoy':None,'unemployment':None,'sources':[DGBAS_NEWS_PAGE_URL],'published':{}}
     text=''
     try:
@@ -12245,7 +12248,7 @@ def _macro_dgbas_latest():
 
 
 def _macro_cbc_latest():
-    """V2.15.2：央行重要指標頁；即使央行頁連線/解析失敗，也逐欄使用已核對官方值，絕不回傳 N/A。"""
+    """V2.15.3：央行重要指標頁；即使央行頁連線/解析失敗，也逐欄使用已核對官方值，絕不回傳 N/A。"""
     out={'usd_twd':None,'m2_yoy':None,'overnight':None,'discount_rate':None,
          'source':CBC_KEY_INDICATORS_URL,'fallback_dates':{}}
     # 最近核對的央行官方值：僅作為「來源暫時不可用/頁面格式變動」時的保底，
@@ -12290,6 +12293,9 @@ def _macro_cbc_latest():
 _MACRO_RUN_CACHE = None
 _MACRO_INTELLIGENCE_RUN_CACHE = None
 _MACRO_FRED_HISTORY_CACHE = {}
+_MACRO_FRED_HISTORY_ATTEMPTED = False
+_MACRO_HISTORY_RUN_CACHE = None
+_MACRO_NEWS_RUN_CACHE = None
 
 
 def _macro_value(d, key):
@@ -12325,42 +12331,45 @@ def _macro_history_append(d):
 
 
 def _macro_series_history(series_key, d=None, min_points=MACRO_FORECAST_MIN_POINTS):
-    """Get persisted history first; if needed, use one process-level FRED history cache.
-    Never issue one FRED request per forecast series on every stock.
-    """
-    global _MACRO_FRED_HISTORY_CACHE
-    hist=load_json(MACRO_HISTORY_FILE)
-    vals=[]
-    if isinstance(hist,dict):
-        for x in hist.get('items',[]):
-            v=x.get(series_key)
-            if isinstance(v,(int,float)) and math.isfinite(float(v)):
-                vals.append((str(x.get('ts','')),float(v)))
-    if len(vals)>=min_points:
-        return vals
-    if series_key in MACRO_FRED_SERIES:
-        if not _MACRO_FRED_HISTORY_CACHE:
-            try:
-                ids=','.join(MACRO_FRED_SERIES.values())
-                url='https://fred.stlouisfed.org/graph/fredgraph.csv?id='+quote(ids)
-                r=requests.get(url,timeout=max(8,MACRO_TIMEOUT),headers={'User-Agent':'Mozilla/5.0 stock-alert/2.15.2','Accept':'text/csv,*/*'},verify=False)
-                r.raise_for_status()
-                df=pd.read_csv(pd.io.common.StringIO(r.text))
-                if len(df.columns)>=2:
-                    date_col=df.columns[0]
-                    for key,sid in MACRO_FRED_SERIES.items():
-                        if sid not in df.columns: continue
-                        tmp=pd.to_numeric(df[sid],errors='coerce')
-                        pairs=[(str(dt),float(v)) for dt,v in zip(df[date_col],tmp) if pd.notna(v)]
-                        pairs=pairs[-84:]
-                        if key=='us_cpi' and len(pairs)>=13:
-                            raw=[v for _,v in pairs]
-                            pairs=[(pairs[i][0],(raw[i]/raw[i-12]-1)*100) for i in range(12,len(raw)) if raw[i-12]!=0]
-                        if pairs: _MACRO_FRED_HISTORY_CACHE[key]=pairs
-            except Exception:
-                _MACRO_FRED_HISTORY_CACHE={}
-        return _MACRO_FRED_HISTORY_CACHE.get(series_key, vals)
-    return vals
+    """V2.15.3：歷史 FRED 只允許本次 process 一次批次嘗試，失敗後絕不重試。"""
+    global _MACRO_FRED_HISTORY_CACHE, _MACRO_FRED_HISTORY_ATTEMPTED, _MACRO_HISTORY_RUN_CACHE
+    if _MACRO_HISTORY_RUN_CACHE is None:
+        hist=load_json(MACRO_HISTORY_FILE)
+        vals_by_key={}
+        if isinstance(hist,dict):
+            keys=list(MACRO_FRED_SERIES.keys())+['gdp_yoy','cpi_yoy','unemployment','discount_rate','m2_yoy','usd_twd','overnight']
+            for x in hist.get('items',[]):
+                if not isinstance(x,dict): continue
+                ts=str(x.get('ts',''))
+                for k in keys:
+                    v=x.get(k)
+                    if isinstance(v,(int,float)) and math.isfinite(float(v)):
+                        vals_by_key.setdefault(k,[]).append((ts,float(v)))
+        _MACRO_HISTORY_RUN_CACHE=vals_by_key
+    vals=list((_MACRO_HISTORY_RUN_CACHE or {}).get(series_key,[]))
+    if len(vals)>=min_points: return vals
+    if series_key in MACRO_FRED_SERIES and not _MACRO_FRED_HISTORY_ATTEMPTED:
+        _MACRO_FRED_HISTORY_ATTEMPTED=True
+        try:
+            ids=','.join(MACRO_FRED_SERIES.values())
+            r=requests.get('https://fred.stlouisfed.org/graph/fredgraph.csv',params={'id':ids},timeout=max(8,MACRO_TIMEOUT),headers={'User-Agent':'Mozilla/5.0 stock-alert/2.15.3','Accept':'text/csv,*/*'},verify=False)
+            r.raise_for_status()
+            df=pd.read_csv(pd.io.common.StringIO(r.text))
+            cache={}
+            if len(df.columns)>=2:
+                date_col=df.columns[0]
+                for key,sid in MACRO_FRED_SERIES.items():
+                    if sid not in df.columns: continue
+                    tmp=pd.to_numeric(df[sid],errors='coerce')
+                    pairs=[(str(dt),float(v)) for dt,v in zip(df[date_col],tmp) if pd.notna(v)][-84:]
+                    if key=='us_cpi' and len(pairs)>=13:
+                        raw=[v for _,v in pairs]; pairs=[(pairs[i][0],(raw[i]/raw[i-12]-1)*100) for i in range(12,len(raw)) if raw[i-12]!=0]
+                    if pairs: cache[key]=pairs
+            _MACRO_FRED_HISTORY_CACHE=cache
+        except Exception as e:
+            print(f'V2.15.3 FRED歷史批次略過：{type(e).__name__}: {e}',flush=True)
+            _MACRO_FRED_HISTORY_CACHE={}
+    return (_MACRO_FRED_HISTORY_CACHE or {}).get(series_key,vals)
 
 
 def _macro_forecast_one(series_key, current, horizon, d=None):
@@ -12395,10 +12404,14 @@ def _macro_forecast_one(series_key, current, horizon, d=None):
 
 
 def _macro_news_fetch(force=False):
-    """Fetch concrete macro/policy events from Google News RSS; event text is evidence, not forecast itself."""
+    """Fetch concrete macro/policy events from Google News RSS; V2.15.3 同一 process 共用結果。"""
+    global _MACRO_NEWS_RUN_CACHE
+    if not force and isinstance(_MACRO_NEWS_RUN_CACHE,dict) and _MACRO_NEWS_RUN_CACHE.get('data') is not None:
+        return _MACRO_NEWS_RUN_CACHE['data']
     cached=load_json(MACRO_NEWS_CACHE_FILE)
     now=time.time()
     if not force and isinstance(cached,dict) and now-float(cached.get('cached_at',0) or 0)<MACRO_NEWS_CACHE_HOURS*3600:
+        _MACRO_NEWS_RUN_CACHE={'data':cached.get('data',{})}
         return cached.get('data',{})
     queries=[
         'Federal Reserve interest rates inflation US economy',
@@ -12434,6 +12447,7 @@ def _macro_news_fetch(force=False):
         x['reason']='；'.join(pos+neg) or '中性／待確認'
     data={'items':clean[:MACRO_NEWS_MAX_ITEMS],'updated_at':datetime.now(TW_TZ).isoformat(),'errors':errors}
     save_json(MACRO_NEWS_CACHE_FILE,{'cached_at':now,'data':data})
+    _MACRO_NEWS_RUN_CACHE={'data':data}
     return data
 
 
@@ -12454,7 +12468,7 @@ def _macro_regime(d):
 
 
 def macro_intelligence(force=False):
-    """V2.15.2 five-quadrant macro transmission + statistical forecast + event intelligence.
+    """V2.15.3 five-quadrant macro transmission + statistical forecast + event intelligence.
     One complete intelligence calculation per Workflow run; stock scoring reuses it.
     """
     global _MACRO_INTELLIGENCE_RUN_CACHE
@@ -12526,7 +12540,7 @@ def macro_industry_impact(industry='', subindustries=None, name=''):
 
 
 def macro_fetch(force=False):
-    """V2.15.2：台美總經資料中心；同一 Workflow 行程只抓一次，Render 仍使用磁碟快取。"""
+    """V2.15.3：台美總經資料中心；同一 Workflow 行程只抓一次，Render 仍使用磁碟快取。"""
     global _MACRO_RUN_CACHE
     if not force and isinstance(_MACRO_RUN_CACHE,dict) and _MACRO_RUN_CACHE.get('data'):
         return _MACRO_RUN_CACHE['data']
@@ -12564,7 +12578,7 @@ def macro_fetch(force=False):
                 d['us'][key]={'value':v,'date':dt,'series':sid,'unit':'YoY %' if key=='us_cpi' else '','fallback':True}
     except Exception as e:
         d['errors'].append(f'FRED batch: {type(e).__name__}: {e}')
-        # V2.15.2：批次端點失敗時，不再做 7 次慢速 timeout；改用最近已驗證的官方 FRED last-known-good。
+        # V2.15.3：批次端點失敗時，不再做 7 次慢速 timeout；改用最近已驗證的官方 FRED last-known-good。
         # 下一次成功連線時會自動覆蓋。
         fred_fallback={
             'fed_rate':(3.63,'2026-09-04'),
@@ -12592,7 +12606,7 @@ def macro_fetch(force=False):
         except Exception: pass
         _MACRO_RUN_CACHE={'data':d}
         return d
-    # V2.15.2：網頁／Render 不應因外部宏觀資料源暫時逾時而整頁空白。
+    # V2.15.3：網頁／Render 不應因外部宏觀資料源暫時逾時而整頁空白。
     # 若本次全部來源失敗，保留上一份可用快取並標示為 stale。
     if isinstance(cached,dict) and isinstance(cached.get('data'),dict) and cached.get('data'):
         stale=dict(cached.get('data') or {})
@@ -12619,7 +12633,7 @@ def macro_profile_for_stock(industry, subindustries=None, name=''):
 
 
 def macro_stock_factor(industry, subindustries=None, name=''):
-    """V2.15.2：總經五象限傳導後的個股輔助調整，仍限制在 -3~+3。"""
+    """V2.15.3：總經五象限傳導後的個股輔助調整，仍限制在 -3~+3。"""
     try:
         x=macro_industry_impact(industry,subindustries,name)
         score=int(x.get('factor',0) or 0)
@@ -12704,7 +12718,7 @@ def _trump_recent_news_fetch(symbol=''):
 
 
 def _trump_translate_title(title):
-    """V2.15.2：繁中翻譯三層備援：Google GTX -> MyMemory -> 原文。"""
+    """V2.15.3：繁中翻譯三層備援：Google GTX -> MyMemory -> 原文。"""
     text=str(title or '').strip()
     if not text or not re.search(r'[A-Za-z]',text): return text
     cache=globals().setdefault('_TRUMP_TRANSLATION_CACHE',{}); key=text[:500]
@@ -13092,7 +13106,7 @@ def run_webhook_server():
         return (
             '<!doctype html><html><head><meta charset="utf-8">'
             '<meta name="viewport" content="width=device-width,initial-scale=1">'
-            '<title>Stock Alert V2.15.2</title>'
+            '<title>Stock Alert V2.15.3</title>'
             '<style>body{margin:0;padding:20px;background:#f6f7f9;color:#222}'
             '.card{max-width:900px;margin:auto;background:#fff;border-radius:14px;padding:20px;box-shadow:0 2px 12px #0001}'
             'a{word-break:break-all}</style></head><body><div class="card">'
@@ -13150,7 +13164,7 @@ def run_webhook_server():
             result=_line_industry_top3_analysis(sub,u,html_links=True,parent=display_parent)
         except Exception as ex:
             result=f'❌ 分析失敗：{type(ex).__name__}: {ex}'
-        # V2.15.2：保留 Top3 內的 /stock 超連結，但把換行轉成真正的 HTML 換行，避免手機瀏覽器全部擠成一行。
+        # V2.15.3：保留 Top3 內的 /stock 超連結，但把換行轉成真正的 HTML 換行，避免手機瀏覽器全部擠成一行。
         result_html = str(result).replace('\n', '<br>')
         body=(
             f'<div class="card"><h1>📊 {html.escape(sub)}</h1><div class="muted">大產業：{html.escape(display_parent)}</div><div class="industry-result">{result_html}</div></div>'
@@ -13255,7 +13269,7 @@ def run_webhook_server():
             rows.append(f'<p>{icon} {html.escape(_trump_translate_title(ni.get("title","")))}<br><span class="muted">{html.escape(str(ni.get("published","")))}｜Google News RSS</span></p>')
         if news.get('error'): rows.append(f'<p class="muted">⚠️ 第二層資料取得失敗：{html.escape(str(news.get("error")))}</p>')
         rows.append('</div>')
-        # V2.15.2：Trump Intelligence；把政策事件與交易訊號分離，並提供產業／估值傳導。
+        # V2.15.3：Trump Intelligence；把政策事件與交易訊號分離，並提供產業／估值傳導。
         rows.append('<div class="card"><h2>🧠 Trump Intelligence｜政策 → 產業 → 股票</h2>')
         rows.append('<p class="muted">278-T 是已申報交易；本區只把近期政策／政府投資／關稅等事件當作情境變數，不把新聞當成已發生的個人交易。</p>')
         trump_items=news.get('items',[])[:6]
@@ -14658,10 +14672,10 @@ def main():
 
     else:
 
-        print('========== V2.15.2 RUN START ==========', flush=True)
+        print('========== V2.15.3 RUN START ==========', flush=True)
         print(f'執行時間（台灣）：{datetime.now(TW_TZ).strftime("%Y-%m-%d %H:%M:%S")}', flush=True)
         run_alerts()
-        print('========== V2.15.2 RUN END ==========', flush=True)
+        print('========== V2.15.3 RUN END ==========', flush=True)
 
 
 if __name__ == '__main__':
