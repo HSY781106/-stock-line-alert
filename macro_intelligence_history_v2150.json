@@ -17,6 +17,23 @@
       "m2_yoy": 7.42,
       "usd_twd": 31.548,
       "overnight": 0.821
+    },
+    {
+      "ts": "2026-09-11T00:04:21.478265+08:00",
+      "fed_rate": 3.63,
+      "us_cpi": 3.3,
+      "us_gdp_growth": 1.5,
+      "us_unemployment": 4.1,
+      "us_10y": 4.72,
+      "us_curve_10y2y": 0.41,
+      "vix": 15.72,
+      "gdp_yoy": 12.93,
+      "cpi_yoy": 2.04,
+      "unemployment": 3.39,
+      "discount_rate": 2.0,
+      "m2_yoy": 7.42,
+      "usd_twd": 31.548,
+      "overnight": 0.821
     }
   ]
 }
