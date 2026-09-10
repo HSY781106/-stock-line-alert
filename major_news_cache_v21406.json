@@ -88,7 +88,7 @@
     "lookback_days": 14
   },
   "3711": {
-    "fetched_at": "2026-09-10T23:27:13.705153+08:00",
+    "fetched_at": "2026-09-11T07:51:34.657663+08:00",
     "adjustment": 0,
     "events": [
       {
@@ -96,6 +96,16 @@
         "source": "CMoney",
         "date": "2026-08-28T10:36:32+08:00",
         "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE53QlZmWmUzcWFNTTVBb1psTGNvMVE1NXlGWk4xSWpVZG1YTGdJVVdfT2lBaHFSdXRMSnFaaXFmZVdnWFhYdVZSVkI3Z09FeFNqWVBwdDdiYVE?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "3711 日月光投控- 🚨 主力在調節？昨日主動式ETF 減碼這檔！ - 股市爆料同學會 - CMoney",
+        "source": "CMoney",
+        "date": "2026-08-28T15:00:00+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTFBzbHZGdFhOS3pUdm1MOER4T0FhQkthVXM5dGgwcUVtRkVJelZsak5PTmlWLXktUUdHT002X3VrN3NlS1RyZjJNWlNqV3puUmctdE1RNFZ2dzQ?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
@@ -156,16 +166,6 @@
         "source": "CMoney投資網誌",
         "date": "2026-09-01T15:00:00+08:00",
         "link": "https://news.google.com/rss/articles/CBMigwFBVV95cUxPS2VBQ3I1M212WE9Pd19IRjZKaWdVTlZ3emxsellXeXBPVFhVS3ZLNW54VktmVThaeTlnY2V6a0JqSnpvcjNwcWowWGd5WW00emJpUDdrd2Z2RUV1MjhOR0Q5Q2JQRVlHLVdXaldGRVhKdF9wa3dRNkFoVUJYV25HWFhWdw?oc=5",
-        "raw_adjustment": 0,
-        "adjustment": 0,
-        "label": "",
-        "status": ""
-      },
-      {
-        "title": "日月光投控大漲立馬翻臉慘摔！兇手抓到了 36萬股東心碎 - 自由時報",
-        "source": "自由時報",
-        "date": "2026-09-02T15:00:00+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE1OMDcxY2xMMm1zWmVoRlhPc0NXaDRMX1Q0Uk11UnpNSFU4Rlloa1FHTzhqWTEycmtnLXRoa0FBOXdWbG44VmxLUU1fa01RTnJMWkozZVRCazQ?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
