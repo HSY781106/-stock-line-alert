@@ -228,6 +228,9 @@ GROQ_MODEL = os.getenv('GROQ_MODEL', 'openai/gpt-oss-20b').strip()
 AI_TIMEOUT = int(os.getenv('AI_TIMEOUT', '15') or 15)
 AI_NEWS_CACHE_FILE = 'ai_semantic_cache_v2170.json'
 AI_NEWS_CACHE_HOURS = float(os.getenv('AI_NEWS_CACHE_HOURS', '168') or 168)
+AI_MACRO_CACHE_HOURS = float(os.getenv('AI_MACRO_CACHE_HOURS', '6') or 6)
+AI_TRUMP_CACHE_HOURS = float(os.getenv('AI_TRUMP_CACHE_HOURS', '6') or 6)
+AI_WEB_ANALYSIS_ENABLED = os.getenv('AI_WEB_ANALYSIS_ENABLED', '1').strip().lower() not in ('0','false','no','off')
 AI_QUOTA_STATE_FILE = 'ai_quota_state_v2175.json'
 AI_MAX_OUTPUT_TOKENS = int(os.getenv('AI_MAX_OUTPUT_TOKENS', '700') or 700)
 AI_RETRY_ON_FAILURE = os.getenv('AI_RETRY_ON_FAILURE', '0').strip().lower() in ('1','true','yes','on')
@@ -1086,6 +1089,66 @@ def _ai_enabled(kind='all'):
     return True
 
 
+def _ai_web_enabled(kind):
+    """V2.17.6：總經／Trump 網頁分析獨立於15分鐘股票警報 AI 閘門。
+    網頁分析本來就是 AI 的主要用途之一；只有快取命中或供應商不可用時才不發 request。
+    """
+    if not AI_WEB_ANALYSIS_ENABLED:
+        return False
+    if not any(_ai_provider_key(p) for p in _ai_provider_order()):
+        return False
+    if kind == 'macro':
+        return True
+    if kind == 'trump':
+        return bool(AI_ENABLE_TRUMP)
+    return True
+
+
+def _ai_compact_payload(obj, max_chars=18000):
+    try:
+        text=json.dumps(obj, ensure_ascii=False, sort_keys=True, default=str)
+    except Exception:
+        text=str(obj)
+    return text[:max_chars]
+
+
+def _ai_macro_summary(info):
+    """V2.17.6：把總經數據轉成真正的人話版投資判讀。以資料 fingerprint 做跨請求共用快取。"""
+    if not _ai_web_enabled('macro') or not isinstance(info,dict):
+        return None
+    data=info.get('data',{}) or {}
+    payload={'regime':info.get('regime',{}),'scenarios':info.get('scenarios',[]),
+             'implications':info.get('implications',[]),'forecasts':info.get('forecasts',{}),
+             'news':(info.get('news',{}) or {}).get('items',[])[:10],'data':data}
+    fp=hashlib.sha256(_ai_compact_payload(payload,40000).encode('utf-8')).hexdigest()[:24]
+    prompt=(
+        '請根據提供的台美總經、金融市場、事件與統計預測資料，做保守的投資人版綜合判讀。\n'
+        '不要逐項重述數據，而要回答：目前總體環境偏多、偏空或混合？最重要的2到4個驅動因素是什麼？\n'
+        '對台股、台灣科技/半導體、金融、內需，以及美股/QQQ各自的主要影響？\n'
+        '未來1到3個月最需要觀察哪些變數、什麼情況會讓判斷轉向？\n'
+        '嚴格區分「資料已觀察到的事實」與「推論」，不要把統計預測寫成確定事件。\n'
+        '輸出 JSON：{"headline":"繁中一句話","regime":"偏多|中性|偏空|混合","summary":"80-180字","key_drivers":["..."],"taiwan_tech":"...","taiwan_financial":"...","taiwan_domestic":"...","us_equity":"...","watch_items":["..."],"risk_flags":["..."]}'
+    )
+    return _ai_call_json('你是保守的總經投資研究員。只做資料綜合與情境分析，不保證報酬。',prompt+'\n資料：'+_ai_compact_payload(payload),cache_key='macro_web:'+fp,ttl_hours=AI_MACRO_CACHE_HOURS)
+
+
+def _ai_trump_summary(news, factor=None, portfolio=None):
+    """V2.17.6：把 Trump 政策／新聞／公開交易資料轉成政策→產業→市場的人話分析。"""
+    if not _ai_web_enabled('trump'):
+        return None
+    payload={'market_factor':factor or {},'news':(news or {}).get('items',[])[:12],
+             'portfolio':(portfolio or [])[:40]}
+    fp=hashlib.sha256(_ai_compact_payload(payload,40000).encode('utf-8')).hexdigest()[:24]
+    prompt=(
+        '請綜合 Trump 最新政策/關稅/政府投資/市場新聞與公開申報交易資料，做投資人版判讀。\n'
+        '重點不是重述新聞，而是說明政策目前處於威脅、討論、宣布、執行、暫緩或豁免哪個階段，並判斷確定性。\n'
+        '分析政策如何傳導到半導體/AI、電子製造、能源、國防、金融、一般美股與台股出口產業。\n'
+        '特別避免把 Trump 個人公開持倉與政策新聞混為同一件事；若證據不足要明確說不知道。\n'
+        '輸出 JSON：{"headline":"繁中一句話","stance":"偏多|中性|偏空|混合","summary":"80-180字","policy_drivers":["..."],"semiconductor_ai":"...","taiwan_export":"...","us_equity":"...","policy_stage":"...","certainty":"高|中|低","watch_items":["..."],"risk_flags":["..."]}'
+    )
+    return _ai_call_json('你是保守的美國政策與市場研究員。區分事實、政策階段與推論，不把新聞當成確定股價預測。',prompt+'\n資料：'+_ai_compact_payload(payload),cache_key='trump_web:'+fp,ttl_hours=AI_TRUMP_CACHE_HOURS)
+
+
 def _ai_extract_text(payload):
     try:
         outs = payload.get('output', []) if isinstance(payload, dict) else []
@@ -1152,9 +1215,9 @@ def _ai_mark_provider_quota_exhausted(provider, reason='quota'):
         d['exhausted']=sorted(exhausted)
         d['reason_'+provider]=str(reason)[:300]
         save_json(AI_QUOTA_STATE_FILE,d)
-        print(f'V2.17.5 AI：{provider} 今日免費額度/配額已耗盡，今天後續不再呼叫 {provider}', flush=True)
+        print(f'V2.17.6 AI：{provider} 今日免費額度/配額已耗盡，今天後續不再呼叫 {provider}', flush=True)
     except Exception as e:
-        print(f'V2.17.5 AI：無法保存 {provider} quota 狀態：{type(e).__name__}: {e}', flush=True)
+        print(f'V2.17.6 AI：無法保存 {provider} quota 狀態：{type(e).__name__}: {e}', flush=True)
 
 
 def _ai_provider_order():
@@ -1203,7 +1266,7 @@ def _ai_call_provider(provider, system_prompt, user_prompt):
     # V2.17.4：所有結構化 AI 任務都明確要求「只回傳 JSON object」。
     structured_instruction=(
         str(system_prompt or '').rstrip() +
-        '\n\n【V2.17.5 輸出格式硬性規則】\n'
+        '\n\n【V2.17.6 輸出格式硬性規則】\n'
         '你必須只輸出一個合法 JSON object。\n'
         '不得輸出 Markdown、```、前言、後記、解釋文字或 JSON 以外的任何字元。\n'
         'JSON 必須能被標準 json.loads() 直接解析；不可省略必要欄位。'
@@ -1263,13 +1326,13 @@ def _ai_call_json(system_prompt, user_prompt, cache_key='', ttl_hours=72):
     - 任何 AI 失敗都 fallback，不阻斷主流程
     """
     if not any(_ai_provider_key(p) for p in _ai_provider_order()):
-        print('V2.17.5 AI：未設定 Gemini/Mistral/Groq API Key，使用規則 fallback', flush=True)
+        print('V2.17.6 AI：未設定 Gemini/Mistral/Groq API Key，使用規則 fallback', flush=True)
         return None
     now=time.time()
     if cache_key:
         c=_AI_SEMANTIC_RUN_CACHE.get(cache_key)
         if isinstance(c,dict) and now-float(c.get('ts',0) or 0)<ttl_hours*3600:
-            print('V2.17.5 AI：memory cache hit', flush=True)
+            print('V2.17.6 AI：memory cache hit', flush=True)
             return c.get('data')
         disk=load_json(AI_NEWS_CACHE_FILE)
         if isinstance(disk,dict):
@@ -1278,17 +1341,17 @@ def _ai_call_json(system_prompt, user_prompt, cache_key='', ttl_hours=72):
                 data=d.get('data')
                 if isinstance(data,dict):
                     _AI_SEMANTIC_RUN_CACHE[cache_key]={'ts':float(d.get('ts',now) or now),'data':data}
-                    print('V2.17.5 AI：disk cache hit', flush=True)
+                    print('V2.17.6 AI：disk cache hit', flush=True)
                     return data
     providers=[p for p in _ai_provider_order() if _ai_provider_key(p) and not _ai_provider_quota_exhausted(p)]
     if not providers:
-        print('V2.17.5 AI：所有已設定免費供應商今日均已耗盡配額，完全停用 AI，使用規則 fallback', flush=True)
+        print('V2.17.6 AI：所有已設定免費供應商今日均已耗盡配額，完全停用 AI，使用規則 fallback', flush=True)
         return None
     attempts=2 if AI_RETRY_ON_FAILURE else 1
     for provider in providers:
         for attempt in range(1,attempts+1):
             try:
-                print(f'V2.17.5 AI：provider={provider} request {attempt}/{attempts}', flush=True)
+                print(f'V2.17.6 AI：provider={provider} request {attempt}/{attempts}', flush=True)
                 data=_ai_call_provider(provider,system_prompt,user_prompt)
                 if cache_key:
                     _AI_SEMANTIC_RUN_CACHE[cache_key]={'ts':time.time(),'data':data}
@@ -1299,19 +1362,19 @@ def _ai_call_json(system_prompt, user_prompt, cache_key='', ttl_hours=72):
                         old=sorted(disk,key=lambda z:float(disk[z].get('ts',0) if isinstance(disk[z],dict) else 0))
                         for k in old[:-500]: disk.pop(k,None)
                     save_json(AI_NEWS_CACHE_FILE,disk)
-                print(f'V2.17.5 AI：SUCCESS｜provider={provider}', flush=True)
+                print(f'V2.17.6 AI：SUCCESS｜provider={provider}', flush=True)
                 return data
             except Exception as e:
                 msg=str(e)
-                print(f'V2.17.5 AI：FAIL｜provider={provider}｜{type(e).__name__}: {e}', flush=True)
+                print(f'V2.17.6 AI：FAIL｜provider={provider}｜{type(e).__name__}: {e}', flush=True)
                 # V2.17.4：不只 503/429。任何傳輸、逾時、空回覆、JSON 格式或 schema 異常，
                 # 都代表本次 provider 不可靠；立即熔斷該 provider，避免同一 RUN 再浪費免費 request。
                 if re.search(r'429|quota|rate.?limit|resource.?exhausted|too many requests|exceed', msg, flags=re.I):
                     _ai_mark_provider_quota_exhausted(provider, msg)
                 AI_PROVIDER_DISABLED_THIS_RUN.add(provider)
-                print(f'V2.17.5 AI：熔斷 {provider}｜本次 RUN 後續不再重試，避免浪費免費 request', flush=True)
+                print(f'V2.17.6 AI：熔斷 {provider}｜本次 RUN 後續不再重試，避免浪費免費 request', flush=True)
                 break
-    print('V2.17.5 AI：所有免費供應商均失敗，使用規則 fallback', flush=True)
+    print('V2.17.6 AI：所有免費供應商均失敗，使用規則 fallback', flush=True)
     return None
 
 
@@ -1331,7 +1394,7 @@ def _ai_runtime_status():
 
 def _print_ai_runtime_status():
     st=_ai_runtime_status()
-    print('========== V2.17.5 AI STATUS ==========', flush=True)
+    print('========== V2.17.6 AI STATUS ==========', flush=True)
     print(f"Gemini API Key：{'已設定' if st['gemini'] else '未設定'}｜模型：{GEMINI_MODEL}", flush=True)
     print(f"Mistral API Key：{'已設定' if st['mistral'] else '未設定'}｜模型：{MISTRAL_MODEL}", flush=True)
     print(f"Groq API Key：{'已設定' if st['groq'] else '未設定'}｜模型：{GROQ_MODEL}", flush=True)
@@ -14076,9 +14139,18 @@ def run_webhook_server():
     def macro_page():
         try:
             info=macro_intelligence(force=False); d=info.get('data',{}); us=d.get('us',{}); tw=d.get('taiwan',{})
+            ai_macro=_ai_macro_summary(info)
             reg=info.get('regime',{}); body=['<div class="card"><h1>🌎 Macro & Policy Intelligence</h1>',
                 '<p class="muted">五大總經象限＋統計預測＋事件情報＋情境樹＋產業傳導。理論關係、統計估計、最新事件分開標示，不把單一新聞當成確定預測。</p>']
             if d.get('_stale'): body.append('<p class="muted">⚠️ 即時來源暫時無法更新，以下沿用最近可用資料。</p>')
+            if isinstance(ai_macro,dict):
+                body.append('<div class="card"><h2>🤖 AI 總經人話判讀</h2>')
+                body.append(f'<p><b>{html.escape(str(ai_macro.get("headline","")))}</b></p>')
+                body.append(f'<p>{html.escape(str(ai_macro.get("summary","")))}</p>')
+                for key,label in (("taiwan_tech","台灣科技／半導體"),("taiwan_financial","台灣金融"),("taiwan_domestic","台灣內需"),("us_equity","美股／QQQ")):
+                    if ai_macro.get(key): body.append(f'<p><b>{label}</b>：{html.escape(str(ai_macro.get(key)))}</p>')
+                if ai_macro.get("watch_items"): body.append('<p><b>接下來觀察：</b>'+html.escape('、'.join(map(str,ai_macro.get("watch_items")[:6])))+'</p>')
+                body.append('</div>')
             body.append(f'<h2>🎯 目前總經狀態：{html.escape(str(reg.get("regime","資料不足")))}</h2><p>景氣：{html.escape(str(reg.get("growth","N/A")))}｜通膨：{html.escape(str(reg.get("inflation","N/A")))}｜勞動：{html.escape(str(reg.get("labor","N/A")))}｜市場風險：{html.escape(str(reg.get("risk","N/A")))}</p>')
             body.append('<h2>📈 統計預測（1／3／6個月）</h2><p class="muted">阻尼趨勢＋均值回歸；區間是統計不確定性，不是保證。</p>')
             labels={'us_cpi':'美CPI YoY','fed_rate':'Fed利率','us_gdp_growth':'美GDP','us_unemployment':'美失業率','us_10y':'美10Y','us_curve_10y2y':'美10Y-2Y','vix':'VIX','gdp_yoy':'台GDP YoY','cpi_yoy':'台CPI YoY','unemployment':'台失業率','discount_rate':'台重貼現率','m2_yoy':'台M2年增','usd_twd':'USD/TWD'}
@@ -14152,6 +14224,7 @@ def run_webhook_server():
         rows.append(f'<p>近180日淨買賣（主訊號）：{factor.get("net180",0):,.0f}<br>近30日：{factor.get("net30",0):,.0f}<br>近60日：{factor.get("net60",0):,.0f}<br>近90日：{factor.get("net90",0):,.0f}</p>')
         rows.append(f'<p class="muted">近180日股票／ETF交易：{factor.get("valid_transaction_count",0)} 筆；買進：{factor.get("buy_count",0)}；賣出：{factor.get("sell_count",0)}<br>資料庫已解析交易總筆數：{factor.get("transaction_count",0)}</p></div>')
         news=trump_recent_news_factor()
+        ai_trump=_ai_trump_summary(news, factor=factor, portfolio=portfolio)
         rows.append('<div class="card"><h2>🟡 第二層｜最近30日 Trump 政策／交易／產業動向</h2>')
         rows.append(f'<p><b>{html.escape(news.get("state","⚪ 無資料"))}</b>　輔助調整：<b>{int(news.get("factor",0)):+d}</b></p>')
         rows.append(f'<p class="muted">符合條件：{int(news.get("qualified_items",0))} 篇；正面：{int(news.get("positive",0))}；負面：{int(news.get("negative",0))}；中性：{int(news.get("neutral",0))}<br>⚠️ 本層包含官方交易以外的政策／言論／政府投資；政策訊號不等於 Trump 個人持股。</p>')
@@ -14160,6 +14233,14 @@ def run_webhook_server():
             rows.append(f'<p>{icon} {html.escape(_trump_translate_title(ni.get("title","")))}<br><span class="muted">{html.escape(str(ni.get("published","")))}｜Google News RSS</span></p>')
         if news.get('error'): rows.append(f'<p class="muted">⚠️ 第二層資料取得失敗：{html.escape(str(news.get("error")))}</p>')
         rows.append('</div>')
+        if isinstance(ai_trump,dict):
+            rows.append('<div class="card"><h2>🤖 AI Trump 人話判讀</h2>')
+            rows.append(f'<p><b>{html.escape(str(ai_trump.get("headline","")))}</b></p>')
+            rows.append(f'<p>{html.escape(str(ai_trump.get("summary","")))}</p>')
+            for key,label in (("semiconductor_ai","半導體／AI"),("taiwan_export","台灣出口"),("us_equity","美股"),("policy_stage","政策階段"),("certainty","確定性")):
+                if ai_trump.get(key): rows.append(f'<p><b>{label}</b>：{html.escape(str(ai_trump.get(key)))}</p>')
+            if ai_trump.get("watch_items"): rows.append('<p><b>接下來觀察：</b>'+html.escape('、'.join(map(str,ai_trump.get("watch_items")[:6])))+'</p>')
+            rows.append('</div>')
         # V2.15.4：Trump Intelligence；把政策事件與交易訊號分離，並提供產業／估值傳導。
         rows.append('<div class="card"><h2>🧠 Trump Intelligence｜政策 → 產業 → 股票</h2>')
         rows.append('<p class="muted">278-T 是已申報交易；本區只把近期政策／政府投資／關稅等事件當作情境變數，不把新聞當成已發生的個人交易。</p>')
@@ -15114,63 +15195,59 @@ def _notify_target_buy_point(name, symbol, state, u=None):
 
         score = int(to_float(buy.get('score')) or 0)
 
-        # V2.14.21：取得既有第一層「投資價值」分數。
-        # analysis()/etf_analysis() 的輸出仍是完整文字結果，因此只解析「綜合評分」；
-        # 不另外建立第二套評分模型，避免與既有雙層模型產生分數口徑不一致。
-        investment_score = None
-        try:
-            # V2.17.1：只有這個「極佳買點通知」已經進入可通知流程時，才開啟 AI。
-            if name in ('0050 元大台灣50', 'QQQ'):
-                full_result = _run_ai_alert_analysis(etf_analysis, name)
-            else:
-                full_result = _run_ai_alert_analysis(analysis, name, u, False)
-            if isinstance(full_result, str):
-                m = re.search(r'(?:ETF)?綜合評分：\s*(-?\d+(?:\.\d+)?)\s*/\s*100', full_result)
-                if m:
-                    investment_score = int(float(m.group(1)))
-        except Exception as e:
-            print(f'⚠️ V2.14.21 {name} 投資價值分數取得失敗：{type(e).__name__}: {e}', flush=True)
-
+        # V2.17.6：先建立狀態並做「不啟用 AI」的規則投資價值判定；
+        # 只有確認本輪真的同時達到「買點>=90 + 投資價值>=90 + 未鎖定」後，才呼叫 AI。
         today = datetime.now(TW_TZ).strftime('%Y-%m-%d')
         bp = state.setdefault('target_buy_point_alert', {})
         if not isinstance(bp, dict):
             bp = {}
             state['target_buy_point_alert'] = bp
-
         item = bp.get(name)
         if not isinstance(item, dict):
             item = {}
             bp[name] = item
-
         locked = bool(item.get('locked', False))
         last_date = item.get('date')
         if last_date != today:
             item['date'] = today
-            # 跨日若已跌回解鎖線，直接清除舊鎖。
             if score <= 60:
                 locked = False
                 item['locked'] = False
-
-        # 買點 <=60：解除通知鎖；下一次重新同時 >=90 + 投資價值>=90 才通知。
         if score <= 60:
             item['locked'] = False
-            print(
-                f'V2.14.21 {name} 買點 {score}：跌回60以下/等於60，解除通知鎖',
-                flush=True
-            )
+            print(f'V2.17.6 {name} 買點 {score}：跌回60以下/等於60，解除通知鎖', flush=True)
             return buy
-
-        # 已通知且尚未跌回60：完全不重複 LINE。
         if locked:
-            print(
-                f'V2.14.21 {name} 買點 {score}、投資價值 '
-                f'{investment_score if investment_score is not None else "N/A"}：'
-                f'已通知且尚未跌回60，不重複 LINE',
-                flush=True
-            )
+            print(f'V2.17.6 {name} 買點 {score}：已通知且尚未跌回60，不重複 LINE', flush=True)
             return buy
 
-        # 只有「超低點 + 嚴重低估」才消耗 LINE 額度。
+        investment_score = None
+        try:
+            # 先用規則模型取得第一層分數；此步驟禁止 AI。
+            if name in ('0050 元大台灣50', 'QQQ'):
+                rule_result = etf_analysis(name)
+            else:
+                rule_result = analysis(name, u, False)
+            if isinstance(rule_result, str):
+                m = re.search(r'(?:ETF)?綜合評分：\s*(-?\d+(?:\.\d+)?)\s*/\s*100', rule_result)
+                if m: investment_score = int(float(m.group(1)))
+        except Exception as e:
+            print(f'V2.17.6 {name} 規則投資價值分數取得失敗：{type(e).__name__}: {e}', flush=True)
+
+        if investment_score is None or investment_score < 90:
+            print(f'V2.17.6 {name} 買點 {score}、投資價值 {investment_score if investment_score is not None else "N/A"}：未達 LINE 門檻，不呼叫 AI', flush=True)
+            return buy
+
+        # 真的即將送出極佳買點 LINE，現在才允許 AI。
+        try:
+            if name in ('0050 元大台灣50', 'QQQ'):
+                full_result = _run_ai_alert_analysis(etf_analysis, name)
+            else:
+                full_result = _run_ai_alert_analysis(analysis, name, u, False)
+        except Exception as e:
+            full_result = None
+            print(f'V2.17.6 {name} AI 加碼分析失敗：{type(e).__name__}: {e}', flush=True)
+
         if score >= 90 and investment_score is not None and investment_score >= 90:
             price = to_float(tech.get('price'))
             trend = buy.get('trend_state') or 'N/A'
