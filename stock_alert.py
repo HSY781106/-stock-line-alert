@@ -234,7 +234,7 @@ AI_MAX_OUTPUT_TOKENS = int(os.getenv('AI_MAX_OUTPUT_TOKENS', '700') or 700)
 AI_RETRY_ON_FAILURE = os.getenv('AI_RETRY_ON_FAILURE', '0').strip().lower() in ('1','true','yes','on')
 AI_MAX_NEWS_PER_BATCH = int(os.getenv('AI_MAX_NEWS_PER_BATCH', '4') or 4)
 AI_MAX_TRUMP_PER_BATCH = int(os.getenv('AI_MAX_TRUMP_PER_BATCH', '4') or 4)
-AI_PROVIDER_DISABLED_THIS_RUN = set()  # V2.17.3 503/429 provider 熔斷
+AI_PROVIDER_DISABLED_THIS_RUN = set()  # V2.17.4：任何 AI 傳輸/格式失敗都熔斷該 provider，避免本次 RUN 重複浪費 request
 AI_ENABLE_FINAL_SUMMARY = os.getenv('AI_ENABLE_FINAL_SUMMARY', '0').strip().lower() not in ('0','false','no','off')
 AI_ENABLE_NEWS = os.getenv('AI_ENABLE_NEWS', '1').strip().lower() not in ('0','false','no','off')
 AI_ENABLE_TRUMP = os.getenv('AI_ENABLE_TRUMP', '1').strip().lower() not in ('0','false','no','off')
@@ -1107,17 +1107,28 @@ def _ai_extract_text(payload):
 
 
 def _ai_json(text):
+    """V2.17.4：多層 JSON 防呆。
+    1) 直接解析；2) 去 Markdown code fence；3) 擷取最外層 JSON object。
+    不對內容做猜測或自行補欄位，解析不了就交給上層熔斷。
+    """
     text=str(text or '').strip()
     if not text:
         return None
-    text=re.sub(r'^```(?:json)?\s*|\s*```$','',text.strip(),flags=re.I|re.S).strip()
-    try:
-        return json.loads(text)
-    except Exception:
-        m=re.search(r'\{.*\}',text,re.S)
-        if m:
-            try: return json.loads(m.group(0))
-            except Exception: return None
+    candidates=[text]
+    cleaned=re.sub(r'^\s*```(?:json)?\s*|\s*```\s*$','',text,flags=re.I|re.S).strip()
+    if cleaned and cleaned not in candidates:
+        candidates.append(cleaned)
+    # 非貪婪掃描可能抓到內層物件；這裡保留原本最寬鬆的第一個「{...}」策略。
+    m=re.search(r'\{.*\}',cleaned or text,re.S)
+    if m and m.group(0) not in candidates:
+        candidates.append(m.group(0))
+    for candidate in candidates:
+        try:
+            obj=json.loads(candidate)
+            if isinstance(obj,dict):
+                return obj
+        except Exception:
+            pass
     return None
 
 
@@ -1131,13 +1142,13 @@ def _ai_budget_allow_and_reserve():
         if not isinstance(d,dict) or d.get('date')!=today: d={'date':today,'calls':0}
         calls=int(d.get('calls',0) or 0)
         if calls >= AI_DAILY_MAX_CALLS:
-            print(f'V2.17.3 AI：今日 request 上限 {AI_DAILY_MAX_CALLS}，改用規則 fallback', flush=True)
+            print(f'V2.17.4 AI：今日 request 上限 {AI_DAILY_MAX_CALLS}，改用規則 fallback', flush=True)
             return False
         d['calls']=calls+1; save_json(AI_BUDGET_FILE,d)
-        print(f"V2.17.3 AI：今日 request {d['calls']}/{AI_DAILY_MAX_CALLS}", flush=True)
+        print(f"V2.17.4 AI：今日 request {d['calls']}/{AI_DAILY_MAX_CALLS}", flush=True)
         return True
     except Exception as e:
-        print(f'V2.17.3 AI：預算檔異常，禁止本次 AI 呼叫：{type(e).__name__}: {e}', flush=True)
+        print(f'V2.17.4 AI：預算檔異常，禁止本次 AI 呼叫：{type(e).__name__}: {e}', flush=True)
         return False
 
 
@@ -1184,10 +1195,18 @@ def _ai_call_provider(provider, system_prompt, user_prompt):
     key=_ai_provider_key(provider)
     if not key:
         return None
+    # V2.17.4：所有結構化 AI 任務都明確要求「只回傳 JSON object」。
+    structured_instruction=(
+        str(system_prompt or '').rstrip() +
+        '\n\n【V2.17.4 輸出格式硬性規則】\n'
+        '你必須只輸出一個合法 JSON object。\n'
+        '不得輸出 Markdown、```、前言、後記、解釋文字或 JSON 以外的任何字元。\n'
+        'JSON 必須能被標準 json.loads() 直接解析；不可省略必要欄位。'
+    )
     if provider=='gemini':
         url=f'https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent'
         payload={
-            'system_instruction': {'parts':[{'text':str(system_prompt or '')}]},
+            'system_instruction': {'parts':[{'text':structured_instruction}]},
             'contents':[{'role':'user','parts':[{'text':str(user_prompt or '')}]}],
             'generationConfig': {
                 'responseMimeType':'application/json',
@@ -1200,7 +1219,7 @@ def _ai_call_provider(provider, system_prompt, user_prompt):
         payload={
             'model':MISTRAL_MODEL,
             'messages':[
-                {'role':'system','content':str(system_prompt or '')},
+                {'role':'system','content':structured_instruction},
                 {'role':'user','content':str(user_prompt or '')}
             ],
             'max_tokens':AI_MAX_OUTPUT_TOKENS,
@@ -1212,7 +1231,7 @@ def _ai_call_provider(provider, system_prompt, user_prompt):
         payload={
             'model':GROQ_MODEL,
             'messages':[
-                {'role':'system','content':str(system_prompt or '')},
+                {'role':'system','content':structured_instruction},
                 {'role':'user','content':str(user_prompt or '')}
             ],
             'max_completion_tokens':AI_MAX_OUTPUT_TOKENS,
@@ -1232,20 +1251,20 @@ def _ai_call_provider(provider, system_prompt, user_prompt):
 
 
 def _ai_call_json(system_prompt, user_prompt, cache_key='', ttl_hours=72):
-    """V2.17.0：Gemini Free 主力 + Mistral/Groq Free 備援。
+    """V2.17.4：Gemini Free 主力 + Mistral/Groq Free 備援。
     - 不記錄任何 API key
     - cache hit 不重複呼叫
     - 共用每日 request fuse
     - 任何 AI 失敗都 fallback，不阻斷主流程
     """
     if not any(_ai_provider_key(p) for p in _ai_provider_order()):
-        print('V2.17.3 AI：未設定 Gemini/Mistral/Groq API Key，使用規則 fallback', flush=True)
+        print('V2.17.4 AI：未設定 Gemini/Mistral/Groq API Key，使用規則 fallback', flush=True)
         return None
     now=time.time()
     if cache_key:
         c=_AI_SEMANTIC_RUN_CACHE.get(cache_key)
         if isinstance(c,dict) and now-float(c.get('ts',0) or 0)<ttl_hours*3600:
-            print('V2.17.3 AI：memory cache hit', flush=True)
+            print('V2.17.4 AI：memory cache hit', flush=True)
             return c.get('data')
         disk=load_json(AI_NEWS_CACHE_FILE)
         if isinstance(disk,dict):
@@ -1254,7 +1273,7 @@ def _ai_call_json(system_prompt, user_prompt, cache_key='', ttl_hours=72):
                 data=d.get('data')
                 if isinstance(data,dict):
                     _AI_SEMANTIC_RUN_CACHE[cache_key]={'ts':float(d.get('ts',now) or now),'data':data}
-                    print('V2.17.3 AI：disk cache hit', flush=True)
+                    print('V2.17.4 AI：disk cache hit', flush=True)
                     return data
     if not _ai_budget_allow_and_reserve():
         return None
@@ -1263,7 +1282,7 @@ def _ai_call_json(system_prompt, user_prompt, cache_key='', ttl_hours=72):
     for provider in providers:
         for attempt in range(1,attempts+1):
             try:
-                print(f'V2.17.3 AI：provider={provider} request {attempt}/{attempts}', flush=True)
+                print(f'V2.17.4 AI：provider={provider} request {attempt}/{attempts}', flush=True)
                 data=_ai_call_provider(provider,system_prompt,user_prompt)
                 if cache_key:
                     _AI_SEMANTIC_RUN_CACHE[cache_key]={'ts':time.time(),'data':data}
@@ -1274,17 +1293,17 @@ def _ai_call_json(system_prompt, user_prompt, cache_key='', ttl_hours=72):
                         old=sorted(disk,key=lambda z:float(disk[z].get('ts',0) if isinstance(disk[z],dict) else 0))
                         for k in old[:-500]: disk.pop(k,None)
                     save_json(AI_NEWS_CACHE_FILE,disk)
-                print(f'V2.17.3 AI：SUCCESS｜provider={provider}', flush=True)
+                print(f'V2.17.4 AI：SUCCESS｜provider={provider}', flush=True)
                 return data
             except Exception as e:
                 msg=str(e)
-                print(f'V2.17.3 AI：FAIL｜provider={provider}｜{type(e).__name__}: {e}', flush=True)
-                if 'HTTP 503' in msg or 'HTTP 429' in msg or 'UNAVAILABLE' in msg or 'RESOURCE_EXHAUSTED' in msg:
-                    AI_PROVIDER_DISABLED_THIS_RUN.add(provider)
-                    print(f'V2.17.3 AI：熔斷 {provider}｜本次 RUN 後續不再重試，避免浪費免費 request', flush=True)
-                    break
-                if attempt<attempts: time.sleep(1.0)
-    print('V2.17.3 AI：所有免費供應商均失敗，使用規則 fallback', flush=True)
+                print(f'V2.17.4 AI：FAIL｜provider={provider}｜{type(e).__name__}: {e}', flush=True)
+                # V2.17.4：不只 503/429。任何傳輸、逾時、空回覆、JSON 格式或 schema 異常，
+                # 都代表本次 provider 不可靠；立即熔斷該 provider，避免同一 RUN 再浪費免費 request。
+                AI_PROVIDER_DISABLED_THIS_RUN.add(provider)
+                print(f'V2.17.4 AI：熔斷 {provider}｜本次 RUN 後續不再重試，避免浪費免費 request', flush=True)
+                break
+    print('V2.17.4 AI：所有免費供應商均失敗，使用規則 fallback', flush=True)
     return None
 
 
@@ -1304,7 +1323,7 @@ def _ai_runtime_status():
 
 def _print_ai_runtime_status():
     st=_ai_runtime_status()
-    print('========== V2.17.3 AI STATUS ==========', flush=True)
+    print('========== V2.17.4 AI STATUS ==========', flush=True)
     print(f"Gemini API Key：{'已設定' if st['gemini'] else '未設定'}｜模型：{GEMINI_MODEL}", flush=True)
     print(f"Mistral API Key：{'已設定' if st['mistral'] else '未設定'}｜模型：{MISTRAL_MODEL}", flush=True)
     print(f"Groq API Key：{'已設定' if st['groq'] else '未設定'}｜模型：{GROQ_MODEL}", flush=True)
@@ -10753,7 +10772,7 @@ def analysis(
         fund_weight_text = "本產業實際配分：N/A（無有效基本面指標）"
 
     # --------------------------------------------------------
-    # V2.17.3 AI 最終整合：只讀取各層既有結果，不改動量化分數。
+    # V2.17.4 AI 最終整合：只讀取各層既有結果，不改動量化分數。
     # --------------------------------------------------------
     ai_final_text=''
     if AI_ENABLE_FINAL_SUMMARY:
@@ -10771,7 +10790,7 @@ def analysis(
             ai_final=_ai_final_investment_summary(_snapshot)
             ai_final_text=_format_ai_final_summary(ai_final)
         except Exception as e:
-            print(f'V2.17.3 AI 最終結論失敗：{type(e).__name__}: {e}',flush=True)
+            print(f'V2.17.4 AI 最終結論失敗：{type(e).__name__}: {e}',flush=True)
     if not ai_final_text and AI_ENABLE_FINAL_SUMMARY:
         # 沒有 API key 時仍提供 deterministic 摘要，避免畫面留白。
         _conflict='投資價值與買點不同步' if ((fs>=24 and buy.get('score',0)<60) or (fs<24 and buy.get('score',0)>=60)) else '各層訊號大致一致'
@@ -13015,8 +13034,9 @@ def _macro_series_history(series_key, d=None, min_points=MACRO_FORECAST_MIN_POIN
     if not _MACRO_FRED_HISTORY_ATTEMPTED:
         _MACRO_FRED_HISTORY_ATTEMPTED=True
         cache={}
+        batch_failed=False
         try:
-            # V2.17.0：若有 FRED_API_KEY，優先走官方 observations JSON；沒有則繼續公開 CSV。
+            # V2.17.4：若有 FRED_API_KEY，優先走官方 observations JSON；沒有則繼續公開 CSV。
             if FRED_API_KEY:
                 def _fred_api_one(item):
                     k,sid=item
@@ -13050,7 +13070,14 @@ def _macro_series_history(series_key, d=None, min_points=MACRO_FORECAST_MIN_POIN
                         pairs=[(pairs[i][0],(raw[i]/raw[i-12]-1)*100) for i in range(12,len(raw)) if raw[i-12]!=0]
                     if pairs: cache[key]=pairs
         except Exception as e:
-            print(f'V2.17.1 FRED多序列歷史不足：{type(e).__name__}: {e}',flush=True)
+            batch_failed=True
+            print(f'V2.17.4 FRED多序列歷史取得失敗：{type(e).__name__}: {e}',flush=True)
+
+        # V2.17.4：多序列批次失敗後，不再對 7 個序列逐一重抓。
+        # 否則一次 timeout 會變成 7 次 timeout，拖慢整個 workflow；改用本地歷史/中性 fallback。
+        if batch_failed:
+            _MACRO_FRED_HISTORY_CACHE={}
+            return (_MACRO_FRED_HISTORY_CACHE or {}).get(series_key,vals)
 
         def fetch_one(item):
             key,sid=item
@@ -15586,7 +15613,7 @@ def main():
 
         print('========== V2.17.1 RUN START ==========', flush=True)
         _print_ai_runtime_status()
-        print('V2.17.3 AI 閘門：每15分鐘自動掃描只有達到 LINE 發送門檻後才啟用 AI；未觸發時完全不呼叫 AI', flush=True)
+        print('V2.17.4 AI 閘門：每15分鐘自動掃描只有達到 LINE 發送門檻後才啟用 AI；未觸發時完全不呼叫 AI', flush=True)
         print(f'執行時間（台灣）：{datetime.now(TW_TZ).strftime("%Y-%m-%d %H:%M:%S")}', flush=True)
         run_alerts()
         print('========== V2.17.1 RUN END ==========', flush=True)
