@@ -1,27 +1,20 @@
 {
-  "_cached_at": 1788992428.1769423,
-  "_version": 3,
+  "_cached_at": 1788999350.0587244,
+  "_version": 4,
   "data": {
-    "updated_at": "2026-09-10T06:20:28.177098+08:00",
+    "updated_at": "2026-09-10T08:15:50.058973+08:00",
     "us": {},
     "taiwan": {
       "usd_twd": 31.505,
       "m2_yoy": 7.42,
       "overnight": 0.824,
-      "discount_rate": 2.0,
-      "source": "https://www.cbc.gov.tw/app.asp?xdUrl=appKeyIndicators.asp"
+      "discount_rate": 2.0
     },
     "sources": {
-      "cbc": "https://www.cbc.gov.tw/tw/mp-1.html"
+      "cbc": "https://www.cbc.gov.tw/app.asp?xdUrl=appKeyIndicators.asp"
     },
     "errors": [
-      "FRED FEDFUNDS: ReadTimeout: HTTPSConnectionPool(host='fred.stlouisfed.org', port=443): Read timed out. (read timeout=10)",
-      "FRED CPIAUCSL: ReadTimeout: HTTPSConnectionPool(host='fred.stlouisfed.org', port=443): Read timed out. (read timeout=10)",
-      "FRED A191RL1Q225SBEA: ReadTimeout: HTTPSConnectionPool(host='fred.stlouisfed.org', port=443): Read timed out. (read timeout=10)",
-      "FRED UNRATE: ReadTimeout: HTTPSConnectionPool(host='fred.stlouisfed.org', port=443): Read timed out. (read timeout=10)",
-      "FRED DGS10: ReadTimeout: HTTPSConnectionPool(host='fred.stlouisfed.org', port=443): Read timed out. (read timeout=10)",
-      "FRED T10Y2Y: ReadTimeout: HTTPSConnectionPool(host='fred.stlouisfed.org', port=443): Read timed out. (read timeout=10)",
-      "FRED VIXCLS: ReadTimeout: HTTPSConnectionPool(host='fred.stlouisfed.org', port=443): Read timed out. (read timeout=10)",
+      "FRED batch: ReadTimeout: HTTPSConnectionPool(host='fred.stlouisfed.org', port=443): Read timed out. (read timeout=10)",
       "DGBAS: TooManyRedirects: Exceeded 30 redirects."
     ]
   }
