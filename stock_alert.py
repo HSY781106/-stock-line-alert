@@ -228,8 +228,7 @@ GROQ_MODEL = os.getenv('GROQ_MODEL', 'openai/gpt-oss-20b').strip()
 AI_TIMEOUT = int(os.getenv('AI_TIMEOUT', '15') or 15)
 AI_NEWS_CACHE_FILE = 'ai_semantic_cache_v2170.json'
 AI_NEWS_CACHE_HOURS = float(os.getenv('AI_NEWS_CACHE_HOURS', '168') or 168)
-AI_DAILY_MAX_CALLS = int(os.getenv('AI_DAILY_MAX_CALLS', '8') or 8)
-AI_BUDGET_FILE = 'ai_budget_v2170.json'
+AI_QUOTA_STATE_FILE = 'ai_quota_state_v2175.json'
 AI_MAX_OUTPUT_TOKENS = int(os.getenv('AI_MAX_OUTPUT_TOKENS', '700') or 700)
 AI_RETRY_ON_FAILURE = os.getenv('AI_RETRY_ON_FAILURE', '0').strip().lower() in ('1','true','yes','on')
 AI_MAX_NEWS_PER_BATCH = int(os.getenv('AI_MAX_NEWS_PER_BATCH', '4') or 4)
@@ -1132,24 +1131,30 @@ def _ai_json(text):
     return None
 
 
-def _ai_budget_today():
-    return datetime.now(timezone.utc).strftime('%Y-%m-%d')
+def _ai_quota_today():
+    return datetime.now(TW_TZ).strftime('%Y-%m-%d')
 
-def _ai_budget_allow_and_reserve():
-    today=_ai_budget_today()
+def _ai_provider_quota_exhausted(provider):
     try:
-        d=load_json(AI_BUDGET_FILE)
-        if not isinstance(d,dict) or d.get('date')!=today: d={'date':today,'calls':0}
-        calls=int(d.get('calls',0) or 0)
-        if calls >= AI_DAILY_MAX_CALLS:
-            print(f'V2.17.4 AI：今日 request 上限 {AI_DAILY_MAX_CALLS}，改用規則 fallback', flush=True)
-            return False
-        d['calls']=calls+1; save_json(AI_BUDGET_FILE,d)
-        print(f"V2.17.4 AI：今日 request {d['calls']}/{AI_DAILY_MAX_CALLS}", flush=True)
-        return True
-    except Exception as e:
-        print(f'V2.17.4 AI：預算檔異常，禁止本次 AI 呼叫：{type(e).__name__}: {e}', flush=True)
+        d=load_json(AI_QUOTA_STATE_FILE)
+        return isinstance(d,dict) and d.get('date')==_ai_quota_today() and provider in (d.get('exhausted') or [])
+    except Exception:
         return False
+
+def _ai_mark_provider_quota_exhausted(provider, reason='quota'):
+    try:
+        today=_ai_quota_today()
+        d=load_json(AI_QUOTA_STATE_FILE)
+        if not isinstance(d,dict) or d.get('date')!=today:
+            d={'date':today,'exhausted':[]}
+        exhausted=set(d.get('exhausted') or [])
+        exhausted.add(provider)
+        d['exhausted']=sorted(exhausted)
+        d['reason_'+provider]=str(reason)[:300]
+        save_json(AI_QUOTA_STATE_FILE,d)
+        print(f'V2.17.5 AI：{provider} 今日免費額度/配額已耗盡，今天後續不再呼叫 {provider}', flush=True)
+    except Exception as e:
+        print(f'V2.17.5 AI：無法保存 {provider} quota 狀態：{type(e).__name__}: {e}', flush=True)
 
 
 def _ai_provider_order():
@@ -1198,7 +1203,7 @@ def _ai_call_provider(provider, system_prompt, user_prompt):
     # V2.17.4：所有結構化 AI 任務都明確要求「只回傳 JSON object」。
     structured_instruction=(
         str(system_prompt or '').rstrip() +
-        '\n\n【V2.17.4 輸出格式硬性規則】\n'
+        '\n\n【V2.17.5 輸出格式硬性規則】\n'
         '你必須只輸出一個合法 JSON object。\n'
         '不得輸出 Markdown、```、前言、後記、解釋文字或 JSON 以外的任何字元。\n'
         'JSON 必須能被標準 json.loads() 直接解析；不可省略必要欄位。'
@@ -1254,17 +1259,17 @@ def _ai_call_json(system_prompt, user_prompt, cache_key='', ttl_hours=72):
     """V2.17.4：Gemini Free 主力 + Mistral/Groq Free 備援。
     - 不記錄任何 API key
     - cache hit 不重複呼叫
-    - 共用每日 request fuse
+    - 不設定人工每日 request 上限；以供應商實際免費額度/配額回應為準
     - 任何 AI 失敗都 fallback，不阻斷主流程
     """
     if not any(_ai_provider_key(p) for p in _ai_provider_order()):
-        print('V2.17.4 AI：未設定 Gemini/Mistral/Groq API Key，使用規則 fallback', flush=True)
+        print('V2.17.5 AI：未設定 Gemini/Mistral/Groq API Key，使用規則 fallback', flush=True)
         return None
     now=time.time()
     if cache_key:
         c=_AI_SEMANTIC_RUN_CACHE.get(cache_key)
         if isinstance(c,dict) and now-float(c.get('ts',0) or 0)<ttl_hours*3600:
-            print('V2.17.4 AI：memory cache hit', flush=True)
+            print('V2.17.5 AI：memory cache hit', flush=True)
             return c.get('data')
         disk=load_json(AI_NEWS_CACHE_FILE)
         if isinstance(disk,dict):
@@ -1273,16 +1278,17 @@ def _ai_call_json(system_prompt, user_prompt, cache_key='', ttl_hours=72):
                 data=d.get('data')
                 if isinstance(data,dict):
                     _AI_SEMANTIC_RUN_CACHE[cache_key]={'ts':float(d.get('ts',now) or now),'data':data}
-                    print('V2.17.4 AI：disk cache hit', flush=True)
+                    print('V2.17.5 AI：disk cache hit', flush=True)
                     return data
-    if not _ai_budget_allow_and_reserve():
+    providers=[p for p in _ai_provider_order() if _ai_provider_key(p) and not _ai_provider_quota_exhausted(p)]
+    if not providers:
+        print('V2.17.5 AI：所有已設定免費供應商今日均已耗盡配額，完全停用 AI，使用規則 fallback', flush=True)
         return None
-    providers=[p for p in _ai_provider_order() if _ai_provider_key(p)]
     attempts=2 if AI_RETRY_ON_FAILURE else 1
     for provider in providers:
         for attempt in range(1,attempts+1):
             try:
-                print(f'V2.17.4 AI：provider={provider} request {attempt}/{attempts}', flush=True)
+                print(f'V2.17.5 AI：provider={provider} request {attempt}/{attempts}', flush=True)
                 data=_ai_call_provider(provider,system_prompt,user_prompt)
                 if cache_key:
                     _AI_SEMANTIC_RUN_CACHE[cache_key]={'ts':time.time(),'data':data}
@@ -1293,17 +1299,19 @@ def _ai_call_json(system_prompt, user_prompt, cache_key='', ttl_hours=72):
                         old=sorted(disk,key=lambda z:float(disk[z].get('ts',0) if isinstance(disk[z],dict) else 0))
                         for k in old[:-500]: disk.pop(k,None)
                     save_json(AI_NEWS_CACHE_FILE,disk)
-                print(f'V2.17.4 AI：SUCCESS｜provider={provider}', flush=True)
+                print(f'V2.17.5 AI：SUCCESS｜provider={provider}', flush=True)
                 return data
             except Exception as e:
                 msg=str(e)
-                print(f'V2.17.4 AI：FAIL｜provider={provider}｜{type(e).__name__}: {e}', flush=True)
+                print(f'V2.17.5 AI：FAIL｜provider={provider}｜{type(e).__name__}: {e}', flush=True)
                 # V2.17.4：不只 503/429。任何傳輸、逾時、空回覆、JSON 格式或 schema 異常，
                 # 都代表本次 provider 不可靠；立即熔斷該 provider，避免同一 RUN 再浪費免費 request。
+                if re.search(r'429|quota|rate.?limit|resource.?exhausted|too many requests|exceed', msg, flags=re.I):
+                    _ai_mark_provider_quota_exhausted(provider, msg)
                 AI_PROVIDER_DISABLED_THIS_RUN.add(provider)
-                print(f'V2.17.4 AI：熔斷 {provider}｜本次 RUN 後續不再重試，避免浪費免費 request', flush=True)
+                print(f'V2.17.5 AI：熔斷 {provider}｜本次 RUN 後續不再重試，避免浪費免費 request', flush=True)
                 break
-    print('V2.17.4 AI：所有免費供應商均失敗，使用規則 fallback', flush=True)
+    print('V2.17.5 AI：所有免費供應商均失敗，使用規則 fallback', flush=True)
     return None
 
 
@@ -1323,12 +1331,12 @@ def _ai_runtime_status():
 
 def _print_ai_runtime_status():
     st=_ai_runtime_status()
-    print('========== V2.17.4 AI STATUS ==========', flush=True)
+    print('========== V2.17.5 AI STATUS ==========', flush=True)
     print(f"Gemini API Key：{'已設定' if st['gemini'] else '未設定'}｜模型：{GEMINI_MODEL}", flush=True)
     print(f"Mistral API Key：{'已設定' if st['mistral'] else '未設定'}｜模型：{MISTRAL_MODEL}", flush=True)
     print(f"Groq API Key：{'已設定' if st['groq'] else '未設定'}｜模型：{GROQ_MODEL}", flush=True)
     print(f"AI 主力：{AI_PROVIDER}｜NEWS：{'ON' if st['news'] else 'OFF'}｜TRUMP：{'ON' if st['trump'] else 'OFF'}｜FINAL：{'ON' if st['final'] else 'OFF'}", flush=True)
-    print(f"AI 備援順序：{','.join(AI_FALLBACK_PROVIDERS) or '無'}｜每日 request fuse：{AI_DAILY_MAX_CALLS}", flush=True)
+    print(f"AI 備援順序：{','.join(AI_FALLBACK_PROVIDERS) or '無'}｜每日人工 request 上限：無（以供應商免費額度/配額為準）", flush=True)
     print(f"FRED_API_KEY：{'已設定' if st['fred_api_key'] else '未設定（使用公開 FRED CSV）'}", flush=True)
 
 
