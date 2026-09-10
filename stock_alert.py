@@ -410,8 +410,15 @@ LINE_INDUSTRY_SESSION_TTL = 10 * 60
 # V2.15.6：Render 產業頁短期分析快取。只快取已完成的 Top3 detail，避免使用者
 # 反覆切換同一產業／個股時重新觸發 3 次完整技術刷新；TTL 到期仍會重新取得最新資料。
 WEB_INDUSTRY_ANALYSIS_CACHE = {}
-WEB_INDUSTRY_ANALYSIS_CACHE_TTL = 5 * 60
+WEB_INDUSTRY_ANALYSIS_CACHE_TTL = 15 * 60
 WEB_INDUSTRY_ANALYSIS_CACHE_LOCK = threading.Lock()
+
+# V2.15.6 speed foundation (kept under V2.15.6 release): Render 產業頁
+# 同一個 process 不重複從 GitHub 下載 1985 檔市場 metadata。TTL 10 分鐘；
+# Top3 的價格仍由 analysis() 取得可用的最新價格。
+WEB_INDUSTRY_UNIVERSE_CACHE = {}
+WEB_INDUSTRY_UNIVERSE_CACHE_TTL = 10 * 60
+WEB_INDUSTRY_UNIVERSE_CACHE_LOCK = threading.Lock()
 
 
 # ============================================================
@@ -10974,6 +10981,75 @@ def _line_industry_official_candidates(subindustries, parent, u, data):
     return out
 
 
+def _web_get_query_universe(query):
+    """V2.15.6 speed fix：Web 產業頁共用短期市場 metadata。
+
+    不改 LINE 查詢的 build_line_query_universe() 行為；只避免 Render 同一
+    process 在每個 /industry request 都重新讀 GitHub market universe。
+    """
+    key = re.sub(r'\s+', '', str(query or '').strip().upper()) or '__ALL__'
+    now = time.time()
+    with WEB_INDUSTRY_UNIVERSE_CACHE_LOCK:
+        z = WEB_INDUSTRY_UNIVERSE_CACHE.get(key)
+        if isinstance(z, dict) and now - float(z.get('ts', 0) or 0) < WEB_INDUSTRY_UNIVERSE_CACHE_TTL:
+            data = z.get('data')
+            if isinstance(data, dict) and data:
+                return data
+    data = build_line_query_universe(query)
+    if isinstance(data, dict) and data:
+        with WEB_INDUSTRY_UNIVERSE_CACHE_LOCK:
+            WEB_INDUSTRY_UNIVERSE_CACHE[key] = {'ts': now, 'data': data}
+            if len(WEB_INDUSTRY_UNIVERSE_CACHE) > 8:
+                old = sorted(WEB_INDUSTRY_UNIVERSE_CACHE.items(), key=lambda kv: kv[1].get('ts', 0))[:3]
+                for k, _ in old:
+                    WEB_INDUSTRY_UNIVERSE_CACHE.pop(k, None)
+    return data or {}
+
+
+def _line_industry_run_top3_analysis(top, u, label='產業'):
+    """V2.15.6 speed fix：三檔 Top3 分析並行執行。
+
+    analysis() 本身包含 Yahoo/官方資料 I/O；序列執行會把三檔延遲相加。
+    這裡只並行彼此獨立的股票，不改評分公式。
+    """
+    def one(row):
+        cap, code, item = row
+        name = str(item.get('name') or code).strip()
+        price = to_float(item.get('price'))
+        first_score = buy_score = None
+        buy_verdict = 'N/A'
+        try:
+            # 產業頁優先使用既有技術快取；不要每次都強制 Yahoo 下載 6 個月日線。
+            detail, cache_hit = _line_industry_analysis_cached(code, name, u)
+            first_score, buy_score, buy_verdict = _line_extract_analysis_scores(detail)
+            pm = re.search(r'目前價格：\s*([0-9,]+(?:\.\d+)?)', detail)
+            if pm:
+                price = to_float(pm.group(1))
+        except Exception as ex:
+            print(f'V2.15.6 {label} Top3 分析失敗 {code}: {type(ex).__name__}: {ex}', flush=True)
+        return (code, name, price, cap, first_score, buy_score, buy_verdict)
+
+    # 先把全市場 PE 共用快取暖起來；避免 3 個 worker 首次同時觸發同一份官方 PE 請求。
+    try:
+        get_current_pe_data()
+    except Exception as ex:
+        print(f'V2.15.6 產業頁 PE 快取預熱失敗：{type(ex).__name__}: {ex}', flush=True)
+    results = {}
+    workers = min(3, len(top)) or 1
+    with ThreadPoolExecutor(max_workers=workers, thread_name_prefix='industry-top3') as ex:
+        futures = {ex.submit(one, row): row for row in top}
+        for fut in as_completed(futures):
+            row = futures[fut]
+            code = row[1]
+            try:
+                results[code] = fut.result()
+            except Exception as ex2:
+                cap, code, item = row
+                results[code] = (code, str(item.get('name') or code).strip(), to_float(item.get('price')), cap, None, None, 'N/A')
+                print(f'V2.15.6 {label} Top3 worker 失敗 {code}: {type(ex2).__name__}: {ex2}', flush=True)
+    return [results[clean_code(row[1])] for row in top]
+
+
 def _line_industry_analysis_cached(code, name, u):
     """V2.15.6：產業頁 5 分鐘分析快取。"""
     key = clean_code(code)
@@ -10982,7 +11058,7 @@ def _line_industry_analysis_cached(code, name, u):
         cached = WEB_INDUSTRY_ANALYSIS_CACHE.get(key)
         if isinstance(cached, dict) and now - float(cached.get('ts', 0)) < WEB_INDUSTRY_ANALYSIS_CACHE_TTL:
             return cached.get('detail', ''), True
-    detail = analysis(f'{key} {name}', u, backfill=False, line_light=True, force_technical_refresh=True)
+    detail = analysis(f'{key} {name}', u, backfill=False, line_light=True, force_technical_refresh=False)
     with WEB_INDUSTRY_ANALYSIS_CACHE_LOCK:
         WEB_INDUSTRY_ANALYSIS_CACHE[key] = {'ts': now, 'detail': detail}
         if len(WEB_INDUSTRY_ANALYSIS_CACHE) > 100:
@@ -11009,21 +11085,9 @@ def _line_industry_top3_analysis(subindustry, u, html_links=False, parent=None):
     top = candidates[:3]
     if not top:
         return f'❌ 找不到「{subindustry}」的股票資料。\n\n可能是官方次產業快取尚未涵蓋，或該細產業目前沒有符合條件的上市櫃股票。'
+    analyzed = _line_industry_run_top3_analysis(top, u, label='產業')
     rows = []
-    for rank, (cap, code, item) in enumerate(top, 1):
-        name = str(item.get('name') or code).strip()
-        symbol = item.get('symbol') or symbol_for(code, item.get('market'))
-        price = to_float(item.get('price'))
-        first_score = buy_score = None
-        buy_verdict = 'N/A'
-        try:
-            detail = analysis(f'{code} {name}', u, backfill=False, line_light=True, force_technical_refresh=True)
-            first_score, buy_score, buy_verdict = _line_extract_analysis_scores(detail)
-            pm = re.search(r'目前價格：\s*([0-9,]+(?:\.\d+)?)', detail)
-            if pm:
-                price = to_float(pm.group(1))
-        except Exception as e:
-            print(f'V2.14.21 產業 Top3 分析失敗 {code}: {type(e).__name__}: {e}', flush=True)
+    for rank, (code, name, price, cap, first_score, buy_score, buy_verdict) in enumerate(analyzed, 1):
         rows.append({'rank': rank, 'code': code, 'name': name, 'price': price,
                      'market_cap': _line_industry_market_cap_100m(cap),
                      'first_score': first_score, 'buy_score': buy_score, 'buy_verdict': buy_verdict})
@@ -13231,20 +13295,9 @@ def _web_direct_industry_stock_result(query, u):
         if not top:
             return f'❌ 找不到「{code} {item.get("name") or ""}」所屬官方次產業的股票資料。'
 
+        analyzed = _line_industry_run_top3_analysis(top, u, label='外部產業直接查詢')
         rows=[]
-        for rank,(cap,cc,stock) in enumerate(top,1):
-            name=str(stock.get('name') or cc).strip()
-            price=to_float(stock.get('price'))
-            first_score=buy_score=None
-            buy_verdict='N/A'
-            try:
-                detail,_cache_hit=_line_industry_analysis_cached(cc,name,u)
-                first_score,buy_score,buy_verdict=_line_extract_analysis_scores(detail)
-                pm=re.search(r'目前價格：\s*([0-9,]+(?:\.\d+)?)',detail)
-                if pm:
-                    price=to_float(pm.group(1))
-            except Exception as ex:
-                print(f'V2.15.5 外部產業直接查詢 Top3 分析失敗 {cc}: {type(ex).__name__}: {ex}',flush=True)
+        for rank,(cc,name,price,cap,first_score,buy_score,buy_verdict) in enumerate(analyzed,1):
             rows.append((rank,cc,name,price,cap,first_score,buy_score,buy_verdict))
 
         lines=[
@@ -13377,7 +13430,7 @@ def run_webhook_server():
         stock_query = str(request.args.get('stock') or '').strip()
         if not parent and stock_query:
             try:
-                u = build_line_query_universe(stock_query)
+                u = _web_get_query_universe(stock_query)
                 result = _web_direct_industry_stock_result(stock_query, u)
                 if result:
                     result_html = str(result).replace('\n', '<br>')
@@ -13400,9 +13453,11 @@ def run_webhook_server():
             )
             return _web_page('產業分析',body)
         try:
-            u=build_line_query_universe(parent)
-            u, _ = _line_industry_fetch_parent_data(parent, u)
+            u=_web_get_query_universe(parent)
             options=_line_industry_build_subindustry_menu(parent,u)
+            if not options:
+                u, _ = _line_industry_fetch_parent_data(parent, u)
+                options=_line_industry_build_subindustry_menu(parent,u)
         except Exception as ex:
             return _web_page('產業分析',f'<div class="card"><h1>❌ 產業資料取得失敗</h1><pre>{html.escape(str(ex))}</pre></div>'),500
         if not options:
@@ -13418,7 +13473,7 @@ def run_webhook_server():
             return _web_page('產業分析',body)
         try:
             display_parent = _line_industry_parent_for_subindustry(sub) or parent
-            if display_parent != parent:
+            if display_parent != parent and not _line_industry_build_subindustry_menu(display_parent,u):
                 u, _ = _line_industry_fetch_parent_data(display_parent, u)
             result=_line_industry_top3_analysis(sub,u,html_links=True,parent=display_parent)
         except Exception as ex:
