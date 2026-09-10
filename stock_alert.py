@@ -193,7 +193,7 @@ _TRUMP_RECENT_NEWS_CACHE = {}
 MACRO_CACHE_FILE = 'macro_systemic_cache_v21442.json'
 MACRO_CACHE_HOURS = 6
 MACRO_CACHE_VERSION = 8
-# V2.15.3：Macro & Policy Intelligence；保留舊總經快取格式，但另建歷史/事件快取。
+# V2.15.4：Macro & Policy Intelligence；保留舊總經快取格式，但另建歷史/事件快取。
 MACRO_HISTORY_FILE = 'macro_intelligence_history_v2150.json'
 MACRO_HISTORY_VERSION = 1
 MACRO_HISTORY_MAX_DAYS = 730
@@ -735,7 +735,7 @@ def canonical_industry(v):
         '生技醫療業': '生技醫療',
         '醫療保健業': '醫療保健',
         '觀光事業': '觀光餐旅',
-        # V2.15.3：官方產業資料常以「建設業／營建業」記錄，LINE 第一層使用「建材營造」。
+        # V2.15.4：官方產業資料常以「建設業／營建業」記錄，LINE 第一層使用「建材營造」。
         '建設業': '建材營造',
         '營建業': '建材營造'
     }
@@ -9517,7 +9517,7 @@ def yahoo_etf_profile(symbol):
 
     is_tw=str(symbol).upper().endswith(('.TW','.TWO'))
     if is_tw:
-        # V2.15.3：TWSE feed 的 e=market price 可能與同一執行中的即時行情不同步。
+        # V2.15.4：TWSE feed 的 e=market price 可能與同一執行中的即時行情不同步。
         # 因此「目前價格」以本函式前面取得的即時行情為唯一權威；TWSE 只提供 NAV / assets。
         # premium 不直接採用 TWSE 的 g，最後一律用「即時價格 ÷ NAV - 1」重新計算。
         twse=_twse_etf_nav_fallback(symbol)
@@ -9546,7 +9546,7 @@ def yahoo_etf_profile(symbol):
     if out.get('yield') is not None and not (0<=out['yield']<=30): out['yield']=None
     if out.get('beta') is not None and not (-5<=out['beta']<=5): out['beta']=None
     if out.get('expense') is not None and not (0<=out['expense']<=10): out['expense']=None; out['expense_source']=None
-    # V2.15.3：只要同時有 authoritative live price + NAV，就強制重算折溢價。
+    # V2.15.4：只要同時有 authoritative live price + NAV，就強制重算折溢價。
     # 不接受 TWSE g 或 Yahoo 舊 premium，避免 price/NAV/premium 三者互相矛盾。
     if out.get('price') is not None and out.get('nav') is not None and out['nav']>0:
         prem=(out['price']/out['nav']-1)*100
@@ -10570,13 +10570,17 @@ def _line_industry_canonical_parent(text):
 
 
 def _line_industry_load_data():
-    cache = load_json(SUBINDUSTRY_CACHE_FILE)
-    data = cache.get('data', {}) if isinstance(cache, dict) else {}
-    if not isinstance(data, dict) or not data:
-        remote = load_remote_subindustry_cache()
-        data = remote.get('data', {}) if isinstance(remote, dict) else {}
-    return data if isinstance(data, dict) else {}
-
+    """V2.15.4：合併 Render 本機與 GitHub Actions 最新公開次產業快取。"""
+    cache=load_json(SUBINDUSTRY_CACHE_FILE)
+    local=cache.get('data',{}) if isinstance(cache,dict) else {}
+    if not isinstance(local,dict): local={}
+    remote=load_remote_subindustry_cache()
+    remote_data=remote.get('data',{}) if isinstance(remote,dict) else {}
+    if not isinstance(remote_data,dict): remote_data={}
+    if not local: return remote_data
+    if not remote_data: return local
+    merged=dict(local); merged.update(remote_data)
+    return merged
 
 # LINE 第一層產業選單：固定顯示順序。記憶體保留為最後的產品導覽入口。
 LINE_INDUSTRY_PARENT_MENU = [
@@ -10738,7 +10742,7 @@ def _line_extract_analysis_scores(text):
     )
 
 
-# V2.15.3：官方產業價值鏈的「次產業」與 TWSE 大產業不是一對一字串關係。
+# V2.15.4：官方產業價值鏈的「次產業」與 TWSE 大產業不是一對一字串關係。
 # 明確的官方節點若被舊快取掛到錯誤 parent，必須以正確 parent 為準。
 LINE_SUBINDUSTRY_PARENT_OVERRIDES = {
     _line_industry_norm('建設業'): '建材營造',
@@ -10750,62 +10754,35 @@ def _line_industry_parent_for_subindustry(subindustry):
 
 
 def _line_industry_build_subindustry_menu(parent, u):
-    """V2.15.3：次產業選單必須維持「大產業→官方次產業」一對一階層。
-
-    舊版先讀 industry_subindustry_menu_cache，若舊快取曾混入跨產業次產業，
-    就會出現「水泥工業 → 建設業」這類錯配。現在優先由 subindustry_cache 的
-    records 重新建立 parent/sub 關係；只有完全沒有 records 才退回舊索引。
-    """
-    parent_c = canonical_industry(parent)
-    override_subs = {k for k,v in LINE_SUBINDUSTRY_PARENT_OVERRIDES.items() if canonical_industry(v)==parent_c}
-    blocked_subs = {k for k,v in LINE_SUBINDUSTRY_PARENT_OVERRIDES.items() if canonical_industry(v)!=parent_c}
-    options = []
-
-    data = _line_industry_load_data()
-    if isinstance(data, dict) and data:
-        for info in data.values():
-            if not isinstance(info, dict):
-                continue
-            records = info.get('records', [])
-            if isinstance(records, list) and records:
-                for rec in records:
-                    if not isinstance(rec, dict):
-                        continue
-                    rec_parent = canonical_industry(rec.get('industry') or rec.get('main_industry') or '')
-                    if rec_parent != parent_c:
-                        continue
-                    n = normalize_subindustry(rec.get('sub_industry') or rec.get('subindustry') or rec.get('node') or '')
-                    if _line_industry_norm(n) in blocked_subs:
-                        continue
-                    if n and n not in options:
-                        options.append(n)
-            else:
-                info_parent = canonical_industry(info.get('industry') or info.get('main_industry') or '')
-                if info_parent != parent_c:
-                    continue
-                subs = info.get('subindustries', []) or []
-                if not isinstance(subs, list):
-                    subs = [subs]
+    """V2.15.4：官方 records 優先；records 缺 parent 時以股票官方大產業補階層。"""
+    parent_c=canonical_industry(parent)
+    blocked={k for k,v in LINE_SUBINDUSTRY_PARENT_OVERRIDES.items() if canonical_industry(v)!=parent_c}
+    options=[]; data=_line_industry_load_data()
+    if isinstance(data,dict):
+        for code,info in data.items():
+            if not isinstance(info,dict): continue
+            records=info.get('records',[]); records=records if isinstance(records,list) else []
+            usable=False
+            for rec in records:
+                if not isinstance(rec,dict): continue
+                rp=canonical_industry(rec.get('industry') or rec.get('main_industry') or '')
+                n=normalize_subindustry(rec.get('sub_industry') or rec.get('subindustry') or rec.get('node') or '')
+                if rp and n: usable=True
+                if rp==parent_c and n and _line_industry_norm(n) not in blocked and n not in options: options.append(n)
+            if not usable:
+                item=u.get(clean_code(code)) if isinstance(u,dict) else None
+                ip=canonical_industry(item.get('industry') if isinstance(item,dict) else '')
+                if not ip: ip=canonical_industry(info.get('industry') or info.get('main_industry') or '')
+                if ip!=parent_c: continue
+                subs=info.get('subindustries',[]); subs=subs if isinstance(subs,list) else [subs]
                 for sub in subs:
-                    n = normalize_subindustry(sub)
-                    if _line_industry_norm(n) in blocked_subs:
-                        continue
-                    if n and n not in options:
-                        options.append(n)
-        if options:
-            return sorted(options, key=lambda x: (_line_industry_norm(x), x))
-
-    # V2.15.3：不再使用扁平舊 menu cache 或 u.subindustries 反推 parent。
-    # 這兩種資料沒有可靠 parent 關聯，是過去「水泥工業→建設業」污染的來源。
-    # 只有明確的 parent override 才可作最後備援。
-    for sub_norm, forced_parent in LINE_SUBINDUSTRY_PARENT_OVERRIDES.items():
-        if canonical_industry(forced_parent)==parent_c and sub_norm not in blocked_subs:
-            # 建設業的官方節點已由 TPEx/TWSE records 確認；records 暫時缺失時才保留這個單點 fallback。
-            if sub_norm==_line_industry_norm('建設業') and '建設業' not in options:
-                options.append('建設業')
-            elif sub_norm==_line_industry_norm('營建業') and '營建業' not in options:
-                options.append('營建業')
-    return sorted(options, key=lambda x: (_line_industry_norm(x), x))
+                    n=normalize_subindustry(sub)
+                    if n and _line_industry_norm(n) not in blocked and n not in options: options.append(n)
+    if options: return sorted(options,key=lambda x:(_line_industry_norm(x),x))
+    for sub_norm,forced_parent in LINE_SUBINDUSTRY_PARENT_OVERRIDES.items():
+        if canonical_industry(forced_parent)==parent_c and sub_norm not in blocked:
+            options.append('建設業' if sub_norm==_line_industry_norm('建設業') else '營建業')
+    return sorted(set(options),key=lambda x:(_line_industry_norm(x),x))
 
 def _line_industry_fetch_parent_data(parent, u):
     """V2.14.21：背景工作才補抓指定大產業，避免 webhook/LINE Reply 被外部 API 卡住。"""
@@ -12158,7 +12135,7 @@ def _trump_news_company_name(symbol):
 
 
 def _macro_fred_batch_latest():
-    """V2.15.3：一次請求 FRED 全部美國指標，避免 7 個序列各自 timeout。"""
+    """V2.15.4：一次請求 FRED 全部美國指標，避免 7 個序列各自 timeout。"""
     series_ids=list(MACRO_FRED_SERIES.values())
     # FRED graph endpoint 支援以逗號分隔的多序列 CSV。
     url='https://fred.stlouisfed.org/graph/fredgraph.csv?id='+quote(','.join(series_ids))
@@ -12195,7 +12172,7 @@ def _macro_fred_batch_latest():
     return out
 
 def _macro_fred_latest(series_id, derive_yoy=False):
-    """V2.15.3：保留單序列 API 相容介面，實際優先使用 batch 結果。"""
+    """V2.15.4：保留單序列 API 相容介面，實際優先使用 batch 結果。"""
     url='https://fred.stlouisfed.org/graph/fredgraph.csv?id='+quote(series_id)
     last_err=None
     for verify in (True, False):
@@ -12215,7 +12192,7 @@ def _macro_fred_latest(series_id, derive_yoy=False):
 
 
 def _macro_dgbas_latest():
-    """V2.15.3：主計總處採獨立指標解析；解析失敗時保留最近官方已知值，不再整組 N/A。"""
+    """V2.15.4：主計總處採獨立指標解析；解析失敗時保留最近官方已知值，不再整組 N/A。"""
     out={'gdp_yoy':None,'cpi_yoy':None,'unemployment':None,'sources':[DGBAS_NEWS_PAGE_URL],'published':{}}
     text=''
     try:
@@ -12248,7 +12225,7 @@ def _macro_dgbas_latest():
 
 
 def _macro_cbc_latest():
-    """V2.15.3：央行重要指標頁；即使央行頁連線/解析失敗，也逐欄使用已核對官方值，絕不回傳 N/A。"""
+    """V2.15.4：央行重要指標頁；即使央行頁連線/解析失敗，也逐欄使用已核對官方值，絕不回傳 N/A。"""
     out={'usd_twd':None,'m2_yoy':None,'overnight':None,'discount_rate':None,
          'source':CBC_KEY_INDICATORS_URL,'fallback_dates':{}}
     # 最近核對的央行官方值：僅作為「來源暫時不可用/頁面格式變動」時的保底，
@@ -12331,7 +12308,7 @@ def _macro_history_append(d):
 
 
 def _macro_series_history(series_key, d=None, min_points=MACRO_FORECAST_MIN_POINTS):
-    """V2.15.3：歷史 FRED 只允許本次 process 一次批次嘗試，失敗後絕不重試。"""
+    """V2.15.4：歷史 FRED 只允許本次 process 一次批次嘗試，失敗後絕不重試。"""
     global _MACRO_FRED_HISTORY_CACHE, _MACRO_FRED_HISTORY_ATTEMPTED, _MACRO_HISTORY_RUN_CACHE
     if _MACRO_HISTORY_RUN_CACHE is None:
         hist=load_json(MACRO_HISTORY_FILE)
@@ -12367,7 +12344,7 @@ def _macro_series_history(series_key, d=None, min_points=MACRO_FORECAST_MIN_POIN
                     if pairs: cache[key]=pairs
             _MACRO_FRED_HISTORY_CACHE=cache
         except Exception as e:
-            print(f'V2.15.3 FRED歷史批次略過：{type(e).__name__}: {e}',flush=True)
+            print(f'V2.15.4 FRED歷史批次略過：{type(e).__name__}: {e}',flush=True)
             _MACRO_FRED_HISTORY_CACHE={}
     return (_MACRO_FRED_HISTORY_CACHE or {}).get(series_key,vals)
 
@@ -12404,7 +12381,7 @@ def _macro_forecast_one(series_key, current, horizon, d=None):
 
 
 def _macro_news_fetch(force=False):
-    """Fetch concrete macro/policy events from Google News RSS; V2.15.3 同一 process 共用結果。"""
+    """Fetch concrete macro/policy events from Google News RSS; V2.15.4 同一 process 共用結果。"""
     global _MACRO_NEWS_RUN_CACHE
     if not force and isinstance(_MACRO_NEWS_RUN_CACHE,dict) and _MACRO_NEWS_RUN_CACHE.get('data') is not None:
         return _MACRO_NEWS_RUN_CACHE['data']
@@ -12468,7 +12445,7 @@ def _macro_regime(d):
 
 
 def macro_intelligence(force=False):
-    """V2.15.3 five-quadrant macro transmission + statistical forecast + event intelligence.
+    """V2.15.4 five-quadrant macro transmission + statistical forecast + event intelligence.
     One complete intelligence calculation per Workflow run; stock scoring reuses it.
     """
     global _MACRO_INTELLIGENCE_RUN_CACHE
@@ -12540,7 +12517,7 @@ def macro_industry_impact(industry='', subindustries=None, name=''):
 
 
 def macro_fetch(force=False):
-    """V2.15.3：台美總經資料中心；同一 Workflow 行程只抓一次，Render 仍使用磁碟快取。"""
+    """V2.15.4：台美總經資料中心；同一 Workflow 行程只抓一次，Render 仍使用磁碟快取。"""
     global _MACRO_RUN_CACHE
     if not force and isinstance(_MACRO_RUN_CACHE,dict) and _MACRO_RUN_CACHE.get('data'):
         return _MACRO_RUN_CACHE['data']
@@ -12578,7 +12555,7 @@ def macro_fetch(force=False):
                 d['us'][key]={'value':v,'date':dt,'series':sid,'unit':'YoY %' if key=='us_cpi' else '','fallback':True}
     except Exception as e:
         d['errors'].append(f'FRED batch: {type(e).__name__}: {e}')
-        # V2.15.3：批次端點失敗時，不再做 7 次慢速 timeout；改用最近已驗證的官方 FRED last-known-good。
+        # V2.15.4：批次端點失敗時，不再做 7 次慢速 timeout；改用最近已驗證的官方 FRED last-known-good。
         # 下一次成功連線時會自動覆蓋。
         fred_fallback={
             'fed_rate':(3.63,'2026-09-04'),
@@ -12606,7 +12583,7 @@ def macro_fetch(force=False):
         except Exception: pass
         _MACRO_RUN_CACHE={'data':d}
         return d
-    # V2.15.3：網頁／Render 不應因外部宏觀資料源暫時逾時而整頁空白。
+    # V2.15.4：網頁／Render 不應因外部宏觀資料源暫時逾時而整頁空白。
     # 若本次全部來源失敗，保留上一份可用快取並標示為 stale。
     if isinstance(cached,dict) and isinstance(cached.get('data'),dict) and cached.get('data'):
         stale=dict(cached.get('data') or {})
@@ -12633,7 +12610,7 @@ def macro_profile_for_stock(industry, subindustries=None, name=''):
 
 
 def macro_stock_factor(industry, subindustries=None, name=''):
-    """V2.15.3：總經五象限傳導後的個股輔助調整，仍限制在 -3~+3。"""
+    """V2.15.4：總經五象限傳導後的個股輔助調整，仍限制在 -3~+3。"""
     try:
         x=macro_industry_impact(industry,subindustries,name)
         score=int(x.get('factor',0) or 0)
@@ -12718,7 +12695,7 @@ def _trump_recent_news_fetch(symbol=''):
 
 
 def _trump_translate_title(title):
-    """V2.15.3：繁中翻譯三層備援：Google GTX -> MyMemory -> 原文。"""
+    """V2.15.4：繁中翻譯三層備援：Google GTX -> MyMemory -> 原文。"""
     text=str(title or '').strip()
     if not text or not re.search(r'[A-Za-z]',text): return text
     cache=globals().setdefault('_TRUMP_TRANSLATION_CACHE',{}); key=text[:500]
@@ -13106,7 +13083,7 @@ def run_webhook_server():
         return (
             '<!doctype html><html><head><meta charset="utf-8">'
             '<meta name="viewport" content="width=device-width,initial-scale=1">'
-            '<title>Stock Alert V2.15.3</title>'
+            '<title>Stock Alert V2.15.4</title>'
             '<style>body{margin:0;padding:20px;background:#f6f7f9;color:#222}'
             '.card{max-width:900px;margin:auto;background:#fff;border-radius:14px;padding:20px;box-shadow:0 2px 12px #0001}'
             'a{word-break:break-all}</style></head><body><div class="card">'
@@ -13124,7 +13101,7 @@ def run_webhook_server():
             'h1{font-size:24px;margin:4px 0 14px}h2{font-size:18px;margin:0 0 12px}p{line-height:1.6}'
             'select,input,button{width:100%;box-sizing:border-box;font-size:16px;padding:12px;border:1px solid #d1d5db;border-radius:10px;margin:6px 0 12px;background:#fff}'
             'button{background:#111827;color:#fff;border:0;font-weight:700}.muted{color:#6b7280;font-size:13px}'
-            'pre{white-space:pre-wrap;line-height:1.55;font-family:inherit}.industry-result{line-height:1.75;word-break:break-word}.industry-result a{font-weight:700}.nav{display:flex;gap:8px}.nav a{flex:1;text-align:center;padding:10px;border-radius:10px;background:#eef2ff;color:#111827;text-decoration:none}'
+            'pre{white-space:pre-wrap;line-height:1.55;font-family:inherit}.industry-result{line-height:1.75;word-break:break-word}.industry-result a{font-weight:700}.nav{display:flex;gap:8px}.nav a{flex:1;text-align:center;padding:10px;border-radius:10px;background:#eef2ff;color:#111827;text-decoration:none}.forecast-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.forecast-card{background:#f8fafc;border:1px solid #e5e7eb;border-radius:12px;padding:12px}.forecast-card h3{margin:0 0 8px;font-size:16px}.forecast-card p{margin:8px 0;font-size:14px}@media(max-width:680px){.forecast-grid{grid-template-columns:1fr}}'
             '</style></head><body><div class="wrap">' + body + '</div></body></html>'
         )
 
@@ -13143,6 +13120,7 @@ def run_webhook_server():
             return _web_page('產業分析',body)
         try:
             u=build_line_query_universe(parent)
+            u, _ = _line_industry_fetch_parent_data(parent, u)
             options=_line_industry_build_subindustry_menu(parent,u)
         except Exception as ex:
             return _web_page('產業分析',f'<div class="card"><h1>❌ 產業資料取得失敗</h1><pre>{html.escape(str(ex))}</pre></div>'),500
@@ -13164,7 +13142,7 @@ def run_webhook_server():
             result=_line_industry_top3_analysis(sub,u,html_links=True,parent=display_parent)
         except Exception as ex:
             result=f'❌ 分析失敗：{type(ex).__name__}: {ex}'
-        # V2.15.3：保留 Top3 內的 /stock 超連結，但把換行轉成真正的 HTML 換行，避免手機瀏覽器全部擠成一行。
+        # V2.15.4：保留 Top3 內的 /stock 超連結，但把換行轉成真正的 HTML 換行，避免手機瀏覽器全部擠成一行。
         result_html = str(result).replace('\n', '<br>')
         body=(
             f'<div class="card"><h1>📊 {html.escape(sub)}</h1><div class="muted">大產業：{html.escape(display_parent)}</div><div class="industry-result">{result_html}</div></div>'
@@ -13197,12 +13175,18 @@ def run_webhook_server():
             body.append(f'<h2>🎯 目前總經狀態：{html.escape(str(reg.get("regime","資料不足")))}</h2><p>景氣：{html.escape(str(reg.get("growth","N/A")))}｜通膨：{html.escape(str(reg.get("inflation","N/A")))}｜勞動：{html.escape(str(reg.get("labor","N/A")))}｜市場風險：{html.escape(str(reg.get("risk","N/A")))}</p>')
             body.append('<h2>📈 統計預測（1／3／6個月）</h2><p class="muted">阻尼趨勢＋均值回歸；區間是統計不確定性，不是保證。</p>')
             labels={'us_cpi':'美CPI YoY','fed_rate':'Fed利率','us_gdp_growth':'美GDP','us_unemployment':'美失業率','us_10y':'美10Y','us_curve_10y2y':'美10Y-2Y','vix':'VIX','gdp_yoy':'台GDP YoY','cpi_yoy':'台CPI YoY','unemployment':'台失業率','discount_rate':'台重貼現率','m2_yoy':'台M2年增','usd_twd':'USD/TWD'}
-            for k,label in labels.items():
-                cur=_macro_value(d,k); fs=info['forecasts'].get(k,{})
-                cells=[]
-                for h in (1,3,6):
-                    z=fs.get(str(h),{}); cells.append(f'{h}M：'+('N/A' if z.get('value') is None else f"{z["value"]:.2f} [{z["low"]:.2f},{z["high"]:.2f}] C{z["confidence"]}"))
-                body.append(f'<p><b>{label}</b>｜目前：{("N/A" if cur is None else f"{cur:.2f}")}<br>{"｜".join(cells)}</p>')
+            body.append('<div class="forecast-grid">')
+            for h,title in ((1,'📅 1個月'),(3,'📅 3個月'),(6,'📅 6個月')):
+                body.append(f'<div class="forecast-card"><h3>{title}</h3>')
+                for k,label in labels.items():
+                    cur=_macro_value(d,k); z=info['forecasts'].get(k,{}).get(str(h),{})
+                    current='N/A' if cur is None else f'{cur:.2f}'
+                    if z.get('value') is None: forecast='N/A'
+                    else: forecast=f"{z['value']:.2f} <span class=\"muted\">[{z['low']:.2f}, {z['high']:.2f}]｜C{z['confidence']}｜n={z.get('n',0)}</span>"
+                    body.append(f'<p><b>{label}</b><br>目前 {current} → <b>{forecast}</b></p>')
+                body.append('</div>')
+            body.append('</div>')
+            body.append('<p class="muted">C＝模型信心；n＝歷史觀測點。n不足時模型會保守貼近目前值，不代表高可信度預測。</p>')
             body.append('<h2>🧭 五大總經象限／傳導網</h2>')
             for q in info['quadrants']:
                 body.append(f'<p><b>{html.escape(q["name"])}</b><br>{html.escape(q["chain"])}</p>')
@@ -13269,7 +13253,7 @@ def run_webhook_server():
             rows.append(f'<p>{icon} {html.escape(_trump_translate_title(ni.get("title","")))}<br><span class="muted">{html.escape(str(ni.get("published","")))}｜Google News RSS</span></p>')
         if news.get('error'): rows.append(f'<p class="muted">⚠️ 第二層資料取得失敗：{html.escape(str(news.get("error")))}</p>')
         rows.append('</div>')
-        # V2.15.3：Trump Intelligence；把政策事件與交易訊號分離，並提供產業／估值傳導。
+        # V2.15.4：Trump Intelligence；把政策事件與交易訊號分離，並提供產業／估值傳導。
         rows.append('<div class="card"><h2>🧠 Trump Intelligence｜政策 → 產業 → 股票</h2>')
         rows.append('<p class="muted">278-T 是已申報交易；本區只把近期政策／政府投資／關稅等事件當作情境變數，不把新聞當成已發生的個人交易。</p>')
         trump_items=news.get('items',[])[:6]
@@ -13288,7 +13272,7 @@ def run_webhook_server():
         else: rows.append('<p>目前沒有可辨識的股票／ETF資料。</p>')
         rows.append('</div>')
         if err: rows.append(f'<div class="card"><p>⚠️ {html.escape(err)}</p></div>')
-        rows.append('<div class="card"><h2>🔎 查詢任一美股／ETF的川普直接曝險</h2><form method="get" action="/trump-stock"><input name="symbol" placeholder="例如 DELL、NVDA、QQQ、SPY（不限於川普持股）" required><button type="submit">查詢個別標的</button></form></div>')
+        rows.append('<div class="card"><h2>🔎 查詢任一台股／美股／ETF的 Trump 標的 Intelligence</h2><form method="get" action="/trump-stock"><input name="symbol" placeholder="例如 2330、3711、NVDA、DELL、QQQ、SPY（不限於川普持股）" required><button type="submit">查詢個別標的</button></form></div>')
         rows.append('<div class="nav"><a href="/industry">🏭 產業分析</a><a href="/macro">🌎 總經</a><a href="/">首頁</a></div>')
         return _web_page('川普投資風向', ''.join(rows))
 
@@ -13296,16 +13280,48 @@ def run_webhook_server():
     def trump_stock_page():
         symbol=str(request.args.get('symbol') or '').strip().upper()
         if not symbol:
-            return _web_page('川普個股', '<div class="card"><h1>🇺🇸 川普個別標的</h1><form method="get"><input name="symbol" placeholder="DELL / NVDA / QQQ" required><button>查詢</button></form></div>')
-        factor=trump_stock_factor(symbol)
-        news=trump_recent_news_factor(symbol)
-        body=(f'<div class="card"><h1>🇺🇸 {html.escape(symbol)}｜川普直接曝險</h1>'
-              f'<p><b>{html.escape(str(factor.get("state","無資料")))}</b>　調整：<b>{int(factor.get("factor",0)):+d}</b></p>'
-              f'<p>近180日可辨識直接交易：{int(factor.get("transactions",0))} 筆（歷史共 {int(factor.get("all_transactions",0))} 筆）<br>公開持倉：{"有" if factor.get("held") else "無／未辨識"}</p>' +
-              ('<p><b>最近交易明細</b></p>' + ''.join(f'<p>{html.escape(str(x.get("date","")))}｜{"買進" if x.get("side")=="buy" else "賣出"}｜{html.escape(str(x.get("value_range","")))}</p>' for x in factor.get("latest_transactions",[])[:5]) + '<p class="muted">這是公開申報資料訊號，不代表即時交易，也不代表投資建議。</p></div>') +
-              f'<div class="card"><h2>🟡 第二層｜最近30日 {html.escape(symbol)} 相關 Trump 政策／市場資訊</h2><p><b>{html.escape(news.get("state","⚪ 無資料"))}</b>　輔助調整：<b>{int(news.get("factor",0)):+d}</b></p>' + ''.join(f'<p>{"🟢" if x.get("side")=="positive" else "🔴" if x.get("side")=="negative" else "⚪"} {html.escape(str(x.get("title","")))}<br><span class="muted">{html.escape(str(x.get("published","")))}</span></p>' for x in news.get('items',[])[:6]) + '<p class="muted">⚠️ 政策／市場資訊不等於 Trump 官方已申報交易；278-T 仍為第一層主訊號。</p></div>' +
-              '<div class="nav"><a href="/trump">← 川普總覽</a><a href="/industry">🏭 產業分析</a><a href="/macro">🌎 總經</a></div>')
-        return _web_page('川普個別標的',body)
+            return _web_page('Trump 個別標的', '<div class="card"><h1>🇺🇸 Trump 個別標的 Intelligence</h1><p>支援台股、美股、ETF；不只查 Trump 是否持有，也分析政策／關稅／政府投資如何傳導到標的。</p><form method="get"><input name="symbol" placeholder="2330 / 3711 / NVDA / DELL / QQQ" required><button>開始分析</button></form></div>')
+        try:
+            lookup=symbol.replace('.TW','').replace('.TWO','').replace('.US','')
+            u=build_line_query_universe(lookup)
+            item=u.get(lookup) if isinstance(u,dict) else None
+            if item is None and lookup.isdigit(): item=u.get(clean_code(lookup)) if isinstance(u,dict) else None
+            item=item if isinstance(item,dict) else {}
+            name=str(item.get('name') or lookup); industry=str(item.get('industry') or item.get('major_industry') or '')
+            subs=item.get('subindustries') or item.get('subindustry') or []
+            if isinstance(subs,str): subs=[subs]
+            market=str(item.get('market') or ('TWSE' if lookup.isdigit() else 'US'))
+            direct=trump_stock_factor(lookup); news=trump_recent_news_factor(lookup); theme=trump_theme_stock_factor(lookup,industry,subs,name); market_factor=trump_market_factor()
+            direct_f=int(direct.get('factor',0) or 0); news_f=int(news.get('factor',0) or 0); theme_f=int(theme.get('factor',0) or 0); combined=max(-8,min(8,direct_f+news_f+theme_f))
+            overall='🟢 Trump因素偏正面／可增加曝險' if combined>=4 else '🟢 Trump因素略偏正面' if combined>=1 else '🔴 Trump因素偏負面／降低曝險' if combined<=-4 else '🟠 Trump因素略偏負面' if combined<0 else '🟡 Trump因素中性／等待事件確認'
+            p_base,p_up,p_down=.50,.25,.25
+            if news_f>0: p_up+=.10; p_base-=.05; p_down-=.05
+            if news_f<0: p_down+=.10; p_base-=.05; p_up-=.05
+            if theme_f>0: p_up+=.05; p_base-=.025; p_down-=.025
+            if theme_f<0: p_down+=.05; p_base-=.025; p_up-=.025
+            total=p_base+p_up+p_down; p_base,p_up,p_down=[x/total for x in (p_base,p_up,p_down)]
+            body=[f'<div class="card"><h1>🇺🇸 {html.escape(name)}（{html.escape(lookup)}）｜Trump Intelligence</h1>',f'<p><b>市場：</b>{html.escape(market)}　<b>產業：</b>{html.escape(industry or "N/A")}　<b>次產業：</b>{html.escape(", ".join(str(x) for x in subs) if subs else "N/A")}</p>',f'<p><b>Trump綜合影響：</b><span style="font-size:18px">{overall}</span>　調整 <b>{combined:+d}</b></p>','<p class="muted">278-T 是已申報交易；政策／新聞是另一層事件訊號。這裡回答的是 Trump 因素對這個標的的額外風險／機會。</p></div>']
+            body.append('<div class="card"><h2>① 直接交易／公開持倉</h2>'); body.append(f'<p><b>{html.escape(str(direct.get("state","⚪ 無資料")))}</b>　直接交易調整：<b>{direct_f:+d}</b></p><p>近180日交易：{int(direct.get("transactions",0))} 筆　｜公開持倉：{"有" if direct.get("held") else "無／未辨識"}</p>')
+            txs=direct.get('latest_transactions',[]) or []
+            for x in txs[:5]: body.append(f'<p>• {html.escape(str(x.get("date","")))}｜{"買進" if x.get("side")=="buy" else "賣出"}｜{html.escape(str(x.get("value_range","")))}</p>')
+            if not txs: body.append('<p class="muted">近180日沒有可辨識的 Trump 個別標的交易。</p>')
+            body.append('</div>')
+            body.append('<div class="card"><h2>② 政策／新聞 → 產業 → 標的</h2>'); body.append(f'<p><b>{html.escape(str(news.get("state","⚪ 無資料")))}</b>　近期事件：<b>{news_f:+d}</b>　｜　<b>{html.escape(str(theme.get("state","⚪ 中性")))}</b>　產業政策：<b>{theme_f:+d}</b></p>')
+            if theme.get('reasons'): body.append('<p>相關主題：'+html.escape('、'.join(theme.get('reasons',[])))+'</p>')
+            for x in (news.get('items',[]) or [])[:6]:
+                icon='🟢' if x.get('side')=='positive' else '🔴' if x.get('side')=='negative' else '⚪'; body.append(f'<p>{icon} <b>{html.escape(str(_trump_translate_title(x.get("title",""))))}</b><br><span class="muted">{html.escape(str(x.get("published","")))}｜{html.escape(str(x.get("theme") or "Trump政策／市場"))}</span></p>')
+            if not news.get('items'): body.append('<p class="muted">沒有足夠的「直接提及此標的」Trump 政策／市場新聞，不強行把產業新聞套到個股。</p>')
+            body.append('</div>')
+            body.append('<div class="card"><h2>③ Trump → 產業 → 財務傳導</h2><p><b>政策／關稅／政府投資</b> → 需求、成本、供應鏈 → 營收／毛利 → EPS → 估值倍數 → 股價。</p>'); body.append(f'<p>市場層 Trump 風向：<b>{int(market_factor.get("factor",0)):+d}</b>｜{html.escape(str(market_factor.get("state","⚪")))}</p>')
+            if theme.get('items'):
+                for x in theme.get('items',[])[:5]: body.append(f'<p>• {html.escape(str(x.get("theme","")))}：{("偏正面" if x.get("side")=="positive" else "偏負面" if x.get("side")=="negative" else "待確認")}</p>')
+            else: body.append('<p class="muted">目前沒有足夠的標的直接 Trump 主題曝險證據，維持中性。</p>')
+            body.append('</div>')
+            body.append('<div class="card"><h2>④ 三種 Trump 政策情境</h2>'); body.append(f'<p><b>A 基準／政策維持</b>｜{p_base*100:.0f}%<br>現有政策方向大致維持，標的影響主要來自既有曝險。</p><p><b>B 偏多／產業支持加速</b>｜{p_up*100:.0f}%<br>政府投資、採購、補貼或產業政策加速，需求／訂單／資本支出鏈改善。</p><p><b>C 偏空／關稅與監管升級</b>｜{p_down*100:.0f}%<br>關稅、出口限制、監管或成本壓力升高，毛利與估值承壓。</p><p class="muted">機率是模型情境權重，不是市場隱含機率。</p></div>')
+            body.append(f'<div class="card"><h2>⑤ 最後判讀</h2><p><b>{overall}</b></p><p>直接交易 {direct_f:+d} ＋近期政策／新聞 {news_f:+d} ＋產業主題 {theme_f:+d} ＝ Trump 標的層調整 <b>{combined:+d}</b>。</p><p class="muted">不取代基本面、技術、籌碼與第二層買點模型；它回答的是 Trump 因素的額外影響。</p><div class="nav"><a href="/trump">← Trump總覽</a><a href="/macro-stock?symbol={html.escape(lookup)}">🌎 總經曝險</a><a href="/stock?symbol={html.escape(lookup)}">📊 完整個股分析</a></div></div>')
+            return _web_page('Trump 個別標的 Intelligence',''.join(body))
+        except Exception as ex:
+            return _web_page('Trump 個別標的',f'<div class="card"><h1>❌ 分析失敗</h1><pre>{html.escape(type(ex).__name__+": "+str(ex))}</pre><div class="nav"><a href="/trump">← Trump總覽</a></div></div>'),200
 
     @app.post('/callback')
     def cb():
@@ -14672,10 +14688,10 @@ def main():
 
     else:
 
-        print('========== V2.15.3 RUN START ==========', flush=True)
+        print('========== V2.15.4 RUN START ==========', flush=True)
         print(f'執行時間（台灣）：{datetime.now(TW_TZ).strftime("%Y-%m-%d %H:%M:%S")}', flush=True)
         run_alerts()
-        print('========== V2.15.3 RUN END ==========', flush=True)
+        print('========== V2.15.4 RUN END ==========', flush=True)
 
 
 if __name__ == '__main__':
