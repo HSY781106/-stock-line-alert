@@ -1,21 +1,17 @@
-name: Stock Alert V2.17.2
+name: Stock Alert V2.17.3
 
 on:
   schedule:
     # 台灣時間 09:00–13:59
-    # GitHub Actions cron 使用 UTC，因此台灣 +8 → UTC 01:00–05:59
     - cron: '*/15 1-5 * * 1-5'
 
     # 台灣時間 21:30、21:45
-    # UTC 13:30、13:45
     - cron: '30,45 13 * * 1-5'
 
     # 台灣時間 22:00–04:59
-    # UTC 14:00–20:59
     - cron: '*/15 14-20 * * 1-5'
 
     # 台灣時間 05:00
-    # UTC 21:00
     - cron: '0 21 * * 1-5'
 
   workflow_dispatch:
@@ -46,15 +42,14 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt pypdf
 
-      - name: Run stock alert
+      - name: Run stock alert V2.17.3
         env:
           LINE_CHANNEL_ACCESS_TOKEN: ${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }}
           LINE_CHANNEL_SECRET: ${{ secrets.LINE_CHANNEL_SECRET }}
 
-          # V2.17.2：Gemini Free 主力
-          # AI 只有達到 LINE 發送門檻後才啟用
+          # Gemini Free 主力
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          GEMINI_MODEL: gemini-3.7-flash
+          GEMINI_MODEL: gemini-3.5-flash
 
           # 可選免費備援
           MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
@@ -70,25 +65,24 @@ jobs:
           AI_ENABLE_TRUMP: '1'
           AI_ENABLE_FINAL_SUMMARY: '1'
 
-          # 每日 AI request 總上限
+          # 每日免費 AI request fuse
           AI_DAILY_MAX_CALLS: '8'
 
-          # AI 輸出上限
           AI_MAX_OUTPUT_TOKENS: '700'
 
-          # 不自動 retry，避免浪費免費額度
+          # 不自動 retry，避免浪費免費 request
           AI_RETRY_ON_FAILURE: '0'
 
           # 新聞語意快取 7 天
           AI_NEWS_CACHE_HOURS: '168'
 
-          # Gemini / Mistral / Groq timeout
+          # AI provider timeout
           AI_TIMEOUT: '15'
 
-          # V2.17.2：FRED timeout 收斂
+          # FRED timeout
           MACRO_TIMEOUT: '12'
 
-          # 可選：如果另外建立 FRED API Key
+          # 若之後建立 FRED API Key 才取消註解
           # FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
 
         run: python stock_alert.py
@@ -99,6 +93,6 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
-          git diff --cached --quiet || git commit -m "Update V2.17.2 alert state, AI cache, macro history and stability fixes"
+          git diff --cached --quiet || git commit -m "Update V2.17.3 alert state, AI circuit breaker and news stability"
           git pull --rebase origin main || true
           git push origin HEAD:main
