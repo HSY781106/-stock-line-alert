@@ -1,4 +1,4 @@
-name: Stock Alert V2.17.5
+name: Stock Alert V2.17.6
 
 on:
   schedule:
@@ -30,67 +30,58 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+          cache: pip
 
       - name: Install dependencies
         run: pip install -r requirements.txt pypdf
 
-      - name: Run stock alert
+      - name: Run stock alert V2.17.6
         env:
           LINE_CHANNEL_ACCESS_TOKEN: ${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }}
           LINE_CHANNEL_SECRET: ${{ secrets.LINE_CHANNEL_SECRET }}
 
-          # V2.17.5：Gemini Free 主力
-          # AI 只有達到 LINE 發送門檻後才啟用
-          # 未達門檻完全不呼叫 AI
+          # 免費 AI：Gemini 主力；只有設定 Secret 才啟用備援
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GEMINI_MODEL: gemini-3.5-flash
-
-          # 可選免費備援
-          # 只有建立並放入 GitHub Secrets 才會啟用
           MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
           MISTRAL_MODEL: mistral-small-latest
-
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           GROQ_MODEL: openai/gpt-oss-20b
 
           AI_PROVIDER: gemini
           AI_FALLBACK_PROVIDERS: mistral,groq
-
           AI_ENABLE_NEWS: '1'
           AI_ENABLE_TRUMP: '1'
           AI_ENABLE_FINAL_SUMMARY: '1'
 
-          # V2.17.5：
-          # 不再使用「每天最多 8 次」的人為限制
-          # 0 = 不設人工每日 request 上限
-          # 實際是否可用由免費 API quota / 429 / quota exceeded 決定
-          AI_DAILY_MAX_CALLS: '0'
+          # V2.17.6：總經／Trump Web AI 與股票15分鐘警報AI分離
+          AI_WEB_ANALYSIS_ENABLED: '1'
 
           AI_MAX_OUTPUT_TOKENS: '700'
           AI_RETRY_ON_FAILURE: '0'
-          AI_NEWS_CACHE_HOURS: '168'
-          AI_TIMEOUT: '15'
 
-          # Macro / FRED
+          # 新聞語意快取
+          AI_NEWS_CACHE_HOURS: '168'
+
+          # Web 總經／Trump AI 共用結果快取
+          AI_MACRO_CACHE_HOURS: '6'
+          AI_TRUMP_CACHE_HOURS: '6'
+
+          AI_TIMEOUT: '15'
           MACRO_TIMEOUT: '12'
 
-          # 可選：
-          # 如果另外建立 FRED_API_KEY，
-          # 可在 GitHub Secrets 放入後取消下一行註解
+          # 可選：若另外建立 FRED API Key，可取消下一行註解
           # FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
 
         run: python stock_alert.py
 
       - name: Save state and caches
         if: always()
+        shell: bash
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
           git add -A
-
-          git diff --cached --quiet || git commit -m "Update V2.17.5 alert state, AI quota state, AI cache, macro history and alert-gated AI"
-
+          git diff --cached --quiet || git commit -m "Update V2.17.6 alert state, AI cache, macro and Trump intelligence"
           git pull --rebase origin main || true
-
           git push origin HEAD:main
