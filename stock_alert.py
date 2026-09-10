@@ -192,7 +192,7 @@ _TRUMP_RECENT_NEWS_CACHE = {}
 # V2.14.42：獨立總經風險引擎。資料來源：FRED graph CSV + 台灣央行/主計總處公開 JSON。
 MACRO_CACHE_FILE = 'macro_systemic_cache_v21442.json'
 MACRO_CACHE_HOURS = 6
-MACRO_CACHE_VERSION = 6
+MACRO_CACHE_VERSION = 7
 MACRO_TIMEOUT = 10
 FRED_GRAPH_URL = 'https://fred.stlouisfed.org/graph/fredgraph.csv?id={series}'
 DGBAS_NEWS_JSON_URL = 'https://www.dgbas.gov.tw/OpenData.aspx?SN=5B2F388DBDFAF866'
@@ -10717,7 +10717,7 @@ def _line_extract_analysis_scores(text):
     )
 
 
-# V2.14.46：官方產業價值鏈的「次產業」與 TWSE 大產業不是一對一字串關係。
+# V2.14.49：官方產業價值鏈的「次產業」與 TWSE 大產業不是一對一字串關係。
 # 明確的官方節點若被舊快取掛到錯誤 parent，必須以正確 parent 為準。
 LINE_SUBINDUSTRY_PARENT_OVERRIDES = {
     _line_industry_norm('建設業'): '建材營造',
@@ -10729,7 +10729,7 @@ def _line_industry_parent_for_subindustry(subindustry):
 
 
 def _line_industry_build_subindustry_menu(parent, u):
-    """V2.14.46：次產業選單必須維持「大產業→官方次產業」一對一階層。
+    """V2.14.49：次產業選單必須維持「大產業→官方次產業」一對一階層。
 
     舊版先讀 industry_subindustry_menu_cache，若舊快取曾混入跨產業次產業，
     就會出現「水泥工業 → 建設業」這類錯配。現在優先由 subindustry_cache 的
@@ -10774,7 +10774,7 @@ def _line_industry_build_subindustry_menu(parent, u):
         if options:
             return sorted(options, key=lambda x: (_line_industry_norm(x), x))
 
-    # V2.14.46：不再使用扁平舊 menu cache 或 u.subindustries 反推 parent。
+    # V2.14.49：不再使用扁平舊 menu cache 或 u.subindustries 反推 parent。
     # 這兩種資料沒有可靠 parent 關聯，是過去「水泥工業→建設業」污染的來源。
     # 只有明確的 parent override 才可作最後備援。
     for sub_norm, forced_parent in LINE_SUBINDUSTRY_PARENT_OVERRIDES.items():
@@ -12137,7 +12137,7 @@ def _trump_news_company_name(symbol):
 
 
 def _macro_fred_batch_latest():
-    """V2.14.46：一次請求 FRED 全部美國指標，避免 7 個序列各自 timeout。"""
+    """V2.14.49：一次請求 FRED 全部美國指標，避免 7 個序列各自 timeout。"""
     series_ids=list(MACRO_FRED_SERIES.values())
     # FRED graph endpoint 支援以逗號分隔的多序列 CSV。
     url='https://fred.stlouisfed.org/graph/fredgraph.csv?id='+quote(','.join(series_ids))
@@ -12174,7 +12174,7 @@ def _macro_fred_batch_latest():
     return out
 
 def _macro_fred_latest(series_id, derive_yoy=False):
-    """V2.14.46：保留單序列 API 相容介面，實際優先使用 batch 結果。"""
+    """V2.14.49：保留單序列 API 相容介面，實際優先使用 batch 結果。"""
     url='https://fred.stlouisfed.org/graph/fredgraph.csv?id='+quote(series_id)
     last_err=None
     for verify in (True, False):
@@ -12194,7 +12194,7 @@ def _macro_fred_latest(series_id, derive_yoy=False):
 
 
 def _macro_dgbas_latest():
-    """V2.14.46：主計總處採獨立指標解析；解析失敗時保留最近官方已知值，不再整組 N/A。"""
+    """V2.14.49：主計總處採獨立指標解析；解析失敗時保留最近官方已知值，不再整組 N/A。"""
     out={'gdp_yoy':None,'cpi_yoy':None,'unemployment':None,'sources':[DGBAS_NEWS_PAGE_URL],'published':{}}
     text=''
     try:
@@ -12272,7 +12272,7 @@ def _macro_cbc_latest():
 _MACRO_RUN_CACHE = None
 
 def macro_fetch(force=False):
-    """V2.14.46：台美總經資料中心；同一 Workflow 行程只抓一次，Render 仍使用磁碟快取。"""
+    """V2.14.49：台美總經資料中心；同一 Workflow 行程只抓一次，Render 仍使用磁碟快取。"""
     global _MACRO_RUN_CACHE
     if not force and isinstance(_MACRO_RUN_CACHE,dict) and _MACRO_RUN_CACHE.get('data'):
         return _MACRO_RUN_CACHE['data']
@@ -12310,7 +12310,7 @@ def macro_fetch(force=False):
                 d['us'][key]={'value':v,'date':dt,'series':sid,'unit':'YoY %' if key=='us_cpi' else '','fallback':True}
     except Exception as e:
         d['errors'].append(f'FRED batch: {type(e).__name__}: {e}')
-        # V2.14.46：批次端點失敗時，不再做 7 次慢速 timeout；改用最近已驗證的官方 FRED last-known-good。
+        # V2.14.49：批次端點失敗時，不再做 7 次慢速 timeout；改用最近已驗證的官方 FRED last-known-good。
         # 下一次成功連線時會自動覆蓋。
         fred_fallback={
             'fed_rate':(3.63,'2026-09-04'),
@@ -12335,7 +12335,7 @@ def macro_fetch(force=False):
     if success_count>0:
         payload={'_cached_at':now,'_version':MACRO_CACHE_VERSION,'data':d}; save_json(MACRO_CACHE_FILE,payload)
         return d
-    # V2.14.46：網頁／Render 不應因外部宏觀資料源暫時逾時而整頁空白。
+    # V2.14.49：網頁／Render 不應因外部宏觀資料源暫時逾時而整頁空白。
     # 若本次全部來源失敗，保留上一份可用快取並標示為 stale。
     if isinstance(cached,dict) and isinstance(cached.get('data'),dict) and cached.get('data'):
         stale=dict(cached.get('data') or {})
@@ -12472,7 +12472,7 @@ def _trump_recent_news_fetch(symbol=''):
 
 
 def _trump_translate_title(title):
-    """V2.14.46：繁中翻譯三層備援：Google GTX -> MyMemory -> 原文。"""
+    """V2.14.49：繁中翻譯三層備援：Google GTX -> MyMemory -> 原文。"""
     text=str(title or '').strip()
     if not text or not re.search(r'[A-Za-z]',text): return text
     cache=globals().setdefault('_TRUMP_TRANSLATION_CACHE',{}); key=text[:500]
@@ -12860,7 +12860,7 @@ def run_webhook_server():
         return (
             '<!doctype html><html><head><meta charset="utf-8">'
             '<meta name="viewport" content="width=device-width,initial-scale=1">'
-            '<title>Stock Alert V2.14.46</title>'
+            '<title>Stock Alert V2.14.49</title>'
             '<style>body{margin:0;padding:20px;background:#f6f7f9;color:#222}'
             '.card{max-width:900px;margin:auto;background:#fff;border-radius:14px;padding:20px;box-shadow:0 2px 12px #0001}'
             'a{word-break:break-all}</style></head><body><div class="card">'
@@ -12918,7 +12918,7 @@ def run_webhook_server():
             result=_line_industry_top3_analysis(sub,u,html_links=True,parent=display_parent)
         except Exception as ex:
             result=f'❌ 分析失敗：{type(ex).__name__}: {ex}'
-        # V2.14.46：保留 Top3 內的 /stock 超連結，但把換行轉成真正的 HTML 換行，避免手機瀏覽器全部擠成一行。
+        # V2.14.49：保留 Top3 內的 /stock 超連結，但把換行轉成真正的 HTML 換行，避免手機瀏覽器全部擠成一行。
         result_html = str(result).replace('\n', '<br>')
         body=(
             f'<div class="card"><h1>📊 {html.escape(sub)}</h1><div class="muted">大產業：{html.escape(display_parent)}</div><div class="industry-result">{result_html}</div></div>'
@@ -14378,10 +14378,10 @@ def main():
 
     else:
 
-        print('========== V2.14.46 RUN START ==========', flush=True)
+        print('========== V2.14.49 RUN START ==========', flush=True)
         print(f'執行時間（台灣）：{datetime.now(TW_TZ).strftime("%Y-%m-%d %H:%M:%S")}', flush=True)
         run_alerts()
-        print('========== V2.14.46 RUN END ==========', flush=True)
+        print('========== V2.14.49 RUN END ==========', flush=True)
 
 
 if __name__ == '__main__':
