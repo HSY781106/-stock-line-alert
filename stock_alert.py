@@ -1,4 +1,6 @@
-# stock_alert.py V2.14.42
+# stock_alert.py V2.15.5
+# V2.15.5：外部產業網頁修正版：官方價值鏈 parent 與 TWSE 大產業名稱採語意對應；
+#             /industry 新增台股代碼／公司名稱直接查詢對應官方次產業 Top 3；不改 LINE 產業聊天室流程。
 # V2.14.08：V2.14.05 完整覆蓋版；保留重大消息面「多公司新聞隔離」邏輯，
 #             修正 LINE 15 分鐘區間通知遺失「加碼分析／建議」問題，並修正目前價格不得使用過期市場股票池價格。
 #             重大消息評分只使用新聞標題，RSS description/snippet/延伸內容完全不參與評分。
@@ -10742,12 +10744,60 @@ def _line_extract_analysis_scores(text):
     )
 
 
-# V2.15.4：官方產業價值鏈的「次產業」與 TWSE 大產業不是一對一字串關係。
+# V2.15.5：官方產業價值鏈的「次產業」與 TWSE 大產業不是一對一字串關係。
 # 明確的官方節點若被舊快取掛到錯誤 parent，必須以正確 parent 為準。
 LINE_SUBINDUSTRY_PARENT_OVERRIDES = {
     _line_industry_norm('建設業'): '建材營造',
     _line_industry_norm('營建業'): '建材營造',
 }
+
+# V2.15.5：修正「TWSE 大產業」與「產業價值鏈官方大產業」名稱不同的問題。
+# TWSE 第一層例如「水泥工業」，官方產業價值鏈記錄為「水泥」；
+# 「鋼鐵工業」->「鋼鐵」、「半導體業」->「半導體」等。
+# 不再把兩邊字串直接相等，改用官方來源名稱的正規化比對。
+LINE_VALUE_CHAIN_PARENT_ALIASES = {
+    '水泥工業': ['水泥'],
+    '食品工業': ['食品'],
+    '塑膠工業': ['塑膠', '石化及塑橡膠'],
+    '紡織纖維': ['紡織'],
+    '電機機械': ['電機機械'],
+    '電器電纜': ['電機機械', '電器電纜'],
+    '玻璃陶瓷': ['玻璃陶瓷'],
+    '造紙工業': ['造紙'],
+    '鋼鐵工業': ['鋼鐵'],
+    '橡膠工業': ['橡膠', '石化及塑橡膠'],
+    '汽車工業': ['汽車'],
+    '半導體業': ['半導體'],
+    '電腦及週邊設備業': ['電腦及週邊設備'],
+    '光電業': ['平面顯示器', '光電'],
+    '通信網路業': ['通信網路'],
+    '電子零組件業': ['被動元件', '連接器', '電子零組件'],
+    '電子通路業': ['電子通路'],
+    '資訊服務業': ['軟體服務'],
+    '其他電子業': ['其他'],
+    '建材營造': ['建材營造', '建設業', '營建業'],
+    '航運業': ['交通運輸及航運', '航運'],
+    '觀光餐旅': ['觀光', '休閒娛樂'],
+    '金融保險': ['金融', '銀行', '保險'],
+    '貿易百貨': ['貿易百貨'],
+    '油電燃氣業': ['油電燃氣'],
+    '化學工業': ['化學', '石化及塑橡膠'],
+}
+
+def _line_industry_value_chain_parent_match(record_parent, target_parent):
+    rp = _line_industry_norm(record_parent)
+    tp = canonical_industry(target_parent)
+    if not rp or not tp:
+        return False
+    if rp == _line_industry_norm(tp):
+        return True
+    aliases = LINE_VALUE_CHAIN_PARENT_ALIASES.get(tp, [])
+    if any(rp == _line_industry_norm(x) for x in aliases):
+        return True
+    # 一般情況再允許官方名稱與 TWSE 名稱只差「業／工業」的比對。
+    def strip_suffix(x):
+        return re.sub(r'(工業|業)$', '', _line_industry_norm(x))
+    return bool(strip_suffix(rp) and strip_suffix(rp) == strip_suffix(tp))
 
 def _line_industry_parent_for_subindustry(subindustry):
     return LINE_SUBINDUSTRY_PARENT_OVERRIDES.get(_line_industry_norm(subindustry))
@@ -10768,19 +10818,19 @@ def _line_industry_build_subindustry_menu(parent, u):
                 rp=canonical_industry(rec.get('industry') or rec.get('main_industry') or '')
                 n=normalize_subindustry(rec.get('sub_industry') or rec.get('subindustry') or rec.get('node') or '')
                 if rp and n: usable=True
-                if rp==parent_c and n and _line_industry_norm(n) not in blocked and n not in options: options.append(n)
+                if _line_industry_value_chain_parent_match(rp, parent_c) and n and _line_industry_norm(n) not in blocked and n not in options: options.append(n)
             if not usable:
                 item=u.get(clean_code(code)) if isinstance(u,dict) else None
                 ip=canonical_industry(item.get('industry') if isinstance(item,dict) else '')
                 if not ip: ip=canonical_industry(info.get('industry') or info.get('main_industry') or '')
-                if ip!=parent_c: continue
+                if not _line_industry_value_chain_parent_match(ip, parent_c): continue
                 subs=info.get('subindustries',[]); subs=subs if isinstance(subs,list) else [subs]
                 for sub in subs:
                     n=normalize_subindustry(sub)
                     if n and _line_industry_norm(n) not in blocked and n not in options: options.append(n)
     if options: return sorted(options,key=lambda x:(_line_industry_norm(x),x))
 
-    # V2.15.4 final：若 Render 本機/遠端股票次產業資料暫時不可讀，
+    # V2.15.5 final：若 Render 本機/遠端股票次產業資料暫時不可讀，
     # 直接使用 GitHub Actions 已建立的官方 parent -> subindustry 索引。
     # 這個索引不是股票硬編碼，而是 Actions 從官方 records 建出的 48/966 動態索引。
     try:
@@ -10797,7 +10847,7 @@ def _line_industry_build_subindustry_menu(parent, u):
                             options.append(n)
                 break
     except Exception as e:
-        print(f'V2.15.4 產業索引備援失敗：{type(e).__name__}: {e}',flush=True)
+        print(f'V2.15.5 產業索引備援失敗：{type(e).__name__}: {e}',flush=True)
     if options: return sorted(options,key=lambda x:(_line_industry_norm(x),x))
 
     for sub_norm,forced_parent in LINE_SUBINDUSTRY_PARENT_OVERRIDES.items():
@@ -13028,13 +13078,141 @@ def handle_event(e, u):
 
 
 
+def _web_direct_industry_stock_result(query, u):
+        """V2.15.5：外部產業頁支援直接輸入台股代碼／公司名稱。
+
+        不改 LINE 聊天流程。先解析股票，再以官方價值鏈次產業資料找出
+        該股票所屬的次產業；若一檔股票有多個官方節點，直接以所有節點的
+        聯集找 Top 3，避免任意挑第一個節點造成錯誤分類。
+        """
+        raw = str(query or '').strip()
+        if not raw:
+            return None
+        item = resolve_stock(raw, u)
+        if not isinstance(item, dict):
+            return None
+        code = clean_code(item.get('code') or '')
+        if not re.fullmatch(r'\d{4,6}[A-Z]?', code):
+            return None
+        parent = canonical_industry(item.get('industry') or '')
+        if not parent:
+            return None
+
+        data = _line_industry_load_data()
+        # 確保「直接查這一檔」不受 parent Top120 限制；目標股缺資料時只補這一檔。
+        info = data.get(code, {}) if isinstance(data, dict) else {}
+        subs = info.get('subindustries', []) if isinstance(info, dict) else []
+        subs = subs if isinstance(subs, list) else [subs]
+        subs = list(dict.fromkeys(normalize_subindustry(x) for x in subs if normalize_subindustry(x)))
+        if not subs:
+            try:
+                fetched = _fetch_missing_value_chains([code])
+                if isinstance(fetched, dict):
+                    data.update(fetched)
+                    attach_subindustries(u, data)
+                    info = data.get(code, {}) if isinstance(data, dict) else {}
+                    subs = info.get('subindustries', []) if isinstance(info, dict) else []
+                    subs = subs if isinstance(subs, list) else [subs]
+                    subs = list(dict.fromkeys(normalize_subindustry(x) for x in subs if normalize_subindustry(x)))
+            except Exception as ex:
+                print(f'V2.15.5 外部產業直接查詢補抓失敗 {code}: {type(ex).__name__}: {ex}', flush=True)
+
+        # 目標股取得官方節點後，再補齊同大產業的主要市值股票，避免
+        # 直接查詢因只抓到目標股而把 Top3 錯誤變成只有 1 檔。
+        try:
+            u, parent_data = _line_industry_fetch_parent_data(parent, u)
+            if isinstance(parent_data, dict) and parent_data:
+                data.update(parent_data)
+        except Exception as ex:
+            print(f'V2.15.5 外部產業直接查詢同業資料補抓失敗 {parent}: {type(ex).__name__}: {ex}', flush=True)
+
+        # 快取已有資料時，仍重新掛回 u，確保後續 Top3 能看到官方節點。
+        if isinstance(data, dict) and data:
+            attach_subindustries(u, data)
+            item = u.get(code, item)
+            subs = item.get('subindustries', []) if isinstance(item, dict) else subs
+            subs = subs if isinstance(subs, list) else [subs]
+            subs = list(dict.fromkeys(normalize_subindustry(x) for x in subs if normalize_subindustry(x)))
+
+        if not subs:
+            return (
+                f'❌ {code} {item.get("name") or ""}\n'
+                f'大產業：{parent}\n\n'
+                '目前查不到這支股票的官方細產業資料，請稍後再試。'
+            )
+
+        # Top3 是「官方次產業聯集」，不是把多個節點任意選一個。
+        target_subs = {_line_industry_norm(x) for x in subs}
+        candidates = []
+        for c, stock in u.items():
+            if not isinstance(stock, dict):
+                continue
+            cc = clean_code(c)
+            if not re.fullmatch(r'\d{4,6}[A-Z]?', cc):
+                continue
+            if canonical_industry(stock.get('industry') or '') != parent:
+                continue
+            stock_subs = stock.get('subindustries') or []
+            stock_subs = stock_subs if isinstance(stock_subs, list) else [stock_subs]
+            normalized = {_line_industry_norm(x) for x in stock_subs if normalize_subindustry(x)}
+            if not (normalized & target_subs):
+                continue
+            cap = to_float(stock.get('market_cap'))
+            if cap is not None and cap > 0:
+                candidates.append((cap, cc, stock))
+        candidates.sort(key=lambda x: (-x[0], x[1]))
+        top = candidates[:3]
+        if not top:
+            return f'❌ 找不到「{code} {item.get("name") or ""}」所屬官方次產業的股票資料。'
+
+        rows=[]
+        for rank,(cap,cc,stock) in enumerate(top,1):
+            name=str(stock.get('name') or cc).strip()
+            price=to_float(stock.get('price'))
+            first_score=buy_score=None
+            buy_verdict='N/A'
+            try:
+                detail=analysis(f'{cc} {name}',u,backfill=False,line_light=True,force_technical_refresh=True)
+                first_score,buy_score,buy_verdict=_line_extract_analysis_scores(detail)
+                pm=re.search(r'目前價格：\s*([0-9,]+(?:\.\d+)?)',detail)
+                if pm:
+                    price=to_float(pm.group(1))
+            except Exception as ex:
+                print(f'V2.15.5 外部產業直接查詢 Top3 分析失敗 {cc}: {type(ex).__name__}: {ex}',flush=True)
+            rows.append((rank,cc,name,price,cap,first_score,buy_score,buy_verdict))
+
+        lines=[
+            f'🔎 {code} {item.get("name") or ""}｜所屬產業 Top 3',
+            '',
+            f'大產業：{parent}',
+            f'官方次產業：{", ".join(subs)}',
+            '',
+            '📊 排名依目前市值由大到小',
+            ''
+        ]
+        medals=['🥇','🥈','🥉']
+        for row,medal in zip(rows,medals):
+            rank,cc,name,price,cap,fs,bs,bv=row
+            lines += [
+                '━━━━━━━━━━━━━━',
+                f'{medal} {rank}. <a href="/stock?symbol={html.escape(str(cc))}" target="_blank">{html.escape(str(cc))} {html.escape(str(name))}</a>',
+                f'目前價格：{fmt(price)}',
+                f'市值：{fmt(_line_industry_market_cap_100m(cap))} 億元' if cap is not None else '市值：N/A',
+                f'第一層投資價值：{fs}/100' if fs is not None else '第一層投資價值：N/A',
+                f'第二層買點分數：{bs}/100' if bs is not None else '第二層買點分數：N/A',
+                f'買點判定：{bv}'
+            ]
+        lines += ['━━━━━━━━━━━━━━','', '📌 這是「輸入個股 → 對應官方次產業聯集」的 Top 3；不是用公司名稱關鍵字猜產業。']
+        return '\n'.join(lines)[:5000]
+
+
 def run_webhook_server():
     from flask import Flask, request
 
     app = Flask(__name__)
 
     print('================================')
-    print('LINE Webhook Server V2.14.32')
+    print('LINE Webhook Server V2.15.5')
     print('模式：LINE A 方案｜Reply 結果頁網址 + 背景分析 + Render 完整結果頁｜查詢不 Push')
     print('================================')
 
@@ -13104,7 +13282,7 @@ def run_webhook_server():
         return (
             '<!doctype html><html><head><meta charset="utf-8">'
             '<meta name="viewport" content="width=device-width,initial-scale=1">'
-            '<title>Stock Alert V2.15.4</title>'
+            '<title>Stock Alert V2.15.5</title>'
             '<style>body{margin:0;padding:20px;background:#f6f7f9;color:#222}'
             '.card{max-width:900px;margin:auto;background:#fff;border-radius:14px;padding:20px;box-shadow:0 2px 12px #0001}'
             'a{word-break:break-all}</style></head><body><div class="card">'
@@ -13130,12 +13308,28 @@ def run_webhook_server():
     def industry_page():
         parent = str(request.args.get('parent') or '').strip()
         sub = str(request.args.get('sub') or '').strip()
+        stock_query = str(request.args.get('stock') or '').strip()
+        if not parent and stock_query:
+            try:
+                u = build_line_query_universe(stock_query)
+                result = _web_direct_industry_stock_result(stock_query, u)
+                if result:
+                    result_html = str(result).replace('\n', '<br>')
+                    body=(
+                        f'<div class="card"><h1>📊 個股對應產業</h1><div class="industry-result">{result_html}</div></div>'
+                        '<div class="nav"><a href="/industry">← 產業選單</a><a href="/">首頁</a></div>'
+                    )
+                    return _web_page('個股對應產業',body)
+            except Exception as ex:
+                return _web_page('個股對應產業',f'<div class="card"><h1>❌ 查詢失敗</h1><pre>{html.escape(type(ex).__name__ + ": " + str(ex))}</pre></div>'),500
         if not parent:
             options = _line_industry_parent_options()
             opts=''.join(f'<option value="{html.escape(x)}">{html.escape(x)}</option>' for x in options)
             body=(
                 '<div class="card"><h1>📊 產業分析</h1><p class="muted">選擇大產業 → 次產業，系統依目前資料找出次產業市值 Top 3 並分析。</p>'
                 '<form method="get"><label>① 選擇大產業</label><select name="parent">'+opts+'</select><button type="submit">下一步：選擇次產業</button></form></div>'
+                '<div class="card"><h2>🔎 直接查個股所屬產業</h2><p class="muted">輸入台股代碼或公司名稱，例如 2330、台積電；系統會依官方產業價值鏈資料找出對應次產業，直接顯示 Top 3。</p>'
+                '<form method="get"><input name="stock" placeholder="例如：2330 或 台積電" autocomplete="off"><button type="submit">🔍 查詢個股對應產業 Top 3</button></form></div>'
                 '<div class="nav"><a href="/trump">🇺🇸 川普風向</a><a href="/macro">🌎 總經風險</a><a href="/">首頁</a></div>'
             )
             return _web_page('產業分析',body)
@@ -14709,10 +14903,10 @@ def main():
 
     else:
 
-        print('========== V2.15.4 RUN START ==========', flush=True)
+        print('========== V2.15.5 RUN START ==========', flush=True)
         print(f'執行時間（台灣）：{datetime.now(TW_TZ).strftime("%Y-%m-%d %H:%M:%S")}', flush=True)
         run_alerts()
-        print('========== V2.15.4 RUN END ==========', flush=True)
+        print('========== V2.15.5 RUN END ==========', flush=True)
 
 
 if __name__ == '__main__':
