@@ -192,7 +192,16 @@ _TRUMP_RECENT_NEWS_CACHE = {}
 # V2.14.42：獨立總經風險引擎。資料來源：FRED graph CSV + 台灣央行/主計總處公開 JSON。
 MACRO_CACHE_FILE = 'macro_systemic_cache_v21442.json'
 MACRO_CACHE_HOURS = 6
-MACRO_CACHE_VERSION = 7
+MACRO_CACHE_VERSION = 8
+# V2.15.0：Macro & Policy Intelligence；保留舊總經快取格式，但另建歷史/事件快取。
+MACRO_HISTORY_FILE = 'macro_intelligence_history_v2150.json'
+MACRO_HISTORY_VERSION = 1
+MACRO_HISTORY_MAX_DAYS = 730
+MACRO_NEWS_CACHE_FILE = 'macro_news_cache_v2150.json'
+MACRO_NEWS_CACHE_HOURS = 3
+MACRO_FORECAST_HORIZONS = (1, 3, 6)
+MACRO_FORECAST_MIN_POINTS = 8
+MACRO_NEWS_MAX_ITEMS = 12
 MACRO_TIMEOUT = 10
 FRED_GRAPH_URL = 'https://fred.stlouisfed.org/graph/fredgraph.csv?id={series}'
 DGBAS_NEWS_JSON_URL = 'https://www.dgbas.gov.tw/OpenData.aspx?SN=5B2F388DBDFAF866'
@@ -9505,7 +9514,7 @@ def yahoo_etf_profile(symbol):
 
     is_tw=str(symbol).upper().endswith(('.TW','.TWO'))
     if is_tw:
-        # V2.14.50：TWSE feed 的 e=market price 可能與同一執行中的即時行情不同步。
+        # V2.15.0：TWSE feed 的 e=market price 可能與同一執行中的即時行情不同步。
         # 因此「目前價格」以本函式前面取得的即時行情為唯一權威；TWSE 只提供 NAV / assets。
         # premium 不直接採用 TWSE 的 g，最後一律用「即時價格 ÷ NAV - 1」重新計算。
         twse=_twse_etf_nav_fallback(symbol)
@@ -9534,7 +9543,7 @@ def yahoo_etf_profile(symbol):
     if out.get('yield') is not None and not (0<=out['yield']<=30): out['yield']=None
     if out.get('beta') is not None and not (-5<=out['beta']<=5): out['beta']=None
     if out.get('expense') is not None and not (0<=out['expense']<=10): out['expense']=None; out['expense_source']=None
-    # V2.14.50：只要同時有 authoritative live price + NAV，就強制重算折溢價。
+    # V2.15.0：只要同時有 authoritative live price + NAV，就強制重算折溢價。
     # 不接受 TWSE g 或 Yahoo 舊 premium，避免 price/NAV/premium 三者互相矛盾。
     if out.get('price') is not None and out.get('nav') is not None and out['nav']>0:
         prem=(out['price']/out['nav']-1)*100
@@ -10726,7 +10735,7 @@ def _line_extract_analysis_scores(text):
     )
 
 
-# V2.14.50：官方產業價值鏈的「次產業」與 TWSE 大產業不是一對一字串關係。
+# V2.15.0：官方產業價值鏈的「次產業」與 TWSE 大產業不是一對一字串關係。
 # 明確的官方節點若被舊快取掛到錯誤 parent，必須以正確 parent 為準。
 LINE_SUBINDUSTRY_PARENT_OVERRIDES = {
     _line_industry_norm('建設業'): '建材營造',
@@ -10738,7 +10747,7 @@ def _line_industry_parent_for_subindustry(subindustry):
 
 
 def _line_industry_build_subindustry_menu(parent, u):
-    """V2.14.50：次產業選單必須維持「大產業→官方次產業」一對一階層。
+    """V2.15.0：次產業選單必須維持「大產業→官方次產業」一對一階層。
 
     舊版先讀 industry_subindustry_menu_cache，若舊快取曾混入跨產業次產業，
     就會出現「水泥工業 → 建設業」這類錯配。現在優先由 subindustry_cache 的
@@ -10783,7 +10792,7 @@ def _line_industry_build_subindustry_menu(parent, u):
         if options:
             return sorted(options, key=lambda x: (_line_industry_norm(x), x))
 
-    # V2.14.50：不再使用扁平舊 menu cache 或 u.subindustries 反推 parent。
+    # V2.15.0：不再使用扁平舊 menu cache 或 u.subindustries 反推 parent。
     # 這兩種資料沒有可靠 parent 關聯，是過去「水泥工業→建設業」污染的來源。
     # 只有明確的 parent override 才可作最後備援。
     for sub_norm, forced_parent in LINE_SUBINDUSTRY_PARENT_OVERRIDES.items():
@@ -12146,7 +12155,7 @@ def _trump_news_company_name(symbol):
 
 
 def _macro_fred_batch_latest():
-    """V2.14.50：一次請求 FRED 全部美國指標，避免 7 個序列各自 timeout。"""
+    """V2.15.0：一次請求 FRED 全部美國指標，避免 7 個序列各自 timeout。"""
     series_ids=list(MACRO_FRED_SERIES.values())
     # FRED graph endpoint 支援以逗號分隔的多序列 CSV。
     url='https://fred.stlouisfed.org/graph/fredgraph.csv?id='+quote(','.join(series_ids))
@@ -12183,7 +12192,7 @@ def _macro_fred_batch_latest():
     return out
 
 def _macro_fred_latest(series_id, derive_yoy=False):
-    """V2.14.50：保留單序列 API 相容介面，實際優先使用 batch 結果。"""
+    """V2.15.0：保留單序列 API 相容介面，實際優先使用 batch 結果。"""
     url='https://fred.stlouisfed.org/graph/fredgraph.csv?id='+quote(series_id)
     last_err=None
     for verify in (True, False):
@@ -12203,7 +12212,7 @@ def _macro_fred_latest(series_id, derive_yoy=False):
 
 
 def _macro_dgbas_latest():
-    """V2.14.50：主計總處採獨立指標解析；解析失敗時保留最近官方已知值，不再整組 N/A。"""
+    """V2.15.0：主計總處採獨立指標解析；解析失敗時保留最近官方已知值，不再整組 N/A。"""
     out={'gdp_yoy':None,'cpi_yoy':None,'unemployment':None,'sources':[DGBAS_NEWS_PAGE_URL],'published':{}}
     text=''
     try:
@@ -12236,7 +12245,7 @@ def _macro_dgbas_latest():
 
 
 def _macro_cbc_latest():
-    """V2.14.50：央行重要指標頁；即使央行頁連線/解析失敗，也逐欄使用已核對官方值，絕不回傳 N/A。"""
+    """V2.15.0：央行重要指標頁；即使央行頁連線/解析失敗，也逐欄使用已核對官方值，絕不回傳 N/A。"""
     out={'usd_twd':None,'m2_yoy':None,'overnight':None,'discount_rate':None,
          'source':CBC_KEY_INDICATORS_URL,'fallback_dates':{}}
     # 最近核對的央行官方值：僅作為「來源暫時不可用/頁面格式變動」時的保底，
@@ -12280,8 +12289,230 @@ def _macro_cbc_latest():
 
 _MACRO_RUN_CACHE = None
 
+
+def _macro_value(d, key):
+    """Return normalized numeric macro value from the current macro payload."""
+    if key in d.get('us',{}):
+        x=d['us'].get(key)
+        return x.get('value') if isinstance(x,dict) else None
+    return d.get('taiwan',{}).get(key)
+
+
+def _macro_history_append(d):
+    """Persist one observation per run.  History is used only for statistical estimates."""
+    hist=load_json(MACRO_HISTORY_FILE)
+    if not isinstance(hist,dict) or hist.get('_version')!=MACRO_HISTORY_VERSION:
+        hist={'_version':MACRO_HISTORY_VERSION,'items':[]}
+    item={'ts':d.get('updated_at') or datetime.now(TW_TZ).isoformat()}
+    keys=list(MACRO_FRED_SERIES.keys())+['gdp_yoy','cpi_yoy','unemployment','discount_rate','m2_yoy','usd_twd','overnight']
+    for k in keys:
+        v=_macro_value(d,k)
+        if isinstance(v,(int,float)) and math.isfinite(float(v)):
+            item[k]=float(v)
+    # Avoid duplicate observations within the same calendar day/run.
+    items=hist.get('items',[])
+    day=str(item['ts'])[:10]
+    replaced=False
+    for old in reversed(items[-10:]):
+        if str(old.get('ts',''))[:10]==day:
+            old.update(item); replaced=True; break
+    if not replaced: items.append(item)
+    hist['items']=items[-MACRO_HISTORY_MAX_DAYS:]
+    save_json(MACRO_HISTORY_FILE,hist)
+    return hist
+
+
+def _macro_series_history(series_key, d=None, min_points=MACRO_FORECAST_MIN_POINTS):
+    """Get historical observations from persisted Action history; fallback to FRED history for US series."""
+    hist=load_json(MACRO_HISTORY_FILE)
+    vals=[]
+    if isinstance(hist,dict):
+        for x in hist.get('items',[]):
+            v=x.get(series_key)
+            if isinstance(v,(int,float)) and math.isfinite(float(v)):
+                vals.append((str(x.get('ts','')),float(v)))
+    if len(vals)>=min_points:
+        return vals
+    # FRED historical fallback for US indicators gives the forecast engine real observations
+    # even when Actions has only been running for a short time.
+    if series_key in MACRO_FRED_SERIES:
+        sid=MACRO_FRED_SERIES[series_key]
+        try:
+            url='https://fred.stlouisfed.org/graph/fredgraph.csv?id='+quote(sid)
+            r=requests.get(url,timeout=max(8,MACRO_TIMEOUT),headers={'User-Agent':'Mozilla/5.0 stock-alert/2.15.0','Accept':'text/csv,*/*'},verify=False)
+            r.raise_for_status()
+            df=pd.read_csv(pd.io.common.StringIO(r.text))
+            if len(df.columns)>=2:
+                dc=df.columns[0]; vc=df.columns[-1]
+                df[vc]=pd.to_numeric(df[vc],errors='coerce')
+                df=df.dropna(subset=[vc]).tail(84)
+                out=[(str(row[dc]),float(row[vc])) for _,row in df.iterrows()]
+                if series_key=='us_cpi' and len(out)>=13:
+                    raw=[v for _,v in out]
+                    out=[(out[i][0],(raw[i]/raw[i-12]-1)*100) for i in range(12,len(raw)) if raw[i-12]!=0]
+                if out: return out
+        except Exception:
+            pass
+    return vals
+
+
+def _macro_forecast_one(series_key, current, horizon, d=None):
+    """Robust forecast: damped trend + mean reversion, with uncertainty and sample size.
+    This is intentionally not presented as an EPS-style point prediction; it is a statistical range.
+    """
+    hist=_macro_series_history(series_key,d)
+    vals=[v for _,v in hist if isinstance(v,(int,float)) and math.isfinite(v)]
+    if current is not None and (not vals or abs(vals[-1]-float(current))>1e-12): vals.append(float(current))
+    if not vals: return {'value':None,'low':None,'high':None,'confidence':0,'n':0,'method':'無資料'}
+    n=len(vals); arr=np.array(vals[-60:],dtype=float)
+    if n<MACRO_FORECAST_MIN_POINTS:
+        pred=float(arr[-1]); sd=float(np.std(arr)) if len(arr)>1 else 0.0; conf=25
+    else:
+        # OLS trend over time, then shrink strongly toward recent mean to avoid runaway extrapolation.
+        x=np.arange(len(arr),dtype=float)
+        try: slope,inter=np.polyfit(x,arr,1); trend=float(inter+slope*(len(arr)-1+horizon))
+        except Exception: trend=float(arr[-1])
+        recent=float(np.mean(arr[-12:])) if len(arr)>=12 else float(np.mean(arr))
+        pred=0.65*trend+0.35*recent
+        # one-step residual volatility, scaled by sqrt(horizon)
+        fitted=np.polyval(np.polyfit(x,arr,1),x) if len(arr)>=2 else arr
+        resid=arr-fitted; sd=float(np.std(resid[-36:])) if len(resid)>2 else float(np.std(arr))
+        conf=min(90,35+min(40,n)*1.0)
+    width=max(0.01,1.35*sd*math.sqrt(max(1,horizon)))
+    # Rates/yields and inflation should not produce absurd negative intervals.
+    if series_key in ('fed_rate','us_10y','us_cpi','us_unemployment','discount_rate','cpi_yoy','unemployment'):
+        low=max(0.0,pred-width); high=pred+width
+    else:
+        low=pred-width; high=pred+width
+    return {'value':round(float(pred),3),'low':round(float(low),3),'high':round(float(high),3),'confidence':int(conf),'n':n,'method':'阻尼趨勢＋均值回歸'}
+
+
+def _macro_news_fetch(force=False):
+    """Fetch concrete macro/policy events from Google News RSS; event text is evidence, not forecast itself."""
+    cached=load_json(MACRO_NEWS_CACHE_FILE)
+    now=time.time()
+    if not force and isinstance(cached,dict) and now-float(cached.get('cached_at',0) or 0)<MACRO_NEWS_CACHE_HOURS*3600:
+        return cached.get('data',{})
+    queries=[
+        'Federal Reserve interest rates inflation US economy',
+        'US CPI jobs GDP Treasury yields economy',
+        'Taiwan central bank interest rate CPI GDP economy',
+        'Taiwan exports semiconductor AI tariffs economy',
+        'oil prices inflation Fed global economy'
+    ]
+    items=[]; errors=[]
+    for q in queries:
+        try:
+            url='https://news.google.com/rss/search?'+urlencode({'q':q+' when:7d','hl':'en-US','gl':'US','ceid':'US:en'})
+            r=requests.get(url,timeout=10,headers={'User-Agent':'Mozilla/5.0 stock-alert/2.15.0'})
+            r.raise_for_status()
+            root=ET.fromstring(r.text)
+            for it in root.findall('.//item')[:8]:
+                title=(it.findtext('title') or '').strip(); link=(it.findtext('link') or '').strip(); pub=(it.findtext('pubDate') or '').strip()
+                if not title: continue
+                items.append({'title':title,'link':link,'published':pub,'query':q})
+        except Exception as e: errors.append(f'{type(e).__name__}: {e}')
+    seen=set(); clean=[]
+    for x in items:
+        k=re.sub(r'\W+','',x['title'].lower())
+        if k in seen: continue
+        seen.add(k); clean.append(x)
+    # Event direction is conservative: only explicit policy/economic shocks get directional tags.
+    for x in clean:
+        t=x['title'].lower()
+        pos=[]; neg=[]
+        if any(k in t for k in ('rate cut','cuts rates','easing','lower rates','disinflation','strong growth','growth accelerates','jobs gain')): pos.append('寬鬆／景氣改善')
+        if any(k in t for k in ('rate hike','hikes rates','higher rates','inflation rises','inflationary','oil above','recession','layoffs','jobless')): neg.append('緊縮／景氣風險')
+        x['direction']='positive' if pos and not neg else 'negative' if neg and not pos else 'neutral'
+        x['reason']='；'.join(pos+neg) or '中性／待確認'
+    data={'items':clean[:MACRO_NEWS_MAX_ITEMS],'updated_at':datetime.now(TW_TZ).isoformat(),'errors':errors}
+    save_json(MACRO_NEWS_CACHE_FILE,{'cached_at':now,'data':data})
+    return data
+
+
+def _macro_regime(d):
+    us=d.get('us',{}); tw=d.get('taiwan',{})
+    def uv(k):
+        x=us.get(k); return x.get('value') if isinstance(x,dict) else None
+    cpi=uv('us_cpi'); fed=uv('fed_rate'); gdp=uv('us_gdp_growth'); un=uv('us_unemployment'); y10=uv('us_10y'); vix=uv('vix'); twg=tw.get('gdp_yoy'); fx=tw.get('usd_twd')
+    inflation='高通膨壓力' if cpi is not None and cpi>=3 else '通膨可控'
+    growth='景氣偏強' if gdp is not None and gdp>=2.5 else '景氣偏弱' if gdp is not None and gdp<1 else '景氣中性'
+    labor='勞動市場偏緊' if un is not None and un<4.5 else '勞動市場轉弱' if un is not None and un>=5 else '勞動市場中性'
+    risk='風險偏高' if vix is not None and vix>=25 else '風險中性'
+    if inflation=='高通膨壓力' and fed is not None and fed>=3.5: regime='通膨偏黏＋利率偏高'
+    elif growth=='景氣偏強' and inflation!='高通膨壓力': regime='成長主導／軟著陸偏正面'
+    elif growth=='景氣偏弱' and inflation=='高通膨壓力': regime='停滯風險'
+    else: regime='過渡期／資料分歧'
+    return {'regime':regime,'growth':growth,'inflation':inflation,'labor':labor,'risk':risk,'tw_growth':twg,'fx':fx,'yield10':y10}
+
+
+def macro_intelligence(force=False):
+    """V2.15.0 five-quadrant macro transmission + statistical forecast + event intelligence."""
+    d=macro_fetch(force=force)
+    _macro_history_append(d)
+    reg=_macro_regime(d)
+    forecasts={}
+    keys=['us_cpi','fed_rate','us_gdp_growth','us_unemployment','us_10y','us_curve_10y2y','vix','gdp_yoy','cpi_yoy','unemployment','discount_rate','m2_yoy','usd_twd']
+    for k in keys:
+        cur=_macro_value(d,k)
+        forecasts[k]={str(h):_macro_forecast_one(k,cur,h,d) for h in MACRO_FORECAST_HORIZONS}
+    news=_macro_news_fetch(force=force)
+    # Five quadrants: theoretical links are explicit; direction is driven by current data and events.
+    q=[
+      {'name':'① 貨幣／金融','vars':['Fed利率','M2／流動性','10Y／2Y殖利率','信用條件','VIX'],'chain':'政策利率／流動性 → 市場利率 → 信用成本 → 資產估值 → 投資與風險偏好'},
+      {'name':'② 實體經濟','vars':['GDP','PMI／工業生產','消費','投資','出口'],'chain':'利率／金融條件 → 消費＋投資 → GDP／產能利用 → 企業營收與獲利'},
+      {'name':'③ 價格／成本','vars':['CPI','PPI','油價／原物料','工資'],'chain':'需求＋供給衝擊 → 原物料／工資 → CPI/PPI → 央行政策反應 → 金融條件'},
+      {'name':'④ 勞動市場','vars':['失業率','就業','薪資','職缺'],'chain':'景氣／企業獲利 → 招募／裁員 → 失業率與薪資 → 消費 → GDP；反饋影響通膨'},
+      {'name':'⑤ 國際／匯率／市場','vars':['DXY','USD/TWD','美債','VIX','跨境資金'],'chain':'利差＋風險偏好＋貿易／能源 → 匯率與資金流 → 台灣進口成本／出口競爭力 → CPI與企業獲利'},
+    ]
+    # Concrete current-state implications, deliberately not hard-coded as certainty.
+    implications=[]
+    us=d.get('us',{}); tw=d.get('taiwan',{})
+    def uv(k):
+        x=us.get(k); return x.get('value') if isinstance(x,dict) else None
+    if uv('us_cpi') is not None and uv('us_cpi')>=3: implications.append('美國通膨仍偏高：Fed降息空間受限，長端殖利率與高估值資產敏感度提高。')
+    if uv('us_gdp_growth') is not None and uv('us_gdp_growth')>=2.5: implications.append('美國成長仍有支撐：科技、半導體、資本支出鏈的需求風險較低。')
+    if uv('vix') is not None and uv('vix')>=25: implications.append('VIX升高時，估值壓縮與資金撤出風險通常同步提高。')
+    if tw.get('usd_twd') is not None: implications.append(f"USD/TWD {float(tw['usd_twd']):.3f}：匯率同時影響出口換匯、進口成本與外資資金流，需依產業淨曝險判讀。")
+    # Scenario engine: probabilities are transparent heuristic priors updated by observable state, not claimed market-implied odds.
+    p_soft=0.45; p_stag=0.25; p_reacc=0.30
+    if uv('us_cpi') is not None and uv('us_cpi')>=3.5: p_stag+=0.10; p_soft-=0.05; p_reacc-=0.05
+    if uv('us_gdp_growth') is not None and uv('us_gdp_growth')>=3: p_reacc+=0.08; p_soft-=0.04; p_stag-=0.04
+    total=p_soft+p_stag+p_reacc; p_soft/=total; p_stag/=total; p_reacc/=total
+    scenarios=[
+      {'name':'A 軟著陸／通膨下行','prob':p_soft,'impact':'利率逐步下行、成長維持，對科技／金融／一般風險資產偏正面'},
+      {'name':'B 停滯／通膨偏黏','prob':p_stag,'impact':'利率維持高檔、成本壓力與估值壓縮並存，對高估值與景氣循環股偏不利'},
+      {'name':'C 再加速／通膨反彈','prob':p_reacc,'impact':'成長較強但利率再升，出口需求較佳、長久期估值承壓'},
+    ]
+    return {'data':d,'regime':reg,'forecasts':forecasts,'quadrants':q,'implications':implications,'news':news,'scenarios':scenarios,'updated_at':datetime.now(TW_TZ).isoformat()}
+
+
+def macro_industry_impact(industry='', subindustries=None, name=''):
+    """Map five-quadrant macro regime to an industry profile without replacing stock fundamentals."""
+    info=macro_intelligence(); text=' '.join([str(industry or ''),str(name or '')]+[str(x) for x in (subindustries or [])]).lower()
+    tech=any(k in text for k in ('半導體','電子','電腦','伺服器','ai','ic','通信','光電'))
+    financial=any(k in text for k in ('金融','銀行','保險','證券'))
+    domestic=any(k in text for k in ('食品','零售','通路','觀光','餐飲','營建','生技','醫療')) and not tech
+    scores={'growth':0,'rates':0,'fx':0,'risk':0}
+    us=info['data'].get('us',{}); tw=info['data'].get('taiwan',{})
+    def uv(k):
+        x=us.get(k); return x.get('value') if isinstance(x,dict) else None
+    g=uv('us_gdp_growth'); ten=uv('us_10y'); v=uv('vix'); fx=tw.get('usd_twd')
+    if g is not None: scores['growth']=1 if g>=2.5 else -1 if g<1 else 0
+    if ten is not None: scores['rates']=-1 if ten>=4.5 else 1 if ten<3.5 else 0
+    if v is not None: scores['risk']=-1 if v>=25 else 1 if v<18 else 0
+    if fx is not None and tech: scores['fx']=1 if fx>=32 else 0
+    factor=0
+    if tech: factor=scores['growth']+scores['rates']+scores['risk']+scores['fx']
+    elif financial: factor=scores['rates']+scores['risk']
+    elif domestic: factor=scores['growth']+scores['risk']
+    else: factor=scores['growth']+scores['rates']+scores['risk']
+    factor=max(-3,min(3,factor))
+    return {'factor':factor,'profile':'科技／出口' if tech else '金融' if financial else '內需' if domestic else '一般','regime':info['regime'],'scenarios':info['scenarios'],'implications':info['implications'],'scores':scores,'news':info['news'],'forecasts':info['forecasts']}
+
+
 def macro_fetch(force=False):
-    """V2.14.50：台美總經資料中心；同一 Workflow 行程只抓一次，Render 仍使用磁碟快取。"""
+    """V2.15.0：台美總經資料中心；同一 Workflow 行程只抓一次，Render 仍使用磁碟快取。"""
     global _MACRO_RUN_CACHE
     if not force and isinstance(_MACRO_RUN_CACHE,dict) and _MACRO_RUN_CACHE.get('data'):
         return _MACRO_RUN_CACHE['data']
@@ -12319,7 +12550,7 @@ def macro_fetch(force=False):
                 d['us'][key]={'value':v,'date':dt,'series':sid,'unit':'YoY %' if key=='us_cpi' else '','fallback':True}
     except Exception as e:
         d['errors'].append(f'FRED batch: {type(e).__name__}: {e}')
-        # V2.14.50：批次端點失敗時，不再做 7 次慢速 timeout；改用最近已驗證的官方 FRED last-known-good。
+        # V2.15.0：批次端點失敗時，不再做 7 次慢速 timeout；改用最近已驗證的官方 FRED last-known-good。
         # 下一次成功連線時會自動覆蓋。
         fred_fallback={
             'fed_rate':(3.63,'2026-09-04'),
@@ -12343,8 +12574,10 @@ def macro_fetch(force=False):
     success_count=sum(1 for v in d.get('us',{}).values() if isinstance(v,dict) and v.get('value') is not None) + sum(1 for k in ('gdp_yoy','cpi_yoy','unemployment','usd_twd','m2_yoy','overnight','discount_rate') if d.get('taiwan',{}).get(k) is not None)
     if success_count>0:
         payload={'_cached_at':now,'_version':MACRO_CACHE_VERSION,'data':d}; save_json(MACRO_CACHE_FILE,payload)
+        try: _macro_history_append(d)
+        except Exception: pass
         return d
-    # V2.14.50：網頁／Render 不應因外部宏觀資料源暫時逾時而整頁空白。
+    # V2.15.0：網頁／Render 不應因外部宏觀資料源暫時逾時而整頁空白。
     # 若本次全部來源失敗，保留上一份可用快取並標示為 stale。
     if isinstance(cached,dict) and isinstance(cached.get('data'),dict) and cached.get('data'):
         stale=dict(cached.get('data') or {})
@@ -12371,51 +12604,26 @@ def macro_profile_for_stock(industry, subindustries=None, name=''):
 
 
 def macro_stock_factor(industry, subindustries=None, name=''):
-    """V2.14.42：將總經轉成個股相關的 -3~+3 輔助調整；資料不足時不硬算。"""
-    d=macro_fetch(); us=d.get('us',{}); tw=d.get('taiwan',{})
-    profile,keys=macro_profile_for_stock(industry,subindustries,name); score=0; reasons=[]
-    _macro_text=' '.join([str(industry or ''),str(name or '')]+[str(x) for x in (subindustries or [])]).lower()
-    export=any(k in _macro_text for k in ('半導體','電子','電腦','光電','通信','伺服器','ic','ai','鋼鐵','塑化','紡織','航運','機械','化學','汽車','零組件'))
-    def val(k):
-        if k.startswith('tw_'):
-            return {'tw_gdp':tw.get('gdp_yoy'),'tw_cpi':tw.get('cpi_yoy'),'tw_unemployment':tw.get('unemployment'),'tw_rate':tw.get('discount_rate'),'tw_m2':tw.get('m2_yoy')}.get(k)
-        if k=='usd_twd': return tw.get('usd_twd')
-        if k=='vix':
-            z=us.get('vix',{})
-            if isinstance(z,dict) and z.get('value') is not None: return z.get('value')
-            try: return float(yf.Ticker('^VIX').fast_info.get('last_price'))
-            except Exception: return None
-        z=us.get(k,{}); return z.get('value') if isinstance(z,dict) else None
-    # Growth
-    g=val('us_gdp_growth'); tg=val('tw_gdp')
-    if 'us_gdp_growth' in keys and g is not None:
-        if g>=3: score+=1; reasons.append('美國景氣穩健')
-        elif g<1: score-=1; reasons.append('美國景氣放緩')
-    if 'tw_gdp' in keys and tg is not None:
-        if tg>=4: score+=1; reasons.append('台灣景氣強')
-        elif tg<2: score-=1; reasons.append('台灣景氣放緩')
-    # Rates / inflation
-    fed=val('fed_rate'); ten=val('us_10y'); cpi=val('us_cpi'); twcpi=val('tw_cpi')
-    if 'fed_rate' in keys and fed is not None and fed>=4.5: score-=1; reasons.append('美國利率偏高')
-    if 'us_10y' in keys and ten is not None and ten>=4.5: score-=1; reasons.append('美債殖利率偏高')
-    if 'us_cpi' in keys and cpi is not None:
-        # CPI level不是直接通膨率，不能拿指數值當通膨率；故僅作資料展示，不參與此處評分。
-        pass
-    if 'tw_cpi' in keys and twcpi is not None and twcpi>=3: score-=1; reasons.append('台灣通膨偏高')
-    fx=val('usd_twd')
-    if 'usd_twd' in keys and fx is not None and export and fx>=32: score+=1; reasons.append('台幣偏弱有利出口換匯')
-    vix=val('vix')
-    if 'vix' in keys and vix is not None and vix>=25: score-=1; reasons.append('市場波動偏高')
-    # curve only as risk flag
-    curve=val('us_curve_10y2y')
-    if 'us_curve_10y2y' in keys and curve is not None and curve<-0.5: score-=1; reasons.append('美國殖利率曲線偏弱')
-    score=max(-3,min(3,score))
-    if score>=2: state='🟢 總經環境偏正面'
-    elif score>0: state='🟢 總經環境略偏正面'
-    elif score==0: state='🟡 總經環境中性'
-    elif score>-2: state='🟠 總經環境略偏負面'
-    else: state='🔴 總經環境偏負面'
-    return {'factor':score,'state':state,'profile':profile,'reasons':reasons[:5],'data':d,'keys':keys}
+    """V2.15.0：總經五象限傳導後的個股輔助調整，仍限制在 -3~+3。"""
+    try:
+        x=macro_industry_impact(industry,subindustries,name)
+        score=int(x.get('factor',0) or 0)
+        reasons=[]
+        s=x.get('scores',{}) or {}
+        if s.get('growth'): reasons.append('景氣傳導'+('偏正面' if s['growth']>0 else '偏負面'))
+        if s.get('rates'): reasons.append('利率／殖利率傳導'+('偏正面' if s['rates']>0 else '偏負面'))
+        if s.get('fx'): reasons.append('匯率傳導偏正面' if s['fx']>0 else '匯率傳導偏負面')
+        if s.get('risk'): reasons.append('市場風險'+('偏低' if s['risk']>0 else '偏高'))
+        if score>=2: state='🟢 總經環境偏正面'
+        elif score>0: state='🟢 總經環境略偏正面'
+        elif score==0: state='🟡 總經環境中性'
+        elif score>-2: state='🟠 總經環境略偏負面'
+        else: state='🔴 總經環境偏負面'
+        return {'factor':score,'state':state,'profile':x.get('profile','一般'),'reasons':reasons[:5],
+                'data':x.get('forecasts',{}),'keys':[], 'scenarios':x.get('scenarios',{}),
+                'event_implications':x.get('implications',[])}
+    except Exception as e:
+        return {'factor':0,'state':'⚪ 資料不足','profile':'一般','reasons':[], 'data':{},'keys':[],'error':str(e)}
 
 
 def _trump_recent_news_fetch(symbol=''):
@@ -12481,7 +12689,7 @@ def _trump_recent_news_fetch(symbol=''):
 
 
 def _trump_translate_title(title):
-    """V2.14.50：繁中翻譯三層備援：Google GTX -> MyMemory -> 原文。"""
+    """V2.15.0：繁中翻譯三層備援：Google GTX -> MyMemory -> 原文。"""
     text=str(title or '').strip()
     if not text or not re.search(r'[A-Za-z]',text): return text
     cache=globals().setdefault('_TRUMP_TRANSLATION_CACHE',{}); key=text[:500]
@@ -12869,7 +13077,7 @@ def run_webhook_server():
         return (
             '<!doctype html><html><head><meta charset="utf-8">'
             '<meta name="viewport" content="width=device-width,initial-scale=1">'
-            '<title>Stock Alert V2.14.50</title>'
+            '<title>Stock Alert V2.15.0</title>'
             '<style>body{margin:0;padding:20px;background:#f6f7f9;color:#222}'
             '.card{max-width:900px;margin:auto;background:#fff;border-radius:14px;padding:20px;box-shadow:0 2px 12px #0001}'
             'a{word-break:break-all}</style></head><body><div class="card">'
@@ -12927,7 +13135,7 @@ def run_webhook_server():
             result=_line_industry_top3_analysis(sub,u,html_links=True,parent=display_parent)
         except Exception as ex:
             result=f'❌ 分析失敗：{type(ex).__name__}: {ex}'
-        # V2.14.50：保留 Top3 內的 /stock 超連結，但把換行轉成真正的 HTML 換行，避免手機瀏覽器全部擠成一行。
+        # V2.15.0：保留 Top3 內的 /stock 超連結，但把換行轉成真正的 HTML 換行，避免手機瀏覽器全部擠成一行。
         result_html = str(result).replace('\n', '<br>')
         body=(
             f'<div class="card"><h1>📊 {html.escape(sub)}</h1><div class="muted">大產業：{html.escape(display_parent)}</div><div class="industry-result">{result_html}</div></div>'
@@ -12953,25 +13161,62 @@ def run_webhook_server():
     @app.get('/macro')
     def macro_page():
         try:
-            d=macro_fetch(force=False); us=d.get('us',{}); tw=d.get('taiwan',{})
-            def mv(k):
-                x=us.get(k,{}); return x.get('value') if isinstance(x,dict) else None
-            body=['<div class="card"><h1>🌎 台美總經／系統性風險</h1>', '<p class="muted">本頁獨立於 Trump；個股分析只取與自身產業/營收模式相關的指標。</p>']
-            if d.get('_stale'): body.append('<p class="muted">⚠️ 即時來源暫時無法更新，以下顯示最近一次成功快取；不影響頁面瀏覽。</p>')
-            body.append('<h2>🇺🇸 美國</h2>')
-            for label,key in [('GDP成長率','us_gdp_growth'),('Fed利率','fed_rate'),('CPI指數','us_cpi'),('失業率','us_unemployment'),('10Y殖利率','us_10y'),('10Y-2Y','us_curve_10y2y')]:
-                v=mv(key); body.append(f'<p><b>{label}</b>：{("N/A" if v is None else f"{v:.2f}")}</p>')
-            body.append('<h2>🇹🇼 台灣</h2>')
-            for label,key,suf in [('GDP YoY','gdp_yoy','%'),('CPI YoY','cpi_yoy','%'),('失業率','unemployment','%'),('重貼現率','discount_rate','%'),('M2年增','m2_yoy','%'),('USD/TWD','usd_twd','')]:
-                v=tw.get(key); body.append(f'<p><b>{label}</b>：{("N/A" if v is None else f"{v:.2f}{suf}")}</p>')
-            v=mv('vix')
-            body.append(f'<p><b>VIX</b>：{("N/A" if v is None else f"{v:.2f}")}</p>')
-            body.append('<p class="muted">資料來源：FRED、台灣央行、主計總處公開資料。更新：'+html.escape(str(d.get('updated_at','')))+'</p>')
-            body.append('<h2>📌 個股使用方式</h2><p>科技/出口股偏重美國景氣、Fed、10Y、台灣GDP、匯率；內需股偏重台灣GDP、CPI、失業率、利率；金融股偏重Fed、10Y與殖利率曲線。</p>')
-            body.append('<div class="nav"><a href="/industry">🏭 產業</a><a href="/trump">🇺🇸 Trump</a><a href="/">首頁</a></div>')
-            return _web_page('總經風險', ''.join(body))
+            info=macro_intelligence(force=False); d=info.get('data',{}); us=d.get('us',{}); tw=d.get('taiwan',{})
+            reg=info.get('regime',{}); body=['<div class="card"><h1>🌎 Macro & Policy Intelligence</h1>',
+                '<p class="muted">五大總經象限＋統計預測＋事件情報＋情境樹＋產業傳導。理論關係、統計估計、最新事件分開標示，不把單一新聞當成確定預測。</p>']
+            if d.get('_stale'): body.append('<p class="muted">⚠️ 即時來源暫時無法更新，以下沿用最近可用資料。</p>')
+            body.append(f'<h2>🎯 目前總經狀態：{html.escape(str(reg.get("regime","資料不足")))}</h2><p>景氣：{html.escape(str(reg.get("growth","N/A")))}｜通膨：{html.escape(str(reg.get("inflation","N/A")))}｜勞動：{html.escape(str(reg.get("labor","N/A")))}｜市場風險：{html.escape(str(reg.get("risk","N/A")))}</p>')
+            body.append('<h2>📈 統計預測（1／3／6個月）</h2><p class="muted">阻尼趨勢＋均值回歸；區間是統計不確定性，不是保證。</p>')
+            labels={'us_cpi':'美CPI YoY','fed_rate':'Fed利率','us_gdp_growth':'美GDP','us_unemployment':'美失業率','us_10y':'美10Y','us_curve_10y2y':'美10Y-2Y','vix':'VIX','gdp_yoy':'台GDP YoY','cpi_yoy':'台CPI YoY','unemployment':'台失業率','discount_rate':'台重貼現率','m2_yoy':'台M2年增','usd_twd':'USD/TWD'}
+            for k,label in labels.items():
+                cur=_macro_value(d,k); fs=info['forecasts'].get(k,{})
+                cells=[]
+                for h in (1,3,6):
+                    z=fs.get(str(h),{}); cells.append(f'{h}M：'+('N/A' if z.get('value') is None else f"{z["value"]:.2f} [{z["low"]:.2f},{z["high"]:.2f}] C{z["confidence"]}"))
+                body.append(f'<p><b>{label}</b>｜目前：{("N/A" if cur is None else f"{cur:.2f}")}<br>{"｜".join(cells)}</p>')
+            body.append('<h2>🧭 五大總經象限／傳導網</h2>')
+            for q in info['quadrants']:
+                body.append(f'<p><b>{html.escape(q["name"])}</b><br>{html.escape(q["chain"])}</p>')
+            body.append('<h2>🌳 三大情境</h2>')
+            for x in info['scenarios']:
+                body.append(f'<p><b>{html.escape(x["name"])}</b>｜機率 {x["prob"]*100:.0f}%<br>{html.escape(x["impact"])}</p>')
+            body.append('<h2>📰 最近7日具體事件</h2>')
+            for x in info.get('news',{}).get('items',[])[:8]:
+                icon='🟢' if x.get('direction')=='positive' else '🔴' if x.get('direction')=='negative' else '⚪'
+                body.append(f'<p>{icon} {html.escape(x.get("title",""))}<br><span class="muted">{html.escape(x.get("published",""))}｜事件判讀：{html.escape(x.get("reason",""))}</span></p>')
+            body.append('<h2>🏭 對產業／個股的作用</h2><p>先由總經五象限推導景氣、利率、成本、勞動、匯率與風險偏好的變化，再映射到產業；個股仍由基本面、估值、技術、籌碼、重大消息、Trump 等原模型決定。</p>')
+            body.append('<form method="get" action="/macro-stock"><input name="symbol" placeholder="輸入 2330、3711、QQQ、NVDA…" required><button type="submit">🔍 查詢個股總經曝險</button></form>')
+            body.append('<p class="muted">資料更新：'+html.escape(str(info.get('updated_at','')))+'</p>')
+            body.append('<div class="nav"><a href="/industry">🏭 產業</a><a href="/trump">🇺🇸 Trump</a><a href="/macro">🔄 重新整理</a><a href="/">首頁</a></div>')
+            return _web_page('Macro & Policy Intelligence',''.join(body))
         except Exception as ex:
-            return _web_page('總經風險', f'<div class="card"><h1>🌎 總經資料暫不可用</h1><p>{html.escape(type(ex).__name__)}：{html.escape(str(ex))}</p><div class="nav"><a href="/">首頁</a></div></div>'),200
+            return _web_page('總經風險', f'<div class="card"><h1>🌎 總經資料暫不可用</h1><pre>{html.escape(type(ex).__name__+": "+str(ex))}</pre><div class="nav"><a href="/">首頁</a></div></div>'),200
+
+    @app.get('/macro-stock')
+    def macro_stock_page():
+        symbol=str(request.args.get('symbol') or '').strip().upper()
+        if not symbol:
+            return _web_page('個股總經分析','<div class="card"><h1>🌎 個股總經分析</h1><form method="get"><input name="symbol" placeholder="2330 / 3711 / QQQ / NVDA" required><button>查詢</button></form></div>')
+        try:
+            u=build_line_query_universe(symbol)
+            item=u.get(symbol) if isinstance(u,dict) else None
+            industry=''; sub=[]; name=''
+            if isinstance(item,dict):
+                industry=item.get('industry') or item.get('major_industry') or ''
+                sub=item.get('subindustries') or item.get('subindustry') or []
+                if isinstance(sub,str): sub=[sub]
+                name=item.get('name') or ''
+            imp=macro_industry_impact(industry,sub,name)
+            body=[f'<div class="card"><h1>🌎 {html.escape(symbol)}｜總經曝險</h1><p><b>產業型態：</b>{html.escape(str(imp.get("profile","一般")))}｜<b>總經調整：</b>{int(imp.get("factor",0)):+d}</p><p><b>目前總經狀態：</b>{html.escape(str(imp.get("regime",{}).get("regime","資料不足")))}</p>']
+            body.append('<h2>傳導到此標的</h2>')
+            for k,v in imp.get('scores',{}).items(): body.append(f'<p>{html.escape(k)}：{int(v):+d}</p>')
+            for x in imp.get('implications',[])[:6]: body.append(f'<p>• {html.escape(x)}</p>')
+            body.append('<h2>情境</h2>')
+            for x in imp.get('scenarios',[]): body.append(f'<p><b>{html.escape(x["name"])}</b>｜{x["prob"]*100:.0f}%<br>{html.escape(x["impact"])}</p>')
+            body.append('<p class="muted">此頁是總經傳導層，不會取代原有個股投資價值／買點模型。</p><div class="nav"><a href="/macro">← 總經總覽</a><a href="/stock?symbol='+html.escape(symbol)+'">📊 個股完整分析</a><a href="/">首頁</a></div></div>')
+            return _web_page('個股總經分析',''.join(body))
+        except Exception as ex:
+            return _web_page('個股總經分析',f'<div class="card"><h1>❌ 分析失敗</h1><pre>{html.escape(type(ex).__name__+": "+str(ex))}</pre></div>'),200
 
     @app.get('/trump')
     def trump_page():
@@ -12994,6 +13239,17 @@ def run_webhook_server():
             icon='🟢' if ni.get('side')=='positive' else '🔴' if ni.get('side')=='negative' else '⚪'
             rows.append(f'<p>{icon} {html.escape(_trump_translate_title(ni.get("title","")))}<br><span class="muted">{html.escape(str(ni.get("published","")))}｜Google News RSS</span></p>')
         if news.get('error'): rows.append(f'<p class="muted">⚠️ 第二層資料取得失敗：{html.escape(str(news.get("error")))}</p>')
+        rows.append('</div>')
+        # V2.15.0：Trump Intelligence；把政策事件與交易訊號分離，並提供產業／估值傳導。
+        rows.append('<div class="card"><h2>🧠 Trump Intelligence｜政策 → 產業 → 股票</h2>')
+        rows.append('<p class="muted">278-T 是已申報交易；本區只把近期政策／政府投資／關稅等事件當作情境變數，不把新聞當成已發生的個人交易。</p>')
+        trump_items=news.get('items',[])[:6]
+        for ni in trump_items:
+            title=str(ni.get('title','')); side=ni.get('side','neutral')
+            icon='🟢' if side=='positive' else '🔴' if side=='negative' else '⚪'
+            direction='需求／政策支持' if side=='positive' else '成本／政策風險' if side=='negative' else '待確認'
+            rows.append(f'<p>{icon} <b>{html.escape(_trump_translate_title(title))}</b><br>事件方向：{direction}｜日期：{html.escape(str(ni.get("published","")))}<br><span class="muted">傳導：政策／關稅／政府採購 → 產業需求或成本 → 營收／毛利 → EPS → 估值倍數；實際影響依公司曝險判斷。</span></p>')
+        rows.append('<p><b>三種政策情境</b>：基準＝政策維持；偏多＝產業支持／投資加速；偏空＝關稅／監管／成本壓力升高。若與總經情境交叉，可形成聯合情境，而非單一分數決策。</p>')
         rows.append('</div>')
         rows.append('<div class="card"><h2>📋 公開申報股票／ETF</h2>')
         rows.append(f'<p class="muted">資料：{html.escape(str(report_date))}。OGE 價值為申報區間，不代表即時市值。</p>')
@@ -14387,10 +14643,10 @@ def main():
 
     else:
 
-        print('========== V2.14.50 RUN START ==========', flush=True)
+        print('========== V2.15.0 RUN START ==========', flush=True)
         print(f'執行時間（台灣）：{datetime.now(TW_TZ).strftime("%Y-%m-%d %H:%M:%S")}', flush=True)
         run_alerts()
-        print('========== V2.14.50 RUN END ==========', flush=True)
+        print('========== V2.15.0 RUN END ==========', flush=True)
 
 
 if __name__ == '__main__':
