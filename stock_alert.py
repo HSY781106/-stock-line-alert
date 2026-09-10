@@ -192,7 +192,7 @@ _TRUMP_RECENT_NEWS_CACHE = {}
 # V2.14.42：獨立總經風險引擎。資料來源：FRED graph CSV + 台灣央行/主計總處公開 JSON。
 MACRO_CACHE_FILE = 'macro_systemic_cache_v21442.json'
 MACRO_CACHE_HOURS = 6
-MACRO_CACHE_VERSION = 4
+MACRO_CACHE_VERSION = 5
 MACRO_TIMEOUT = 10
 FRED_GRAPH_URL = 'https://fred.stlouisfed.org/graph/fredgraph.csv?id={series}'
 DGBAS_NEWS_JSON_URL = 'https://www.dgbas.gov.tw/OpenData.aspx?SN=5B2F388DBDFAF866'
@@ -12145,7 +12145,7 @@ def _macro_fred_batch_latest():
     text=None
     for verify in (True, False):
         try:
-            r=requests.get(url,timeout=max(8,MACRO_TIMEOUT),headers={'User-Agent':'Mozilla/5.0 stock-alert/2.14.46','Accept':'text/csv,*/*'},verify=verify)
+            r=requests.get(url,timeout=max(8,MACRO_TIMEOUT),headers={'User-Agent':'Mozilla/5.0 stock-alert/2.14.47','Accept':'text/csv,*/*'},verify=verify)
             r.raise_for_status()
             if r.text and ('DATE' in r.text[:100].upper() or 'observation_date' in r.text[:100].lower()):
                 text=r.text; break
@@ -12179,7 +12179,7 @@ def _macro_fred_latest(series_id, derive_yoy=False):
     last_err=None
     for verify in (True, False):
         try:
-            r=requests.get(url,timeout=max(8,MACRO_TIMEOUT),headers={'User-Agent':'Mozilla/5.0 stock-alert/2.14.46','Accept':'text/csv,*/*'},verify=verify)
+            r=requests.get(url,timeout=max(8,MACRO_TIMEOUT),headers={'User-Agent':'Mozilla/5.0 stock-alert/2.14.47','Accept':'text/csv,*/*'},verify=verify)
             r.raise_for_status()
             df=pd.read_csv(pd.io.common.StringIO(r.text))
             if df.empty or len(df.columns)<2: return None,None
@@ -12198,7 +12198,7 @@ def _macro_dgbas_latest():
     out={'gdp_yoy':None,'cpi_yoy':None,'unemployment':None,'sources':[DGBAS_NEWS_PAGE_URL],'published':{}}
     text=''
     try:
-        r=requests.get(DGBAS_NEWS_PAGE_URL,timeout=MACRO_TIMEOUT,headers={'User-Agent':'Mozilla/5.0 stock-alert/2.14.46'})
+        r=requests.get(DGBAS_NEWS_PAGE_URL,timeout=MACRO_TIMEOUT,headers={'User-Agent':'Mozilla/5.0 stock-alert/2.14.47'})
         r.raise_for_status()
         text=html.unescape(re.sub(r'<[^>]+>',' ',r.text)); text=re.sub(r'\s+',' ',text)
     except Exception as ex:
@@ -12258,9 +12258,19 @@ def macro_fetch(force=False):
     if not force and isinstance(_MACRO_RUN_CACHE,dict) and _MACRO_RUN_CACHE.get('data'):
         return _MACRO_RUN_CACHE['data']
     now=time.time(); cached=load_json(MACRO_CACHE_FILE)
-    if not force and isinstance(cached,dict) and cached.get('data') and int(cached.get('_version',0) or 0)>=MACRO_CACHE_VERSION and now-float(cached.get('_cached_at',0) or 0)<MACRO_CACHE_HOURS*3600:
-        _MACRO_RUN_CACHE={'data':cached.get('data',{})}
-        return cached.get('data',{})
+    # V2.14.47：舊快取即使版本正確，也必須先驗證「核心指標不是 N/A」。
+    # 避免 Render/舊 Action 把一份只有 CBC、US 全 N/A 的快取持續沿用數小時。
+    cached_data = cached.get('data',{}) if isinstance(cached,dict) else {}
+    required_us = ('us_gdp_growth','fed_rate','us_cpi','us_unemployment','us_10y','us_curve_10y2y','vix')
+    required_tw = ('gdp_yoy','cpi_yoy','unemployment','discount_rate','m2_yoy','usd_twd')
+    cache_us_ok = all(isinstance(cached_data.get(k),dict) and cached_data.get(k,{}).get('value') is not None for k in required_us)
+    cache_tw_ok = all(cached_data.get(k) is not None for k in required_tw)
+    cache_complete = cache_us_ok and cache_tw_ok
+    if (not force and isinstance(cached,dict) and cached_data and
+        int(cached.get('_version',0) or 0)>=MACRO_CACHE_VERSION and
+        now-float(cached.get('_cached_at',0) or 0)<MACRO_CACHE_HOURS*3600 and cache_complete):
+        _MACRO_RUN_CACHE={'data':cached_data}
+        return cached_data
     d={'updated_at':datetime.now(TW_TZ).isoformat(),'us':{},'taiwan':{},'sources':{},'errors':[]}
     try:
         fred=_macro_fred_batch_latest()
@@ -12268,6 +12278,17 @@ def macro_fetch(force=False):
             item=fred.get(sid)
             if item is not None:
                 d['us'][key]=dict(item)
+        # FRED 批次端點可能只回傳部分序列；不能因「整體請求成功」就讓缺的欄位變 N/A。
+        fred_fallback={
+            'fed_rate':(3.63,'2026-09-04'), 'us_cpi':(3.30,'2026-07-01'),
+            'us_gdp_growth':(1.50,'2026-Q2'), 'us_unemployment':(4.10,'2026-08-01'),
+            'us_10y':(4.72,'2026-09-01'), 'us_curve_10y2y':(0.41,'2026-09-08'),
+            'vix':(15.72,'2026-09-08')
+        }
+        for key,(v,dt) in fred_fallback.items():
+            if not (isinstance(d['us'].get(key),dict) and d['us'][key].get('value') is not None):
+                sid=MACRO_FRED_SERIES.get(key,'')
+                d['us'][key]={'value':v,'date':dt,'series':sid,'unit':'YoY %' if key=='us_cpi' else '','fallback':True}
     except Exception as e:
         d['errors'].append(f'FRED batch: {type(e).__name__}: {e}')
         # V2.14.46：批次端點失敗時，不再做 7 次慢速 timeout；改用最近已驗證的官方 FRED last-known-good。
@@ -12915,9 +12936,8 @@ def run_webhook_server():
             body.append('<h2>🇹🇼 台灣</h2>')
             for label,key,suf in [('GDP YoY','gdp_yoy','%'),('CPI YoY','cpi_yoy','%'),('失業率','unemployment','%'),('重貼現率','discount_rate','%'),('M2年增','m2_yoy','%'),('USD/TWD','usd_twd','')]:
                 v=tw.get(key); body.append(f'<p><b>{label}</b>：{("N/A" if v is None else f"{v:.2f}{suf}")}</p>')
-            try:
-                v=to_float(yf.Ticker('^VIX').fast_info.get('last_price')); body.append(f'<p><b>VIX</b>：{("N/A" if v is None else f"{v:.2f}")}</p>')
-            except Exception: body.append('<p><b>VIX</b>：N/A</p>')
+            v=mv('vix')
+            body.append(f'<p><b>VIX</b>：{("N/A" if v is None else f"{v:.2f}")}</p>')
             body.append('<p class="muted">資料來源：FRED、台灣央行、主計總處公開資料。更新：'+html.escape(str(d.get('updated_at','')))+'</p>')
             body.append('<h2>📌 個股使用方式</h2><p>科技/出口股偏重美國景氣、Fed、10Y、台灣GDP、匯率；內需股偏重台灣GDP、CPI、失業率、利率；金融股偏重Fed、10Y與殖利率曲線。</p>')
             body.append('<div class="nav"><a href="/industry">🏭 產業</a><a href="/trump">🇺🇸 Trump</a><a href="/">首頁</a></div>')
