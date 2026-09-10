@@ -1,5 +1,5 @@
 {
-  "_cached_at": 1789026145.6760283,
+  "_cached_at": 1789044081.5983825,
   "data": {
     "1101": {
       "pe": null,
@@ -6586,11 +6586,6 @@
       "pb": null,
       "yield": null
     },
-    "3710": {
-      "pe": null,
-      "pb": null,
-      "yield": null
-    },
     "3713": {
       "pe": null,
       "pb": null,
@@ -9256,6 +9251,11 @@
       "pb": null,
       "yield": null
     },
+    "7825": {
+      "pe": null,
+      "pb": null,
+      "yield": null
+    },
     "7828": {
       "pe": null,
       "pb": null,
@@ -9337,11 +9337,6 @@
       "yield": null
     },
     "8054": {
-      "pe": null,
-      "pb": null,
-      "yield": null
-    },
-    "8059": {
       "pe": null,
       "pb": null,
       "yield": null
@@ -9537,11 +9532,6 @@
       "yield": null
     },
     "8272": {
-      "pe": null,
-      "pb": null,
-      "yield": null
-    },
-    "8277": {
       "pe": null,
       "pb": null,
       "yield": null
