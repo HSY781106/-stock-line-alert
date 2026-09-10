@@ -1,5 +1,6 @@
-# stock_alert.py V2.16.0
-# V2.16.0：AI 語意引擎升級：重大消息、Trump 第二/三層、完整投資結論；總經 1/3/6M 歷史預測修正版。
+# stock_alert.py V2.17.1
+# V2.17.1：AI 僅在「已達到 LINE 發送門檻」後啟用；其餘每15分鐘掃描完全不呼叫 AI。
+# V2.17.0 功能全部保留：Gemini Free 主力 + Mistral/Groq Free 備援、重大消息、Trump 語意、總經預測。
 # V2.15.6：外部產業網頁正確性＋效能修正版：官方價值鏈候選池改為資料驅動，不再只依賴同大產業 Top120；
 #             個股對應產業 Top3 與指定次產業 Top3 共用官方次產業候選邏輯；修正市值顯示單位 1000 倍錯誤；
 #             加入短期 Web 產業分析快取，降低重複查詢延遲；保留既有分析模型與 LINE 流程。
@@ -208,24 +209,37 @@ MACRO_NEWS_CACHE_HOURS = 3
 MACRO_FORECAST_HORIZONS = (1, 3, 6)
 MACRO_FORECAST_MIN_POINTS = 8
 MACRO_NEWS_MAX_ITEMS = 12
-MACRO_TIMEOUT = 10
+MACRO_TIMEOUT = int(os.getenv('MACRO_TIMEOUT', '30') or 30)
 
 # ============================================================
-# V2.16.0 AI 語意引擎
-# - 可選：GitHub Actions / Render 設定 OPENAI_API_KEY 即啟用
-# - 未設定或 AI 失敗時，安全退回既有規則模型，不阻斷主流程
-# - 一次批次分析新聞，並以 cache 避免每 15 分鐘重複呼叫
+# V2.17.0 免費 AI 語意引擎
+# - 主力：Google Gemini Free Tier
+# - 備援：Mistral Free / Groq Free（僅在有設定對應 Secret 時啟用）
+# - OpenAI 完全不再使用
+# - AI 失敗／429／額度不足時，自動退回下一家或既有規則模型
 # ============================================================
-AI_API_KEY = os.getenv('OPENAI_API_KEY', '').strip()
-AI_MODEL = os.getenv('OPENAI_MODEL', 'gpt-5.6-luna').strip()
-AI_TIMEOUT = int(os.getenv('OPENAI_TIMEOUT', '18') or 18)
-AI_NEWS_CACHE_FILE = 'ai_semantic_cache_v2160.json'
-AI_NEWS_CACHE_HOURS = float(os.getenv('AI_NEWS_CACHE_HOURS', '72') or 72)
-AI_MAX_NEWS_PER_BATCH = int(os.getenv('AI_MAX_NEWS_PER_BATCH', '8') or 8)
-AI_MAX_TRUMP_PER_BATCH = int(os.getenv('AI_MAX_TRUMP_PER_BATCH', '10') or 10)
-AI_ENABLE_FINAL_SUMMARY = os.getenv('AI_ENABLE_FINAL_SUMMARY', '1').strip().lower() not in ('0','false','no','off')
+AI_PROVIDER = os.getenv('AI_PROVIDER', 'gemini').strip().lower()
+GEMINI_API_KEY = os.getenv('GEMINI_API_KEY', '').strip()
+GEMINI_MODEL = os.getenv('GEMINI_MODEL', 'gemini-3.7-flash').strip()
+MISTRAL_API_KEY = os.getenv('MISTRAL_API_KEY', '').strip()
+MISTRAL_MODEL = os.getenv('MISTRAL_MODEL', 'mistral-small-latest').strip()
+GROQ_API_KEY = os.getenv('GROQ_API_KEY', '').strip()
+GROQ_MODEL = os.getenv('GROQ_MODEL', 'openai/gpt-oss-20b').strip()
+AI_TIMEOUT = int(os.getenv('AI_TIMEOUT', '15') or 15)
+AI_NEWS_CACHE_FILE = 'ai_semantic_cache_v2170.json'
+AI_NEWS_CACHE_HOURS = float(os.getenv('AI_NEWS_CACHE_HOURS', '168') or 168)
+AI_DAILY_MAX_CALLS = int(os.getenv('AI_DAILY_MAX_CALLS', '8') or 8)
+AI_BUDGET_FILE = 'ai_budget_v2170.json'
+AI_MAX_OUTPUT_TOKENS = int(os.getenv('AI_MAX_OUTPUT_TOKENS', '700') or 700)
+AI_RETRY_ON_FAILURE = os.getenv('AI_RETRY_ON_FAILURE', '0').strip().lower() in ('1','true','yes','on')
+AI_MAX_NEWS_PER_BATCH = int(os.getenv('AI_MAX_NEWS_PER_BATCH', '4') or 4)
+AI_MAX_TRUMP_PER_BATCH = int(os.getenv('AI_MAX_TRUMP_PER_BATCH', '4') or 4)
+AI_ENABLE_FINAL_SUMMARY = os.getenv('AI_ENABLE_FINAL_SUMMARY', '0').strip().lower() not in ('0','false','no','off')
 AI_ENABLE_NEWS = os.getenv('AI_ENABLE_NEWS', '1').strip().lower() not in ('0','false','no','off')
 AI_ENABLE_TRUMP = os.getenv('AI_ENABLE_TRUMP', '1').strip().lower() not in ('0','false','no','off')
+# 僅使用明確設定的免費供應商；不自動切換到任何付費方案。
+AI_FALLBACK_PROVIDERS = [x.strip().lower() for x in os.getenv('AI_FALLBACK_PROVIDERS', 'mistral,groq').split(',') if x.strip()]
+FRED_API_KEY = os.getenv('FRED_API_KEY', '').strip()
 FRED_GRAPH_URL = 'https://fred.stlouisfed.org/graph/fredgraph.csv?id={series}'
 DGBAS_NEWS_JSON_URL = 'https://www.dgbas.gov.tw/OpenData.aspx?SN=5B2F388DBDFAF866'
 CBC_HOME_URL = 'https://www.cbc.gov.tw/tw/mp-1.html'
@@ -407,6 +421,9 @@ LINE_ANALYSIS_EXECUTOR = ThreadPoolExecutor(
 
 # LINE webhook 可能因網路重試而重送同一事件；避免同一個 event 被分析兩次。
 LINE_MODE_ACTIVE = False
+# V2.17.1：自動15分鐘掃描時，只有已確認達到 LINE 通知門檻才允許 AI。
+# LINE 使用者主動查詢仍可使用 AI，不受此自動警報閘門限制。
+AI_ALERT_MODE_ACTIVE = False
 
 LINE_EVENT_LOCK = threading.Lock()
 LINE_SEEN_EVENTS = set()
@@ -1051,12 +1068,16 @@ def save_json(f, d):
 
 
 # ============================================================
-# V2.16.0 AI 語意判斷共用引擎
+# V2.17.0 AI 語意判斷共用引擎
 # ============================================================
 _AI_SEMANTIC_RUN_CACHE = {}
 
 def _ai_enabled(kind='all'):
-    if not AI_API_KEY:
+    # V2.17.1：自動15分鐘模式採「先規則、後 AI」；只有已進入通知流程才開 AI。
+    # LINE webhook 主動查詢仍可使用 AI。
+    if not LINE_MODE_ACTIVE and not AI_ALERT_MODE_ACTIVE:
+        return False
+    if not any(_ai_provider_key(p) for p in _ai_provider_order()):
         return False
     if kind == 'news' and not AI_ENABLE_NEWS:
         return False
@@ -1099,52 +1120,221 @@ def _ai_json(text):
     return None
 
 
+def _ai_budget_today():
+    return datetime.now(timezone.utc).strftime('%Y-%m-%d')
+
+def _ai_budget_allow_and_reserve():
+    today=_ai_budget_today()
+    try:
+        d=load_json(AI_BUDGET_FILE)
+        if not isinstance(d,dict) or d.get('date')!=today: d={'date':today,'calls':0}
+        calls=int(d.get('calls',0) or 0)
+        if calls >= AI_DAILY_MAX_CALLS:
+            print(f'V2.17.1 AI：今日 request 上限 {AI_DAILY_MAX_CALLS}，改用規則 fallback', flush=True)
+            return False
+        d['calls']=calls+1; save_json(AI_BUDGET_FILE,d)
+        print(f"V2.17.1 AI：今日 request {d['calls']}/{AI_DAILY_MAX_CALLS}", flush=True)
+        return True
+    except Exception as e:
+        print(f'V2.17.1 AI：預算檔異常，禁止本次 AI 呼叫：{type(e).__name__}: {e}', flush=True)
+        return False
+
+
+def _ai_provider_order():
+    order=[]
+    preferred=AI_PROVIDER if AI_PROVIDER else 'gemini'
+    for x in [preferred] + AI_FALLBACK_PROVIDERS:
+        if x in ('gemini','mistral','groq') and x not in order:
+            order.append(x)
+    return order
+
+
+def _ai_provider_key(provider):
+    return {'gemini': GEMINI_API_KEY, 'mistral': MISTRAL_API_KEY, 'groq': GROQ_API_KEY}.get(provider,'')
+
+
+def _ai_extract_gemini_text(payload):
+    try:
+        candidates=payload.get('candidates') or []
+        if candidates:
+            parts=((candidates[0].get('content') or {}).get('parts') or [])
+            texts=[str(p.get('text','')) for p in parts if isinstance(p,dict) and p.get('text')]
+            return '\n'.join(texts).strip()
+    except Exception:
+        pass
+    return ''
+
+
+def _ai_extract_chat_text(payload):
+    try:
+        choices=payload.get('choices') or []
+        if choices:
+            msg=choices[0].get('message') or {}
+            content=msg.get('content','')
+            if isinstance(content,str): return content.strip()
+            if isinstance(content,list):
+                return '\n'.join(str(x.get('text','')) for x in content if isinstance(x,dict) and x.get('text')).strip()
+    except Exception:
+        pass
+    return ''
+
+
+def _ai_call_provider(provider, system_prompt, user_prompt):
+    key=_ai_provider_key(provider)
+    if not key:
+        return None
+    if provider=='gemini':
+        url=f'https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent'
+        payload={
+            'system_instruction': {'parts':[{'text':str(system_prompt or '')}]},
+            'contents':[{'role':'user','parts':[{'text':str(user_prompt or '')}]}],
+            'generationConfig': {
+                'responseMimeType':'application/json',
+                'maxOutputTokens':AI_MAX_OUTPUT_TOKENS
+            }
+        }
+        headers={'x-goog-api-key':key,'Content-Type':'application/json'}
+    elif provider=='mistral':
+        url='https://api.mistral.ai/v1/chat/completions'
+        payload={
+            'model':MISTRAL_MODEL,
+            'messages':[
+                {'role':'system','content':str(system_prompt or '')},
+                {'role':'user','content':str(user_prompt or '')}
+            ],
+            'max_tokens':AI_MAX_OUTPUT_TOKENS,
+            'response_format':{'type':'json_object'}
+        }
+        headers={'Authorization':f'Bearer {key}','Content-Type':'application/json'}
+    else:
+        url='https://api.groq.com/openai/v1/chat/completions'
+        payload={
+            'model':GROQ_MODEL,
+            'messages':[
+                {'role':'system','content':str(system_prompt or '')},
+                {'role':'user','content':str(user_prompt or '')}
+            ],
+            'max_completion_tokens':AI_MAX_OUTPUT_TOKENS,
+            'response_format':{'type':'json_object'}
+        }
+        headers={'Authorization':f'Bearer {key}','Content-Type':'application/json'}
+    r=requests.post(url,headers=headers,json=payload,timeout=AI_TIMEOUT)
+    if r.status_code>=400:
+        body=r.text[:400].replace('\n',' ')
+        raise RuntimeError(f'HTTP {r.status_code}: {body}')
+    data=r.json()
+    text=_ai_extract_gemini_text(data) if provider=='gemini' else _ai_extract_chat_text(data)
+    parsed=_ai_json(text)
+    if not isinstance(parsed,dict):
+        raise RuntimeError('AI 回傳不是可解析 JSON')
+    return parsed
+
+
 def _ai_call_json(system_prompt, user_prompt, cache_key='', ttl_hours=72):
-    if not AI_API_KEY:
+    """V2.17.0：Gemini Free 主力 + Mistral/Groq Free 備援。
+    - 不記錄任何 API key
+    - cache hit 不重複呼叫
+    - 共用每日 request fuse
+    - 任何 AI 失敗都 fallback，不阻斷主流程
+    """
+    if not any(_ai_provider_key(p) for p in _ai_provider_order()):
+        print('V2.17.1 AI：未設定 Gemini/Mistral/Groq API Key，使用規則 fallback', flush=True)
         return None
     now=time.time()
     if cache_key:
         c=_AI_SEMANTIC_RUN_CACHE.get(cache_key)
         if isinstance(c,dict) and now-float(c.get('ts',0) or 0)<ttl_hours*3600:
+            print('V2.17.1 AI：memory cache hit', flush=True)
             return c.get('data')
         disk=load_json(AI_NEWS_CACHE_FILE)
         if isinstance(disk,dict):
-            x=disk.get(cache_key)
-            if isinstance(x,dict) and now-float(x.get('ts',0) or 0)<ttl_hours*3600:
-                _AI_SEMANTIC_RUN_CACHE[cache_key]=x
-                return x.get('data')
-    payload={
-        'model':AI_MODEL,
-        'input':[
-            {'role':'system','content':[{'type':'input_text','text':system_prompt}]},
-            {'role':'user','content':[{'type':'input_text','text':user_prompt}]}
-        ],
-        'temperature':0.1,
-        'max_output_tokens':1200
-    }
-    try:
-        r=requests.post('https://api.openai.com/v1/responses',headers={
-            'Authorization':f'Bearer {AI_API_KEY}','Content-Type':'application/json'
-        },json=payload,timeout=AI_TIMEOUT)
-        r.raise_for_status()
-        data=_ai_json(_ai_extract_text(r.json()))
-        if isinstance(data,dict) and cache_key:
-            _AI_SEMANTIC_RUN_CACHE[cache_key]={'ts':now,'data':data}
-            disk=load_json(AI_NEWS_CACHE_FILE)
-            if not isinstance(disk,dict): disk={}
-            # 控制 cache 大小：只保留最近 500 筆
-            disk[cache_key]={'ts':now,'data':data}
-            if len(disk)>500:
-                for k in sorted(disk,key=lambda z:float(disk[z].get('ts',0) if isinstance(disk[z],dict) else 0))[:-500]: disk.pop(k,None)
-            save_json(AI_NEWS_CACHE_FILE,disk)
-        return data
-    except Exception as e:
-        print(f'V2.16.0 AI 呼叫失敗：{type(e).__name__}: {e}',flush=True)
+            d=disk.get(cache_key)
+            if isinstance(d,dict) and now-float(d.get('ts',0) or 0)<ttl_hours*3600:
+                data=d.get('data')
+                if isinstance(data,dict):
+                    _AI_SEMANTIC_RUN_CACHE[cache_key]={'ts':float(d.get('ts',now) or now),'data':data}
+                    print('V2.17.1 AI：disk cache hit', flush=True)
+                    return data
+    if not _ai_budget_allow_and_reserve():
         return None
+    providers=[p for p in _ai_provider_order() if _ai_provider_key(p)]
+    attempts=2 if AI_RETRY_ON_FAILURE else 1
+    for provider in providers:
+        for attempt in range(1,attempts+1):
+            try:
+                print(f'V2.17.1 AI：provider={provider} request {attempt}/{attempts}', flush=True)
+                data=_ai_call_provider(provider,system_prompt,user_prompt)
+                if cache_key:
+                    _AI_SEMANTIC_RUN_CACHE[cache_key]={'ts':time.time(),'data':data}
+                    disk=load_json(AI_NEWS_CACHE_FILE)
+                    if not isinstance(disk,dict): disk={}
+                    disk[cache_key]={'ts':time.time(),'data':data,'provider':provider}
+                    if len(disk)>500:
+                        old=sorted(disk,key=lambda z:float(disk[z].get('ts',0) if isinstance(disk[z],dict) else 0))
+                        for k in old[:-500]: disk.pop(k,None)
+                    save_json(AI_NEWS_CACHE_FILE,disk)
+                print(f'V2.17.1 AI：SUCCESS｜provider={provider}', flush=True)
+                return data
+            except Exception as e:
+                print(f'V2.17.1 AI：FAIL｜provider={provider}｜{type(e).__name__}: {e}', flush=True)
+                if attempt<attempts: time.sleep(1.0)
+    print('V2.17.1 AI：所有免費供應商均失敗，使用規則 fallback', flush=True)
+    return None
 
+
+def _ai_runtime_status():
+    return {
+        'gemini': bool(GEMINI_API_KEY),
+        'mistral': bool(MISTRAL_API_KEY),
+        'groq': bool(GROQ_API_KEY),
+        'provider': AI_PROVIDER,
+        'model': GEMINI_MODEL if AI_PROVIDER=='gemini' else (MISTRAL_MODEL if AI_PROVIDER=='mistral' else GROQ_MODEL),
+        'news': bool(AI_ENABLE_NEWS),
+        'trump': bool(AI_ENABLE_TRUMP),
+        'final': bool(AI_ENABLE_FINAL_SUMMARY),
+        'fred_api_key': bool(FRED_API_KEY),
+    }
+
+
+def _print_ai_runtime_status():
+    st=_ai_runtime_status()
+    print('========== V2.17.1 AI STATUS ==========', flush=True)
+    print(f"Gemini API Key：{'已設定' if st['gemini'] else '未設定'}｜模型：{GEMINI_MODEL}", flush=True)
+    print(f"Mistral API Key：{'已設定' if st['mistral'] else '未設定'}｜模型：{MISTRAL_MODEL}", flush=True)
+    print(f"Groq API Key：{'已設定' if st['groq'] else '未設定'}｜模型：{GROQ_MODEL}", flush=True)
+    print(f"AI 主力：{AI_PROVIDER}｜NEWS：{'ON' if st['news'] else 'OFF'}｜TRUMP：{'ON' if st['trump'] else 'OFF'}｜FINAL：{'ON' if st['final'] else 'OFF'}", flush=True)
+    print(f"AI 備援順序：{','.join(AI_FALLBACK_PROVIDERS) or '無'}｜每日 request fuse：{AI_DAILY_MAX_CALLS}", flush=True)
+    print(f"FRED_API_KEY：{'已設定' if st['fred_api_key'] else '未設定（使用公開 FRED CSV）'}", flush=True)
+
+
+def _dedupe_news_events(events, max_items=12):
+    """V2.17.0：同一事件被多家媒體重複報導時，只保留一個事件。
+    以日期＋標題正規化＋核心數字/公司代碼作近似去重，避免 3008 同一天同一利空被三篇新聞重複扣分。
+    """
+    if not isinstance(events,list): return []
+    out=[]; seen=[]
+    for x in events:
+        if not isinstance(x,dict): continue
+        title=str(x.get('title','')).strip()
+        if not title: continue
+        norm=re.sub(r'\s+','',title.lower())
+        norm=re.sub(r'[「」【】\[\]（）()，。,:：!！?？/\\\-—_]+','',norm)
+        date=str(x.get('date') or x.get('published') or '')[:10]
+        # 保留核心公司代碼與數字，讓「同事件不同媒體標題」更容易聚合
+        nums='|'.join(re.findall(r'\b\d{3,6}\b',title)[:5])
+        key=(date, nums, norm[:90])
+        duplicate=False
+        for d,n,k in seen:
+            if date and d==date and nums and n==nums and (norm[:45] in k or k[:45] in norm):
+                duplicate=True; break
+        if duplicate: continue
+        seen.append(key); out.append(x)
+        if len(out)>=max_items: break
+    return out
 
 def _ai_classify_news_events(code,name,events):
     """以完整語意判斷利多/中性/利空，不以單一關鍵字決策。"""
+    events=_dedupe_news_events(events, AI_MAX_NEWS_PER_BATCH)
     if not events or not _ai_enabled('news'): return []
     rows=[]
     for i,x in enumerate(events[:AI_MAX_NEWS_PER_BATCH]):
@@ -1245,7 +1435,7 @@ NEWS_NEGATIVE_PATTERNS = [
     (re.compile(r'撤銷認證|產品召回|召回|重大品質問題'), -6, '產品/品質重大事件'),
     # 經營層重大異動
     (re.compile(r'董事長請辭|總經理請辭|執行長請辭|財務長請辭|董座請辭'), -5, '高階主管重大異動'),
-    # V2.16.0：語意負向上下文；避免「量產／擴產」單字把利空新聞誤判成利多。
+    # V2.17.0：語意負向上下文；避免「量產／擴產」單字把利空新聞誤判成利多。
     (re.compile(r'跌停|大跌|重挫|暴跌|崩跌'), -5, '股價重大下跌'),
     (re.compile(r'不如預期|低於預期|未達預期|不及預期|旺季不旺'), -4, '營運低於預期'),
     (re.compile(r'需求疲弱|需求下滑|需求不振|需求低迷|訂單下滑|訂單減少|訂單不如預期'), -4, '需求/訂單轉弱'),
@@ -1474,7 +1664,7 @@ def fetch_major_news(code, name, force=False):
             adj, label, status, neg, pos = _news_event_score(
                 title, description, source, code=code, name=name
             )
-            # V2.16.0：AI 語意引擎需要看到「沒有命中規則、但可能重要」的新聞。
+            # V2.17.0：AI 語意引擎需要看到「沒有命中規則、但可能重要」的新聞。
             # 仍限制在目標公司事件片段，避免把其他公司的新聞送給 AI。
 
             key = re.sub(r'\W+', '', title.lower())
@@ -3798,8 +3988,8 @@ def check_interval_low(
         analysis_text = None
         if isinstance(u, dict) and u:
             try:
-                analysis_text = analysis(
-                    symbol, u, backfill=False, interval_result=result, line_light=True
+                analysis_text = _run_ai_alert_analysis(
+                    analysis, symbol, u, backfill=False, interval_result=result, line_light=True
                 )
                 if not analysis_text or analysis_text.startswith('❌'):
                     analysis_text = None
@@ -3842,7 +4032,7 @@ def _drop_alert_analysis_message(name, symbol, u, day, week, cur, pc, wh, daily_
     若分析失敗，仍會送出原本的跌幅通知，不讓分析故障影響警報。
     """
     try:
-        result = analysis(symbol, u, backfill=False, line_light=True)
+        result = _run_ai_alert_analysis(analysis, symbol, u, backfill=False, line_light=True)
         if not result or result.startswith('❌'):
             raise RuntimeError(result or 'analysis empty')
 
@@ -3923,6 +4113,19 @@ def _drop_alert_analysis_message(name, symbol, u, day, week, cur, pc, wh, daily_
             f'🔴 跌幅通知\n\n標的：{name}\n目前價格：{cur:,.2f}\n單日跌幅：{day:.2%}'
         )
         return msg
+
+
+def _run_ai_alert_analysis(func, *args, **kwargs):
+    """V2.17.1：進入已觸發 LINE 警報後才暫時開啟 AI。
+    分析結束後立即關閉，避免同一輪其他未觸發標的誤用 AI。
+    """
+    global AI_ALERT_MODE_ACTIVE
+    previous = AI_ALERT_MODE_ACTIVE
+    AI_ALERT_MODE_ACTIVE = True
+    try:
+        return func(*args, **kwargs)
+    finally:
+        AI_ALERT_MODE_ACTIVE = previous
 
 
 def check_drop_alert(
@@ -10542,14 +10745,14 @@ def analysis(
         fund_weight_text = "本產業實際配分：N/A（無有效基本面指標）"
 
     # --------------------------------------------------------
-    # V2.16.0 AI 最終整合：只讀取各層既有結果，不改動量化分數。
+    # V2.17.1 AI 最終整合：只讀取各層既有結果，不改動量化分數。
     # --------------------------------------------------------
     ai_final_text=''
     if AI_ENABLE_FINAL_SUMMARY:
         _snapshot={
             'code':code,'name':name,'total':total,'base_total':base_total,
             'fundamental':fs,'technical':ts,'chips':cs,'risk':risk,
-            'news':news_adj,'news_events':[{'title':x.get('title',''),'adjustment':x.get('adjustment',0),'ai_direction':x.get('ai_direction'),'ai_reason':x.get('ai_reason')} for x in news_events[:5]],
+            'news':news_adj,'news_events':[{'title':x.get('title',''),'adjustment':x.get('adjustment',0),'ai_direction':x.get('ai_direction'),'ai_reason':x.get('ai_reason'),'source':x.get('source')} for x in news_events[:5]],
             'trump_global':trump_global_adj,'trump_industry':trump_theme_adj,
             'trump_reasons':trump_theme.get('reasons',[]),'macro':macro_adj,'macro_reasons':macro.get('reasons',[]),
             'investment_value_verdict':verdict,'buy_score':buy.get('score'),'buy_verdict':buy.get('verdict'),'buy_entry':buy.get('entry'),
@@ -10560,11 +10763,11 @@ def analysis(
             ai_final=_ai_final_investment_summary(_snapshot)
             ai_final_text=_format_ai_final_summary(ai_final)
         except Exception as e:
-            print(f'V2.16.0 AI 最終結論失敗：{type(e).__name__}: {e}',flush=True)
+            print(f'V2.17.1 AI 最終結論失敗：{type(e).__name__}: {e}',flush=True)
     if not ai_final_text and AI_ENABLE_FINAL_SUMMARY:
         # 沒有 API key 時仍提供 deterministic 摘要，避免畫面留白。
         _conflict='投資價值與買點不同步' if ((fs>=24 and buy.get('score',0)<60) or (fs<24 and buy.get('score',0)>=60)) else '各層訊號大致一致'
-        ai_final_text=(f'🤖 綜合結論（規則 fallback）\n建議：{verdict}\n核心：投資價值 {fs}/40、買點 {buy.get("score",0)}/100、總分 {total}/100。\n'
+        ai_final_text=(f'🤖 綜合結論（規則 fallback｜AI 未成功取得）\n建議：{verdict}\n核心：投資價值 {fs}/40、買點 {buy.get("score",0)}/100、總分 {total}/100。\n'
                        f'⚠️ 最大矛盾：{_conflict}\n👀 下一步：{_confirm}；{_buyrisk}')
 
     # --------------------------------------------------------
@@ -12779,7 +12982,7 @@ def _macro_history_append(d):
 
 
 def _macro_series_history(series_key, d=None, min_points=MACRO_FORECAST_MIN_POINTS):
-    """V2.16.0：歷史序列修正版。
+    """V2.17.0：歷史序列修正版。
     批次 FRED 不足時，改以「每個 series 一次」並行抓取最近 84 筆；
     因此不會因批次 CSV 異常而退回 n=1，1/3/6M 也不再全部等於現在值。
     """
@@ -12805,8 +13008,28 @@ def _macro_series_history(series_key, d=None, min_points=MACRO_FORECAST_MIN_POIN
         _MACRO_FRED_HISTORY_ATTEMPTED=True
         cache={}
         try:
+            # V2.17.0：若有 FRED_API_KEY，優先走官方 observations JSON；沒有則繼續公開 CSV。
+            if FRED_API_KEY:
+                def _fred_api_one(item):
+                    k,sid=item
+                    try:
+                        rr=requests.get('https://api.stlouisfed.org/fred/series/observations',params={'series_id':sid,'api_key':FRED_API_KEY,'file_type':'json','sort_order':'desc','limit':84},timeout=MACRO_TIMEOUT,headers={'User-Agent':'Mozilla/5.0 stock-alert/2.16.1'})
+                        rr.raise_for_status(); payload=rr.json(); arr=[]
+                        for ob in payload.get('observations',[]):
+                            try:
+                                vv=float(ob.get('value')); arr.append((str(ob.get('date','')),vv))
+                            except Exception: pass
+                        return k, list(reversed(arr))
+                    except Exception as ex:
+                        print(f'V2.17.1 FRED API失敗 {k}：{type(ex).__name__}',flush=True); return k,[]
+                with ThreadPoolExecutor(max_workers=min(6,len(MACRO_FRED_SERIES))) as ex:
+                    for k,arr in ex.map(_fred_api_one, MACRO_FRED_SERIES.items()):
+                        if arr:
+                            _MACRO_HISTORY_RUN_CACHE[k]=arr; vals_by_key=arr
+                vals=list(_MACRO_HISTORY_RUN_CACHE.get(series_key,[]))
+                if len(vals)>=min_points: return vals
             ids=','.join(dict.fromkeys(MACRO_FRED_SERIES.values()))
-            r=requests.get('https://fred.stlouisfed.org/graph/fredgraph.csv',params={'id':ids},timeout=max(8,MACRO_TIMEOUT),headers={'User-Agent':'Mozilla/5.0 stock-alert/2.16.0','Accept':'text/csv,*/*'},verify=False)
+            r=requests.get('https://fred.stlouisfed.org/graph/fredgraph.csv',params={'id':ids},timeout=max(8,MACRO_TIMEOUT),headers={'User-Agent':'Mozilla/5.0 stock-alert/2.16.1','Accept':'text/csv,*/*'},verify=False)
             r.raise_for_status(); df=pd.read_csv(pd.io.common.StringIO(r.text))
             if len(df.columns)>=2:
                 date_col=df.columns[0]
@@ -12819,12 +13042,12 @@ def _macro_series_history(series_key, d=None, min_points=MACRO_FORECAST_MIN_POIN
                         pairs=[(pairs[i][0],(raw[i]/raw[i-12]-1)*100) for i in range(12,len(raw)) if raw[i-12]!=0]
                     if pairs: cache[key]=pairs
         except Exception as e:
-            print(f'V2.16.0 FRED多序列歷史不足：{type(e).__name__}: {e}',flush=True)
+            print(f'V2.17.1 FRED多序列歷史不足：{type(e).__name__}: {e}',flush=True)
 
         def fetch_one(item):
             key,sid=item
             try:
-                rr=requests.get('https://fred.stlouisfed.org/graph/fredgraph.csv',params={'id':sid},timeout=max(6,MACRO_TIMEOUT),headers={'User-Agent':'Mozilla/5.0 stock-alert/2.16.0','Accept':'text/csv,*/*'},verify=False)
+                rr=requests.get('https://fred.stlouisfed.org/graph/fredgraph.csv',params={'id':sid},timeout=max(12,MACRO_TIMEOUT),headers={'User-Agent':'Mozilla/5.0 stock-alert/2.16.1','Accept':'text/csv,*/*'},verify=False)
                 rr.raise_for_status(); dd=pd.read_csv(pd.io.common.StringIO(rr.text))
                 if len(dd.columns)<2: return key,[]
                 dc=dd.columns[0]; col=sid if sid in dd.columns else dd.columns[1]
@@ -12834,7 +13057,7 @@ def _macro_series_history(series_key, d=None, min_points=MACRO_FORECAST_MIN_POIN
                     raw=[v for _,v in pairs]; pairs=[(pairs[i][0],(raw[i]/raw[i-12]-1)*100) for i in range(12,len(raw)) if raw[i-12]!=0]
                 return key,pairs
             except Exception as e:
-                print(f'V2.16.0 FRED單序列失敗 {key}: {type(e).__name__}',flush=True); return key,[]
+                print(f'V2.17.1 FRED單序列失敗 {key}: {type(e).__name__}',flush=True); return key,[]
 
         need=[(k,v) for k,v in MACRO_FRED_SERIES.items() if len(cache.get(k,[]))<min_points]
         try:
@@ -12842,7 +13065,7 @@ def _macro_series_history(series_key, d=None, min_points=MACRO_FORECAST_MIN_POIN
                 for key,pairs in ex.map(fetch_one,need):
                     if pairs: cache[key]=pairs
         except Exception as e:
-            print(f'V2.16.0 FRED並行補抓失敗：{type(e).__name__}: {e}',flush=True)
+            print(f'V2.17.1 FRED並行補抓失敗：{type(e).__name__}: {e}',flush=True)
         _MACRO_FRED_HISTORY_CACHE=cache
 
     return (_MACRO_FRED_HISTORY_CACHE or {}).get(series_key,vals)
@@ -12858,7 +13081,7 @@ def _macro_forecast_one(series_key, current, horizon, d=None):
     if not vals: return {'value':None,'low':None,'high':None,'confidence':0,'n':0,'method':'無資料'}
     n=len(vals); arr=np.array(vals[-60:],dtype=float)
     if n<MACRO_FORECAST_MIN_POINTS:
-        # V2.16.0：樣本不足時不再假裝 1/3/6M 是有效預測。
+        # V2.17.0：樣本不足時不再假裝 1/3/6M 是有效預測。
         # 直接回傳 N/A，讓前台清楚顯示「歷史樣本不足」，避免三個 horizon 全部複製目前值。
         return {'value':None,'low':None,'high':None,'confidence':0,'n':n,'method':'歷史樣本不足，暫不預測'}
     else:
@@ -13241,9 +13464,10 @@ def _trump_translate_title(title):
 
 
 def trump_recent_news_factor(symbol=''):
-    """V2.16.0：第二層 Trump；AI 語意判斷政策階段、方向與確定性，規則模型作 fallback。"""
+    """V2.17.0：第二層 Trump；AI 語意判斷政策階段、方向與確定性，規則模型作 fallback。"""
     d=_trump_recent_news_fetch(symbol); items=d.get('items',[]) or []; score=int(d.get('score',0) or 0)
-    ai_items=_ai_classify_trump_items(symbol,'','',items) if items else []
+    _trump_ai_needed = bool(items) and (str(symbol).upper() in ('__MARKET__','') or LINE_MODE_ACTIVE)
+    ai_items=_ai_classify_trump_items(symbol,'','',items) if _trump_ai_needed else []
     if ai_items:
         by_id={int(x.get('id')):x for x in ai_items if isinstance(x,dict) and str(x.get('id','')).isdigit()}
         vals=[]
@@ -13257,7 +13481,7 @@ def trump_recent_news_factor(symbol=''):
             if direction=='negative': raw=min(-1,raw)
             elif direction=='positive': raw=max(1,raw)
             else: raw=0
-            x['ai_direction']=direction; x['ai_score']=int(round(raw)); x['ai_confidence']=round(conf,3); x['ai_reason']=str(a.get('reason',''))[:180]; x['policy_stage']=str(a.get('policy_stage','unknown'))
+            x['ai_direction']=direction; x['ai_score']=int(round(raw)); x['ai_confidence']=round(conf,3); x['ai_reason']=str(a.get('reason',''))[:180]; x['policy_stage']=str(a.get('policy_stage','unknown')); x['ai_channel']=str(a.get('affected_channel','不明'))[:40]; x['ai_transmission']=str(a.get('transmission',''))[:220]; x['ai_exposure']=str(a.get('exposure',''))[:220]
             vals.append(x['ai_score'])
         if vals: score=max(-4,min(4,sum(vals)))
     if d.get('error'): state='⚪ 近期公開新聞資料暫不可用'
@@ -13901,7 +14125,7 @@ def run_webhook_server():
             title=str(ni.get('title','')); side=ni.get('side','neutral')
             icon='🟢' if side=='positive' else '🔴' if side=='negative' else '⚪'
             direction='需求／政策支持' if side=='positive' else '成本／政策風險' if side=='negative' else '待確認'
-            rows.append(f'<p>{icon} <b>{html.escape(_trump_translate_title(title))}</b><br>事件方向：{direction}｜日期：{html.escape(str(ni.get("published","")))}<br><span class="muted">傳導：政策／關稅／政府採購 → 產業需求或成本 → 營收／毛利 → EPS → 估值倍數；實際影響依公司曝險判斷。</span></p>')
+            rows.append(f'<p>{icon} <b>{html.escape(_trump_translate_title(title))}</b><br>事件方向：{direction}｜日期：{html.escape(str(ni.get("published","")))}<br><span class="muted">政策階段：{html.escape(str(ni.get("policy_stage") or "規則判斷"))}｜影響通道：{html.escape(str(ni.get("ai_channel") or "政策／產業"))}<br>AI傳導：{html.escape(str(ni.get("ai_transmission") or "尚無個別標的語意傳導分析；僅提供通用框架。"))}<br>AI曝險：{html.escape(str(ni.get("ai_exposure") or "尚無個別標的曝險判斷。"))}</span></p>')
         rows.append('<p><b>三種政策情境</b>：基準＝政策維持；偏多＝產業支持／投資加速；偏空＝關稅／監管／成本壓力升高。若與總經情境交叉，可形成聯合情境，而非單一分數決策。</p>')
         rows.append('</div>')
         rows.append('<div class="card"><h2>📋 公開申報股票／ETF</h2>')
@@ -13949,7 +14173,7 @@ def run_webhook_server():
             body.append('<div class="card"><h2>② 政策／新聞 → 產業 → 標的</h2>'); body.append(f'<p><b>{html.escape(str(news.get("state","⚪ 無資料")))}</b>　近期事件：<b>{news_f:+d}</b>　｜　<b>{html.escape(str(theme.get("state","⚪ 中性")))}</b>　產業政策：<b>{theme_f:+d}</b></p>')
             if theme.get('reasons'): body.append('<p>相關主題：'+html.escape('、'.join(theme.get('reasons',[])))+'</p>')
             for x in (news.get('items',[]) or [])[:6]:
-                icon='🟢' if x.get('side')=='positive' else '🔴' if x.get('side')=='negative' else '⚪'; body.append(f'<p>{icon} <b>{html.escape(str(_trump_translate_title(x.get("title",""))))}</b><br><span class="muted">{html.escape(str(x.get("published","")))}｜{html.escape(str(x.get("theme") or "Trump政策／市場"))}</span></p>')
+                icon='🟢' if x.get('side')=='positive' else '🔴' if x.get('side')=='negative' else '⚪'; body.append(f'<p>{icon} <b>{html.escape(str(_trump_translate_title(x.get("title",""))))}</b><br><span class="muted">{html.escape(str(x.get("published","")))}｜{html.escape(str(x.get("theme") or "Trump政策／市場"))}｜政策階段：{html.escape(str(x.get("policy_stage") or "規則判斷"))}｜通道：{html.escape(str(x.get("ai_channel") or "不明"))}<br>AI傳導：{html.escape(str(x.get("ai_transmission") or "未取得個別傳導"))}<br>AI曝險：{html.escape(str(x.get("ai_exposure") or "未取得個別曝險"))}</span></p>')
             if not news.get('items'): body.append('<p class="muted">沒有足夠的「直接提及此標的」Trump 政策／市場新聞，不強行把產業新聞套到個股。</p>')
             body.append('</div>')
             body.append('<div class="card"><h2>③ Trump → 產業 → 財務傳導</h2><p><b>政策／關稅／政府投資</b> → 需求、成本、供應鏈 → 營收／毛利 → EPS → 估值倍數 → 股價。</p>'); body.append(f'<p>市場層 Trump 風向：<b>{int(market_factor.get("factor",0)):+d}</b>｜{html.escape(str(market_factor.get("state","⚪")))}</p>')
@@ -14368,6 +14592,7 @@ def _is_taiwan_stock_session_open(now=None):
 
 
 def _scan_high_score_stocks(u, state):
+    global AI_ALERT_MODE_ACTIVE
     """V2.14.10：全市場綜合評分 >= 95 分批次掃描。
 
     設計原則：
@@ -14644,16 +14869,38 @@ def _scan_high_score_stocks(u, state):
             risk, rr = score_risk(c['tech'], c['inst'], c['margin'])
             base_total = fs + ts + cs + (10 - risk)
 
-            # V2.14.00：只有理論上可能達到門檻的候選才查新聞，
-            # 避免全市場1985檔逐一打 RSS；重大負面事件會在這裡把分數拉回。
+            # V2.17.1：先完全用既有規則新聞判斷；只有「已達到95分通知門檻」後，才開 AI 語意。
+            # 一般15分鐘掃描不因 AI 增加成本；AI 只服務真正可能送 LINE 的候選。
             if base_total >= threshold - NEWS_MAX_ADJUSTMENT:
-                news_adj, news_events, news_reasons = score_news(
-                    c['code'],
-                    item.get('name') or c['code'],
-                    force=False
-                )
+                # 第一階段：AI 閘門關閉，score_news 只會走規則模型。
+                previous_ai_alert = AI_ALERT_MODE_ACTIVE
+                AI_ALERT_MODE_ACTIVE = False
+                try:
+                    news_adj, news_events, news_reasons = score_news(
+                        c['code'],
+                        item.get('name') or c['code'],
+                        force=False
+                    )
+                finally:
+                    AI_ALERT_MODE_ACTIVE = previous_ai_alert
             else:
                 news_adj, news_events, news_reasons = 0, [], []
+
+            rule_total = max(0, min(100, base_total + news_adj))
+
+            # 第二階段：只有規則模型已經 >=95，才重新跑新聞 AI 語意。
+            # 若 AI 將分數拉回95以下，最後就不會發通知。
+            if rule_total >= threshold:
+                previous_ai_alert = AI_ALERT_MODE_ACTIVE
+                AI_ALERT_MODE_ACTIVE = True
+                try:
+                    news_adj, news_events, news_reasons = score_news(
+                        c['code'],
+                        item.get('name') or c['code'],
+                        force=False
+                    )
+                finally:
+                    AI_ALERT_MODE_ACTIVE = previous_ai_alert
 
             total = max(0, min(100, base_total + news_adj))
             event_level, holding_action, holding_reason = assess_event_disposition(
@@ -14667,7 +14914,7 @@ def _scan_high_score_stocks(u, state):
                 total_for_rank = total
 
             if total_for_rank >= threshold:
-                # V2.14.21：高分股通知也必須同時回答「值不值得投資」與「現在能不能買」。
+                # V2.17.1：高分股通知也必須同時回答「值不值得投資」與「現在能不能買」。
                 buy = assess_buy_point(c['tech'])
                 results.append({
                     'code': c['code'],
@@ -14829,10 +15076,11 @@ def _notify_target_buy_point(name, symbol, state, u=None):
         # 不另外建立第二套評分模型，避免與既有雙層模型產生分數口徑不一致。
         investment_score = None
         try:
+            # V2.17.1：只有這個「極佳買點通知」已經進入可通知流程時，才開啟 AI。
             if name in ('0050 元大台灣50', 'QQQ'):
-                full_result = etf_analysis(name)
+                full_result = _run_ai_alert_analysis(etf_analysis, name)
             else:
-                full_result = analysis(name, u, False)
+                full_result = _run_ai_alert_analysis(analysis, name, u, False)
             if isinstance(full_result, str):
                 m = re.search(r'(?:ETF)?綜合評分：\s*(-?\d+(?:\.\d+)?)\s*/\s*100', full_result)
                 if m:
@@ -15242,7 +15490,7 @@ def run_alerts():
                     f'跳過詳細估值'
                 )
 
-            # V2.14.21：指定目標股/ETF 僅在「買點 >=90 + 投資價值 >=90」時主動 LINE；
+            # V2.17.1：指定目標股/ETF 僅在「買點 >=90 + 投資價值 >=90」時主動 LINE；
             # 與既有全市場「投資價值 >=95」通知仍維持各自流程。
             if name in ('0050 元大台灣50', '2330 台積電', 'QQQ'):
                 _notify_target_buy_point(name, symbol, state, u)
@@ -15328,10 +15576,12 @@ def main():
 
     else:
 
-        print('========== V2.15.6 RUN START ==========', flush=True)
+        print('========== V2.17.1 RUN START ==========', flush=True)
+        _print_ai_runtime_status()
+        print('V2.17.1 AI 閘門：每15分鐘自動掃描只有達到 LINE 發送門檻後才啟用 AI；未觸發時完全不呼叫 AI', flush=True)
         print(f'執行時間（台灣）：{datetime.now(TW_TZ).strftime("%Y-%m-%d %H:%M:%S")}', flush=True)
         run_alerts()
-        print('========== V2.15.6 RUN END ==========', flush=True)
+        print('========== V2.17.1 RUN END ==========', flush=True)
 
 
 if __name__ == '__main__':
