@@ -88,9 +88,90 @@
     "lookback_days": 14
   },
   "3711": {
-    "fetched_at": "2026-09-10T15:43:21.803761+08:00",
+    "fetched_at": "2026-09-10T23:27:13.705153+08:00",
     "adjustment": 0,
-    "events": [],
+    "events": [
+      {
+        "title": "3711 日月光投控- 日月光跟力成FOPLP的比較，力成起步較早，感覺技術是不是... - 股市爆料同學會 - CMoney",
+        "source": "CMoney",
+        "date": "2026-08-28T10:36:32+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE53QlZmWmUzcWFNTTVBb1psTGNvMVE1NXlGWk4xSWpVZG1YTGdJVVdfT2lBaHFSdXRMSnFaaXFmZVdnWFhYdVZSVkI3Z09FeFNqWVBwdDdiYVE?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "3711 日月光投控- 下午陪朋友去銀行辦事， 結果因為發生一些小誤會， 讓她當場氣... - 股市爆料同學會 - CMoney",
+        "source": "CMoney",
+        "date": "2026-08-29T15:00:00+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE5XR0lNNzIyQmNjbkhjRDRRMmlYbmdtWnQza2JDTERsWlhqMnBsemU1bld0djZ6b1ZVXzBHNzBGeUxMWlVFMWxhNGwzYVZqVkpsTHNNUmZxSFI?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "日月光投控(3711)擴大先進封裝資本支出，股價震盪後能否續強？-林彥廷看盤室 - CMoney投資網誌",
+        "source": "CMoney投資網誌",
+        "date": "2026-08-31T14:43:25+08:00",
+        "link": "https://news.google.com/rss/articles/CBMigwFBVV95cUxPS1FET1ZJb081dm80WllMVmNGSHN3d3AyX1Y2NDRPTm1DTDlQNkZxMjhKMjlReTZDdGw0TTFXWndmQ1pNcTdMZUJBZHJvN1R3WGMzVHZxcnNRdk9yU2daOUN1MFYxSW5NbUdYNEhOM29IRk51NDVja3dxVEhJUjh6Z3hmVQ?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "【即時新聞】日月光投控(3711)獲先進封裝追單，這「6檔概念股」多空大洗牌！ - CMoney投資網誌",
+        "source": "CMoney投資網誌",
+        "date": "2026-08-31T15:00:00+08:00",
+        "link": "https://news.google.com/rss/articles/CBMikAFBVV95cUxNdU1aU2ZEajlobTRobUc1NHNCWDJjSmd2ZkJtUW5wYmVoMkZTdnY2cmhHSHFaMVpUYi12ckhDY1VjQmNvbTJPMElMTVo1aVBhbVllVS1RVUtNYW1RalVNUTZDLXBIR2o0R3E3Y3I3WFNaZzBNSW5GVm1fM3Jrbk5yQTFxLUY4YzlCSEZNWFFsQlQ?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "日月光投控(3711) Q2 獲利大幅成長，先進封裝進入成長加速期！-小資女艾蜜莉 - CMoney投資網誌",
+        "source": "CMoney投資網誌",
+        "date": "2026-08-31T15:00:00+08:00",
+        "link": "https://news.google.com/rss/articles/CBMifEFVX3lxTFAyYW1iMEFTUEFjdjU2VHF1UDFsSHFZOXFzT2dQVVZwekR4UHJxczNkZVNXOFRHWWhlejZGWlhvcWxtZXc4UzRwUHpYY0Y4SnZaRDRQRHdEYnVVYnA0R2lwQVBIeW53eGxHTjdud2dBR0FZdklxLTdVM3B0amM?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "【零股排行榜】盤中零股排行榜TOP 20｜0050 元大台灣50、2327 國巨*、00981A 主動統一台股增長、3711 日月光投控、1303 南亞 (0831)｜豐雲學堂2026 年 09 月 - sinotrade.com.tw",
+        "source": "sinotrade.com.tw",
+        "date": "2026-08-31T15:23:51+08:00",
+        "link": "https://news.google.com/rss/articles/CBMi0ARBVV95cUxOeTBSRkRJb0xuOVQ4ZzBIeFRjNS1qRGZXREFEOE5oTzUtdnZVVXZrZFZPOVhSbVUyQ2I5czFkTlFkMzk5ckVQdzhPalc4bHlINndnWk9uS3BmelM4Qnd0M0lYV2h4WHZNd3pNeVpJTHppbkN4Y3hWMndqSlZseG5ldmhsRVU3eDBoUTFfN0RjVW9Da0JIQmh0SGVXeG9ycDBNX1VWVDF4OUJpSkd6T1FLNjR2M1FSTUZ6U2dkLWd5NWxNVV9HTHQ4Xzgxd2haaUduSjNVajVodXhYVjgxYXFWTGZOZmE3V1VQcDVpbENjMGJkVGVORXFxNDczdGhRQUZNXzh0NTI4eWk5T244aHlqTG5IRUJmQk9hOWxOTGVpQWJBWWpvdjl6ZWtKY3BWTXBLdFdsNGdPOF9Gb0t4anpZajhscXNNTVgyclY1T2lqSGxFaXJwcXp",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "日月光投控(3711)站上AI封測要角，先進封裝比重能否拉高獲利-林彥廷看盤室 - CMoney投資網誌",
+        "source": "CMoney投資網誌",
+        "date": "2026-09-01T15:00:00+08:00",
+        "link": "https://news.google.com/rss/articles/CBMigwFBVV95cUxPS2VBQ3I1M212WE9Pd19IRjZKaWdVTlZ3emxsellXeXBPVFhVS3ZLNW54VktmVThaeTlnY2V6a0JqSnpvcjNwcWowWGd5WW00emJpUDdrd2Z2RUV1MjhOR0Q5Q2JQRVlHLVdXaldGRVhKdF9wa3dRNkFoVUJYV25HWFhWdw?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "日月光投控大漲立馬翻臉慘摔！兇手抓到了 36萬股東心碎 - 自由時報",
+        "source": "自由時報",
+        "date": "2026-09-02T15:00:00+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE1OMDcxY2xMMm1zWmVoRlhPc0NXaDRMX1Q0Uk11UnpNSFU4Rlloa1FHTzhqWTEycmtnLXRoa0FBOXdWbG44VmxLUU1fa01RTnJMWkozZVRCazQ?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      }
+    ],
     "source": "Google News RSS",
     "lookback_days": 14
   },
