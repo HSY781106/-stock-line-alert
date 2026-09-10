@@ -1,4 +1,4 @@
-name: Stock Alert V2.17.4
+name: Stock Alert V2.17.5
 
 on:
   schedule:
@@ -39,14 +39,17 @@ jobs:
           LINE_CHANNEL_ACCESS_TOKEN: ${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }}
           LINE_CHANNEL_SECRET: ${{ secrets.LINE_CHANNEL_SECRET }}
 
-          # V2.17.4：Gemini Free 主力
-          # 只有達到 LINE 發送門檻後才啟用 AI
+          # V2.17.5：Gemini Free 主力
+          # AI 只有達到 LINE 發送門檻後才啟用
+          # 未達門檻完全不呼叫 AI
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GEMINI_MODEL: gemini-3.5-flash
 
           # 可選免費備援
+          # 只有建立並放入 GitHub Secrets 才會啟用
           MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
           MISTRAL_MODEL: mistral-small-latest
+
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           GROQ_MODEL: openai/gpt-oss-20b
 
@@ -57,22 +60,23 @@ jobs:
           AI_ENABLE_TRUMP: '1'
           AI_ENABLE_FINAL_SUMMARY: '1'
 
-          AI_DAILY_MAX_CALLS: '8'
+          # V2.17.5：
+          # 不再使用「每天最多 8 次」的人為限制
+          # 0 = 不設人工每日 request 上限
+          # 實際是否可用由免費 API quota / 429 / quota exceeded 決定
+          AI_DAILY_MAX_CALLS: '0'
+
           AI_MAX_OUTPUT_TOKENS: '700'
-
-          # 失敗不重試，避免浪費免費 request
           AI_RETRY_ON_FAILURE: '0'
-
-          # 新聞 AI 快取 7 天
           AI_NEWS_CACHE_HOURS: '168'
-
-          # Gemini timeout
           AI_TIMEOUT: '15'
 
-          # FRED timeout
+          # Macro / FRED
           MACRO_TIMEOUT: '12'
 
-          # 可選：如果之後有 FRED API Key 才需要設定
+          # 可選：
+          # 如果另外建立 FRED_API_KEY，
+          # 可在 GitHub Secrets 放入後取消下一行註解
           # FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
 
         run: python stock_alert.py
@@ -82,7 +86,11 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
           git add -A
-          git diff --cached --quiet || git commit -m "Update V2.17.4 alert state, AI cache, macro history and alert-gated AI"
+
+          git diff --cached --quiet || git commit -m "Update V2.17.5 alert state, AI quota state, AI cache, macro history and alert-gated AI"
+
           git pull --rebase origin main || true
+
           git push origin HEAD:main
