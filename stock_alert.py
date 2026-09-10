@@ -9505,11 +9505,15 @@ def yahoo_etf_profile(symbol):
 
     is_tw=str(symbol).upper().endswith(('.TW','.TWO'))
     if is_tw:
-        # 官方 TWSE feed 直接提供 e=price, f=NAV, g=premium；只要官方有值就覆蓋 Yahoo。
+        # V2.14.50：TWSE feed 的 e=market price 可能與同一執行中的即時行情不同步。
+        # 因此「目前價格」以本函式前面取得的即時行情為唯一權威；TWSE 只提供 NAV / assets。
+        # premium 不直接採用 TWSE 的 g，最後一律用「即時價格 ÷ NAV - 1」重新計算。
         twse=_twse_etf_nav_fallback(symbol)
-        for k in ('price','nav','assets'):
+        for k in ('nav','assets'):
             if twse.get(k) is not None: out[k]=twse[k]
-        if twse.get('premium') is not None: out['premium']=twse['premium']
+        # 保留官方 feed 數值供除錯，但絕不覆蓋 authoritative live price / premium。
+        if twse.get('price') is not None: out['twse_feed_price']=twse['price']
+        if twse.get('premium') is not None: out['twse_feed_premium']=twse['premium']
         # 投信官方只補缺欄位，絕不覆蓋已確認的 TWSE NAV。
         for src in (_official_yuanta_etf_fallback(symbol),_official_cathay_etf_fallback(symbol),_official_twse_etf_fallback(symbol)):
             for k in ('nav','assets','beta','yield','expense'):
@@ -9530,9 +9534,14 @@ def yahoo_etf_profile(symbol):
     if out.get('yield') is not None and not (0<=out['yield']<=30): out['yield']=None
     if out.get('beta') is not None and not (-5<=out['beta']<=5): out['beta']=None
     if out.get('expense') is not None and not (0<=out['expense']<=10): out['expense']=None; out['expense_source']=None
-    if out.get('premium') is None and out.get('price') and out.get('nav') and out['nav']>0:
+    # V2.14.50：只要同時有 authoritative live price + NAV，就強制重算折溢價。
+    # 不接受 TWSE g 或 Yahoo 舊 premium，避免 price/NAV/premium 三者互相矛盾。
+    if out.get('price') is not None and out.get('nav') is not None and out['nav']>0:
         prem=(out['price']/out['nav']-1)*100
-        if -50<=prem<=50: out['premium']=prem
+        if -50<=prem<=50:
+            out['premium']=prem
+        else:
+            out['premium']=None
     if out.get('beta') is None:
         b=_etf_beta_from_history(symbol)
         if b is not None and math.isfinite(b) and -5<=b<=5: out['beta']=b
@@ -10717,7 +10726,7 @@ def _line_extract_analysis_scores(text):
     )
 
 
-# V2.14.49：官方產業價值鏈的「次產業」與 TWSE 大產業不是一對一字串關係。
+# V2.14.50：官方產業價值鏈的「次產業」與 TWSE 大產業不是一對一字串關係。
 # 明確的官方節點若被舊快取掛到錯誤 parent，必須以正確 parent 為準。
 LINE_SUBINDUSTRY_PARENT_OVERRIDES = {
     _line_industry_norm('建設業'): '建材營造',
@@ -10729,7 +10738,7 @@ def _line_industry_parent_for_subindustry(subindustry):
 
 
 def _line_industry_build_subindustry_menu(parent, u):
-    """V2.14.49：次產業選單必須維持「大產業→官方次產業」一對一階層。
+    """V2.14.50：次產業選單必須維持「大產業→官方次產業」一對一階層。
 
     舊版先讀 industry_subindustry_menu_cache，若舊快取曾混入跨產業次產業，
     就會出現「水泥工業 → 建設業」這類錯配。現在優先由 subindustry_cache 的
@@ -10774,7 +10783,7 @@ def _line_industry_build_subindustry_menu(parent, u):
         if options:
             return sorted(options, key=lambda x: (_line_industry_norm(x), x))
 
-    # V2.14.49：不再使用扁平舊 menu cache 或 u.subindustries 反推 parent。
+    # V2.14.50：不再使用扁平舊 menu cache 或 u.subindustries 反推 parent。
     # 這兩種資料沒有可靠 parent 關聯，是過去「水泥工業→建設業」污染的來源。
     # 只有明確的 parent override 才可作最後備援。
     for sub_norm, forced_parent in LINE_SUBINDUSTRY_PARENT_OVERRIDES.items():
@@ -12137,7 +12146,7 @@ def _trump_news_company_name(symbol):
 
 
 def _macro_fred_batch_latest():
-    """V2.14.49：一次請求 FRED 全部美國指標，避免 7 個序列各自 timeout。"""
+    """V2.14.50：一次請求 FRED 全部美國指標，避免 7 個序列各自 timeout。"""
     series_ids=list(MACRO_FRED_SERIES.values())
     # FRED graph endpoint 支援以逗號分隔的多序列 CSV。
     url='https://fred.stlouisfed.org/graph/fredgraph.csv?id='+quote(','.join(series_ids))
@@ -12174,7 +12183,7 @@ def _macro_fred_batch_latest():
     return out
 
 def _macro_fred_latest(series_id, derive_yoy=False):
-    """V2.14.49：保留單序列 API 相容介面，實際優先使用 batch 結果。"""
+    """V2.14.50：保留單序列 API 相容介面，實際優先使用 batch 結果。"""
     url='https://fred.stlouisfed.org/graph/fredgraph.csv?id='+quote(series_id)
     last_err=None
     for verify in (True, False):
@@ -12194,7 +12203,7 @@ def _macro_fred_latest(series_id, derive_yoy=False):
 
 
 def _macro_dgbas_latest():
-    """V2.14.49：主計總處採獨立指標解析；解析失敗時保留最近官方已知值，不再整組 N/A。"""
+    """V2.14.50：主計總處採獨立指標解析；解析失敗時保留最近官方已知值，不再整組 N/A。"""
     out={'gdp_yoy':None,'cpi_yoy':None,'unemployment':None,'sources':[DGBAS_NEWS_PAGE_URL],'published':{}}
     text=''
     try:
@@ -12227,7 +12236,7 @@ def _macro_dgbas_latest():
 
 
 def _macro_cbc_latest():
-    """V2.14.49：央行重要指標頁；即使央行頁連線/解析失敗，也逐欄使用已核對官方值，絕不回傳 N/A。"""
+    """V2.14.50：央行重要指標頁；即使央行頁連線/解析失敗，也逐欄使用已核對官方值，絕不回傳 N/A。"""
     out={'usd_twd':None,'m2_yoy':None,'overnight':None,'discount_rate':None,
          'source':CBC_KEY_INDICATORS_URL,'fallback_dates':{}}
     # 最近核對的央行官方值：僅作為「來源暫時不可用/頁面格式變動」時的保底，
@@ -12272,7 +12281,7 @@ def _macro_cbc_latest():
 _MACRO_RUN_CACHE = None
 
 def macro_fetch(force=False):
-    """V2.14.49：台美總經資料中心；同一 Workflow 行程只抓一次，Render 仍使用磁碟快取。"""
+    """V2.14.50：台美總經資料中心；同一 Workflow 行程只抓一次，Render 仍使用磁碟快取。"""
     global _MACRO_RUN_CACHE
     if not force and isinstance(_MACRO_RUN_CACHE,dict) and _MACRO_RUN_CACHE.get('data'):
         return _MACRO_RUN_CACHE['data']
@@ -12310,7 +12319,7 @@ def macro_fetch(force=False):
                 d['us'][key]={'value':v,'date':dt,'series':sid,'unit':'YoY %' if key=='us_cpi' else '','fallback':True}
     except Exception as e:
         d['errors'].append(f'FRED batch: {type(e).__name__}: {e}')
-        # V2.14.49：批次端點失敗時，不再做 7 次慢速 timeout；改用最近已驗證的官方 FRED last-known-good。
+        # V2.14.50：批次端點失敗時，不再做 7 次慢速 timeout；改用最近已驗證的官方 FRED last-known-good。
         # 下一次成功連線時會自動覆蓋。
         fred_fallback={
             'fed_rate':(3.63,'2026-09-04'),
@@ -12335,7 +12344,7 @@ def macro_fetch(force=False):
     if success_count>0:
         payload={'_cached_at':now,'_version':MACRO_CACHE_VERSION,'data':d}; save_json(MACRO_CACHE_FILE,payload)
         return d
-    # V2.14.49：網頁／Render 不應因外部宏觀資料源暫時逾時而整頁空白。
+    # V2.14.50：網頁／Render 不應因外部宏觀資料源暫時逾時而整頁空白。
     # 若本次全部來源失敗，保留上一份可用快取並標示為 stale。
     if isinstance(cached,dict) and isinstance(cached.get('data'),dict) and cached.get('data'):
         stale=dict(cached.get('data') or {})
@@ -12472,7 +12481,7 @@ def _trump_recent_news_fetch(symbol=''):
 
 
 def _trump_translate_title(title):
-    """V2.14.49：繁中翻譯三層備援：Google GTX -> MyMemory -> 原文。"""
+    """V2.14.50：繁中翻譯三層備援：Google GTX -> MyMemory -> 原文。"""
     text=str(title or '').strip()
     if not text or not re.search(r'[A-Za-z]',text): return text
     cache=globals().setdefault('_TRUMP_TRANSLATION_CACHE',{}); key=text[:500]
@@ -12860,7 +12869,7 @@ def run_webhook_server():
         return (
             '<!doctype html><html><head><meta charset="utf-8">'
             '<meta name="viewport" content="width=device-width,initial-scale=1">'
-            '<title>Stock Alert V2.14.49</title>'
+            '<title>Stock Alert V2.14.50</title>'
             '<style>body{margin:0;padding:20px;background:#f6f7f9;color:#222}'
             '.card{max-width:900px;margin:auto;background:#fff;border-radius:14px;padding:20px;box-shadow:0 2px 12px #0001}'
             'a{word-break:break-all}</style></head><body><div class="card">'
@@ -12918,7 +12927,7 @@ def run_webhook_server():
             result=_line_industry_top3_analysis(sub,u,html_links=True,parent=display_parent)
         except Exception as ex:
             result=f'❌ 分析失敗：{type(ex).__name__}: {ex}'
-        # V2.14.49：保留 Top3 內的 /stock 超連結，但把換行轉成真正的 HTML 換行，避免手機瀏覽器全部擠成一行。
+        # V2.14.50：保留 Top3 內的 /stock 超連結，但把換行轉成真正的 HTML 換行，避免手機瀏覽器全部擠成一行。
         result_html = str(result).replace('\n', '<br>')
         body=(
             f'<div class="card"><h1>📊 {html.escape(sub)}</h1><div class="muted">大產業：{html.escape(display_parent)}</div><div class="industry-result">{result_html}</div></div>'
@@ -14378,10 +14387,10 @@ def main():
 
     else:
 
-        print('========== V2.14.49 RUN START ==========', flush=True)
+        print('========== V2.14.50 RUN START ==========', flush=True)
         print(f'執行時間（台灣）：{datetime.now(TW_TZ).strftime("%Y-%m-%d %H:%M:%S")}', flush=True)
         run_alerts()
-        print('========== V2.14.49 RUN END ==========', flush=True)
+        print('========== V2.14.50 RUN END ==========', flush=True)
 
 
 if __name__ == '__main__':
