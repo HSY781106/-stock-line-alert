@@ -192,7 +192,7 @@ _TRUMP_RECENT_NEWS_CACHE = {}
 # V2.14.42：獨立總經風險引擎。資料來源：FRED graph CSV + 台灣央行/主計總處公開 JSON。
 MACRO_CACHE_FILE = 'macro_systemic_cache_v21442.json'
 MACRO_CACHE_HOURS = 6
-MACRO_CACHE_VERSION = 5
+MACRO_CACHE_VERSION = 6
 MACRO_TIMEOUT = 10
 FRED_GRAPH_URL = 'https://fred.stlouisfed.org/graph/fredgraph.csv?id={series}'
 DGBAS_NEWS_JSON_URL = 'https://www.dgbas.gov.tw/OpenData.aspx?SN=5B2F388DBDFAF866'
@@ -12227,7 +12227,7 @@ def _macro_dgbas_latest():
 
 
 def _macro_cbc_latest():
-    """V2.14.46：改用央行「重要指標」專頁，不再從首頁長文字區段取最後數字。"""
+    """V2.14.48：央行重要指標頁 + 欄位級 last-known-good fallback。"""
     out={'usd_twd':None,'m2_yoy':None,'overnight':None,'discount_rate':None,'source':CBC_KEY_INDICATORS_URL}
     r=requests.get(CBC_KEY_INDICATORS_URL,timeout=MACRO_TIMEOUT,headers={'User-Agent':'Mozilla/5.0 stock-alert/2.14.45'})
     r.raise_for_status(); text=html.unescape(re.sub(r'<[^>]+>',' ',r.text)); text=re.sub(r'\s+',' ',text)
@@ -12240,13 +12240,25 @@ def _macro_cbc_latest():
     for k,patt in patterns.items():
         m=re.search(patt,text,re.I)
         if m:
-            v=float(m.group(1))
-            # 外匯存底 601.90 不應被誤抓；只有合理範圍才接受。
+            try: v=float(m.group(1))
+            except Exception: continue
             if k=='usd_twd' and not (20 <= v <= 40): continue
             if k=='m2_yoy' and not (-20 <= v <= 30): continue
             if k=='overnight' and not (0 <= v <= 20): continue
             if k=='discount_rate' and not (0 <= v <= 20): continue
             out[k]=v
+    # V2.14.48：央行頁面欄位格式可能變動；某欄解析不到時使用最近核對的官方值。
+    # 成功解析的欄位絕不覆蓋，確保正常連線時仍優先使用官方最新資料。
+    fallback={
+        'discount_rate':(2.00,'2026-09-10'),
+        'm2_yoy':(7.42,'2026-09-10'),
+        'usd_twd':(31.505,'2026-09-10'),
+        'overnight':(0.824,'2026-09-10'),
+    }
+    for k,(v,dt) in fallback.items():
+        if out.get(k) is None:
+            out[k]=v
+            out.setdefault('fallback_dates',{})[k]=dt
     return out
 
 
