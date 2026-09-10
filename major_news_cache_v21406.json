@@ -1,7 +1,7 @@
 {
   "2330": {
-    "fetched_at": "2026-09-10T03:39:20.434694+08:00",
-    "adjustment": 4,
+    "fetched_at": "2026-09-10T09:39:41.755812+08:00",
+    "adjustment": 3,
     "events": [
       {
         "title": "ASML、台積電聯手推進 High NA EUV 應用，12 吋光罩布局瞄準 2033 年量產 - CMoney",
@@ -12,30 +12,20 @@
         "adjustment": 3,
         "label": "擴產/認證/量產進展",
         "status": "重大正面事件"
-      },
-      {
-        "title": "台積電在中科二擴1.4奈米新廠進度超前 中科認四廠完工年營業額5千億是低估 - CMoney",
-        "source": "CMoney",
-        "date": "2026-09-09T14:53:00+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE9rYUR6cHlwdWNfdDNyd2lnWHJyQkxQN2pZdlJJMzhzMU5PREZoUGNJSWktRWlhLXZoYldIT25IejN5YkxpOUxSZERFLVZFUHNCZ3BTVXUxTUo?oc=5",
-        "raw_adjustment": 3,
-        "adjustment": 3,
-        "label": "擴產/認證/量產進展",
-        "status": "重大正面事件"
       }
     ],
     "source": "Google News RSS",
     "lookback_days": 14
   },
   "3711": {
-    "fetched_at": "2026-09-10T03:39:25.943625+08:00",
+    "fetched_at": "2026-09-10T09:40:42.859897+08:00",
     "adjustment": 0,
     "events": [],
     "source": "Google News RSS",
     "lookback_days": 14
   },
   "1608": {
-    "fetched_at": "2026-09-01T09:15:44.928128+08:00",
+    "fetched_at": "2026-09-10T09:41:27.620485+08:00",
     "adjustment": 0,
     "events": [],
     "source": "Google News RSS",
