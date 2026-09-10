@@ -1,19 +1,11 @@
-name: Stock Alert V2.17.3
+name: Stock Alert V2.17.4
 
 on:
   schedule:
-    # 台灣時間 09:00–13:59
     - cron: '*/15 1-5 * * 1-5'
-
-    # 台灣時間 21:30、21:45
     - cron: '30,45 13 * * 1-5'
-
-    # 台灣時間 22:00–04:59
     - cron: '*/15 14-20 * * 1-5'
-
-    # 台灣時間 05:00
     - cron: '0 21 * * 1-5'
-
   workflow_dispatch:
 
 concurrency:
@@ -42,19 +34,19 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt pypdf
 
-      - name: Run stock alert V2.17.3
+      - name: Run stock alert
         env:
           LINE_CHANNEL_ACCESS_TOKEN: ${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }}
           LINE_CHANNEL_SECRET: ${{ secrets.LINE_CHANNEL_SECRET }}
 
-          # Gemini Free 主力
+          # V2.17.4：Gemini Free 主力
+          # 只有達到 LINE 發送門檻後才啟用 AI
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GEMINI_MODEL: gemini-3.5-flash
 
           # 可選免費備援
           MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
           MISTRAL_MODEL: mistral-small-latest
-
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           GROQ_MODEL: openai/gpt-oss-20b
 
@@ -65,24 +57,22 @@ jobs:
           AI_ENABLE_TRUMP: '1'
           AI_ENABLE_FINAL_SUMMARY: '1'
 
-          # 每日免費 AI request fuse
           AI_DAILY_MAX_CALLS: '8'
-
           AI_MAX_OUTPUT_TOKENS: '700'
 
-          # 不自動 retry，避免浪費免費 request
+          # 失敗不重試，避免浪費免費 request
           AI_RETRY_ON_FAILURE: '0'
 
-          # 新聞語意快取 7 天
+          # 新聞 AI 快取 7 天
           AI_NEWS_CACHE_HOURS: '168'
 
-          # AI provider timeout
+          # Gemini timeout
           AI_TIMEOUT: '15'
 
           # FRED timeout
           MACRO_TIMEOUT: '12'
 
-          # 若之後建立 FRED API Key 才取消註解
+          # 可選：如果之後有 FRED API Key 才需要設定
           # FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
 
         run: python stock_alert.py
@@ -93,6 +83,6 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
-          git diff --cached --quiet || git commit -m "Update V2.17.3 alert state, AI circuit breaker and news stability"
+          git diff --cached --quiet || git commit -m "Update V2.17.4 alert state, AI cache, macro history and alert-gated AI"
           git pull --rebase origin main || true
           git push origin HEAD:main
