@@ -1,132 +1,104 @@
-name: Stock Alert V2.17.1
+name: Stock Alert V2.17.2
 
 on:
-  workflow_dispatch:
   schedule:
-    - cron: '*/15 * * * *'
+    # 台灣時間 09:00–13:59
+    # GitHub Actions cron 使用 UTC，因此台灣 +8 → UTC 01:00–05:59
+    - cron: '*/15 1-5 * * 1-5'
+
+    # 台灣時間 21:30、21:45
+    # UTC 13:30、13:45
+    - cron: '30,45 13 * * 1-5'
+
+    # 台灣時間 22:00–04:59
+    # UTC 14:00–20:59
+    - cron: '*/15 14-20 * * 1-5'
+
+    # 台灣時間 05:00
+    # UTC 21:00
+    - cron: '0 21 * * 1-5'
+
+  workflow_dispatch:
 
 concurrency:
   group: stock-alert-main
   cancel-in-progress: true
 
+permissions:
+  contents: write
+
 jobs:
-  run-stock-alert:
+  check-stock:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
-
-    env:
-      LINE_CHANNEL_ACCESS_TOKEN: ${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }}
-      LINE_CHANNEL_SECRET: ${{ secrets.LINE_CHANNEL_SECRET }}
-
-      # =========================
-      # Gemini AI（主要）
-      # =========================
-      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-      GEMINI_MODEL: gemini-3.7-flash
-
-      # =========================
-      # Mistral AI（免費備援，可不設定）
-      # =========================
-      MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
-      MISTRAL_MODEL: mistral-small-latest
-
-      # =========================
-      # Groq AI（免費備援，可不設定）
-      # =========================
-      GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
-      GROQ_MODEL: openai/gpt-oss-20b
-
-      # =========================
-      # AI Provider
-      # =========================
-      AI_PROVIDER: gemini
-      AI_FALLBACK_PROVIDERS: mistral,groq
-
-      # =========================
-      # AI 功能
-      # =========================
-      AI_ENABLE_NEWS: '1'
-      AI_ENABLE_TRUMP: '1'
-
-      # 綜合結論開啟
-      # 但只有真正達到 LINE 通知門檻時才會啟用 AI
-      AI_ENABLE_FINAL_SUMMARY: '1'
-
-      # 每次 GitHub Actions 執行的 AI 呼叫上限
-      AI_DAILY_MAX_CALLS: '8'
-
-      # AI 最大輸出
-      AI_MAX_OUTPUT_TOKENS: '700'
-
-      # 不主動重試，降低免費額度消耗
-      AI_RETRY_ON_FAILURE: '0'
-
-      # AI 新聞快取 7 天
-      AI_NEWS_CACHE_HOURS: '168'
-
-      # AI timeout
-      AI_TIMEOUT: '15'
+    timeout-minutes: 13
 
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: '3.12'
 
       - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install requests pandas numpy yfinance beautifulsoup4 lxml flask gunicorn
-
-      - name: Check status/cache
-        run: |
-          echo "========== 檢查狀態/快取 =========="
-          if [ -f alert_state.json ]; then
-            echo "alert_state.json：存在"
-          else
-            echo "alert_state.json：不存在，首次執行"
-          fi
-
-          if [ -f pe_history.json ]; then
-            echo "pe_history.json：存在"
-          else
-            echo "pe_history.json：不存在，首次執行"
-          fi
-
-          if [ -f chip_history.json ]; then
-            echo "chip_history.json：存在"
-          else
-            echo "chip_history.json：不存在，首次執行"
-          fi
-
-          echo "==================================="
+        run: pip install -r requirements.txt pypdf
 
       - name: Run stock alert
-        run: |
-          python stock_alert.py
+        env:
+          LINE_CHANNEL_ACCESS_TOKEN: ${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }}
+          LINE_CHANNEL_SECRET: ${{ secrets.LINE_CHANNEL_SECRET }}
 
-      - name: Commit state/cache changes
+          # V2.17.2：Gemini Free 主力
+          # AI 只有達到 LINE 發送門檻後才啟用
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_MODEL: gemini-3.7-flash
+
+          # 可選免費備援
+          MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
+          MISTRAL_MODEL: mistral-small-latest
+
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          GROQ_MODEL: openai/gpt-oss-20b
+
+          AI_PROVIDER: gemini
+          AI_FALLBACK_PROVIDERS: mistral,groq
+
+          AI_ENABLE_NEWS: '1'
+          AI_ENABLE_TRUMP: '1'
+          AI_ENABLE_FINAL_SUMMARY: '1'
+
+          # 每日 AI request 總上限
+          AI_DAILY_MAX_CALLS: '8'
+
+          # AI 輸出上限
+          AI_MAX_OUTPUT_TOKENS: '700'
+
+          # 不自動 retry，避免浪費免費額度
+          AI_RETRY_ON_FAILURE: '0'
+
+          # 新聞語意快取 7 天
+          AI_NEWS_CACHE_HOURS: '168'
+
+          # Gemini / Mistral / Groq timeout
+          AI_TIMEOUT: '15'
+
+          # V2.17.2：FRED timeout 收斂
+          MACRO_TIMEOUT: '12'
+
+          # 可選：如果另外建立 FRED API Key
+          # FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+
+        run: python stock_alert.py
+
+      - name: Save state and caches
         if: always()
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-          git add \
-            alert_state.json \
-            pe_history.json \
-            chip_history.json \
-            line_fund_cache.json \
-            macro_history.json \
-            ai_news_cache.json \
-            ai_trump_cache.json \
-            2>/dev/null || true
-
-          if git diff --cached --quiet; then
-            echo "沒有需要提交的狀態/快取變更"
-          else
-            git commit -m "Update V2.17.1 alert state, AI cache, macro history and alert-gated AI"
-            git push
-          fi
+          git add -A
+          git diff --cached --quiet || git commit -m "Update V2.17.2 alert state, AI cache, macro history and stability fixes"
+          git pull --rebase origin main || true
+          git push origin HEAD:main
