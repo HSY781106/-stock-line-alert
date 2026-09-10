@@ -12227,19 +12227,32 @@ def _macro_dgbas_latest():
 
 
 def _macro_cbc_latest():
-    """V2.14.48：央行重要指標頁 + 欄位級 last-known-good fallback。"""
-    out={'usd_twd':None,'m2_yoy':None,'overnight':None,'discount_rate':None,'source':CBC_KEY_INDICATORS_URL}
-    r=requests.get(CBC_KEY_INDICATORS_URL,timeout=MACRO_TIMEOUT,headers={'User-Agent':'Mozilla/5.0 stock-alert/2.14.45'})
-    r.raise_for_status(); text=html.unescape(re.sub(r'<[^>]+>',' ',r.text)); text=re.sub(r'\s+',' ',text)
-    patterns={
-        'usd_twd': r'新臺幣\s*/\s*美元銀行間收盤匯率\s*([0-9]+(?:\.[0-9]+)?)',
-        'm2_yoy': r'貨幣總計數M2年增率\s*([0-9]+(?:\.[0-9]+)?)',
-        'overnight': r'金融業隔夜拆款利率\s*([0-9]+(?:\.[0-9]+)?)',
-        'discount_rate': r'重貼現率\s*([0-9]+(?:\.[0-9]+)?)',
+    """V2.14.49：央行重要指標頁；即使央行頁連線/解析失敗，也逐欄使用已核對官方值，絕不回傳 N/A。"""
+    out={'usd_twd':None,'m2_yoy':None,'overnight':None,'discount_rate':None,
+         'source':CBC_KEY_INDICATORS_URL,'fallback_dates':{}}
+    # 最近核對的央行官方值：僅作為「來源暫時不可用/頁面格式變動」時的保底，
+    # 正常成功解析到的新值永遠優先。
+    fallback={
+        'discount_rate':(2.00,'2026-09-10'),
+        'm2_yoy':(7.42,'2026-09-10'),
+        'usd_twd':(31.505,'2026-09-10'),
+        'overnight':(0.824,'2026-09-10'),
     }
-    for k,patt in patterns.items():
-        m=re.search(patt,text,re.I)
-        if m:
+    try:
+        r=requests.get(CBC_KEY_INDICATORS_URL,timeout=MACRO_TIMEOUT,
+                       headers={'User-Agent':'Mozilla/5.0 stock-alert/2.14.49'})
+        r.raise_for_status()
+        text=html.unescape(re.sub(r'<[^>]+>',' ',r.text))
+        text=re.sub(r'\s+',' ',text)
+        patterns={
+            'usd_twd': r'新臺幣\s*/\s*美元銀行間收盤匯率\s*([0-9]+(?:\.[0-9]+)?)',
+            'm2_yoy': r'貨幣總計數M2年增率\s*([0-9]+(?:\.[0-9]+)?)',
+            'overnight': r'金融業隔夜拆款利率\s*([0-9]+(?:\.[0-9]+)?)',
+            'discount_rate': r'重貼現率\s*([0-9]+(?:\.[0-9]+)?)',
+        }
+        for k,patt in patterns.items():
+            m=re.search(patt,text,re.I)
+            if not m: continue
             try: v=float(m.group(1))
             except Exception: continue
             if k=='usd_twd' and not (20 <= v <= 40): continue
@@ -12247,18 +12260,12 @@ def _macro_cbc_latest():
             if k=='overnight' and not (0 <= v <= 20): continue
             if k=='discount_rate' and not (0 <= v <= 20): continue
             out[k]=v
-    # V2.14.48：央行頁面欄位格式可能變動；某欄解析不到時使用最近核對的官方值。
-    # 成功解析的欄位絕不覆蓋，確保正常連線時仍優先使用官方最新資料。
-    fallback={
-        'discount_rate':(2.00,'2026-09-10'),
-        'm2_yoy':(7.42,'2026-09-10'),
-        'usd_twd':(31.505,'2026-09-10'),
-        'overnight':(0.824,'2026-09-10'),
-    }
+    except Exception as e:
+        out['fetch_error']=f'{type(e).__name__}: {e}'
     for k,(v,dt) in fallback.items():
         if out.get(k) is None:
             out[k]=v
-            out.setdefault('fallback_dates',{})[k]=dt
+            out['fallback_dates'][k]=dt
     return out
 
 
