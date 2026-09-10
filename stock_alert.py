@@ -381,7 +381,7 @@ LINE_ANALYSIS_LOCK = threading.Lock()
 # 不再用 daemon=True 的裸 Thread，降低 Render request 結束後背景工作
 # 被直接終止的風險。Reply token 僅用於立即回覆結果頁網址，背景分析不再依賴 replyToken。
 # 完整結果寫入 Render /line-result/<id>，不使用 Push。
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import ThreadPoolExecutor, as_completed
 LINE_ANALYSIS_EXECUTOR = ThreadPoolExecutor(
     max_workers=1,
     thread_name_prefix='line-analysis'
