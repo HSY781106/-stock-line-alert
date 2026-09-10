@@ -1,4 +1,4 @@
-# stock_alert.py V2.17.7
+# stock_alert.py V2.18.0
 # V2.17.1：AI 僅在「已達到 LINE 發送門檻」後啟用；其餘每15分鐘掃描完全不呼叫 AI。
 # V2.17.0 功能全部保留：Gemini Free 主力 + Mistral/Groq Free 備援、重大消息、Trump 語意、總經預測。
 # V2.15.6：外部產業網頁正確性＋效能修正版：官方價值鏈候選池改為資料驅動，不再只依賴同大產業 Top120；
@@ -1114,7 +1114,7 @@ def _ai_compact_payload(obj, max_chars=18000):
 
 
 def _ai_macro_summary(info):
-    """V2.17.7：總經 Web AI。使用明確 JSON Schema，避免 Gemini 回傳不可解析文字。"""
+    """V2.18.0：總經 Web AI。使用明確 JSON Schema，避免 Gemini 回傳不可解析文字。"""
     if not _ai_web_enabled('macro') or not isinstance(info,dict):
         return None
     data=info.get('data',{}) or {}
@@ -1151,7 +1151,7 @@ def _ai_macro_summary(info):
         '未來1到3個月最需要觀察哪些變數、什麼情況會讓判斷轉向？'
         '嚴格區分資料已觀察到的事實與推論，不把統計預測寫成確定事件。'
     )
-    print(f'V2.17.7 Web AI：開始總經分析｜cache=macro_web:{fp}',flush=True)
+    print(f'V2.18.0 Web AI：開始總經分析｜cache=macro_web:{fp}',flush=True)
     result=_ai_call_json(
         '你是保守的總經投資研究員。只做資料綜合與情境分析，不保證報酬。',
         prompt+'\n資料：'+_ai_compact_payload(payload),
@@ -1160,11 +1160,11 @@ def _ai_macro_summary(info):
         response_schema=schema,
         timeout=AI_WEB_TIMEOUT
     )
-    print(f'V2.17.7 Web AI：總經分析{"成功" if isinstance(result,dict) else "失敗/無結果"}',flush=True)
+    print(f'V2.18.0 Web AI：總經分析{"成功" if isinstance(result,dict) else "失敗/無結果"}',flush=True)
     return result
 
 def _ai_trump_summary(news, factor=None, portfolio=None):
-    """V2.17.7：Trump Web AI。除總結外，產出代表性標的傳導，避免頁面只有通用框架。"""
+    """V2.18.0：Trump Web AI。除總結外，產出代表性標的傳導，避免頁面只有通用框架。"""
     if not _ai_web_enabled('trump'):
         return None
     portfolio=portfolio or []
@@ -1229,7 +1229,7 @@ def _ai_trump_summary(news, factor=None, portfolio=None):
         '只可從 representative_candidates 選出有足夠證據的代表性標的；不要自行創造 ticker。'
         'stock_impacts 必須說明政策→產業/成本/需求→標的的傳導理由。'
     )
-    print(f'V2.17.7 Web AI：開始Trump分析｜cache=trump_web:{fp}',flush=True)
+    print(f'V2.18.0 Web AI：開始Trump分析｜cache=trump_web:{fp}',flush=True)
     result=_ai_call_json(
         '你是保守的美國政策與市場研究員。區分事實、政策階段與推論，不把新聞當成確定股價預測。',
         prompt+'\n資料：'+_ai_compact_payload(payload),
@@ -1238,7 +1238,7 @@ def _ai_trump_summary(news, factor=None, portfolio=None):
         response_schema=schema,
         timeout=AI_WEB_TIMEOUT
     )
-    print(f'V2.17.7 Web AI：Trump分析{"成功" if isinstance(result,dict) else "失敗/無結果"}',flush=True)
+    print(f'V2.18.0 Web AI：Trump分析{"成功" if isinstance(result,dict) else "失敗/無結果"}',flush=True)
     return result
 
 def _ai_extract_text(payload):
@@ -1307,9 +1307,9 @@ def _ai_mark_provider_quota_exhausted(provider, reason='quota'):
         d['exhausted']=sorted(exhausted)
         d['reason_'+provider]=str(reason)[:300]
         save_json(AI_QUOTA_STATE_FILE,d)
-        print(f'V2.17.7 AI：{provider} 今日免費額度/配額已耗盡，今天後續不再呼叫 {provider}', flush=True)
+        print(f'V2.18.0 AI：{provider} 今日免費額度/配額已耗盡，今天後續不再呼叫 {provider}', flush=True)
     except Exception as e:
-        print(f'V2.17.7 AI：無法保存 {provider} quota 狀態：{type(e).__name__}: {e}', flush=True)
+        print(f'V2.18.0 AI：無法保存 {provider} quota 狀態：{type(e).__name__}: {e}', flush=True)
 
 
 def _ai_provider_order():
@@ -1358,7 +1358,7 @@ def _ai_call_provider(provider, system_prompt, user_prompt, response_schema=None
     # V2.17.4：所有結構化 AI 任務都明確要求「只回傳 JSON object」。
     structured_instruction=(
         str(system_prompt or '').rstrip() +
-        '\n\n【V2.17.7 輸出格式硬性規則】\n'
+        '\n\n【V2.18.0 輸出格式硬性規則】\n'
         '你必須只輸出一個合法 JSON object。\n'
         '不得輸出 Markdown、```、前言、後記、解釋文字或 JSON 以外的任何字元。\n'
         'JSON 必須能被標準 json.loads() 直接解析；不可省略必要欄位。'
@@ -1420,13 +1420,13 @@ def _ai_call_json(system_prompt, user_prompt, cache_key='', ttl_hours=72, respon
     - 任何 AI 失敗都 fallback，不阻斷主流程
     """
     if not any(_ai_provider_key(p) for p in _ai_provider_order()):
-        print('V2.17.7 AI：未設定 Gemini/Mistral/Groq API Key，使用規則 fallback', flush=True)
+        print('V2.18.0 AI：未設定 Gemini/Mistral/Groq API Key，使用規則 fallback', flush=True)
         return None
     now=time.time()
     if cache_key:
         c=_AI_SEMANTIC_RUN_CACHE.get(cache_key)
         if isinstance(c,dict) and now-float(c.get('ts',0) or 0)<ttl_hours*3600:
-            print('V2.17.7 AI：memory cache hit', flush=True)
+            print('V2.18.0 AI：memory cache hit', flush=True)
             return c.get('data')
         disk=load_json(AI_NEWS_CACHE_FILE)
         if isinstance(disk,dict):
@@ -1435,17 +1435,17 @@ def _ai_call_json(system_prompt, user_prompt, cache_key='', ttl_hours=72, respon
                 data=d.get('data')
                 if isinstance(data,dict):
                     _AI_SEMANTIC_RUN_CACHE[cache_key]={'ts':float(d.get('ts',now) or now),'data':data}
-                    print('V2.17.7 AI：disk cache hit', flush=True)
+                    print('V2.18.0 AI：disk cache hit', flush=True)
                     return data
     providers=[p for p in _ai_provider_order() if _ai_provider_key(p) and not _ai_provider_quota_exhausted(p)]
     if not providers:
-        print('V2.17.7 AI：所有已設定免費供應商今日均已耗盡配額，完全停用 AI，使用規則 fallback', flush=True)
+        print('V2.18.0 AI：所有已設定免費供應商今日均已耗盡配額，完全停用 AI，使用規則 fallback', flush=True)
         return None
     attempts=2 if AI_RETRY_ON_FAILURE else 1
     for provider in providers:
         for attempt in range(1,attempts+1):
             try:
-                print(f'V2.17.7 AI：provider={provider} request {attempt}/{attempts}', flush=True)
+                print(f'V2.18.0 AI：provider={provider} request {attempt}/{attempts}', flush=True)
                 data=_ai_call_provider(provider,system_prompt,user_prompt,response_schema=response_schema,timeout=timeout)
                 if cache_key:
                     _AI_SEMANTIC_RUN_CACHE[cache_key]={'ts':time.time(),'data':data}
@@ -1456,19 +1456,19 @@ def _ai_call_json(system_prompt, user_prompt, cache_key='', ttl_hours=72, respon
                         old=sorted(disk,key=lambda z:float(disk[z].get('ts',0) if isinstance(disk[z],dict) else 0))
                         for k in old[:-500]: disk.pop(k,None)
                     save_json(AI_NEWS_CACHE_FILE,disk)
-                print(f'V2.17.7 AI：SUCCESS｜provider={provider}', flush=True)
+                print(f'V2.18.0 AI：SUCCESS｜provider={provider}', flush=True)
                 return data
             except Exception as e:
                 msg=str(e)
-                print(f'V2.17.7 AI：FAIL｜provider={provider}｜{type(e).__name__}: {e}', flush=True)
+                print(f'V2.18.0 AI：FAIL｜provider={provider}｜{type(e).__name__}: {e}', flush=True)
                 # V2.17.4：不只 503/429。任何傳輸、逾時、空回覆、JSON 格式或 schema 異常，
                 # 都代表本次 provider 不可靠；立即熔斷該 provider，避免同一 RUN 再浪費免費 request。
                 if re.search(r'429|quota|rate.?limit|resource.?exhausted|too many requests|exceed', msg, flags=re.I):
                     _ai_mark_provider_quota_exhausted(provider, msg)
                 AI_PROVIDER_DISABLED_THIS_RUN.add(provider)
-                print(f'V2.17.7 AI：熔斷 {provider}｜本次 RUN 後續不再重試，避免浪費免費 request', flush=True)
+                print(f'V2.18.0 AI：熔斷 {provider}｜本次 RUN 後續不再重試，避免浪費免費 request', flush=True)
                 break
-    print('V2.17.7 AI：所有免費供應商均失敗，使用規則 fallback', flush=True)
+    print('V2.18.0 AI：所有免費供應商均失敗，使用規則 fallback', flush=True)
     return None
 
 
@@ -1488,7 +1488,7 @@ def _ai_runtime_status():
 
 def _print_ai_runtime_status():
     st=_ai_runtime_status()
-    print('========== V2.17.7 AI STATUS ==========', flush=True)
+    print('========== V2.18.0 AI STATUS ==========', flush=True)
     print(f"Gemini API Key：{'已設定' if st['gemini'] else '未設定'}｜模型：{GEMINI_MODEL}", flush=True)
     print(f"Mistral API Key：{'已設定' if st['mistral'] else '未設定'}｜模型：{MISTRAL_MODEL}", flush=True)
     print(f"Groq API Key：{'已設定' if st['groq'] else '未設定'}｜模型：{GROQ_MODEL}", flush=True)
@@ -13138,6 +13138,7 @@ _MACRO_INTELLIGENCE_RUN_CACHE = None
 _MACRO_FRED_HISTORY_CACHE = {}
 _MACRO_FRED_HISTORY_ATTEMPTED = False
 _MACRO_HISTORY_RUN_CACHE = None
+_MACRO_MULTISOURCE_HISTORY_ATTEMPTED = False
 _MACRO_NEWS_RUN_CACHE = None
 
 
@@ -13148,6 +13149,77 @@ def _macro_value(d, key):
         return x.get('value') if isinstance(x,dict) else None
     return d.get('taiwan',{}).get(key)
 
+
+def _macro_seed_multisource_history():
+    """V2.18.0：歷史總經資料多來源補種。
+    不再把 FRED 當成唯一歷史來源；BLS 提供 CPI/失業率歷史、US Treasury 提供殖利率歷史。
+    這些資料只用來建立統計歷史，不直接改寫即時值。
+    """
+    global _MACRO_MULTISOURCE_HISTORY_ATTEMPTED, _MACRO_HISTORY_RUN_CACHE
+    if _MACRO_MULTISOURCE_HISTORY_ATTEMPTED:
+        return
+    _MACRO_MULTISOURCE_HISTORY_ATTEMPTED=True
+    hist=load_json(MACRO_HISTORY_FILE)
+    if not isinstance(hist,dict) or hist.get('_version')!=MACRO_HISTORY_VERSION:
+        hist={'_version':MACRO_HISTORY_VERSION,'items':[]}
+    items=hist.get('items',[]) if isinstance(hist.get('items'),list) else []
+    by_day={str(x.get('ts',''))[:10]:x for x in items if isinstance(x,dict) and x.get('ts')}
+    headers={'User-Agent':'Mozilla/5.0 stock-alert/2.18.0','Accept':'application/json,text/csv,*/*'}
+    fetched=0
+    try:
+        # BLS public API：不需 API key，抓月度 CPI index + 月度失業率。
+        rr=requests.post('https://api.bls.gov/publicAPI/v2/timeseries/data/',json={
+            'seriesid':['CUSR0000SA0','LNS14000000'],
+            'startyear':str(max(2019,datetime.now(TW_TZ).year-7)),
+            'endyear':str(datetime.now(TW_TZ).year)
+        },timeout=max(8,min(15,MACRO_TIMEOUT)),headers=headers)
+        rr.raise_for_status(); payload=rr.json(); series=payload.get('Results',{}).get('series',[])
+        bls={x.get('seriesID'):x.get('data',[]) for x in series if isinstance(x,dict)}
+        cpi={f"{x.get('year')}-{int(x.get('period','M00')[1:]):02d}":float(x['value']) for x in bls.get('CUSR0000SA0',[]) if str(x.get('period','')).startswith('M') and x.get('period')!='M13' and str(x.get('value','')).replace('.','',1).isdigit()}
+        unemp={f"{x.get('year')}-{int(x.get('period','M00')[1:]):02d}":float(x['value']) for x in bls.get('LNS14000000',[]) if str(x.get('period','')).startswith('M') and x.get('period')!='M13' and str(x.get('value','')).replace('.','',1).isdigit()}
+        for ym,v in cpi.items():
+            y,m=map(int,ym.split('-')); dt=f'{y:04d}-{m:02d}-01'; row=by_day.setdefault(dt,{'ts':dt+'T00:00:00+08:00'})
+            row['_bls_cpi_index']=v; fetched+=1
+            prev=ym
+            py,pm=y,m-12
+            if py>=2019:
+                prev=f'{py:04d}-{pm:02d}'
+                # derive YoY when prior observation exists
+                if prev in cpi and cpi[prev]: row['us_cpi']=(v/cpi[prev]-1)*100
+        for ym,v in unemp.items():
+            y,m=map(int,ym.split('-')); dt=f'{y:04d}-{m:02d}-01'; row=by_day.setdefault(dt,{'ts':dt+'T00:00:00+08:00'})
+            row['us_unemployment']=v; fetched+=1
+        print(f'V2.18.0 BLS歷史補種：{len(cpi)}筆CPI、{len(unemp)}筆失業率',flush=True)
+    except Exception as e:
+        print(f'V2.18.0 BLS歷史補種失敗：{type(e).__name__}: {e}',flush=True)
+    try:
+        # US Treasury daily yield curve CSV：免費官方歷史資料。
+        yr=datetime.now(TW_TZ).year
+        url=f'https://home.treasury.gov/resource-center/data-chart-center/interest-rates/daily-treasury-rates.csv/{yr}/all?type=daily_treasury_yield_curve&field_tdr_date_value={yr}&page&_format=csv'
+        rr=requests.get(url,timeout=max(8,min(15,MACRO_TIMEOUT)),headers=headers)
+        rr.raise_for_status(); td=pd.read_csv(pd.io.common.StringIO(rr.text))
+        date_col=next((c for c in td.columns if 'Date' in str(c)),None)
+        c10=next((c for c in td.columns if str(c).strip().startswith('10 YR')),None)
+        c2=next((c for c in td.columns if str(c).strip().startswith('2 YR')),None)
+        if date_col:
+            for _,r in td.iterrows():
+                dt=str(r[date_col])[:10]
+                try: ten=float(r[c10]) if c10 else None
+                except Exception: ten=None
+                try: two=float(r[c2]) if c2 else None
+                except Exception: two=None
+                row=by_day.setdefault(dt,{'ts':dt+'T00:00:00+08:00'})
+                if ten is not None and math.isfinite(ten): row['us_10y']=ten
+                if ten is not None and two is not None and math.isfinite(ten) and math.isfinite(two): row['us_curve_10y2y']=ten-two
+            fetched+=len(td)
+        print(f'V2.18.0 Treasury歷史補種：{len(td)}筆',flush=True)
+    except Exception as e:
+        print(f'V2.18.0 Treasury歷史補種失敗：{type(e).__name__}: {e}',flush=True)
+    if fetched:
+        hist['items']=sorted(by_day.values(),key=lambda x:str(x.get('ts','')))[-MACRO_HISTORY_MAX_DAYS:]
+        save_json(MACRO_HISTORY_FILE,hist)
+        _MACRO_HISTORY_RUN_CACHE=None
+        print(f'V2.18.0 多來源歷史快取完成：{len(hist["items"])}筆',flush=True)
 
 def _macro_history_append(d):
     """Persist one observation per run.  History is used only for statistical estimates."""
@@ -13180,6 +13252,7 @@ def _macro_series_history(series_key, d=None, min_points=MACRO_FORECAST_MIN_POIN
     """
     global _MACRO_FRED_HISTORY_CACHE, _MACRO_FRED_HISTORY_ATTEMPTED, _MACRO_HISTORY_RUN_CACHE
     if _MACRO_HISTORY_RUN_CACHE is None:
+        _macro_seed_multisource_history()
         hist=load_json(MACRO_HISTORY_FILE); vals_by_key={}
         if isinstance(hist,dict):
             keys=list(MACRO_FRED_SERIES.keys())+['gdp_yoy','cpi_yoy','unemployment','discount_rate','m2_yoy','usd_twd','overnight']
@@ -13666,7 +13739,7 @@ def _trump_translate_title(title):
 def trump_recent_news_factor(symbol=''):
     """V2.17.0：第二層 Trump；AI 語意判斷政策階段、方向與確定性，規則模型作 fallback。"""
     d=_trump_recent_news_fetch(symbol); items=d.get('items',[]) or []; score=int(d.get('score',0) or 0)
-    _trump_ai_needed = bool(items) and (str(symbol).upper() in ('__MARKET__','') or LINE_MODE_ACTIVE)
+    _trump_ai_needed = bool(items) and (str(symbol).upper() in ('__MARKET__','') or LINE_MODE_ACTIVE or _ai_web_enabled('trump'))
     ai_items=_ai_classify_trump_items(symbol,'','',items) if _trump_ai_needed else []
     if ai_items:
         by_id={int(x.get('id')):x for x in ai_items if isinstance(x,dict) and str(x.get('id','')).isdigit()}
@@ -14319,6 +14392,8 @@ def run_webhook_server():
         rows.append(f'<p class="muted">近180日股票／ETF交易：{factor.get("valid_transaction_count",0)} 筆；買進：{factor.get("buy_count",0)}；賣出：{factor.get("sell_count",0)}<br>資料庫已解析交易總筆數：{factor.get("transaction_count",0)}</p></div>')
         news=trump_recent_news_factor()
         ai_trump=_ai_trump_summary(news, factor=factor, portfolio=portfolio)
+        if not isinstance(ai_trump,dict):
+            rows.append('<div class="card"><h2>🤖 AI Trump 狀態</h2><p>⚠️ 本次沒有取得 AI 語意結果；頁面不再假裝成 AI 分析。請確認 Render 的 GEMINI_API_KEY／MISTRAL_API_KEY／GROQ_API_KEY 與 AI_WEB_ANALYSIS_ENABLED。</p></div>')
         rows.append('<div class="card"><h2>🟡 第二層｜最近30日 Trump 政策／交易／產業動向</h2>')
         rows.append(f'<p><b>{html.escape(news.get("state","⚪ 無資料"))}</b>　輔助調整：<b>{int(news.get("factor",0)):+d}</b></p>')
         rows.append(f'<p class="muted">符合條件：{int(news.get("qualified_items",0))} 篇；正面：{int(news.get("positive",0))}；負面：{int(news.get("negative",0))}；中性：{int(news.get("neutral",0))}<br>⚠️ 本層包含官方交易以外的政策／言論／政府投資；政策訊號不等於 Trump 個人持股。</p>')
