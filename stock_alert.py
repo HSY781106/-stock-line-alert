@@ -10779,6 +10779,27 @@ def _line_industry_build_subindustry_menu(parent, u):
                     n=normalize_subindustry(sub)
                     if n and _line_industry_norm(n) not in blocked and n not in options: options.append(n)
     if options: return sorted(options,key=lambda x:(_line_industry_norm(x),x))
+
+    # V2.15.4 final：若 Render 本機/遠端股票次產業資料暫時不可讀，
+    # 直接使用 GitHub Actions 已建立的官方 parent -> subindustry 索引。
+    # 這個索引不是股票硬編碼，而是 Actions 從官方 records 建出的 48/966 動態索引。
+    try:
+        menu_cache = load_json(INDUSTRY_MENU_CACHE_FILE)
+        menu_data = menu_cache.get('data',{}) if isinstance(menu_cache,dict) else {}
+        if isinstance(menu_data,dict):
+            for k,v in menu_data.items():
+                if _line_industry_norm(k) != _line_industry_norm(parent_c):
+                    continue
+                if isinstance(v,list):
+                    for sub in v:
+                        n=normalize_subindustry(sub)
+                        if n and _line_industry_norm(n) not in blocked and n not in options:
+                            options.append(n)
+                break
+    except Exception as e:
+        print(f'V2.15.4 產業索引備援失敗：{type(e).__name__}: {e}',flush=True)
+    if options: return sorted(options,key=lambda x:(_line_industry_norm(x),x))
+
     for sub_norm,forced_parent in LINE_SUBINDUSTRY_PARENT_OVERRIDES.items():
         if canonical_industry(forced_parent)==parent_c and sub_norm not in blocked:
             options.append('建設業' if sub_norm==_line_industry_norm('建設業') else '營建業')
