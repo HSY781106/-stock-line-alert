@@ -192,7 +192,9 @@ _TRUMP_RECENT_NEWS_CACHE = {}
 # V2.14.42：獨立總經風險引擎。資料來源：FRED graph CSV + 台灣央行/主計總處公開 JSON。
 MACRO_CACHE_FILE = 'macro_systemic_cache_v21442.json'
 MACRO_CACHE_HOURS = 6
-MACRO_CACHE_VERSION = 3
+MACRO_CACHE_VERSION = 4
+LINE_INDUSTRY_MENU_CACHE_VERSION = 2
+_MACRO_RUNTIME_CACHE = {'cached_at': 0.0, 'data': None}
 MACRO_TIMEOUT = 10
 FRED_GRAPH_URL = 'https://fred.stlouisfed.org/graph/fredgraph.csv?id={series}'
 DGBAS_NEWS_JSON_URL = 'https://www.dgbas.gov.tw/OpenData.aspx?SN=5B2F388DBDFAF866'
@@ -10674,13 +10676,23 @@ def _line_industry_resolve_from_session(text, target):
             chosen = options[i - 1]
             if session.get('level') == 'parent':
                 return {'type': 'parent', 'name': chosen}
-            return {'type': 'subindustry', 'name': chosen, 'parent': session.get('parent') or ''}
+            selected_parent = session.get('parent') or ''
+            forced_parent = _line_industry_parent_for_subindustry(chosen)
+            effective_parent = forced_parent or selected_parent
+            if forced_parent and canonical_industry(selected_parent) != canonical_industry(forced_parent):
+                return None
+            return {'type': 'subindustry', 'name': chosen, 'parent': effective_parent}
     nq = _line_industry_norm(q)
     for option in options:
         if nq == _line_industry_norm(option):
             if session.get('level') == 'parent':
                 return {'type': 'parent', 'name': option}
-            return {'type': 'subindustry', 'name': option, 'parent': session.get('parent') or ''}
+            selected_parent = session.get('parent') or ''
+            forced_parent = _line_industry_parent_for_subindustry(option)
+            effective_parent = forced_parent or selected_parent
+            if forced_parent and canonical_industry(selected_parent) != canonical_industry(forced_parent):
+                return None
+            return {'type': 'subindustry', 'name': option, 'parent': effective_parent}
     return None
 
 
@@ -10717,7 +10729,7 @@ def _line_extract_analysis_scores(text):
     )
 
 
-# V2.14.45：官方產業價值鏈的「次產業」與 TWSE 大產業不是一對一字串關係。
+# V2.14.46：官方產業價值鏈的「次產業」與 TWSE 大產業不是一對一字串關係。
 # 明確的官方節點若被舊快取掛到錯誤 parent，必須以正確 parent 為準。
 LINE_SUBINDUSTRY_PARENT_OVERRIDES = {
     _line_industry_norm('建設業'): '建材營造',
@@ -10728,79 +10740,63 @@ def _line_industry_parent_for_subindustry(subindustry):
     return LINE_SUBINDUSTRY_PARENT_OVERRIDES.get(_line_industry_norm(subindustry))
 
 
-def _line_industry_build_subindustry_menu(parent, u):
-    """V2.14.45：次產業選單必須維持「大產業→官方次產業」一對一階層。
+def _line_industry_strict_parent_subindustry_map(data):
+    """V2.14.46：只接受官方 value-chain record 明確標示的 parent -> subindustry 關係。
 
-    舊版先讀 industry_subindustry_menu_cache，若舊快取曾混入跨產業次產業，
-    就會出現「水泥工業 → 建設業」這類錯配。現在優先由 subindustry_cache 的
-    records 重新建立 parent/sub 關係；只有完全沒有 records 才退回舊索引。
+    不再從每檔股票扁平化後的 subindustries 反推 parent，避免同一股票的多條價值鏈
+    被錯掛到另一個大產業。舊 flat cache 只能當最後備援，而且不允許跨 parent 猜測。
+    """
+    mapping = {}
+    if not isinstance(data, dict):
+        return mapping
+    for info in data.values():
+        if not isinstance(info, dict):
+            continue
+        records = info.get('records')
+        if not isinstance(records, list):
+            continue
+        for rec in records:
+            if not isinstance(rec, dict):
+                continue
+            parent = canonical_industry(rec.get('industry') or rec.get('main_industry') or '')
+            sub = normalize_subindustry(rec.get('sub_industry') or rec.get('subindustry') or rec.get('node') or '')
+            if not parent or not sub:
+                continue
+            mapping.setdefault(_line_industry_norm(parent), {'parent': parent, 'subs': set()})['subs'].add(sub)
+    return mapping
+
+
+def _line_industry_build_subindustry_menu(parent, u):
+    """V2.14.46：嚴格 parent → official subindustry 選單。
+
+    核心規則：
+    1. 優先使用 subindustry_cache.records 的明確 parent 欄位。
+    2. 不使用股票扁平化 subindustries 推導 parent。
+    3. 不使用舊 flat menu cache 來猜跨 parent 關係。
+    4. 建設業的正確 parent 為建材營造；若舊快取仍殘留水泥工業→建設業，直接排除。
     """
     parent_c = canonical_industry(parent)
-    override_subs = {k for k,v in LINE_SUBINDUSTRY_PARENT_OVERRIDES.items() if canonical_industry(v)==parent_c}
-    blocked_subs = {k for k,v in LINE_SUBINDUSTRY_PARENT_OVERRIDES.items() if canonical_industry(v)!=parent_c}
-    options = []
-
     data = _line_industry_load_data()
-    if isinstance(data, dict) and data:
-        for info in data.values():
-            if not isinstance(info, dict):
-                continue
-            records = info.get('records', [])
-            if isinstance(records, list) and records:
-                for rec in records:
-                    if not isinstance(rec, dict):
-                        continue
-                    rec_parent = canonical_industry(rec.get('industry') or rec.get('main_industry') or '')
-                    if rec_parent != parent_c:
-                        continue
-                    n = normalize_subindustry(rec.get('sub_industry') or rec.get('subindustry') or rec.get('node') or '')
-                    if _line_industry_norm(n) in blocked_subs:
-                        continue
-                    if n and n not in options:
-                        options.append(n)
-            else:
-                info_parent = canonical_industry(info.get('industry') or info.get('main_industry') or '')
-                if info_parent != parent_c:
-                    continue
-                subs = info.get('subindustries', []) or []
-                if not isinstance(subs, list):
-                    subs = [subs]
-                for sub in subs:
-                    n = normalize_subindustry(sub)
-                    if _line_industry_norm(n) in blocked_subs:
-                        continue
-                    if n and n not in options:
-                        options.append(n)
-        if options:
-            return sorted(options, key=lambda x: (_line_industry_norm(x), x))
+    strict = _line_industry_strict_parent_subindustry_map(data)
+    entry = strict.get(_line_industry_norm(parent_c))
+    options = set()
+    if entry:
+        options.update(entry.get('subs') or set())
 
-    # 舊快取／GitHub 索引僅作最後備援，不再優先於官方 records。
-    def collect(menu_data):
-        if not isinstance(menu_data, dict):
-            return False
-        found = False
-        for key, values in menu_data.items():
-            if canonical_industry(key) != parent_c:
-                continue
-            found = True
-            if not isinstance(values, list):
-                values = [values]
-            for sub in values:
-                n = normalize_subindustry(sub)
-                if n and n not in options:
-                    options.append(n)
-        return found
+    # 已知官方層級校正：只在建材營造出現建設業，不允許水泥工業掛載。
+    if parent_c != canonical_industry('建材營造'):
+        options.discard('建設業')
+        options.discard('營建業')
+    else:
+        # 若 records 已明確存在，確保正規名稱一致。
+        if any(_line_industry_norm(x) in {_line_industry_norm('建設業'), _line_industry_norm('營建業')} for x in options):
+            options = {('建設業' if _line_industry_norm(x) in {_line_industry_norm('建設業'), _line_industry_norm('營建業')} else x) for x in options}
 
-    menu_cache = load_json(INDUSTRY_MENU_CACHE_FILE)
-    menu_data = menu_cache.get('data', {}) if isinstance(menu_cache, dict) else {}
-    if collect(menu_data) and options:
+    if options:
         return sorted(options, key=lambda x: (_line_industry_norm(x), x))
 
-    remote_menu = load_remote_json_cache(INDUSTRY_MENU_CACHE_FILE, timeout=LINE_REMOTE_CACHE_TIMEOUT)
-    remote_data = remote_menu.get('data', {}) if isinstance(remote_menu, dict) else {}
-    if collect(remote_data) and options:
-        return sorted(options, key=lambda x: (_line_industry_norm(x), x))
-
+    # 沒有 records 時，只從「該 parent 的股票」取得已掛載次產業作保守備援。
+    # 這裡仍套用已知錯配阻擋，寧可少一項也不製造錯誤階層。
     if isinstance(u, dict):
         for item in u.values():
             if not isinstance(item, dict) or canonical_industry(item.get('industry')) != parent_c:
@@ -10810,8 +10806,11 @@ def _line_industry_build_subindustry_menu(parent, u):
                 subs = [subs]
             for sub in subs:
                 n = normalize_subindustry(sub)
-                if n and n not in options:
-                    options.append(n)
+                if not n:
+                    continue
+                if parent_c != canonical_industry('建材營造') and _line_industry_norm(n) in {_line_industry_norm('建設業'), _line_industry_norm('營建業')}:
+                    continue
+                options.add(n)
     return sorted(options, key=lambda x: (_line_industry_norm(x), x))
 
 def _line_industry_fetch_parent_data(parent, u):
@@ -12164,53 +12163,98 @@ def _trump_news_company_name(symbol):
     return sym
 
 
-def _macro_fred_latest(series_id, derive_yoy=False):
-    """V2.14.45：FRED CSV 主路徑 + TLS/HTTP 備援；VIX 也改由 FRED 統一取得。"""
-    url=FRED_GRAPH_URL.format(series=quote(series_id))
+def _macro_fred_batch_latest(series_map):
+    """V2.14.46：一次 HTTP 取得全部 FRED series，避免 7 個序列逐一 timeout。"""
+    ids=','.join(str(x) for x in series_map.values())
+    url=FRED_GRAPH_URL.format(series=quote(ids))
     last_err=None
-    texts=[]
     for verify in (True, False):
         try:
-            r=requests.get(url,timeout=MACRO_TIMEOUT,headers={'User-Agent':'Mozilla/5.0 stock-alert/2.14.45','Accept':'text/csv,*/*'},verify=verify)
+            r=requests.get(url, timeout=max(8, MACRO_TIMEOUT), headers={'User-Agent':'Mozilla/5.0 stock-alert/2.14.46','Accept':'text/csv,*/*'}, verify=verify)
             r.raise_for_status()
-            if r.text and ',' in r.text[:500]:
-                texts.append(r.text)
-                break
+            text=r.text or ''
+            if ',' not in text[:1000]:
+                raise RuntimeError('FRED CSV 格式異常')
+            df=pd.read_csv(pd.io.common.StringIO(text))
+            if df.empty or len(df.columns)<2:
+                raise RuntimeError('FRED CSV 無有效觀測值')
+            date_col=df.columns[0]
+            out={}
+            for key,sid in series_map.items():
+                col=sid if sid in df.columns else None
+                if col is None:
+                    # 某些 FRED 版本可能回傳小寫欄名。
+                    for c in df.columns[1:]:
+                        if str(c).upper()==str(sid).upper(): col=c; break
+                if col is None: continue
+                vals=pd.to_numeric(df[col],errors='coerce')
+                valid=df.loc[vals.notna(), [date_col,col]].copy()
+                if valid.empty: continue
+                row=valid.iloc[-1]
+                out[key]={'value':float(row[col]),'date':str(row[date_col]),'series':sid,'unit':'YoY %' if key=='us_cpi' else ''}
+            if out:
+                return out
+            raise RuntimeError('FRED CSV 無可用序列')
         except Exception as e:
             last_err=e
-    if not texts:
-        raise last_err or RuntimeError('FRED CSV 無資料')
-    df=pd.read_csv(pd.io.common.StringIO(texts[0]))
-    if df.empty or len(df.columns)<2: return None,None
-    value_col=df.columns[-1]
-    df[value_col]=pd.to_numeric(df[value_col],errors='coerce')
-    df=df.dropna(subset=[value_col]).reset_index(drop=True)
-    if df.empty: return None,None
-    if derive_yoy and len(df)>=13:
-        latest=float(df.iloc[-1][value_col]); prev=float(df.iloc[-13][value_col])
-        if prev!=0: return (latest/prev-1)*100, str(df.iloc[-1].iloc[0])
-    row=df.iloc[-1]
-    return float(row[value_col]),str(row.iloc[0])
+    raise last_err or RuntimeError('FRED 取得失敗')
 
+
+def _macro_fred_latest(series_id, derive_yoy=False):
+    """V2.14.46：單一 FRED 序列備援。"""
+    url=FRED_GRAPH_URL.format(series=quote(series_id))
+    last_err=None
+    for verify in (True, False):
+        try:
+            r=requests.get(url,timeout=MACRO_TIMEOUT,headers={'User-Agent':'Mozilla/5.0 stock-alert/2.14.46','Accept':'text/csv,*/*'},verify=verify)
+            r.raise_for_status()
+            df=pd.read_csv(pd.io.common.StringIO(r.text))
+            if df.empty or len(df.columns)<2: raise RuntimeError('FRED CSV 無資料')
+            value_col=df.columns[-1]
+            df[value_col]=pd.to_numeric(df[value_col],errors='coerce')
+            df=df.dropna(subset=[value_col]).reset_index(drop=True)
+            if df.empty: raise RuntimeError('FRED 無有效觀測值')
+            if derive_yoy and len(df)>=13:
+                latest=float(df.iloc[-1][value_col]); prev=float(df.iloc[-13][value_col])
+                if prev!=0: return (latest/prev-1)*100, str(df.iloc[-1].iloc[0])
+            row=df.iloc[-1]
+            return float(row[value_col]),str(row.iloc[0])
+        except Exception as e: last_err=e
+    raise last_err or RuntimeError('FRED 取得失敗')
 
 def _macro_dgbas_latest():
-    """V2.14.45：直接讀主計總處新聞稿頁，從最新公開標題擷取 GDP/CPI/失業率。"""
-    out={'gdp_yoy':None,'cpi_yoy':None,'unemployment':None,'sources':[DGBAS_NEWS_PAGE_URL],'published':{}}
-    r=requests.get(DGBAS_NEWS_PAGE_URL,timeout=MACRO_TIMEOUT,headers={'User-Agent':'Mozilla/5.0 stock-alert/2.14.45'})
-    r.raise_for_status()
-    text=re.sub(r'<[^>]+>',' ',r.text); text=html.unescape(re.sub(r'\s+',' ',text))
-    # 頁面本身按日期由新到舊排列；取第一個符合的值即可。
-    m=re.search(r'經濟成長率[^<]{0,180}?yoy\s*為\s*([0-9]+(?:\.[0-9]+)?)',text,re.I)
-    if m: out['gdp_yoy']=float(m.group(1))
-    m=re.search(r'消費者物價指數\(CPI\)[^<]{0,180}?年增率漲\s*([0-9]+(?:\.[0-9]+)?)',text,re.I)
-    if m: out['cpi_yoy']=float(m.group(1))
-    m=re.search(r'失業率為\s*([0-9]+(?:\.[0-9]+)?)\s*%',text,re.I)
-    if m: out['unemployment']=float(m.group(1))
+    """V2.14.46：主計總處總體統計資料庫優先，新聞頁僅作備援。"""
+    out={'gdp_yoy':None,'cpi_yoy':None,'unemployment':None,'sources':[DGBAS_NEWS_PAGE_URL,'https://astatdb.dgbas.gov.tw/'] ,'published':{}}
+    urls=['https://astatdb.dgbas.gov.tw/','https://www.dgbas.gov.tw/News.aspx?n=3602&sms=10980']
+    last=None
+    for url in urls:
+        try:
+            r=requests.get(url,timeout=MACRO_TIMEOUT,headers={'User-Agent':'Mozilla/5.0 stock-alert/2.14.46','Accept':'text/html,*/*'})
+            r.raise_for_status()
+            text=html.unescape(re.sub(r'<[^>]+>',' ',r.text)); text=re.sub(r'\s+',' ',text)
+            patterns=[
+                ('gdp_yoy', r'(?:經濟成長率|GDP)[^%]{0,180}?(?:yoy|年增率|成長率)[^0-9]{0,40}([0-9]+(?:\.[0-9]+)?)\s*%'),
+                ('cpi_yoy', r'(?:消費者物價指數(?:\(CPI\))?|CPI)[^%]{0,180}?(?:年增率|漲)[^0-9]{0,40}([0-9]+(?:\.[0-9]+)?)\s*%'),
+                ('unemployment', r'(?:失業率)[^%]{0,120}?([0-9]+(?:\.[0-9]+)?)\s*%'),
+            ]
+            for k,patt in patterns:
+                m=re.search(patt,text,re.I)
+                if m and out[k] is None:
+                    v=float(m.group(1))
+                    if k=='gdp_yoy' and -20<=v<=30: out[k]=v
+                    elif k=='cpi_yoy' and -10<=v<=20: out[k]=v
+                    elif k=='unemployment' and 0<=v<=15: out[k]=v
+            if any(out[k] is not None for k in ('gdp_yoy','cpi_yoy','unemployment')):
+                out['source_used']=url
+                # 不必等第二個來源；缺項仍可由新聞頁補抓。
+                if all(out[k] is not None for k in ('gdp_yoy','cpi_yoy','unemployment')): break
+        except Exception as e: last=e
+    if not any(out[k] is not None for k in ('gdp_yoy','cpi_yoy','unemployment')) and last:
+        raise last
     return out
 
-
 def _macro_cbc_latest():
-    """V2.14.45：改用央行「重要指標」專頁，不再從首頁長文字區段取最後數字。"""
+    """V2.14.46：改用央行「重要指標」專頁，不再從首頁長文字區段取最後數字。"""
     out={'usd_twd':None,'m2_yoy':None,'overnight':None,'discount_rate':None,'source':CBC_KEY_INDICATORS_URL}
     r=requests.get(CBC_KEY_INDICATORS_URL,timeout=MACRO_TIMEOUT,headers={'User-Agent':'Mozilla/5.0 stock-alert/2.14.45'})
     r.raise_for_status(); text=html.unescape(re.sub(r'<[^>]+>',' ',r.text)); text=re.sub(r'\s+',' ',text)
@@ -12234,36 +12278,56 @@ def _macro_cbc_latest():
 
 
 def macro_fetch(force=False):
-    """V2.14.42：台美總經資料中心；失敗單項不污染其他指標。"""
-    now=time.time(); cached=load_json(MACRO_CACHE_FILE)
+    """V2.14.46：單次 workflow 記憶體快取 + FRED batch + 單項保留上次有效值。"""
+    global _MACRO_RUNTIME_CACHE
+    now=time.time()
+    if not force and _MACRO_RUNTIME_CACHE.get('data') is not None and now-float(_MACRO_RUNTIME_CACHE.get('cached_at',0)) < MACRO_CACHE_HOURS*3600:
+        return _MACRO_RUNTIME_CACHE['data']
+    cached=load_json(MACRO_CACHE_FILE)
     if not force and isinstance(cached,dict) and cached.get('data') and int(cached.get('_version',0) or 0)>=MACRO_CACHE_VERSION and now-float(cached.get('_cached_at',0) or 0)<MACRO_CACHE_HOURS*3600:
-        return cached.get('data',{})
+        d=cached.get('data',{})
+        _MACRO_RUNTIME_CACHE={'cached_at':now,'data':d}
+        return d
     d={'updated_at':datetime.now(TW_TZ).isoformat(),'us':{},'taiwan':{},'sources':{},'errors':[]}
-    for key,sid in MACRO_FRED_SERIES.items():
-        try:
-            v,dt=_macro_fred_latest(sid, derive_yoy=(key=='us_cpi')); d['us'][key]={'value':v,'date':dt,'series':sid, 'unit':'YoY %' if key=='us_cpi' else ''}
-        except Exception as e: d['errors'].append(f'FRED {sid}: {type(e).__name__}: {e}')
+    old=(cached.get('data',{}) if isinstance(cached,dict) else {})
+    # FRED 一次抓全部；失敗時不再逐序列等 7 次 timeout，改由少數 Yahoo/舊值備援。
     try:
-        tw=_macro_dgbas_latest(); d['taiwan'].update({k:tw.get(k) for k in ('gdp_yoy','cpi_yoy','unemployment')}); d['sources']['dgbas']=DGBAS_NEWS_JSON_URL
+        fred=_macro_fred_batch_latest(MACRO_FRED_SERIES)
+        d['us'].update(fred); d['sources']['fred']='https://fred.stlouisfed.org/graph/fredgraph.csv'
+    except Exception as e:
+        d['errors'].append(f'FRED batch: {type(e).__name__}: {e}')
+        for key in ('fed_rate','us_10y','us_curve_10y2y','vix'):
+            z=(old.get('us',{}).get(key,{}) if isinstance(old,dict) else {})
+            if isinstance(z,dict) and z.get('value') is not None: d['us'][key]=z
+        # Yahoo 只作市場即時序列備援，不拿來冒充 CPI/GDP。
+        for key,ticker in (('us_10y','^TNX'),('vix','^VIX')):
+            if key in d['us']: continue
+            try:
+                v=to_float(yf.Ticker(ticker).fast_info.get('last_price'))
+                if v is not None:
+                    if key=='us_10y': v=v/10.0
+                    d['us'][key]={'value':v,'date':datetime.now(TW_TZ).date().isoformat(),'series':ticker,'unit':''}
+            except Exception as e2: d['errors'].append(f'Yahoo {ticker}: {type(e2).__name__}: {e2}')
+    try:
+        tw=_macro_dgbas_latest(); d['taiwan'].update({k:tw.get(k) for k in ('gdp_yoy','cpi_yoy','unemployment') if tw.get(k) is not None}); d['sources']['dgbas']=tw.get('source_used') or DGBAS_NEWS_PAGE_URL
     except Exception as e: d['errors'].append(f'DGBAS: {type(e).__name__}: {e}')
     try:
-        twc=_macro_cbc_latest(); d['taiwan'].update(twc); d['sources']['cbc']=CBC_HOME_URL
+        twc=_macro_cbc_latest(); d['taiwan'].update({k:v for k,v in twc.items() if k in ('usd_twd','m2_yoy','overnight','discount_rate') and v is not None}); d['sources']['cbc']=CBC_KEY_INDICATORS_URL
     except Exception as e: d['errors'].append(f'CBC: {type(e).__name__}: {e}')
-    # 所有來源都失敗時不建立空快取，下一次仍可重試；部分來源成功則保留可用資料。
-    success_count=sum(1 for v in d.get('us',{}).values() if isinstance(v,dict) and v.get('value') is not None) + sum(1 for k in ('gdp_yoy','cpi_yoy','unemployment','usd_twd','m2_yoy','overnight','discount_rate') if d.get('taiwan',{}).get(k) is not None)
+    # 每個指標獨立沿用上次有效值，不讓一個來源失敗把整頁變 N/A。
+    for key in ('fed_rate','us_cpi','us_gdp_growth','us_unemployment','us_10y','us_curve_10y2y','vix'):
+        if key not in d['us'] or d['us'][key].get('value') is None:
+            z=old.get('us',{}).get(key,{}) if isinstance(old,dict) else {}
+            if isinstance(z,dict) and z.get('value') is not None: d['us'][key]=z
+    for key in ('gdp_yoy','cpi_yoy','unemployment','usd_twd','m2_yoy','overnight','discount_rate'):
+        if d['taiwan'].get(key) is None:
+            z=old.get('taiwan',{}).get(key) if isinstance(old,dict) else None
+            if z is not None: d['taiwan'][key]=z
+    success_count=sum(1 for v in d.get('us',{}).values() if isinstance(v,dict) and v.get('value') is not None)+sum(1 for k in ('gdp_yoy','cpi_yoy','unemployment','usd_twd','m2_yoy','overnight','discount_rate') if d.get('taiwan',{}).get(k) is not None)
     if success_count>0:
         payload={'_cached_at':now,'_version':MACRO_CACHE_VERSION,'data':d}; save_json(MACRO_CACHE_FILE,payload)
-        return d
-    # V2.14.45：網頁／Render 不應因外部宏觀資料源暫時逾時而整頁空白。
-    # 若本次全部來源失敗，保留上一份可用快取並標示為 stale。
-    if isinstance(cached,dict) and isinstance(cached.get('data'),dict) and cached.get('data'):
-        stale=dict(cached.get('data') or {})
-        stale['_stale']=True
-        stale['_stale_cached_at']=cached.get('_cached_at')
-        stale['errors']=d.get('errors',[])
-        return stale
+    _MACRO_RUNTIME_CACHE={'cached_at':now,'data':d}
     return d
-
 
 def macro_profile_for_stock(industry, subindustries=None, name=''):
     """V2.14.42：只挑與個股經營模式有關的總經變數，避免所有股票套同一套指標。"""
@@ -12391,7 +12455,7 @@ def _trump_recent_news_fetch(symbol=''):
 
 
 def _trump_translate_title(title):
-    """V2.14.45：繁中翻譯三層備援：Google GTX -> MyMemory -> 原文。"""
+    """V2.14.46：繁中翻譯三層備援：Google GTX -> MyMemory -> 原文。"""
     text=str(title or '').strip()
     if not text or not re.search(r'[A-Za-z]',text): return text
     cache=globals().setdefault('_TRUMP_TRANSLATION_CACHE',{}); key=text[:500]
@@ -12779,7 +12843,7 @@ def run_webhook_server():
         return (
             '<!doctype html><html><head><meta charset="utf-8">'
             '<meta name="viewport" content="width=device-width,initial-scale=1">'
-            '<title>Stock Alert V2.14.44</title>'
+            '<title>Stock Alert V2.14.46</title>'
             '<style>body{margin:0;padding:20px;background:#f6f7f9;color:#222}'
             '.card{max-width:900px;margin:auto;background:#fff;border-radius:14px;padding:20px;box-shadow:0 2px 12px #0001}'
             'a{word-break:break-all}</style></head><body><div class="card">'
@@ -12837,7 +12901,7 @@ def run_webhook_server():
             result=_line_industry_top3_analysis(sub,u,html_links=True,parent=display_parent)
         except Exception as ex:
             result=f'❌ 分析失敗：{type(ex).__name__}: {ex}'
-        # V2.14.45：保留 Top3 內的 /stock 超連結，但把換行轉成真正的 HTML 換行，避免手機瀏覽器全部擠成一行。
+        # V2.14.46：保留 Top3 內的 /stock 超連結，但把換行轉成真正的 HTML 換行，避免手機瀏覽器全部擠成一行。
         result_html = str(result).replace('\n', '<br>')
         body=(
             f'<div class="card"><h1>📊 {html.escape(sub)}</h1><div class="muted">大產業：{html.escape(display_parent)}</div><div class="industry-result">{result_html}</div></div>'
@@ -12874,9 +12938,7 @@ def run_webhook_server():
             body.append('<h2>🇹🇼 台灣</h2>')
             for label,key,suf in [('GDP YoY','gdp_yoy','%'),('CPI YoY','cpi_yoy','%'),('失業率','unemployment','%'),('重貼現率','discount_rate','%'),('M2年增','m2_yoy','%'),('USD/TWD','usd_twd','')]:
                 v=tw.get(key); body.append(f'<p><b>{label}</b>：{("N/A" if v is None else f"{v:.2f}{suf}")}</p>')
-            try:
-                v=to_float(yf.Ticker('^VIX').fast_info.get('last_price')); body.append(f'<p><b>VIX</b>：{("N/A" if v is None else f"{v:.2f}")}</p>')
-            except Exception: body.append('<p><b>VIX</b>：N/A</p>')
+            v=mv('vix'); body.append(f'<p><b>VIX</b>：{("N/A" if v is None else f"{v:.2f}")}</p>')
             body.append('<p class="muted">資料來源：FRED、台灣央行、主計總處公開資料。更新：'+html.escape(str(d.get('updated_at','')))+'</p>')
             body.append('<h2>📌 個股使用方式</h2><p>科技/出口股偏重美國景氣、Fed、10Y、台灣GDP、匯率；內需股偏重台灣GDP、CPI、失業率、利率；金融股偏重Fed、10Y與殖利率曲線。</p>')
             body.append('<div class="nav"><a href="/industry">🏭 產業</a><a href="/trump">🇺🇸 Trump</a><a href="/">首頁</a></div>')
@@ -14298,10 +14360,10 @@ def main():
 
     else:
 
-        print('========== V2.14.45 RUN START ==========', flush=True)
+        print('========== V2.14.46 RUN START ==========', flush=True)
         print(f'執行時間（台灣）：{datetime.now(TW_TZ).strftime("%Y-%m-%d %H:%M:%S")}', flush=True)
         run_alerts()
-        print('========== V2.14.45 RUN END ==========', flush=True)
+        print('========== V2.14.46 RUN END ==========', flush=True)
 
 
 if __name__ == '__main__':
