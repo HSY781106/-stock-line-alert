@@ -1,5 +1,5 @@
-# stock_alert.py V2.17.1
-# V2.17.1：AI 僅在「已達到 LINE 發送門檻」後啟用；其餘每15分鐘掃描完全不呼叫 AI。
+# stock_alert.py V2.17.2
+# V2.17.2：AI 僅在「已達到 LINE 發送門檻」後啟用；其餘每15分鐘掃描完全不呼叫 AI。
 # V2.17.0 功能全部保留：Gemini Free 主力 + Mistral/Groq Free 備援、重大消息、Trump 語意、總經預測。
 # V2.15.6：外部產業網頁正確性＋效能修正版：官方價值鏈候選池改為資料驅動，不再只依賴同大產業 Top120；
 #             個股對應產業 Top3 與指定次產業 Top3 共用官方次產業候選邏輯；修正市值顯示單位 1000 倍錯誤；
@@ -209,7 +209,7 @@ MACRO_NEWS_CACHE_HOURS = 3
 MACRO_FORECAST_HORIZONS = (1, 3, 6)
 MACRO_FORECAST_MIN_POINTS = 8
 MACRO_NEWS_MAX_ITEMS = 12
-MACRO_TIMEOUT = int(os.getenv('MACRO_TIMEOUT', '30') or 30)
+MACRO_TIMEOUT = min(int(os.getenv('MACRO_TIMEOUT', '12') or 12), 15)
 
 # ============================================================
 # V2.17.0 免費 AI 語意引擎
@@ -421,7 +421,7 @@ LINE_ANALYSIS_EXECUTOR = ThreadPoolExecutor(
 
 # LINE webhook 可能因網路重試而重送同一事件；避免同一個 event 被分析兩次。
 LINE_MODE_ACTIVE = False
-# V2.17.1：自動15分鐘掃描時，只有已確認達到 LINE 通知門檻才允許 AI。
+# V2.17.2：自動15分鐘掃描時，只有已確認達到 LINE 通知門檻才允許 AI。
 # LINE 使用者主動查詢仍可使用 AI，不受此自動警報閘門限制。
 AI_ALERT_MODE_ACTIVE = False
 
@@ -1073,7 +1073,7 @@ def save_json(f, d):
 _AI_SEMANTIC_RUN_CACHE = {}
 
 def _ai_enabled(kind='all'):
-    # V2.17.1：自動15分鐘模式採「先規則、後 AI」；只有已進入通知流程才開 AI。
+    # V2.17.2：自動15分鐘模式採「先規則、後 AI」；只有已進入通知流程才開 AI。
     # LINE webhook 主動查詢仍可使用 AI。
     if not LINE_MODE_ACTIVE and not AI_ALERT_MODE_ACTIVE:
         return False
@@ -1121,7 +1121,7 @@ def _ai_json(text):
 
 
 def _ai_budget_today():
-    return datetime.now(timezone.utc).strftime('%Y-%m-%d')
+    return datetime.now(TW_TZ).strftime('%Y-%m-%d')
 
 def _ai_budget_allow_and_reserve():
     today=_ai_budget_today()
@@ -1130,13 +1130,13 @@ def _ai_budget_allow_and_reserve():
         if not isinstance(d,dict) or d.get('date')!=today: d={'date':today,'calls':0}
         calls=int(d.get('calls',0) or 0)
         if calls >= AI_DAILY_MAX_CALLS:
-            print(f'V2.17.1 AI：今日 request 上限 {AI_DAILY_MAX_CALLS}，改用規則 fallback', flush=True)
+            print(f'V2.17.2 AI：今日 request 上限 {AI_DAILY_MAX_CALLS}，改用規則 fallback', flush=True)
             return False
         d['calls']=calls+1; save_json(AI_BUDGET_FILE,d)
-        print(f"V2.17.1 AI：今日 request {d['calls']}/{AI_DAILY_MAX_CALLS}", flush=True)
+        print(f"V2.17.2 AI：今日 request {d['calls']}/{AI_DAILY_MAX_CALLS}", flush=True)
         return True
     except Exception as e:
-        print(f'V2.17.1 AI：預算檔異常，禁止本次 AI 呼叫：{type(e).__name__}: {e}', flush=True)
+        print(f'V2.17.2 AI：預算檔異常，禁止本次 AI 呼叫：{type(e).__name__}: {e}', flush=True)
         return False
 
 
@@ -1238,13 +1238,13 @@ def _ai_call_json(system_prompt, user_prompt, cache_key='', ttl_hours=72):
     - 任何 AI 失敗都 fallback，不阻斷主流程
     """
     if not any(_ai_provider_key(p) for p in _ai_provider_order()):
-        print('V2.17.1 AI：未設定 Gemini/Mistral/Groq API Key，使用規則 fallback', flush=True)
+        print('V2.17.2 AI：未設定 Gemini/Mistral/Groq API Key，使用規則 fallback', flush=True)
         return None
     now=time.time()
     if cache_key:
         c=_AI_SEMANTIC_RUN_CACHE.get(cache_key)
         if isinstance(c,dict) and now-float(c.get('ts',0) or 0)<ttl_hours*3600:
-            print('V2.17.1 AI：memory cache hit', flush=True)
+            print('V2.17.2 AI：memory cache hit', flush=True)
             return c.get('data')
         disk=load_json(AI_NEWS_CACHE_FILE)
         if isinstance(disk,dict):
@@ -1253,7 +1253,7 @@ def _ai_call_json(system_prompt, user_prompt, cache_key='', ttl_hours=72):
                 data=d.get('data')
                 if isinstance(data,dict):
                     _AI_SEMANTIC_RUN_CACHE[cache_key]={'ts':float(d.get('ts',now) or now),'data':data}
-                    print('V2.17.1 AI：disk cache hit', flush=True)
+                    print('V2.17.2 AI：disk cache hit', flush=True)
                     return data
     if not _ai_budget_allow_and_reserve():
         return None
@@ -1262,7 +1262,7 @@ def _ai_call_json(system_prompt, user_prompt, cache_key='', ttl_hours=72):
     for provider in providers:
         for attempt in range(1,attempts+1):
             try:
-                print(f'V2.17.1 AI：provider={provider} request {attempt}/{attempts}', flush=True)
+                print(f'V2.17.2 AI：provider={provider} request {attempt}/{attempts}', flush=True)
                 data=_ai_call_provider(provider,system_prompt,user_prompt)
                 if cache_key:
                     _AI_SEMANTIC_RUN_CACHE[cache_key]={'ts':time.time(),'data':data}
@@ -1273,12 +1273,12 @@ def _ai_call_json(system_prompt, user_prompt, cache_key='', ttl_hours=72):
                         old=sorted(disk,key=lambda z:float(disk[z].get('ts',0) if isinstance(disk[z],dict) else 0))
                         for k in old[:-500]: disk.pop(k,None)
                     save_json(AI_NEWS_CACHE_FILE,disk)
-                print(f'V2.17.1 AI：SUCCESS｜provider={provider}', flush=True)
+                print(f'V2.17.2 AI：SUCCESS｜provider={provider}', flush=True)
                 return data
             except Exception as e:
-                print(f'V2.17.1 AI：FAIL｜provider={provider}｜{type(e).__name__}: {e}', flush=True)
+                print(f'V2.17.2 AI：FAIL｜provider={provider}｜{type(e).__name__}: {e}', flush=True)
                 if attempt<attempts: time.sleep(1.0)
-    print('V2.17.1 AI：所有免費供應商均失敗，使用規則 fallback', flush=True)
+    print('V2.17.2 AI：所有免費供應商均失敗，使用規則 fallback', flush=True)
     return None
 
 
@@ -1298,7 +1298,7 @@ def _ai_runtime_status():
 
 def _print_ai_runtime_status():
     st=_ai_runtime_status()
-    print('========== V2.17.1 AI STATUS ==========', flush=True)
+    print('========== V2.17.2 AI STATUS ==========', flush=True)
     print(f"Gemini API Key：{'已設定' if st['gemini'] else '未設定'}｜模型：{GEMINI_MODEL}", flush=True)
     print(f"Mistral API Key：{'已設定' if st['mistral'] else '未設定'}｜模型：{MISTRAL_MODEL}", flush=True)
     print(f"Groq API Key：{'已設定' if st['groq'] else '未設定'}｜模型：{GROQ_MODEL}", flush=True)
@@ -1569,7 +1569,7 @@ def _news_event_score(title, description='', source='', code='', name=''):
             positive_hits.append((score, label))
 
     if negative_hits:
-        score, label = min(negative_hits, key=lambda x: x[0])
+        score, label = min(negative_hits, key=lambda x: x[0], default=(0, ''))
         distinct = {x[1] for x in negative_hits}
         if len(distinct) >= 2:
             score = min(score - 2, -15)
@@ -1578,7 +1578,7 @@ def _news_event_score(title, description='', source='', code='', name=''):
         return int(max(NEWS_MIN_ADJUSTMENT, score)), label, '重大負面事件', negative_hits, positive_hits
 
     if positive_hits:
-        score, label = max(positive_hits, key=lambda x: x[0])
+        score, label = max(positive_hits, key=lambda x: x[0], default=(0, ''))
         return int(min(NEWS_MAX_ADJUSTMENT, score)), label, '重大正面事件', negative_hits, positive_hits
 
     return 0, '', '', negative_hits, positive_hits
@@ -4116,7 +4116,7 @@ def _drop_alert_analysis_message(name, symbol, u, day, week, cur, pc, wh, daily_
 
 
 def _run_ai_alert_analysis(func, *args, **kwargs):
-    """V2.17.1：進入已觸發 LINE 警報後才暫時開啟 AI。
+    """V2.17.2：進入已觸發 LINE 警報後才暫時開啟 AI。
     分析結束後立即關閉，避免同一輪其他未觸發標的誤用 AI。
     """
     global AI_ALERT_MODE_ACTIVE
@@ -10745,7 +10745,7 @@ def analysis(
         fund_weight_text = "本產業實際配分：N/A（無有效基本面指標）"
 
     # --------------------------------------------------------
-    # V2.17.1 AI 最終整合：只讀取各層既有結果，不改動量化分數。
+    # V2.17.2 AI 最終整合：只讀取各層既有結果，不改動量化分數。
     # --------------------------------------------------------
     ai_final_text=''
     if AI_ENABLE_FINAL_SUMMARY:
@@ -10763,7 +10763,7 @@ def analysis(
             ai_final=_ai_final_investment_summary(_snapshot)
             ai_final_text=_format_ai_final_summary(ai_final)
         except Exception as e:
-            print(f'V2.17.1 AI 最終結論失敗：{type(e).__name__}: {e}',flush=True)
+            print(f'V2.17.2 AI 最終結論失敗：{type(e).__name__}: {e}',flush=True)
     if not ai_final_text and AI_ENABLE_FINAL_SUMMARY:
         # 沒有 API key 時仍提供 deterministic 摘要，避免畫面留白。
         _conflict='投資價值與買點不同步' if ((fs>=24 and buy.get('score',0)<60) or (fs<24 and buy.get('score',0)>=60)) else '各層訊號大致一致'
@@ -13021,7 +13021,7 @@ def _macro_series_history(series_key, d=None, min_points=MACRO_FORECAST_MIN_POIN
                             except Exception: pass
                         return k, list(reversed(arr))
                     except Exception as ex:
-                        print(f'V2.17.1 FRED API失敗 {k}：{type(ex).__name__}',flush=True); return k,[]
+                        print(f'V2.17.2 FRED API失敗 {k}：{type(ex).__name__}',flush=True); return k,[]
                 with ThreadPoolExecutor(max_workers=min(6,len(MACRO_FRED_SERIES))) as ex:
                     for k,arr in ex.map(_fred_api_one, MACRO_FRED_SERIES.items()):
                         if arr:
@@ -13042,12 +13042,16 @@ def _macro_series_history(series_key, d=None, min_points=MACRO_FORECAST_MIN_POIN
                         pairs=[(pairs[i][0],(raw[i]/raw[i-12]-1)*100) for i in range(12,len(raw)) if raw[i-12]!=0]
                     if pairs: cache[key]=pairs
         except Exception as e:
-            print(f'V2.17.1 FRED多序列歷史不足：{type(e).__name__}: {e}',flush=True)
+            print(f'V2.17.2 FRED多序列歷史不足：{type(e).__name__}: {e}',flush=True)
+            # V2.17.2：批次端點若已逾時，不再對同一批序列逐一重打，避免每15分鐘浪費大量執行時間。
+            # 保留既有磁碟歷史／last-known-good；下次執行再重新嘗試。
+            _MACRO_FRED_HISTORY_CACHE = cache
+            return (_MACRO_FRED_HISTORY_CACHE or {}).get(series_key, vals)
 
         def fetch_one(item):
             key,sid=item
             try:
-                rr=requests.get('https://fred.stlouisfed.org/graph/fredgraph.csv',params={'id':sid},timeout=max(12,MACRO_TIMEOUT),headers={'User-Agent':'Mozilla/5.0 stock-alert/2.16.1','Accept':'text/csv,*/*'},verify=False)
+                rr=requests.get('https://fred.stlouisfed.org/graph/fredgraph.csv',params={'id':sid},timeout=min(6, max(4, MACRO_TIMEOUT)),headers={'User-Agent':'Mozilla/5.0 stock-alert/2.16.1','Accept':'text/csv,*/*'},verify=False)
                 rr.raise_for_status(); dd=pd.read_csv(pd.io.common.StringIO(rr.text))
                 if len(dd.columns)<2: return key,[]
                 dc=dd.columns[0]; col=sid if sid in dd.columns else dd.columns[1]
@@ -13057,7 +13061,7 @@ def _macro_series_history(series_key, d=None, min_points=MACRO_FORECAST_MIN_POIN
                     raw=[v for _,v in pairs]; pairs=[(pairs[i][0],(raw[i]/raw[i-12]-1)*100) for i in range(12,len(raw)) if raw[i-12]!=0]
                 return key,pairs
             except Exception as e:
-                print(f'V2.17.1 FRED單序列失敗 {key}: {type(e).__name__}',flush=True); return key,[]
+                print(f'V2.17.2 FRED單序列失敗 {key}: {type(e).__name__}',flush=True); return key,[]
 
         need=[(k,v) for k,v in MACRO_FRED_SERIES.items() if len(cache.get(k,[]))<min_points]
         try:
@@ -13065,7 +13069,7 @@ def _macro_series_history(series_key, d=None, min_points=MACRO_FORECAST_MIN_POIN
                 for key,pairs in ex.map(fetch_one,need):
                     if pairs: cache[key]=pairs
         except Exception as e:
-            print(f'V2.17.1 FRED並行補抓失敗：{type(e).__name__}: {e}',flush=True)
+            print(f'V2.17.2 FRED並行補抓失敗：{type(e).__name__}: {e}',flush=True)
         _MACRO_FRED_HISTORY_CACHE=cache
 
     return (_MACRO_FRED_HISTORY_CACHE or {}).get(series_key,vals)
@@ -14869,7 +14873,7 @@ def _scan_high_score_stocks(u, state):
             risk, rr = score_risk(c['tech'], c['inst'], c['margin'])
             base_total = fs + ts + cs + (10 - risk)
 
-            # V2.17.1：先完全用既有規則新聞判斷；只有「已達到95分通知門檻」後，才開 AI 語意。
+            # V2.17.2：先完全用既有規則新聞判斷；只有「已達到95分通知門檻」後，才開 AI 語意。
             # 一般15分鐘掃描不因 AI 增加成本；AI 只服務真正可能送 LINE 的候選。
             if base_total >= threshold - NEWS_MAX_ADJUSTMENT:
                 # 第一階段：AI 閘門關閉，score_news 只會走規則模型。
@@ -14914,7 +14918,7 @@ def _scan_high_score_stocks(u, state):
                 total_for_rank = total
 
             if total_for_rank >= threshold:
-                # V2.17.1：高分股通知也必須同時回答「值不值得投資」與「現在能不能買」。
+                # V2.17.2：高分股通知也必須同時回答「值不值得投資」與「現在能不能買」。
                 buy = assess_buy_point(c['tech'])
                 results.append({
                     'code': c['code'],
@@ -15076,7 +15080,7 @@ def _notify_target_buy_point(name, symbol, state, u=None):
         # 不另外建立第二套評分模型，避免與既有雙層模型產生分數口徑不一致。
         investment_score = None
         try:
-            # V2.17.1：只有這個「極佳買點通知」已經進入可通知流程時，才開啟 AI。
+            # V2.17.2：只有這個「極佳買點通知」已經進入可通知流程時，才開啟 AI。
             if name in ('0050 元大台灣50', 'QQQ'):
                 full_result = _run_ai_alert_analysis(etf_analysis, name)
             else:
@@ -15490,7 +15494,7 @@ def run_alerts():
                     f'跳過詳細估值'
                 )
 
-            # V2.17.1：指定目標股/ETF 僅在「買點 >=90 + 投資價值 >=90」時主動 LINE；
+            # V2.17.2：指定目標股/ETF 僅在「買點 >=90 + 投資價值 >=90」時主動 LINE；
             # 與既有全市場「投資價值 >=95」通知仍維持各自流程。
             if name in ('0050 元大台灣50', '2330 台積電', 'QQQ'):
                 _notify_target_buy_point(name, symbol, state, u)
@@ -15576,12 +15580,12 @@ def main():
 
     else:
 
-        print('========== V2.17.1 RUN START ==========', flush=True)
+        print('========== V2.17.2 RUN START ==========', flush=True)
         _print_ai_runtime_status()
-        print('V2.17.1 AI 閘門：每15分鐘自動掃描只有達到 LINE 發送門檻後才啟用 AI；未觸發時完全不呼叫 AI', flush=True)
+        print('V2.17.2 AI 閘門：每15分鐘自動掃描只有達到 LINE 發送門檻後才啟用 AI；未觸發時完全不呼叫 AI', flush=True)
         print(f'執行時間（台灣）：{datetime.now(TW_TZ).strftime("%Y-%m-%d %H:%M:%S")}', flush=True)
         run_alerts()
-        print('========== V2.17.1 RUN END ==========', flush=True)
+        print('========== V2.17.2 RUN END ==========', flush=True)
 
 
 if __name__ == '__main__':
