@@ -15,5 +15,49 @@
       ]
     },
     "provider": "groq"
+  },
+  "trump:__MARKET__:72051919c1e87a15f916b62e": {
+    "ts": 1789134036.6862228,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.9,
+          "policy_stage": "unknown",
+          "reason": "投資收益增強",
+          "relevant": true
+        },
+        {
+          "id": 1,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.8,
+          "policy_stage": "unknown",
+          "reason": "預期油價下跌",
+          "relevant": true
+        },
+        {
+          "id": 2,
+          "direction": "negative",
+          "score": -1,
+          "confidence": 0.6,
+          "policy_stage": "unknown",
+          "reason": "政策不確定性",
+          "relevant": true
+        },
+        {
+          "id": 3,
+          "direction": "negative",
+          "score": -3,
+          "confidence": 0.85,
+          "policy_stage": "considering",
+          "reason": "即將加徵關稅",
+          "relevant": true
+        }
+      ]
+    },
+    "provider": "groq"
   }
 }

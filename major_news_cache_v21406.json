@@ -88,19 +88,9 @@
     "lookback_days": 14
   },
   "3711": {
-    "fetched_at": "2026-09-11T13:53:17.115696+08:00",
+    "fetched_at": "2026-09-11T21:41:29.804661+08:00",
     "adjustment": 4,
     "events": [
-      {
-        "title": "3711 日月光投控- 🚨 主力在調節？昨日主動式ETF 減碼這檔！ - 股市爆料同學會 - CMoney",
-        "source": "CMoney",
-        "date": "2026-08-28T15:00:00+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTFBzbHZGdFhOS3pUdm1MOER4T0FhQkthVXM5dGgwcUVtRkVJelZsak5PTmlWLXktUUdHT002X3VrN3NlS1RyZjJNWlNqV3puUmctdE1RNFZ2dzQ?oc=5",
-        "raw_adjustment": 0,
-        "adjustment": 0,
-        "label": "",
-        "status": ""
-      },
       {
         "title": "3711 日月光投控- 下午陪朋友去銀行辦事， 結果因為發生一些小誤會， 讓她當場氣... - 股市爆料同學會 - CMoney",
         "source": "CMoney",
@@ -166,6 +156,16 @@
         "source": "自由時報",
         "date": "2026-09-02T15:00:00+08:00",
         "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE1OMDcxY2xMMm1zWmVoRlhPc0NXaDRMX1Q0Uk11UnpNSFU4Rlloa1FHTzhqWTEycmtnLXRoa0FBOXdWbG44VmxLUU1fa01RTnJMWkozZVRCazQ?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "鉅亨速報- Factset 最新調查：日月光投控(3711-TW)EPS預估上修至18.57元，預估目標價為700元 - TradingView",
+        "source": "TradingView",
+        "date": "2026-09-05T10:10:00+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE91anBCY3dvMU9FQjVwbzhYcWRxTG5hcGhzY2tfWlpaOFJub0R3WV9LWVJyWXNSLUw1VlJfWm11TXg1OGVGZTM4Q2pWV3lZM3dMcUgxNnlWUGR1NmJiYjhnamdDcjE?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
