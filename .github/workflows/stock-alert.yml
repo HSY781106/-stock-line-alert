@@ -1,4 +1,4 @@
-name: Stock Alert V2.18.4
+name: Stock Alert V2.18.5
 
 on:
   schedule:
@@ -35,7 +35,7 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt pypdf
 
-      - name: Run stock alert V2.18.4
+      - name: Run stock alert V2.18.5
         env:
           LINE_CHANNEL_ACCESS_TOKEN: ${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }}
           LINE_CHANNEL_SECRET: ${{ secrets.LINE_CHANNEL_SECRET }}
@@ -66,8 +66,10 @@ jobs:
           AI_MACRO_CACHE_HOURS: '6'
           AI_TRUMP_CACHE_HOURS: '6'
 
-          AI_TIMEOUT: '15'
-          MACRO_TIMEOUT: '12'
+          AI_TIMEOUT: '12'
+          MACRO_TIMEOUT: '8'
+          MACRO_NEWS_TIMEOUT: '4'
+          TRUMP_NEWS_TIMEOUT: '4'
 
         run: python stock_alert.py
 
@@ -78,6 +80,6 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
-          git diff --cached --quiet || git commit -m "Update V2.18.4 alert state, AI cache, macro and Trump intelligence"
+          git diff --cached --quiet || git commit -m "Update V2.18.5 alert state, AI cache, macro and Trump intelligence"
           git pull --rebase origin main || true
           git push origin HEAD:main
