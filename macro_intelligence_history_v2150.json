@@ -524,6 +524,460 @@
       "ts": "09/10/2026T00:00:00+08:00"
     },
     {
+      "ts": "2019-01-01T00:00:00+08:00",
+      "_bls_cpi_index": 252.561,
+      "us_unemployment": 4.0
+    },
+    {
+      "ts": "2019-02-01T00:00:00+08:00",
+      "_bls_cpi_index": 253.319,
+      "us_unemployment": 3.8
+    },
+    {
+      "ts": "2019-03-01T00:00:00+08:00",
+      "_bls_cpi_index": 254.277,
+      "us_unemployment": 3.8
+    },
+    {
+      "ts": "2019-04-01T00:00:00+08:00",
+      "_bls_cpi_index": 255.233,
+      "us_unemployment": 3.7
+    },
+    {
+      "ts": "2019-05-01T00:00:00+08:00",
+      "_bls_cpi_index": 255.296,
+      "us_unemployment": 3.6
+    },
+    {
+      "ts": "2019-06-01T00:00:00+08:00",
+      "_bls_cpi_index": 255.213,
+      "us_unemployment": 3.6
+    },
+    {
+      "ts": "2019-07-01T00:00:00+08:00",
+      "_bls_cpi_index": 255.802,
+      "us_unemployment": 3.7
+    },
+    {
+      "ts": "2019-08-01T00:00:00+08:00",
+      "_bls_cpi_index": 256.036,
+      "us_unemployment": 3.6
+    },
+    {
+      "ts": "2019-09-01T00:00:00+08:00",
+      "_bls_cpi_index": 256.43,
+      "us_unemployment": 3.5
+    },
+    {
+      "ts": "2019-10-01T00:00:00+08:00",
+      "_bls_cpi_index": 257.155,
+      "us_unemployment": 3.6
+    },
+    {
+      "ts": "2019-11-01T00:00:00+08:00",
+      "_bls_cpi_index": 257.879,
+      "us_unemployment": 3.6
+    },
+    {
+      "ts": "2019-12-01T00:00:00+08:00",
+      "_bls_cpi_index": 258.63,
+      "us_unemployment": 3.6
+    },
+    {
+      "ts": "2020-01-01T00:00:00+08:00",
+      "_bls_cpi_index": 259.127,
+      "us_unemployment": 3.6
+    },
+    {
+      "ts": "2020-02-01T00:00:00+08:00",
+      "_bls_cpi_index": 259.25,
+      "us_unemployment": 3.5
+    },
+    {
+      "ts": "2020-03-01T00:00:00+08:00",
+      "_bls_cpi_index": 258.076,
+      "us_unemployment": 4.4
+    },
+    {
+      "ts": "2020-04-01T00:00:00+08:00",
+      "_bls_cpi_index": 256.032,
+      "us_unemployment": 14.8
+    },
+    {
+      "ts": "2020-05-01T00:00:00+08:00",
+      "_bls_cpi_index": 255.802,
+      "us_unemployment": 13.2
+    },
+    {
+      "ts": "2020-06-01T00:00:00+08:00",
+      "_bls_cpi_index": 257.042,
+      "us_unemployment": 11.0
+    },
+    {
+      "ts": "2020-07-01T00:00:00+08:00",
+      "_bls_cpi_index": 258.352,
+      "us_unemployment": 10.2
+    },
+    {
+      "ts": "2020-08-01T00:00:00+08:00",
+      "_bls_cpi_index": 259.316,
+      "us_unemployment": 8.4
+    },
+    {
+      "ts": "2020-09-01T00:00:00+08:00",
+      "_bls_cpi_index": 259.997,
+      "us_unemployment": 7.8
+    },
+    {
+      "ts": "2020-10-01T00:00:00+08:00",
+      "_bls_cpi_index": 260.319,
+      "us_unemployment": 6.9
+    },
+    {
+      "ts": "2020-11-01T00:00:00+08:00",
+      "_bls_cpi_index": 260.911,
+      "us_unemployment": 6.7
+    },
+    {
+      "ts": "2020-12-01T00:00:00+08:00",
+      "_bls_cpi_index": 262.045,
+      "us_unemployment": 6.7
+    },
+    {
+      "ts": "2021-01-01T00:00:00+08:00",
+      "_bls_cpi_index": 262.687,
+      "us_unemployment": 6.4
+    },
+    {
+      "ts": "2021-02-01T00:00:00+08:00",
+      "_bls_cpi_index": 263.579,
+      "us_unemployment": 6.2
+    },
+    {
+      "ts": "2021-03-01T00:00:00+08:00",
+      "_bls_cpi_index": 264.961,
+      "us_unemployment": 6.1
+    },
+    {
+      "ts": "2021-04-01T00:00:00+08:00",
+      "_bls_cpi_index": 266.614,
+      "us_unemployment": 6.1
+    },
+    {
+      "ts": "2021-05-01T00:00:00+08:00",
+      "_bls_cpi_index": 268.383,
+      "us_unemployment": 5.8
+    },
+    {
+      "ts": "2021-06-01T00:00:00+08:00",
+      "_bls_cpi_index": 270.654,
+      "us_unemployment": 5.9
+    },
+    {
+      "ts": "2021-07-01T00:00:00+08:00",
+      "_bls_cpi_index": 271.903,
+      "us_unemployment": 5.4
+    },
+    {
+      "ts": "2021-08-01T00:00:00+08:00",
+      "_bls_cpi_index": 272.676,
+      "us_unemployment": 5.1
+    },
+    {
+      "ts": "2021-09-01T00:00:00+08:00",
+      "_bls_cpi_index": 273.91,
+      "us_unemployment": 4.7
+    },
+    {
+      "ts": "2021-10-01T00:00:00+08:00",
+      "_bls_cpi_index": 276.55,
+      "us_unemployment": 4.5
+    },
+    {
+      "ts": "2021-11-01T00:00:00+08:00",
+      "_bls_cpi_index": 278.919,
+      "us_unemployment": 4.1
+    },
+    {
+      "ts": "2021-12-01T00:00:00+08:00",
+      "_bls_cpi_index": 280.845,
+      "us_unemployment": 3.9
+    },
+    {
+      "ts": "2022-01-01T00:00:00+08:00",
+      "_bls_cpi_index": 282.543,
+      "us_unemployment": 4.0
+    },
+    {
+      "ts": "2022-02-01T00:00:00+08:00",
+      "_bls_cpi_index": 284.5,
+      "us_unemployment": 3.9
+    },
+    {
+      "ts": "2022-03-01T00:00:00+08:00",
+      "_bls_cpi_index": 287.674,
+      "us_unemployment": 3.7
+    },
+    {
+      "ts": "2022-04-01T00:00:00+08:00",
+      "_bls_cpi_index": 288.561,
+      "us_unemployment": 3.7
+    },
+    {
+      "ts": "2022-05-01T00:00:00+08:00",
+      "_bls_cpi_index": 291.298,
+      "us_unemployment": 3.6
+    },
+    {
+      "ts": "2022-06-01T00:00:00+08:00",
+      "_bls_cpi_index": 294.957,
+      "us_unemployment": 3.6
+    },
+    {
+      "ts": "2022-07-01T00:00:00+08:00",
+      "_bls_cpi_index": 294.913,
+      "us_unemployment": 3.5
+    },
+    {
+      "ts": "2022-08-01T00:00:00+08:00",
+      "_bls_cpi_index": 295.097,
+      "us_unemployment": 3.6
+    },
+    {
+      "ts": "2022-09-01T00:00:00+08:00",
+      "_bls_cpi_index": 296.349,
+      "us_unemployment": 3.5
+    },
+    {
+      "ts": "2022-10-01T00:00:00+08:00",
+      "_bls_cpi_index": 298.007,
+      "us_unemployment": 3.6
+    },
+    {
+      "ts": "2022-11-01T00:00:00+08:00",
+      "_bls_cpi_index": 298.786,
+      "us_unemployment": 3.6
+    },
+    {
+      "ts": "2022-12-01T00:00:00+08:00",
+      "_bls_cpi_index": 298.832,
+      "us_unemployment": 3.5
+    },
+    {
+      "ts": "2023-01-01T00:00:00+08:00",
+      "_bls_cpi_index": 300.42,
+      "us_unemployment": 3.5
+    },
+    {
+      "ts": "2023-02-01T00:00:00+08:00",
+      "_bls_cpi_index": 301.45,
+      "us_unemployment": 3.6
+    },
+    {
+      "ts": "2023-03-01T00:00:00+08:00",
+      "_bls_cpi_index": 301.821,
+      "us_unemployment": 3.5
+    },
+    {
+      "ts": "2023-04-01T00:00:00+08:00",
+      "_bls_cpi_index": 302.845,
+      "us_unemployment": 3.4
+    },
+    {
+      "ts": "2023-05-01T00:00:00+08:00",
+      "_bls_cpi_index": 303.334,
+      "us_unemployment": 3.6
+    },
+    {
+      "ts": "2023-06-01T00:00:00+08:00",
+      "_bls_cpi_index": 304.014,
+      "us_unemployment": 3.6
+    },
+    {
+      "ts": "2023-07-01T00:00:00+08:00",
+      "_bls_cpi_index": 304.609,
+      "us_unemployment": 3.5
+    },
+    {
+      "ts": "2023-08-01T00:00:00+08:00",
+      "_bls_cpi_index": 306.082,
+      "us_unemployment": 3.7
+    },
+    {
+      "ts": "2023-09-01T00:00:00+08:00",
+      "_bls_cpi_index": 307.276,
+      "us_unemployment": 3.7
+    },
+    {
+      "ts": "2023-10-01T00:00:00+08:00",
+      "_bls_cpi_index": 307.696,
+      "us_unemployment": 3.9
+    },
+    {
+      "ts": "2023-11-01T00:00:00+08:00",
+      "_bls_cpi_index": 308.148,
+      "us_unemployment": 3.7
+    },
+    {
+      "ts": "2023-12-01T00:00:00+08:00",
+      "_bls_cpi_index": 308.741,
+      "us_unemployment": 3.8
+    },
+    {
+      "ts": "2024-01-01T00:00:00+08:00",
+      "_bls_cpi_index": 309.698,
+      "us_unemployment": 3.7
+    },
+    {
+      "ts": "2024-02-01T00:00:00+08:00",
+      "_bls_cpi_index": 310.967,
+      "us_unemployment": 3.9
+    },
+    {
+      "ts": "2024-03-01T00:00:00+08:00",
+      "_bls_cpi_index": 312.345,
+      "us_unemployment": 3.9
+    },
+    {
+      "ts": "2024-04-01T00:00:00+08:00",
+      "_bls_cpi_index": 313.023,
+      "us_unemployment": 3.9
+    },
+    {
+      "ts": "2024-05-01T00:00:00+08:00",
+      "_bls_cpi_index": 313.175,
+      "us_unemployment": 3.9
+    },
+    {
+      "ts": "2024-06-01T00:00:00+08:00",
+      "_bls_cpi_index": 313.044,
+      "us_unemployment": 4.1
+    },
+    {
+      "ts": "2024-07-01T00:00:00+08:00",
+      "_bls_cpi_index": 313.569,
+      "us_unemployment": 4.2
+    },
+    {
+      "ts": "2024-08-01T00:00:00+08:00",
+      "_bls_cpi_index": 314.062,
+      "us_unemployment": 4.2
+    },
+    {
+      "ts": "2024-09-01T00:00:00+08:00",
+      "_bls_cpi_index": 314.732,
+      "us_unemployment": 4.1
+    },
+    {
+      "ts": "2024-10-01T00:00:00+08:00",
+      "_bls_cpi_index": 315.631,
+      "us_unemployment": 4.1
+    },
+    {
+      "ts": "2024-11-01T00:00:00+08:00",
+      "_bls_cpi_index": 316.528,
+      "us_unemployment": 4.2
+    },
+    {
+      "ts": "2024-12-01T00:00:00+08:00",
+      "_bls_cpi_index": 317.604,
+      "us_unemployment": 4.1
+    },
+    {
+      "ts": "2025-01-01T00:00:00+08:00",
+      "_bls_cpi_index": 318.961,
+      "us_unemployment": 4.0
+    },
+    {
+      "ts": "2025-02-01T00:00:00+08:00",
+      "_bls_cpi_index": 319.679,
+      "us_unemployment": 4.2
+    },
+    {
+      "ts": "2025-03-01T00:00:00+08:00",
+      "_bls_cpi_index": 319.785,
+      "us_unemployment": 4.2
+    },
+    {
+      "ts": "2025-04-01T00:00:00+08:00",
+      "_bls_cpi_index": 320.302,
+      "us_unemployment": 4.2
+    },
+    {
+      "ts": "2025-05-01T00:00:00+08:00",
+      "_bls_cpi_index": 320.62,
+      "us_unemployment": 4.3
+    },
+    {
+      "ts": "2025-06-01T00:00:00+08:00",
+      "_bls_cpi_index": 321.435,
+      "us_unemployment": 4.1
+    },
+    {
+      "ts": "2025-07-01T00:00:00+08:00",
+      "_bls_cpi_index": 322.169,
+      "us_unemployment": 4.3
+    },
+    {
+      "ts": "2025-08-01T00:00:00+08:00",
+      "_bls_cpi_index": 323.291,
+      "us_unemployment": 4.3
+    },
+    {
+      "ts": "2025-09-01T00:00:00+08:00",
+      "_bls_cpi_index": 324.245,
+      "us_unemployment": 4.4
+    },
+    {
+      "ts": "2025-11-01T00:00:00+08:00",
+      "_bls_cpi_index": 325.063,
+      "us_unemployment": 4.5
+    },
+    {
+      "ts": "2025-12-01T00:00:00+08:00",
+      "_bls_cpi_index": 326.031,
+      "us_unemployment": 4.4
+    },
+    {
+      "ts": "2026-01-01T00:00:00+08:00",
+      "_bls_cpi_index": 326.588,
+      "us_unemployment": 4.3
+    },
+    {
+      "ts": "2026-02-01T00:00:00+08:00",
+      "_bls_cpi_index": 327.46,
+      "us_unemployment": 4.4
+    },
+    {
+      "ts": "2026-03-01T00:00:00+08:00",
+      "_bls_cpi_index": 330.293,
+      "us_unemployment": 4.3
+    },
+    {
+      "ts": "2026-04-01T00:00:00+08:00",
+      "_bls_cpi_index": 332.407,
+      "us_unemployment": 4.3
+    },
+    {
+      "ts": "2026-05-01T00:00:00+08:00",
+      "_bls_cpi_index": 333.979,
+      "us_unemployment": 4.3
+    },
+    {
+      "ts": "2026-06-01T00:00:00+08:00",
+      "_bls_cpi_index": 332.568,
+      "us_unemployment": 4.2
+    },
+    {
+      "ts": "2026-07-01T00:00:00+08:00",
+      "_bls_cpi_index": 332.813,
+      "us_unemployment": 4.1
+    },
+    {
+      "ts": "2026-08-01T00:00:00+08:00",
+      "us_unemployment": 4.1
+    },
+    {
       "ts": "2026-09-10T23:59:42.553237+08:00",
       "fed_rate": 3.63,
       "us_cpi": 3.3,
@@ -541,7 +995,7 @@
       "overnight": 0.821
     },
     {
-      "ts": "2026-09-11T07:50:43.874078+08:00",
+      "ts": "2026-09-11T08:33:18.280133+08:00",
       "fed_rate": 3.63,
       "us_cpi": 3.3,
       "us_gdp_growth": 1.5,
