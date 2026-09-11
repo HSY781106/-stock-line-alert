@@ -1,4 +1,4 @@
-name: Stock Alert V2.18.2
+name: Stock Alert V2.18.3
 
 on:
   schedule:
@@ -35,12 +35,11 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt pypdf
 
-      - name: Run stock alert V2.18.2
+      - name: Run stock alert V2.18.3
         env:
           LINE_CHANNEL_ACCESS_TOKEN: ${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }}
           LINE_CHANNEL_SECRET: ${{ secrets.LINE_CHANNEL_SECRET }}
 
-          # 免費 AI：Gemini 主力；只有設定 Secret 才啟用備援
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GEMINI_MODEL: gemini-3.5-flash
           MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
@@ -54,23 +53,18 @@ jobs:
           AI_ENABLE_TRUMP: '1'
           AI_ENABLE_FINAL_SUMMARY: '1'
 
-          # Web / Macro / Trump AI
           AI_WEB_ANALYSIS_ENABLED: '1'
           AI_WEB_TIMEOUT: '12'
 
           AI_MAX_OUTPUT_TOKENS: '700'
           AI_RETRY_ON_FAILURE: '0'
 
-          # AI 快取
           AI_NEWS_CACHE_HOURS: '168'
           AI_MACRO_CACHE_HOURS: '6'
           AI_TRUMP_CACHE_HOURS: '6'
 
           AI_TIMEOUT: '15'
           MACRO_TIMEOUT: '12'
-
-          # 可選：若另外建立 FRED API Key，可取消下一行註解
-          # FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
 
         run: python stock_alert.py
 
@@ -81,6 +75,6 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
-          git diff --cached --quiet || git commit -m "Update V2.18.2 alert state, AI cache, macro and Trump intelligence"
+          git diff --cached --quiet || git commit -m "Update V2.18.3 alert state, AI cache, macro and Trump intelligence"
           git pull --rebase origin main || true
           git push origin HEAD:main
