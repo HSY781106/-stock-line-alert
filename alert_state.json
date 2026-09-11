@@ -14,9 +14,12 @@
     },
     "3711 日月光投控": {
       "date": "2026-09-12",
-      "daily_alert_sent": false,
+      "daily_alert_sent": true,
       "weekly_alert_sent": false,
-      "alert_sent": false
+      "alert_sent": true,
+      "alert_time": "2026-09-12T03:48:17.157572+08:00",
+      "trigger_day": -0.056923,
+      "trigger_week": -0.061256
     },
     "QQQ": {
       "date": "2026-09-12",
