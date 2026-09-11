@@ -203,7 +203,7 @@ MACRO_CACHE_VERSION = 8
 # V2.15.4：Macro & Policy Intelligence；保留舊總經快取格式，但另建歷史/事件快取。
 MACRO_HISTORY_FILE = 'macro_intelligence_history_v2150.json'
 MACRO_HISTORY_VERSION = 2
-MACRO_HISTORY_MAX_DAYS = 730
+MACRO_HISTORY_MAX_DAYS = 3650
 MACRO_NEWS_CACHE_FILE = 'macro_news_cache_v2150.json'
 MACRO_NEWS_CACHE_HOURS = 3
 MACRO_FORECAST_HORIZONS = (1, 3, 6)
@@ -232,7 +232,7 @@ AI_MACRO_CACHE_HOURS = float(os.getenv('AI_MACRO_CACHE_HOURS', '6') or 6)
 AI_TRUMP_CACHE_HOURS = float(os.getenv('AI_TRUMP_CACHE_HOURS', '6') or 6)
 AI_WEB_ANALYSIS_ENABLED = os.getenv('AI_WEB_ANALYSIS_ENABLED', '1').strip().lower() not in ('0','false','no','off')
 AI_WEB_TIMEOUT = float(os.getenv('AI_WEB_TIMEOUT', '12') or 12)
-AI_QUOTA_STATE_FILE = 'ai_quota_state_v2175.json'
+AI_QUOTA_STATE_FILE = 'ai_quota_state_v2181.json'
 AI_MAX_OUTPUT_TOKENS = int(os.getenv('AI_MAX_OUTPUT_TOKENS', '700') or 700)
 AI_RETRY_ON_FAILURE = os.getenv('AI_RETRY_ON_FAILURE', '0').strip().lower() in ('1','true','yes','on')
 AI_MAX_NEWS_PER_BATCH = int(os.getenv('AI_MAX_NEWS_PER_BATCH', '4') or 4)
@@ -1289,6 +1289,20 @@ def _ai_json(text):
 def _ai_quota_today():
     return datetime.now(TW_TZ).strftime('%Y-%m-%d')
 
+def _ai_normalize_quota_state():
+    """V2.18.1：免費供應商配額狀態只在台灣當日有效；跨日自動清空舊日狀態。"""
+    try:
+        today=_ai_quota_today()
+        d=load_json(AI_QUOTA_STATE_FILE)
+        if not isinstance(d,dict) or d.get('date')!=today:
+            save_json(AI_QUOTA_STATE_FILE,{'date':today,'exhausted':[]})
+            return
+        if not isinstance(d.get('exhausted'),list):
+            d['exhausted']=[]
+            save_json(AI_QUOTA_STATE_FILE,d)
+    except Exception as e:
+        print(f'V2.18.1 AI：quota 狀態初始化失敗：{type(e).__name__}: {e}',flush=True)
+
 def _ai_provider_quota_exhausted(provider):
     try:
         d=load_json(AI_QUOTA_STATE_FILE)
@@ -1437,6 +1451,7 @@ def _ai_call_json(system_prompt, user_prompt, cache_key='', ttl_hours=72, respon
                     _AI_SEMANTIC_RUN_CACHE[cache_key]={'ts':float(d.get('ts',now) or now),'data':data}
                     print('V2.18.0 AI：disk cache hit', flush=True)
                     return data
+    _ai_normalize_quota_state()
     providers=[p for p in _ai_provider_order() if _ai_provider_key(p) and not _ai_provider_quota_exhausted(p)]
     if not providers:
         print('V2.18.0 AI：所有已設定免費供應商今日均已耗盡配額，完全停用 AI，使用規則 fallback', flush=True)
@@ -13175,8 +13190,21 @@ def _macro_seed_multisource_history():
         },timeout=max(8,min(15,MACRO_TIMEOUT)),headers=headers)
         rr.raise_for_status(); payload=rr.json(); series=payload.get('Results',{}).get('series',[])
         bls={x.get('seriesID'):x.get('data',[]) for x in series if isinstance(x,dict)}
-        cpi={f"{x.get('year')}-{int(x.get('period','M00')[1:]):02d}":float(x['value']) for x in bls.get('CUSR0000SA0',[]) if str(x.get('period','')).startswith('M') and x.get('period')!='M13' and str(x.get('value','')).replace('.','',1).isdigit()}
-        unemp={f"{x.get('year')}-{int(x.get('period','M00')[1:]):02d}":float(x['value']) for x in bls.get('LNS14000000',[]) if str(x.get('period','')).startswith('M') and x.get('period')!='M13' and str(x.get('value','')).replace('.','',1).isdigit()}
+        def _bls_float(x):
+            try:
+                v=float(str(x).strip().replace(',',''))
+                return v if math.isfinite(v) else None
+            except Exception:
+                return None
+        def _bls_month_key(x):
+            y=str(x.get('year','')).strip(); period=str(x.get('period','')).strip()
+            if not y.isdigit() or not period.startswith('M') or period=='M13': return None
+            try:
+                m=int(period[1:])
+                return f'{int(y):04d}-{m:02d}' if 1<=m<=12 else None
+            except Exception: return None
+        cpi={k:v for x in bls.get('CUSR0000SA0',[]) if (k:=_bls_month_key(x)) and (v:=_bls_float(x.get('value'))) is not None}
+        unemp={k:v for x in bls.get('LNS14000000',[]) if (k:=_bls_month_key(x)) and (v:=_bls_float(x.get('value'))) is not None}
         for ym,v in cpi.items():
             y,m=map(int,ym.split('-')); dt=f'{y:04d}-{m:02d}-01'; row=by_day.setdefault(dt,{'ts':dt+'T00:00:00+08:00'})
             row['_bls_cpi_index']=v; fetched+=1
@@ -13246,10 +13274,7 @@ def _macro_history_append(d):
 
 
 def _macro_series_history(series_key, d=None, min_points=MACRO_FORECAST_MIN_POINTS):
-    """V2.17.0：歷史序列修正版。
-    批次 FRED 不足時，改以「每個 series 一次」並行抓取最近 84 筆；
-    因此不會因批次 CSV 異常而退回 n=1，1/3/6M 也不再全部等於現在值。
-    """
+    """V2.18.1：優先使用本地多來源歷史；FRED 只做一次批次補抓，不因 timeout 讓整個總經流程中止。"""
     global _MACRO_FRED_HISTORY_CACHE, _MACRO_FRED_HISTORY_ATTEMPTED, _MACRO_HISTORY_RUN_CACHE
     if _MACRO_HISTORY_RUN_CACHE is None:
         _macro_seed_multisource_history()
@@ -13263,85 +13288,34 @@ def _macro_series_history(series_key, d=None, min_points=MACRO_FORECAST_MIN_POIN
                     v=x.get(k)
                     if isinstance(v,(int,float)) and math.isfinite(float(v)):
                         vals_by_key.setdefault(k,[]).append((ts,float(v)))
+        for k in list(vals_by_key):
+            vals_by_key[k]=sorted(vals_by_key[k],key=lambda z:z[0])[-max(1,MACRO_HISTORY_MAX_DAYS):]
         _MACRO_HISTORY_RUN_CACHE=vals_by_key
     vals=list((_MACRO_HISTORY_RUN_CACHE or {}).get(series_key,[]))
-    if len(vals)>=min_points: return vals
-    if series_key not in MACRO_FRED_SERIES: return vals
-
-    # 本次 process 只做一次歷史批次；批次不足時並行單序列補抓。
-    if not _MACRO_FRED_HISTORY_ATTEMPTED:
-        _MACRO_FRED_HISTORY_ATTEMPTED=True
-        cache={}
-        batch_failed=False
-        try:
-            # V2.17.4：若有 FRED_API_KEY，優先走官方 observations JSON；沒有則繼續公開 CSV。
-            if FRED_API_KEY:
-                def _fred_api_one(item):
-                    k,sid=item
-                    try:
-                        rr=requests.get('https://api.stlouisfed.org/fred/series/observations',params={'series_id':sid,'api_key':FRED_API_KEY,'file_type':'json','sort_order':'desc','limit':84},timeout=MACRO_TIMEOUT,headers={'User-Agent':'Mozilla/5.0 stock-alert/2.16.1'})
-                        rr.raise_for_status(); payload=rr.json(); arr=[]
-                        for ob in payload.get('observations',[]):
-                            try:
-                                vv=float(ob.get('value')); arr.append((str(ob.get('date','')),vv))
-                            except Exception: pass
-                        return k, list(reversed(arr))
-                    except Exception as ex:
-                        print(f'V2.17.1 FRED API失敗 {k}：{type(ex).__name__}',flush=True); return k,[]
-                with ThreadPoolExecutor(max_workers=min(6,len(MACRO_FRED_SERIES))) as ex:
-                    for k,arr in ex.map(_fred_api_one, MACRO_FRED_SERIES.items()):
-                        if arr:
-                            _MACRO_HISTORY_RUN_CACHE[k]=arr; vals_by_key=arr
-                vals=list(_MACRO_HISTORY_RUN_CACHE.get(series_key,[]))
-                if len(vals)>=min_points: return vals
-            ids=','.join(dict.fromkeys(MACRO_FRED_SERIES.values()))
-            r=requests.get('https://fred.stlouisfed.org/graph/fredgraph.csv',params={'id':ids},timeout=max(8,MACRO_TIMEOUT),headers={'User-Agent':'Mozilla/5.0 stock-alert/2.16.1','Accept':'text/csv,*/*'},verify=False)
-            r.raise_for_status(); df=pd.read_csv(pd.io.common.StringIO(r.text))
-            if len(df.columns)>=2:
-                date_col=df.columns[0]
-                for key,sid in MACRO_FRED_SERIES.items():
-                    if sid not in df.columns: continue
-                    tmp=pd.to_numeric(df[sid],errors='coerce')
-                    pairs=[(str(dt),float(v)) for dt,v in zip(df[date_col],tmp) if pd.notna(v)][-84:]
-                    if key=='us_cpi' and len(pairs)>=13:
-                        raw=[v for _,v in pairs]
-                        pairs=[(pairs[i][0],(raw[i]/raw[i-12]-1)*100) for i in range(12,len(raw)) if raw[i-12]!=0]
-                    if pairs: cache[key]=pairs
-        except Exception as e:
-            batch_failed=True
-            print(f'V2.17.4 FRED多序列歷史取得失敗：{type(e).__name__}: {e}',flush=True)
-
-        # V2.17.4：多序列批次失敗後，不再對 7 個序列逐一重抓。
-        # 否則一次 timeout 會變成 7 次 timeout，拖慢整個 workflow；改用本地歷史/中性 fallback。
-        if batch_failed:
-            _MACRO_FRED_HISTORY_CACHE={}
-            return (_MACRO_FRED_HISTORY_CACHE or {}).get(series_key,vals)
-
-        def fetch_one(item):
-            key,sid=item
-            try:
-                rr=requests.get('https://fred.stlouisfed.org/graph/fredgraph.csv',params={'id':sid},timeout=max(12,MACRO_TIMEOUT),headers={'User-Agent':'Mozilla/5.0 stock-alert/2.16.1','Accept':'text/csv,*/*'},verify=False)
-                rr.raise_for_status(); dd=pd.read_csv(pd.io.common.StringIO(rr.text))
-                if len(dd.columns)<2: return key,[]
-                dc=dd.columns[0]; col=sid if sid in dd.columns else dd.columns[1]
-                tmp=pd.to_numeric(dd[col],errors='coerce')
-                pairs=[(str(dt),float(v)) for dt,v in zip(dd[dc],tmp) if pd.notna(v)][-84:]
-                if key=='us_cpi' and len(pairs)>=13:
-                    raw=[v for _,v in pairs]; pairs=[(pairs[i][0],(raw[i]/raw[i-12]-1)*100) for i in range(12,len(raw)) if raw[i-12]!=0]
-                return key,pairs
-            except Exception as e:
-                print(f'V2.17.1 FRED單序列失敗 {key}: {type(e).__name__}',flush=True); return key,[]
-
-        need=[(k,v) for k,v in MACRO_FRED_SERIES.items() if len(cache.get(k,[]))<min_points]
-        try:
-            with ThreadPoolExecutor(max_workers=min(7,max(1,len(need)))) as ex:
-                for key,pairs in ex.map(fetch_one,need):
-                    if pairs: cache[key]=pairs
-        except Exception as e:
-            print(f'V2.17.1 FRED並行補抓失敗：{type(e).__name__}: {e}',flush=True)
-        _MACRO_FRED_HISTORY_CACHE=cache
-
-    return (_MACRO_FRED_HISTORY_CACHE or {}).get(series_key,vals)
+    if len(vals)>=min_points or series_key not in MACRO_FRED_SERIES:
+        return vals
+    if _MACRO_FRED_HISTORY_ATTEMPTED:
+        return vals
+    _MACRO_FRED_HISTORY_ATTEMPTED=True
+    # 沒有 FRED key 時，不再對 7 個序列逐一 timeout；本地 BLS/Treasury 歷史優先。
+    if not FRED_API_KEY:
+        return vals
+    try:
+        ids=','.join(dict.fromkeys(MACRO_FRED_SERIES.values()))
+        rr=requests.get('https://api.stlouisfed.org/fred/series/observations',params={'series_id':ids,'api_key':FRED_API_KEY,'file_type':'json','sort_order':'asc','limit':5000},timeout=min(8,max(5,MACRO_TIMEOUT)),headers={'User-Agent':'Mozilla/5.0 stock-alert/2.18.1'})
+        rr.raise_for_status()
+        payload=rr.json()
+        # API 一次只支援一個 series_id；若多 ID 被拒絕，直接保留其他來源，不再逐一重試。
+        if isinstance(payload,dict) and payload.get('observations'):
+            sid=MACRO_FRED_SERIES.get(series_key)
+            arr=[]
+            for ob in payload.get('observations',[]):
+                try: arr.append((str(ob.get('date','')),float(ob.get('value'))))
+                except Exception: pass
+            if arr: _MACRO_FRED_HISTORY_CACHE[series_key]=arr[-MACRO_HISTORY_MAX_DAYS:]
+    except Exception as e:
+        print(f'V2.18.1 FRED歷史補抓略過：{type(e).__name__}: {e}',flush=True)
+    return list((_MACRO_FRED_HISTORY_CACHE or {}).get(series_key,vals))
 
 
 def _macro_forecast_one(series_key, current, horizon, d=None):
