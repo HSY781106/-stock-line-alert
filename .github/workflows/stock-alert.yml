@@ -1,5 +1,4 @@
-name: Stock Alert V2.18.8
-
+name: Stock Alert V2.18.9
 on:
   schedule:
     - cron: '*/15 1-5 * * 1-5'
@@ -7,72 +6,77 @@ on:
     - cron: '*/15 14-20 * * 1-5'
     - cron: '0 21 * * 1-5'
   workflow_dispatch:
-
 concurrency:
   group: stock-alert-main
   cancel-in-progress: true
-
 permissions:
   contents: write
-
 jobs:
   check-stock:
     runs-on: ubuntu-latest
-    timeout-minutes: 13
-
+    timeout-minutes: 15
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
           cache: pip
-
       - name: Install dependencies
-        run: pip install -r requirements.txt pypdf
-
-      - name: Run stock alert V2.18.8
+        run: |
+          pip install -r requirements.txt pypdf
+      - name: Run stock alert V2.18.9
         env:
           LINE_CHANNEL_ACCESS_TOKEN: ${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }}
           LINE_CHANNEL_SECRET: ${{ secrets.LINE_CHANNEL_SECRET }}
-
+          # ============================================================
+          # AI Provider
+          # ============================================================
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          GEMINI_MODEL: gemini-3.5-flash
-
+          GEMINI_MODEL: gemini-2.5-flash
           MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
           MISTRAL_MODEL: mistral-small-latest
-
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           GROQ_MODEL: openai/gpt-oss-20b
-
+          # 主供應商 + 免費 fallback
           AI_PROVIDER: gemini
           AI_FALLBACK_PROVIDERS: mistral,groq
-
+          # ============================================================
+          # AI 功能
+          # ============================================================
           AI_ENABLE_NEWS: '1'
           AI_ENABLE_TRUMP: '1'
           AI_ENABLE_FINAL_SUMMARY: '1'
-
+          # AI Web 分析
           AI_WEB_ANALYSIS_ENABLED: '1'
-          AI_WEB_TIMEOUT: '5'
-
+          AI_WEB_TIMEOUT: '15'
+          # ============================================================
+          # AI 輸出 / Retry
+          # ============================================================
           AI_MAX_OUTPUT_TOKENS: '700'
-          AI_RETRY_ON_FAILURE: '0'
-
+          # V2.18.9：
+          # 不再完全禁止 retry
+          # Gemini / Mistral / Groq 遇到暫時性錯誤可重試一次
+          AI_RETRY_ON_FAILURE: '1'
+          # AI 主請求 timeout
+          # V2.18.8 的 12 秒太容易把免費 AI 自己切死
+          AI_TIMEOUT: '20'
+          # ============================================================
+          # Cache
+          # ============================================================
           AI_NEWS_CACHE_HOURS: '168'
           AI_MACRO_CACHE_HOURS: '6'
           AI_TRUMP_CACHE_HOURS: '6'
-
-          AI_TIMEOUT: '12'
+          # ============================================================
+          # Macro / Trump
+          # ============================================================
           MACRO_TIMEOUT: '8'
           MACRO_NEWS_TIMEOUT: '4'
           TRUMP_NEWS_TIMEOUT: '4'
-
         run: python stock_alert.py
-
       - name: Save state and caches
         if: always()
         shell: bash
@@ -80,6 +84,8 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
-          git diff --cached --quiet || git commit -m "Update V2.18.8 alert state and caches"
+          if ! git diff --cached --quiet; then
+            git commit -m "Update V2.18.9 alert state and caches"
+          fi
           git pull --rebase origin main || true
           git push origin HEAD:main
