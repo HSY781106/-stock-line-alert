@@ -1,4 +1,4 @@
-# stock_alert.py V2.18.6
+# stock_alert.py V2.18.7
 # V2.17.1：AI 僅在「已達到 LINE 發送門檻」後啟用；其餘每15分鐘掃描完全不呼叫 AI。
 # V2.17.0 功能全部保留：Gemini Free 主力 + Mistral/Groq Free 備援、重大消息、Trump 語意、總經預測。
 # V2.15.6：外部產業網頁正確性＋效能修正版：官方價值鏈候選池改為資料驅動，不再只依賴同大產業 Top120；
@@ -234,13 +234,13 @@ AI_WEB_ANALYSIS_ENABLED = os.getenv('AI_WEB_ANALYSIS_ENABLED', '1').strip().lowe
 AI_WEB_TIMEOUT = float(os.getenv('AI_WEB_TIMEOUT', '5') or 5)
 MACRO_NEWS_TIMEOUT = float(os.getenv('MACRO_NEWS_TIMEOUT', '5') or 5)
 TRUMP_NEWS_TIMEOUT = float(os.getenv('TRUMP_NEWS_TIMEOUT', '5') or 5)
-AI_QUOTA_STATE_FILE = 'ai_quota_state_v2186.json'
+AI_QUOTA_STATE_FILE = 'ai_quota_state_v2187.json'
 AI_MAX_OUTPUT_TOKENS = int(os.getenv('AI_MAX_OUTPUT_TOKENS', '700') or 700)
 AI_RETRY_ON_FAILURE = os.getenv('AI_RETRY_ON_FAILURE', '0').strip().lower() in ('1','true','yes','on')
 AI_MAX_NEWS_PER_BATCH = int(os.getenv('AI_MAX_NEWS_PER_BATCH', '4') or 4)
 AI_MAX_TRUMP_PER_BATCH = int(os.getenv('AI_MAX_TRUMP_PER_BATCH', '4') or 4)
 AI_PROVIDER_DISABLED_THIS_RUN = set()  # V2.17.4：任何 AI 傳輸/格式失敗都熔斷該 provider，避免本次 RUN 重複浪費 request
-AI_PROVIDER_QUOTA_COOLDOWN_UNTIL = {}  # V2.18.6：Web/Render 同一程序收到 429 後，當日直接跳過該 provider，避免每次網頁重等
+AI_PROVIDER_QUOTA_COOLDOWN_UNTIL = {}  # V2.18.7：Web/Render 同一程序收到 429 後，當日直接跳過該 provider，避免每次網頁重等
 AI_ENABLE_FINAL_SUMMARY = os.getenv('AI_ENABLE_FINAL_SUMMARY', '0').strip().lower() not in ('0','false','no','off')
 AI_ENABLE_NEWS = os.getenv('AI_ENABLE_NEWS', '1').strip().lower() not in ('0','false','no','off')
 AI_ENABLE_TRUMP = os.getenv('AI_ENABLE_TRUMP', '1').strip().lower() not in ('0','false','no','off')
@@ -1117,7 +1117,7 @@ def _ai_compact_payload(obj, max_chars=18000):
 
 
 def _ai_macro_summary(info):
-    """V2.18.6：總經 Web AI。使用明確 JSON Schema，避免 Gemini 回傳不可解析文字。"""
+    """V2.18.7：總經 Web AI。使用明確 JSON Schema，避免 Gemini 回傳不可解析文字。"""
     if not _ai_web_enabled('macro') or not isinstance(info,dict):
         return None
     data=info.get('data',{}) or {}
@@ -1154,7 +1154,7 @@ def _ai_macro_summary(info):
         '未來1到3個月最需要觀察哪些變數、什麼情況會讓判斷轉向？'
         '嚴格區分資料已觀察到的事實與推論，不把統計預測寫成確定事件。'
     )
-    print(f'V2.18.6 Web AI：開始總經分析｜cache=macro_web:{fp}',flush=True)
+    print(f'V2.18.7 Web AI：開始總經分析｜cache=macro_web:{fp}',flush=True)
     result=_ai_call_json(
         '你是保守的總經投資研究員。只做資料綜合與情境分析，不保證報酬。',
         prompt+'\n資料：'+_ai_compact_payload(payload),
@@ -1163,11 +1163,11 @@ def _ai_macro_summary(info):
         response_schema=schema,
         timeout=AI_WEB_TIMEOUT
     )
-    print(f'V2.18.6 Web AI：總經分析{"成功" if isinstance(result,dict) else "失敗/無結果"}',flush=True)
+    print(f'V2.18.7 Web AI：總經分析{"成功" if isinstance(result,dict) else "失敗/無結果"}',flush=True)
     return result
 
 def _ai_trump_summary(news, factor=None, portfolio=None):
-    """V2.18.6：Trump Web AI。除總結外，產出代表性標的傳導，避免頁面只有通用框架。"""
+    """V2.18.7：Trump Web AI。除總結外，產出代表性標的傳導，避免頁面只有通用框架。"""
     if not _ai_web_enabled('trump'):
         return None
     portfolio=portfolio or []
@@ -1232,7 +1232,7 @@ def _ai_trump_summary(news, factor=None, portfolio=None):
         '只可從 representative_candidates 選出有足夠證據的代表性標的；不要自行創造 ticker。'
         'stock_impacts 必須說明政策→產業/成本/需求→標的的傳導理由。'
     )
-    print(f'V2.18.6 Web AI：開始Trump分析｜cache=trump_web:{fp}',flush=True)
+    print(f'V2.18.7 Web AI：開始Trump分析｜cache=trump_web:{fp}',flush=True)
     result=_ai_call_json(
         '你是保守的美國政策與市場研究員。區分事實、政策階段與推論，不把新聞當成確定股價預測。',
         prompt+'\n資料：'+_ai_compact_payload(payload),
@@ -1241,7 +1241,7 @@ def _ai_trump_summary(news, factor=None, portfolio=None):
         response_schema=schema,
         timeout=AI_WEB_TIMEOUT
     )
-    print(f'V2.18.6 Web AI：Trump分析{"成功" if isinstance(result,dict) else "失敗/無結果"}',flush=True)
+    print(f'V2.18.7 Web AI：Trump分析{"成功" if isinstance(result,dict) else "失敗/無結果"}',flush=True)
     return result
 
 def _ai_extract_text(payload):
@@ -1279,7 +1279,7 @@ def _ai_json(text):
     m=re.search(r'\{.*\}',cleaned or text,re.S)
     if m and m.group(0) not in candidates:
         candidates.append(m.group(0))
-    # V2.18.6：若模型在 JSON 前後夾雜說明文字，嘗試以括號深度找第一個完整 object。
+    # V2.18.7：若模型在 JSON 前後夾雜說明文字，嘗試以括號深度找第一個完整 object。
     src=cleaned or text
     starts=[i for i,ch in enumerate(src) if ch=='{']
     for st in starts[:3]:
@@ -1324,7 +1324,7 @@ def _ai_normalize_quota_state():
             d['exhausted']=[]
             save_json(AI_QUOTA_STATE_FILE,d)
     except Exception as e:
-        print(f'V2.18.6 AI：quota 狀態初始化失敗：{type(e).__name__}: {e}',flush=True)
+        print(f'V2.18.7 AI：quota 狀態初始化失敗：{type(e).__name__}: {e}',flush=True)
 
 def _ai_provider_quota_exhausted(provider):
     try:
@@ -1345,9 +1345,9 @@ def _ai_mark_provider_quota_exhausted(provider, reason='quota'):
         d['reason_'+provider]=str(reason)[:300]
         save_json(AI_QUOTA_STATE_FILE,d)
         AI_PROVIDER_QUOTA_COOLDOWN_UNTIL[provider]=time.time()+24*3600
-        print(f'V2.18.6 AI：{provider} 今日免費額度/配額已耗盡，今天後續不再呼叫 {provider}', flush=True)
+        print(f'V2.18.7 AI：{provider} 今日免費額度/配額已耗盡，今天後續不再呼叫 {provider}', flush=True)
     except Exception as e:
-        print(f'V2.18.6 AI：無法保存 {provider} quota 狀態：{type(e).__name__}: {e}', flush=True)
+        print(f'V2.18.7 AI：無法保存 {provider} quota 狀態：{type(e).__name__}: {e}', flush=True)
 
 
 def _ai_provider_order():
@@ -1399,7 +1399,7 @@ def _ai_call_provider(provider, system_prompt, user_prompt, response_schema=None
     # V2.17.4：所有結構化 AI 任務都明確要求「只回傳 JSON object」。
     structured_instruction=(
         str(system_prompt or '').rstrip() +
-        '\n\n【V2.18.6 輸出格式硬性規則】\n'
+        '\n\n【V2.18.7 輸出格式硬性規則】\n'
         '你必須只輸出一個合法 JSON object。\n'
         '不得輸出 Markdown、```、前言、後記、解釋文字或 JSON 以外的任何字元。\n'
         'JSON 必須能被標準 json.loads() 直接解析；不可省略必要欄位。'
@@ -1460,13 +1460,13 @@ def _ai_call_json(system_prompt, user_prompt, cache_key='', ttl_hours=72, respon
     - 任何 AI 失敗都 fallback，不阻斷主流程
     """
     if not any(_ai_provider_key(p) for p in _ai_provider_order()):
-        print('V2.18.6 AI：未設定 Gemini/Mistral/Groq API Key，使用規則 fallback', flush=True)
+        print('V2.18.7 AI：未設定 Gemini/Mistral/Groq API Key，使用規則 fallback', flush=True)
         return None
     now=time.time()
     if cache_key:
         c=_AI_SEMANTIC_RUN_CACHE.get(cache_key)
         if isinstance(c,dict) and now-float(c.get('ts',0) or 0)<ttl_hours*3600:
-            print('V2.18.6 AI：memory cache hit', flush=True)
+            print('V2.18.7 AI：memory cache hit', flush=True)
             return c.get('data')
         disk=load_json(AI_NEWS_CACHE_FILE)
         if isinstance(disk,dict):
@@ -1475,18 +1475,18 @@ def _ai_call_json(system_prompt, user_prompt, cache_key='', ttl_hours=72, respon
                 data=d.get('data')
                 if isinstance(data,dict):
                     _AI_SEMANTIC_RUN_CACHE[cache_key]={'ts':float(d.get('ts',now) or now),'data':data}
-                    print('V2.18.6 AI：disk cache hit', flush=True)
+                    print('V2.18.7 AI：disk cache hit', flush=True)
                     return data
     _ai_normalize_quota_state()
     providers=[p for p in _ai_provider_order() if _ai_provider_key(p) and not _ai_provider_quota_exhausted(p)]
     if not providers:
-        print('V2.18.6 AI：所有已設定免費供應商今日均已耗盡配額，完全停用 AI，使用規則 fallback', flush=True)
+        print('V2.18.7 AI：所有已設定免費供應商今日均已耗盡配額，完全停用 AI，使用規則 fallback', flush=True)
         return None
     attempts=2 if AI_RETRY_ON_FAILURE else 1
     for provider in providers:
         for attempt in range(1,attempts+1):
             try:
-                print(f'V2.18.6 AI：provider={provider} request {attempt}/{attempts}', flush=True)
+                print(f'V2.18.7 AI：provider={provider} request {attempt}/{attempts}', flush=True)
                 data=_ai_call_provider(provider,system_prompt,user_prompt,response_schema=response_schema,timeout=timeout)
                 if cache_key:
                     _AI_SEMANTIC_RUN_CACHE[cache_key]={'ts':time.time(),'data':data}
@@ -1497,19 +1497,19 @@ def _ai_call_json(system_prompt, user_prompt, cache_key='', ttl_hours=72, respon
                         old=sorted(disk,key=lambda z:float(disk[z].get('ts',0) if isinstance(disk[z],dict) else 0))
                         for k in old[:-500]: disk.pop(k,None)
                     save_json(AI_NEWS_CACHE_FILE,disk)
-                print(f'V2.18.6 AI：SUCCESS｜provider={provider}', flush=True)
+                print(f'V2.18.7 AI：SUCCESS｜provider={provider}', flush=True)
                 return data
             except Exception as e:
                 msg=str(e)
-                print(f'V2.18.6 AI：FAIL｜provider={provider}｜{type(e).__name__}: {e}', flush=True)
+                print(f'V2.18.7 AI：FAIL｜provider={provider}｜{type(e).__name__}: {e}', flush=True)
                 # V2.17.4：不只 503/429。任何傳輸、逾時、空回覆、JSON 格式或 schema 異常，
                 # 都代表本次 provider 不可靠；立即熔斷該 provider，避免同一 RUN 再浪費免費 request。
                 if re.search(r'429|quota|rate.?limit|resource.?exhausted|too many requests|exceed', msg, flags=re.I):
                     _ai_mark_provider_quota_exhausted(provider, msg)
                 AI_PROVIDER_DISABLED_THIS_RUN.add(provider)
-                print(f'V2.18.6 AI：熔斷 {provider}｜本次 RUN 後續不再重試，避免浪費免費 request', flush=True)
+                print(f'V2.18.7 AI：熔斷 {provider}｜本次 RUN 後續不再重試，避免浪費免費 request', flush=True)
                 break
-    print('V2.18.6 AI：所有免費供應商均失敗，使用規則 fallback', flush=True)
+    print('V2.18.7 AI：所有免費供應商均失敗，使用規則 fallback', flush=True)
     return None
 
 
@@ -1529,7 +1529,7 @@ def _ai_runtime_status():
 
 def _print_ai_runtime_status():
     st=_ai_runtime_status()
-    print('========== V2.18.6 AI STATUS ==========', flush=True)
+    print('========== V2.18.7 AI STATUS ==========', flush=True)
     print(f"Gemini API Key：{'已設定' if st['gemini'] else '未設定'}｜模型：{GEMINI_MODEL}", flush=True)
     print(f"Mistral API Key：{'已設定' if st['mistral'] else '未設定'}｜模型：{MISTRAL_MODEL}", flush=True)
     print(f"Groq API Key：{'已設定' if st['groq'] else '未設定'}｜模型：{GROQ_MODEL}", flush=True)
@@ -4259,71 +4259,60 @@ def check_interval_low(
 
 
 def _drop_alert_analysis_message(name, symbol, u, day, week, cur, pc, wh, daily_triggered, weekly_triggered):
-    """V2.10.47：跌幅警報觸發後，直接沿用同一套股票加碼分析模型。
+    """V2.18.7：跌幅自動通知直接沿用 analysis() 的完整結果。
 
-    這裡使用 LINE 輕量路徑與 Actions 已建立的快取，避免警報時重新掃描全市場。
-    若分析失敗，仍會送出原本的跌幅通知，不讓分析故障影響警報。
+    不再依賴舊版欄位格式；所有數值與查詢頁相同，從同一次 analysis 結果擷取。
+    自動通知只是較精簡的呈現，不重新計算、不另外呼叫另一套評分模型。
     """
     try:
         result = _run_ai_alert_analysis(analysis, symbol, u, backfill=False, line_light=True)
         if not result or result.startswith('❌'):
             raise RuntimeError(result or 'analysis empty')
 
-        def grab(pattern, default='N/A'):
-            m = re.search(pattern, result, flags=re.I)
-            return m.group(1).strip() if m else default
-
-        total = grab(r'(?:投資價值評分|綜合評分)：\s*([^\n]+)')
-        verdict = grab(r'(?:投資價值結論|最終建議|結論)：\s*([^\n]+)')
-        pe = grab(r'PE：([^\n]+)')
-        one = grab(r'一年平均PE：([^\n]+)')
-        pb = grab(r'PB：([^\n]+)')
-        yld = grab(r'殖利率：([^\n]+)')
-        growth = grab(r'EPS成長：([^\n]+)')
-        peg = grab(r'PEG：([^\n]+)')
-        roe = grab(r'ROE：([^\n]+)')
-        rsi = grab(r'RSI：([^\n]+)')
-        kd = grab(r'KD：([^\n]+)')
-        trend = grab(r'趨勢：([^\n]+)')
-        buy_score = grab(r'買點評分：([^\n]+)')
-        buy_verdict = grab(r'目前買點：([^\n]+)')
-        buy_trend = grab(r'短中期趨勢：([^\n]+)')
-        buy_z1 = grab(r'第一觀察買點：([^\n]+)')
-        buy_z2 = grab(r'第二觀察買點：([^\n]+)')
-        buy_entry = grab(r'進場策略：([^\n]+)')
-        fs = grab(r'基本面得分：([^\n]+)')
-        ts = grab(r'技術得分：([^\n]+)')
-        cs = grab(r'籌碼得分：([^\n]+)')
-        inst5 = grab(r'法人5日：([^\n]+)')
-        inst20 = grab(r'法人20日：([^\n]+)')
-        factors = grab(r'加分因素：([^\n]+)')
-        chips = grab(r'籌碼訊號：([^\n]+)')
-        risks = grab(r'風險提醒：([^\n]+)')
-        holding = grab(r'持股處置：([^\n]+)')
-        event_level = grab(r'事件處置等級：([^\n]+)')
-
-        # V2.18.6：跌幅 LINE 通知不得因 AI 429 / fallback 文案格式差異而整包變 N/A。
-        # 直接接受 analysis() 的實際規則輸出格式，並對缺欄位做第二層正規表示式補抓。
-        def grab_any(patterns, default='N/A'):
+        def grab(patterns, default='N/A'):
+            if isinstance(patterns, str):
+                patterns=[patterns]
             for ptn in patterns:
-                m = re.search(ptn, result, flags=re.I)
+                m=re.search(ptn, result, flags=re.I|re.M)
                 if m:
                     return m.group(1).strip()
             return default
 
-        total = grab_any([r'投資價值評分：\s*([^\n]+)', r'綜合評分：\s*([0-9]+(?:\.[0-9]+)?)/100', r'綜合評分：\s*([^\n]+)'], total)
-        verdict = grab_any([r'投資價值結論：\s*([^\n]+)', r'📌\s*最終建議：\s*([^\n]+)', r'最終建議：\s*([^\n]+)', r'結論：\s*([^\n]+)'], verdict)
-        buy_score = grab_any([r'買點評分：\s*([0-9]+(?:\.[0-9]+)?)(?:/100)?', r'第二層｜買點\s*([0-9]+(?:\.[0-9]+)?)\s*/\s*100'], buy_score)
-        buy_verdict = grab_any([r'目前買點：\s*([^\n]+)', r'第二層｜買點\s*[0-9]+\s*/\s*100\s+([^\n]+)'], buy_verdict)
-        buy_trend = grab_any([r'短中期趨勢：\s*([^\n]+)'], buy_trend)
-        buy_z1 = grab_any([r'第一觀察買點：\s*([^\n]+)'], buy_z1)
-        buy_z2 = grab_any([r'第二觀察買點：\s*([^\n]+)'], buy_z2)
-        buy_entry = grab_any([r'進場策略：\s*([^\n]+)', r'策略：\s*([^\n]+)'], buy_entry)
-        event_level = grab_any([r'事件處置等級：\s*([^\n]+)', r'事件處置：\s*([^\n]+)'], event_level)
-        holding = grab_any([r'持股處置：\s*([^\n]+)', r'持股處置：([^\n]+)'], holding)
-        fs = grab_any([r'基本面：\s*([^\n]+)', r'基本面\s+([0-9]+/40)'], fs)
-        ts = grab_any([r'技術面：\s*([^\n]+)', r'技術面\s+([0-9]+/30)'], ts)
-        cs = grab_any([r'籌碼面：\s*([^\n]+)', r'籌碼面\s+([0-9]+/20)'], cs)
+        total=grab([r'🎯\s*綜合評分：\s*([0-9]+(?:\.[0-9]+)?/100)', r'投資價值評分：\s*([^\n]+)'])
+        verdict=grab([r'🎯\s*綜合評分：\s*[0-9]+(?:\.[0-9]+)?/100\s*([^\n]+)', r'📌\s*最終建議：\s*([^\n]+)'])
+        trend=grab(r'目前價格：[^\n]*?\s+趨勢：([^\n]+)')
+        pe=grab(r'PE\s+([^｜\n]+)')
+        one=grab(r'1Y PE\s+([^｜\n]+)')
+        peer=grab(r'同業中位數\s+([^\n]+)')
+        pb=grab(r'PB\s+([^｜\n]+)')
+        yld=grab(r'殖利率\s+([^｜\n]+)')
+        roe=grab(r'ROE\s+([^\n]+)')
+        growth=grab(r'EPS成長\s+([^｜\n]+)')
+        peg=grab(r'PEG\s+([^\n]+)')
+        rsi=grab(r'RSI\s+([^｜\n]+)')
+        kd=grab(r'KD\s+([^｜\n]+)')
+        fs=grab(r'💰\s*基本面\s+([^\n]+)')
+        ts=grab(r'📈\s*技術面\s+([^\n]+)')
+        cs=grab(r'🏦\s*籌碼面\s+([^\n]+)')
+        inst=grab(r'法人：([^\n]+)')
+        margin=grab(r'融資：([^\n]+)')
+        news_adj=grab(r'📰\s*重大消息\s*([+-]?\d+)')
+        news_reason=grab(r'📰\s*重大消息\s*[+-]?\d+\n([^\n]+)')
+        industry=grab(r'🏭\s*產業環境\s+([^\n]+)')
+        trump=grab(r'🇺🇸\s*Trump\s*([^\n]+)')
+        trump_policy=grab(r'產業政策：([^\n]+)')
+        trump_theme=grab(r'Trump主題：([^\n]+)')
+        macro=grab(r'🌎\s*總經\s*([^\n]+)')
+        macro_type=grab(r'總經類型：([^\n]+)')
+        macro_reason=grab(r'總經重點：([^\n]+)')
+        buy_score=grab(r'🎯\s*第二層｜買點\s+([0-9]+(?:\.[0-9]+)?/100)')
+        buy_verdict=grab(r'🎯\s*第二層｜買點\s+[0-9]+(?:\.[0-9]+)?/100\s+([^\n]+)')
+        buy_z1=grab(r'第一觀察買點：([^\n]+)')
+        buy_z2=grab(r'第二觀察買點：([^\n]+)')
+        buy_entry=grab(r'策略：([^\n]+)')
+        event=grab(r'事件處置：([^\n]+)')
+        factors=grab(r'加分因素：([^\n]+)')
+        risks=grab(r'風險提醒：([^\n]+)')
 
         triggers=[]
         if daily_triggered:
@@ -4331,48 +4320,34 @@ def _drop_alert_analysis_message(name, symbol, u, day, week, cur, pc, wh, daily_
         if weekly_triggered and week is not None:
             triggers.append(f'距7日高點 {week:.2%} ≤ {WEEK_THRESHOLD:.0%}')
 
-        msg=(
+        return (
             f'🔴 跌幅通知＋加碼評估\n\n'
-            f'標的：{name}\n'
-            f'目前價格：{cur:,.2f}\n'
-            f'前一交易日收盤：{pc:,.2f}\n'
-            f'過去7日高點：{wh:,.2f}\n'
-            f'觸發條件：{"、".join(triggers)}\n\n'
-            f'【第一層｜投資價值】\n'            f'投資價值評分：{total}\n'            f'投資價值結論：{verdict}\n\n'            f'【第二層｜🎯 買點評估】\n'            f'買點評分：{buy_score}\n目前買點：{buy_verdict}\n短中期趨勢：{buy_trend}\n'            f'第一觀察買點：{buy_z1}\n第二觀察買點：{buy_z2}\n進場策略：{buy_entry}\n'
-            f'事件處置等級：{event_level}\n'
-            f'持股處置：{holding}\n'
-            f'基本面：{fs}\n'
-            f'技術面：{ts}\n'
-            f'籌碼面：{cs}\n\n'
-            f'PE：{pe}｜一年平均PE：{one}\n'
-            f'PB：{pb}｜殖利率：{yld}\n'
-            f'EPS成長：{growth}｜PEG：{peg}\n'
-            f'ROE：{roe}\n'
-            f'RSI：{rsi}｜KD：{kd}\n'
-            f'趨勢：{trend}\n'
-            f'法人5日：{inst5}\n'
-            f'法人20日：{inst20}\n\n'
-            f'加分因素：{factors}\n'
-            f'籌碼訊號：{chips}\n'
-            f'風險提醒：{risks}'
-        )
-        return msg[:5000]
+            f'標的：{name}\n目前價格：{cur:,.2f}\n前一交易日收盤：{pc:,.2f}\n'
+            f'過去7日高點：{wh:,.2f}\n觸發條件：{"、".join(triggers)}\n\n'
+            f'【第一層｜投資價值】\n投資價值評分：{total}\n投資價值結論：{verdict}\n'
+            f'基本面：{fs}\n技術面：{ts}\n籌碼面：{cs}\n\n'
+            f'PE：{pe}｜一年平均PE：{one}\n同業中位數PE：{peer}\n'
+            f'PB：{pb}｜殖利率：{yld}\nEPS成長：{growth}｜PEG：{peg}\nROE：{roe}\n'
+            f'RSI：{rsi}｜KD：{kd}\n趨勢：{trend}\n法人：{inst}\n融資：{margin}\n\n'
+            f'【第二層｜🎯 買點評估】\n買點評分：{buy_score}\n目前買點：{buy_verdict}\n'
+            f'第一觀察買點：{buy_z1}\n第二觀察買點：{buy_z2}\n進場策略：{buy_entry}\n\n'
+            f'📰 重大消息 {news_adj}\n{news_reason}\n\n'
+            f'🏭 產業環境：{industry}\n'
+            f'🇺🇸 Trump：{trump}\n產業政策：{trump_policy}\nTrump主題：{trump_theme}\n\n'
+            f'🌎 總經：{macro}\n總經類型：{macro_type}\n總經重點：{macro_reason}\n\n'
+            f'📌 最終建議：{verdict}\n事件處置：{event}\n\n'
+            f'加分因素：{factors}\n風險提醒：{risks}'
+        )[:5000]
     except Exception as e:
-        print(f'V2.10.47 跌幅通知加碼分析失敗 {name}: {type(e).__name__}: {e}', flush=True)
-        msg=(
-            f'🔴 跌幅通知\n\n'
-            f'標的：{name}\n'
-            f'目前價格：{cur:,.2f}\n'
-            f'前一交易日收盤：{pc:,.2f}\n'
-            f'單日跌幅：{day:.2%}\n'
-            f'距7日高點跌幅：{week:.2%}' if week is not None else
-            f'🔴 跌幅通知\n\n標的：{name}\n目前價格：{cur:,.2f}\n單日跌幅：{day:.2%}'
+        print(f'V2.18.7 跌幅通知加碼分析失敗 {name}: {type(e).__name__}: {e}', flush=True)
+        return (
+            f'🔴 跌幅通知\n\n標的：{name}\n目前價格：{cur:,.2f}\n'
+            f'前一交易日收盤：{pc:,.2f}\n單日跌幅：{day:.2%}'
+            + (f'\n距7日高點跌幅：{week:.2%}' if week is not None else '')
         )
-        return msg
-
 
 def _ai_background_session_allowed(identifier):
-    """V2.18.6：背景15分鐘 Actions 的股票/ETF AI 硬閘門。
+    """V2.18.7：背景15分鐘 Actions 的股票/ETF AI 硬閘門。
     台股僅 09:00-14:00；美股/QQQ 僅 21:30-05:00。
     Web 頁面的 AI 不走此函式，因此 /macro、/trump 仍可正常使用 Web AI。
     """
@@ -4386,11 +4361,11 @@ def _ai_background_session_allowed(identifier):
 
 
 def _run_ai_alert_analysis(func, *args, **kwargs):
-    """V2.18.6：已觸發 LINE 警報後才暫時開 AI，且背景掃描必須在對應市場交易時段。"""
+    """V2.18.7：已觸發 LINE 警報後才暫時開 AI，且背景掃描必須在對應市場交易時段。"""
     global AI_ALERT_MODE_ACTIVE
     identifier = args[0] if args else kwargs.get('symbol') or kwargs.get('name') or ''
     if not _ai_background_session_allowed(identifier):
-        print(f'V2.18.6 AI：非對應市場交易時段，跳過背景股票/ETF AI｜{identifier}', flush=True)
+        print(f'V2.18.7 AI：非對應市場交易時段，跳過背景股票/ETF AI｜{identifier}', flush=True)
         return None
     previous = AI_ALERT_MODE_ACTIVE
     AI_ALERT_MODE_ACTIVE = True
@@ -4406,63 +4381,57 @@ def check_drop_alert(
     state,
     u=None
 ):
-    """V2.10.42：跌幅達標後，同一則 LINE 通知直接附上當下加碼評估。"""
-    cur = get_latest_price(symbol)
-    pc = get_previous_close(symbol)
-    wh = get_week_high(symbol)
+    """V2.18.7：每一標的一個台灣曆日最多只發一次跌幅自動通知。
 
+    一旦當天曾經觸發過，不論之後是否拉回門檻以上、再度跌破門檻，
+    當天都不再發第二次。隔日日期變更才重新取得一次通知資格。
+    15分鐘區間低點通知仍維持自己的獨立 LOCK，不受此設定影響。
+    """
+    cur=get_latest_price(symbol)
+    pc=get_previous_close(symbol)
+    wh=get_week_high(symbol)
     if cur is None or pc is None:
-        return
+        return False
 
-    day = cur / pc - 1
-    week = cur / wh - 1 if wh else None
-
-    s = state.setdefault('drop_alert', {}).setdefault(name, {})
-    today = datetime.now(TW_TZ).strftime('%Y-%m-%d')
+    day=cur/pc-1
+    week=cur/wh-1 if wh else None
+    s=state.setdefault('drop_alert',{}).setdefault(name,{})
+    today=datetime.now(TW_TZ).strftime('%Y-%m-%d')
 
     if s.get('date') != today:
-        s.update({'date': today, 'daily_alert': False, 'weekly_alert': False})
+        s.clear()
+        s.update({'date':today,'daily_alert_sent':False,'weekly_alert_sent':False,'alert_sent':False})
 
-    daily_triggered = day <= DAILY_THRESHOLD and not s.get('daily_alert')
-    weekly_triggered = week is not None and week <= WEEK_THRESHOLD and not s.get('weekly_alert')
+    # V2.18.7：當天任何跌幅自動通知只允許一次。
+    if s.get('alert_sent') or s.get('daily_alert_sent') or s.get('weekly_alert_sent'):
+        return False
 
-    if daily_triggered:
-        s['daily_alert'] = True
-    elif day > DAILY_THRESHOLD:
-        s['daily_alert'] = False
+    daily_triggered=day <= DAILY_THRESHOLD
+    weekly_triggered=(week is not None and week <= WEEK_THRESHOLD)
+    triggered_this_run=bool(daily_triggered or weekly_triggered)
 
-    if weekly_triggered:
-        s['weekly_alert'] = True
-    elif week is not None and week > WEEK_THRESHOLD:
-        s['weekly_alert'] = False
+    if not triggered_this_run:
+        return False
 
-    # 同一次執行若同時達到單日/一週門檻，只發一則整合通知，避免 LINE 重複洗版。
-    triggered_this_run = bool(daily_triggered or weekly_triggered)
+    # 先鎖定再送出，避免同一 RUN/並行流程重複進入。
+    s['alert_sent']=True
+    if daily_triggered: s['daily_alert_sent']=True
+    if weekly_triggered: s['weekly_alert_sent']=True
+    s['alert_time']=datetime.now(TW_TZ).isoformat()
+    s['trigger_day']=round(day,6)
+    s['trigger_week']=round(week,6) if week is not None else None
 
-    if triggered_this_run:
-        if isinstance(u, dict) and u:
-            msg = _drop_alert_analysis_message(
-                name, symbol, u, day, week, cur, pc, wh,
-                daily_triggered, weekly_triggered
-            )
-        else:
-            msg = (
-                f'🔴 跌幅通知\n\n'
-                f'標的：{name}\n'
-                f'目前價格：{cur:,.2f}\n'
-                f'前一交易日收盤：{pc:,.2f}\n'
-                f'單日跌幅：{day:.2%}\n'
-                f'距7日高點跌幅：{week:.2%}' if week is not None else
-                f'🔴 跌幅通知\n\n標的：{name}\n目前價格：{cur:,.2f}\n單日跌幅：{day:.2%}'
-            )
-        send_line(msg)
-
-    return triggered_this_run
-
-
-# ============================================================
-# Valuation
-# ============================================================
+    if isinstance(u,dict) and u:
+        msg=_drop_alert_analysis_message(name,symbol,u,day,week,cur,pc,wh,daily_triggered,weekly_triggered)
+    else:
+        triggers=[]
+        if daily_triggered: triggers.append(f'當日跌幅 {day:.2%} ≤ {DAILY_THRESHOLD:.0%}')
+        if weekly_triggered and week is not None: triggers.append(f'距7日高點 {week:.2%} ≤ {WEEK_THRESHOLD:.0%}')
+        msg=(f'🔴 跌幅通知\n\n標的：{name}\n目前價格：{cur:,.2f}\n'
+             f'前一交易日收盤：{pc:,.2f}\n觸發條件：{"、".join(triggers)}')
+    send_line(msg)
+    print(f'🔒 {name} V2.18.7 當日跌幅通知已鎖定：{today}，今日後續不再重複通知',flush=True)
+    return True
 
 def tpex_web_peratio_data(ds=None, timeout=None):
     """V2.10.28：TPEx 官方網頁版 PE/PB/殖利率備援。
@@ -11035,7 +11004,7 @@ def analysis(
             ai_final=_ai_final_investment_summary(_snapshot)
             ai_final_text=_format_ai_final_summary(ai_final)
         except Exception as e:
-            print(f'V2.18.6 AI 最終結論失敗：{type(e).__name__}: {e}',flush=True)
+            print(f'V2.18.7 AI 最終結論失敗：{type(e).__name__}: {e}',flush=True)
     if not ai_final_text and AI_ENABLE_FINAL_SUMMARY:
         # 沒有 API key 時仍提供 deterministic 摘要，避免畫面留白。
         _conflict='投資價值與買點不同步' if ((fs>=24 and buy.get('score',0)<60) or (fs<24 and buy.get('score',0)>=60)) else '各層訊號大致一致'
@@ -13231,7 +13200,7 @@ def _macro_value(d, key):
 
 
 def _macro_seed_multisource_history():
-    """V2.18.6：歷史總經資料多來源補種。
+    """V2.18.7：歷史總經資料多來源補種。
     不再把 FRED 當成唯一歷史來源；BLS 提供 CPI/失業率歷史、US Treasury 提供殖利率歷史。
     這些資料只用來建立統計歷史，不直接改寫即時值。
     """
@@ -13246,49 +13215,6 @@ def _macro_seed_multisource_history():
     by_day={str(x.get('ts',''))[:10]:x for x in items if isinstance(x,dict) and x.get('ts')}
     headers={'User-Agent':'Mozilla/5.0 stock-alert/2.18.0','Accept':'application/json,text/csv,*/*'}
     fetched=0
-    # V2.18.6：把同一次 FRED graph CSV 的完整歷史直接寫入本地統計快取。
-    # 最新值與歷史值共用同一個免費官方端點，避免每個序列各自 timeout；
-    # 這會一次補齊 CPI、Fed、GDP、失業率、10Y、10Y-2Y、VIX 的歷史樣本。
-    try:
-        fred_ids=list(dict.fromkeys(MACRO_FRED_SERIES.values()))
-        fred_url='https://fred.stlouisfed.org/graph/fredgraph.csv?id='+quote(','.join(fred_ids))
-        fr=requests.get(fred_url,timeout=max(8,min(12,MACRO_TIMEOUT)),headers=headers)
-        fr.raise_for_status()
-        fdf=pd.read_csv(pd.io.common.StringIO(fr.text))
-        if not fdf.empty and len(fdf.columns)>=2:
-            fdate=fdf.columns[0]
-            for _,rr in fdf.iterrows():
-                dt=str(rr[fdate])[:10]
-                if not dt or dt.lower()=='nan':
-                    continue
-                row=by_day.setdefault(dt,{'ts':dt+'T00:00:00+08:00'})
-                for key,sid in MACRO_FRED_SERIES.items():
-                    if sid not in fdf.columns:
-                        continue
-                    try:
-                        val=float(rr[sid])
-                        if not math.isfinite(val):
-                            continue
-                    except Exception:
-                        continue
-                    row[key]=val
-            # CPIAUCSL is an index; convert stored history to YoY %, matching current macro_fetch.
-            cpi_rows=sorted([(k,v) for k,v in [(str(x.get('ts',''))[:10],x.get('us_cpi')) for x in by_day.values()] if isinstance(v,(int,float)) and math.isfinite(float(v))],key=lambda z:z[0])
-            raw={k:v for k,v in cpi_rows}
-            for dt,row in by_day.items():
-                if 'us_cpi' in row:
-                    try:
-                        d0=datetime.strptime(dt,'%Y-%m-%d')
-                        prev=(d0.replace(year=d0.year-1)).strftime('%Y-%m-%d')
-                        # monthly CPI rows are first-of-month; exact 12-month match is sufficient.
-                        if prev in raw and float(raw[prev])!=0:
-                            row['us_cpi']=(float(raw[dt])/float(raw[prev])-1)*100
-                    except Exception:
-                        pass
-            fetched += len(fdf)
-            print(f'V2.18.6 FRED歷史補種：{len(fdf)}列、{len(fred_ids)}序列',flush=True)
-    except Exception as e:
-        print(f'V2.18.6 FRED歷史補種略過：{type(e).__name__}: {e}',flush=True)
     try:
         # BLS public API：不需 API key，抓月度 CPI index + 月度失業率。
         rr=requests.post('https://api.bls.gov/publicAPI/v2/timeseries/data/',json={
@@ -13325,9 +13251,9 @@ def _macro_seed_multisource_history():
         for ym,v in unemp.items():
             y,m=map(int,ym.split('-')); dt=f'{y:04d}-{m:02d}-01'; row=by_day.setdefault(dt,{'ts':dt+'T00:00:00+08:00'})
             row['us_unemployment']=v; fetched+=1
-        print(f'V2.18.6 BLS歷史補種：{len(cpi)}筆CPI、{len(unemp)}筆失業率',flush=True)
+        print(f'V2.18.7 BLS歷史補種：{len(cpi)}筆CPI、{len(unemp)}筆失業率',flush=True)
     except Exception as e:
-        print(f'V2.18.6 BLS歷史補種失敗：{type(e).__name__}: {e}',flush=True)
+        print(f'V2.18.7 BLS歷史補種失敗：{type(e).__name__}: {e}',flush=True)
     try:
         # US Treasury daily yield curve CSV：免費官方歷史資料。
         yr=datetime.now(TW_TZ).year
@@ -13348,14 +13274,14 @@ def _macro_seed_multisource_history():
                 if ten is not None and math.isfinite(ten): row['us_10y']=ten
                 if ten is not None and two is not None and math.isfinite(ten) and math.isfinite(two): row['us_curve_10y2y']=ten-two
             fetched+=len(td)
-        print(f'V2.18.6 Treasury歷史補種：{len(td)}筆',flush=True)
+        print(f'V2.18.7 Treasury歷史補種：{len(td)}筆',flush=True)
     except Exception as e:
-        print(f'V2.18.6 Treasury歷史補種失敗：{type(e).__name__}: {e}',flush=True)
+        print(f'V2.18.7 Treasury歷史補種失敗：{type(e).__name__}: {e}',flush=True)
     if fetched:
         hist['items']=sorted(by_day.values(),key=lambda x:str(x.get('ts','')))[-MACRO_HISTORY_MAX_DAYS:]
         save_json(MACRO_HISTORY_FILE,hist)
         _MACRO_HISTORY_RUN_CACHE=None
-        print(f'V2.18.6 多來源歷史快取完成：{len(hist["items"])}筆',flush=True)
+        print(f'V2.18.7 多來源歷史快取完成：{len(hist["items"])}筆',flush=True)
 
 def _macro_history_append(d):
     """Persist one observation per run.  History is used only for statistical estimates."""
@@ -13382,7 +13308,9 @@ def _macro_history_append(d):
 
 
 def _macro_series_history(series_key, d=None, min_points=MACRO_FORECAST_MIN_POINTS):
-    """V2.18.1：優先使用本地多來源歷史；FRED 只做一次批次補抓，不因 timeout 讓整個總經流程中止。"""
+    """V2.18.7：本地歷史優先；沒有 FRED key 時也使用公開 FRED graph CSV 歷史。
+    一次下載七個序列，避免每個指標各自 timeout。CPI 轉為 YoY 後再供預測使用。
+    """
     global _MACRO_FRED_HISTORY_CACHE, _MACRO_FRED_HISTORY_ATTEMPTED, _MACRO_HISTORY_RUN_CACHE
     if _MACRO_HISTORY_RUN_CACHE is None:
         _macro_seed_multisource_history()
@@ -13397,32 +13325,53 @@ def _macro_series_history(series_key, d=None, min_points=MACRO_FORECAST_MIN_POIN
                     if isinstance(v,(int,float)) and math.isfinite(float(v)):
                         vals_by_key.setdefault(k,[]).append((ts,float(v)))
         for k in list(vals_by_key):
-            vals_by_key[k]=sorted(vals_by_key[k],key=lambda z:z[0])[-max(1,MACRO_HISTORY_MAX_DAYS):]
+            vals_by_key[k]=sorted(vals_by_key[k],key=lambda z:z[0])[-MACRO_HISTORY_MAX_DAYS:]
         _MACRO_HISTORY_RUN_CACHE=vals_by_key
+
     vals=list((_MACRO_HISTORY_RUN_CACHE or {}).get(series_key,[]))
     if len(vals)>=min_points or series_key not in MACRO_FRED_SERIES:
         return vals
-    if _MACRO_FRED_HISTORY_ATTEMPTED:
-        return vals
-    _MACRO_FRED_HISTORY_ATTEMPTED=True
-    # 沒有 FRED key 時，不再對 7 個序列逐一 timeout；本地 BLS/Treasury 歷史優先。
-    if not FRED_API_KEY:
-        return vals
-    try:
-        sid=MACRO_FRED_SERIES.get(series_key)
-        if not sid: return vals
-        rr=requests.get('https://api.stlouisfed.org/fred/series/observations',params={'series_id':sid,'api_key':FRED_API_KEY,'file_type':'json','sort_order':'asc','limit':5000},timeout=min(8,max(5,MACRO_TIMEOUT)),headers={'User-Agent':'Mozilla/5.0 stock-alert/2.18.2'})
-        rr.raise_for_status()
-        payload=rr.json()
-        # API 一次只支援一個 series_id；若多 ID 被拒絕，直接保留其他來源，不再逐一重試。
-        if isinstance(payload,dict) and payload.get('observations'):
-            arr=[]
-            for ob in payload.get('observations',[]):
-                try: arr.append((str(ob.get('date','')),float(ob.get('value'))))
-                except Exception: pass
-            if arr: _MACRO_FRED_HISTORY_CACHE[series_key]=arr[-MACRO_HISTORY_MAX_DAYS:]
-    except Exception as e:
-        print(f'V2.18.6 FRED歷史補抓略過：{type(e).__name__}: {e}',flush=True)
+    if not _MACRO_FRED_HISTORY_ATTEMPTED:
+        _MACRO_FRED_HISTORY_ATTEMPTED=True
+        try:
+            series_ids=list(MACRO_FRED_SERIES.values())
+            url='https://fred.stlouisfed.org/graph/fredgraph.csv?id='+quote(','.join(series_ids))
+            text=None; last=None
+            for verify in (True,False):
+                try:
+                    rr=requests.get(url,timeout=max(8,MACRO_TIMEOUT),headers={'User-Agent':'Mozilla/5.0 stock-alert/2.18.7','Accept':'text/csv,*/*'},verify=verify)
+                    rr.raise_for_status()
+                    if rr.text and ('DATE' in rr.text[:120].upper() or 'observation_date' in rr.text[:120].lower()):
+                        text=rr.text; break
+                except Exception as e: last=e
+            if not text: raise last or RuntimeError('FRED graph CSV 無資料')
+            df=pd.read_csv(pd.io.common.StringIO(text))
+            date_col=df.columns[0]
+            fred_hist={}
+            for key,sid in MACRO_FRED_SERIES.items():
+                if sid not in df.columns: continue
+                col=pd.to_numeric(df[sid],errors='coerce')
+                rows=[]
+                for i,row in df.loc[col.notna(),[date_col,sid]].iterrows():
+                    try:
+                        dt=str(row[date_col])
+                        val=float(row[sid])
+                        if math.isfinite(val): rows.append((dt,val))
+                    except Exception: pass
+                if key=='us_cpi':
+                    # CPI index -> YoY using 12 observations prior, matching monthly dates.
+                    raw={dt:v for dt,v in rows}; yoy=[]
+                    for dt,v in rows:
+                        try:
+                            d0=pd.Timestamp(dt); prev=(d0-pd.DateOffset(months=12)).strftime('%Y-%m-%d')
+                            if prev in raw and raw[prev]!=0: yoy.append((dt,(v/raw[prev]-1)*100))
+                        except Exception: pass
+                    rows=yoy
+                fred_hist[key]=rows[-MACRO_HISTORY_MAX_DAYS:]
+            _MACRO_FRED_HISTORY_CACHE.update(fred_hist)
+            print(f'V2.18.7 FRED公開歷史：批次載入 {len(fred_hist)} 指標',flush=True)
+        except Exception as e:
+            print(f'V2.18.7 FRED公開歷史補抓略過：{type(e).__name__}: {e}',flush=True)
     return list((_MACRO_FRED_HISTORY_CACHE or {}).get(series_key,vals))
 
 
@@ -13436,12 +13385,13 @@ def _macro_forecast_one(series_key, current, horizon, d=None):
     if not vals: return {'value':None,'low':None,'high':None,'confidence':0,'n':0,'method':'無資料'}
     n=len(vals); arr=np.array(vals[-60:],dtype=float)
     if n<MACRO_FORECAST_MIN_POINTS:
-        # V2.18.6：樣本不足不再整欄 N/A；改為「保守貼近目前值」，
-        # 並明確降低信心，讓前台仍能顯示方向參考，但不冒充高可信統計預測。
-        pred=float(arr[-1])
-        sd=float(np.std(arr)) if len(arr)>1 else max(abs(pred)*0.03,0.10)
-        # 樣本越少，區間越寬；n=1 時至少給出可辨識的不確定性。
-        conf=max(15,min(30,int(15+2*n)))
+        # V2.18.7：若公開歷史暫時不足，不回傳 N/A；以目前值做極保守持平基準，並明確標示低信心。
+        base=float(current) if current is not None else float(arr[-1])
+        sd=float(np.std(arr)) if len(arr)>1 else max(abs(base)*0.02,0.01)
+        width=max(0.05,1.50*sd*math.sqrt(max(1,horizon)))
+        low=max(0.0,base-width) if series_key in ('fed_rate','us_10y','us_cpi','us_unemployment','discount_rate','cpi_yoy','unemployment') else base-width
+        high=base+width
+        return {'value':round(base,3),'low':round(float(low),3),'high':round(float(high),3),'confidence':15,'n':n,'method':'目前值保守持平（歷史樣本不足）'}
     else:
         # OLS trend over time, then shrink strongly toward recent mean to avoid runaway extrapolation.
         x=np.arange(len(arr),dtype=float)
@@ -13454,8 +13404,6 @@ def _macro_forecast_one(series_key, current, horizon, d=None):
         resid=arr-fitted; sd=float(np.std(resid[-36:])) if len(resid)>2 else float(np.std(arr))
         conf=min(90,35+min(40,n)*1.0)
     width=max(0.01,1.35*sd*math.sqrt(max(1,horizon)))
-    if n<MACRO_FORECAST_MIN_POINTS:
-        width=max(width, abs(pred)*0.015*math.sqrt(max(1,horizon)))
     # Rates/yields and inflation should not produce absurd negative intervals.
     if series_key in ('fed_rate','us_10y','us_cpi','us_unemployment','discount_rate','cpi_yoy','unemployment'):
         low=max(0.0,pred-width); high=pred+width
@@ -13579,8 +13527,6 @@ def macro_intelligence(force=False):
       {'name':'B 停滯／通膨偏黏','prob':p_stag,'impact':'利率維持高檔、成本壓力與估值壓縮並存，對高估值與景氣循環股偏不利'},
       {'name':'C 再加速／通膨反彈','prob':p_reacc,'impact':'成長較強但利率再升，出口需求較佳、長久期估值承壓'},
     ]
-    forecast_na=sum(1 for _k,_v in forecasts.items() for _h,_f in _v.items() if not isinstance(_f,dict) or _f.get('value') is None)
-    print(f'V2.18.6 總經統計預測：13指標×3期；N/A={forecast_na}（樣本不足改用保守目前值）',flush=True)
     result={'data':d,'regime':reg,'forecasts':forecasts,'quadrants':q,'implications':implications,'news':news,'scenarios':scenarios,'updated_at':datetime.now(TW_TZ).isoformat()}
     _MACRO_INTELLIGENCE_RUN_CACHE={'result':result}
     return result
@@ -13727,7 +13673,7 @@ def macro_stock_factor(industry, subindustries=None, name=''):
 
 
 def _is_bad_news_title(title):
-    """V2.18.6：過濾 Google/代理伺服器錯誤頁被 RSS 當成新聞標題的污染資料。"""
+    """V2.18.7：過濾 Google/代理伺服器錯誤頁被 RSS 當成新聞標題的污染資料。"""
     t=html.unescape(str(title or '')).strip().lower()
     if not t: return True
     bad=('error 500','server error','af-error-page','<html','<body','<!doctype','overflow:auto','display:block!important','google error','javascript:','stack trace')
@@ -13737,7 +13683,7 @@ def _is_bad_news_title(title):
 
 
 def _trump_recent_news_fetch(symbol=''):
-    """V2.18.6：Trump 第二層；Google News RSS 多查詢並行，降低總等待時間。"""
+    """V2.18.7：Trump 第二層；Google News RSS 多查詢並行，降低總等待時間。"""
     global _TRUMP_RECENT_NEWS_CACHE
     key=str(symbol or '').upper().strip() or '__MARKET__'; now_ts=time.time()
     cached=_TRUMP_RECENT_NEWS_CACHE.get(key)
@@ -15505,10 +15451,10 @@ def _notify_target_buy_point(name, symbol, state, u=None):
                 item['locked'] = False
         if score <= 60:
             item['locked'] = False
-            print(f'V2.18.6 {name} 買點 {score}：跌回60以下/等於60，解除通知鎖', flush=True)
+            print(f'V2.18.7 {name} 買點 {score}：跌回60以下/等於60，解除通知鎖', flush=True)
             return buy
         if locked:
-            print(f'V2.18.6 {name} 買點 {score}：已通知且尚未跌回60，不重複 LINE', flush=True)
+            print(f'V2.18.7 {name} 買點 {score}：已通知且尚未跌回60，不重複 LINE', flush=True)
             return buy
 
         investment_score = None
@@ -15522,10 +15468,10 @@ def _notify_target_buy_point(name, symbol, state, u=None):
                 m = re.search(r'(?:ETF)?綜合評分：\s*(-?\d+(?:\.\d+)?)\s*/\s*100', rule_result)
                 if m: investment_score = int(float(m.group(1)))
         except Exception as e:
-            print(f'V2.18.6 {name} 規則投資價值分數取得失敗：{type(e).__name__}: {e}', flush=True)
+            print(f'V2.18.7 {name} 規則投資價值分數取得失敗：{type(e).__name__}: {e}', flush=True)
 
         if investment_score is None or investment_score < 90:
-            print(f'V2.18.6 {name} 買點 {score}、投資價值 {investment_score if investment_score is not None else "N/A"}：未達 LINE 門檻，不呼叫 AI', flush=True)
+            print(f'V2.18.7 {name} 買點 {score}、投資價值 {investment_score if investment_score is not None else "N/A"}：未達 LINE 門檻，不呼叫 AI', flush=True)
             return buy
 
         # 真的即將送出極佳買點 LINE，現在才允許 AI。
@@ -15536,7 +15482,7 @@ def _notify_target_buy_point(name, symbol, state, u=None):
                 full_result = _run_ai_alert_analysis(analysis, name, u, False)
         except Exception as e:
             full_result = None
-            print(f'V2.18.6 {name} AI 加碼分析失敗：{type(e).__name__}: {e}', flush=True)
+            print(f'V2.18.7 {name} AI 加碼分析失敗：{type(e).__name__}: {e}', flush=True)
 
         if score >= 90 and investment_score is not None and investment_score >= 90:
             price = to_float(tech.get('price'))
@@ -15986,12 +15932,12 @@ def main():
 
     else:
 
-        print('========== V2.18.6 RUN START ==========', flush=True)
+        print('========== V2.18.7 RUN START ==========', flush=True)
         _print_ai_runtime_status()
-        print('V2.18.6 AI 閘門：每15分鐘自動掃描只有達到 LINE 發送門檻後才啟用 AI；未觸發時完全不呼叫 AI', flush=True)
+        print('V2.18.7 AI 閘門：每15分鐘自動掃描只有達到 LINE 發送門檻後才啟用 AI；未觸發時完全不呼叫 AI｜跌幅自動通知：每標的一天最多1次', flush=True)
         print(f'執行時間（台灣）：{datetime.now(TW_TZ).strftime("%Y-%m-%d %H:%M:%S")}', flush=True)
         run_alerts()
-        print('========== V2.18.6 RUN END ==========', flush=True)
+        print('========== V2.18.7 RUN END ==========', flush=True)
 
 
 if __name__ == '__main__':
