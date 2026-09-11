@@ -1,4 +1,4 @@
-# stock_alert.py V2.18.4
+# stock_alert.py V2.18.5
 # V2.17.1：AI 僅在「已達到 LINE 發送門檻」後啟用；其餘每15分鐘掃描完全不呼叫 AI。
 # V2.17.0 功能全部保留：Gemini Free 主力 + Mistral/Groq Free 備援、重大消息、Trump 語意、總經預測。
 # V2.15.6：外部產業網頁正確性＋效能修正版：官方價值鏈候選池改為資料驅動，不再只依賴同大產業 Top120；
@@ -209,7 +209,7 @@ MACRO_NEWS_CACHE_HOURS = 3
 MACRO_FORECAST_HORIZONS = (1, 3, 6)
 MACRO_FORECAST_MIN_POINTS = 8
 MACRO_NEWS_MAX_ITEMS = 12
-MACRO_TIMEOUT = int(os.getenv('MACRO_TIMEOUT', '30') or 30)
+MACRO_TIMEOUT = int(os.getenv('MACRO_TIMEOUT', '8') or 8)
 
 # ============================================================
 # V2.17.0 免費 AI 語意引擎
@@ -232,13 +232,15 @@ AI_MACRO_CACHE_HOURS = float(os.getenv('AI_MACRO_CACHE_HOURS', '6') or 6)
 AI_TRUMP_CACHE_HOURS = float(os.getenv('AI_TRUMP_CACHE_HOURS', '6') or 6)
 AI_WEB_ANALYSIS_ENABLED = os.getenv('AI_WEB_ANALYSIS_ENABLED', '1').strip().lower() not in ('0','false','no','off')
 AI_WEB_TIMEOUT = float(os.getenv('AI_WEB_TIMEOUT', '5') or 5)
-AI_QUOTA_STATE_FILE = 'ai_quota_state_v2181.json'
+MACRO_NEWS_TIMEOUT = float(os.getenv('MACRO_NEWS_TIMEOUT', '5') or 5)
+TRUMP_NEWS_TIMEOUT = float(os.getenv('TRUMP_NEWS_TIMEOUT', '5') or 5)
+AI_QUOTA_STATE_FILE = 'ai_quota_state_v2185.json'
 AI_MAX_OUTPUT_TOKENS = int(os.getenv('AI_MAX_OUTPUT_TOKENS', '700') or 700)
 AI_RETRY_ON_FAILURE = os.getenv('AI_RETRY_ON_FAILURE', '0').strip().lower() in ('1','true','yes','on')
 AI_MAX_NEWS_PER_BATCH = int(os.getenv('AI_MAX_NEWS_PER_BATCH', '4') or 4)
 AI_MAX_TRUMP_PER_BATCH = int(os.getenv('AI_MAX_TRUMP_PER_BATCH', '4') or 4)
 AI_PROVIDER_DISABLED_THIS_RUN = set()  # V2.17.4：任何 AI 傳輸/格式失敗都熔斷該 provider，避免本次 RUN 重複浪費 request
-AI_PROVIDER_QUOTA_COOLDOWN_UNTIL = {}  # V2.18.4：Web/Render 同一程序收到 429 後，當日直接跳過該 provider，避免每次網頁重等
+AI_PROVIDER_QUOTA_COOLDOWN_UNTIL = {}  # V2.18.5：Web/Render 同一程序收到 429 後，當日直接跳過該 provider，避免每次網頁重等
 AI_ENABLE_FINAL_SUMMARY = os.getenv('AI_ENABLE_FINAL_SUMMARY', '0').strip().lower() not in ('0','false','no','off')
 AI_ENABLE_NEWS = os.getenv('AI_ENABLE_NEWS', '1').strip().lower() not in ('0','false','no','off')
 AI_ENABLE_TRUMP = os.getenv('AI_ENABLE_TRUMP', '1').strip().lower() not in ('0','false','no','off')
@@ -1115,7 +1117,7 @@ def _ai_compact_payload(obj, max_chars=18000):
 
 
 def _ai_macro_summary(info):
-    """V2.18.4：總經 Web AI。使用明確 JSON Schema，避免 Gemini 回傳不可解析文字。"""
+    """V2.18.5：總經 Web AI。使用明確 JSON Schema，避免 Gemini 回傳不可解析文字。"""
     if not _ai_web_enabled('macro') or not isinstance(info,dict):
         return None
     data=info.get('data',{}) or {}
@@ -1152,7 +1154,7 @@ def _ai_macro_summary(info):
         '未來1到3個月最需要觀察哪些變數、什麼情況會讓判斷轉向？'
         '嚴格區分資料已觀察到的事實與推論，不把統計預測寫成確定事件。'
     )
-    print(f'V2.18.4 Web AI：開始總經分析｜cache=macro_web:{fp}',flush=True)
+    print(f'V2.18.5 Web AI：開始總經分析｜cache=macro_web:{fp}',flush=True)
     result=_ai_call_json(
         '你是保守的總經投資研究員。只做資料綜合與情境分析，不保證報酬。',
         prompt+'\n資料：'+_ai_compact_payload(payload),
@@ -1161,11 +1163,11 @@ def _ai_macro_summary(info):
         response_schema=schema,
         timeout=AI_WEB_TIMEOUT
     )
-    print(f'V2.18.4 Web AI：總經分析{"成功" if isinstance(result,dict) else "失敗/無結果"}',flush=True)
+    print(f'V2.18.5 Web AI：總經分析{"成功" if isinstance(result,dict) else "失敗/無結果"}',flush=True)
     return result
 
 def _ai_trump_summary(news, factor=None, portfolio=None):
-    """V2.18.4：Trump Web AI。除總結外，產出代表性標的傳導，避免頁面只有通用框架。"""
+    """V2.18.5：Trump Web AI。除總結外，產出代表性標的傳導，避免頁面只有通用框架。"""
     if not _ai_web_enabled('trump'):
         return None
     portfolio=portfolio or []
@@ -1230,7 +1232,7 @@ def _ai_trump_summary(news, factor=None, portfolio=None):
         '只可從 representative_candidates 選出有足夠證據的代表性標的；不要自行創造 ticker。'
         'stock_impacts 必須說明政策→產業/成本/需求→標的的傳導理由。'
     )
-    print(f'V2.18.4 Web AI：開始Trump分析｜cache=trump_web:{fp}',flush=True)
+    print(f'V2.18.5 Web AI：開始Trump分析｜cache=trump_web:{fp}',flush=True)
     result=_ai_call_json(
         '你是保守的美國政策與市場研究員。區分事實、政策階段與推論，不把新聞當成確定股價預測。',
         prompt+'\n資料：'+_ai_compact_payload(payload),
@@ -1239,7 +1241,7 @@ def _ai_trump_summary(news, factor=None, portfolio=None):
         response_schema=schema,
         timeout=AI_WEB_TIMEOUT
     )
-    print(f'V2.18.4 Web AI：Trump分析{"成功" if isinstance(result,dict) else "失敗/無結果"}',flush=True)
+    print(f'V2.18.5 Web AI：Trump分析{"成功" if isinstance(result,dict) else "失敗/無結果"}',flush=True)
     return result
 
 def _ai_extract_text(payload):
@@ -1277,7 +1279,7 @@ def _ai_json(text):
     m=re.search(r'\{.*\}',cleaned or text,re.S)
     if m and m.group(0) not in candidates:
         candidates.append(m.group(0))
-    # V2.18.4：若模型在 JSON 前後夾雜說明文字，嘗試以括號深度找第一個完整 object。
+    # V2.18.5：若模型在 JSON 前後夾雜說明文字，嘗試以括號深度找第一個完整 object。
     src=cleaned or text
     starts=[i for i,ch in enumerate(src) if ch=='{']
     for st in starts[:3]:
@@ -1322,7 +1324,7 @@ def _ai_normalize_quota_state():
             d['exhausted']=[]
             save_json(AI_QUOTA_STATE_FILE,d)
     except Exception as e:
-        print(f'V2.18.4 AI：quota 狀態初始化失敗：{type(e).__name__}: {e}',flush=True)
+        print(f'V2.18.5 AI：quota 狀態初始化失敗：{type(e).__name__}: {e}',flush=True)
 
 def _ai_provider_quota_exhausted(provider):
     try:
@@ -1343,9 +1345,9 @@ def _ai_mark_provider_quota_exhausted(provider, reason='quota'):
         d['reason_'+provider]=str(reason)[:300]
         save_json(AI_QUOTA_STATE_FILE,d)
         AI_PROVIDER_QUOTA_COOLDOWN_UNTIL[provider]=time.time()+24*3600
-        print(f'V2.18.4 AI：{provider} 今日免費額度/配額已耗盡，今天後續不再呼叫 {provider}', flush=True)
+        print(f'V2.18.5 AI：{provider} 今日免費額度/配額已耗盡，今天後續不再呼叫 {provider}', flush=True)
     except Exception as e:
-        print(f'V2.18.4 AI：無法保存 {provider} quota 狀態：{type(e).__name__}: {e}', flush=True)
+        print(f'V2.18.5 AI：無法保存 {provider} quota 狀態：{type(e).__name__}: {e}', flush=True)
 
 
 def _ai_provider_order():
@@ -1397,7 +1399,7 @@ def _ai_call_provider(provider, system_prompt, user_prompt, response_schema=None
     # V2.17.4：所有結構化 AI 任務都明確要求「只回傳 JSON object」。
     structured_instruction=(
         str(system_prompt or '').rstrip() +
-        '\n\n【V2.18.4 輸出格式硬性規則】\n'
+        '\n\n【V2.18.5 輸出格式硬性規則】\n'
         '你必須只輸出一個合法 JSON object。\n'
         '不得輸出 Markdown、```、前言、後記、解釋文字或 JSON 以外的任何字元。\n'
         'JSON 必須能被標準 json.loads() 直接解析；不可省略必要欄位。'
@@ -1435,8 +1437,7 @@ def _ai_call_provider(provider, system_prompt, user_prompt, response_schema=None
                 {'role':'system','content':structured_instruction},
                 {'role':'user','content':str(user_prompt or '')}
             ],
-            'max_completion_tokens':AI_MAX_OUTPUT_TOKENS,
-            'response_format':{'type':'json_object'}
+            'max_completion_tokens':AI_MAX_OUTPUT_TOKENS
         }
         headers={'Authorization':f'Bearer {key}','Content-Type':'application/json'}
     r=requests.post(url,headers=headers,json=payload,timeout=(timeout if timeout is not None else AI_TIMEOUT))
@@ -1459,13 +1460,13 @@ def _ai_call_json(system_prompt, user_prompt, cache_key='', ttl_hours=72, respon
     - 任何 AI 失敗都 fallback，不阻斷主流程
     """
     if not any(_ai_provider_key(p) for p in _ai_provider_order()):
-        print('V2.18.4 AI：未設定 Gemini/Mistral/Groq API Key，使用規則 fallback', flush=True)
+        print('V2.18.5 AI：未設定 Gemini/Mistral/Groq API Key，使用規則 fallback', flush=True)
         return None
     now=time.time()
     if cache_key:
         c=_AI_SEMANTIC_RUN_CACHE.get(cache_key)
         if isinstance(c,dict) and now-float(c.get('ts',0) or 0)<ttl_hours*3600:
-            print('V2.18.4 AI：memory cache hit', flush=True)
+            print('V2.18.5 AI：memory cache hit', flush=True)
             return c.get('data')
         disk=load_json(AI_NEWS_CACHE_FILE)
         if isinstance(disk,dict):
@@ -1474,18 +1475,18 @@ def _ai_call_json(system_prompt, user_prompt, cache_key='', ttl_hours=72, respon
                 data=d.get('data')
                 if isinstance(data,dict):
                     _AI_SEMANTIC_RUN_CACHE[cache_key]={'ts':float(d.get('ts',now) or now),'data':data}
-                    print('V2.18.4 AI：disk cache hit', flush=True)
+                    print('V2.18.5 AI：disk cache hit', flush=True)
                     return data
     _ai_normalize_quota_state()
     providers=[p for p in _ai_provider_order() if _ai_provider_key(p) and not _ai_provider_quota_exhausted(p)]
     if not providers:
-        print('V2.18.4 AI：所有已設定免費供應商今日均已耗盡配額，完全停用 AI，使用規則 fallback', flush=True)
+        print('V2.18.5 AI：所有已設定免費供應商今日均已耗盡配額，完全停用 AI，使用規則 fallback', flush=True)
         return None
     attempts=2 if AI_RETRY_ON_FAILURE else 1
     for provider in providers:
         for attempt in range(1,attempts+1):
             try:
-                print(f'V2.18.4 AI：provider={provider} request {attempt}/{attempts}', flush=True)
+                print(f'V2.18.5 AI：provider={provider} request {attempt}/{attempts}', flush=True)
                 data=_ai_call_provider(provider,system_prompt,user_prompt,response_schema=response_schema,timeout=timeout)
                 if cache_key:
                     _AI_SEMANTIC_RUN_CACHE[cache_key]={'ts':time.time(),'data':data}
@@ -1496,19 +1497,19 @@ def _ai_call_json(system_prompt, user_prompt, cache_key='', ttl_hours=72, respon
                         old=sorted(disk,key=lambda z:float(disk[z].get('ts',0) if isinstance(disk[z],dict) else 0))
                         for k in old[:-500]: disk.pop(k,None)
                     save_json(AI_NEWS_CACHE_FILE,disk)
-                print(f'V2.18.4 AI：SUCCESS｜provider={provider}', flush=True)
+                print(f'V2.18.5 AI：SUCCESS｜provider={provider}', flush=True)
                 return data
             except Exception as e:
                 msg=str(e)
-                print(f'V2.18.4 AI：FAIL｜provider={provider}｜{type(e).__name__}: {e}', flush=True)
+                print(f'V2.18.5 AI：FAIL｜provider={provider}｜{type(e).__name__}: {e}', flush=True)
                 # V2.17.4：不只 503/429。任何傳輸、逾時、空回覆、JSON 格式或 schema 異常，
                 # 都代表本次 provider 不可靠；立即熔斷該 provider，避免同一 RUN 再浪費免費 request。
                 if re.search(r'429|quota|rate.?limit|resource.?exhausted|too many requests|exceed', msg, flags=re.I):
                     _ai_mark_provider_quota_exhausted(provider, msg)
                 AI_PROVIDER_DISABLED_THIS_RUN.add(provider)
-                print(f'V2.18.4 AI：熔斷 {provider}｜本次 RUN 後續不再重試，避免浪費免費 request', flush=True)
+                print(f'V2.18.5 AI：熔斷 {provider}｜本次 RUN 後續不再重試，避免浪費免費 request', flush=True)
                 break
-    print('V2.18.4 AI：所有免費供應商均失敗，使用規則 fallback', flush=True)
+    print('V2.18.5 AI：所有免費供應商均失敗，使用規則 fallback', flush=True)
     return None
 
 
@@ -1528,7 +1529,7 @@ def _ai_runtime_status():
 
 def _print_ai_runtime_status():
     st=_ai_runtime_status()
-    print('========== V2.18.4 AI STATUS ==========', flush=True)
+    print('========== V2.18.5 AI STATUS ==========', flush=True)
     print(f"Gemini API Key：{'已設定' if st['gemini'] else '未設定'}｜模型：{GEMINI_MODEL}", flush=True)
     print(f"Mistral API Key：{'已設定' if st['mistral'] else '未設定'}｜模型：{MISTRAL_MODEL}", flush=True)
     print(f"Groq API Key：{'已設定' if st['groq'] else '未設定'}｜模型：{GROQ_MODEL}", flush=True)
@@ -4301,7 +4302,7 @@ def _drop_alert_analysis_message(name, symbol, u, day, week, cur, pc, wh, daily_
         holding = grab(r'持股處置：([^\n]+)')
         event_level = grab(r'事件處置等級：([^\n]+)')
 
-        # V2.18.4：跌幅 LINE 通知不得因 AI 429 / fallback 文案格式差異而整包變 N/A。
+        # V2.18.5：跌幅 LINE 通知不得因 AI 429 / fallback 文案格式差異而整包變 N/A。
         # 直接接受 analysis() 的實際規則輸出格式，並對缺欄位做第二層正規表示式補抓。
         def grab_any(patterns, default='N/A'):
             for ptn in patterns:
@@ -4371,7 +4372,7 @@ def _drop_alert_analysis_message(name, symbol, u, day, week, cur, pc, wh, daily_
 
 
 def _ai_background_session_allowed(identifier):
-    """V2.18.4：背景15分鐘 Actions 的股票/ETF AI 硬閘門。
+    """V2.18.5：背景15分鐘 Actions 的股票/ETF AI 硬閘門。
     台股僅 09:00-14:00；美股/QQQ 僅 21:30-05:00。
     Web 頁面的 AI 不走此函式，因此 /macro、/trump 仍可正常使用 Web AI。
     """
@@ -4385,11 +4386,11 @@ def _ai_background_session_allowed(identifier):
 
 
 def _run_ai_alert_analysis(func, *args, **kwargs):
-    """V2.18.4：已觸發 LINE 警報後才暫時開 AI，且背景掃描必須在對應市場交易時段。"""
+    """V2.18.5：已觸發 LINE 警報後才暫時開 AI，且背景掃描必須在對應市場交易時段。"""
     global AI_ALERT_MODE_ACTIVE
     identifier = args[0] if args else kwargs.get('symbol') or kwargs.get('name') or ''
     if not _ai_background_session_allowed(identifier):
-        print(f'V2.18.4 AI：非對應市場交易時段，跳過背景股票/ETF AI｜{identifier}', flush=True)
+        print(f'V2.18.5 AI：非對應市場交易時段，跳過背景股票/ETF AI｜{identifier}', flush=True)
         return None
     previous = AI_ALERT_MODE_ACTIVE
     AI_ALERT_MODE_ACTIVE = True
@@ -11034,7 +11035,7 @@ def analysis(
             ai_final=_ai_final_investment_summary(_snapshot)
             ai_final_text=_format_ai_final_summary(ai_final)
         except Exception as e:
-            print(f'V2.18.4 AI 最終結論失敗：{type(e).__name__}: {e}',flush=True)
+            print(f'V2.18.5 AI 最終結論失敗：{type(e).__name__}: {e}',flush=True)
     if not ai_final_text and AI_ENABLE_FINAL_SUMMARY:
         # 沒有 API key 時仍提供 deterministic 摘要，避免畫面留白。
         _conflict='投資價值與買點不同步' if ((fs>=24 and buy.get('score',0)<60) or (fs<24 and buy.get('score',0)>=60)) else '各層訊號大致一致'
@@ -13230,7 +13231,7 @@ def _macro_value(d, key):
 
 
 def _macro_seed_multisource_history():
-    """V2.18.4：歷史總經資料多來源補種。
+    """V2.18.5：歷史總經資料多來源補種。
     不再把 FRED 當成唯一歷史來源；BLS 提供 CPI/失業率歷史、US Treasury 提供殖利率歷史。
     這些資料只用來建立統計歷史，不直接改寫即時值。
     """
@@ -13281,9 +13282,9 @@ def _macro_seed_multisource_history():
         for ym,v in unemp.items():
             y,m=map(int,ym.split('-')); dt=f'{y:04d}-{m:02d}-01'; row=by_day.setdefault(dt,{'ts':dt+'T00:00:00+08:00'})
             row['us_unemployment']=v; fetched+=1
-        print(f'V2.18.4 BLS歷史補種：{len(cpi)}筆CPI、{len(unemp)}筆失業率',flush=True)
+        print(f'V2.18.5 BLS歷史補種：{len(cpi)}筆CPI、{len(unemp)}筆失業率',flush=True)
     except Exception as e:
-        print(f'V2.18.4 BLS歷史補種失敗：{type(e).__name__}: {e}',flush=True)
+        print(f'V2.18.5 BLS歷史補種失敗：{type(e).__name__}: {e}',flush=True)
     try:
         # US Treasury daily yield curve CSV：免費官方歷史資料。
         yr=datetime.now(TW_TZ).year
@@ -13304,14 +13305,14 @@ def _macro_seed_multisource_history():
                 if ten is not None and math.isfinite(ten): row['us_10y']=ten
                 if ten is not None and two is not None and math.isfinite(ten) and math.isfinite(two): row['us_curve_10y2y']=ten-two
             fetched+=len(td)
-        print(f'V2.18.4 Treasury歷史補種：{len(td)}筆',flush=True)
+        print(f'V2.18.5 Treasury歷史補種：{len(td)}筆',flush=True)
     except Exception as e:
-        print(f'V2.18.4 Treasury歷史補種失敗：{type(e).__name__}: {e}',flush=True)
+        print(f'V2.18.5 Treasury歷史補種失敗：{type(e).__name__}: {e}',flush=True)
     if fetched:
         hist['items']=sorted(by_day.values(),key=lambda x:str(x.get('ts','')))[-MACRO_HISTORY_MAX_DAYS:]
         save_json(MACRO_HISTORY_FILE,hist)
         _MACRO_HISTORY_RUN_CACHE=None
-        print(f'V2.18.4 多來源歷史快取完成：{len(hist["items"])}筆',flush=True)
+        print(f'V2.18.5 多來源歷史快取完成：{len(hist["items"])}筆',flush=True)
 
 def _macro_history_append(d):
     """Persist one observation per run.  History is used only for statistical estimates."""
@@ -13378,7 +13379,7 @@ def _macro_series_history(series_key, d=None, min_points=MACRO_FORECAST_MIN_POIN
                 except Exception: pass
             if arr: _MACRO_FRED_HISTORY_CACHE[series_key]=arr[-MACRO_HISTORY_MAX_DAYS:]
     except Exception as e:
-        print(f'V2.18.4 FRED歷史補抓略過：{type(e).__name__}: {e}',flush=True)
+        print(f'V2.18.5 FRED歷史補抓略過：{type(e).__name__}: {e}',flush=True)
     return list((_MACRO_FRED_HISTORY_CACHE or {}).get(series_key,vals))
 
 
@@ -13433,17 +13434,25 @@ def _macro_news_fetch(force=False):
         'oil prices inflation Fed global economy'
     ]
     items=[]; errors=[]
-    for q in queries:
+    def _fetch_macro_news_query(q):
         try:
             url='https://news.google.com/rss/search?'+urlencode({'q':q+' when:7d','hl':'en-US','gl':'US','ceid':'US:en'})
-            r=requests.get(url,timeout=10,headers={'User-Agent':'Mozilla/5.0 stock-alert/2.15.0'})
+            r=requests.get(url,timeout=MACRO_NEWS_TIMEOUT,headers={'User-Agent':'Mozilla/5.0 stock-alert/2.18.5'})
             r.raise_for_status()
             root=ET.fromstring(r.text)
+            out=[]
             for it in root.findall('.//item')[:8]:
                 title=(it.findtext('title') or '').strip(); link=(it.findtext('link') or '').strip(); pub=(it.findtext('pubDate') or '').strip()
-                if not title: continue
-                items.append({'title':title,'link':link,'published':pub,'query':q})
-        except Exception as e: errors.append(f'{type(e).__name__}: {e}')
+                if title: out.append({'title':title,'link':link,'published':pub,'query':q})
+            return out, None
+        except Exception as e:
+            return [], f'{type(e).__name__}: {e}'
+    with ThreadPoolExecutor(max_workers=min(5,len(queries))) as ex:
+        futures=[ex.submit(_fetch_macro_news_query,q) for q in queries]
+        for fut in futures:
+            got, err=fut.result()
+            items.extend(got)
+            if err: errors.append(err)
     seen=set(); clean=[]
     for x in items:
         k=re.sub(r'\W+','',x['title'].lower())
@@ -13668,7 +13677,7 @@ def macro_stock_factor(industry, subindustries=None, name=''):
 
 
 def _is_bad_news_title(title):
-    """V2.18.4：過濾 Google/代理伺服器錯誤頁被 RSS 當成新聞標題的污染資料。"""
+    """V2.18.5：過濾 Google/代理伺服器錯誤頁被 RSS 當成新聞標題的污染資料。"""
     t=html.unescape(str(title or '')).strip().lower()
     if not t: return True
     bad=('error 500','server error','af-error-page','<html','<body','<!doctype','overflow:auto','display:block!important','google error','javascript:','stack trace')
@@ -13678,9 +13687,7 @@ def _is_bad_news_title(title):
 
 
 def _trump_recent_news_fetch(symbol=''):
-    """V2.14.42：第二層 Trump 市場影響引擎。
-    同時追蹤：個人交易、政策/言論、政府投資、產業主題；政策不冒充 278-T 交易。
-    """
+    """V2.18.5：Trump 第二層；Google News RSS 多查詢並行，降低總等待時間。"""
     global _TRUMP_RECENT_NEWS_CACHE
     key=str(symbol or '').upper().strip() or '__MARKET__'; now_ts=time.time()
     cached=_TRUMP_RECENT_NEWS_CACHE.get(key)
@@ -13692,53 +13699,55 @@ def _trump_recent_news_fetch(symbol=''):
     out={'query':' | '.join(queries),'items':[],'raw_items':0,'qualified_items':0,'positive':0,'negative':0,'neutral':0,'score':0,'themes':{},'error':''}
     seen=set(); cutoff=datetime.now(TW_TZ)-timedelta(days=TRUMP_RECENT_NEWS_LOOKBACK_DAYS)
     try:
-        for q in queries:
-            rss_url='https://news.google.com/rss/search?q='+quote(q)+'&hl=en-US&gl=US&ceid=US:en'
-            r=requests.get(rss_url,timeout=12,headers={'User-Agent':'stock-alert/2.14.42'}); r.raise_for_status(); root=ET.fromstring(r.content)
-            raw=[]
-            for item in root.findall('.//item'):
-                title=(item.findtext('title') or '').strip(); link=(item.findtext('link') or '').strip(); pub=(item.findtext('pubDate') or '').strip()
-                if not title or _is_bad_news_title(title):
-                    continue
-                dt=None
-                try: dt=parsedate_to_datetime(pub).astimezone(TW_TZ)
-                except Exception: pass
-                raw.append((dt,title,link,pub))
-            out['raw_items']+=len(raw)
-            for dt,title,link,pub in sorted(raw,key=lambda x:x[0] or datetime.min.replace(tzinfo=TW_TZ),reverse=True):
-                if dt is not None and dt<cutoff: continue
-                low=title.lower(); norm=re.sub(r'\W+',' ',low).strip()
-                if norm in seen: continue
-                theme=None
-                if any(w in low for w in ('magnet','rare earth','critical mineral','neodymium')): theme='稀土／磁鐵／關鍵礦物'
-                elif any(w in low for w in ('semiconductor','chip','tsmc','artificial intelligence','ai infrastructure')): theme='半導體／AI'
-                elif any(w in low for w in ('defense','defence','drone','military','aerospace')): theme='國防／無人機／航太'
-                elif any(w in low for w in ('oil','gas','nuclear','energy')): theme='能源'
-                elif any(w in low for w in ('spacex','space','satellite')): theme='太空／衛星'
-                elif any(w in low for w in ('tariff','trade war','import duty')): theme='關稅／貿易'
-                elif any(w in low for w in ('crypto','bitcoin','ethereum')): theme='加密資產'
-                personal=any(w in low for w in ('trump bought','trump purchased','trump invested','trump sold','trump shares','trump stake','trump holdings','financial disclosure'))
-                policy=any(w in low for w in ('trump','president trump')) and theme is not None
-                if key!='__MARKET__':
-                    terms=[key.lower()] + ([company.lower()] if company else [])
-                    relevant=any(t and t in low for t in terms) or (theme in ('半導體／AI','稀土／磁鐵／關鍵礦物','國防／無人機／航太','能源','太空／衛星','關稅／貿易','加密資產') and any(x in low for x in terms))
-                    if not relevant: continue
-                    # 個股查詢：仍需標的直接提及，避免把整個產業新聞誤套到個股。
-                    if not any(t and t in low for t in terms): continue
-                if not personal and not policy: continue
-                seen.add(norm)
-                side='neutral'; score=0
-                if any(w in low for w in ('invest','investment','bought','purchase','deal','fund','award','support','back','build','expand')): side='positive'; score=1
-                if any(w in low for w in ('ban','restrict','tariff','sanction','cut','halt','delay','lawsuit','investigation')): side='negative'; score=-1
-                item={'title':title[:300],'link':link,'published':dt.isoformat() if dt else pub,'side':side,'score':score,'theme':theme or 'Trump政策/市場動向','source':'Google News RSS'}
-                out['items'].append(item); out[side]+=1
-                if theme: out['themes'][theme]=int(out['themes'].get(theme,0))+1
-                if len(out['items'])>=TRUMP_RECENT_NEWS_MAX_ITEMS: break
+        def _fetch(q):
+            try:
+                rss_url='https://news.google.com/rss/search?q='+quote(q)+'&hl=en-US&gl=US&ceid=US:en'
+                r=requests.get(rss_url,timeout=TRUMP_NEWS_TIMEOUT,headers={'User-Agent':'stock-alert/2.18.5'}); r.raise_for_status(); root=ET.fromstring(r.content)
+                raw=[]
+                for item in root.findall('.//item'):
+                    title=(item.findtext('title') or '').strip(); link=(item.findtext('link') or '').strip(); pub=(item.findtext('pubDate') or '').strip()
+                    if not title or _is_bad_news_title(title): continue
+                    dt=None
+                    try: dt=parsedate_to_datetime(pub).astimezone(TW_TZ)
+                    except Exception: pass
+                    raw.append((dt,title,link,pub))
+                return raw,''
+            except Exception as e: return [],f'{type(e).__name__}: {e}'
+        with ThreadPoolExecutor(max_workers=min(5,len(queries))) as ex:
+            results=list(ex.map(_fetch,queries))
+        all_raw=[]
+        for raw,err in results:
+            out['raw_items']+=len(raw); all_raw.extend(raw)
+            if err and not out['error']: out['error']=err
+        all_raw.sort(key=lambda x:x[0] or datetime.min.replace(tzinfo=TW_TZ),reverse=True)
+        for dt,title,link,pub in all_raw:
+            if dt is not None and dt<cutoff: continue
+            low=title.lower(); norm=re.sub(r'\W+',' ',low).strip()
+            if norm in seen: continue
+            theme=None
+            if any(w in low for w in ('magnet','rare earth','critical mineral','neodymium')): theme='稀土／磁鐵／關鍵礦物'
+            elif any(w in low for w in ('semiconductor','chip','tsmc','artificial intelligence','ai infrastructure')): theme='半導體／AI'
+            elif any(w in low for w in ('defense','defence','drone','military','aerospace')): theme='國防／無人機／航太'
+            elif any(w in low for w in ('oil','gas','nuclear','energy')): theme='能源'
+            elif any(w in low for w in ('spacex','space','satellite')): theme='太空／衛星'
+            elif any(w in low for w in ('tariff','trade war','import duty')): theme='關稅／貿易'
+            elif any(w in low for w in ('crypto','bitcoin','ethereum')): theme='加密資產'
+            personal=any(w in low for w in ('trump bought','trump purchased','trump invested','trump sold','trump shares','trump stake','trump holdings','financial disclosure'))
+            policy=any(w in low for w in ('trump','president trump')) and theme is not None
+            if key!='__MARKET__':
+                terms=[key.lower()] + ([company.lower()] if company else [])
+                if not any(t and t in low for t in terms): continue
+            if not personal and not policy: continue
+            seen.add(norm); side='neutral'; score=0
+            if any(w in low for w in ('invest','investment','bought','purchase','deal','fund','award','support','back','build','expand')): side='positive'; score=1
+            if any(w in low for w in ('ban','restrict','tariff','sanction','cut','halt','delay','lawsuit','investigation')): side='negative'; score=-1
+            item={'title':title[:300],'link':link,'published':dt.isoformat() if dt else pub,'side':side,'score':score,'theme':theme or 'Trump政策/市場動向','source':'Google News RSS'}
+            out['items'].append(item); out[side]+=1
+            if theme: out['themes'][theme]=int(out['themes'].get(theme,0))+1
             if len(out['items'])>=TRUMP_RECENT_NEWS_MAX_ITEMS: break
         out['qualified_items']=len(out['items']); out['score']=max(-4,min(4,sum(int(x.get('score',0)) for x in out['items']))); out['source']='Google News RSS / public market news'
     except Exception as e: out['error']=f'{type(e).__name__}: {e}'
     _TRUMP_RECENT_NEWS_CACHE[key]={'cached_at':now_ts,'data':out}; return out
-
 
 def _trump_translate_title(title):
     """V2.15.4：繁中翻譯三層備援：Google GTX -> MyMemory -> 原文。"""
@@ -13752,7 +13761,7 @@ def _trump_translate_title(title):
     ]
     for url,params in urls:
         try:
-            r=requests.get(url,params=params,timeout=12,headers={'User-Agent':'Mozilla/5.0'})
+            r=requests.get(url,params=params,timeout=3,headers={'User-Agent':'Mozilla/5.0'})
             r.raise_for_status(); payload=r.json()
             translated=''.join(str(x[0]) for x in (payload[0] if isinstance(payload,list) and payload else []) if isinstance(x,list) and x).strip()
             if translated and translated != text:
@@ -13761,7 +13770,7 @@ def _trump_translate_title(title):
             pass
     try:
         # Google Translate mobile HTML 是 GTX API 的另一個備援，不需要 API key。
-        r=requests.get('https://translate.google.com/m',params={'sl':'auto','tl':'zh-TW','q':text[:500]},timeout=12,headers={'User-Agent':'Mozilla/5.0'})
+        r=requests.get('https://translate.google.com/m',params={'sl':'auto','tl':'zh-TW','q':text[:500]},timeout=3,headers={'User-Agent':'Mozilla/5.0'})
         r.raise_for_status()
         m=re.search(r'<div[^>]+class=[\"\']result-container[\"\'][^>]*>(.*?)</div>',r.text,re.I|re.S)
         if m:
@@ -13771,7 +13780,7 @@ def _trump_translate_title(title):
     except Exception:
         pass
     try:
-        r=requests.get('https://api.mymemory.translated.net/get',params={'q':text[:500],'langpair':'en|zh-TW'},timeout=12,headers={'User-Agent':'Mozilla/5.0'})
+        r=requests.get('https://api.mymemory.translated.net/get',params={'q':text[:500],'langpair':'en|zh-TW'},timeout=3,headers={'User-Agent':'Mozilla/5.0'})
         r.raise_for_status(); payload=r.json(); translated=str((payload.get('responseData') or {}).get('translatedText') or '').strip()
         if translated and translated.lower()!=text.lower():
             cache[key]=translated; return translated
@@ -14446,9 +14455,12 @@ def run_webhook_server():
         rows.append('<div class="card"><h2>🟡 第二層｜最近30日 Trump 政策／交易／產業動向</h2>')
         rows.append(f'<p><b>{html.escape(news.get("state","⚪ 無資料"))}</b>　輔助調整：<b>{int(news.get("factor",0)):+d}</b></p>')
         rows.append(f'<p class="muted">符合條件：{int(news.get("qualified_items",0))} 篇；正面：{int(news.get("positive",0))}；負面：{int(news.get("negative",0))}；中性：{int(news.get("neutral",0))}<br>⚠️ 本層包含官方交易以外的政策／言論／政府投資；政策訊號不等於 Trump 個人持股。</p>')
-        for ni in news.get('items',[])[:6]:
+        _display_items=news.get('items',[])[:6]
+        with ThreadPoolExecutor(max_workers=min(6,len(_display_items) or 1)) as _tex:
+            _translated=list(_tex.map(lambda _ni: _trump_translate_title(_ni.get("title","")), _display_items))
+        for ni, translated_title in zip(_display_items, _translated):
             icon='🟢' if ni.get('side')=='positive' else '🔴' if ni.get('side')=='negative' else '⚪'
-            rows.append(f'<p>{icon} {html.escape(_trump_translate_title(ni.get("title","")))}<br><span class="muted">{html.escape(str(ni.get("published","")))}｜Google News RSS</span></p>')
+            rows.append(f'<p>{icon} {html.escape(translated_title)}<br><span class="muted">{html.escape(str(ni.get("published","")))}｜Google News RSS</span></p>')
         if news.get('error'): rows.append(f'<p class="muted">⚠️ 第二層資料取得失敗：{html.escape(str(news.get("error")))}</p>')
         rows.append('</div>')
         if isinstance(ai_trump,dict):
@@ -15443,10 +15455,10 @@ def _notify_target_buy_point(name, symbol, state, u=None):
                 item['locked'] = False
         if score <= 60:
             item['locked'] = False
-            print(f'V2.18.4 {name} 買點 {score}：跌回60以下/等於60，解除通知鎖', flush=True)
+            print(f'V2.18.5 {name} 買點 {score}：跌回60以下/等於60，解除通知鎖', flush=True)
             return buy
         if locked:
-            print(f'V2.18.4 {name} 買點 {score}：已通知且尚未跌回60，不重複 LINE', flush=True)
+            print(f'V2.18.5 {name} 買點 {score}：已通知且尚未跌回60，不重複 LINE', flush=True)
             return buy
 
         investment_score = None
@@ -15460,10 +15472,10 @@ def _notify_target_buy_point(name, symbol, state, u=None):
                 m = re.search(r'(?:ETF)?綜合評分：\s*(-?\d+(?:\.\d+)?)\s*/\s*100', rule_result)
                 if m: investment_score = int(float(m.group(1)))
         except Exception as e:
-            print(f'V2.18.4 {name} 規則投資價值分數取得失敗：{type(e).__name__}: {e}', flush=True)
+            print(f'V2.18.5 {name} 規則投資價值分數取得失敗：{type(e).__name__}: {e}', flush=True)
 
         if investment_score is None or investment_score < 90:
-            print(f'V2.18.4 {name} 買點 {score}、投資價值 {investment_score if investment_score is not None else "N/A"}：未達 LINE 門檻，不呼叫 AI', flush=True)
+            print(f'V2.18.5 {name} 買點 {score}、投資價值 {investment_score if investment_score is not None else "N/A"}：未達 LINE 門檻，不呼叫 AI', flush=True)
             return buy
 
         # 真的即將送出極佳買點 LINE，現在才允許 AI。
@@ -15474,7 +15486,7 @@ def _notify_target_buy_point(name, symbol, state, u=None):
                 full_result = _run_ai_alert_analysis(analysis, name, u, False)
         except Exception as e:
             full_result = None
-            print(f'V2.18.4 {name} AI 加碼分析失敗：{type(e).__name__}: {e}', flush=True)
+            print(f'V2.18.5 {name} AI 加碼分析失敗：{type(e).__name__}: {e}', flush=True)
 
         if score >= 90 and investment_score is not None and investment_score >= 90:
             price = to_float(tech.get('price'))
@@ -15924,12 +15936,12 @@ def main():
 
     else:
 
-        print('========== V2.18.4 RUN START ==========', flush=True)
+        print('========== V2.18.5 RUN START ==========', flush=True)
         _print_ai_runtime_status()
-        print('V2.18.4 AI 閘門：每15分鐘自動掃描只有達到 LINE 發送門檻後才啟用 AI；未觸發時完全不呼叫 AI', flush=True)
+        print('V2.18.5 AI 閘門：每15分鐘自動掃描只有達到 LINE 發送門檻後才啟用 AI；未觸發時完全不呼叫 AI', flush=True)
         print(f'執行時間（台灣）：{datetime.now(TW_TZ).strftime("%Y-%m-%d %H:%M:%S")}', flush=True)
         run_alerts()
-        print('========== V2.18.4 RUN END ==========', flush=True)
+        print('========== V2.18.5 RUN END ==========', flush=True)
 
 
 if __name__ == '__main__':
