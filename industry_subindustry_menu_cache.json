@@ -1,5 +1,5 @@
 {
-  "_cached_at": 1789090639.4425244,
+  "_cached_at": 1789091524.229085,
   "source": "subindustry_cache.json",
   "data": {
     "半導體": [
@@ -57,7 +57,9 @@
       "ITO導電薄膜",
       "ITO靶材",
       "IT服務",
+      "LCoS",
       "LED驅動IC",
+      "MicroLED",
       "MRHeadset&SG",
       "ODM/OEM",
       "PaaS",
@@ -494,6 +496,7 @@
       "顯示卡",
       "顯示器",
       "顯示器模組",
+      "顯示技術",
       "風場營造",
       "風場規劃",
       "風場開發",
@@ -558,6 +561,8 @@
       "HPU",
       "IC",
       "IT服務",
+      "LCoS",
+      "MicroLED",
       "MRHeadset&SG",
       "ODM/OEM",
       "QualcommXRPlatform",
@@ -598,7 +603,8 @@
       "重工業",
       "電池模組",
       "頭顯裝置品牌廠",
-      "顧問"
+      "顧問",
+      "顯示技術"
     ],
     "LED照明產業": [
       "光源/磊晶",

@@ -1,5 +1,5 @@
 {
-  "_cached_at": 1789090639.162747,
+  "_cached_at": 1789091523.8704224,
   "source": "TPEx/TWSE Industry Value Chain",
   "source_url": "https://ic.tpex.org.tw/company_chain.php",
   "cache_days": 30,
@@ -46968,6 +46968,200 @@
           "industry": "休閒娛樂",
           "sub_industry": "高爾夫球具業",
           "date": "2026-09-09"
+        }
+      ]
+    },
+    "7825": {
+      "subindustries": [
+        "生產製程及檢測設備",
+        "應用/系統軟體設計開發",
+        "系統整合服務",
+        "資料處理服務",
+        "其他電子產品及電子服務產業",
+        "系統整合",
+        "顧問諮詢",
+        "領域解決方案",
+        "智慧設備",
+        "機器學習",
+        "電腦視覺",
+        "自然語言處理",
+        "運算設備",
+        "雲端平台",
+        "設備管理軟體",
+        "分析工具",
+        "感測裝置",
+        "PaaS",
+        "SaaS",
+        "顯示技術",
+        "光學元件/模組",
+        "LCoS",
+        "MicroLED",
+        "微型顯示器/光機引擎(LightEngine)",
+        "環境感知",
+        "深度感測",
+        "使用者感知",
+        "視覺"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "生產製程及檢測設備",
+          "date": "2026-09-11"
+        },
+        {
+          "industry": "印刷電路板",
+          "sub_industry": "生產製程及檢測設備",
+          "date": "2026-09-11"
+        },
+        {
+          "industry": "軟體服務",
+          "sub_industry": "應用/系統軟體設計開發",
+          "date": "2026-09-11"
+        },
+        {
+          "industry": "軟體服務",
+          "sub_industry": "系統整合服務",
+          "date": "2026-09-11"
+        },
+        {
+          "industry": "軟體服務",
+          "sub_industry": "資料處理服務",
+          "date": "2026-09-11"
+        },
+        {
+          "industry": "其他",
+          "sub_industry": "其他電子產品及電子服務產業",
+          "date": "2026-09-11"
+        },
+        {
+          "industry": "人工智慧",
+          "sub_industry": "系統整合",
+          "date": "2026-09-11"
+        },
+        {
+          "industry": "人工智慧",
+          "sub_industry": "顧問諮詢",
+          "date": "2026-09-11"
+        },
+        {
+          "industry": "人工智慧",
+          "sub_industry": "領域解決方案",
+          "date": "2026-09-11"
+        },
+        {
+          "industry": "人工智慧",
+          "sub_industry": "智慧設備",
+          "date": "2026-09-11"
+        },
+        {
+          "industry": "人工智慧",
+          "sub_industry": "機器學習",
+          "date": "2026-09-11"
+        },
+        {
+          "industry": "人工智慧",
+          "sub_industry": "電腦視覺",
+          "date": "2026-09-11"
+        },
+        {
+          "industry": "人工智慧",
+          "sub_industry": "自然語言處理",
+          "date": "2026-09-11"
+        },
+        {
+          "industry": "人工智慧",
+          "sub_industry": "運算設備",
+          "date": "2026-09-11"
+        },
+        {
+          "industry": "人工智慧",
+          "sub_industry": "雲端平台",
+          "date": "2026-09-11"
+        },
+        {
+          "industry": "雲端運算",
+          "sub_industry": "設備管理軟體",
+          "date": "2026-09-11"
+        },
+        {
+          "industry": "大數據",
+          "sub_industry": "系統整合",
+          "date": "2026-09-11"
+        },
+        {
+          "industry": "大數據",
+          "sub_industry": "顧問諮詢",
+          "date": "2026-09-11"
+        },
+        {
+          "industry": "大數據",
+          "sub_industry": "領域解決方案",
+          "date": "2026-09-11"
+        },
+        {
+          "industry": "大數據",
+          "sub_industry": "分析工具",
+          "date": "2026-09-11"
+        },
+        {
+          "industry": "運動科技",
+          "sub_industry": "感測裝置",
+          "date": "2026-09-11"
+        },
+        {
+          "industry": "雲端運算",
+          "sub_industry": "PaaS",
+          "date": "2026-09-11"
+        },
+        {
+          "industry": "雲端運算",
+          "sub_industry": "SaaS",
+          "date": "2026-09-11"
+        },
+        {
+          "industry": "體驗科技",
+          "sub_industry": "顯示技術",
+          "date": "2026-09-11"
+        },
+        {
+          "industry": "體驗科技",
+          "sub_industry": "光學元件/模組",
+          "date": "2026-09-11"
+        },
+        {
+          "industry": "體驗科技",
+          "sub_industry": "LCoS",
+          "date": "2026-09-11"
+        },
+        {
+          "industry": "體驗科技",
+          "sub_industry": "MicroLED",
+          "date": "2026-09-11"
+        },
+        {
+          "industry": "體驗科技",
+          "sub_industry": "微型顯示器/光機引擎(LightEngine)",
+          "date": "2026-09-11"
+        },
+        {
+          "industry": "體驗科技",
+          "sub_industry": "環境感知",
+          "date": "2026-09-11"
+        },
+        {
+          "industry": "體驗科技",
+          "sub_industry": "深度感測",
+          "date": "2026-09-11"
+        },
+        {
+          "industry": "體驗科技",
+          "sub_industry": "使用者感知",
+          "date": "2026-09-11"
+        },
+        {
+          "industry": "體驗科技",
+          "sub_industry": "視覺",
+          "date": "2026-09-11"
         }
       ]
     }
