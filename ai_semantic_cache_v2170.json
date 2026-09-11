@@ -1,0 +1,19 @@
+{
+  "trump:__MARKET__:dbb7cfdf27ccc73ecb8dbcea": {
+    "ts": 1789102385.2307062,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.8,
+          "policy_stage": "unknown",
+          "reason": "不相關",
+          "relevant": false
+        }
+      ]
+    },
+    "provider": "groq"
+  }
+}
