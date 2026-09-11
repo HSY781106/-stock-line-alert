@@ -1,4 +1,4 @@
-# stock_alert.py V2.18.0
+# stock_alert.py V2.18.2
 # V2.17.1：AI 僅在「已達到 LINE 發送門檻」後啟用；其餘每15分鐘掃描完全不呼叫 AI。
 # V2.17.0 功能全部保留：Gemini Free 主力 + Mistral/Groq Free 備援、重大消息、Trump 語意、總經預測。
 # V2.15.6：外部產業網頁正確性＋效能修正版：官方價值鏈候選池改為資料驅動，不再只依賴同大產業 Top120；
@@ -1114,7 +1114,7 @@ def _ai_compact_payload(obj, max_chars=18000):
 
 
 def _ai_macro_summary(info):
-    """V2.18.0：總經 Web AI。使用明確 JSON Schema，避免 Gemini 回傳不可解析文字。"""
+    """V2.18.2：總經 Web AI。使用明確 JSON Schema，避免 Gemini 回傳不可解析文字。"""
     if not _ai_web_enabled('macro') or not isinstance(info,dict):
         return None
     data=info.get('data',{}) or {}
@@ -1151,7 +1151,7 @@ def _ai_macro_summary(info):
         '未來1到3個月最需要觀察哪些變數、什麼情況會讓判斷轉向？'
         '嚴格區分資料已觀察到的事實與推論，不把統計預測寫成確定事件。'
     )
-    print(f'V2.18.0 Web AI：開始總經分析｜cache=macro_web:{fp}',flush=True)
+    print(f'V2.18.2 Web AI：開始總經分析｜cache=macro_web:{fp}',flush=True)
     result=_ai_call_json(
         '你是保守的總經投資研究員。只做資料綜合與情境分析，不保證報酬。',
         prompt+'\n資料：'+_ai_compact_payload(payload),
@@ -1160,11 +1160,11 @@ def _ai_macro_summary(info):
         response_schema=schema,
         timeout=AI_WEB_TIMEOUT
     )
-    print(f'V2.18.0 Web AI：總經分析{"成功" if isinstance(result,dict) else "失敗/無結果"}',flush=True)
+    print(f'V2.18.2 Web AI：總經分析{"成功" if isinstance(result,dict) else "失敗/無結果"}',flush=True)
     return result
 
 def _ai_trump_summary(news, factor=None, portfolio=None):
-    """V2.18.0：Trump Web AI。除總結外，產出代表性標的傳導，避免頁面只有通用框架。"""
+    """V2.18.2：Trump Web AI。除總結外，產出代表性標的傳導，避免頁面只有通用框架。"""
     if not _ai_web_enabled('trump'):
         return None
     portfolio=portfolio or []
@@ -1229,7 +1229,7 @@ def _ai_trump_summary(news, factor=None, portfolio=None):
         '只可從 representative_candidates 選出有足夠證據的代表性標的；不要自行創造 ticker。'
         'stock_impacts 必須說明政策→產業/成本/需求→標的的傳導理由。'
     )
-    print(f'V2.18.0 Web AI：開始Trump分析｜cache=trump_web:{fp}',flush=True)
+    print(f'V2.18.2 Web AI：開始Trump分析｜cache=trump_web:{fp}',flush=True)
     result=_ai_call_json(
         '你是保守的美國政策與市場研究員。區分事實、政策階段與推論，不把新聞當成確定股價預測。',
         prompt+'\n資料：'+_ai_compact_payload(payload),
@@ -1238,7 +1238,7 @@ def _ai_trump_summary(news, factor=None, portfolio=None):
         response_schema=schema,
         timeout=AI_WEB_TIMEOUT
     )
-    print(f'V2.18.0 Web AI：Trump分析{"成功" if isinstance(result,dict) else "失敗/無結果"}',flush=True)
+    print(f'V2.18.2 Web AI：Trump分析{"成功" if isinstance(result,dict) else "失敗/無結果"}',flush=True)
     return result
 
 def _ai_extract_text(payload):
@@ -1276,6 +1276,26 @@ def _ai_json(text):
     m=re.search(r'\{.*\}',cleaned or text,re.S)
     if m and m.group(0) not in candidates:
         candidates.append(m.group(0))
+    # V2.18.2：若模型在 JSON 前後夾雜說明文字，嘗試以括號深度找第一個完整 object。
+    src=cleaned or text
+    starts=[i for i,ch in enumerate(src) if ch=='{']
+    for st in starts[:3]:
+        depth=0; in_str=False; esc=False
+        for j in range(st,len(src)):
+            ch=src[j]
+            if in_str:
+                if esc: esc=False
+                elif ch=='\\': esc=True
+                elif ch=='"': in_str=False
+                continue
+            if ch=='"': in_str=True; continue
+            if ch=='{': depth+=1
+            elif ch=='}':
+                depth-=1
+                if depth==0:
+                    piece=src[st:j+1]
+                    if piece not in candidates: candidates.append(piece)
+                    break
     for candidate in candidates:
         try:
             obj=json.loads(candidate)
@@ -1321,9 +1341,9 @@ def _ai_mark_provider_quota_exhausted(provider, reason='quota'):
         d['exhausted']=sorted(exhausted)
         d['reason_'+provider]=str(reason)[:300]
         save_json(AI_QUOTA_STATE_FILE,d)
-        print(f'V2.18.0 AI：{provider} 今日免費額度/配額已耗盡，今天後續不再呼叫 {provider}', flush=True)
+        print(f'V2.18.2 AI：{provider} 今日免費額度/配額已耗盡，今天後續不再呼叫 {provider}', flush=True)
     except Exception as e:
-        print(f'V2.18.0 AI：無法保存 {provider} quota 狀態：{type(e).__name__}: {e}', flush=True)
+        print(f'V2.18.2 AI：無法保存 {provider} quota 狀態：{type(e).__name__}: {e}', flush=True)
 
 
 def _ai_provider_order():
@@ -1372,7 +1392,7 @@ def _ai_call_provider(provider, system_prompt, user_prompt, response_schema=None
     # V2.17.4：所有結構化 AI 任務都明確要求「只回傳 JSON object」。
     structured_instruction=(
         str(system_prompt or '').rstrip() +
-        '\n\n【V2.18.0 輸出格式硬性規則】\n'
+        '\n\n【V2.18.2 輸出格式硬性規則】\n'
         '你必須只輸出一個合法 JSON object。\n'
         '不得輸出 Markdown、```、前言、後記、解釋文字或 JSON 以外的任何字元。\n'
         'JSON 必須能被標準 json.loads() 直接解析；不可省略必要欄位。'
@@ -1434,13 +1454,13 @@ def _ai_call_json(system_prompt, user_prompt, cache_key='', ttl_hours=72, respon
     - 任何 AI 失敗都 fallback，不阻斷主流程
     """
     if not any(_ai_provider_key(p) for p in _ai_provider_order()):
-        print('V2.18.0 AI：未設定 Gemini/Mistral/Groq API Key，使用規則 fallback', flush=True)
+        print('V2.18.2 AI：未設定 Gemini/Mistral/Groq API Key，使用規則 fallback', flush=True)
         return None
     now=time.time()
     if cache_key:
         c=_AI_SEMANTIC_RUN_CACHE.get(cache_key)
         if isinstance(c,dict) and now-float(c.get('ts',0) or 0)<ttl_hours*3600:
-            print('V2.18.0 AI：memory cache hit', flush=True)
+            print('V2.18.2 AI：memory cache hit', flush=True)
             return c.get('data')
         disk=load_json(AI_NEWS_CACHE_FILE)
         if isinstance(disk,dict):
@@ -1449,18 +1469,18 @@ def _ai_call_json(system_prompt, user_prompt, cache_key='', ttl_hours=72, respon
                 data=d.get('data')
                 if isinstance(data,dict):
                     _AI_SEMANTIC_RUN_CACHE[cache_key]={'ts':float(d.get('ts',now) or now),'data':data}
-                    print('V2.18.0 AI：disk cache hit', flush=True)
+                    print('V2.18.2 AI：disk cache hit', flush=True)
                     return data
     _ai_normalize_quota_state()
     providers=[p for p in _ai_provider_order() if _ai_provider_key(p) and not _ai_provider_quota_exhausted(p)]
     if not providers:
-        print('V2.18.0 AI：所有已設定免費供應商今日均已耗盡配額，完全停用 AI，使用規則 fallback', flush=True)
+        print('V2.18.2 AI：所有已設定免費供應商今日均已耗盡配額，完全停用 AI，使用規則 fallback', flush=True)
         return None
     attempts=2 if AI_RETRY_ON_FAILURE else 1
     for provider in providers:
         for attempt in range(1,attempts+1):
             try:
-                print(f'V2.18.0 AI：provider={provider} request {attempt}/{attempts}', flush=True)
+                print(f'V2.18.2 AI：provider={provider} request {attempt}/{attempts}', flush=True)
                 data=_ai_call_provider(provider,system_prompt,user_prompt,response_schema=response_schema,timeout=timeout)
                 if cache_key:
                     _AI_SEMANTIC_RUN_CACHE[cache_key]={'ts':time.time(),'data':data}
@@ -1471,19 +1491,19 @@ def _ai_call_json(system_prompt, user_prompt, cache_key='', ttl_hours=72, respon
                         old=sorted(disk,key=lambda z:float(disk[z].get('ts',0) if isinstance(disk[z],dict) else 0))
                         for k in old[:-500]: disk.pop(k,None)
                     save_json(AI_NEWS_CACHE_FILE,disk)
-                print(f'V2.18.0 AI：SUCCESS｜provider={provider}', flush=True)
+                print(f'V2.18.2 AI：SUCCESS｜provider={provider}', flush=True)
                 return data
             except Exception as e:
                 msg=str(e)
-                print(f'V2.18.0 AI：FAIL｜provider={provider}｜{type(e).__name__}: {e}', flush=True)
+                print(f'V2.18.2 AI：FAIL｜provider={provider}｜{type(e).__name__}: {e}', flush=True)
                 # V2.17.4：不只 503/429。任何傳輸、逾時、空回覆、JSON 格式或 schema 異常，
                 # 都代表本次 provider 不可靠；立即熔斷該 provider，避免同一 RUN 再浪費免費 request。
                 if re.search(r'429|quota|rate.?limit|resource.?exhausted|too many requests|exceed', msg, flags=re.I):
                     _ai_mark_provider_quota_exhausted(provider, msg)
                 AI_PROVIDER_DISABLED_THIS_RUN.add(provider)
-                print(f'V2.18.0 AI：熔斷 {provider}｜本次 RUN 後續不再重試，避免浪費免費 request', flush=True)
+                print(f'V2.18.2 AI：熔斷 {provider}｜本次 RUN 後續不再重試，避免浪費免費 request', flush=True)
                 break
-    print('V2.18.0 AI：所有免費供應商均失敗，使用規則 fallback', flush=True)
+    print('V2.18.2 AI：所有免費供應商均失敗，使用規則 fallback', flush=True)
     return None
 
 
@@ -1503,7 +1523,7 @@ def _ai_runtime_status():
 
 def _print_ai_runtime_status():
     st=_ai_runtime_status()
-    print('========== V2.18.0 AI STATUS ==========', flush=True)
+    print('========== V2.18.2 AI STATUS ==========', flush=True)
     print(f"Gemini API Key：{'已設定' if st['gemini'] else '未設定'}｜模型：{GEMINI_MODEL}", flush=True)
     print(f"Mistral API Key：{'已設定' if st['mistral'] else '未設定'}｜模型：{MISTRAL_MODEL}", flush=True)
     print(f"Groq API Key：{'已設定' if st['groq'] else '未設定'}｜模型：{GROQ_MODEL}", flush=True)
@@ -4322,11 +4342,27 @@ def _drop_alert_analysis_message(name, symbol, u, day, week, cur, pc, wh, daily_
         return msg
 
 
-def _run_ai_alert_analysis(func, *args, **kwargs):
-    """V2.17.1：進入已觸發 LINE 警報後才暫時開啟 AI。
-    分析結束後立即關閉，避免同一輪其他未觸發標的誤用 AI。
+def _ai_background_session_allowed(identifier):
+    """V2.18.2：背景15分鐘 Actions 的股票/ETF AI 硬閘門。
+    台股僅 09:00-14:00；美股/QQQ 僅 21:30-05:00。
+    Web 頁面的 AI 不走此函式，因此 /macro、/trump 仍可正常使用 Web AI。
     """
+    text=str(identifier or '').upper().strip()
+    now=datetime.now(TW_TZ)
+    t=now.time()
+    is_tw=text.endswith('.TW') or text.startswith('^TW') or text in ('0050','2330','3711')
+    if is_tw:
+        return dt_time(9,0) <= t < dt_time(14,0)
+    return t >= dt_time(21,30) or t < dt_time(5,0)
+
+
+def _run_ai_alert_analysis(func, *args, **kwargs):
+    """V2.18.2：已觸發 LINE 警報後才暫時開 AI，且背景掃描必須在對應市場交易時段。"""
     global AI_ALERT_MODE_ACTIVE
+    identifier = args[0] if args else kwargs.get('symbol') or kwargs.get('name') or ''
+    if not _ai_background_session_allowed(identifier):
+        print(f'V2.18.2 AI：非對應市場交易時段，跳過背景股票/ETF AI｜{identifier}', flush=True)
+        return None
     previous = AI_ALERT_MODE_ACTIVE
     AI_ALERT_MODE_ACTIVE = True
     try:
@@ -13166,7 +13202,7 @@ def _macro_value(d, key):
 
 
 def _macro_seed_multisource_history():
-    """V2.18.0：歷史總經資料多來源補種。
+    """V2.18.2：歷史總經資料多來源補種。
     不再把 FRED 當成唯一歷史來源；BLS 提供 CPI/失業率歷史、US Treasury 提供殖利率歷史。
     這些資料只用來建立統計歷史，不直接改寫即時值。
     """
@@ -13217,9 +13253,9 @@ def _macro_seed_multisource_history():
         for ym,v in unemp.items():
             y,m=map(int,ym.split('-')); dt=f'{y:04d}-{m:02d}-01'; row=by_day.setdefault(dt,{'ts':dt+'T00:00:00+08:00'})
             row['us_unemployment']=v; fetched+=1
-        print(f'V2.18.0 BLS歷史補種：{len(cpi)}筆CPI、{len(unemp)}筆失業率',flush=True)
+        print(f'V2.18.2 BLS歷史補種：{len(cpi)}筆CPI、{len(unemp)}筆失業率',flush=True)
     except Exception as e:
-        print(f'V2.18.0 BLS歷史補種失敗：{type(e).__name__}: {e}',flush=True)
+        print(f'V2.18.2 BLS歷史補種失敗：{type(e).__name__}: {e}',flush=True)
     try:
         # US Treasury daily yield curve CSV：免費官方歷史資料。
         yr=datetime.now(TW_TZ).year
@@ -13240,14 +13276,14 @@ def _macro_seed_multisource_history():
                 if ten is not None and math.isfinite(ten): row['us_10y']=ten
                 if ten is not None and two is not None and math.isfinite(ten) and math.isfinite(two): row['us_curve_10y2y']=ten-two
             fetched+=len(td)
-        print(f'V2.18.0 Treasury歷史補種：{len(td)}筆',flush=True)
+        print(f'V2.18.2 Treasury歷史補種：{len(td)}筆',flush=True)
     except Exception as e:
-        print(f'V2.18.0 Treasury歷史補種失敗：{type(e).__name__}: {e}',flush=True)
+        print(f'V2.18.2 Treasury歷史補種失敗：{type(e).__name__}: {e}',flush=True)
     if fetched:
         hist['items']=sorted(by_day.values(),key=lambda x:str(x.get('ts','')))[-MACRO_HISTORY_MAX_DAYS:]
         save_json(MACRO_HISTORY_FILE,hist)
         _MACRO_HISTORY_RUN_CACHE=None
-        print(f'V2.18.0 多來源歷史快取完成：{len(hist["items"])}筆',flush=True)
+        print(f'V2.18.2 多來源歷史快取完成：{len(hist["items"])}筆',flush=True)
 
 def _macro_history_append(d):
     """Persist one observation per run.  History is used only for statistical estimates."""
@@ -13301,13 +13337,13 @@ def _macro_series_history(series_key, d=None, min_points=MACRO_FORECAST_MIN_POIN
     if not FRED_API_KEY:
         return vals
     try:
-        ids=','.join(dict.fromkeys(MACRO_FRED_SERIES.values()))
-        rr=requests.get('https://api.stlouisfed.org/fred/series/observations',params={'series_id':ids,'api_key':FRED_API_KEY,'file_type':'json','sort_order':'asc','limit':5000},timeout=min(8,max(5,MACRO_TIMEOUT)),headers={'User-Agent':'Mozilla/5.0 stock-alert/2.18.1'})
+        sid=MACRO_FRED_SERIES.get(series_key)
+        if not sid: return vals
+        rr=requests.get('https://api.stlouisfed.org/fred/series/observations',params={'series_id':sid,'api_key':FRED_API_KEY,'file_type':'json','sort_order':'asc','limit':5000},timeout=min(8,max(5,MACRO_TIMEOUT)),headers={'User-Agent':'Mozilla/5.0 stock-alert/2.18.2'})
         rr.raise_for_status()
         payload=rr.json()
         # API 一次只支援一個 series_id；若多 ID 被拒絕，直接保留其他來源，不再逐一重試。
         if isinstance(payload,dict) and payload.get('observations'):
-            sid=MACRO_FRED_SERIES.get(series_key)
             arr=[]
             for ob in payload.get('observations',[]):
                 try: arr.append((str(ob.get('date','')),float(ob.get('value'))))
@@ -13603,6 +13639,16 @@ def macro_stock_factor(industry, subindustries=None, name=''):
         return {'factor':0,'state':'⚪ 資料不足','profile':'一般','reasons':[], 'data':{},'keys':[],'error':str(e)}
 
 
+def _is_bad_news_title(title):
+    """V2.18.2：過濾 Google/代理伺服器錯誤頁被 RSS 當成新聞標題的污染資料。"""
+    t=html.unescape(str(title or '')).strip().lower()
+    if not t: return True
+    bad=('error 500','server error','af-error-page','<html','<body','<!doctype','overflow:auto','display:block!important','google error','javascript:','stack trace')
+    if any(x in t for x in bad): return True
+    if t.count('<')>=2 or t.count('>')>=2: return True
+    return False
+
+
 def _trump_recent_news_fetch(symbol=''):
     """V2.14.42：第二層 Trump 市場影響引擎。
     同時追蹤：個人交易、政策/言論、政府投資、產業主題；政策不冒充 278-T 交易。
@@ -13624,7 +13670,8 @@ def _trump_recent_news_fetch(symbol=''):
             raw=[]
             for item in root.findall('.//item'):
                 title=(item.findtext('title') or '').strip(); link=(item.findtext('link') or '').strip(); pub=(item.findtext('pubDate') or '').strip()
-                if not title: continue
+                if not title or _is_bad_news_title(title):
+                    continue
                 dt=None
                 try: dt=parsedate_to_datetime(pub).astimezone(TW_TZ)
                 except Exception: pass
@@ -15849,12 +15896,12 @@ def main():
 
     else:
 
-        print('========== V2.17.1 RUN START ==========', flush=True)
+        print('========== V2.18.2 RUN START ==========', flush=True)
         _print_ai_runtime_status()
         print('V2.17.4 AI 閘門：每15分鐘自動掃描只有達到 LINE 發送門檻後才啟用 AI；未觸發時完全不呼叫 AI', flush=True)
         print(f'執行時間（台灣）：{datetime.now(TW_TZ).strftime("%Y-%m-%d %H:%M:%S")}', flush=True)
         run_alerts()
-        print('========== V2.17.1 RUN END ==========', flush=True)
+        print('========== V2.18.2 RUN END ==========', flush=True)
 
 
 if __name__ == '__main__':
