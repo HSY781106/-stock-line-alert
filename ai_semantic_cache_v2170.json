@@ -59,5 +59,49 @@
       ]
     },
     "provider": "groq"
+  },
+  "trump:__MARKET__:1ca988e03c09f7e7f3ef2b2e": {
+    "ts": 1789185224.5196948,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.8,
+          "policy_stage": "unknown",
+          "reason": "油價上漲利好油產業",
+          "relevant": true
+        },
+        {
+          "id": 1,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.7,
+          "policy_stage": "unknown",
+          "reason": "油價下跌不利油產業",
+          "relevant": true
+        },
+        {
+          "id": 2,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.5,
+          "policy_stage": "unknown",
+          "reason": "與半導體無直接關聯",
+          "relevant": false
+        },
+        {
+          "id": 3,
+          "direction": "negative",
+          "score": -3,
+          "confidence": 0.8,
+          "policy_stage": "considering",
+          "reason": "半導體關稅框架正在制定",
+          "relevant": true
+        }
+      ]
+    },
+    "provider": "groq"
   }
 }
