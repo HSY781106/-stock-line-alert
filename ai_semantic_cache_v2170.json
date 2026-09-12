@@ -103,5 +103,49 @@
       ]
     },
     "provider": "groq"
+  },
+  "trump:__MARKET__:6b669c21b54b491ceb03e069": {
+    "ts": 1789187594.1806498,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.7,
+          "policy_stage": "unknown",
+          "reason": "報導提及川普個人投資因伊朗戰爭獲益，反映能源價格上漲對能源標的短線有利",
+          "relevant": true
+        },
+        {
+          "id": 1,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.6,
+          "policy_stage": "threat",
+          "reason": "川普宣稱伊朗戰勝後油價將大幅下跌，屬口頭表態且變數仍多",
+          "relevant": true
+        },
+        {
+          "id": 2,
+          "direction": "negative",
+          "score": -1,
+          "confidence": 0.5,
+          "policy_stage": "threat",
+          "reason": "川普要求大幅降息，半導體類股逆勢上揚，但貨幣政策與整體大盤不確定性交織",
+          "relevant": true
+        },
+        {
+          "id": 3,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.8,
+          "policy_stage": "considering",
+          "reason": "商務部長表示正研擬半導體關稅框架，屬考慮階段，增加產業貿易成本疑慮",
+          "relevant": true
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
