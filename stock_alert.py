@@ -1,4 +1,4 @@
-# stock_alert.py V2.18.32
+# stock_alert.py V2.18.33
 # V2.17.1：AI 僅在「已達到 LINE 發送門檻」後啟用；其餘每15分鐘掃描完全不呼叫 AI。
 # V2.17.0 功能全部保留：Gemini Free 主力 + Mistral/Groq Free 備援、重大消息、Trump 語意、總經預測。
 # V2.15.6：外部產業網頁正確性＋效能修正版：官方價值鏈候選池改為資料驅動，不再只依賴同大產業 Top120；
@@ -237,16 +237,16 @@ MACRO_NEWS_TIMEOUT = float(os.getenv('MACRO_NEWS_TIMEOUT', '5') or 5)
 TRUMP_NEWS_TIMEOUT = float(os.getenv('TRUMP_NEWS_TIMEOUT', '5') or 5)
 AI_QUOTA_STATE_FILE = 'ai_quota_state_v21815.json'
 AI_MAX_OUTPUT_TOKENS = int(os.getenv('AI_MAX_OUTPUT_TOKENS', '900') or 900)
-# V2.18.32：Gemini 3.6 Flash 結構化 JSON 偶發輸出被截斷；僅 Gemini 提高輸出上限。
+# V2.18.33：Gemini 3.6 Flash 結構化 JSON 偶發輸出被截斷；僅 Gemini 提高輸出上限。
 AI_GEMINI_MAX_OUTPUT_TOKENS = int(os.getenv('AI_GEMINI_MAX_OUTPUT_TOKENS', '1600') or 1600)
-# V2.18.32：Groq/Mistral 免費方案對 token throughput 敏感；縮小輸出上限，避免 Trump/總經把 Groq 打到 TPM 429。
+# V2.18.33：Groq/Mistral 免費方案對 token throughput 敏感；縮小輸出上限，避免 Trump/總經把 Groq 打到 TPM 429。
 AI_GROQ_MAX_OUTPUT_TOKENS = min(int(os.getenv('AI_GROQ_MAX_OUTPUT_TOKENS', '1400') or 1400), 1400)
 AI_MISTRAL_MAX_OUTPUT_TOKENS = min(int(os.getenv('AI_MISTRAL_MAX_OUTPUT_TOKENS', '650') or 650), 650)
 AI_RETRY_ON_FAILURE = os.getenv('AI_RETRY_ON_FAILURE', '1').strip().lower() in ('1','true','yes','on')
 AI_MAX_NEWS_PER_BATCH = int(os.getenv('AI_MAX_NEWS_PER_BATCH', '4') or 4)
 AI_MAX_TRUMP_PER_BATCH = int(os.getenv('AI_MAX_TRUMP_PER_BATCH', '4') or 4)
 AI_PROVIDER_DISABLED_THIS_RUN = set()  # V2.17.4：任何 AI 傳輸/格式失敗都熔斷該 provider，避免本次 RUN 重複浪費 request
-AI_PROVIDER_QUOTA_COOLDOWN_UNTIL = {}  # V2.18.32：僅明確 quota exhaustion 才暫停 provider
+AI_PROVIDER_QUOTA_COOLDOWN_UNTIL = {}  # V2.18.33：僅明確 quota exhaustion 才暫停 provider
 AI_LAST_PROVIDER_STATUS = {}
 AI_LAST_TRUMP_STATUS = {}
 AI_LAST_MACRO_STATUS = {}
@@ -440,10 +440,10 @@ LINE_MODE_ACTIVE = False
 # V2.17.1：自動15分鐘掃描時，只有已確認達到 LINE 通知門檻才允許 AI。
 # LINE 使用者主動查詢仍可使用 AI，不受此自動警報閘門限制。
 AI_ALERT_MODE_ACTIVE = False
-# V2.18.32：Render 直接網頁個股分析允許使用 AI 最終整合；與 LINE / 自動警報閘門分開。
+# V2.18.33：Render 直接網頁個股分析允許使用 AI 最終整合；與 LINE / 自動警報閘門分開。
 AI_WEB_DIRECT_ACTIVE = ContextVar('AI_WEB_DIRECT_ACTIVE', default=False)
 
-# V2.18.32：台股交易日狀態快取。
+# V2.18.33：台股交易日狀態快取。
 # 僅以官方 TWSE 市場開休市日資料確認；查不到時採 fail-closed，
 # 絕不因網路/API 異常而把上一交易日價格當成今天盤中價格。
 _TW_TRADING_DAY_CACHE = {}
@@ -1125,7 +1125,7 @@ def _ai_web_enabled(kind):
 
 
 def _ai_compact_payload(obj, max_chars=12000):
-    """V2.18.32：保留結構，但限制新聞/文字欄位長度，避免免費 provider 因輸入 token 過大而 TPM 429。"""
+    """V2.18.33：保留結構，但限制新聞/文字欄位長度，避免免費 provider 因輸入 token 過大而 TPM 429。"""
     def clean(v, limit=700):
         if isinstance(v, str):
             return re.sub(r'\s+', ' ', v).strip()[:limit]
@@ -1174,7 +1174,7 @@ def _ai_meaningful_trump_result(result):
 
 
 def _ai_macro_summary(info):
-    """V2.18.32：總經 Web AI。使用明確 JSON Schema，避免 Gemini 回傳不可解析文字。"""
+    """V2.18.33：總經 Web AI。使用明確 JSON Schema，避免 Gemini 回傳不可解析文字。"""
     global AI_LAST_MACRO_STATUS
     AI_LAST_MACRO_STATUS={'status':'started','provider_order':_ai_provider_order()}
     if not isinstance(info,dict):
@@ -1217,7 +1217,7 @@ def _ai_macro_summary(info):
         '未來1到3個月最需要觀察哪些變數、什麼情況會讓判斷轉向？'
         '嚴格區分資料已觀察到的事實與推論，不把統計預測寫成確定事件。'
     )
-    print(f'V2.18.32 Web AI：開始總經分析｜cache=macro_web:{fp}',flush=True)
+    print(f'V2.18.33 Web AI：開始總經分析｜cache=macro_web:{fp}',flush=True)
     result=_ai_call_json(
         '你是保守的總經投資研究員。只做資料綜合與情境分析，不保證報酬。',
         prompt+'\n資料：'+_ai_compact_payload(payload,4200),
@@ -1232,11 +1232,11 @@ def _ai_macro_summary(info):
     else:
         AI_LAST_MACRO_STATUS={'status':'failed','reason':'AI 回傳 JSON 欄位為空或不完整；不把空內容誤標成成功','provider_status':dict(AI_LAST_PROVIDER_STATUS)}
         result=None
-    print(f'V2.18.32 Web AI：總經分析{"成功" if isinstance(result,dict) else "失敗/無結果"}',flush=True)
+    print(f'V2.18.33 Web AI：總經分析{"成功" if isinstance(result,dict) else "失敗/無結果"}',flush=True)
     return result
 
 def _ai_trump_summary(news, factor=None, portfolio=None):
-    """V2.18.32：Trump Web AI。除總結外，產出代表性標的傳導，避免頁面只有通用框架。"""
+    """V2.18.33：Trump Web AI。除總結外，產出代表性標的傳導，避免頁面只有通用框架。"""
     global AI_LAST_TRUMP_STATUS
     AI_LAST_TRUMP_STATUS={'status':'started','provider_order':_ai_provider_order()}
     if not _ai_web_enabled('trump'):
@@ -1304,7 +1304,7 @@ def _ai_trump_summary(news, factor=None, portfolio=None):
         '只可從 representative_candidates 選出有足夠證據的代表性標的；不要自行創造 ticker。'
         'stock_impacts 必須說明政策→產業/成本/需求→標的的傳導理由。'
     )
-    print(f'V2.18.32 Web AI：開始Trump分析｜cache=trump_web:{fp}',flush=True)
+    print(f'V2.18.33 Web AI：開始Trump分析｜cache=trump_web:{fp}',flush=True)
     result=_ai_call_json(
         '你是保守的美國政策與市場研究員。區分事實、政策階段與推論，不把新聞當成確定股價預測。',
         prompt+'\n資料：'+_ai_compact_payload(payload,4200),
@@ -1319,7 +1319,7 @@ def _ai_trump_summary(news, factor=None, portfolio=None):
     else:
         AI_LAST_TRUMP_STATUS={'status':'failed','reason':'AI 回傳 JSON 欄位為空或不完整；不把空內容誤標成成功','provider_status':dict(AI_LAST_PROVIDER_STATUS)}
         result=None
-    print(f'V2.18.32 Web AI：Trump分析{"成功" if isinstance(result,dict) else "失敗/無結果"}',flush=True)
+    print(f'V2.18.33 Web AI：Trump分析{"成功" if isinstance(result,dict) else "失敗/無結果"}',flush=True)
     return result
 
 def _ai_extract_text(payload):
@@ -1357,7 +1357,7 @@ def _ai_json(text):
     m=re.search(r'\{.*\}',cleaned or text,re.S)
     if m and m.group(0) not in candidates:
         candidates.append(m.group(0))
-    # V2.18.32：若模型在 JSON 前後夾雜說明文字，嘗試以括號深度找第一個完整 object。
+    # V2.18.33：若模型在 JSON 前後夾雜說明文字，嘗試以括號深度找第一個完整 object。
     src=cleaned or text
     starts=[i for i,ch in enumerate(src) if ch=='{']
     for st in starts[:3]:
@@ -1385,7 +1385,7 @@ def _ai_json(text):
         except Exception:
             pass
 
-    # V2.18.32：Gemini 3.6 Flash 偶發在輸出 JSON 尾端 timeout/截斷。
+    # V2.18.33：Gemini 3.6 Flash 偶發在輸出 JSON 尾端 timeout/截斷。
     # 對「明確是被截斷的 JSON」做保守閉合，不猜測欄位內容。
     # 只補缺失的引號、]、}，不修改已存在的資料。
     try:
@@ -1423,7 +1423,7 @@ def _ai_json(text):
                 try:
                     obj=json.loads(repaired)
                     if isinstance(obj,dict):
-                        print('V2.18.32 AI：偵測到截斷 JSON，已成功保守閉合', flush=True)
+                        print('V2.18.33 AI：偵測到截斷 JSON，已成功保守閉合', flush=True)
                         return obj
                 except Exception:
                     pass
@@ -1446,7 +1446,7 @@ def _ai_normalize_quota_state():
             return
         if not isinstance(d.get('exhausted'),list):
             d['exhausted']=[]
-        # V2.18.32：清除 V2.18.23 對 429 的誤判鎖。
+        # V2.18.33：清除 V2.18.23 對 429 的誤判鎖。
         # 舊版把 Gemini「You exceeded your current quota + retry in XXs」或 Mistral 429 寫成今日 quota，
         # 這其實只是短期 rate-limit；若不清掉，新版永遠輪不到該 provider。
         changed=False
@@ -1456,12 +1456,12 @@ def _ai_normalize_quota_state():
             if re.search(r'HTTP\s*429|rate limit exceeded|rate_limited|retry\s+(?:in|after)\s+[0-9]+(?:\.[0-9]+)?\s*s|free_tier_requests',_reason,re.I):
                 exhausted.remove(_p)
                 changed=True
-                print(f'V2.18.32 AI：清除 {_p} 舊版 429/短期 rate-limit quota lock，恢復 provider',flush=True)
+                print(f'V2.18.33 AI：清除 {_p} 舊版 429/短期 rate-limit quota lock，恢復 provider',flush=True)
         d['exhausted']=exhausted
         if changed or 'reason_gemini' in d or 'reason_mistral' in d or 'reason_groq' in d:
             save_json(AI_QUOTA_STATE_FILE,d)
     except Exception as e:
-        print(f'V2.18.32 AI：quota 狀態初始化失敗：{type(e).__name__}: {e}',flush=True)
+        print(f'V2.18.33 AI：quota 狀態初始化失敗：{type(e).__name__}: {e}',flush=True)
 
 def _ai_provider_quota_exhausted(provider):
     try:
@@ -1482,9 +1482,9 @@ def _ai_mark_provider_quota_exhausted(provider, reason='quota'):
         d['reason_'+provider]=str(reason)[:300]
         save_json(AI_QUOTA_STATE_FILE,d)
         AI_PROVIDER_QUOTA_COOLDOWN_UNTIL[provider]=time.time()+6*3600
-        print(f'V2.18.32 AI：{provider} 今日免費額度/配額已耗盡，今天後續不再呼叫 {provider}', flush=True)
+        print(f'V2.18.33 AI：{provider} 今日免費額度/配額已耗盡，今天後續不再呼叫 {provider}', flush=True)
     except Exception as e:
-        print(f'V2.18.32 AI：無法保存 {provider} quota 狀態：{type(e).__name__}: {e}', flush=True)
+        print(f'V2.18.33 AI：無法保存 {provider} quota 狀態：{type(e).__name__}: {e}', flush=True)
 
 
 def _ai_provider_order():
@@ -1530,7 +1530,7 @@ def _ai_extract_chat_text(payload):
 
 
 def _ai_call_provider(provider, system_prompt, user_prompt, response_schema=None, timeout=None):
-    """V2.18.32：免費 AI provider 呼叫層。
+    """V2.18.33：免費 AI provider 呼叫層。
     - Gemini 使用目前設定模型 + JSON schema
     - Mistral 使用 JSON object mode
     - Groq 使用 JSON object mode，避免 GPT-OSS strict schema 400
@@ -1541,7 +1541,7 @@ def _ai_call_provider(provider, system_prompt, user_prompt, response_schema=None
         return None
     structured_instruction=(
         str(system_prompt or '').rstrip() +
-        '\n\n【V2.18.32 輸出格式硬性規則】\n'
+        '\n\n【V2.18.33 輸出格式硬性規則】\n'
         '你必須只輸出一個合法 JSON object。\n'
         '不得輸出 Markdown、```、前言、後記、解釋文字或 JSON 以外的任何字元。\n'
         'JSON 必須能被標準 json.loads() 直接解析；不可省略必要欄位。\n'
@@ -1561,7 +1561,7 @@ def _ai_call_provider(provider, system_prompt, user_prompt, response_schema=None
             }
         }
         if isinstance(response_schema, dict):
-            # V2.18.32: Gemini REST generateContent 現行 API 對 Schema protobuf
+            # V2.18.33: Gemini REST generateContent 現行 API 對 Schema protobuf
             # 會拒絕 JSON Schema 的 additionalProperties 欄位；改用
             # responseJsonSchema 傳遞完整 JSON Schema，保留 additionalProperties。
             payload['generationConfig']['responseJsonSchema'] = response_schema
@@ -1589,10 +1589,10 @@ def _ai_call_provider(provider, system_prompt, user_prompt, response_schema=None
             ],
             'max_completion_tokens':AI_GROQ_MAX_OUTPUT_TOKENS,
             'reasoning_effort':'low',
-            'reasoning_format':'hidden',
+            'include_reasoning':False,
             'temperature':0.1
         }
-        # V2.18.32：Groq 改用 JSON Object Mode。
+        # V2.18.33：Groq 改用 JSON Object Mode。
         # GPT-OSS 在本專案的動態 schema + strict Structured Outputs 曾回 HTTP 400，
         # 因此不再送 json_schema；改由 system prompt + json_object + 本地 json.loads() 驗證。
         payload['response_format']={'type':'json_object'}
@@ -1626,7 +1626,7 @@ def _ai_call_provider(provider, system_prompt, user_prompt, response_schema=None
     if not isinstance(parsed,dict):
         preview=str(text or '')[:300].replace('\n',' ')
         raise RuntimeError(f'AI_JSON_PARSE_ERROR: 回傳不是可解析 JSON｜preview={preview}')
-    # V2.18.32：Groq/GPT-OSS 偶爾在輸出上限不足時回合法 JSON，但必要文字欄位為空。
+    # V2.18.33：Groq/GPT-OSS 偶爾在輸出上限不足時回合法 JSON，但必要文字欄位為空。
     # 這種情況不能算成功；交給上層切換/重試，而不是讓總經/Trump 頁面誤顯示成功。
     if isinstance(response_schema, dict):
         required=response_schema.get('required',[])
@@ -1642,7 +1642,7 @@ def _ai_call_provider(provider, system_prompt, user_prompt, response_schema=None
 
 
 def _ai_transient_error(msg):
-    """V2.18.32：只對值得重試的暫時性錯誤做一次 retry。"""
+    """V2.18.33：只對值得重試的暫時性錯誤做一次 retry。"""
     text=str(msg or '')
     if re.search(r'READ_TIMEOUT|ReadTimeout|Timeout|NETWORK_ERROR|ConnectionError|AI_JSON_INCOMPLETE', text, flags=re.I):
         return True
@@ -1654,7 +1654,7 @@ def _ai_transient_error(msg):
 
 
 def _ai_retry_after_seconds(msg, default=2.0):
-    """V2.18.32：同時解析 HTTP Retry-After 與 provider 回傳文字的 retry in XXs。"""
+    """V2.18.33：同時解析 HTTP Retry-After 與 provider 回傳文字的 retry in XXs。"""
     text=str(msg or '')
     patterns=(
         r'retry-after\s*[=:]\s*([0-9]+(?:\.[0-9]+)?)',
@@ -1672,7 +1672,7 @@ def _ai_retry_after_seconds(msg, default=2.0):
 
 
 def _ai_short_rate_limit(msg):
-    """V2.18.32：判斷 429 是否為短期 RPM/RPS/TPM rate-limit，而非日/月配額耗盡。"""
+    """V2.18.33：判斷 429 是否為短期 RPM/RPS/TPM rate-limit，而非日/月配額耗盡。"""
     text=str(msg or '').lower()
     has_retry=bool(re.search(r'retry\s+(?:in|after)\s+[0-9]+(?:\.[0-9]+)?\s*s',text,re.I))
     short_terms=(
@@ -1684,7 +1684,7 @@ def _ai_short_rate_limit(msg):
 
 
 def _ai_hard_quota_error(msg):
-    """V2.18.32：只把明確的帳號/日/月/帳單配額耗盡標成 hard quota。
+    """V2.18.33：只把明確的帳號/日/月/帳單配額耗盡標成 hard quota。
     Gemini「You exceeded your current quota」且出現 free_tier_requests 時，視為免費額度已達上限，
     本次 RUN 不再重試，直接交給下一家 provider。"""
     text=str(msg or '').lower()
@@ -1710,7 +1710,7 @@ def _ai_hard_quota_error(msg):
 
 
 def _ai_call_json(system_prompt, user_prompt, cache_key='', ttl_hours=72, response_schema=None, timeout=None):
-    """V2.18.32：Gemini Free 主力 + Mistral/Groq Free 備援。
+    """V2.18.33：Gemini Free 主力 + Mistral/Groq Free 備援。
     - cache hit 不重複呼叫
     - 429 不直接等同「今日免費額度用完」
     - timeout / 429 / 5xx 最多有限 retry，避免浪費 request
@@ -1718,13 +1718,13 @@ def _ai_call_json(system_prompt, user_prompt, cache_key='', ttl_hours=72, respon
     - 真正 quota 才寫入當日 quota lock
     - 所有 provider 都失敗才回規則 fallback
     """
-    # V2.18.32：每次 AI 呼叫獨立建立 provider 診斷；Render 長駐程序不沿用前一次失敗。
+    # V2.18.33：每次 AI 呼叫獨立建立 provider 診斷；Render 長駐程序不沿用前一次失敗。
     global AI_LAST_PROVIDER_STATUS
     AI_LAST_PROVIDER_STATUS={}
     for _p in _ai_provider_order():
         if _ai_provider_key(_p): AI_LAST_PROVIDER_STATUS[_p]={'status':'not_attempted'}
     if not any(_ai_provider_key(p) for p in _ai_provider_order()):
-        print('V2.18.32 AI：未設定 Gemini/Mistral/Groq API Key，使用規則 fallback', flush=True)
+        print('V2.18.33 AI：未設定 Gemini/Mistral/Groq API Key，使用規則 fallback', flush=True)
         return None
     now=time.time()
     if cache_key:
@@ -1732,7 +1732,7 @@ def _ai_call_json(system_prompt, user_prompt, cache_key='', ttl_hours=72, respon
         if isinstance(c,dict) and now-float(c.get('ts',0) or 0)<ttl_hours*3600:
             _cp=str(c.get('provider') or 'cache')
             AI_LAST_PROVIDER_STATUS[_cp]={'status':'cache_hit','source':'memory'}
-            print(f'V2.18.32 AI：memory cache hit｜provider={_cp}', flush=True)
+            print(f'V2.18.33 AI：memory cache hit｜provider={_cp}', flush=True)
             return c.get('data')
         disk=load_json(AI_NEWS_CACHE_FILE)
         if isinstance(disk,dict):
@@ -1743,23 +1743,23 @@ def _ai_call_json(system_prompt, user_prompt, cache_key='', ttl_hours=72, respon
                     _cp=str(d.get('provider') or 'cache')
                     _AI_SEMANTIC_RUN_CACHE[cache_key]={'ts':float(d.get('ts',now) or now),'data':data,'provider':_cp}
                     AI_LAST_PROVIDER_STATUS[_cp]={'status':'cache_hit','source':'disk'}
-                    print(f'V2.18.32 AI：disk cache hit｜provider={_cp}', flush=True)
+                    print(f'V2.18.33 AI：disk cache hit｜provider={_cp}', flush=True)
                     return data
     _ai_normalize_quota_state()
     providers=[p for p in _ai_provider_order() if _ai_provider_key(p) and not _ai_provider_quota_exhausted(p)]
     if not providers:
-        print('V2.18.32 AI：所有已設定免費供應商今日均已耗盡配額，完全停用 AI，使用規則 fallback', flush=True)
+        print('V2.18.33 AI：所有已設定免費供應商今日均已耗盡配額，完全停用 AI，使用規則 fallback', flush=True)
         return None
 
-    # V2.18.32：即使環境變數沒特別開 retry，也對 transient error 做最多一次 retry。
+    # V2.18.33：即使環境變數沒特別開 retry，也對 transient error 做最多一次 retry。
     # 非 transient（schema/JSON/400/401/403）不重打，避免浪費免費 request。
-    max_attempts=2  # V2.18.32：transient error 固定最多重試一次；非 transient 絕不重打
+    max_attempts=2  # V2.18.33：transient error 固定最多重試一次；非 transient 絕不重打
     for provider in providers:
         user_prompt_for_retry=user_prompt
         for attempt in range(1,max_attempts+1):
             try:
                 AI_LAST_PROVIDER_STATUS[provider]={'status':'request','attempt':attempt}
-                print(f'V2.18.32 AI：provider={provider} request {attempt}/{max_attempts}', flush=True)
+                print(f'V2.18.33 AI：provider={provider} request {attempt}/{max_attempts}', flush=True)
                 data=_ai_call_provider(
                     provider,
                     system_prompt,
@@ -1777,15 +1777,15 @@ def _ai_call_json(system_prompt, user_prompt, cache_key='', ttl_hours=72, respon
                         for k in old[:-500]: disk.pop(k,None)
                     save_json(AI_NEWS_CACHE_FILE,disk)
                 AI_LAST_PROVIDER_STATUS[provider]={'status':'success','attempt':attempt}
-                print(f'V2.18.32 AI：SUCCESS｜provider={provider}', flush=True)
+                print(f'V2.18.33 AI：SUCCESS｜provider={provider}', flush=True)
                 return data
             except Exception as e:
                 msg=str(e)
                 AI_LAST_PROVIDER_STATUS[provider]={'status':'fail','error':msg[:500]}
-                print(f'V2.18.32 AI：FAIL｜provider={provider}｜{type(e).__name__}: {msg}', flush=True)
+                print(f'V2.18.33 AI：FAIL｜provider={provider}｜{type(e).__name__}: {msg}', flush=True)
                 transient=_ai_transient_error(msg)
                 hard_quota=_ai_hard_quota_error(msg)
-                # V2.18.32：Groq/Mistral 偶發只回 {} 或空欄位。第二次不要重送完整資料，
+                # V2.18.33：Groq/Mistral 偶發只回 {} 或空欄位。第二次不要重送完整資料，
                 # 改成超精簡救援提示，避免同一 RUN 再吃掉大量 TPM。
                 if (provider in ('groq','mistral') and 'AI_JSON_INCOMPLETE' in msg and attempt < max_attempts):
                     rescue_user=(
@@ -1804,58 +1804,58 @@ def _ai_call_json(system_prompt, user_prompt, cache_key='', ttl_hours=72, respon
                 if hard_quota:
                     _ai_mark_provider_quota_exhausted(provider,msg)
                     AI_PROVIDER_DISABLED_THIS_RUN.add(provider)
-                    print(f'V2.18.32 AI：{provider} 明確回報期間/帳號 quota exhausted，今日不再呼叫', flush=True)
+                    print(f'V2.18.33 AI：{provider} 明確回報期間/帳號 quota exhausted，今日不再呼叫', flush=True)
                     break
 
-                # V2.18.32：HTTP 429 視為 provider rate-limit，本次 RUN 直接切換下一家，
+                # V2.18.33：HTTP 429 視為 provider rate-limit，本次 RUN 直接切換下一家，
                 # 不再做第二次 request，避免免費額度/速率限制下白白浪費一次呼叫。
                 # timeout / network / 5xx 仍最多重試一次。
                 is_429=bool(re.search(r'HTTP\s+429', msg, flags=re.I))
                 if is_429 and _ai_short_rate_limit(msg):
                     wait=_ai_retry_after_seconds(msg, default=2.0)
                     AI_LAST_PROVIDER_STATUS[provider]={'status':'rate_limited','error':msg[:500],'retry_after':wait}
-                    # V2.18.32：短期 429 若有明確 retry-after，先等一次再重試同一 provider。
+                    # V2.18.33：短期 429 若有明確 retry-after，先等一次再重試同一 provider。
                     # 原 V2.18.27 直接跳下一家，會在三家同時短限流時全部失敗。
                     if attempt < max_attempts:
                         wait=min(max(wait,1.0),20.0)
-                        print(f'V2.18.32 AI：{provider} 短期 429，等待 {wait:.1f}s 後重試一次（不再立即放棄）', flush=True)
+                        print(f'V2.18.33 AI：{provider} 短期 429，等待 {wait:.1f}s 後重試一次（不再立即放棄）', flush=True)
                         time.sleep(wait)
                         continue
                     AI_PROVIDER_DISABLED_THIS_RUN.add(provider)
                     break
                 short_rate_limit=is_429 and _ai_short_rate_limit(msg)
-                # V2.18.32：Gemini 的 JSON 格式錯誤屬於「可重試的生成失敗」。
+                # V2.18.33：Gemini 的 JSON 格式錯誤屬於「可重試的生成失敗」。
                 # 實測 Gemini 3.6 Flash 偶發會輸出截斷/非 JSON 片段；第二次請求可恢復，
                 # 若仍失敗才熔斷並交給 Mistral/Groq，不讓單次格式異常直接放棄 Gemini。
                 is_gemini_json_failure=(provider=='gemini' and 'AI_JSON_PARSE_ERROR' in msg)
                 if (transient and not is_429 or is_gemini_json_failure) and attempt < max_attempts:
                     wait=_ai_retry_after_seconds(msg, default=1.0)
-                    print(f'V2.18.32 AI：{provider} 可恢復生成失敗，{wait:.1f}s 後重試一次', flush=True)
+                    print(f'V2.18.33 AI：{provider} 可恢復生成失敗，{wait:.1f}s 後重試一次', flush=True)
                     time.sleep(wait)
                     continue
 
                 if is_429:
-                    # V2.18.32：429 不再寫 6 小時 quota lock；只做短期 cooldown，並立即交棒給下一家。
+                    # V2.18.33：429 不再寫 6 小時 quota lock；只做短期 cooldown，並立即交棒給下一家。
                     _cooldown=_ai_retry_after_seconds(msg, default=10.0)
                     if short_rate_limit:
                         _cooldown=min(max(_cooldown,5.0),60.0)
                     else:
                         _cooldown=min(max(_cooldown,15.0),120.0)
                     AI_PROVIDER_QUOTA_COOLDOWN_UNTIL[provider]=time.time()+_cooldown
-                    print(f'V2.18.32 AI：{provider} HTTP 429，短期 cooldown {_cooldown:.1f}s；立即切換下一家 provider',flush=True)
+                    print(f'V2.18.33 AI：{provider} HTTP 429，短期 cooldown {_cooldown:.1f}s；立即切換下一家 provider',flush=True)
                 AI_PROVIDER_DISABLED_THIS_RUN.add(provider)
                 if transient or is_gemini_json_failure or is_429:
-                    print(f'V2.18.32 AI：{provider} 重試後仍失敗，本次 RUN 切換下一家', flush=True)
+                    print(f'V2.18.33 AI：{provider} 重試後仍失敗，本次 RUN 切換下一家', flush=True)
                 else:
-                    print(f'V2.18.32 AI：{provider} 非暫時性錯誤，本次 RUN 切換下一家，避免重複浪費 request', flush=True)
+                    print(f'V2.18.33 AI：{provider} 非暫時性錯誤，本次 RUN 切換下一家，避免重複浪費 request', flush=True)
                 break
 
-    print('V2.18.32 AI：所有免費供應商均失敗，使用規則 fallback', flush=True)
+    print('V2.18.33 AI：所有免費供應商均失敗，使用規則 fallback', flush=True)
     return None
 
 
 def _ai_provider_human_status(provider_status):
-    """V2.18.32：給一般使用者看的 AI 狀態；不顯示 HTTP/JSON/API 錯誤細節。"""
+    """V2.18.33：給一般使用者看的 AI 狀態；不顯示 HTTP/JSON/API 錯誤細節。"""
     ps=provider_status if isinstance(provider_status,dict) else {}
     labels={'gemini':'Gemini','mistral':'Mistral','groq':'Groq'}
     parts=[]
@@ -1919,7 +1919,7 @@ def _ai_runtime_status():
 
 def _print_ai_runtime_status():
     st=_ai_runtime_status()
-    print('========== V2.18.32 AI STATUS ==========', flush=True)
+    print('========== V2.18.33 AI STATUS ==========', flush=True)
     print(f"Gemini API Key：{'已設定' if st['gemini'] else '未設定'}｜模型：{GEMINI_MODEL}", flush=True)
     print(f"Mistral API Key：{'已設定' if st['mistral'] else '未設定'}｜模型：{MISTRAL_MODEL}", flush=True)
     print(f"Groq API Key：{'已設定' if st['groq'] else '未設定'}｜模型：{GROQ_MODEL}", flush=True)
@@ -3108,7 +3108,7 @@ def get_tpex_market_values():
 
 
 # ============================================================
-# V2.18.32
+# V2.18.33
 # Official Dynamic Subindustry — no manual parent aliases
 # ============================================================
 # ============================================================
@@ -3394,7 +3394,7 @@ def _fetch_missing_value_chains(codes):
     return result
 
 def _refresh_line_industry_menu_cache(u=None):
-    """V2.18.32：建立「TWSE 大產業 -> 官網所有細產業」索引。
+    """V2.18.33：建立「TWSE 大產業 -> 官網所有細產業」索引。
 
     重要：索引 key 不再直接使用官網 parent 名稱。官網 parent 與 TWSE parent
     常常不同，因此以 company_chain 的股票代號回到市場股票池，使用該股票的
@@ -3451,10 +3451,10 @@ def _refresh_line_industry_menu_cache(u=None):
             'source_url': VALUE_CHAIN_BASE,
             'data': index
         })
-        print(f'V2.18.32 LINE產業選單索引：{len(index)} 個 TWSE 大產業、{sum(len(v) for v in index.values())} 個官方細產業', flush=True)
+        print(f'V2.18.33 LINE產業選單索引：{len(index)} 個 TWSE 大產業、{sum(len(v) for v in index.values())} 個官方細產業', flush=True)
         return index
     except Exception as e:
-        print(f'V2.18.32 LINE產業選單索引建立失敗：{type(e).__name__}: {e}', flush=True)
+        print(f'V2.18.33 LINE產業選單索引建立失敗：{type(e).__name__}: {e}', flush=True)
         return {}
 
 def _auto_expand_subindustry_cache(u):
@@ -4750,7 +4750,7 @@ def check_interval_low(
 
 
 def _drop_alert_analysis_message(name, symbol, u, day, week, cur, pc, wh, daily_triggered, weekly_triggered):
-    """V2.18.32：跌幅自動通知直接沿用 analysis() 的完整結果。
+    """V2.18.33：跌幅自動通知直接沿用 analysis() 的完整結果。
 
     不再依賴舊版欄位格式；所有數值與查詢頁相同，從同一次 analysis 結果擷取。
     自動通知只是較精簡的呈現，不重新計算、不另外呼叫另一套評分模型。
@@ -4836,12 +4836,12 @@ def _drop_alert_analysis_message(name, symbol, u, day, week, cur, pc, wh, daily_
             f'加分因素：{factors}\n風險提醒：{risks}'
         )[:5000]
     except Exception as e:
-        print(f'V2.18.32 跌幅通知加碼分析失敗 {name}: {type(e).__name__}: {e}', flush=True)
-        # V2.18.32：完整分析失敗時也不能退化成「只有跌幅」；至少保留規則模型的核心資料。
+        print(f'V2.18.33 跌幅通知加碼分析失敗 {name}: {type(e).__name__}: {e}', flush=True)
+        # V2.18.33：完整分析失敗時也不能退化成「只有跌幅」；至少保留規則模型的核心資料。
         try:
             rule_text=analysis(symbol, u, backfill=False, line_light=True)
         except Exception as e2:
-            print(f'V2.18.32 跌幅通知規則完整分析再次失敗 {name}: {type(e2).__name__}: {e2}', flush=True)
+            print(f'V2.18.33 跌幅通知規則完整分析再次失敗 {name}: {type(e2).__name__}: {e2}', flush=True)
             rule_text=''
         if rule_text and not str(rule_text).startswith('❌'):
             return (f'🔴 跌幅通知＋完整量化分析（AI語意暫時不可用）\n\n'
@@ -4853,7 +4853,7 @@ def _drop_alert_analysis_message(name, symbol, u, day, week, cur, pc, wh, daily_
                 '\n\n⚠️ AI與完整量化分析本次均暫時無法取得。')
 
 def _ai_background_session_allowed(identifier):
-    """V2.18.32：背景15分鐘 Actions 的股票/ETF AI 硬閘門。
+    """V2.18.33：背景15分鐘 Actions 的股票/ETF AI 硬閘門。
     台股僅 09:00-14:00；美股/QQQ 僅 21:30-05:00。
     Web 頁面的 AI 不走此函式，因此 /macro、/trump 仍可正常使用 Web AI。
     """
@@ -4867,11 +4867,11 @@ def _ai_background_session_allowed(identifier):
 
 
 def _run_ai_alert_analysis(func, *args, **kwargs):
-    """V2.18.32：已觸發 LINE 警報後才暫時開 AI，且背景掃描必須在對應市場交易時段。"""
+    """V2.18.33：已觸發 LINE 警報後才暫時開 AI，且背景掃描必須在對應市場交易時段。"""
     global AI_ALERT_MODE_ACTIVE
     identifier = args[0] if args else kwargs.get('symbol') or kwargs.get('name') or ''
     if not _ai_background_session_allowed(identifier):
-        print(f'V2.18.32 AI：非對應市場交易時段，跳過背景股票/ETF AI｜{identifier}', flush=True)
+        print(f'V2.18.33 AI：非對應市場交易時段，跳過背景股票/ETF AI｜{identifier}', flush=True)
         return None
     previous = AI_ALERT_MODE_ACTIVE
     AI_ALERT_MODE_ACTIVE = True
@@ -4887,13 +4887,13 @@ def check_drop_alert(
     state,
     u=None
 ):
-    """V2.18.32：每一標的一個台灣曆日最多只發一次跌幅自動通知。
+    """V2.18.33：每一標的一個台灣曆日最多只發一次跌幅自動通知。
 
     一旦當天曾經觸發過，不論之後是否拉回門檻以上、再度跌破門檻，
     當天都不再發第二次。隔日日期變更才重新取得一次通知資格。
     15分鐘區間低點通知仍維持自己的獨立 LOCK，不受此設定影響。
     """
-    # V2.18.32：跌幅自動通知也必須遵守「標的所屬市場交易時段」。
+    # V2.18.33：跌幅自動通知也必須遵守「標的所屬市場交易時段」。
     # 之前只有 15 分鐘區間低點與 AI 有交易時段閘門，check_drop_alert() 本身
     # 沒有閘門，因此 GitHub Actions 在台股夜間（例如台灣 03:00）仍會用
     # 前一交易日收盤計算 3711/2330/0050 的跌幅並送 LINE。
@@ -4905,7 +4905,7 @@ def check_drop_alert(
                         str(symbol or '').upper().strip().startswith('^TW') or
                         str(symbol or '').upper().strip() in ('0050','2330','3711')):
         if not _is_taiwan_trading_day(now_tw):
-            print(f'⏸️ V2.18.32 台股非交易日，跳過跌幅通知：{name}｜{now_tw.strftime("%Y-%m-%d")}', flush=True)
+            print(f'⏸️ V2.18.33 台股非交易日，跳過跌幅通知：{name}｜{now_tw.strftime("%Y-%m-%d")}', flush=True)
             return False
     text_symbol=str(symbol or '').upper().strip()
     is_tw_symbol=(text_symbol.endswith('.TW') or text_symbol.endswith('.TWO')
@@ -4913,11 +4913,11 @@ def check_drop_alert(
                   or text_symbol in ('0050','2330','3711'))
     market_open=(dt_time(9,0) <= t_tw < dt_time(14,0)) if is_tw_symbol else (t_tw >= dt_time(21,30) or t_tw < dt_time(5,0))
     if not market_open:
-        print(f'⏸️ V2.18.32 跌幅自動通知：非標的交易時段，跳過 {name}｜台灣時間 {now_tw.strftime("%Y-%m-%d %H:%M:%S")}', flush=True)
+        print(f'⏸️ V2.18.33 跌幅自動通知：非標的交易時段，跳過 {name}｜台灣時間 {now_tw.strftime("%Y-%m-%d %H:%M:%S")}', flush=True)
         return False
 
     if is_tw_symbol:
-        # V2.18.32：台股跌幅通知必須拿到「今天交易日」的盤中 K 棒；
+        # V2.18.33：台股跌幅通知必須拿到「今天交易日」的盤中 K 棒；
         # 若 Yahoo 只回上一交易日資料，直接 fail-closed，不得拿舊收盤冒充現價。
         try:
             intraday = yf_download(symbol, '1d', '5m')
@@ -4930,10 +4930,10 @@ def check_drop_alert(
                 else:
                     latest_dt = latest_dt.tz_convert(TW_TZ)
             if latest_dt is None or latest_dt.date() != now_tw.date():
-                print(f'⏸️ V2.18.32 {name} 無今天台股盤中 K 棒，跳過跌幅通知｜Yahoo 最新資料：{latest_dt}', flush=True)
+                print(f'⏸️ V2.18.33 {name} 無今天台股盤中 K 棒，跳過跌幅通知｜Yahoo 最新資料：{latest_dt}', flush=True)
                 return False
         except Exception as e:
-            print(f'⏸️ V2.18.32 {name} 無法確認今天盤中行情，跳過跌幅通知：{type(e).__name__}: {e}', flush=True)
+            print(f'⏸️ V2.18.33 {name} 無法確認今天盤中行情，跳過跌幅通知：{type(e).__name__}: {e}', flush=True)
             return False
 
     cur=get_latest_price(symbol)
@@ -4951,10 +4951,10 @@ def check_drop_alert(
         s.clear()
         s.update({'date':today,'daily_alert_sent':False,'weekly_alert_sent':False,'alert_sent':False})
 
-    # V2.18.32：不再於盤中清除舊 LOCK。
+    # V2.18.33：不再於盤中清除舊 LOCK。
     # 非交易日現在在函式入口直接 return，因此不會污染／重置當日狀態。
 
-    # V2.18.32：當天任何跌幅自動通知只允許一次。
+    # V2.18.33：當天任何跌幅自動通知只允許一次。
     if s.get('alert_sent') or s.get('daily_alert_sent') or s.get('weekly_alert_sent'):
         return False
 
@@ -4973,14 +4973,14 @@ def check_drop_alert(
     s['trigger_day']=round(day,6)
     s['trigger_week']=round(week,6) if week is not None else None
 
-    # V2.18.32：跌幅通知一旦觸發，立即把當日 LOCK 寫入磁碟。
+    # V2.18.33：跌幅通知一旦觸發，立即把當日 LOCK 寫入磁碟。
     # 不再等整個 15 分鐘 Action 跑完才 save_json，避免兩個 Actions
     # 在重疊執行時讀到舊狀態而重複發 LINE。
     try:
         save_json(STATE_FILE, state)
         # GitHub Actions 的下一個 15 分鐘 RUN 讀的是 repository 裡的檔案；
         # 因此不能只寫 runner 本機，必須在真正發 LINE 前立即 commit/push。
-        # 這是 V2.18.32 防止重複通知的核心。
+        # 這是 V2.18.33 防止重複通知的核心。
         import subprocess
         subprocess.run(['git', 'config', 'user.name', 'github-actions[bot]'], check=False, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         subprocess.run(['git', 'config', 'user.email', '41898282+github-actions[bot]@users.noreply.github.com'], check=False, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
@@ -4990,7 +4990,7 @@ def check_drop_alert(
         diff_result = subprocess.run(['git', 'diff', '--cached', '--quiet', '--', STATE_FILE], check=False)
         if diff_result.returncode == 0:
             # 可能已經由前一個 RUN 寫入；只要 repository 狀態已經是當日 LOCK 即可。
-            print(f'🔒 {name} V2.18.32 當日跌幅 LOCK 已存在於 repository，跳過重複 commit', flush=True)
+            print(f'🔒 {name} V2.18.33 當日跌幅 LOCK 已存在於 repository，跳過重複 commit', flush=True)
         else:
             commit_result = subprocess.run(
                 ['git', 'commit', '-m', f'Lock daily drop alert {name} {today}'],
@@ -5006,10 +5006,10 @@ def check_drop_alert(
                 push_result = subprocess.run(['git', 'push', 'origin', 'HEAD:main'], check=False, capture_output=True, text=True)
             if push_result.returncode != 0:
                 raise RuntimeError(f'git push 失敗：{push_result.stderr.strip() or push_result.stdout.strip()}')
-            print(f'🔒 {name} V2.18.32 已立即 commit + push 當日跌幅 LOCK：{today}', flush=True)
+            print(f'🔒 {name} V2.18.33 已立即 commit + push 當日跌幅 LOCK：{today}', flush=True)
     except Exception as e:
         # 防止「LINE 已送出但 LOCK 沒進 repository」造成每15分鐘重複洗版。
-        print(f'🛑 {name} V2.18.32 無法把當日跌幅 LOCK 持久化到 GitHub，為安全起見本次不發 LINE：{type(e).__name__}: {e}', flush=True)
+        print(f'🛑 {name} V2.18.33 無法把當日跌幅 LOCK 持久化到 GitHub，為安全起見本次不發 LINE：{type(e).__name__}: {e}', flush=True)
         return False
 
     if isinstance(u,dict) and u:
@@ -5021,7 +5021,7 @@ def check_drop_alert(
         msg=(f'🔴 跌幅通知\n\n標的：{name}\n目前價格：{cur:,.2f}\n'
              f'前一交易日收盤：{pc:,.2f}\n觸發條件：{"、".join(triggers)}')
     send_line(msg)
-    print(f'🔒 {name} V2.18.32 當日跌幅通知已鎖定：{today}，今日後續不再重複通知',flush=True)
+    print(f'🔒 {name} V2.18.33 當日跌幅通知已鎖定：{today}，今日後續不再重複通知',flush=True)
     return True
 
 def tpex_web_peratio_data(ds=None, timeout=None):
@@ -11598,7 +11598,7 @@ def analysis(
             ai_final=_ai_final_investment_summary(_snapshot)
             ai_final_text=_format_ai_final_summary(ai_final)
         except Exception as e:
-            print(f'V2.18.32 AI 最終結論失敗：{type(e).__name__}: {e}',flush=True)
+            print(f'V2.18.33 AI 最終結論失敗：{type(e).__name__}: {e}',flush=True)
     if not ai_final_text and AI_ENABLE_FINAL_SUMMARY:
         # 沒有 API key 時仍提供 deterministic 摘要，避免畫面留白。
         _conflict='投資價值與買點不同步' if ((fs>=24 and buy.get('score',0)<60) or (fs<24 and buy.get('score',0)>=60)) else '各層訊號大致一致'
@@ -12060,7 +12060,7 @@ LINE_SUBINDUSTRY_PARENT_OVERRIDES = {
 # TWSE 第一層例如「水泥工業」，官方產業價值鏈記錄為「水泥」；
 # 「鋼鐵工業」->「鋼鐵」、「半導體業」->「半導體」等。
 # 不再把兩邊字串直接相等，改用官方來源名稱的正規化比對。
-# V2.18.32：取消人工「大產業 -> 官方產業價值鏈」alias 維護。
+# V2.18.33：取消人工「大產業 -> 官方產業價值鏈」alias 維護。
 # 核心規則：TWSE/TPEx 大產業名稱只是「候選母類別」，真正的細產業一律
 # 從官方產業價值鏈 company_chain.php 的 records 反推。
 # 也就是：同一檔股票的 TWSE 大產業 = 目標大產業時，該股票在官方網站
@@ -12071,7 +12071,7 @@ LINE_VALUE_CHAIN_PARENT_ALIASES = {}
 
 
 def _line_industry_stock_parent_match(record_parent, target_parent, stock_parent=''):
-    """V2.18.32：官方 parent 比對只作輔助；股票自身 TWSE 大產業才是主判斷。"""
+    """V2.18.33：官方 parent 比對只作輔助；股票自身 TWSE 大產業才是主判斷。"""
     target = canonical_industry(target_parent)
     stock = canonical_industry(stock_parent)
     record = canonical_industry(record_parent)
@@ -12087,7 +12087,7 @@ def _line_industry_stock_parent_match(record_parent, target_parent, stock_parent
 
 
 def _line_industry_value_chain_parent_match(record_parent, target_parent):
-    """V2.18.32 相容函式：名稱相同時才直接判定；真正資料驅動比對由上層帶 stock_parent。"""
+    """V2.18.33 相容函式：名稱相同時才直接判定；真正資料驅動比對由上層帶 stock_parent。"""
     rp = _line_industry_norm(record_parent)
     tp = canonical_industry(target_parent)
     if not rp or not tp:
@@ -12104,7 +12104,7 @@ def _line_industry_parent_for_subindustry(subindustry):
 
 
 def _line_industry_build_subindustry_menu(parent, u):
-    """V2.18.32：完全資料驅動建立官方細產業選單。
+    """V2.18.33：完全資料驅動建立官方細產業選單。
 
     不再依賴手動 alias。對每一筆官方 company_chain records，先找到它對應的
     股票，再以該股票的 TWSE 大產業判定是否屬於目前 parent；因此官方 parent
@@ -12164,7 +12164,7 @@ def _line_industry_build_subindustry_menu(parent, u):
                             options.append(n)
                 break
     except Exception as e:
-        print(f'V2.18.32 官方產業索引備援失敗：{type(e).__name__}: {e}', flush=True)
+        print(f'V2.18.33 官方產業索引備援失敗：{type(e).__name__}: {e}', flush=True)
 
     return sorted(options, key=lambda x: (_line_industry_norm(x), x))
 
@@ -12201,14 +12201,14 @@ def _line_industry_fetch_parent_data(parent, u):
         if not any(normalize_subindustry(x) for x in (subs if isinstance(subs, list) else [subs])):
             missing.append(item)
 
-    # V2.18.32：取消 Top120/Top200 人為上限。
+    # V2.18.33：取消 Top120/Top200 人為上限。
     # 使用者要求的是「官網有的細產業全部抓到」，因此選定大產業後，
     # 該大產業所有缺少官方 company_chain 資料的股票都必須補抓。
     # 這樣冷門細產業也不會因市值排名低而永遠消失。
     missing.sort(key=lambda x: to_float(x.get('market_cap')) or 0, reverse=True)
     targets = [clean_code(x.get('code')) for x in missing]
     if targets:
-        print(f'V2.18.32 產業官方資料補抓：{parent_c} 缺少 {len(missing)} 檔，全部補抓 {len(targets)} 檔', flush=True)
+        print(f'V2.18.33 產業官方資料補抓：{parent_c} 缺少 {len(missing)} 檔，全部補抓 {len(targets)} 檔', flush=True)
         try:
             fetched = _fetch_missing_value_chains(targets)
             if isinstance(fetched, dict) and fetched:
@@ -12240,7 +12240,7 @@ def _line_industry_official_candidates(subindustries, parent, u, data):
             if not re.fullmatch(r'\d{4,6}[A-Z]?', cc):
                 continue
             stock = u.get(cc) or {}
-            # V2.18.32：以股票自身 TWSE 大產業作主判斷，不要求官方 parent 名稱相同。
+            # V2.18.33：以股票自身 TWSE 大產業作主判斷，不要求官方 parent 名稱相同。
             if parent_c and canonical_industry(stock.get('industry') or '') != parent_c:
                 continue
             matched = False
@@ -12411,7 +12411,7 @@ def _line_industry_top3_analysis(subindustry, u, html_links=False, parent=None):
 
 
 def _line_industry_parent_top3_analysis(parent, u, html_links=False):
-    """V2.18.32：官方細產業不存在/暫無可用時，直接用 TWSE/TPEx 大產業做市值 Top 3。
+    """V2.18.33：官方細產業不存在/暫無可用時，直接用 TWSE/TPEx 大產業做市值 Top 3。
     不猜細產業、不硬編碼股票；候選只來自目前官方市場股票池，並以大產業欄位過濾。
     """
     parent_c=canonical_industry(parent)
@@ -12473,7 +12473,7 @@ def _line_industry_query_result(text, target, u):
         if options:
             _line_industry_set_session(target, q['name'], options, 'subindustry')
             return 'options', _line_industry_options_message(q['name'], options)
-        # V2.18.32：沒有官方細產業時，不再直接報錯；改用大產業市值 Top 3。
+        # V2.18.33：沒有官方細產業時，不再直接報錯；改用大產業市值 Top 3。
         return 'result', _line_industry_parent_top3_analysis(q['name'], query_u)
     if q and q.get('type') == 'subindustry':
         query_u = u if isinstance(u, dict) and u else build_line_query_universe(text)
@@ -13851,7 +13851,7 @@ def _macro_value(d, key):
 
 
 def _macro_seed_multisource_history():
-    """V2.18.32：歷史總經資料多來源補種。
+    """V2.18.33：歷史總經資料多來源補種。
     不再把 FRED 當成唯一歷史來源；BLS 提供 CPI/失業率歷史、US Treasury 提供殖利率歷史。
     這些資料只用來建立統計歷史，不直接改寫即時值。
     """
@@ -13902,9 +13902,9 @@ def _macro_seed_multisource_history():
         for ym,v in unemp.items():
             y,m=map(int,ym.split('-')); dt=f'{y:04d}-{m:02d}-01'; row=by_day.setdefault(dt,{'ts':dt+'T00:00:00+08:00'})
             row['us_unemployment']=v; fetched+=1
-        print(f'V2.18.32 BLS歷史補種：{len(cpi)}筆CPI、{len(unemp)}筆失業率',flush=True)
+        print(f'V2.18.33 BLS歷史補種：{len(cpi)}筆CPI、{len(unemp)}筆失業率',flush=True)
     except Exception as e:
-        print(f'V2.18.32 BLS歷史補種失敗：{type(e).__name__}: {e}',flush=True)
+        print(f'V2.18.33 BLS歷史補種失敗：{type(e).__name__}: {e}',flush=True)
     try:
         # US Treasury daily yield curve CSV：免費官方歷史資料。
         yr=datetime.now(TW_TZ).year
@@ -13925,14 +13925,14 @@ def _macro_seed_multisource_history():
                 if ten is not None and math.isfinite(ten): row['us_10y']=ten
                 if ten is not None and two is not None and math.isfinite(ten) and math.isfinite(two): row['us_curve_10y2y']=ten-two
             fetched+=len(td)
-        print(f'V2.18.32 Treasury歷史補種：{len(td)}筆',flush=True)
+        print(f'V2.18.33 Treasury歷史補種：{len(td)}筆',flush=True)
     except Exception as e:
-        print(f'V2.18.32 Treasury歷史補種失敗：{type(e).__name__}: {e}',flush=True)
+        print(f'V2.18.33 Treasury歷史補種失敗：{type(e).__name__}: {e}',flush=True)
     if fetched:
         hist['items']=sorted(by_day.values(),key=lambda x:str(x.get('ts','')))[-MACRO_HISTORY_MAX_DAYS:]
         save_json(MACRO_HISTORY_FILE,hist)
         _MACRO_HISTORY_RUN_CACHE=None
-        print(f'V2.18.32 多來源歷史快取完成：{len(hist["items"])}筆',flush=True)
+        print(f'V2.18.33 多來源歷史快取完成：{len(hist["items"])}筆',flush=True)
 
 def _macro_history_append(d):
     """Persist one observation per run.  History is used only for statistical estimates."""
@@ -13959,7 +13959,7 @@ def _macro_history_append(d):
 
 
 def _macro_series_history(series_key, d=None, min_points=MACRO_FORECAST_MIN_POINTS):
-    """V2.18.32：本地歷史優先；沒有 FRED key 時也使用公開 FRED graph CSV 歷史。
+    """V2.18.33：本地歷史優先；沒有 FRED key 時也使用公開 FRED graph CSV 歷史。
     一次下載七個序列，避免每個指標各自 timeout。CPI 轉為 YoY 後再供預測使用。
     """
     global _MACRO_FRED_HISTORY_CACHE, _MACRO_FRED_HISTORY_ATTEMPTED, _MACRO_HISTORY_RUN_CACHE
@@ -14020,9 +14020,9 @@ def _macro_series_history(series_key, d=None, min_points=MACRO_FORECAST_MIN_POIN
                     rows=yoy
                 fred_hist[key]=rows[-MACRO_HISTORY_MAX_DAYS:]
             _MACRO_FRED_HISTORY_CACHE.update(fred_hist)
-            print(f'V2.18.32 FRED公開歷史：批次載入 {len(fred_hist)} 指標',flush=True)
+            print(f'V2.18.33 FRED公開歷史：批次載入 {len(fred_hist)} 指標',flush=True)
         except Exception as e:
-            print(f'V2.18.32 FRED公開歷史補抓略過：{type(e).__name__}: {e}',flush=True)
+            print(f'V2.18.33 FRED公開歷史補抓略過：{type(e).__name__}: {e}',flush=True)
     return list((_MACRO_FRED_HISTORY_CACHE or {}).get(series_key,vals))
 
 
@@ -14036,7 +14036,7 @@ def _macro_forecast_one(series_key, current, horizon, d=None):
     if not vals: return {'value':None,'low':None,'high':None,'confidence':0,'n':0,'method':'無資料'}
     n=len(vals); arr=np.array(vals[-60:],dtype=float)
     if n<MACRO_FORECAST_MIN_POINTS:
-        # V2.18.32：若公開歷史暫時不足，不回傳 N/A；以目前值做極保守持平基準，並明確標示低信心。
+        # V2.18.33：若公開歷史暫時不足，不回傳 N/A；以目前值做極保守持平基準，並明確標示低信心。
         base=float(current) if current is not None else float(arr[-1])
         sd=float(np.std(arr)) if len(arr)>1 else max(abs(base)*0.02,0.01)
         width=max(0.05,1.50*sd*math.sqrt(max(1,horizon)))
@@ -14324,7 +14324,7 @@ def macro_stock_factor(industry, subindustries=None, name=''):
 
 
 def _is_bad_news_title(title):
-    """V2.18.32：過濾 Google/代理伺服器錯誤頁被 RSS 當成新聞標題的污染資料。"""
+    """V2.18.33：過濾 Google/代理伺服器錯誤頁被 RSS 當成新聞標題的污染資料。"""
     t=html.unescape(str(title or '')).strip().lower()
     if not t: return True
     bad=('error 500','server error','af-error-page','<html','<body','<!doctype','overflow:auto','display:block!important','google error','javascript:','stack trace')
@@ -14334,7 +14334,7 @@ def _is_bad_news_title(title):
 
 
 def _trump_recent_news_fetch(symbol=''):
-    """V2.18.32：Trump 第二層；Google News RSS 多查詢並行，降低總等待時間。"""
+    """V2.18.33：Trump 第二層；Google News RSS 多查詢並行，降低總等待時間。"""
     global _TRUMP_RECENT_NEWS_CACHE
     key=str(symbol or '').upper().strip() or '__MARKET__'; now_ts=time.time()
     cached=_TRUMP_RECENT_NEWS_CACHE.get(key)
@@ -14967,7 +14967,7 @@ def run_webhook_server():
         except Exception as ex:
             return _web_page('產業分析',f'<div class="card"><h1>❌ 產業資料取得失敗</h1><pre>{html.escape(str(ex))}</pre></div>'),500
         if not options:
-            # V2.18.32：細產業不存在/暫無資料時，直接提供大產業市值 Top 3。
+            # V2.18.33：細產業不存在/暫無資料時，直接提供大產業市值 Top 3。
             fallback=_line_industry_parent_top3_analysis(parent,u,html_links=True)
             return _web_page('產業分析',f'<div class="card"><h1>📊 {html.escape(parent)}</h1><p class="muted">目前沒有可用的官方細產業資料，以下改用大產業市值 Top 3。</p><pre style="white-space:pre-wrap">{fallback}</pre><a href="/industry">← 重新選擇</a></div>'),200
         if not sub:
@@ -14994,7 +14994,7 @@ def run_webhook_server():
         )
         return _web_page('產業分析結果',body)
 
-    # V2.18.32：Render 外部分析頁改為背景工作，避免瀏覽器長時間黑屏。
+    # V2.18.33：Render 外部分析頁改為背景工作，避免瀏覽器長時間黑屏。
     # 先顯示「分析中／請重新整理」，背景完成後再顯示完整頁面。
     WEB_PAGE_TASKS = {}
     WEB_PAGE_TASK_LOCK = threading.Lock()
@@ -15061,7 +15061,7 @@ def run_webhook_server():
 
     @app.get('/ai-diagnostic')
     def ai_diagnostic_page():
-        """V2.18.32：三家 AI provider 獨立 Hello 診斷。
+        """V2.18.33：三家 AI provider 獨立 Hello 診斷。
         每家只送一次極短 JSON 測試，不走 fallback、不使用 cache、不寫 quota lock，
         用來確認 Gemini/Mistral/Groq 是否各自能正常接受 API request。
         """
@@ -15122,7 +15122,7 @@ def run_webhook_server():
 
     @app.get('/stock')
     def direct_stock_page():
-        """V2.14.43 + V2.18.32：產業/Trump/總經頁點擊後以背景工作產生完整個股分析。"""
+        """V2.14.43 + V2.18.33：產業/Trump/總經頁點擊後以背景工作產生完整個股分析。"""
         symbol = str(request.args.get('symbol') or '').strip()
         if not symbol:
             return _web_page('個股分析', '<div class="card"><h1>📊 個股分析</h1><form method="get"><input name="symbol" placeholder="例如 2330、3711、NVDA、QQQ" required><button type="submit">查詢完整分析</button></form></div>')
@@ -15771,7 +15771,7 @@ def refresh_all_market_pe_history(pe_history, universe=None):
 
 
 def _is_taiwan_trading_day(now=None):
-    """V2.18.32：確認今天是否為 TWSE 台股實際交易日。
+    """V2.18.33：確認今天是否為 TWSE 台股實際交易日。
 
     週末直接判定非交易日；平日再查 TWSE 官方市場開休市資料。
     官方資料無法取得時採 fail-closed，避免手動 workflow_dispatch 在
@@ -15786,7 +15786,7 @@ def _is_taiwan_trading_day(now=None):
     # 處理補行交易日／特殊休市。
     if now.weekday() >= 5:
         _TW_TRADING_DAY_CACHE[date_key] = False
-        print(f'📅 V2.18.32 台股交易日確認：否｜{date_key}（週末）', flush=True)
+        print(f'📅 V2.18.33 台股交易日確認：否｜{date_key}（週末）', flush=True)
         return False
 
     url = 'https://www.twse.com.tw/holidaySchedule/holidaySchedule'
@@ -15814,7 +15814,7 @@ def _is_taiwan_trading_day(now=None):
             plain = re.sub(r'\s+', ' ', plain)
             if date_key not in plain:
                 _TW_TRADING_DAY_CACHE[date_key] = True
-                print(f'📅 V2.18.32 台股交易日確認：是｜{date_key}｜來源：TWSE 官方開休市資料', flush=True)
+                print(f'📅 V2.18.33 台股交易日確認：是｜{date_key}｜來源：TWSE 官方開休市資料', flush=True)
                 return True
             row_text = plain
         else:
@@ -15827,7 +15827,7 @@ def _is_taiwan_trading_day(now=None):
         result = False if closed and not trading else True
         _TW_TRADING_DAY_CACHE[date_key] = result
         print(
-            f'📅 V2.18.32 台股交易日確認：{"是" if result else "否"}｜{date_key}｜來源：TWSE 官方開休市資料',
+            f'📅 V2.18.33 台股交易日確認：{"是" if result else "否"}｜{date_key}｜來源：TWSE 官方開休市資料',
             flush=True
         )
         return result
@@ -15835,14 +15835,14 @@ def _is_taiwan_trading_day(now=None):
         # Fail-closed：無法確認交易日就絕不讓自動台股 LINE 通知通過。
         _TW_TRADING_DAY_CACHE[date_key] = False
         print(
-            f'🛑 V2.18.32 無法確認台股交易日，採 fail-closed：{date_key}｜{type(e).__name__}: {e}',
+            f'🛑 V2.18.33 無法確認台股交易日，採 fail-closed：{date_key}｜{type(e).__name__}: {e}',
             flush=True
         )
         return False
 
 
 def _is_taiwan_stock_session_open(now=None):
-    """V2.18.32：台股 09:00～14:00 且必須為實際交易日。"""
+    """V2.18.33：台股 09:00～14:00 且必須為實際交易日。"""
     now = now or datetime.now(TW_TZ)
     if not _is_taiwan_trading_day(now):
         return False
@@ -16349,10 +16349,10 @@ def _notify_target_buy_point(name, symbol, state, u=None):
                 item['locked'] = False
         if score <= 60:
             item['locked'] = False
-            print(f'V2.18.32 {name} 買點 {score}：跌回60以下/等於60，解除通知鎖', flush=True)
+            print(f'V2.18.33 {name} 買點 {score}：跌回60以下/等於60，解除通知鎖', flush=True)
             return buy
         if locked:
-            print(f'V2.18.32 {name} 買點 {score}：已通知且尚未跌回60，不重複 LINE', flush=True)
+            print(f'V2.18.33 {name} 買點 {score}：已通知且尚未跌回60，不重複 LINE', flush=True)
             return buy
 
         investment_score = None
@@ -16366,10 +16366,10 @@ def _notify_target_buy_point(name, symbol, state, u=None):
                 m = re.search(r'(?:ETF)?綜合評分：\s*(-?\d+(?:\.\d+)?)\s*/\s*100', rule_result)
                 if m: investment_score = int(float(m.group(1)))
         except Exception as e:
-            print(f'V2.18.32 {name} 規則投資價值分數取得失敗：{type(e).__name__}: {e}', flush=True)
+            print(f'V2.18.33 {name} 規則投資價值分數取得失敗：{type(e).__name__}: {e}', flush=True)
 
         if investment_score is None or investment_score < 90:
-            print(f'V2.18.32 {name} 買點 {score}、投資價值 {investment_score if investment_score is not None else "N/A"}：未達 LINE 門檻，不呼叫 AI', flush=True)
+            print(f'V2.18.33 {name} 買點 {score}、投資價值 {investment_score if investment_score is not None else "N/A"}：未達 LINE 門檻，不呼叫 AI', flush=True)
             return buy
 
         # 真的即將送出極佳買點 LINE，現在才允許 AI。
@@ -16380,7 +16380,7 @@ def _notify_target_buy_point(name, symbol, state, u=None):
                 full_result = _run_ai_alert_analysis(analysis, name, u, False)
         except Exception as e:
             full_result = None
-            print(f'V2.18.32 {name} AI 加碼分析失敗：{type(e).__name__}: {e}', flush=True)
+            print(f'V2.18.33 {name} AI 加碼分析失敗：{type(e).__name__}: {e}', flush=True)
 
         if score >= 90 and investment_score is not None and investment_score >= 90:
             price = to_float(tech.get('price'))
@@ -16472,9 +16472,9 @@ def run_alerts():
     tw_now = datetime.now(TW_TZ)
     tw_trading_day = _is_taiwan_trading_day(tw_now)
     if not tw_trading_day:
-        print(f'⏸️ V2.18.32 台股非交易日：{tw_now.strftime("%Y-%m-%d")}，跳過所有台股自動 LINE／跌幅／15分鐘／高分通知', flush=True)
+        print(f'⏸️ V2.18.33 台股非交易日：{tw_now.strftime("%Y-%m-%d")}，跳過所有台股自動 LINE／跌幅／15分鐘／高分通知', flush=True)
     else:
-        print(f'📅 V2.18.32 台股交易日確認：是｜{tw_now.strftime("%Y-%m-%d")}', flush=True)
+        print(f'📅 V2.18.33 台股交易日確認：是｜{tw_now.strftime("%Y-%m-%d")}', flush=True)
 
     print(
         '================================\n'
@@ -16665,7 +16665,7 @@ def run_alerts():
         target_is_taiwan = (text_symbol.endswith('.TW') or text_symbol.endswith('.TWO') or
                             text_symbol.startswith('^TW') or text_symbol in ('0050','2330','3711'))
         if target_is_taiwan and not tw_trading_day:
-            print(f'⏸️ V2.18.32 {name}：台股非交易日，跳過本次價格／跌幅／15分鐘／完整分析，保留既有 LOCK 與盤中基準', flush=True)
+            print(f'⏸️ V2.18.33 {name}：台股非交易日，跳過本次價格／跌幅／15分鐘／完整分析，保留既有 LOCK 與盤中基準', flush=True)
             continue
 
         try:
@@ -16843,12 +16843,12 @@ def main():
 
     else:
 
-        print('========== V2.18.32 RUN START ==========', flush=True)
+        print('========== V2.18.33 RUN START ==========', flush=True)
         _print_ai_runtime_status()
-        print('V2.18.32 AI 閘門：每15分鐘自動掃描只有達到 LINE 發送門檻後才啟用 AI；未觸發時完全不呼叫 AI｜跌幅自動通知：每標的一天最多1次｜觸發後立即持久化LOCK', flush=True)
+        print('V2.18.33 AI 閘門：每15分鐘自動掃描只有達到 LINE 發送門檻後才啟用 AI；未觸發時完全不呼叫 AI｜跌幅自動通知：每標的一天最多1次｜觸發後立即持久化LOCK', flush=True)
         print(f'執行時間（台灣）：{datetime.now(TW_TZ).strftime("%Y-%m-%d %H:%M:%S")}', flush=True)
         run_alerts()
-        print('========== V2.18.32 RUN END ==========', flush=True)
+        print('========== V2.18.33 RUN END ==========', flush=True)
 
 
 if __name__ == '__main__':
