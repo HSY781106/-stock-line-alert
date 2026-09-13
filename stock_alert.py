@@ -1,4 +1,4 @@
-# stock_alert.py V2.19.9
+# stock_alert.py V2.20.0
 # V2.19.7：Theme Intelligence semantic candidate engine + bounded quantitative analysis；
 # V2.17.0 功能全部保留：Gemini Free 主力 + Mistral/Groq Free 備援、重大消息、Trump 語意、總經預測。
 # V2.15.6：外部產業網頁正確性＋效能修正版：官方價值鏈候選池改為資料驅動，不再只依賴同大產業 Top120；
@@ -106,7 +106,7 @@ import xml.etree.ElementTree as ET
 from email.utils import parsedate_to_datetime
 
 from datetime import datetime, timedelta, time as dt_time, timezone
-from urllib.parse import quote
+from urllib.parse import quote, urlencode
 from zoneinfo import ZoneInfo
 
 import requests
@@ -15331,11 +15331,40 @@ def run_webhook_server():
             'ai伺服器': ['電腦及週邊設備業', '電子零組件業', '其他電子業', '資訊服務業'],
             '先進封裝': ['半導體業', '電子零組件業', '其他電子業'],
         }
+        THEME_SUBINDUSTRY_HINTS = {
+            '自主智能': ['軟體','資訊','雲端','人工智慧','代理人','自動化','企業'],
+            '自主型ai': ['軟體','資訊','雲端','人工智慧','代理人','自動化','企業'],
+            '代理人ai': ['軟體','資訊','雲端','人工智慧','代理人','自動化','企業'],
+            '代理人ai技術': ['軟體','資訊','雲端','人工智慧','代理人','自動化','企業'],
+            'ai代理人': ['軟體','資訊','雲端','人工智慧','代理人','自動化','企業'],
+            'ai代理人技術': ['軟體','資訊','雲端','人工智慧','代理人','自動化','企業'],
+            'agenticai': ['軟體','資訊','雲端','人工智慧','代理人','自動化','企業'],
+            'aiagent': ['軟體','資訊','雲端','人工智慧','代理人','自動化','企業'],
+            'ai企業運營': ['企業','軟體','資訊','雲端','服務','資料','自動化','AI','人工智慧'],
+            '物理ai': ['機器人','自動化','工業電腦','感測器','機電','控制','伺服','馬達','機器視覺'],
+            'physicalai': ['機器人','自動化','工業電腦','感測器','機電','控制','伺服','馬達','機器視覺'],
+            '人形機器人': ['機器人','自動化','工業電腦','感測器','機電','控制','伺服','馬達'],
+            '機器人': ['機器人','自動化','工業電腦','感測器','機電','控制','伺服','馬達','機器視覺'],
+            '無人機': ['無人機','航太','航空','飛行','感測器','雷達','通訊','光電','機電','控制'],
+            'drone': ['無人機','航太','航空','飛行','感測器','雷達','通訊','光電','機電','控制'],
+            'cpo': ['光通訊','光電','通信','連接器','光纖','光學'],
+            'hbm': ['記憶體','封裝','晶圓','半導體','IC'],
+            '液冷': ['散熱','水冷','熱管理','伺服器','機櫃'],
+            '資料中心': ['資料中心','伺服器','網路','雲端','資訊'],
+            'data center': ['資料中心','伺服器','網路','雲端','資訊'],
+            'ai伺服器': ['伺服器','資料中心','雲端','散熱'],
+            '先進封裝': ['先進封裝','封裝','測試','晶圓'],
+        }
         alias_parents = []
+        alias_terms = []
         for k, vals in THEME_PARENT_HINTS.items():
             if k.replace(' ', '') in topic_low:
                 alias_parents.extend(vals)
+        for k, vals in THEME_SUBINDUSTRY_HINTS.items():
+            if k.replace(' ', '') in topic_low:
+                alias_terms.extend(vals)
         alias_parents = list(dict.fromkeys(alias_parents))
+        alias_terms = list(dict.fromkeys(alias_terms))
 
         # 第一階段 schema：刻意不要求 official_subindustries。
         schema = {
@@ -15364,7 +15393,7 @@ def run_webhook_server():
             'required': ['headline', 'trend', 'summary', 'why_now', 'fine_themes', 'risks', 'evidence_limitations'],
             'additionalProperties': False,
         }
-        cache_key = 'theme_v2199_decompose:' + hashlib.sha256((topic + '|' + _ai_compact_payload(news, 9000)).encode('utf-8')).hexdigest()[:24]
+        cache_key = 'theme_v2200_decompose:' + hashlib.sha256((topic + '|' + _ai_compact_payload(news, 9000)).encode('utf-8')).hexdigest()[:24]
         result = _ai_call_json(
             '你是保守的台灣科技投資題材研究員。現在只做第一階段：把輸入的大題材拆成1~3個「具體、可研究、可投資驗證」的細題材。'
             '此階段絕對不要要求或創造官方次產業名稱，也不要因為目前無法對應官方分類而判定資料不足。'
@@ -15375,7 +15404,7 @@ def run_webhook_server():
             cache_key=cache_key, ttl_hours=THEME_ANALYSIS_TTL / 3600, response_schema=schema, timeout=12
         )
         if not isinstance(result, dict):
-            print(f'V2.19.9 Theme：第一階段 AI 拆題失敗｜{topic}', flush=True)
+            print(f'V2.20.0 Theme：第一階段 AI 拆題失敗｜{topic}', flush=True)
             return None
 
         cleaned = []
@@ -15395,56 +15424,110 @@ def run_webhook_server():
         if not cleaned:
             return None
 
-        # 第二階段預先附上「可能的官方次產業候選」，但不要求它們成功才顯示細題材。
-        # 優先使用 Actions 已建立的「TWSE 大產業 -> 官方細產業」索引。
-        menu_data = {}
-        try:
-            mc = load_json(INDUSTRY_MENU_CACHE_FILE)
-            menu_data = mc.get('data', {}) if isinstance(mc, dict) else {}
-        except Exception as e:
-            print(f'V2.19.9 Theme：官方產業索引讀取失敗｜{type(e).__name__}: {e}', flush=True)
-        official_candidates = []
-        if isinstance(menu_data, dict) and alias_parents:
-            parent_norms = {canonical_industry(x) for x in alias_parents}
-            for k, vals in menu_data.items():
-                if canonical_industry(k) not in parent_norms or not isinstance(vals, list):
+        # V2.20.0：以 company-chain 官方 records + market universe 的大產業交集建立候選。
+        data = _line_industry_load_data()
+        official = _theme_official_subindustries()
+        universe_cache = load_json(UNIVERSE_CACHE_FILE)
+        universe_data = universe_cache.get('data', {}) if isinstance(universe_cache, dict) else {}
+        if not isinstance(universe_data, dict):
+            universe_data = {}
+        sub_parent = {}
+        if isinstance(data, dict):
+            for code, info in data.items():
+                if not isinstance(info, dict):
                     continue
-                for v in vals:
-                    n = normalize_subindustry(v)
-                    if n and n not in official_candidates:
-                        official_candidates.append(n)
-        if not official_candidates:
-            official_candidates = _theme_official_subindustries()[:200]
+                cc = clean_code(code)
+                stock = universe_data.get(cc, {})
+                stock_parent = canonical_industry(stock.get('industry') or '') if isinstance(stock, dict) else ''
+                info_parent = canonical_industry(info.get('industry') or info.get('main_industry') or '')
+                parent = stock_parent or info_parent
+                recs = info.get('records', [])
+                if isinstance(recs, list) and recs:
+                    for rec in recs:
+                        if not isinstance(rec, dict):
+                            continue
+                        sub = normalize_subindustry(rec.get('sub_industry') or rec.get('subindustry') or rec.get('node') or '')
+                        if sub:
+                            rp = canonical_industry(rec.get('industry') or rec.get('main_industry') or '')
+                            sub_parent.setdefault(_line_industry_norm(sub), set()).add(parent or rp)
+                else:
+                    subs = info.get('subindustries', [])
+                    subs = subs if isinstance(subs, list) else [subs]
+                    for sub in subs:
+                        sub = normalize_subindustry(sub)
+                        if sub:
+                            sub_parent.setdefault(_line_industry_norm(sub), set()).add(parent)
+        available_parents = {canonical_industry(p) for vals in sub_parent.values() for p in vals if p}
+        hinted_parent_norm = {canonical_industry(x) for x in alias_parents if x} & available_parents
+        scored = []
+        for n in official:
+            low = str(n).lower()
+            score = 0
+            for t in alias_terms:
+                if str(t).lower() in low:
+                    score += 5
+            if any(canonical_industry(p) in hinted_parent_norm for p in sub_parent.get(_line_industry_norm(n), set()) if p):
+                score += 3
+            if score:
+                scored.append((score, str(n).strip()))
+        dedup = {}
+        for score, n in scored:
+            dedup[n] = max(score, dedup.get(n, 0))
+        official_candidates = [n for n, _ in sorted(dedup.items(), key=lambda kv: (-kv[1], len(kv[0]), kv[0]))][:100]
+        if not official_candidates and hinted_parent_norm:
+            for n in official:
+                parents = sub_parent.get(_line_industry_norm(n), set())
+                if any(canonical_industry(p) in hinted_parent_norm for p in parents if p):
+                    official_candidates.append(str(n).strip())
+            official_candidates = list(dict.fromkeys(official_candidates))[:100]
 
-        # V2.19.8：第一階段完全不做官方映射；只有使用者選定細題材時才映射。
-        # 這避免一次拆 3 個細題材就發出 3 次額外 AI 請求，也避免官方分類暫時
-        # 不可用時把「細題材拆解成功」錯誤顯示成「資料不足」。
         selected_fine = str(selected_fine or '').strip()
         if not selected_fine:
             for ft in result['fine_themes']:
                 ft['official_subindustries'] = []
-            print(f'V2.19.9 Theme：第一階段完成｜{topic}｜fine={len(result["fine_themes"])}', flush=True)
+            print(f'V2.20.0 Theme：第一階段完成｜{topic}｜fine={len(result["fine_themes"])}', flush=True)
             return result
 
         # 只對使用者選定的細題材做一次「官方名稱映射」。映射失敗會明確保留
         # 細題材，但第二階段不會拿不存在的官方名稱去跑股票。
         map_schema = {
             'type': 'object',
-            'properties': {'official_subindustries': {'type': 'array', 'minItems': 0, 'maxItems': 3, 'items': {'type': 'string'}}},
-            'required': ['official_subindustries'], 'additionalProperties': False,
+            'properties': {
+                'official_subindustries': {'type': 'array', 'minItems': 0, 'maxItems': 3, 'items': {'type': 'string'}},
+                'evidence_titles': {'type': 'array', 'minItems': 0, 'maxItems': 3, 'items': {'type': 'string'}},
+                'mapping_reason': {'type': 'string'},
+            },
+            'required': ['official_subindustries', 'evidence_titles', 'mapping_reason'], 'additionalProperties': False,
         }
         valid_official = set(_theme_official_subindustries())
+        fine_news = _theme_news_fetch(selected_fine, max_items=18)
+        combined_news = []
+        seen_news = set()
+        for item in (fine_news + news):
+            title = str(item.get('title') or '').strip() if isinstance(item, dict) else ''
+            nk = re.sub(r'\W+', ' ', title.lower()).strip()
+            if not nk or nk in seen_news:
+                continue
+            seen_news.add(nk)
+            combined_news.append(item)
+        combined_news = combined_news[:24]
         for ft in result['fine_themes']:
             if str(ft.get('name') or '').strip() != selected_fine:
                 ft['official_subindustries'] = []
                 continue
             sub_candidates = official_candidates
-            map_payload = {'fine_theme': ft.get('name'), 'logic': ft.get('logic'), 'topic': topic, 'official_candidates': sub_candidates}
-            mk = 'theme_v2199_map:' + hashlib.sha256(_ai_compact_payload(map_payload, 8000).encode('utf-8')).hexdigest()[:24]
+            map_payload = {
+                'fine_theme': ft.get('name'), 'logic': ft.get('logic'), 'topic': topic,
+                'official_candidates': sub_candidates, 'news': combined_news,
+                'semantic_subindustry_hints': alias_terms,
+            }
+            mk = 'theme_v2200_map:' + hashlib.sha256(_ai_compact_payload(map_payload, 8000).encode('utf-8')).hexdigest()[:24]
             mapped = _ai_call_json(
                 '你是台灣產業分類研究員。把這個細題材對應到最合理的官方產業價值鏈細產業。'
-                '只能從 official_candidates 原樣選擇，禁止創造名稱；若沒有合理對應可以輸出空陣列。最多3個。',
-                '資料：' + _ai_compact_payload(map_payload, 8000), cache_key=mk, ttl_hours=24,
+                '只能從 official_candidates 原樣選擇，禁止創造名稱；若沒有合理對應可以輸出空陣列。最多3個。'
+                '同時從 news 中挑選真正與這個細題材相關的新聞標題；沒有可靠新聞就輸出空陣列。'
+                '不要因為新聞不足就放棄官方分類映射；分類可依供應鏈邏輯，但不得捏造公司受惠證據。',
+                '資料：' + _ai_compact_payload(map_payload, 11000), cache_key=mk, ttl_hours=24,
                 response_schema=map_schema, timeout=10
             )
             subs = []
@@ -15454,8 +15537,17 @@ def run_webhook_server():
                     if exact and exact in sub_candidates and exact not in subs:
                         subs.append(exact)
             ft['official_subindustries'] = subs[:3]
+            if isinstance(mapped, dict):
+                ev = [str(x).strip() for x in (mapped.get('evidence_titles') or []) if str(x).strip()]
+                if ev:
+                    ft['evidence_titles'] = ev[:3]
+                reason = str(mapped.get('mapping_reason') or '').strip()
+                if reason:
+                    ft['mapping_reason'] = reason
+            if not subs:
+                ft['mapping_reason'] = ft.get('mapping_reason') or '目前官方價值鏈資料無法建立足夠可靠的細產業對應。'
 
-        print(f'V2.19.9 Theme：第一階段完成｜{topic}｜fine={len(result["fine_themes"])}｜官方映射候選={len(official_candidates)}', flush=True)
+        print(f'V2.20.0 Theme：第二階段完成｜{topic}｜fine={len(result["fine_themes"])}｜官方映射候選={len(official_candidates)}', flush=True)
         return result
 
     def _theme_quantitative_results(result, u):
@@ -15477,10 +15569,10 @@ def run_webhook_server():
                     candidates=_line_industry_official_candidates(target_subs,parent,u2,data)
                 # 不能先用市值切掉候選，再宣稱「最有投資價值」。先取較大的候選池
                 # 做既有量化分析，再依第一層投資價值排序；買點分數與市值只作後續 tie-break。
-                # V2.19.6：題材頁不是全市場掃描；限制每個官方次產業先分析 6 檔，
+                # V2.19.6：題材頁不是全市場掃描；限制每個官方次產業先分析 12 檔，
                 # 再由既有投資價值／買點模型排序 Top3，避免「物理AI／無人機」
                 # 這類多供應鏈題材在 Render Free 上跑數十分鐘。
-                candidate_pool=[x for x in candidates if to_float(x[0]) is not None and to_float(x[0]) > 0][:6]
+                candidate_pool=[x for x in candidates if to_float(x[0]) is not None and to_float(x[0]) > 0][:12]
                 if not candidate_pool:
                     # 若官方資料只有市值缺失/0 的候選，仍允許分析，但畫面一定顯示 N/A，不顯示假 0。
                     candidate_pool=candidates[:12]
@@ -15514,7 +15606,9 @@ def run_webhook_server():
         lines += [f'• {x}' for x in (result.get('why_now') or [])[:4]]
         lines += ['','🧩 細題材／供應鏈拆解']
         for i,ft in enumerate(result.get('fine_themes',[])[:3],1):
-            lines += [f'{i}. {ft.get("name")}',f'邏輯：{ft.get("logic")}', '官方次產業：'+ '、'.join(ft.get('official_subindustries',[])[:3])]
+            lines += [f'{i}. {ft.get("name")}',f'邏輯：{ft.get("logic")}', '官方次產業：'+ ('、'.join(ft.get('official_subindustries',[])[:3]) if ft.get('official_subindustries') else '資料不足')]
+            if ft.get('mapping_reason'):
+                lines.append('分類判斷：'+str(ft.get('mapping_reason')))
             ev=ft.get('evidence_titles') or []
             if ev: lines.append('新聞證據：'+'；'.join(str(x) for x in ev[:2]))
         lines += ['','🏭 受惠產業 → 公司 → 既有量化模型']
@@ -15683,7 +15777,7 @@ def run_webhook_server():
                 f'<p><b>目前趨勢：</b>{trend}</p>'
                 f'<p>{summary}</p>'
                 + (f'<h3>⏱️ 為什麼現在值得看</h3><ul>{why_html}</ul>' if why_html else '')
-                + '<p><b>以下先讓你選投資方向；選定後才會啟動股票／估值／技術／籌碼分析。</b></p>'
+                + '<p><b>以下細題材順序是 AI 依新聞證據與產業邏輯的研究優先順序，不是投資價值排名；選定後才會啟動股票／估值／技術／籌碼分析。</b></p>'
                 + ''.join(cards)
                 + f'<div class="nav"><a href="/theme">← 題材首頁</a><a href="/industry">🏭 產業</a><a href="/">首頁</a></div>'
             )
