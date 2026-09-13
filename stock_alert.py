@@ -1,4 +1,4 @@
-# stock_alert.py V2.18.39
+# stock_alert.py V2.19.0
 # V2.17.1：AI 僅在「已達到 LINE 發送門檻」後啟用；其餘每15分鐘掃描完全不呼叫 AI。
 # V2.17.0 功能全部保留：Gemini Free 主力 + Mistral/Groq Free 備援、重大消息、Trump 語意、總經預測。
 # V2.15.6：外部產業網頁正確性＋效能修正版：官方價值鏈候選池改為資料驅動，不再只依賴同大產業 Top120；
@@ -15118,23 +15118,273 @@ def run_webhook_server():
         )
         return _web_page('Stock Alert',body), 200
 
+    # ============================================================
+    # V2.19.0：Theme Intelligence
+    # 題材 = 全球近期事件／趨勢 → 細題材 → 官方產業／次產業 → 公司 → 既有量化模型
+    # ============================================================
+    THEME_HOT_CACHE = {'ts': 0.0, 'data': None}
+    THEME_ANALYSIS_CACHE = {}
+    THEME_CACHE_LOCK = threading.Lock()
+    THEME_HOT_TTL = 6 * 60 * 60
+    THEME_ANALYSIS_TTL = 12 * 60 * 60
+    THEME_NEWS_TTL = 30 * 60
+    THEME_NEWS_CACHE = {}
+
+    def _theme_news_fetch(topic, max_items=18):
+        """抓近期公開新聞標題；只作題材脈絡，不直接當作公司受惠證據。"""
+        key = re.sub(r'\s+', ' ', str(topic or '').strip().lower())
+        now = time.time()
+        with THEME_CACHE_LOCK:
+            c = THEME_NEWS_CACHE.get(key)
+            if isinstance(c, dict) and now - float(c.get('ts', 0) or 0) < THEME_NEWS_TTL:
+                return c.get('data') or []
+        queries = [f'"{topic}" latest technology industry investment', f'"{topic}" supply chain companies Taiwan']
+        rows=[]; seen=set()
+        for q in queries:
+            try:
+                rss_url='https://news.google.com/rss/search?q='+quote(q)+'&hl=en-US&gl=US&ceid=US:en'
+                r=requests.get(rss_url,timeout=4,headers={'User-Agent':'stock-alert-theme/2.19.0'})
+                r.raise_for_status(); root=ET.fromstring(r.content)
+                for item in root.findall('.//item'):
+                    title=(item.findtext('title') or '').strip()
+                    link=(item.findtext('link') or '').strip()
+                    pub=(item.findtext('pubDate') or '').strip()
+                    if not title: continue
+                    norm=re.sub(r'\W+',' ',title.lower()).strip()
+                    if norm in seen: continue
+                    seen.add(norm)
+                    dt=None
+                    try: dt=parsedate_to_datetime(pub).astimezone(TW_TZ)
+                    except Exception: pass
+                    rows.append({'title':title[:240],'link':link,'published':dt.isoformat() if dt else pub})
+            except Exception as ex:
+                print(f'V2.19.0 Theme news fetch 失敗：{type(ex).__name__}: {ex}',flush=True)
+        rows.sort(key=lambda x:x.get('published') or '', reverse=True)
+        rows=rows[:max_items]
+        with THEME_CACHE_LOCK:
+            THEME_NEWS_CACHE[key]={'ts':now,'data':rows}
+            if len(THEME_NEWS_CACHE)>20:
+                old=sorted(THEME_NEWS_CACHE.items(),key=lambda kv:kv[1].get('ts',0))[:8]
+                for k,_ in old: THEME_NEWS_CACHE.pop(k,None)
+        return rows
+
+    def _theme_official_subindustries():
+        data=_line_industry_load_data()
+        names=set()
+        if isinstance(data,dict):
+            for info in data.values():
+                if not isinstance(info,dict): continue
+                recs=info.get('records',[])
+                if isinstance(recs,list):
+                    for rec in recs:
+                        if isinstance(rec,dict):
+                            n=normalize_subindustry(rec.get('sub_industry') or rec.get('subindustry') or rec.get('node') or '')
+                            if n: names.add(n)
+                subs=info.get('subindustries',[])
+                if not isinstance(subs,list): subs=[subs]
+                for sub in subs:
+                    n=normalize_subindustry(sub)
+                    if n: names.add(n)
+        return sorted(names)
+
+    def _theme_hot_topics():
+        now=time.time()
+        with THEME_CACHE_LOCK:
+            if THEME_HOT_CACHE.get('data') and now-float(THEME_HOT_CACHE.get('ts',0) or 0)<THEME_HOT_TTL:
+                print('V2.19.0 Theme：熱門題材 cache hit',flush=True)
+                return THEME_HOT_CACHE['data']
+        # 不硬編碼「熱門題材」；由近期公開新聞讓 AI 聚類。
+        queries=['AI semiconductor technology industry','technology investment trend supply chain','Taiwan technology industry trend','global emerging technology']
+        rows=[]; seen=set()
+        for q in queries:
+            try:
+                rss_url='https://news.google.com/rss/search?q='+quote(q)+'&hl=en-US&gl=US&ceid=US:en'
+                r=requests.get(rss_url,timeout=4,headers={'User-Agent':'stock-alert-theme/2.19.0'})
+                r.raise_for_status(); root=ET.fromstring(r.content)
+                for item in root.findall('.//item')[:12]:
+                    title=(item.findtext('title') or '').strip()
+                    link=(item.findtext('link') or '').strip()
+                    if not title: continue
+                    norm=re.sub(r'\W+',' ',title.lower()).strip()
+                    if norm in seen: continue
+                    seen.add(norm); rows.append({'title':title[:220],'link':link})
+            except Exception as ex:
+                print(f'V2.19.0 Theme hot news 失敗：{type(ex).__name__}: {ex}',flush=True)
+        if not rows:
+            return []
+        schema={'type':'object','properties':{
+            'topics':{'type':'array','minItems':1,'maxItems':8,'items':{'type':'object','properties':{
+                'topic':{'type':'string'},'why_hot':{'type':'string'},'trend':{'type':'string'},'evidence_titles':{'type':'array','minItems':1,'maxItems':3,'items':{'type':'string'}}
+            },'required':['topic','why_hot','trend','evidence_titles'],'additionalProperties':False}}
+        },'required':['topics'],'additionalProperties':False}
+        result=_ai_call_json(
+            '你是保守的全球科技投資研究員。請把提供的近期新聞標題聚類成真正的投資題材。不得捏造事件；題材必須能由新聞標題支持。不要把單一公司新聞直接當成整體題材。',
+            '請選出近期最值得追蹤的 4~8 個題材。每個題材給一句為何熱門與趨勢，並只能引用輸入新聞標題作 evidence_titles。資料：'+_ai_compact_payload(rows,9000),
+            cache_key='theme_hot_v2190',ttl_hours=THEME_HOT_TTL/3600,response_schema=schema,timeout=12
+        )
+        topics=result.get('topics',[]) if isinstance(result,dict) else []
+        with THEME_CACHE_LOCK:
+            THEME_HOT_CACHE.update({'ts':now,'data':topics})
+        return topics
+
+    def _theme_analyze(topic):
+        topic=str(topic or '').strip()
+        if not topic: return None
+        data=_line_industry_load_data()
+        official=_theme_official_subindustries()
+        news=_theme_news_fetch(topic)
+        # 讓 AI 只在有限的官方候選名稱中選擇，避免自行發明產業名稱。
+        # 候選清單過長時先用文字 token 篩選，保留通用名稱與前 80 個可能項。
+        tokens=[x for x in re.findall(r'[\u4e00-\u9fffA-Za-z0-9]+',topic.lower()) if len(x)>=2]
+        scored=[]
+        for n in official:
+            low=n.lower(); score=sum(1 for t in tokens if t in low)
+            if score: scored.append((score,n))
+        candidates=[n for _,n in sorted(scored,key=lambda x:(-x[0],len(x[1])))[:80]]
+        if len(candidates)<40: candidates=official[:160] if not candidates else candidates+official[:max(0,160-len(candidates))]
+        keyseed=topic+'|'+','.join(candidates)
+        cache_key='theme_v2190:'+hashlib.sha256(keyseed.encode('utf-8')).hexdigest()[:24]
+        now=time.time()
+        with THEME_CACHE_LOCK:
+            c=THEME_ANALYSIS_CACHE.get(cache_key)
+            if isinstance(c,dict) and now-float(c.get('ts',0) or 0)<THEME_ANALYSIS_TTL:
+                print(f'V2.19.0 Theme AI：cache hit｜{topic}',flush=True)
+                return c.get('data')
+        schema={'type':'object','properties':{
+            'headline':{'type':'string'},'trend':{'type':'string','enum':['升溫','高熱度','盤整','降溫','混合','資料不足']},
+            'summary':{'type':'string'},'why_now':{'type':'array','minItems':1,'maxItems':4,'items':{'type':'string'}},
+            'fine_themes':{'type':'array','minItems':1,'maxItems':3,'items':{'type':'object','properties':{
+                'name':{'type':'string'},'logic':{'type':'string'},'official_subindustries':{'type':'array','minItems':1,'maxItems':3,'items':{'type':'string'}},
+                'evidence_titles':{'type':'array','minItems':1,'maxItems':3,'items':{'type':'string'}}
+            },'required':['name','logic','official_subindustries','evidence_titles'],'additionalProperties':False}},
+            'risks':{'type':'array','minItems':1,'maxItems':4,'items':{'type':'string'}},
+            'evidence_limitations':{'type':'array','minItems':1,'maxItems':3,'items':{'type':'string'}}
+        },'required':['headline','trend','summary','why_now','fine_themes','risks','evidence_limitations'],'additionalProperties':False}
+        payload={'topic':topic,'news':news,'official_subindustry_candidates':candidates}
+        result=_ai_call_json(
+            '你是保守的台灣科技投資題材研究員。題材研究與產業研究不同：先回答全球事件／趨勢正在形成什麼機會，再拆細題材。官方細產業名稱只能從 candidate list 選，絕對不得自行創造。不得捏造供應商、客戶、訂單、營收、認證或直接受惠關係；沒有證據就明確寫資料不足。',
+            '分析題材「'+topic+'」。找出 1~3 個最重要細題材，並將每個細題材對應到 candidate list 中真正存在的官方次產業。evidence_titles 必須來自輸入新聞標題。資料：'+_ai_compact_payload(payload,11000),
+            cache_key=cache_key,ttl_hours=THEME_ANALYSIS_TTL/3600,response_schema=schema,timeout=12
+        )
+        if not isinstance(result,dict): return None
+        valid=set(official)
+        cleaned=[]
+        for ft in result.get('fine_themes',[]):
+            if not isinstance(ft,dict): continue
+            subs=[]
+            for sub in ft.get('official_subindustries',[]) if isinstance(ft.get('official_subindustries'),list) else []:
+                exact=next((x for x in valid if _line_industry_norm(x)==_line_industry_norm(sub)),None)
+                if exact and exact not in subs: subs.append(exact)
+            if subs:
+                x=dict(ft); x['official_subindustries']=subs[:3]; cleaned.append(x)
+        result['fine_themes']=cleaned[:3]
+        if not result['fine_themes']: return None
+        with THEME_CACHE_LOCK:
+            THEME_ANALYSIS_CACHE[cache_key]={'ts':now,'data':result}
+            if len(THEME_ANALYSIS_CACHE)>20:
+                old=sorted(THEME_ANALYSIS_CACHE.items(),key=lambda kv:kv[1].get('ts',0))[:5]
+                for k,_ in old: THEME_ANALYSIS_CACHE.pop(k,None)
+        return result
+
+    def _theme_quantitative_results(result, u):
+        """只跑既有量化模型，不重複跑 Industry AI，避免 Theme/Industry AI 疊加耗時。"""
+        if not isinstance(result,dict): return []
+        data=_line_industry_load_data()
+        jobs=[]
+        for ft in result.get('fine_themes',[])[:3]:
+            for sub in ft.get('official_subindustries',[])[:2]:
+                jobs.append((str(ft.get('name') or sub),str(sub)))
+        def one(item):
+            fine,sub=item
+            try:
+                target_subs=_line_industry_match_names(sub)
+                parent=_line_industry_parent_for_subindustry(sub)
+                candidates=_line_industry_official_candidates(target_subs,parent,u,data)
+                if len(candidates)<3 and parent:
+                    u2,_=_line_industry_fetch_parent_data(parent,u)
+                    candidates=_line_industry_official_candidates(target_subs,parent,u2,data)
+                top=candidates[:3]
+                if not top:
+                    return fine,sub,f'❌ 找不到「{sub}」可分析的官方股票。'
+                analyzed=_line_industry_run_top3_analysis(top,u,label='題材')
+                lines=[f'🏆 {sub} 量化 Top 3','', '📊 排名依目前市值；以下只沿用既有投資價值／買點模型，不重複 AI Industry Intelligence。','']
+                medals=['🥇','🥈','🥉']
+                for row,medal in zip(analyzed,medals):
+                    code,name,price,cap,fs,bs,bv=row
+                    title=f'{medal} {code} {name}'
+                    if code:
+                        title=f'{medal} <a href="/stock?symbol={html.escape(str(code))}" target="_blank">{html.escape(str(code))} {html.escape(str(name))}</a>'
+                    lines.extend(['━━━━━━━━━━━━━━',title,f'目前價格：{fmt(price)}',f'市值：{fmt(_line_industry_market_cap_100m(cap))} 億元' if cap is not None else '市值：N/A',f'第一層投資價值：{fs}/100' if fs is not None else '第一層投資價值：N/A',f'第二層買點分數：{bs}/100' if bs is not None else '第二層買點分數：N/A',f'買點判定：{bv}'])
+                return fine,sub,'\n'.join(lines)
+            except Exception as ex:
+                return fine,sub,f'❌ {sub} 量化分析失敗：{type(ex).__name__}: {ex}'
+        out=[]
+        with ThreadPoolExecutor(max_workers=min(4,max(1,len(jobs))),thread_name_prefix='theme-quant') as ex:
+            futs=[ex.submit(one,j) for j in jobs]
+            for f in futs: out.append(f.result())
+        return out
+
+    def _format_theme_result(topic,result,quant):
+        lines=[f'🔥 題材 Intelligence｜{topic}',f'趨勢：{result.get("trend","資料不足")}',str(result.get('summary') or ''),'','⏱️ 為什麼現在值得看：']
+        lines += [f'• {x}' for x in (result.get('why_now') or [])[:4]]
+        lines += ['','🧩 細題材／供應鏈拆解']
+        for i,ft in enumerate(result.get('fine_themes',[])[:3],1):
+            lines += [f'{i}. {ft.get("name")}',f'邏輯：{ft.get("logic")}', '官方次產業：'+ '、'.join(ft.get('official_subindustries',[])[:3])]
+            ev=ft.get('evidence_titles') or []
+            if ev: lines.append('新聞證據：'+'；'.join(str(x) for x in ev[:2]))
+        lines += ['','🏭 受惠產業 → 公司 → 既有量化模型']
+        if quant:
+            for fine,sub,text in quant:
+                lines += ['',f'【{fine}｜{sub}】',text]
+        lines += ['','⚠️ 風險與限制']
+        lines += [f'• {x}' for x in (result.get('risks') or [])[:4]]
+        lines += [f'• {x}' for x in (result.get('evidence_limitations') or [])[:3]]
+        lines += ['','📌 AI 題材 Top3 與原有量化分數是兩層不同訊號：AI 負責題材／細題材與研究方向；投資價值、買點、技術與籌碼仍沿用既有模型。']
+        return '\n'.join(lines)[:12000]
+
     @app.get('/theme')
     def theme_page():
-        """V2.18.39：題材 Intelligence 首頁入口，先提供規劃中的新功能入口。"""
-        body=(
-            '<div class="card"><h1>🔥 題材 Intelligence</h1>'
-            '<p>從近期熱門趨勢／事件出發，往下拆解細題材、受惠產業與潛在受惠公司。</p>'
-            '<p class="muted">功能建置中：未來會支援「熱門題材 → 細題材 → 產業 → 公司 → 量化投資分析」。</p></div>'
-            '<div class="card"><h2>即將加入</h2><ul>'
-            '<li>🔥 近期熱門題材</li>'
-            '<li>🔎 自訂題材搜尋</li>'
-            '<li>🧩 題材 → 細題材供應鏈拆解</li>'
-            '<li>🏭 受惠產業與公司</li>'
-            '<li>📊 串接既有投資價值／買點模型</li>'
-            '</ul></div>'
-            '<div class="nav"><a href="/industry">🏭 產業分析</a><a href="/macro">🌎 總經</a><a href="/trump">🇺🇸 Trump</a><a href="/">首頁</a></div>'
-        )
-        return _web_page('題材 Intelligence',body),200
+        topic=str(request.args.get('topic') or '').strip()
+        custom=str(request.args.get('q') or '').strip()
+        chosen=custom or topic
+        if not chosen:
+            if request.args.get('_ready')!='1':
+                task_id=_start_async_web_task('熱門題材 Intelligence',lambda: theme_page(),'/theme?_ready=1')
+                body=('<div class="card"><h1>⏳ 正在整理近期熱門題材</h1>'
+                      '<p>正在抓取近期公開新聞，並由 AI 聚類出真正值得追蹤的投資題材。</p>'
+                      '<p><b>請稍候，完成後會自動顯示。</b></p></div>')
+                return _web_page('熱門題材｜分析中',body+f"<script>setTimeout(function(){{window.location.replace('/web-task/{task_id}');}},1000);</script>")
+            hot=_theme_hot_topics()
+            opts=''.join(f'<option value="{html.escape(str(x.get("topic") or ""))}">{html.escape(str(x.get("topic") or ""))}</option>' for x in hot if x.get('topic'))
+            body=('<div class="card"><h1>🔥 題材 Intelligence</h1>'
+                  '<p>從近期全球事件／趨勢出發，AI 拆解細題材，再用官方產業價值鏈找受惠產業與公司，最後串回既有投資價值＋買點模型。</p>'
+                  '<label>① 近期熱門題材</label><form method="get"><select name="topic"><option value="">請選擇</option>'+opts+'</select><button type="submit">🔥 開始題材分析</button></form></div>'
+                  '<div class="card"><label>② 自訂題材搜尋</label><form method="get"><input name="q" placeholder="例如：iPhone Duo、Physical AI、CPO、AI Data Center、機器人"><button type="submit">🔎 分析自訂題材</button></form>'
+                  '<p class="muted">題材不是固定股票清單；系統會依近期公開資訊與官方次產業資料動態拆解。</p></div>')
+            if hot:
+                body+='<div class="card"><h2>🔥 最近值得追蹤</h2><ul>'+''.join(f'<li><b>{html.escape(str(x.get("topic")))}</b>｜{html.escape(str(x.get("why_hot") or ""))}</li>' for x in hot[:8])+'</ul></div>'
+            body+='<div class="nav"><a href="/industry">🏭 產業</a><a href="/macro">🌎 總經</a><a href="/trump">🇺🇸 Trump</a><a href="/">首頁</a></div>'
+            return _web_page('題材 Intelligence',body)
+        if request.args.get('_ready')!='1':
+            task_id=_start_async_web_task(f'{chosen} 題材 Intelligence',lambda: theme_page(),f'/theme?'+('q=' if custom else 'topic=')+quote(chosen)+'&_ready=1')
+            body=(f'<div class="card"><h1>⏳ {html.escape(chosen)} 題材分析中</h1>'
+                  '<p>正在抓取近期公開資訊、AI 拆解細題材、對應官方次產業，並計算既有投資價值／買點模型。</p>'
+                  '<p><b>請稍候，完成後會自動顯示完整結果。</b></p></div>')
+            return _web_page(f'{chosen}｜分析中',body+f"<script>setTimeout(function(){{window.location.replace('/web-task/{task_id}');}},1000);</script>")
+        try:
+            result=_theme_analyze(chosen)
+            if not result:
+                return _web_page('題材 Intelligence',f'<div class="card"><h1>❌ 題材分析不足</h1><p>目前公開資料不足以建立可靠的細題材／官方次產業對應，請換一個更具體的題材。</p></div>'),200
+            u=_web_get_query_universe('__ALL__')
+            if not u:
+                u=build_line_query_universe(chosen)
+            quant=_theme_quantitative_results(result,u)
+            text=_format_theme_result(chosen,result,quant)
+            body=f'<div class="card"><div class="industry-result">{text.replace(chr(10),"<br>")}</div></div><div class="nav"><a href="/theme">← 題材首頁</a><a href="/industry">🏭 產業</a><a href="/">首頁</a></div>'
+            return _web_page('題材 Intelligence 結果',body)
+        except Exception as ex:
+            traceback.print_exc()
+            return _web_page('題材 Intelligence',f'<div class="card"><h1>❌ 分析失敗</h1><pre>{html.escape(type(ex).__name__+": "+str(ex))}</pre></div>'),500
 
     @app.get('/health')
     def health2():
@@ -17138,12 +17388,12 @@ def main():
 
     else:
 
-        print('========== V2.18.39 RUN START ==========', flush=True)
+        print('========== V2.19.0 RUN START ==========', flush=True)
         _print_ai_runtime_status()
-        print('V2.18.39 AI 閘門：每15分鐘自動掃描只有達到 LINE 發送門檻後才啟用 AI；未觸發時完全不呼叫 AI｜跌幅自動通知：每標的一天最多1次｜觸發後立即持久化LOCK', flush=True)
+        print('V2.19.0 AI 閘門：每15分鐘自動掃描只有達到 LINE 發送門檻後才啟用 AI；未觸發時完全不呼叫 AI｜跌幅自動通知：每標的一天最多1次｜觸發後立即持久化LOCK', flush=True)
         print(f'執行時間（台灣）：{datetime.now(TW_TZ).strftime("%Y-%m-%d %H:%M:%S")}', flush=True)
         run_alerts()
-        print('========== V2.18.39 RUN END ==========', flush=True)
+        print('========== V2.19.0 RUN END ==========', flush=True)
 
 
 if __name__ == '__main__':
