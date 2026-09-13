@@ -1,5 +1,5 @@
-# stock_alert.py V2.19.6
-# V2.19.6：Theme Intelligence semantic candidate engine + bounded quantitative analysis；
+# stock_alert.py V2.19.7
+# V2.19.7：Theme Intelligence semantic candidate engine + bounded quantitative analysis；
 # V2.17.0 功能全部保留：Gemini Free 主力 + Mistral/Groq Free 備援、重大消息、Trump 語意、總經預測。
 # V2.15.6：外部產業網頁正確性＋效能修正版：官方價值鏈候選池改為資料驅動，不再只依賴同大產業 Top120；
 #             個股對應產業 Top3 與指定次產業 Top3 共用官方次產業候選邏輯；修正市值顯示單位 1000 倍錯誤；
@@ -15314,6 +15314,10 @@ def run_webhook_server():
                         '通信網路業', '電機機械', '其他電子業'],
             '自主型ai': ['資訊服務業', '數位雲端', '電腦及週邊設備業',
                         '通信網路業', '電機機械', '其他電子業'],
+            '代理人ai': ['資訊服務業', '數位雲端', '電腦及週邊設備業', '通信網路業', '其他電子業'],
+            '代理人ai技術': ['資訊服務業', '數位雲端', '電腦及週邊設備業', '通信網路業', '其他電子業'],
+            'ai代理人': ['資訊服務業', '數位雲端', '電腦及週邊設備業', '通信網路業', '其他電子業'],
+            'ai代理人技術': ['資訊服務業', '數位雲端', '電腦及週邊設備業', '通信網路業', '其他電子業'],
             'agenticai': ['資訊服務業', '數位雲端', '電腦及週邊設備業',
                           '通信網路業', '其他電子業'],
             'aiagent': ['資訊服務業', '數位雲端', '電腦及週邊設備業',
@@ -15357,7 +15361,11 @@ def run_webhook_server():
                         '工業電腦', '感測器', '控制', '伺服', '機器視覺'],
             '自主型ai': ['軟體', '資訊', '雲端', '人工智慧', '機器人', '自動化',
                         '工業電腦', '感測器', '控制', '伺服', '機器視覺'],
-            'agenticai': ['軟體', '資訊', '雲端', '人工智慧', '機器人', '自動化'],
+            '代理人ai': ['軟體', '資訊', '雲端', '人工智慧', '代理人', '自動化'],
+            '代理人ai技術': ['軟體', '資訊', '雲端', '人工智慧', '代理人', '自動化'],
+            'ai代理人': ['軟體', '資訊', '雲端', '人工智慧', '代理人', '自動化'],
+            'ai代理人技術': ['軟體', '資訊', '雲端', '人工智慧', '代理人', '自動化'],
+            'agenticai': ['軟體', '資訊', '雲端', '人工智慧', '代理人', '機器人', '自動化'],
             'aiagent': ['軟體', '資訊', '雲端', '人工智慧', '機器人', '自動化'],
             'ai企業運營': ['企業', '軟體', '資訊', '雲端', '服務', '資料', '自動化',
                           'AI', '人工智慧'],
@@ -15398,8 +15406,16 @@ def run_webhook_server():
         alias_parents = list(dict.fromkeys(alias_parents))
         alias_terms = list(dict.fromkeys(alias_terms))
 
-        # 建立「官方次產業 → 官方 parent」索引。
-        # parent 以市場池的 TWSE 大產業為主，沒有市場池 parent 才使用官方 parent。
+        # 建立「官方次產業 → TWSE parent」索引。
+        # V2.19.7 修正：_line_industry_load_data() 只回傳次產業快取，
+        # 不保證 data['_universe'] 存在；舊版因此讓 stock_parent 永遠取不到，
+        # 最後 available_parents 只剩官方 parent/空值，造成「無人機」等題材 parents=none。
+        # 這裡直接讀既有 market_universe_cache.json 的 data，只取 industry 欄位，
+        # 不觸發 get_market_universe() 的自動補抓，避免題材頁每次都額外抓 50 檔。
+        universe_cache = load_json(UNIVERSE_CACHE_FILE)
+        universe_data = universe_cache.get('data', {}) if isinstance(universe_cache, dict) else {}
+        if not isinstance(universe_data, dict):
+            universe_data = {}
         sub_parent = {}
         if isinstance(data, dict):
             for code, info in data.items():
@@ -15408,7 +15424,7 @@ def run_webhook_server():
                 cc = clean_code(code)
                 stock = {}
                 try:
-                    stock = data.get('_universe', {}).get(cc, {}) if isinstance(data.get('_universe'), dict) else {}
+                    stock = universe_data.get(cc, {}) if isinstance(universe_data, dict) else {}
                 except Exception:
                     stock = {}
                 stock_parent = canonical_industry(stock.get('industry') or '') if isinstance(stock, dict) else ''
@@ -15487,19 +15503,19 @@ def run_webhook_server():
 
         if not candidates:
             print(
-                f'V2.19.6 Theme：找不到可靠官方次產業候選｜{topic}｜'
+                f'V2.19.7 Theme：找不到可靠官方次產業候選｜{topic}｜'
                 f'parents={",".join(sorted(hinted_parent_norm)) or "none"}',
                 flush=True
             )
             return None
 
         keyseed = topic + '|' + ','.join(str(x) for x in candidates)
-        cache_key = 'theme_v2196:' + hashlib.sha256(keyseed.encode('utf-8')).hexdigest()[:24]
+        cache_key = 'theme_v2197:' + hashlib.sha256(keyseed.encode('utf-8')).hexdigest()[:24]
         now = time.time()
         with THEME_CACHE_LOCK:
             c = THEME_ANALYSIS_CACHE.get(cache_key)
             if isinstance(c, dict) and now - float(c.get('ts', 0) or 0) < THEME_ANALYSIS_TTL:
-                print(f'V2.19.6 Theme AI：cache hit｜{topic}', flush=True)
+                print(f'V2.19.7 Theme AI：cache hit｜{topic}', flush=True)
                 return c.get('data')
 
         schema = {
@@ -15692,7 +15708,7 @@ def run_webhook_server():
 
     @app.get('/theme')
     def theme_page():
-        """V2.19.6：題材採兩階段互動。
+        """V2.19.7：題材採兩階段互動。
         第一階段只做「大題材 → 細題材」拆解，讓使用者選擇；
         第二階段才針對選定細題材做官方次產業＋股票量化分析。
         """
