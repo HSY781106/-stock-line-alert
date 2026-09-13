@@ -1,4 +1,4 @@
-# stock_alert.py V2.19.8
+# stock_alert.py V2.19.9
 # V2.19.7：Theme Intelligence semantic candidate engine + bounded quantitative analysis；
 # V2.17.0 功能全部保留：Gemini Free 主力 + Mistral/Groq Free 備援、重大消息、Trump 語意、總經預測。
 # V2.15.6：外部產業網頁正確性＋效能修正版：官方價值鏈候選池改為資料驅動，不再只依賴同大產業 Top120；
@@ -15290,7 +15290,7 @@ def run_webhook_server():
         return topics
 
     def _theme_analyze(topic, selected_fine=None):
-        """V2.19.8：真正兩階段的 Theme Intelligence。
+        """V2.19.9：真正兩階段的 Theme Intelligence。
 
         第一階段只負責「大題材 -> 1~3 個可研究細題材」，不要求官方次產業。
         第二階段（使用者選定細題材後）才把細題材對應到官方 company_chain
@@ -15364,17 +15364,18 @@ def run_webhook_server():
             'required': ['headline', 'trend', 'summary', 'why_now', 'fine_themes', 'risks', 'evidence_limitations'],
             'additionalProperties': False,
         }
-        cache_key = 'theme_v2198_decompose:' + hashlib.sha256((topic + '|' + _ai_compact_payload(news, 9000)).encode('utf-8')).hexdigest()[:24]
+        cache_key = 'theme_v2199_decompose:' + hashlib.sha256((topic + '|' + _ai_compact_payload(news, 9000)).encode('utf-8')).hexdigest()[:24]
         result = _ai_call_json(
             '你是保守的台灣科技投資題材研究員。現在只做第一階段：把輸入的大題材拆成1~3個「具體、可研究、可投資驗證」的細題材。'
             '此階段絕對不要要求或創造官方次產業名稱，也不要因為目前無法對應官方分類而判定資料不足。'
             '不得捏造供應商、客戶、訂單、營收、認證或直接受惠關係；沒有證據就明確寫資料不足。'
             '細題材應優先從新聞與產業邏輯歸納，例如無人機可拆成軍用/商用無人機、飛控/感測、通訊與影像等方向。'
-            'evidence_titles 必須來自輸入新聞標題。輸入題材：' + topic + '。資料：' + _ai_compact_payload({'news': news, 'semantic_parent_hints': alias_parents}, 10000),
+            'evidence_titles 必須來自輸入新聞標題。',
+            '輸入題材：' + topic + '。資料：' + _ai_compact_payload({'news': news, 'semantic_parent_hints': alias_parents}, 10000),
             cache_key=cache_key, ttl_hours=THEME_ANALYSIS_TTL / 3600, response_schema=schema, timeout=12
         )
         if not isinstance(result, dict):
-            print(f'V2.19.8 Theme：第一階段 AI 拆題失敗｜{topic}', flush=True)
+            print(f'V2.19.9 Theme：第一階段 AI 拆題失敗｜{topic}', flush=True)
             return None
 
         cleaned = []
@@ -15401,7 +15402,7 @@ def run_webhook_server():
             mc = load_json(INDUSTRY_MENU_CACHE_FILE)
             menu_data = mc.get('data', {}) if isinstance(mc, dict) else {}
         except Exception as e:
-            print(f'V2.19.8 Theme：官方產業索引讀取失敗｜{type(e).__name__}: {e}', flush=True)
+            print(f'V2.19.9 Theme：官方產業索引讀取失敗｜{type(e).__name__}: {e}', flush=True)
         official_candidates = []
         if isinstance(menu_data, dict) and alias_parents:
             parent_norms = {canonical_industry(x) for x in alias_parents}
@@ -15422,7 +15423,7 @@ def run_webhook_server():
         if not selected_fine:
             for ft in result['fine_themes']:
                 ft['official_subindustries'] = []
-            print(f'V2.19.8 Theme：第一階段完成｜{topic}｜fine={len(result["fine_themes"])}', flush=True)
+            print(f'V2.19.9 Theme：第一階段完成｜{topic}｜fine={len(result["fine_themes"])}', flush=True)
             return result
 
         # 只對使用者選定的細題材做一次「官方名稱映射」。映射失敗會明確保留
@@ -15439,7 +15440,7 @@ def run_webhook_server():
                 continue
             sub_candidates = official_candidates
             map_payload = {'fine_theme': ft.get('name'), 'logic': ft.get('logic'), 'topic': topic, 'official_candidates': sub_candidates}
-            mk = 'theme_v2198_map:' + hashlib.sha256(_ai_compact_payload(map_payload, 8000).encode('utf-8')).hexdigest()[:24]
+            mk = 'theme_v2199_map:' + hashlib.sha256(_ai_compact_payload(map_payload, 8000).encode('utf-8')).hexdigest()[:24]
             mapped = _ai_call_json(
                 '你是台灣產業分類研究員。把這個細題材對應到最合理的官方產業價值鏈細產業。'
                 '只能從 official_candidates 原樣選擇，禁止創造名稱；若沒有合理對應可以輸出空陣列。最多3個。',
@@ -15454,7 +15455,7 @@ def run_webhook_server():
                         subs.append(exact)
             ft['official_subindustries'] = subs[:3]
 
-        print(f'V2.19.8 Theme：第一階段完成｜{topic}｜fine={len(result["fine_themes"])}｜官方映射候選={len(official_candidates)}', flush=True)
+        print(f'V2.19.9 Theme：第一階段完成｜{topic}｜fine={len(result["fine_themes"])}｜官方映射候選={len(official_candidates)}', flush=True)
         return result
 
     def _theme_quantitative_results(result, u):
