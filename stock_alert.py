@@ -1,4 +1,4 @@
-# stock_alert.py V2.19.2
+# stock_alert.py V2.19.3
 # V2.17.1：AI 僅在「已達到 LINE 發送門檻」後啟用；其餘每15分鐘掃描完全不呼叫 AI。
 # V2.17.0 功能全部保留：Gemini Free 主力 + Mistral/Groq Free 備援、重大消息、Trump 語意、總經預測。
 # V2.15.6：外部產業網頁正確性＋效能修正版：官方價值鏈候選池改為資料驅動，不再只依賴同大產業 Top120；
@@ -15138,7 +15138,33 @@ def run_webhook_server():
             c = THEME_NEWS_CACHE.get(key)
             if isinstance(c, dict) and now - float(c.get('ts', 0) or 0) < THEME_NEWS_TTL:
                 return c.get('data') or []
-        queries = [f'"{topic}" latest technology industry investment', f'"{topic}" supply chain companies Taiwan']
+        # V2.19.3：題材搜尋改為「中文 + 英文 + 語意別名」雙語/同義詞查詢，
+        # 例如「物理AI／自主智能」不能只用中文原詞查新聞，否則很容易得到空集合。
+        _theme_news_aliases = {
+            '自主智能': ['agentic AI','AI agents','autonomous AI','autonomous intelligence','自主型AI'],
+            '物理ai': ['physical AI','robotics AI','embodied AI','機器人 AI'],
+            'physicalai': ['physical AI','robotics AI','embodied AI','機器人 AI'],
+            '人形機器人': ['humanoid robots','humanoid robotics'],
+            '機器人': ['robotics','industrial robots','humanoid robots'],
+            'agi': ['artificial general intelligence','AGI'],
+            '通用人工智慧': ['artificial general intelligence','AGI'],
+            'cpo': ['co-packaged optics','CPO','optical interconnect'],
+            'hbm': ['high bandwidth memory','HBM'],
+            '液冷': ['liquid cooling','direct liquid cooling','AI server cooling'],
+        }
+        topic_key=topic.lower().replace(' ','')
+        aliases=[]
+        for k,v in _theme_news_aliases.items():
+            if k in topic_key:
+                aliases.extend(v)
+        aliases=list(dict.fromkeys(aliases))[:4]
+        queries = [
+            f'"{topic}" 最新 科技 產業 投資',
+            f'"{topic}" 台灣 供應鏈 公司',
+            f'"{topic}" latest technology industry investment',
+            f'"{topic}" supply chain companies Taiwan',
+        ]
+        queries += [f'"{a}" latest technology industry investment' for a in aliases[:2]]
         rows=[]; seen=set()
         for q in queries:
             try:
@@ -15158,7 +15184,7 @@ def run_webhook_server():
                     except Exception: pass
                     rows.append({'title':title[:240],'link':link,'published':dt.isoformat() if dt else pub})
             except Exception as ex:
-                print(f'V2.19.2 Theme news fetch 失敗：{type(ex).__name__}: {ex}',flush=True)
+                print(f'V2.19.3 Theme news fetch 失敗：{type(ex).__name__}: {ex}',flush=True)
         rows.sort(key=lambda x:x.get('published') or '', reverse=True)
         rows=rows[:max_items]
         with THEME_CACHE_LOCK:
@@ -15191,7 +15217,7 @@ def run_webhook_server():
         now=time.time()
         with THEME_CACHE_LOCK:
             if THEME_HOT_CACHE.get('data') and now-float(THEME_HOT_CACHE.get('ts',0) or 0)<THEME_HOT_TTL:
-                print('V2.19.2 Theme：熱門題材 cache hit',flush=True)
+                print('V2.19.3 Theme：熱門題材 cache hit',flush=True)
                 return THEME_HOT_CACHE['data']
         # 不硬編碼「熱門題材」；由近期公開新聞讓 AI 聚類。
         queries=['emerging technology investment trend','AI applications technology trend','next generation consumer technology','robotics automation space energy technology']
@@ -15209,7 +15235,7 @@ def run_webhook_server():
                     if norm in seen: continue
                     seen.add(norm); rows.append({'title':title[:220],'link':link})
             except Exception as ex:
-                print(f'V2.19.2 Theme hot news 失敗：{type(ex).__name__}: {ex}',flush=True)
+                print(f'V2.19.3 Theme hot news 失敗：{type(ex).__name__}: {ex}',flush=True)
         if not rows:
             return []
         schema={'type':'object','properties':{
@@ -15224,10 +15250,10 @@ def run_webhook_server():
             '如果多個新聞其實都在描述同一個核心驅動，例如 AI 對高算力晶片的需求、AI 基礎設施、AI 加速器與先進封裝，必須合併成一個題材，而不是拆成數個近義題材。\n'
             '不得捏造事件；題材必須能由新聞標題支持；不要把單一公司新聞直接當成整體題材。',
             '請選出近期最值得追蹤的 3~6 個「真正不同」題材。topic 與 topic_zh 都必須使用繁體中文；英文只能保留必要的技術縮寫，例如 AGI、CPO、HBM、GPU。topic_zh 是網站顯示名稱，請用自然、簡潔、投資人看得懂的繁中。每個題材給一句為何熱門與趨勢，並只能引用輸入新聞標題作 evidence_titles。若只能找到同一核心題材，就寧可少列，不要硬湊數量。資料：'+_ai_compact_payload(rows,9000),
-            cache_key='theme_hot_v2192',ttl_hours=THEME_HOT_TTL/3600,response_schema=schema,timeout=12
+            cache_key='theme_hot_v2193',ttl_hours=THEME_HOT_TTL/3600,response_schema=schema,timeout=12
         )
         topics=result.get('topics',[]) if isinstance(result,dict) else []
-        # V2.19.2：第二道 deterministic gate。即使 AI 誤把產業/政策當題材，也不要直接顯示。
+        # V2.19.3：第二道 deterministic gate。即使 AI 誤把產業/政策當題材，也不要直接顯示。
         forbidden=('半導體','semiconductor','晶片產業','電子業','科技業','AI產業','人工智慧產業','關稅政策','產業政策','供應鏈本土化','supply chain localization')
         cleaned=[]
         seen_theme=[]
@@ -15252,7 +15278,12 @@ def run_webhook_server():
                 if a and b and len(a&b)/max(1,min(len(a),len(b)))>=0.60:
                     duplicate=True; break
             if duplicate: continue
-            seen_theme.append(norm); x=dict(x); x['topic']=name; x['topic_zh']=name; cleaned.append(x)
+            seen_theme.append(norm); x=dict(x)
+            # V2.19.3：將過度直譯、投資人不易辨識的「自主智能」標準化為
+            # 更接近市場慣用語的「自主型 AI／AI Agent 應用」，但保留使用者手動輸入原詞的能力。
+            if norm in {'自主智能','自主智慧'}:
+                name='自主型 AI（AI Agent）應用'
+            x['topic']=name; x['topic_zh']=name; cleaned.append(x)
         topics=cleaned[:8]
         with THEME_CACHE_LOCK:
             THEME_HOT_CACHE.update({'ts':now,'data':topics})
@@ -15264,22 +15295,50 @@ def run_webhook_server():
         data=_line_industry_load_data()
         official=_theme_official_subindustries()
         news=_theme_news_fetch(topic)
-        # 讓 AI 只在有限的官方候選名稱中選擇，避免自行發明產業名稱。
-        # 候選清單過長時先用文字 token 篩選，保留通用名稱與前 80 個可能項。
+        # V2.19.3：修正最嚴重的題材錯配。舊版在「自主智能／物理AI」
+        # 與官方次產業名稱沒有字面交集時，會直接塞入 official[:160]；
+        # AI 便可能從完全無關的候選中選出「CPU」，造成看似有答案、其實是幻覺。
+        # 現在先用題材語意別名擴大候選，再交給 AI；若完全找不到可靠候選，
+        # 寧可回報資料不足，也絕不餵任意前 160 個產業。
+        THEME_SUBINDUSTRY_HINTS = {
+            '自主智能': ['機器人','自動化','工業電腦','感測器','機電','電機機械','控制','伺服','馬達','機器視覺','軟體服務','資訊服務'],
+            '物理ai': ['機器人','自動化','工業電腦','感測器','機電','電機機械','控制','伺服','馬達','機器視覺','軟體服務','資訊服務'],
+            'physicalai': ['機器人','自動化','工業電腦','感測器','機電','電機機械','控制','伺服','馬達','機器視覺','軟體服務','資訊服務'],
+            'agenticai': ['軟體服務','資訊服務','人工智慧','資料中心','機器人','自動化'],
+            'agi': ['軟體服務','資訊服務','人工智慧','資料中心'],
+            '通用人工智慧': ['軟體服務','資訊服務','人工智慧','資料中心'],
+            '人形機器人': ['機器人','自動化','工業電腦','感測器','機電','電機機械','控制','伺服','馬達','機器視覺'],
+            '機器人': ['機器人','自動化','工業電腦','感測器','機電','電機機械','控制','伺服','馬達','機器視覺'],
+            'cpo': ['光通訊','光電','通信網路','連接器','電子零組件'],
+            'hbm': ['記憶體','半導體','封裝','晶圓製造'],
+            '液冷': ['散熱','水冷','熱管理','電腦及週邊設備','伺服器'],
+        }
+        topic_low=topic.lower().replace(' ','')
+        alias_terms=[]
+        for k,v in THEME_SUBINDUSTRY_HINTS.items():
+            if k in topic_low:
+                alias_terms.extend(v)
         tokens=[x for x in re.findall(r'[\u4e00-\u9fffA-Za-z0-9]+',topic.lower()) if len(x)>=2]
+        search_terms=list(dict.fromkeys(tokens+alias_terms))
         scored=[]
         for n in official:
-            low=n.lower(); score=sum(1 for t in tokens if t in low)
+            low=n.lower(); score=0
+            for t in search_terms:
+                if t.lower() in low:
+                    score += 3 if t in alias_terms else 1
             if score: scored.append((score,n))
-        candidates=[n for _,n in sorted(scored,key=lambda x:(-x[0],len(x[1])))[:80]]
-        if len(candidates)<40: candidates=official[:160] if not candidates else candidates+official[:max(0,160-len(candidates))]
+        candidates=[n for _,n in sorted(scored,key=lambda x:(-x[0],len(x[1]),x[1]))[:80]]
+        if not candidates:
+            # 沒有可靠的官方名稱候選就停止，不再使用任意產業前綴。
+            print(f'V2.19.3 Theme：找不到可靠官方次產業候選｜{topic}',flush=True)
+            return None
         keyseed=topic+'|'+','.join(candidates)
-        cache_key='theme_v2192:'+hashlib.sha256(keyseed.encode('utf-8')).hexdigest()[:24]
+        cache_key='theme_v2193:'+hashlib.sha256(keyseed.encode('utf-8')).hexdigest()[:24]
         now=time.time()
         with THEME_CACHE_LOCK:
             c=THEME_ANALYSIS_CACHE.get(cache_key)
             if isinstance(c,dict) and now-float(c.get('ts',0) or 0)<THEME_ANALYSIS_TTL:
-                print(f'V2.19.2 Theme AI：cache hit｜{topic}',flush=True)
+                print(f'V2.19.3 Theme AI：cache hit｜{topic}',flush=True)
                 return c.get('data')
         schema={'type':'object','properties':{
             'headline':{'type':'string'},'trend':{'type':'string','enum':['升溫','高熱度','盤整','降溫','混合','資料不足']},
@@ -15291,9 +15350,10 @@ def run_webhook_server():
             'risks':{'type':'array','minItems':1,'maxItems':4,'items':{'type':'string'}},
             'evidence_limitations':{'type':'array','minItems':1,'maxItems':3,'items':{'type':'string'}}
         },'required':['headline','trend','summary','why_now','fine_themes','risks','evidence_limitations'],'additionalProperties':False}
-        payload={'topic':topic,'news':news,'official_subindustry_candidates':candidates}
+        payload={'topic':topic,'news':news,'official_subindustry_candidates':candidates,
+                'semantic_aliases': alias_terms}
         result=_ai_call_json(
-            '你是保守的台灣科技投資題材研究員。題材研究與產業研究不同：先回答全球事件／趨勢正在形成什麼機會，再拆細題材。官方細產業名稱只能從 candidate list 選，絕對不得自行創造。不得捏造供應商、客戶、訂單、營收、認證或直接受惠關係；沒有證據就明確寫資料不足。',
+            '你是保守的台灣科技投資題材研究員。題材研究與產業研究不同：先回答全球事件／趨勢正在形成什麼機會，再拆細題材。官方細產業名稱只能從 candidate list 選，絕對不得自行創造。不得捏造供應商、客戶、訂單、營收、認證或直接受惠關係；沒有證據就明確寫資料不足。若候選清單沒有與題材有實質關聯的次產業，必須保守輸出資料不足；不可為了湊答案把 CPU、半導體等泛產業硬套到機器人／物理AI／自主智能。',
             '分析題材「'+topic+'」。找出 1~3 個最重要細題材，並將每個細題材對應到 candidate list 中真正存在的官方次產業。evidence_titles 必須來自輸入新聞標題。資料：'+_ai_compact_payload(payload,11000),
             cache_key=cache_key,ttl_hours=THEME_ANALYSIS_TTL/3600,response_schema=schema,timeout=12
         )
@@ -15582,7 +15642,7 @@ def run_webhook_server():
         )
         return _web_page('產業分析結果',body)
 
-    # V2.19.2：Theme Intelligence 修正版：真正題材聚類、排除單純產業/政策分類；
+    # V2.19.3：Theme Intelligence 修正版：真正題材聚類、排除單純產業/政策分類；
 #             修正 Render 分析頁偶發「按鈕無反應／背景工作後不跳轉」問題，改用 meta refresh；
 #             熱門題材改為直接可點選卡片，手動題材也明確 action；題材 AI 嚴禁把半導體/關稅等產業或政策本身當成題材。
 # V2.18.39：Render 外部分析頁改為背景工作，避免瀏覽器長時間黑屏。
