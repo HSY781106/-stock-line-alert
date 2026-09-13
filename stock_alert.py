@@ -1,4 +1,4 @@
-# stock_alert.py V2.20.0
+# stock_alert.py V2.20.1
 # V2.19.7：Theme Intelligence semantic candidate engine + bounded quantitative analysis；
 # V2.17.0 功能全部保留：Gemini Free 主力 + Mistral/Groq Free 備援、重大消息、Trump 語意、總經預測。
 # V2.15.6：外部產業網頁正確性＋效能修正版：官方價值鏈候選池改為資料驅動，不再只依賴同大產業 Top120；
@@ -15314,6 +15314,10 @@ def run_webhook_server():
             'ai代理人技術': ['資訊服務業', '數位雲端', '電腦及週邊設備業', '通信網路業', '其他電子業'],
             'agenticai': ['資訊服務業', '數位雲端', '電腦及週邊設備業', '通信網路業', '其他電子業'],
             'aiagent': ['資訊服務業', '數位雲端', '電腦及週邊設備業', '通信網路業', '其他電子業'],
+            '自主代理ai': ['資訊服務業', '數位雲端', '電腦及週邊設備業', '通信網路業', '其他電子業'],
+            '自主代理': ['資訊服務業', '數位雲端', '電腦及週邊設備業', '通信網路業', '其他電子業'],
+            'ai代理技術': ['資訊服務業', '數位雲端', '電腦及週邊設備業', '通信網路業', '其他電子業'],
+            'ai代理': ['資訊服務業', '數位雲端', '電腦及週邊設備業', '通信網路業', '其他電子業'],
             'ai企業運營': ['資訊服務業', '數位雲端', '電腦及週邊設備業', '通信網路業'],
             '物理ai': ['電機機械', '電腦及週邊設備業', '其他電子業', '通信網路業', '資訊服務業'],
             'physicalai': ['電機機械', '電腦及週邊設備業', '其他電子業', '通信網路業', '資訊服務業'],
@@ -15340,6 +15344,10 @@ def run_webhook_server():
             'ai代理人技術': ['軟體','資訊','雲端','人工智慧','代理人','自動化','企業'],
             'agenticai': ['軟體','資訊','雲端','人工智慧','代理人','自動化','企業'],
             'aiagent': ['軟體','資訊','雲端','人工智慧','代理人','自動化','企業'],
+            '自主代理ai': ['軟體','資訊','雲端','人工智慧','代理人','自動化','企業'],
+            '自主代理': ['軟體','資訊','雲端','人工智慧','代理人','自動化','企業'],
+            'ai代理技術': ['軟體','資訊','雲端','人工智慧','代理人','自動化','企業'],
+            'ai代理': ['軟體','資訊','雲端','人工智慧','代理人','自動化','企業'],
             'ai企業運營': ['企業','軟體','資訊','雲端','服務','資料','自動化','AI','人工智慧'],
             '物理ai': ['機器人','自動化','工業電腦','感測器','機電','控制','伺服','馬達','機器視覺'],
             'physicalai': ['機器人','自動化','工業電腦','感測器','機電','控制','伺服','馬達','機器視覺'],
@@ -15373,7 +15381,7 @@ def run_webhook_server():
                 'headline': {'type': 'string'},
                 'trend': {'type': 'string', 'enum': ['升溫', '高熱度', '盤整', '降溫', '混合', '資料不足']},
                 'summary': {'type': 'string'},
-                'why_now': {'type': 'array', 'minItems': 1, 'maxItems': 4, 'items': {'type': 'string'}},
+                'why_now': {'type': 'array', 'minItems': 1, 'maxItems': 5, 'items': {'type': 'string'}},
                 'fine_themes': {
                     'type': 'array', 'minItems': 1, 'maxItems': 3,
                     'items': {
@@ -15381,7 +15389,7 @@ def run_webhook_server():
                         'properties': {
                             'name': {'type': 'string'},
                             'logic': {'type': 'string'},
-                            'evidence_titles': {'type': 'array', 'minItems': 1, 'maxItems': 3, 'items': {'type': 'string'}},
+                            'evidence_titles': {'type': 'array', 'minItems': 0, 'maxItems': 3, 'items': {'type': 'string'}},
                         },
                         'required': ['name', 'logic', 'evidence_titles'],
                         'additionalProperties': False,
@@ -15393,7 +15401,7 @@ def run_webhook_server():
             'required': ['headline', 'trend', 'summary', 'why_now', 'fine_themes', 'risks', 'evidence_limitations'],
             'additionalProperties': False,
         }
-        cache_key = 'theme_v2200_decompose:' + hashlib.sha256((topic + '|' + _ai_compact_payload(news, 9000)).encode('utf-8')).hexdigest()[:24]
+        cache_key = 'theme_v2201_decompose:' + hashlib.sha256((topic + '|' + _ai_compact_payload(news, 9000)).encode('utf-8')).hexdigest()[:24]
         result = _ai_call_json(
             '你是保守的台灣科技投資題材研究員。現在只做第一階段：把輸入的大題材拆成1~3個「具體、可研究、可投資驗證」的細題材。'
             '此階段絕對不要要求或創造官方次產業名稱，也不要因為目前無法對應官方分類而判定資料不足。'
@@ -15404,7 +15412,7 @@ def run_webhook_server():
             cache_key=cache_key, ttl_hours=THEME_ANALYSIS_TTL / 3600, response_schema=schema, timeout=12
         )
         if not isinstance(result, dict):
-            print(f'V2.20.0 Theme：第一階段 AI 拆題失敗｜{topic}', flush=True)
+            print(f'V2.20.1 Theme：第一階段 AI 拆題失敗｜{topic}', flush=True)
             return None
 
         cleaned = []
@@ -15480,12 +15488,22 @@ def run_webhook_server():
                 if any(canonical_industry(p) in hinted_parent_norm for p in parents if p):
                     official_candidates.append(str(n).strip())
             official_candidates = list(dict.fromkeys(official_candidates))[:100]
+        # V2.20.1：AI/代理題材若官方次產業名稱本身沒有「AI／軟體」字樣，
+        # 不能因字串語意分數為 0 就宣告沒有候選；有可靠的大產業 hint 時，
+        # 直接保留該 parent 下的官方節點交給第二階段 AI 精選。
+        if not official_candidates and alias_parents:
+            parent_set = {canonical_industry(x) for x in alias_parents if x}
+            for n in official:
+                parents = sub_parent.get(_line_industry_norm(n), set())
+                if any(canonical_industry(p) in parent_set for p in parents if p):
+                    official_candidates.append(str(n).strip())
+            official_candidates = list(dict.fromkeys(official_candidates))[:100]
 
         selected_fine = str(selected_fine or '').strip()
         if not selected_fine:
             for ft in result['fine_themes']:
                 ft['official_subindustries'] = []
-            print(f'V2.20.0 Theme：第一階段完成｜{topic}｜fine={len(result["fine_themes"])}', flush=True)
+            print(f'V2.20.1 Theme：第一階段完成｜{topic}｜fine={len(result["fine_themes"])}', flush=True)
             return result
 
         # 只對使用者選定的細題材做一次「官方名稱映射」。映射失敗會明確保留
@@ -15521,7 +15539,7 @@ def run_webhook_server():
                 'official_candidates': sub_candidates, 'news': combined_news,
                 'semantic_subindustry_hints': alias_terms,
             }
-            mk = 'theme_v2200_map:' + hashlib.sha256(_ai_compact_payload(map_payload, 8000).encode('utf-8')).hexdigest()[:24]
+            mk = 'theme_v2201_map:' + hashlib.sha256(_ai_compact_payload(map_payload, 8000).encode('utf-8')).hexdigest()[:24]
             mapped = _ai_call_json(
                 '你是台灣產業分類研究員。把這個細題材對應到最合理的官方產業價值鏈細產業。'
                 '只能從 official_candidates 原樣選擇，禁止創造名稱；若沒有合理對應可以輸出空陣列。最多3個。'
@@ -15547,7 +15565,7 @@ def run_webhook_server():
             if not subs:
                 ft['mapping_reason'] = ft.get('mapping_reason') or '目前官方價值鏈資料無法建立足夠可靠的細產業對應。'
 
-        print(f'V2.20.0 Theme：第二階段完成｜{topic}｜fine={len(result["fine_themes"])}｜官方映射候選={len(official_candidates)}', flush=True)
+        print(f'V2.20.1 Theme：第二階段完成｜{topic}｜fine={len(result["fine_themes"])}｜官方映射候選={len(official_candidates)}', flush=True)
         return result
 
     def _theme_quantitative_results(result, u):
@@ -15572,10 +15590,10 @@ def run_webhook_server():
                 # V2.19.6：題材頁不是全市場掃描；限制每個官方次產業先分析 12 檔，
                 # 再由既有投資價值／買點模型排序 Top3，避免「物理AI／無人機」
                 # 這類多供應鏈題材在 Render Free 上跑數十分鐘。
-                candidate_pool=[x for x in candidates if to_float(x[0]) is not None and to_float(x[0]) > 0][:12]
+                candidate_pool=[x for x in candidates if to_float(x[0]) is not None and to_float(x[0]) > 0][:8]
                 if not candidate_pool:
                     # 若官方資料只有市值缺失/0 的候選，仍允許分析，但畫面一定顯示 N/A，不顯示假 0。
-                    candidate_pool=candidates[:12]
+                    candidate_pool=candidates[:8]
                 if not candidate_pool:
                     return fine,sub,f'❌ 找不到「{sub}」可分析的官方股票。'
                 analyzed=_line_industry_run_top3_analysis(candidate_pool,u,label='題材')
