@@ -1,4 +1,4 @@
-# stock_alert.py V2.19.7
+# stock_alert.py V2.19.8
 # V2.19.7：Theme Intelligence semantic candidate engine + bounded quantitative analysis；
 # V2.17.0 功能全部保留：Gemini Free 主力 + Mistral/Groq Free 備援、重大消息、Trump 語意、總經預測。
 # V2.15.6：外部產業網頁正確性＋效能修正版：官方價值鏈候選池改為資料驅動，不再只依賴同大產業 Top120；
@@ -15289,248 +15289,62 @@ def run_webhook_server():
             THEME_HOT_CACHE.update({'ts':now,'data':topics})
         return topics
 
-    def _theme_analyze(topic):
-        """
-        V2.19.6 Theme Intelligence：
-        1. 題材不再只靠「官方次產業名稱文字交集」找候選。
-        2. 先用語意 alias 推導「可能的大產業」，再從官方 company_chain
-           實際資料中收集該大產業的官方次產業。
-        3. AI 只能從官方實際存在的 candidate list 選，禁止自行創造次產業。
-        4. 若題材沒有可靠的官方產業路徑，才回報資料不足。
+    def _theme_analyze(topic, selected_fine=None):
+        """V2.19.8：真正兩階段的 Theme Intelligence。
+
+        第一階段只負責「大題材 -> 1~3 個可研究細題材」，不要求官方次產業。
+        第二階段（使用者選定細題材後）才把細題材對應到官方 company_chain
+        實際存在的次產業。這避免「AI 已成功拆題，但官方名稱沒有文字交集」
+        時整頁被錯誤判成資料不足。
         """
         topic = str(topic or '').strip()
         if not topic:
             return None
 
-        data = _line_industry_load_data()
-        official = _theme_official_subindustries()
         news = _theme_news_fetch(topic)
+        topic_low = topic.lower().replace(' ', '').replace('　', '')
 
-        # 題材 → 官方大產業的「研究範圍提示」。
-        # 這不是股票代碼硬編碼，也不是直接指定答案；
-        # 後續仍必須從 data 中找出實際存在的官方次產業。
+        # 保留既有題材語意提示，僅用於第二階段縮小研究範圍，不直接當答案。
         THEME_PARENT_HINTS = {
-            '自主智能': ['資訊服務業', '數位雲端', '電腦及週邊設備業',
-                        '通信網路業', '電機機械', '其他電子業'],
-            '自主型ai': ['資訊服務業', '數位雲端', '電腦及週邊設備業',
-                        '通信網路業', '電機機械', '其他電子業'],
+            '自主智能': ['資訊服務業', '數位雲端', '電腦及週邊設備業', '通信網路業', '電機機械', '其他電子業'],
+            '自主型ai': ['資訊服務業', '數位雲端', '電腦及週邊設備業', '通信網路業', '電機機械', '其他電子業'],
             '代理人ai': ['資訊服務業', '數位雲端', '電腦及週邊設備業', '通信網路業', '其他電子業'],
             '代理人ai技術': ['資訊服務業', '數位雲端', '電腦及週邊設備業', '通信網路業', '其他電子業'],
             'ai代理人': ['資訊服務業', '數位雲端', '電腦及週邊設備業', '通信網路業', '其他電子業'],
             'ai代理人技術': ['資訊服務業', '數位雲端', '電腦及週邊設備業', '通信網路業', '其他電子業'],
-            'agenticai': ['資訊服務業', '數位雲端', '電腦及週邊設備業',
-                          '通信網路業', '其他電子業'],
-            'aiagent': ['資訊服務業', '數位雲端', '電腦及週邊設備業',
-                        '通信網路業', '其他電子業'],
-            'ai企業運營': ['資訊服務業', '數位雲端', '電腦及週邊設備業',
-                          '通信網路業'],
-            '物理ai': ['電機機械', '電腦及週邊設備業', '其他電子業',
-                       '通信網路業', '資訊服務業'],
-            'physicalai': ['電機機械', '電腦及週邊設備業', '其他電子業',
-                           '通信網路業', '資訊服務業'],
-            'physical ai': ['電機機械', '電腦及週邊設備業', '其他電子業',
-                            '通信網路業', '資訊服務業'],
-            '人形機器人': ['電機機械', '電腦及週邊設備業', '其他電子業',
-                          '通信網路業'],
-            '機器人': ['電機機械', '電腦及週邊設備業', '其他電子業',
-                      '通信網路業', '資訊服務業'],
-            '無人機': ['電機機械', '電腦及週邊設備業', '其他電子業',
-                      '通信網路業', '光電業'],
-            'drone': ['電機機械', '電腦及週邊設備業', '其他電子業',
-                      '通信網路業', '光電業'],
-            'drones': ['電機機械', '電腦及週邊設備業', '其他電子業',
-                       '通信網路業', '光電業'],
+            'agenticai': ['資訊服務業', '數位雲端', '電腦及週邊設備業', '通信網路業', '其他電子業'],
+            'aiagent': ['資訊服務業', '數位雲端', '電腦及週邊設備業', '通信網路業', '其他電子業'],
+            'ai企業運營': ['資訊服務業', '數位雲端', '電腦及週邊設備業', '通信網路業'],
+            '物理ai': ['電機機械', '電腦及週邊設備業', '其他電子業', '通信網路業', '資訊服務業'],
+            'physicalai': ['電機機械', '電腦及週邊設備業', '其他電子業', '通信網路業', '資訊服務業'],
+            'physical ai': ['電機機械', '電腦及週邊設備業', '其他電子業', '通信網路業', '資訊服務業'],
+            '人形機器人': ['電機機械', '電腦及週邊設備業', '其他電子業', '通信網路業'],
+            '機器人': ['電機機械', '電腦及週邊設備業', '其他電子業', '通信網路業', '資訊服務業'],
+            '無人機': ['電機機械', '電腦及週邊設備業', '其他電子業', '通信網路業', '光電業'],
+            'drone': ['電機機械', '電腦及週邊設備業', '其他電子業', '通信網路業', '光電業'],
+            'drones': ['電機機械', '電腦及週邊設備業', '其他電子業', '通信網路業', '光電業'],
             'cpo': ['通信網路業', '光電業', '電子零組件業', '其他電子業'],
-            'hbm': ['半導體業', '電腦及週邊設備業', '電子零組件業',
-                    '其他電子業'],
-            '液冷': ['電腦及週邊設備業', '電子零組件業', '其他電子業',
-                    '電機機械'],
-            '資料中心': ['電腦及週邊設備業', '通信網路業', '資訊服務業',
-                        '數位雲端', '電子零組件業'],
-            'data center': ['電腦及週邊設備業', '通信網路業', '資訊服務業',
-                            '數位雲端', '電子零組件業'],
-            'ai伺服器': ['電腦及週邊設備業', '電子零組件業', '其他電子業',
-                        '資訊服務業'],
+            'hbm': ['半導體業', '電腦及週邊設備業', '電子零組件業', '其他電子業'],
+            '液冷': ['電腦及週邊設備業', '電子零組件業', '其他電子業', '電機機械'],
+            '資料中心': ['電腦及週邊設備業', '通信網路業', '資訊服務業', '數位雲端', '電子零組件業'],
+            'data center': ['電腦及週邊設備業', '通信網路業', '資訊服務業', '數位雲端', '電子零組件業'],
+            'ai伺服器': ['電腦及週邊設備業', '電子零組件業', '其他電子業', '資訊服務業'],
             '先進封裝': ['半導體業', '電子零組件業', '其他電子業'],
         }
-
-        # 題材 → 官方次產業的語意提示。
-        # 仍只用來排序「已存在於官方資料」的候選，不會直接產生答案。
-        THEME_SUBINDUSTRY_HINTS = {
-            '自主智能': ['軟體', '資訊', '雲端', '人工智慧', '機器人', '自動化',
-                        '工業電腦', '感測器', '控制', '伺服', '機器視覺'],
-            '自主型ai': ['軟體', '資訊', '雲端', '人工智慧', '機器人', '自動化',
-                        '工業電腦', '感測器', '控制', '伺服', '機器視覺'],
-            '代理人ai': ['軟體', '資訊', '雲端', '人工智慧', '代理人', '自動化'],
-            '代理人ai技術': ['軟體', '資訊', '雲端', '人工智慧', '代理人', '自動化'],
-            'ai代理人': ['軟體', '資訊', '雲端', '人工智慧', '代理人', '自動化'],
-            'ai代理人技術': ['軟體', '資訊', '雲端', '人工智慧', '代理人', '自動化'],
-            'agenticai': ['軟體', '資訊', '雲端', '人工智慧', '代理人', '機器人', '自動化'],
-            'aiagent': ['軟體', '資訊', '雲端', '人工智慧', '機器人', '自動化'],
-            'ai企業運營': ['企業', '軟體', '資訊', '雲端', '服務', '資料', '自動化',
-                          'AI', '人工智慧'],
-            '物理ai': ['機器人', '自動化', '工業電腦', '感測器', '機電', '控制',
-                       '伺服', '馬達', '機器視覺', '精密', '機器'],
-            'physicalai': ['機器人', '自動化', '工業電腦', '感測器', '機電', '控制',
-                           '伺服', '馬達', '機器視覺', '精密', '機器'],
-            'physical ai': ['機器人', '自動化', '工業電腦', '感測器', '機電', '控制',
-                            '伺服', '馬達', '機器視覺', '精密', '機器'],
-            '人形機器人': ['機器人', '自動化', '工業電腦', '感測器', '機電', '控制',
-                          '伺服', '馬達', '機器視覺'],
-            '機器人': ['機器人', '自動化', '工業電腦', '感測器', '機電', '控制',
-                      '伺服', '馬達', '機器視覺'],
-            '無人機': ['無人機', '航太', '航空', '飛行', '感測器', '雷達', '通訊',
-                      '光電', '機電', '控制', '伺服'],
-            'drone': ['無人機', '航太', '航空', '飛行', '感測器', '雷達', '通訊',
-                      '光電', '機電', '控制', '伺服'],
-            'drones': ['無人機', '航太', '航空', '飛行', '感測器', '雷達', '通訊',
-                       '光電', '機電', '控制', '伺服'],
-            'cpo': ['光通訊', '光電', '通信', '連接器', '光纖', '光學'],
-            'hbm': ['記憶體', '封裝', '晶圓', '半導體', 'IC'],
-            '液冷': ['散熱', '水冷', '熱管理', '伺服器', '機櫃'],
-            '資料中心': ['資料中心', '伺服器', '網路', '雲端', '資訊'],
-            'data center': ['資料中心', '伺服器', '網路', '雲端', '資訊'],
-            'ai伺服器': ['伺服器', '資料中心', '雲端', '散熱'],
-            '先進封裝': ['先進封裝', '封裝', '測試', '晶圓'],
-        }
-
-        topic_low = topic.lower().replace(' ', '').replace('　', '')
         alias_parents = []
-        alias_terms = []
         for k, vals in THEME_PARENT_HINTS.items():
             if k.replace(' ', '') in topic_low:
                 alias_parents.extend(vals)
-        for k, vals in THEME_SUBINDUSTRY_HINTS.items():
-            if k.replace(' ', '') in topic_low:
-                alias_terms.extend(vals)
         alias_parents = list(dict.fromkeys(alias_parents))
-        alias_terms = list(dict.fromkeys(alias_terms))
 
-        # 建立「官方次產業 → TWSE parent」索引。
-        # V2.19.7 修正：_line_industry_load_data() 只回傳次產業快取，
-        # 不保證 data['_universe'] 存在；舊版因此讓 stock_parent 永遠取不到，
-        # 最後 available_parents 只剩官方 parent/空值，造成「無人機」等題材 parents=none。
-        # 這裡直接讀既有 market_universe_cache.json 的 data，只取 industry 欄位，
-        # 不觸發 get_market_universe() 的自動補抓，避免題材頁每次都額外抓 50 檔。
-        universe_cache = load_json(UNIVERSE_CACHE_FILE)
-        universe_data = universe_cache.get('data', {}) if isinstance(universe_cache, dict) else {}
-        if not isinstance(universe_data, dict):
-            universe_data = {}
-        sub_parent = {}
-        if isinstance(data, dict):
-            for code, info in data.items():
-                if not isinstance(info, dict):
-                    continue
-                cc = clean_code(code)
-                stock = {}
-                try:
-                    stock = universe_data.get(cc, {}) if isinstance(universe_data, dict) else {}
-                except Exception:
-                    stock = {}
-                stock_parent = canonical_industry(stock.get('industry') or '') if isinstance(stock, dict) else ''
-                info_parent = canonical_industry(info.get('industry') or info.get('main_industry') or '')
-                parent = stock_parent or info_parent
-                recs = info.get('records', [])
-                if isinstance(recs, list) and recs:
-                    for rec in recs:
-                        if not isinstance(rec, dict):
-                            continue
-                        sub = normalize_subindustry(
-                            rec.get('sub_industry') or rec.get('subindustry') or rec.get('node') or ''
-                        )
-                        if not sub:
-                            continue
-                        rp = canonical_industry(rec.get('industry') or rec.get('main_industry') or '')
-                        sub_parent.setdefault(_line_industry_norm(sub), set()).add(parent or rp)
-                else:
-                    subs = info.get('subindustries', [])
-                    subs = subs if isinstance(subs, list) else [subs]
-                    for sub in subs:
-                        sub = normalize_subindustry(sub)
-                        if sub:
-                            sub_parent.setdefault(_line_industry_norm(sub), set()).add(parent)
-
-        # 取得官方資料中真正存在的 parent。
-        available_parents = set()
-        for vals in sub_parent.values():
-            for p in vals:
-                if p:
-                    available_parents.add(canonical_industry(p))
-
-        hinted_parent_norm = {canonical_industry(x) for x in alias_parents if x}
-        hinted_parent_norm &= available_parents
-
-        # 第一階段：文字/alias 直接命中。
-        scored = []
-        for n in official:
-            low = n.lower()
-            score = 0
-            for t in alias_terms:
-                if t.lower() in low:
-                    score += 5
-            # 題材原詞若本身就是官方名稱的一部分，也保留少量分數。
-            for t in re.findall(r'[\u4e00-\u9fffA-Za-z0-9]+', topic_low):
-                if len(t) >= 2 and t.lower() in low:
-                    score += 2
-            if score:
-                scored.append((score, n))
-
-        # 第二階段：semantic parent expansion。
-        # 這是 V2.19.6 的關鍵：例如「物理AI」即使官方節點沒有「物理AI」字樣，
-        # 只要它位於電機機械/電腦及週邊/其他電子等官方資料範圍，就能進候選池。
-        if hinted_parent_norm:
-            for n in official:
-                parents = sub_parent.get(_line_industry_norm(n), set())
-                if any(canonical_industry(p) in hinted_parent_norm for p in parents if p):
-                    bonus = 3
-                    if any(t.lower() in n.lower() for t in alias_terms):
-                        bonus += 5
-                    scored.append((bonus, n))
-
-        # 第三階段：如果 cache 中沒有可辨識 parent，仍可使用語意詞直接命中；
-        # 絕不退回 official[:160] 這類任意候選。
-        dedup = {}
-        for score, n in scored:
-            dedup[n] = max(score, dedup.get(n, 0))
-        candidates = [
-            str(n).strip() for _, n in sorted(
-                dedup.items(), key=lambda x: (-x[1], len(str(x[0])), str(x[0]))
-            ) if n is not None and str(n).strip()
-        ][:100]
-
-        # V2.19.6：官方資料偶爾把 node/subindustry 讀成數字；候選池對外一律字串。
-        candidates = list(dict.fromkeys(candidates))
-
-        if not candidates:
-            print(
-                f'V2.19.7 Theme：找不到可靠官方次產業候選｜{topic}｜'
-                f'parents={",".join(sorted(hinted_parent_norm)) or "none"}',
-                flush=True
-            )
-            return None
-
-        keyseed = topic + '|' + ','.join(str(x) for x in candidates)
-        cache_key = 'theme_v2197:' + hashlib.sha256(keyseed.encode('utf-8')).hexdigest()[:24]
-        now = time.time()
-        with THEME_CACHE_LOCK:
-            c = THEME_ANALYSIS_CACHE.get(cache_key)
-            if isinstance(c, dict) and now - float(c.get('ts', 0) or 0) < THEME_ANALYSIS_TTL:
-                print(f'V2.19.7 Theme AI：cache hit｜{topic}', flush=True)
-                return c.get('data')
-
+        # 第一階段 schema：刻意不要求 official_subindustries。
         schema = {
             'type': 'object',
             'properties': {
                 'headline': {'type': 'string'},
-                'trend': {
-                    'type': 'string',
-                    'enum': ['升溫', '高熱度', '盤整', '降溫', '混合', '資料不足']
-                },
+                'trend': {'type': 'string', 'enum': ['升溫', '高熱度', '盤整', '降溫', '混合', '資料不足']},
                 'summary': {'type': 'string'},
-                'why_now': {
-                    'type': 'array', 'minItems': 1, 'maxItems': 4,
-                    'items': {'type': 'string'}
-                },
+                'why_now': {'type': 'array', 'minItems': 1, 'maxItems': 4, 'items': {'type': 'string'}},
                 'fine_themes': {
                     'type': 'array', 'minItems': 1, 'maxItems': 3,
                     'items': {
@@ -15538,103 +15352,109 @@ def run_webhook_server():
                         'properties': {
                             'name': {'type': 'string'},
                             'logic': {'type': 'string'},
-                            'official_subindustries': {
-                                'type': 'array', 'minItems': 1, 'maxItems': 3,
-                                'items': {'type': 'string'}
-                            },
-                            'evidence_titles': {
-                                'type': 'array', 'minItems': 1, 'maxItems': 3,
-                                'items': {'type': 'string'}
-                            }
+                            'evidence_titles': {'type': 'array', 'minItems': 1, 'maxItems': 3, 'items': {'type': 'string'}},
                         },
-                        'required': [
-                            'name', 'logic', 'official_subindustries', 'evidence_titles'
-                        ],
-                        'additionalProperties': False
-                    }
+                        'required': ['name', 'logic', 'evidence_titles'],
+                        'additionalProperties': False,
+                    },
                 },
-                'risks': {
-                    'type': 'array', 'minItems': 1, 'maxItems': 4,
-                    'items': {'type': 'string'}
-                },
-                'evidence_limitations': {
-                    'type': 'array', 'minItems': 1, 'maxItems': 3,
-                    'items': {'type': 'string'}
-                }
+                'risks': {'type': 'array', 'minItems': 1, 'maxItems': 4, 'items': {'type': 'string'}},
+                'evidence_limitations': {'type': 'array', 'minItems': 1, 'maxItems': 3, 'items': {'type': 'string'}},
             },
-            'required': [
-                'headline', 'trend', 'summary', 'why_now', 'fine_themes',
-                'risks', 'evidence_limitations'
-            ],
-            'additionalProperties': False
+            'required': ['headline', 'trend', 'summary', 'why_now', 'fine_themes', 'risks', 'evidence_limitations'],
+            'additionalProperties': False,
         }
-
-        payload = {
-            'topic': topic,
-            'news': news,
-            'official_subindustry_candidates': candidates,
-            'semantic_parent_hints': alias_parents,
-            'semantic_subindustry_hints': alias_terms,
-        }
-
+        cache_key = 'theme_v2198_decompose:' + hashlib.sha256((topic + '|' + _ai_compact_payload(news, 9000)).encode('utf-8')).hexdigest()[:24]
         result = _ai_call_json(
-            '你是保守的台灣科技投資題材研究員。題材研究與產業研究不同：'
-            '先回答全球事件／趨勢正在形成什麼機會，再拆細題材。'
-            '官方細產業名稱只能從 candidate list 選，絕對不得自行創造。'
-            '不得捏造供應商、客戶、訂單、營收、認證或直接受惠關係；'
-            '沒有證據就明確寫資料不足。'
-            '候選清單是由官方產業價值鏈資料經語意 parent 篩選而來，'
-            '不要因為候選名稱沒有「物理AI／無人機／AI企業運營」字樣就全部否定；'
-            '應根據題材實際供應鏈邏輯，在候選中選最合理的官方次產業。'
-            '但若確實無合理對應，仍必須輸出資料不足。'
-            'evidence_titles 必須來自輸入新聞標題。',
-            '分析題材「' + topic + '」。找出 1~3 個最重要細題材，'
-            '並將每個細題材對應到 candidate list 中真正存在的官方次產業。'
-            '資料：' + _ai_compact_payload(payload, 11000),
-            cache_key=cache_key,
-            ttl_hours=THEME_ANALYSIS_TTL / 3600,
-            response_schema=schema,
-            timeout=12
+            '你是保守的台灣科技投資題材研究員。現在只做第一階段：把輸入的大題材拆成1~3個「具體、可研究、可投資驗證」的細題材。'
+            '此階段絕對不要要求或創造官方次產業名稱，也不要因為目前無法對應官方分類而判定資料不足。'
+            '不得捏造供應商、客戶、訂單、營收、認證或直接受惠關係；沒有證據就明確寫資料不足。'
+            '細題材應優先從新聞與產業邏輯歸納，例如無人機可拆成軍用/商用無人機、飛控/感測、通訊與影像等方向。'
+            'evidence_titles 必須來自輸入新聞標題。輸入題材：' + topic + '。資料：' + _ai_compact_payload({'news': news, 'semantic_parent_hints': alias_parents}, 10000),
+            cache_key=cache_key, ttl_hours=THEME_ANALYSIS_TTL / 3600, response_schema=schema, timeout=12
         )
-
         if not isinstance(result, dict):
+            print(f'V2.19.8 Theme：第一階段 AI 拆題失敗｜{topic}', flush=True)
             return None
 
-        valid = set(official)
         cleaned = []
         for ft in result.get('fine_themes', []):
             if not isinstance(ft, dict):
                 continue
-            subs = []
-            for sub in (
-                ft.get('official_subindustries')
-                if isinstance(ft.get('official_subindustries'), list) else []
-            ):
-                exact = next(
-                    (x for x in valid if _line_industry_norm(x) == _line_industry_norm(sub)),
-                    None
-                )
-                if exact and exact in candidates and exact not in subs:
-                    subs.append(exact)
-            if subs:
-                x = dict(ft)
-                x['official_subindustries'] = subs[:3]
-                cleaned.append(x)
-
+            name = str(ft.get('name') or '').strip()
+            logic = str(ft.get('logic') or '').strip()
+            if not name or not logic:
+                continue
+            x = dict(ft)
+            x['name'] = name
+            x['logic'] = logic
+            x['official_subindustries'] = []
+            cleaned.append(x)
         result['fine_themes'] = cleaned[:3]
-        if not result['fine_themes']:
+        if not cleaned:
             return None
 
-        with THEME_CACHE_LOCK:
-            THEME_ANALYSIS_CACHE[cache_key] = {'ts': now, 'data': result}
-            if len(THEME_ANALYSIS_CACHE) > 20:
-                old = sorted(
-                    THEME_ANALYSIS_CACHE.items(),
-                    key=lambda kv: kv[1].get('ts', 0)
-                )[:5]
-                for k, _ in old:
-                    THEME_ANALYSIS_CACHE.pop(k, None)
+        # 第二階段預先附上「可能的官方次產業候選」，但不要求它們成功才顯示細題材。
+        # 優先使用 Actions 已建立的「TWSE 大產業 -> 官方細產業」索引。
+        menu_data = {}
+        try:
+            mc = load_json(INDUSTRY_MENU_CACHE_FILE)
+            menu_data = mc.get('data', {}) if isinstance(mc, dict) else {}
+        except Exception as e:
+            print(f'V2.19.8 Theme：官方產業索引讀取失敗｜{type(e).__name__}: {e}', flush=True)
+        official_candidates = []
+        if isinstance(menu_data, dict) and alias_parents:
+            parent_norms = {canonical_industry(x) for x in alias_parents}
+            for k, vals in menu_data.items():
+                if canonical_industry(k) not in parent_norms or not isinstance(vals, list):
+                    continue
+                for v in vals:
+                    n = normalize_subindustry(v)
+                    if n and n not in official_candidates:
+                        official_candidates.append(n)
+        if not official_candidates:
+            official_candidates = _theme_official_subindustries()[:200]
 
+        # V2.19.8：第一階段完全不做官方映射；只有使用者選定細題材時才映射。
+        # 這避免一次拆 3 個細題材就發出 3 次額外 AI 請求，也避免官方分類暫時
+        # 不可用時把「細題材拆解成功」錯誤顯示成「資料不足」。
+        selected_fine = str(selected_fine or '').strip()
+        if not selected_fine:
+            for ft in result['fine_themes']:
+                ft['official_subindustries'] = []
+            print(f'V2.19.8 Theme：第一階段完成｜{topic}｜fine={len(result["fine_themes"])}', flush=True)
+            return result
+
+        # 只對使用者選定的細題材做一次「官方名稱映射」。映射失敗會明確保留
+        # 細題材，但第二階段不會拿不存在的官方名稱去跑股票。
+        map_schema = {
+            'type': 'object',
+            'properties': {'official_subindustries': {'type': 'array', 'minItems': 0, 'maxItems': 3, 'items': {'type': 'string'}}},
+            'required': ['official_subindustries'], 'additionalProperties': False,
+        }
+        valid_official = set(_theme_official_subindustries())
+        for ft in result['fine_themes']:
+            if str(ft.get('name') or '').strip() != selected_fine:
+                ft['official_subindustries'] = []
+                continue
+            sub_candidates = official_candidates
+            map_payload = {'fine_theme': ft.get('name'), 'logic': ft.get('logic'), 'topic': topic, 'official_candidates': sub_candidates}
+            mk = 'theme_v2198_map:' + hashlib.sha256(_ai_compact_payload(map_payload, 8000).encode('utf-8')).hexdigest()[:24]
+            mapped = _ai_call_json(
+                '你是台灣產業分類研究員。把這個細題材對應到最合理的官方產業價值鏈細產業。'
+                '只能從 official_candidates 原樣選擇，禁止創造名稱；若沒有合理對應可以輸出空陣列。最多3個。',
+                '資料：' + _ai_compact_payload(map_payload, 8000), cache_key=mk, ttl_hours=24,
+                response_schema=map_schema, timeout=10
+            )
+            subs = []
+            if isinstance(mapped, dict):
+                for sub in mapped.get('official_subindustries', []):
+                    exact = next((x for x in valid_official if _line_industry_norm(x) == _line_industry_norm(sub)), None)
+                    if exact and exact in sub_candidates and exact not in subs:
+                        subs.append(exact)
+            ft['official_subindustries'] = subs[:3]
+
+        print(f'V2.19.8 Theme：第一階段完成｜{topic}｜fine={len(result["fine_themes"])}｜官方映射候選={len(official_candidates)}', flush=True)
         return result
 
     def _theme_quantitative_results(result, u):
@@ -15775,7 +15595,7 @@ def run_webhook_server():
             # 第二階段：使用者已選細題材 → 才做股票量化
             # ------------------------------------------------------------
             if selected:
-                result = _theme_analyze(chosen)
+                result = _theme_analyze(chosen, selected_fine=selected)
                 if not result:
                     return _web_page(
                         '題材 Intelligence',
