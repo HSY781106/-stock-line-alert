@@ -1,5 +1,5 @@
-# stock_alert.py V2.19.5
-# V2.19.5：Theme Intelligence semantic candidate engine + bounded quantitative analysis；
+# stock_alert.py V2.19.6
+# V2.19.6：Theme Intelligence semantic candidate engine + bounded quantitative analysis；
 # V2.17.0 功能全部保留：Gemini Free 主力 + Mistral/Groq Free 備援、重大消息、Trump 語意、總經預測。
 # V2.15.6：外部產業網頁正確性＋效能修正版：官方價值鏈候選池改為資料驅動，不再只依賴同大產業 Top120；
 #             個股對應產業 Top3 與指定次產業 Top3 共用官方次產業候選邏輯；修正市值顯示單位 1000 倍錯誤；
@@ -15205,12 +15205,12 @@ def run_webhook_server():
                     for rec in recs:
                         if isinstance(rec,dict):
                             n=normalize_subindustry(rec.get('sub_industry') or rec.get('subindustry') or rec.get('node') or '')
-                            if n: names.add(n)
+                            if n is not None and str(n).strip(): names.add(str(n).strip())
                 subs=info.get('subindustries',[])
                 if not isinstance(subs,list): subs=[subs]
                 for sub in subs:
                     n=normalize_subindustry(sub)
-                    if n: names.add(n)
+                    if n is not None and str(n).strip(): names.add(str(n).strip())
         return sorted(names)
 
     def _theme_hot_topics():
@@ -15291,7 +15291,7 @@ def run_webhook_server():
 
     def _theme_analyze(topic):
         """
-        V2.19.5 Theme Intelligence：
+        V2.19.6 Theme Intelligence：
         1. 題材不再只靠「官方次產業名稱文字交集」找候選。
         2. 先用語意 alias 推導「可能的大產業」，再從官方 company_chain
            實際資料中收集該大產業的官方次產業。
@@ -15460,7 +15460,7 @@ def run_webhook_server():
                 scored.append((score, n))
 
         # 第二階段：semantic parent expansion。
-        # 這是 V2.19.5 的關鍵：例如「物理AI」即使官方節點沒有「物理AI」字樣，
+        # 這是 V2.19.6 的關鍵：例如「物理AI」即使官方節點沒有「物理AI」字樣，
         # 只要它位於電機機械/電腦及週邊/其他電子等官方資料範圍，就能進候選池。
         if hinted_parent_norm:
             for n in official:
@@ -15477,24 +15477,29 @@ def run_webhook_server():
         for score, n in scored:
             dedup[n] = max(score, dedup.get(n, 0))
         candidates = [
-            n for _, n in sorted(dedup.items(), key=lambda x: (-x[1], len(x[0]), x[0]))
+            str(n).strip() for _, n in sorted(
+                dedup.items(), key=lambda x: (-x[1], len(str(x[0])), str(x[0]))
+            ) if n is not None and str(n).strip()
         ][:100]
+
+        # V2.19.6：官方資料偶爾把 node/subindustry 讀成數字；候選池對外一律字串。
+        candidates = list(dict.fromkeys(candidates))
 
         if not candidates:
             print(
-                f'V2.19.5 Theme：找不到可靠官方次產業候選｜{topic}｜'
+                f'V2.19.6 Theme：找不到可靠官方次產業候選｜{topic}｜'
                 f'parents={",".join(sorted(hinted_parent_norm)) or "none"}',
                 flush=True
             )
             return None
 
-        keyseed = topic + '|' + ','.join(candidates)
-        cache_key = 'theme_v2194:' + hashlib.sha256(keyseed.encode('utf-8')).hexdigest()[:24]
+        keyseed = topic + '|' + ','.join(str(x) for x in candidates)
+        cache_key = 'theme_v2196:' + hashlib.sha256(keyseed.encode('utf-8')).hexdigest()[:24]
         now = time.time()
         with THEME_CACHE_LOCK:
             c = THEME_ANALYSIS_CACHE.get(cache_key)
             if isinstance(c, dict) and now - float(c.get('ts', 0) or 0) < THEME_ANALYSIS_TTL:
-                print(f'V2.19.5 Theme AI：cache hit｜{topic}', flush=True)
+                print(f'V2.19.6 Theme AI：cache hit｜{topic}', flush=True)
                 return c.get('data')
 
         schema = {
@@ -15635,7 +15640,7 @@ def run_webhook_server():
                     candidates=_line_industry_official_candidates(target_subs,parent,u2,data)
                 # 不能先用市值切掉候選，再宣稱「最有投資價值」。先取較大的候選池
                 # 做既有量化分析，再依第一層投資價值排序；買點分數與市值只作後續 tie-break。
-                # V2.19.5：題材頁不是全市場掃描；限制每個官方次產業先分析 6 檔，
+                # V2.19.6：題材頁不是全市場掃描；限制每個官方次產業先分析 6 檔，
                 # 再由既有投資價值／買點模型排序 Top3，避免「物理AI／無人機」
                 # 這類多供應鏈題材在 Render Free 上跑數十分鐘。
                 candidate_pool=[x for x in candidates if to_float(x[0]) is not None and to_float(x[0]) > 0][:6]
@@ -15659,7 +15664,7 @@ def run_webhook_server():
             except Exception as ex:
                 return fine,sub,f'❌ {sub} 量化分析失敗：{type(ex).__name__}: {ex}'
         out=[]
-        # V2.19.5：最多分析 4 個「細題材×官方次產業」組合，避免一個題材
+        # V2.19.6：最多分析 4 個「細題材×官方次產業」組合，避免一個題材
         # 因 AI 拆出 3×2 而同時啟動大量完整股票分析。
         jobs = jobs[:4]
         with ThreadPoolExecutor(max_workers=min(3,max(1,len(jobs))),thread_name_prefix='theme-quant') as ex:
@@ -15687,7 +15692,7 @@ def run_webhook_server():
 
     @app.get('/theme')
     def theme_page():
-        """V2.19.5：題材採兩階段互動。
+        """V2.19.6：題材採兩階段互動。
         第一階段只做「大題材 → 細題材」拆解，讓使用者選擇；
         第二階段才針對選定細題材做官方次產業＋股票量化分析。
         """
