@@ -1,4 +1,4 @@
-# stock_alert.py V2.19.0
+# stock_alert.py V2.19.1
 # V2.17.1：AI 僅在「已達到 LINE 發送門檻」後啟用；其餘每15分鐘掃描完全不呼叫 AI。
 # V2.17.0 功能全部保留：Gemini Free 主力 + Mistral/Groq Free 備援、重大消息、Trump 語意、總經預測。
 # V2.15.6：外部產業網頁正確性＋效能修正版：官方價值鏈候選池改為資料驅動，不再只依賴同大產業 Top120；
@@ -15158,7 +15158,7 @@ def run_webhook_server():
                     except Exception: pass
                     rows.append({'title':title[:240],'link':link,'published':dt.isoformat() if dt else pub})
             except Exception as ex:
-                print(f'V2.19.0 Theme news fetch 失敗：{type(ex).__name__}: {ex}',flush=True)
+                print(f'V2.19.1 Theme news fetch 失敗：{type(ex).__name__}: {ex}',flush=True)
         rows.sort(key=lambda x:x.get('published') or '', reverse=True)
         rows=rows[:max_items]
         with THEME_CACHE_LOCK:
@@ -15191,10 +15191,10 @@ def run_webhook_server():
         now=time.time()
         with THEME_CACHE_LOCK:
             if THEME_HOT_CACHE.get('data') and now-float(THEME_HOT_CACHE.get('ts',0) or 0)<THEME_HOT_TTL:
-                print('V2.19.0 Theme：熱門題材 cache hit',flush=True)
+                print('V2.19.1 Theme：熱門題材 cache hit',flush=True)
                 return THEME_HOT_CACHE['data']
         # 不硬編碼「熱門題材」；由近期公開新聞讓 AI 聚類。
-        queries=['AI semiconductor technology industry','technology investment trend supply chain','Taiwan technology industry trend','global emerging technology']
+        queries=['emerging technology investment trend','AI applications technology trend','next generation consumer technology','robotics automation space energy technology']
         rows=[]; seen=set()
         for q in queries:
             try:
@@ -15209,20 +15209,51 @@ def run_webhook_server():
                     if norm in seen: continue
                     seen.add(norm); rows.append({'title':title[:220],'link':link})
             except Exception as ex:
-                print(f'V2.19.0 Theme hot news 失敗：{type(ex).__name__}: {ex}',flush=True)
+                print(f'V2.19.1 Theme hot news 失敗：{type(ex).__name__}: {ex}',flush=True)
         if not rows:
             return []
         schema={'type':'object','properties':{
             'topics':{'type':'array','minItems':1,'maxItems':8,'items':{'type':'object','properties':{
-                'topic':{'type':'string'},'why_hot':{'type':'string'},'trend':{'type':'string'},'evidence_titles':{'type':'array','minItems':1,'maxItems':3,'items':{'type':'string'}}
-            },'required':['topic','why_hot','trend','evidence_titles'],'additionalProperties':False}}
+                'topic':{'type':'string'},'topic_type':{'type':'string','enum':['technology_theme','product_cycle','application_theme','supply_chain_theme','event_theme']},
+                'why_hot':{'type':'string'},'trend':{'type':'string'},'evidence_titles':{'type':'array','minItems':1,'maxItems':3,'items':{'type':'string'}}
+            },'required':['topic','topic_type','why_hot','trend','evidence_titles'],'additionalProperties':False}}
         },'required':['topics'],'additionalProperties':False}
         result=_ai_call_json(
-            '你是保守的全球科技投資研究員。請把提供的近期新聞標題聚類成真正的投資題材。不得捏造事件；題材必須能由新聞標題支持。不要把單一公司新聞直接當成整體題材。',
-            '請選出近期最值得追蹤的 4~8 個題材。每個題材給一句為何熱門與趨勢，並只能引用輸入新聞標題作 evidence_titles。資料：'+_ai_compact_payload(rows,9000),
-            cache_key='theme_hot_v2190',ttl_hours=THEME_HOT_TTL/3600,response_schema=schema,timeout=12
+            '你是保守的全球科技投資研究員。你要找的是「投資題材」，不是產業名稱、政策名稱或地緣政治分類。題材必須描述一個正在發生的需求、技術、產品週期、應用趨勢或可觀察事件。\n'
+            '嚴格禁止：把「半導體」「AI產業」「科技業」「電子業」「關稅」「產業政策」「供應鏈本土化」本身列為題材。這些只能作為背景或產業層。\n'
+            '如果多個新聞其實都在描述同一個核心驅動，例如 AI 對高算力晶片的需求、AI 基礎設施、AI 加速器與先進封裝，必須合併成一個題材，而不是拆成數個近義題材。\n'
+            '不得捏造事件；題材必須能由新聞標題支持；不要把單一公司新聞直接當成整體題材。',
+            '請選出近期最值得追蹤的 4~8 個「真正不同」題材。每個題材給一句為何熱門與趨勢，並只能引用輸入新聞標題作 evidence_titles。若只能找到同一核心題材，就寧可少列，不要硬湊數量。資料：'+_ai_compact_payload(rows,9000),
+            cache_key='theme_hot_v2191',ttl_hours=THEME_HOT_TTL/3600,response_schema=schema,timeout=12
         )
         topics=result.get('topics',[]) if isinstance(result,dict) else []
+        # V2.19.1：第二道 deterministic gate。即使 AI 誤把產業/政策當題材，也不要直接顯示。
+        forbidden=('半導體','semiconductor','晶片產業','電子業','科技業','AI產業','人工智慧產業','關稅政策','產業政策','供應鏈本土化','supply chain localization')
+        cleaned=[]
+        seen_theme=[]
+        for x in topics:
+            if not isinstance(x,dict): continue
+            name=str(x.get('topic') or '').strip()
+            typ=str(x.get('topic_type') or '').strip()
+            low=name.lower()
+            if not name or typ not in {'technology_theme','product_cycle','application_theme','supply_chain_theme','event_theme'}: continue
+            if any(f.lower() in low for f in forbidden):
+                # 允許帶有具體技術/產品語意的題材，例如「AI伺服器液冷」，但拒絕只有「半導體」這類母產業。
+                concrete=any(k in low for k in ('先進封裝','液冷','hbm','加速器','資料中心','data center','機器人','robot','physical ai','cpo','光通訊','自駕','衛星','太空','核能','儲能','電網','iphone','摺疊','人形'))
+                if not concrete: continue
+            # 去除高度近義重複題材：中文關鍵詞交集或標準化名稱包含關係。
+            norm=re.sub(r'[^0-9a-zA-Z一-鿿]+','',low)
+            duplicate=False
+            for prev in seen_theme:
+                if norm in prev or prev in norm:
+                    duplicate=True; break
+                a=set(re.findall(r'[一-鿿]{2,}|[a-zA-Z]{3,}|\d+',norm))
+                b=set(re.findall(r'[一-鿿]{2,}|[a-zA-Z]{3,}|\d+',prev))
+                if a and b and len(a&b)/max(1,min(len(a),len(b)))>=0.60:
+                    duplicate=True; break
+            if duplicate: continue
+            seen_theme.append(norm); cleaned.append(x)
+        topics=cleaned[:8]
         with THEME_CACHE_LOCK:
             THEME_HOT_CACHE.update({'ts':now,'data':topics})
         return topics
@@ -15243,12 +15274,12 @@ def run_webhook_server():
         candidates=[n for _,n in sorted(scored,key=lambda x:(-x[0],len(x[1])))[:80]]
         if len(candidates)<40: candidates=official[:160] if not candidates else candidates+official[:max(0,160-len(candidates))]
         keyseed=topic+'|'+','.join(candidates)
-        cache_key='theme_v2190:'+hashlib.sha256(keyseed.encode('utf-8')).hexdigest()[:24]
+        cache_key='theme_v2191:'+hashlib.sha256(keyseed.encode('utf-8')).hexdigest()[:24]
         now=time.time()
         with THEME_CACHE_LOCK:
             c=THEME_ANALYSIS_CACHE.get(cache_key)
             if isinstance(c,dict) and now-float(c.get('ts',0) or 0)<THEME_ANALYSIS_TTL:
-                print(f'V2.19.0 Theme AI：cache hit｜{topic}',flush=True)
+                print(f'V2.19.1 Theme AI：cache hit｜{topic}',flush=True)
                 return c.get('data')
         schema={'type':'object','properties':{
             'headline':{'type':'string'},'trend':{'type':'string','enum':['升溫','高熱度','盤整','降溫','混合','資料不足']},
@@ -15353,16 +15384,23 @@ def run_webhook_server():
                 body=('<div class="card"><h1>⏳ 正在整理近期熱門題材</h1>'
                       '<p>正在抓取近期公開新聞，並由 AI 聚類出真正值得追蹤的投資題材。</p>'
                       '<p><b>請稍候，完成後會自動顯示。</b></p></div>')
-                return _web_page('熱門題材｜分析中',body+f"<script>setTimeout(function(){{window.location.replace('/web-task/{task_id}');}},1000);</script>")
+                return _web_page('熱門題材｜分析中',body+f"<meta http-equiv='refresh' content='1;url=/web-task/{task_id}'>")
             hot=_theme_hot_topics()
             opts=''.join(f'<option value="{html.escape(str(x.get("topic") or ""))}">{html.escape(str(x.get("topic") or ""))}</option>' for x in hot if x.get('topic'))
             body=('<div class="card"><h1>🔥 題材 Intelligence</h1>'
                   '<p>從近期全球事件／趨勢出發，AI 拆解細題材，再用官方產業價值鏈找受惠產業與公司，最後串回既有投資價值＋買點模型。</p>'
-                  '<label>① 近期熱門題材</label><form method="get"><select name="topic"><option value="">請選擇</option>'+opts+'</select><button type="submit">🔥 開始題材分析</button></form></div>'
-                  '<div class="card"><label>② 自訂題材搜尋</label><form method="get"><input name="q" placeholder="例如：iPhone Duo、Physical AI、CPO、AI Data Center、機器人"><button type="submit">🔎 分析自訂題材</button></form>'
+                  '<label>① 近期熱門題材</label><form method="get" action="/theme"><select name="topic"><option value="">請選擇</option>'+opts+'</select><button type="submit">🔥 開始題材分析</button></form></div>'
+                  '<div class="card"><label>② 自訂題材搜尋</label><form method="get" action="/theme"><input name="q" placeholder="例如：iPhone Duo、Physical AI、CPO、AI Data Center、機器人"><button type="submit">🔎 分析自訂題材</button></form>'
                   '<p class="muted">題材不是固定股票清單；系統會依近期公開資訊與官方次產業資料動態拆解。</p></div>')
             if hot:
-                body+='<div class="card"><h2>🔥 最近值得追蹤</h2><ul>'+''.join(f'<li><b>{html.escape(str(x.get("topic")))}</b>｜{html.escape(str(x.get("why_hot") or ""))}</li>' for x in hot[:8])+'</ul></div>'
+                cards=[]
+                for x in hot[:8]:
+                    t=str(x.get('topic') or '').strip()
+                    if not t: continue
+                    cards.append('<form method="get" action="/theme" style="margin:0 0 10px">'
+                                 f'<input type="hidden" name="topic" value="{html.escape(t, quote=True)}">'
+                                 f'<button type="submit">🔥 {html.escape(t)}<br><span style="font-weight:400;font-size:13px">{html.escape(str(x.get("why_hot") or ""))}</span></button></form>')
+                body+='<div class="card"><h2>🔥 最近值得追蹤</h2>'+''.join(cards)+'</div>'
             body+='<div class="nav"><a href="/industry">🏭 產業</a><a href="/macro">🌎 總經</a><a href="/trump">🇺🇸 Trump</a><a href="/">首頁</a></div>'
             return _web_page('題材 Intelligence',body)
         if request.args.get('_ready')!='1':
@@ -15370,7 +15408,7 @@ def run_webhook_server():
             body=(f'<div class="card"><h1>⏳ {html.escape(chosen)} 題材分析中</h1>'
                   '<p>正在抓取近期公開資訊、AI 拆解細題材、對應官方次產業，並計算既有投資價值／買點模型。</p>'
                   '<p><b>請稍候，完成後會自動顯示完整結果。</b></p></div>')
-            return _web_page(f'{chosen}｜分析中',body+f"<script>setTimeout(function(){{window.location.replace('/web-task/{task_id}');}},1000);</script>")
+            return _web_page(f'{chosen}｜分析中',body+f"<meta http-equiv='refresh' content='1;url=/web-task/{task_id}'>")
         try:
             result=_theme_analyze(chosen)
             if not result:
@@ -15539,7 +15577,10 @@ def run_webhook_server():
         )
         return _web_page('產業分析結果',body)
 
-    # V2.18.39：Render 外部分析頁改為背景工作，避免瀏覽器長時間黑屏。
+    # V2.19.1：Theme Intelligence 修正版：真正題材聚類、排除單純產業/政策分類；
+#             修正 Render 分析頁偶發「按鈕無反應／背景工作後不跳轉」問題，改用 meta refresh；
+#             熱門題材改為直接可點選卡片，手動題材也明確 action；題材 AI 嚴禁把半導體/關稅等產業或政策本身當成題材。
+# V2.18.39：Render 外部分析頁改為背景工作，避免瀏覽器長時間黑屏。
     # 先顯示「分析中／請重新整理」，背景完成後再顯示完整頁面。
     WEB_PAGE_TASKS = {}
     WEB_PAGE_TASK_LOCK = threading.Lock()
