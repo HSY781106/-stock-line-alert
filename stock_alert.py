@@ -1,4 +1,4 @@
-# stock_alert.py V2.20.1
+# stock_alert.py V2.21.0
 # V2.19.7：Theme Intelligence semantic candidate engine + bounded quantitative analysis；
 # V2.17.0 功能全部保留：Gemini Free 主力 + Mistral/Groq Free 備援、重大消息、Trump 語意、總經預測。
 # V2.15.6：外部產業網頁正確性＋效能修正版：官方價值鏈候選池改為資料驅動，不再只依賴同大產業 Top120；
@@ -470,6 +470,9 @@ LINE_INDUSTRY_SESSION_TTL = 10 * 60
 WEB_INDUSTRY_ANALYSIS_CACHE = {}
 WEB_INDUSTRY_ANALYSIS_CACHE_TTL = 15 * 60
 WEB_INDUSTRY_ANALYSIS_CACHE_LOCK = threading.Lock()
+# V2.21.0：主題量化階段的 EPS 持久快取寫入鎖，避免多 worker 同時 replace tmp 檔。
+EPS_QUARTERLY_CACHE_LOCK = threading.RLock()
+
 
 # V2.15.6 speed foundation (kept under V2.15.6 release): Render 產業頁
 # 同一個 process 不重複從 GitHub 下載 1985 檔市場 metadata。TTL 10 分鐘；
@@ -5588,8 +5591,11 @@ def _yfinance_earnings_dates_eps(symbol):
     key=('yf_earnings_dates_eps_v21062', symbol)
     if key in RUN_CACHE:
         return RUN_CACHE[key]
-    cache=load_json(EPS_QUARTERLY_CACHE_FILE)
-    item=cache.get(symbol,{}) if isinstance(cache,dict) else {}
+    # V2.21.0：同一時間只允許一個 worker 讀寫季度 EPS 持久快取，
+    # 避免 Render 多執行緒出現 eps_quarterly_cache.json.tmp -> ... 的 race condition。
+    with EPS_QUARTERLY_CACHE_LOCK:
+        cache=load_json(EPS_QUARTERLY_CACHE_FILE)
+        item=cache.get(symbol,{}) if isinstance(cache,dict) else {}
     cached_at=to_float(item.get('_cached_at')) if isinstance(item,dict) else None
     if cached_at and time.time()-cached_at < 7*86400:
         data=item.get('data') if isinstance(item,dict) else None
@@ -5638,8 +5644,12 @@ def _yfinance_earnings_dates_eps(symbol):
             dedup[keyq]=x
         out=list(dedup.values())
         out.sort(key=lambda x:x['date'])
-        cache[symbol]={'_cached_at':time.time(),'data':out,'source':'Yahoo earnings dates Reported EPS'}
-        save_json(EPS_QUARTERLY_CACHE_FILE,cache)
+        # V2.21.0：重新讀一次後再合併，避免其他 worker 在網路請求期間寫入的資料被覆蓋。
+        with EPS_QUARTERLY_CACHE_LOCK:
+            latest_cache=load_json(EPS_QUARTERLY_CACHE_FILE)
+            if not isinstance(latest_cache,dict): latest_cache={}
+            latest_cache[symbol]={'_cached_at':time.time(),'data':out,'source':'Yahoo earnings dates Reported EPS'}
+            save_json(EPS_QUARTERLY_CACHE_FILE,latest_cache)
         print(f'V2.10.62 Yahoo Reported EPS 備援：{symbol} {len(out)} 季',flush=True)
     except Exception as e:
         print(f'V2.10.62 Yahoo Reported EPS 備援失敗 {symbol}: {type(e).__name__}: {e}',flush=True)
@@ -15401,25 +15411,52 @@ def run_webhook_server():
             'required': ['headline', 'trend', 'summary', 'why_now', 'fine_themes', 'risks', 'evidence_limitations'],
             'additionalProperties': False,
         }
-        cache_key = 'theme_v2201_decompose:' + hashlib.sha256((topic + '|' + _ai_compact_payload(news, 9000)).encode('utf-8')).hexdigest()[:24]
+        cache_key = 'theme_v2210_decompose:' + hashlib.sha256((topic + '|' + _ai_compact_payload(news, 9000)).encode('utf-8')).hexdigest()[:24]
         result = _ai_call_json(
             '你是保守的台灣科技投資題材研究員。現在只做第一階段：把輸入的大題材拆成1~3個「具體、可研究、可投資驗證」的細題材。'
             '此階段絕對不要要求或創造官方次產業名稱，也不要因為目前無法對應官方分類而判定資料不足。'
             '不得捏造供應商、客戶、訂單、營收、認證或直接受惠關係；沒有證據就明確寫資料不足。'
-            '細題材應優先從新聞與產業邏輯歸納，例如無人機可拆成軍用/商用無人機、飛控/感測、通訊與影像等方向。'
+            '細題材名稱必須使用繁體中文；AI、CPO、HBM、GPU、Agent、UAV 等公認技術縮寫可以保留英文，但不得把完整英文句子或英文細題材名稱直接輸出。'
+            '例如「Autonomous Drone」應改寫成「自主飛行無人機」，「Enterprise AI Agent」應改寫成「企業 AI Agent 應用」。'
+            '細題材應優先從新聞與產業邏輯歸納，例如無人機可拆成軍用與國防無人機、飛控與感測、通訊與影像等方向。'
             'evidence_titles 必須來自輸入新聞標題。',
             '輸入題材：' + topic + '。資料：' + _ai_compact_payload({'news': news, 'semantic_parent_hints': alias_parents}, 10000),
             cache_key=cache_key, ttl_hours=THEME_ANALYSIS_TTL / 3600, response_schema=schema, timeout=12
         )
         if not isinstance(result, dict):
-            print(f'V2.20.1 Theme：第一階段 AI 拆題失敗｜{topic}', flush=True)
+            print(f'V2.21.0 Theme：第一階段 AI 拆題失敗｜{topic}', flush=True)
             return None
+
+        # V2.21.0：程式端最後一道中文名稱保護；避免 Groq/Gemini 即使收到 prompt 仍回傳英文細題材。
+        def _theme_name_zh(name, topic_text=''):
+            n=str(name or '').strip()
+            key=re.sub(r'[^a-z0-9]+','',n.lower())
+            replacements={
+                'autonomousdrone':'自主飛行無人機','droneautonomy':'無人機自主飛行',
+                'uavvision':'無人機視覺與感測','uavcommunications':'無人機通訊與影像',
+                'embodiedai':'具身智能','physicalai':'物理 AI',
+                'enterpriseaiagent':'企業 AI Agent 應用','aiagentforenterprise':'企業 AI Agent 應用',
+                'agenticai':'自主型 AI Agent 應用','enterpriseagenticai':'企業 AI Agent 應用',
+                'robotvision':'機器人視覺與感知','roboticsvision':'機器人視覺與感知',
+                'roboticcontrol':'機器人控制與自動化',
+                'dronevision':'無人機視覺與感測',
+            }
+            if key in replacements: return replacements[key]
+            # 含中文就保留，只把常見英文連接詞清理掉。
+            if re.search(r'[\u4e00-\u9fff]',n): return n
+            # 純英文未知名稱不應直接出現在中文 UI；依題材給安全的中文 fallback。
+            t=re.sub(r'\s+','',str(topic_text or '').lower())
+            if '無人機' in topic_text or 'drone' in t or 'uav' in t: return '無人機相關應用與供應鏈'
+            if '機器人' in topic_text or 'robot' in t: return '機器人應用與自動化'
+            if 'agent' in t or '代理' in topic_text: return 'AI Agent 應用與企業自動化'
+            if 'physical' in t or '物理' in topic_text: return '物理 AI 與具身智能'
+            return 'AI 應用與自動化'
 
         cleaned = []
         for ft in result.get('fine_themes', []):
             if not isinstance(ft, dict):
                 continue
-            name = str(ft.get('name') or '').strip()
+            name = _theme_name_zh(ft.get('name'), topic)
             logic = str(ft.get('logic') or '').strip()
             if not name or not logic:
                 continue
@@ -15503,7 +15540,7 @@ def run_webhook_server():
         if not selected_fine:
             for ft in result['fine_themes']:
                 ft['official_subindustries'] = []
-            print(f'V2.20.1 Theme：第一階段完成｜{topic}｜fine={len(result["fine_themes"])}', flush=True)
+            print(f'V2.21.0 Theme：第一階段完成｜{topic}｜fine={len(result["fine_themes"])}', flush=True)
             return result
 
         # 只對使用者選定的細題材做一次「官方名稱映射」。映射失敗會明確保留
@@ -15539,7 +15576,7 @@ def run_webhook_server():
                 'official_candidates': sub_candidates, 'news': combined_news,
                 'semantic_subindustry_hints': alias_terms,
             }
-            mk = 'theme_v2201_map:' + hashlib.sha256(_ai_compact_payload(map_payload, 8000).encode('utf-8')).hexdigest()[:24]
+            mk = 'theme_v2210_map:' + hashlib.sha256(_ai_compact_payload(map_payload, 8000).encode('utf-8')).hexdigest()[:24]
             mapped = _ai_call_json(
                 '你是台灣產業分類研究員。把這個細題材對應到最合理的官方產業價值鏈細產業。'
                 '只能從 official_candidates 原樣選擇，禁止創造名稱；若沒有合理對應可以輸出空陣列。最多3個。'
@@ -15565,7 +15602,7 @@ def run_webhook_server():
             if not subs:
                 ft['mapping_reason'] = ft.get('mapping_reason') or '目前官方價值鏈資料無法建立足夠可靠的細產業對應。'
 
-        print(f'V2.20.1 Theme：第二階段完成｜{topic}｜fine={len(result["fine_themes"])}｜官方映射候選={len(official_candidates)}', flush=True)
+        print(f'V2.21.0 Theme：第二階段完成｜{topic}｜fine={len(result["fine_themes"])}｜官方映射候選={len(official_candidates)}', flush=True)
         return result
 
     def _theme_quantitative_results(result, u):
@@ -15585,17 +15622,39 @@ def run_webhook_server():
                 if len(candidates)<3 and parent:
                     u2,_=_line_industry_fetch_parent_data(parent,u)
                     candidates=_line_industry_official_candidates(target_subs,parent,u2,data)
-                # 不能先用市值切掉候選，再宣稱「最有投資價值」。先取較大的候選池
-                # 做既有量化分析，再依第一層投資價值排序；買點分數與市值只作後續 tie-break。
-                # V2.19.6：題材頁不是全市場掃描；限制每個官方次產業先分析 12 檔，
-                # 再由既有投資價值／買點模型排序 Top3，避免「物理AI／無人機」
-                # 這類多供應鏈題材在 Render Free 上跑數十分鐘。
-                candidate_pool=[x for x in candidates if to_float(x[0]) is not None and to_float(x[0]) > 0][:8]
-                if not candidate_pool:
-                    # 若官方資料只有市值缺失/0 的候選，仍允許分析，但畫面一定顯示 N/A，不顯示假 0。
-                    candidate_pool=candidates[:8]
-                if not candidate_pool:
+                if not candidates:
                     return fine,sub,f'❌ 找不到「{sub}」可分析的官方股票。'
+
+                # V2.21.0：兩段式量化架構。
+                # 1) 先使用 15 分鐘內已存在的完整量化 cache；cache 命中者直接可比較。
+                # 2) 沒有 cache 時只挑 5 檔做完整既有模型，避免 8~12 檔全部重跑。
+                #    這裡的市值只作「計算資源篩選」，絕不是投資價值排名；真正 Top3
+                #    仍完全依既有第一層投資價值、第二層買點排序。
+                cached_rows=[]; uncached=[]
+                now_ts=time.time()
+                for row in candidates:
+                    code=clean_code(row[1])
+                    with WEB_INDUSTRY_ANALYSIS_CACHE_LOCK:
+                        cc=WEB_INDUSTRY_ANALYSIS_CACHE.get(code)
+                    if isinstance(cc,dict) and now_ts-float(cc.get('ts',0) or 0) < WEB_INDUSTRY_ANALYSIS_CACHE_TTL:
+                        fs,bs,bv=_line_extract_analysis_scores(cc.get('detail',''))
+                        if fs is not None:
+                            cached_rows.append((row,fs,bs,bv))
+                            continue
+                    uncached.append(row)
+
+                candidate_pool=[]
+                # 已有完整模型結果優先，最多補到 3 檔最終候選。
+                cached_rows.sort(key=lambda z:(-(z[1] if z[1] is not None else -1),-(z[2] if z[2] is not None else -1),-(z[0][0] or 0)))
+                candidate_pool.extend([z[0] for z in cached_rows[:3]])
+                need=max(0,5-len(candidate_pool))
+                if need:
+                    candidate_pool.extend(uncached[:need])
+                if not candidate_pool:
+                    candidate_pool=candidates[:5]
+                cached_codes={clean_code(z[0][1]) for z in cached_rows}
+                full_count=sum(1 for x in candidate_pool if clean_code(x[1]) not in cached_codes)
+                print(f'V2.21.0 Theme：量化快速篩選｜{sub}｜官方候選={len(candidates)}｜cache={len(cached_rows)}｜本次完整分析={full_count}', flush=True)
                 analyzed=_line_industry_run_top3_analysis(candidate_pool,u,label='題材')
                 analyzed.sort(key=lambda r:(-(r[4] if r[4] is not None else -1),-(r[5] if r[5] is not None else -1),-(r[3] if r[3] is not None else -1),str(r[0])))
                 analyzed=analyzed[:3]
@@ -15698,7 +15757,7 @@ def run_webhook_server():
             title = f'{chosen}｜細題材分析中' if not selected else f'{selected}｜股票分析中'
             desc = ('正在由 AI 拆解大題材，整理可研究的細題材，請先選擇投資方向。'
                     if not selected else
-                    '已選定細題材，正在對應官方次產業並計算投資價值／買點。')
+                    '已選定細題材：先快速篩選官方候選，再只對少量候選執行完整投資價值／買點模型。')
             body = (f'<div class="card"><h1>⏳ {html.escape(chosen)} 分析中</h1>'
                     f'<p>{desc}</p><p><b>請稍候，完成後會自動顯示。</b></p></div>')
             return _web_page(title, body + f"<meta http-equiv='refresh' content='1;url=/web-task/{task_id}'>")
@@ -15850,7 +15909,7 @@ def run_webhook_server():
         return (
             '<!doctype html><html><head><meta charset="utf-8">'
             '<meta name="viewport" content="width=device-width,initial-scale=1">'
-            '<title>Stock Alert V2.15.6</title>'
+            '<title>Stock Alert V2.21.0</title>'
             '<style>body{margin:0;padding:20px;background:#f6f7f9;color:#222}'
             '.card{max-width:900px;margin:auto;background:#fff;border-radius:14px;padding:20px;box-shadow:0 2px 12px #0001}'
             'a{word-break:break-all}</style></head><body><div class="card">'
@@ -16019,7 +16078,7 @@ def run_webhook_server():
         if task.get('status') == 'running':
             title = html.escape(str(task.get('title') or '分析'))
             body=(f'<div class="card"><h1>⏳ {title} 分析中</h1>'
-                  '<p>正在抓取最新資料、整理模型與 AI 語意分析。</p>'
+                  '<p>正在依序完成：題材語意 → 官方次產業 → 快速候選篩選 → 既有量化模型。</p>'
                   '<p><b>請稍候，頁面會自動重新整理。</b></p>'
                   '<p class="muted">如果你想手動查看最新狀態，也可以重新整理本頁。</p>'
                   '<meta http-equiv="refresh" content="3"></div>')
