@@ -1,4 +1,4 @@
-# stock_alert.py V2.21.0
+# stock_alert.py V2.22.0
 # V2.19.7：Theme Intelligence semantic candidate engine + bounded quantitative analysis；
 # V2.17.0 功能全部保留：Gemini Free 主力 + Mistral/Groq Free 備援、重大消息、Trump 語意、總經預測。
 # V2.15.6：外部產業網頁正確性＋效能修正版：官方價值鏈候選池改為資料驅動，不再只依賴同大產業 Top120；
@@ -470,7 +470,7 @@ LINE_INDUSTRY_SESSION_TTL = 10 * 60
 WEB_INDUSTRY_ANALYSIS_CACHE = {}
 WEB_INDUSTRY_ANALYSIS_CACHE_TTL = 15 * 60
 WEB_INDUSTRY_ANALYSIS_CACHE_LOCK = threading.Lock()
-# V2.21.0：主題量化階段的 EPS 持久快取寫入鎖，避免多 worker 同時 replace tmp 檔。
+# V2.22.0：主題量化階段的 EPS 持久快取寫入鎖，避免多 worker 同時 replace tmp 檔。
 EPS_QUARTERLY_CACHE_LOCK = threading.RLock()
 
 
@@ -1458,31 +1458,39 @@ def _ai_quota_today():
     return datetime.now(ZoneInfo('America/Los_Angeles')).strftime('%Y-%m-%d')
 
 def _ai_normalize_quota_state():
-    """V2.18.1：免費供應商配額狀態只在台灣當日有效；跨日自動清空舊日狀態。"""
+    """V2.22.0：只清除真正跨日失效的「硬配額」鎖；絕不因 429 字樣自動解鎖。
+
+    Gemini Free Tier 的 daily quota 可能依 Pacific Time 重置，因此 quota state
+    以 _ai_quota_today() 判斷。短期 rate-limit 只使用記憶體 cooldown，不寫入 daily exhausted。
+    """
     try:
         today=_ai_quota_today()
         d=load_json(AI_QUOTA_STATE_FILE)
         if not isinstance(d,dict) or d.get('date')!=today:
             save_json(AI_QUOTA_STATE_FILE,{'date':today,'exhausted':[]})
+            AI_PROVIDER_DISABLED_THIS_RUN.clear()
             return
         if not isinstance(d.get('exhausted'),list):
             d['exhausted']=[]
-        # V2.18.39：清除 V2.18.23 對 429 的誤判鎖。
-        # 舊版把 Gemini「You exceeded your current quota + retry in XXs」或 Mistral 429 寫成今日 quota，
-        # 這其實只是短期 rate-limit；若不清掉，新版永遠輪不到該 provider。
+        # V2.22.0：保留硬配額鎖。舊版曾用 regex 把所有 HTTP 429 都清掉，
+        # 導致 Gemini 明明已達每日 free_tier_requests，下一次請求又重新打 API。
+        # 若舊 state 已含「短期 rate limit」原因，移除該 provider 的錯誤鎖；
+        # 若原因明確包含 free_tier/quota exhausted，則整個當日保留。
         changed=False
-        exhausted=list(d.get('exhausted') or [])
-        for _p in list(exhausted):
-            _reason=str(d.get('reason_'+str(_p),'') or '')
-            if re.search(r'HTTP\s*429|rate limit exceeded|rate_limited|retry\s+(?:in|after)\s+[0-9]+(?:\.[0-9]+)?\s*s|free_tier_requests',_reason,re.I):
-                exhausted.remove(_p)
+        exhausted=[]
+        for _p in list(d.get('exhausted') or []):
+            reason=str(d.get('reason_'+str(_p),'') or '')
+            hard=bool(re.search(r'free_tier_requests|quota\s+exceeded|quota\s+exhausted|daily\s+quota|resource\s+exhausted|per.?day',reason,re.I))
+            if hard:
+                exhausted.append(_p)
+            else:
                 changed=True
-                print(f'V2.18.39 AI：清除 {_p} 舊版 429/短期 rate-limit quota lock，恢復 provider',flush=True)
-        d['exhausted']=exhausted
-        if changed or 'reason_gemini' in d or 'reason_mistral' in d or 'reason_groq' in d:
+                print(f'V2.22.0 AI：清除舊版非硬配額 {_p} lock；HTTP 429/短期 rate-limit 不視為每日配額耗盡',flush=True)
+        d['exhausted']=sorted(set(exhausted))
+        if changed:
             save_json(AI_QUOTA_STATE_FILE,d)
     except Exception as e:
-        print(f'V2.18.39 AI：quota 狀態初始化失敗：{type(e).__name__}: {e}',flush=True)
+        print(f'V2.22.0 AI：quota 狀態初始化失敗：{type(e).__name__}: {e}',flush=True)
 
 def _ai_provider_quota_exhausted(provider):
     try:
@@ -1870,16 +1878,14 @@ def _ai_call_json(system_prompt, user_prompt, cache_key='', ttl_hours=72, respon
                 # 不再做第二次 request，避免免費額度/速率限制下白白浪費一次呼叫。
                 # timeout / network / 5xx 仍最多重試一次。
                 is_429=bool(re.search(r'HTTP\s+429', msg, flags=re.I))
-                if is_429 and _ai_short_rate_limit(msg):
-                    wait=_ai_retry_after_seconds(msg, default=2.0)
+                if is_429:
+                    # V2.22.0：429 一律不在同一 request 內重試。短期限流只做短 cooldown，
+                    # 真正 daily quota 由 hard_quota 分支寫入當日永久鎖。這能避免免費額度被重試吃光。
+                    wait=_ai_retry_after_seconds(msg, default=10.0)
                     AI_LAST_PROVIDER_STATUS[provider]={'status':'rate_limited','error':msg[:500],'retry_after':wait}
-                    # V2.18.39：短期 429 若有明確 retry-after，先等一次再重試同一 provider。
-                    # 原 V2.18.27 直接跳下一家，會在三家同時短限流時全部失敗。
-                    if attempt < max_attempts:
-                        wait=min(max(wait,1.0),20.0)
-                        print(f'V2.18.39 AI：{provider} 短期 429，等待 {wait:.1f}s 後重試一次（不再立即放棄）', flush=True)
-                        time.sleep(wait)
-                        continue
+                    _cooldown=min(max(wait,10.0),120.0)
+                    AI_PROVIDER_QUOTA_COOLDOWN_UNTIL[provider]=time.time()+_cooldown
+                    print(f'V2.22.0 AI：{provider} HTTP 429，短期 cooldown {_cooldown:.1f}s；本次 RUN 直接切換下一家，不重試',flush=True)
                     AI_PROVIDER_DISABLED_THIS_RUN.add(provider)
                     break
                 short_rate_limit=is_429 and _ai_short_rate_limit(msg)
@@ -1893,15 +1899,6 @@ def _ai_call_json(system_prompt, user_prompt, cache_key='', ttl_hours=72, respon
                     time.sleep(wait)
                     continue
 
-                if is_429:
-                    # V2.18.39：429 不再寫 6 小時 quota lock；只做短期 cooldown，並立即交棒給下一家。
-                    _cooldown=_ai_retry_after_seconds(msg, default=10.0)
-                    if short_rate_limit:
-                        _cooldown=min(max(_cooldown,5.0),60.0)
-                    else:
-                        _cooldown=min(max(_cooldown,15.0),120.0)
-                    AI_PROVIDER_QUOTA_COOLDOWN_UNTIL[provider]=time.time()+_cooldown
-                    print(f'V2.18.39 AI：{provider} HTTP 429，短期 cooldown {_cooldown:.1f}s；立即切換下一家 provider',flush=True)
                 AI_PROVIDER_DISABLED_THIS_RUN.add(provider)
                 if transient or is_gemini_json_failure or is_429:
                     print(f'V2.18.39 AI：{provider} 重試後仍失敗，本次 RUN 切換下一家', flush=True)
@@ -5591,7 +5588,7 @@ def _yfinance_earnings_dates_eps(symbol):
     key=('yf_earnings_dates_eps_v21062', symbol)
     if key in RUN_CACHE:
         return RUN_CACHE[key]
-    # V2.21.0：同一時間只允許一個 worker 讀寫季度 EPS 持久快取，
+    # V2.22.0：同一時間只允許一個 worker 讀寫季度 EPS 持久快取，
     # 避免 Render 多執行緒出現 eps_quarterly_cache.json.tmp -> ... 的 race condition。
     with EPS_QUARTERLY_CACHE_LOCK:
         cache=load_json(EPS_QUARTERLY_CACHE_FILE)
@@ -5644,7 +5641,7 @@ def _yfinance_earnings_dates_eps(symbol):
             dedup[keyq]=x
         out=list(dedup.values())
         out.sort(key=lambda x:x['date'])
-        # V2.21.0：重新讀一次後再合併，避免其他 worker 在網路請求期間寫入的資料被覆蓋。
+        # V2.22.0：重新讀一次後再合併，避免其他 worker 在網路請求期間寫入的資料被覆蓋。
         with EPS_QUARTERLY_CACHE_LOCK:
             latest_cache=load_json(EPS_QUARTERLY_CACHE_FILE)
             if not isinstance(latest_cache,dict): latest_cache={}
@@ -15136,9 +15133,33 @@ def run_webhook_server():
     THEME_ANALYSIS_CACHE = {}
     THEME_CACHE_LOCK = threading.Lock()
     THEME_HOT_TTL = 6 * 60 * 60
-    THEME_ANALYSIS_TTL = 12 * 60 * 60
-    THEME_NEWS_TTL = 30 * 60
+    THEME_DECOMPOSE_TTL = 24 * 60 * 60
+    THEME_MAPPING_TTL = 72 * 60 * 60
+    THEME_ANALYSIS_TTL = THEME_DECOMPOSE_TTL
+    THEME_QUANT_TTL = 2 * 60 * 60
+    THEME_NEWS_TTL = 6 * 60 * 60
     THEME_NEWS_CACHE = {}
+
+    def _theme_canonical_key(topic):
+        """V2.22.0：同一題材使用穩定 canonical key，不把每次新聞 payload hash 當 cache identity。"""
+        raw=re.sub(r'\s+','',str(topic or '').strip().lower())
+        aliases={
+            'physicalai':'physical_ai','物理ai':'physical_ai','物理人工智慧':'physical_ai',
+            'drone':'drone','drones':'drone','無人機':'drone','無人機題材':'drone',
+            'agenticai':'agentic_ai','aiagent':'agentic_ai','代理人ai':'agentic_ai','自主代理':'agentic_ai','自主代理ai':'agentic_ai','自主智能':'agentic_ai','自主型ai':'agentic_ai',
+            'robotics':'robotics','robot':'robotics','機器人':'robotics','人形機器人':'robotics',
+            'cpo':'cpo','hbm':'hbm','液冷':'liquid_cooling','資料中心':'data_center','aI伺服器'.lower():'ai_server','ai伺服器':'ai_server',
+        }
+        return aliases.get(raw, re.sub(r'[^a-z0-9\u4e00-\u9fff]+','_',raw)[:80] or 'unknown')
+
+    def _theme_major_event_signal(news):
+        """V2.22.0：重大事件才提前打破 24h/72h 題材快取；一般新聞不因 hash 變動而重算。"""
+        words=('重大訂單','大單','量產','出貨','客戶取消','取消訂單','延遲','延期','失敗','下修','砍單','停產','禁令','制裁','召回','事故','爆炸','起火','認證通過','取得認證','併購','收購','破產','裁員','重大合約','軍售','中標','得標','侵權','訴訟')
+        hits=[]
+        for x in news or []:
+            title=str(x.get('title') or '') if isinstance(x,dict) else ''
+            if any(w in title for w in words): hits.append(title)
+        return hits[:5]
 
     def _theme_news_fetch(topic, max_items=18):
         """抓近期公開新聞標題；只作題材脈絡，不直接當作公司受惠證據。"""
@@ -15411,7 +15432,10 @@ def run_webhook_server():
             'required': ['headline', 'trend', 'summary', 'why_now', 'fine_themes', 'risks', 'evidence_limitations'],
             'additionalProperties': False,
         }
-        cache_key = 'theme_v2210_decompose:' + hashlib.sha256((topic + '|' + _ai_compact_payload(news, 9000)).encode('utf-8')).hexdigest()[:24]
+        canonical = _theme_canonical_key(topic)
+        decompose_cache_key = 'theme_v2220_decompose:' + canonical
+        major_events = _theme_major_event_signal(news)
+        cache_key = decompose_cache_key if not major_events else decompose_cache_key + ':event:' + hashlib.sha256('|'.join(major_events).encode('utf-8')).hexdigest()[:12]
         result = _ai_call_json(
             '你是保守的台灣科技投資題材研究員。現在只做第一階段：把輸入的大題材拆成1~3個「具體、可研究、可投資驗證」的細題材。'
             '此階段絕對不要要求或創造官方次產業名稱，也不要因為目前無法對應官方分類而判定資料不足。'
@@ -15421,13 +15445,22 @@ def run_webhook_server():
             '細題材應優先從新聞與產業邏輯歸納，例如無人機可拆成軍用與國防無人機、飛控與感測、通訊與影像等方向。'
             'evidence_titles 必須來自輸入新聞標題。',
             '輸入題材：' + topic + '。資料：' + _ai_compact_payload({'news': news, 'semantic_parent_hints': alias_parents}, 10000),
-            cache_key=cache_key, ttl_hours=THEME_ANALYSIS_TTL / 3600, response_schema=schema, timeout=12
+            cache_key=cache_key, ttl_hours=THEME_DECOMPOSE_TTL / 3600, response_schema=schema, timeout=12
         )
         if not isinstance(result, dict):
-            print(f'V2.21.0 Theme：第一階段 AI 拆題失敗｜{topic}', flush=True)
-            return None
+            # V2.22.0：AI provider 全部失敗時也不能讓使用者得到空白頁；
+            # 先建立保守研究入口，後續仍可進官方分類驗證。
+            print(f'V2.22.0 Theme：第一階段 AI 拆題失敗，使用保守 fallback｜{topic}', flush=True)
+            result={
+                'headline': str(topic), 'trend':'資料不足',
+                'summary':f'目前 AI 無法穩定取得足夠證據，先以「{topic}」作為研究入口。',
+                'why_now':['先檢查近期新聞、產業供應鏈與官方價值鏈是否出現可驗證變化。'],
+                'fine_themes':[{'name':str(topic),'logic':f'先從「{topic}」拆解可能受惠環節，再用官方次產業資料與量化模型驗證。','evidence_titles':[]}],
+                'risks':['目前 AI 證據不足，不能直接視為投資結論。'],
+                'evidence_limitations':['AI provider 暫時無法產生完整細題材分析。']
+            }
 
-        # V2.21.0：程式端最後一道中文名稱保護；避免 Groq/Gemini 即使收到 prompt 仍回傳英文細題材。
+        # V2.22.0：程式端最後一道中文名稱保護；避免 Groq/Gemini 即使收到 prompt 仍回傳英文細題材。
         def _theme_name_zh(name, topic_text=''):
             n=str(name or '').strip()
             key=re.sub(r'[^a-z0-9]+','',n.lower())
@@ -15467,7 +15500,20 @@ def run_webhook_server():
             cleaned.append(x)
         result['fine_themes'] = cleaned[:3]
         if not cleaned:
-            return None
+            # V2.22.0：AI 不得因資料不足回傳空細題材。至少建立 1 個可研究方向；
+            # 「證據不足」只能放在限制欄，不應阻斷使用者繼續選題。
+            t=str(topic or '').strip()
+            fallback_name=_theme_name_zh(t,t)
+            result['fine_themes']=[{
+                'name': fallback_name,
+                'logic': f'以「{t}」為研究主題，先從近期新聞與官方產業價值鏈資料驗證實際受惠環節；目前 AI 證據不足，後續分類需保守確認。',
+                'evidence_titles': [],
+                'official_subindustries': []
+            }]
+            lim=list(result.get('evidence_limitations') or [])
+            lim.insert(0,'AI 未取得足夠新聞證據拆出更細方向，先保留原題材作為研究入口。')
+            result['evidence_limitations']=lim[:3]
+            print(f'V2.22.0 Theme：AI 細題材為空，已建立保守 fallback｜{topic}',flush=True)
 
         # V2.20.0：以 company-chain 官方 records + market universe 的大產業交集建立候選。
         data = _line_industry_load_data()
@@ -15540,7 +15586,7 @@ def run_webhook_server():
         if not selected_fine:
             for ft in result['fine_themes']:
                 ft['official_subindustries'] = []
-            print(f'V2.21.0 Theme：第一階段完成｜{topic}｜fine={len(result["fine_themes"])}', flush=True)
+            print(f'V2.22.0 Theme：第一階段完成｜{topic}｜fine={len(result["fine_themes"])}', flush=True)
             return result
 
         # 只對使用者選定的細題材做一次「官方名稱映射」。映射失敗會明確保留
@@ -15576,13 +15622,13 @@ def run_webhook_server():
                 'official_candidates': sub_candidates, 'news': combined_news,
                 'semantic_subindustry_hints': alias_terms,
             }
-            mk = 'theme_v2210_map:' + hashlib.sha256(_ai_compact_payload(map_payload, 8000).encode('utf-8')).hexdigest()[:24]
+            mk = 'theme_v2220_map:' + _theme_canonical_key(topic) + ':' + re.sub(r'[^a-z0-9\u4e00-\u9fff]+','_',str(selected_fine).lower()).strip('_')[:80]
             mapped = _ai_call_json(
                 '你是台灣產業分類研究員。把這個細題材對應到最合理的官方產業價值鏈細產業。'
                 '只能從 official_candidates 原樣選擇，禁止創造名稱；若沒有合理對應可以輸出空陣列。最多3個。'
                 '同時從 news 中挑選真正與這個細題材相關的新聞標題；沒有可靠新聞就輸出空陣列。'
                 '不要因為新聞不足就放棄官方分類映射；分類可依供應鏈邏輯，但不得捏造公司受惠證據。',
-                '資料：' + _ai_compact_payload(map_payload, 11000), cache_key=mk, ttl_hours=24,
+                '資料：' + _ai_compact_payload(map_payload, 11000), cache_key=mk, ttl_hours=THEME_MAPPING_TTL / 3600,
                 response_schema=map_schema, timeout=10
             )
             subs = []
@@ -15602,7 +15648,7 @@ def run_webhook_server():
             if not subs:
                 ft['mapping_reason'] = ft.get('mapping_reason') or '目前官方價值鏈資料無法建立足夠可靠的細產業對應。'
 
-        print(f'V2.21.0 Theme：第二階段完成｜{topic}｜fine={len(result["fine_themes"])}｜官方映射候選={len(official_candidates)}', flush=True)
+        print(f'V2.22.0 Theme：第二階段完成｜{topic}｜fine={len(result["fine_themes"])}｜官方映射候選={len(official_candidates)}', flush=True)
         return result
 
     def _theme_quantitative_results(result, u):
@@ -15625,7 +15671,7 @@ def run_webhook_server():
                 if not candidates:
                     return fine,sub,f'❌ 找不到「{sub}」可分析的官方股票。'
 
-                # V2.21.0：兩段式量化架構。
+                # V2.22.0：兩段式量化架構。
                 # 1) 先使用 15 分鐘內已存在的完整量化 cache；cache 命中者直接可比較。
                 # 2) 沒有 cache 時只挑 5 檔做完整既有模型，避免 8~12 檔全部重跑。
                 #    這裡的市值只作「計算資源篩選」，絕不是投資價值排名；真正 Top3
@@ -15646,15 +15692,15 @@ def run_webhook_server():
                 candidate_pool=[]
                 # 已有完整模型結果優先，最多補到 3 檔最終候選。
                 cached_rows.sort(key=lambda z:(-(z[1] if z[1] is not None else -1),-(z[2] if z[2] is not None else -1),-(z[0][0] or 0)))
-                candidate_pool.extend([z[0] for z in cached_rows[:3]])
-                need=max(0,5-len(candidate_pool))
+                candidate_pool.extend([z[0] for z in cached_rows[:2]])
+                need=max(0,2-len(candidate_pool))
                 if need:
                     candidate_pool.extend(uncached[:need])
                 if not candidate_pool:
-                    candidate_pool=candidates[:5]
+                    candidate_pool=candidates[:2]
                 cached_codes={clean_code(z[0][1]) for z in cached_rows}
                 full_count=sum(1 for x in candidate_pool if clean_code(x[1]) not in cached_codes)
-                print(f'V2.21.0 Theme：量化快速篩選｜{sub}｜官方候選={len(candidates)}｜cache={len(cached_rows)}｜本次完整分析={full_count}', flush=True)
+                print(f'V2.22.0 Theme：量化快速篩選｜{sub}｜官方候選={len(candidates)}｜cache={len(cached_rows)}｜本次完整分析={full_count}', flush=True)
                 analyzed=_line_industry_run_top3_analysis(candidate_pool,u,label='題材')
                 analyzed.sort(key=lambda r:(-(r[4] if r[4] is not None else -1),-(r[5] if r[5] is not None else -1),-(r[3] if r[3] is not None else -1),str(r[0])))
                 analyzed=analyzed[:3]
@@ -15673,7 +15719,7 @@ def run_webhook_server():
         # V2.19.6：最多分析 4 個「細題材×官方次產業」組合，避免一個題材
         # 因 AI 拆出 3×2 而同時啟動大量完整股票分析。
         jobs = jobs[:4]
-        with ThreadPoolExecutor(max_workers=min(3,max(1,len(jobs))),thread_name_prefix='theme-quant') as ex:
+        with ThreadPoolExecutor(max_workers=min(2,max(1,len(jobs))),thread_name_prefix='theme-quant') as ex:
             futs=[ex.submit(one,j) for j in jobs]
             for f in futs: out.append(f.result())
         return out
@@ -15909,7 +15955,7 @@ def run_webhook_server():
         return (
             '<!doctype html><html><head><meta charset="utf-8">'
             '<meta name="viewport" content="width=device-width,initial-scale=1">'
-            '<title>Stock Alert V2.21.0</title>'
+            '<title>Stock Alert V2.22.0</title>'
             '<style>body{margin:0;padding:20px;background:#f6f7f9;color:#222}'
             '.card{max-width:900px;margin:auto;background:#fff;border-radius:14px;padding:20px;box-shadow:0 2px 12px #0001}'
             'a{word-break:break-all}</style></head><body><div class="card">'
@@ -16030,11 +16076,16 @@ def run_webhook_server():
 
     def _start_async_web_task(title, callback, request_target=None):
         target = request_target or (request.path + '?_ready=1')
-        task_id = hashlib.sha256(f"{title}|{time.time_ns()}".encode()).hexdigest()[:20]
+        payload_token = base64.urlsafe_b64encode(str(target).encode('utf-8')).decode('ascii').rstrip('=')
+        task_id = 't22_' + payload_token + '_' + hashlib.sha256(str(target).encode('utf-8')).hexdigest()[:8]
         with WEB_PAGE_TASK_LOCK:
+            existing=WEB_PAGE_TASKS.get(task_id)
+            if isinstance(existing,dict) and existing.get('status') == 'running':
+                return task_id
             WEB_PAGE_TASKS[task_id] = {
                 'status': 'running',
                 'title': title,
+                'target': target,
                 'created_at': time.time(),
                 'html': ''
             }
@@ -16074,7 +16125,24 @@ def run_webhook_server():
         with WEB_PAGE_TASK_LOCK:
             task = dict(WEB_PAGE_TASKS.get(task_id) or {})
         if not task:
-            return _web_page('分析工作不存在', '<div class="card"><h1>❌ 找不到這筆分析</h1><p>可能已完成或 Render 重新部署，請重新查詢。</p><div class="nav"><a href="/">首頁</a></div></div>'), 404
+            # V2.22.0：task id 可自我還原 request target。Render 重啟/重新部署後，
+            # 即使記憶體 WEB_PAGE_TASKS 被清空，也不再直接 404；重新建立同一背景工作。
+            if str(task_id).startswith('t22_'):
+                try:
+                    token=str(task_id)[4:].rsplit('_',1)[0]
+                    pad='='*((4-len(token)%4)%4)
+                    recovered=base64.urlsafe_b64decode((token+pad).encode('ascii')).decode('utf-8')
+                    if recovered.startswith('/'):
+                        print(f'V2.22.0 Web Task：偵測到遺失 task，依 target 自動恢復｜{recovered}',flush=True)
+                        # title 從 target 推導，避免需要額外狀態檔。
+                        
+                        def _recovered_callback():
+                            return app.dispatch_request()
+                        new_id=_start_async_web_task('恢復中的 Web 分析', _recovered_callback, recovered)
+                        return _web_page('分析恢復中', f'<div class="card"><h1>⏳ 分析工作已恢復</h1><p>Render 工作程序曾重啟，系統正在重新建立這筆分析。</p><meta http-equiv="refresh" content="2;url=/web-task/{new_id}"></div>')
+                except Exception as ex:
+                    print(f'V2.22.0 Web Task：task target 還原失敗：{type(ex).__name__}: {ex}',flush=True)
+            return _web_page('分析工作不存在', '<div class="card"><h1>❌ 找不到這筆分析</h1><p>這筆工作狀態已不存在，請重新查詢。</p><div class="nav"><a href="/">首頁</a></div></div>'), 404
         if task.get('status') == 'running':
             title = html.escape(str(task.get('title') or '分析'))
             body=(f'<div class="card"><h1>⏳ {title} 分析中</h1>'
