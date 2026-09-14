@@ -1535,7 +1535,14 @@ def _ai_result_quality_ok(result,response_schema=None):
         if items and not any(isinstance(x,dict) and str(x.get('reason') or '').strip() for x in items): return False,'新聞結果全部缺乏理由'
         return True,''
     if 'recommendation' in keys:
-        req=('recommendation','core','fundamental_view','technical_view','chips_view','risk_view','news_view','trump_view','macro_view','buy_view','reason'); missing=[k for k in req if not str(result.get(k) or '').strip()]
+        # V2.23.7：ETF final summary 與股票 final summary 共用 recommendation，
+        # 但 schema 不同；原本只檢查股票欄位會把 Groq 的有效 ETF JSON 誤判成低品質，
+        # 導致 log 顯示 SUCCESS，頁面卻落到「規則 fallback」。
+        if 'value_view' in keys:
+            req=('recommendation','core','value_view','buy_view','macro_view','news_view','trump_view','theme_view','risk_view','conflict','reason')
+        else:
+            req=('recommendation','core','fundamental_view','technical_view','chips_view','risk_view','news_view','trump_view','macro_view','buy_view','reason')
+        missing=[k for k in req if not str(result.get(k) or '').strip()]
         return (False,'最終整合缺欄：'+','.join(missing[:3])) if missing else (True,'')
     return True,''
 
@@ -10813,24 +10820,77 @@ def _official_twse_etf_fallback(symbol):
     except Exception as e: print(f'V2.10.41 TWSE ETF 官方 fallback失敗 {symbol}: {type(e).__name__}',flush=True)
     return out
 
+def _etf_beta_benchmark(symbol):
+    """V2.23.7：依 ETF 市場/風格選擇合理 Beta benchmark。"""
+    x=str(symbol or '').upper().replace('.TW','').replace('.TWO','')
+    mapping={
+        '0050':'^TWII','006208':'^TWII','00878':'^TWII','00919':'^TWII','00713':'^TWII','00679B':'^TWII','00887':'^TWII',
+        'QQQ':'^GSPC','SPY':'^GSPC','VOO':'^GSPC','IVV':'^GSPC','VTI':'^GSPC','DIA':'^GSPC','XLK':'^GSPC','XLF':'^GSPC','ARKK':'^GSPC',
+        'IWM':'^RUT','SMH':'^GSPC','SOXX':'^GSPC'
+    }
+    return mapping.get(x,'^GSPC' if not x.endswith('B') else '^TWII')
+
 def _etf_beta_from_history(symbol):
-    """V2.10.40：ETF Beta 最後獨立數學備援，對台股 ETF 以 ^TWII 計算。"""
+    """V2.23.7：ETF Beta 數學備援；台灣 ETF 對 ^TWII，美國 ETF 依市場選基準。"""
+    benchmark=_etf_beta_benchmark(symbol)
     try:
-        hist=yf.download([symbol,'^TWII'],period='1y',interval='1d',auto_adjust=True,progress=False,threads=False)
+        hist=yf.download([symbol,benchmark],period='1y',interval='1d',auto_adjust=True,progress=False,threads=False)
         if hist is None or hist.empty: return None
         close=hist.get('Close') if isinstance(hist.columns,pd.MultiIndex) else hist
-        if close is None: return None
-        if isinstance(close,pd.Series): return None
+        if close is None or isinstance(close,pd.Series): return None
         cols=[c for c in close.columns]
         etf_col=next((c for c in cols if str(c)==str(symbol)),None)
-        mkt_col=next((c for c in cols if str(c)=='^TWII'),None)
+        mkt_col=next((c for c in cols if str(c)==str(benchmark)),None)
         if etf_col is None or mkt_col is None: return None
         r=pd.concat([close[etf_col].pct_change(),close[mkt_col].pct_change()],axis=1).dropna()
         if len(r)<60: return None
         cov=np.cov(r.iloc[:,0],r.iloc[:,1],ddof=1)[0,1]; var=np.var(r.iloc[:,1],ddof=1)
-        return float(cov/var) if var>0 else None
+        b=float(cov/var) if var>0 else None
+        return b if b is not None and math.isfinite(b) and -5<=b<=5 else None
     except Exception:
         return None
+
+def _us_etf_profile_fallback(symbol):
+    """V2.23.7：美國 ETF Yahoo 401/crumb 失敗時，補抓公開基金頁的 AUM/Yield/Beta/NAV。"""
+    sym=str(symbol or '').upper().strip()
+    out={}
+    urls=[]
+    if sym=='QQQ':
+        urls=[
+            'https://www.invesco.com/qqq-etf/en/home.html',
+            'https://www.invesco.com/us/financial-products/etfs/product-detail?productId=QQQ&ticker=QQQ&audienceType=Investor'
+        ]
+    # QuoteMedia 是通用 ETF fallback；不把它當 authoritative price。
+    urls.append(f'https://research.quotemedia.com/fund/home/overview?symbol={requests.utils.quote(sym)}')
+    for url in urls:
+        try:
+            r=requests.get(url,timeout=7,headers={'User-Agent':'Mozilla/5.0 stock-alert/2.23.7'},verify=False); r.raise_for_status()
+            text=html.unescape(re.sub(r'\s+',' ',r.text))
+            def grab(patterns,scale=1.0):
+                for pat in patterns:
+                    m=re.search(pat,text,re.I)
+                    if m:
+                        v=to_float(m.group(1))
+                        if v is not None: return v*scale
+                return None
+            if out.get('assets') is None:
+                out['assets']=grab([r'(?:Net Assets|Total Assets|AUM).{0,120}?\$?([0-9,.]+)\s*B',r'(?:Net Assets|Total Assets|AUM).{0,120}?([0-9,.]+)\s*B'])
+                if out.get('assets') is not None: out['assets']*=1e9
+            if out.get('yield') is None:
+                y=grab([r'(?:Dividend Yield|TTM Yield|12-Month Distribution Rate).{0,100}?([0-9.]+)\s*%'])
+                if y is not None and 0<=y<=30: out['yield']=y
+            if out.get('beta') is None:
+                b=grab([r'(?:Equity Beta|Beta).{0,80}?([0-9]+(?:\.[0-9]+)?)'])
+                if b is not None and -5<=b<=5: out['beta']=b
+            if out.get('nav') is None:
+                n=grab([r'(?:NAV at market close|NAV).{0,80}?\$?([0-9]+(?:\.[0-9]+)?)'])
+                if n is not None and 0<n<10000: out['nav']=n
+            if out.get('price') is None:
+                q=grab([r'(?:Last Trade|Market Price|Closing Price).{0,80}?\$?([0-9]+(?:\.[0-9]+)?)'])
+                if q is not None and 0<q<100000: out['price']=q
+        except Exception as e:
+            print(f'V2.23.7 美國 ETF fallback 失敗 {sym}: {type(e).__name__}',flush=True)
+    return out
 
 def yahoo_etf_profile(symbol):
     """V2.10.41：ETF 多源資料；官方 NAV/premium 優先，異常值一律丟棄。"""
@@ -10893,12 +10953,23 @@ def yahoo_etf_profile(symbol):
             y=yahoo_tw_dividend_fallback(symbol,out.get('price'))
             if y is not None: out['yield']=y
 
+    if not is_tw:
+        ext=_us_etf_profile_fallback(symbol)
+        for k in ('nav','assets','yield','beta'):
+            if out.get(k) is None and ext.get(k) is not None: out[k]=ext[k]
+        # 只有沒有即時價時才接受外部基金頁價格，避免覆蓋 technical authoritative price。
+        if out.get('price') is None and ext.get('price') is not None: out['price']=ext['price']
+
     # 合理性清洗，避免 parser 產生 3.00 NAV、7.00 beta、3000% premium。
     if out.get('nav') is not None and not (0<out['nav']<10000): out['nav']=None
     if out.get('price') is not None and not (0<out['price']<100000): out['price']=None
     if out.get('premium') is not None and not (-50<=out['premium']<=50): out['premium']=None
     if out.get('yield') is not None and not (0<=out['yield']<=30): out['yield']=None
     if out.get('beta') is not None and not (-5<=out['beta']<=5): out['beta']=None
+    # V2.23.7：Beta 必須與 ETF 所屬市場合理；若美國 ETF 得到極端偏低值，優先用正確 benchmark 重算。
+    if not is_tw and out.get('beta') is not None and 0<=out['beta']<0.30:
+        b=_etf_beta_from_history(symbol)
+        if b is not None: out['beta']=b
     if out.get('expense') is not None and not (0<=out['expense']<=10): out['expense']=None; out['expense_source']=None
     # V2.15.4：只要同時有 authoritative live price + NAV，就強制重算折溢價。
     # 不接受 TWSE g 或 Yahoo 舊 premium，避免 price/NAV/premium 三者互相矛盾。
@@ -10971,7 +11042,7 @@ def _etf_context_profile(info, code, symbol):
 
 
 def _ai_final_etf_summary(ctx):
-    """V2.23.6：ETF 專屬 AI 最終整合，不改原始分數。"""
+    """V2.23.7：ETF 專屬 AI 最終整合，不改原始分數。"""
     if not AI_ENABLE_FINAL_SUMMARY or not _ai_enabled('all'): return None
     compact=json.dumps(ctx,ensure_ascii=False,default=str)[:12000]
     prompt=(
@@ -10992,7 +11063,7 @@ def _ai_final_etf_summary(ctx):
         'next_watch':{'type':'array','minItems':1,'maxItems':4,'items':{'type':'string'}},'reason':{'type':'string'}},
         'required':['recommendation','confidence','core','value_view','buy_view','macro_view','news_view','trump_view','theme_view','risk_view','conflict','strengths','risks','next_watch','reason'],'additionalProperties':False}
     return _ai_call_json('你是保守的 ETF 投資決策摘要器。只整合既有資料，不得增加事實。',prompt,
-        cache_key='etf_final_v2236:'+str(ctx.get('code',''))+':'+str(ctx.get('snapshot_key','')),ttl_hours=6,response_schema=schema)
+        cache_key='etf_final_v2237:'+str(ctx.get('code',''))+':'+str(ctx.get('snapshot_key','')),ttl_hours=6,response_schema=schema)
 
 
 def _format_ai_final_etf_summary(x):
@@ -11046,7 +11117,7 @@ def assess_buy_point(tech):
 
 
 def etf_analysis(query):
-    """V2.23.6：ETF 完整多層分析：投資價值 × 買點 × 消息 × 外部環境/題材 × AI。"""
+    """V2.23.7：ETF 完整多層分析：投資價值 × 買點 × 消息 × 外部環境/題材 × AI。"""
     info=resolve_etf_query(query)
     if not info: return f'❌ 找不到 ETF：{query}'
     symbol=info['symbol']; code=next((k for k,v in ETF_MAP.items() if v is info), str(query).upper())
@@ -11080,7 +11151,7 @@ def etf_analysis(query):
     if not ai_text and AI_ENABLE_FINAL_SUMMARY:
         conflict='投資價值高但目前買點偏弱' if score is not None and score>=75 and buy.get('score',0)<60 else '目前買點強於長中期投資價值' if score is not None and score<60 and buy.get('score',0)>=75 else '各層訊號大致一致'
         ai_text=f'🤖 AI ETF 最終綜合判斷（規則 fallback）\n建議：{verdict}\n核心：投資價值 {score_text}、買點 {buy.get("score",0)}/100。\n⚠️ 最大矛盾：{conflict}\n👀 下一步：{", ".join(buy.get("confirms") or []) or "持續觀察趨勢與總經"}'
-    return (f'📊 ETF「投資價值 × 買點 × 環境 × AI」完整分析 V2.23.6\n\n標的：{info["name"]}（{code}）\n代號：{symbol}\n\n'
+    return (f'📊 ETF「投資價值 × 買點 × 環境 × AI」完整分析 V2.23.7\n\n標的：{info["name"]}（{code}）\n代號：{symbol}\n\n'
             f'【第一層｜ETF投資價值】\nETF特性：40分\nNAV：{fmt(nav)}\n溢價/折價：{fmt(premium)}%\n殖利率：{fmt(p.get("yield"))}%\nBeta：{fmt(p.get("beta"))}\n資產規模：{fmt(p.get("assets"),0)}\n\n'
             f'技術面：60分\n價格：{fmt(price)}\nRSI：{fmt(tech.get("rsi"))}\nKD：K={fmt(tech.get("k"))} / D={fmt(tech.get("d"))}\nMA20：{fmt(tech.get("ma20"))}\nMA60：{fmt(tech.get("ma60"))}\n趨勢：{tech.get("trend") or "N/A"}\n'
             f'技術資料完整度：{tech_ok}/5（{tech_pct}%）\n評分資料完整度：{completeness:.0f}%\n\nETF綜合評分：{score_text}\n配置結論：{verdict}\n加分因素：{"、".join(reasons) if reasons else "無"}\nTrump直接曝險：{trump.get("factor",0):+d}｜{trump.get("state","無資料")}\n\n'
