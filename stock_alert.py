@@ -1,5 +1,5 @@
-# stock_alert.py V2.23.5
-# V2.23.5：AI 備援品質閘門／硬配額鎖強化／Theme 直接受惠證據／市場市值補正／Top3 語義修正。
+# stock_alert.py V2.23.6
+# V2.23.6：AI 備援品質閘門／硬配額鎖強化／Theme 直接受惠證據／市場市值補正／Top3 語義修正。
 # V2.19.7：Theme Intelligence semantic candidate engine + bounded quantitative analysis；
 # V2.17.0 功能全部保留：Gemini Free 主力 + Mistral/Groq Free 備援、重大消息、Trump 語意、總經預測。
 # V2.15.6：外部產業網頁正確性＋效能修正版：官方價值鏈候選池改為資料驅動，不再只依賴同大產業 Top120；
@@ -1446,7 +1446,7 @@ def _ai_json(text):
                 try:
                     obj=json.loads(repaired)
                     if isinstance(obj,dict):
-                        print('V2.23.5 AI：偵測到截斷 JSON，已成功保守閉合', flush=True)
+                        print('V2.23.6 AI：偵測到截斷 JSON，已成功保守閉合', flush=True)
                         return obj
                 except Exception:
                     pass
@@ -1460,7 +1460,7 @@ def _ai_quota_today():
     return datetime.now(ZoneInfo('America/Los_Angeles')).strftime('%Y-%m-%d')
 
 def _ai_normalize_quota_state():
-    """V2.23.5：硬配額鎖結構化保存；短期 429 絕不寫入每日 exhausted。"""
+    """V2.23.6：硬配額鎖結構化保存；短期 429 絕不寫入每日 exhausted。"""
     try:
         today=_ai_quota_today(); d=load_json(AI_QUOTA_STATE_FILE)
         if not isinstance(d,dict) or d.get('date')!=today:
@@ -1472,10 +1472,10 @@ def _ai_normalize_quota_state():
             if _ai_hard_quota_error(reason):
                 if provider not in hard: hard[provider]={'reason':reason[:500],'ts':time.time()}; changed=True
             else:
-                print(f'V2.23.5 AI：移除舊版非硬配額 {provider} lock；429/短期 rate-limit 不視為每日額度耗盡',flush=True); changed=True
+                print(f'V2.23.6 AI：移除舊版非硬配額 {provider} lock；429/短期 rate-limit 不視為每日額度耗盡',flush=True); changed=True
         d['hard_exhausted']=hard; d['exhausted']=sorted(hard.keys()); d['version']=2230
         if changed: save_json(AI_QUOTA_STATE_FILE,d)
-    except Exception as e: print(f'V2.23.5 AI：quota 狀態初始化失敗：{type(e).__name__}: {e}',flush=True)
+    except Exception as e: print(f'V2.23.6 AI：quota 狀態初始化失敗：{type(e).__name__}: {e}',flush=True)
 
 def _ai_provider_quota_exhausted(provider):
     try:
@@ -1492,8 +1492,8 @@ def _ai_mark_provider_quota_exhausted(provider, reason='quota'):
         hard=d.get('hard_exhausted'); hard=hard if isinstance(hard,dict) else {}
         hard[provider]={'reason':str(reason)[:500],'ts':time.time()}; d['hard_exhausted']=hard; d['exhausted']=sorted(hard.keys()); d['reason_'+provider]=str(reason)[:300]; d['version']=2230
         save_json(AI_QUOTA_STATE_FILE,d); AI_PROVIDER_QUOTA_COOLDOWN_UNTIL[provider]=time.time()+6*3600
-        print(f'V2.23.5 AI：{provider} 確認為硬配額耗盡，今日後續不再呼叫',flush=True)
-    except Exception as e: print(f'V2.23.5 AI：無法保存 {provider} quota 狀態：{type(e).__name__}: {e}',flush=True)
+        print(f'V2.23.6 AI：{provider} 確認為硬配額耗盡，今日後續不再呼叫',flush=True)
+    except Exception as e: print(f'V2.23.6 AI：無法保存 {provider} quota 狀態：{type(e).__name__}: {e}',flush=True)
 
 
 def _ai_provider_order():
@@ -1508,7 +1508,7 @@ def _ai_provider_key(provider):
     return {'gemini':GEMINI_API_KEY,'mistral':MISTRAL_API_KEY,'groq':GROQ_API_KEY}.get(provider,'')
 
 def _ai_result_quality_ok(result,response_schema=None):
-    """V2.23.5：HTTP 200 不等於有效 AI 結果；低品質結果交給下一家 provider。"""
+    """V2.23.6：HTTP 200 不等於有效 AI 結果；低品質結果交給下一家 provider。"""
     if not isinstance(result,dict): return False,'不是 JSON object'
     props=(response_schema or {}).get('properties',{}) if isinstance(response_schema,dict) else {}; keys=set(props.keys())
     if 'fine_themes' in keys:
@@ -1799,7 +1799,7 @@ def _ai_call_json(system_prompt, user_prompt, cache_key='', ttl_hours=72, respon
     for _p in _ai_provider_order():
         if _ai_provider_key(_p): AI_LAST_PROVIDER_STATUS[_p]={'status':'not_attempted'}
     if not any(_ai_provider_key(p) for p in _ai_provider_order()):
-        print('V2.23.5 AI：未設定 Gemini/Mistral/Groq API Key，使用規則 fallback', flush=True)
+        print('V2.23.6 AI：未設定 Gemini/Mistral/Groq API Key，使用規則 fallback', flush=True)
         return None
     now=time.time()
     if cache_key:
@@ -1808,8 +1808,8 @@ def _ai_call_json(system_prompt, user_prompt, cache_key='', ttl_hours=72, respon
             ok,why=_ai_result_quality_ok(c.get('data'),response_schema)
             if ok:
                 _cp=str(c.get('provider') or 'cache'); AI_LAST_PROVIDER_STATUS[_cp]={'status':'cache_hit','source':'memory'}
-                print(f'V2.23.5 AI：memory cache hit｜provider={_cp}', flush=True); return c.get('data')
-            print(f'V2.23.5 AI：忽略低品質 memory cache｜{why}',flush=True)
+                print(f'V2.23.6 AI：memory cache hit｜provider={_cp}', flush=True); return c.get('data')
+            print(f'V2.23.6 AI：忽略低品質 memory cache｜{why}',flush=True)
         disk=load_json(AI_NEWS_CACHE_FILE)
         if isinstance(disk,dict):
             d=disk.get(cache_key)
@@ -1819,12 +1819,12 @@ def _ai_call_json(system_prompt, user_prompt, cache_key='', ttl_hours=72, respon
                     ok,why=_ai_result_quality_ok(data,response_schema)
                     if ok:
                         _cp=str(d.get('provider') or 'cache'); _AI_SEMANTIC_RUN_CACHE[cache_key]={'ts':float(d.get('ts',now) or now),'data':data,'provider':_cp}; AI_LAST_PROVIDER_STATUS[_cp]={'status':'cache_hit','source':'disk'}
-                        print(f'V2.23.5 AI：disk cache hit｜provider={_cp}', flush=True); return data
-                    print(f'V2.23.5 AI：忽略低品質 disk cache｜{why}',flush=True)
+                        print(f'V2.23.6 AI：disk cache hit｜provider={_cp}', flush=True); return data
+                    print(f'V2.23.6 AI：忽略低品質 disk cache｜{why}',flush=True)
     _ai_normalize_quota_state()
     providers=[p for p in _ai_provider_order() if _ai_provider_key(p) and not _ai_provider_quota_exhausted(p)]
     if not providers:
-        print('V2.23.5 AI：所有已設定免費供應商今日均已耗盡配額，完全停用 AI，使用規則 fallback', flush=True)
+        print('V2.23.6 AI：所有已設定免費供應商今日均已耗盡配額，完全停用 AI，使用規則 fallback', flush=True)
         return None
 
     # V2.18.39：即使環境變數沒特別開 retry，也對 transient error 做最多一次 retry。
@@ -1835,7 +1835,7 @@ def _ai_call_json(system_prompt, user_prompt, cache_key='', ttl_hours=72, respon
         for attempt in range(1,max_attempts+1):
             try:
                 AI_LAST_PROVIDER_STATUS[provider]={'status':'request','attempt':attempt}
-                print(f'V2.23.5 AI：provider={provider} request {attempt}/{max_attempts}', flush=True)
+                print(f'V2.23.6 AI：provider={provider} request {attempt}/{max_attempts}', flush=True)
                 data=_ai_call_provider(
                     provider,
                     system_prompt,
@@ -1855,12 +1855,12 @@ def _ai_call_json(system_prompt, user_prompt, cache_key='', ttl_hours=72, respon
                         for k in old[:-500]: disk.pop(k,None)
                     save_json(AI_NEWS_CACHE_FILE,disk)
                 AI_LAST_PROVIDER_STATUS[provider]={'status':'success','attempt':attempt}
-                print(f'V2.23.5 AI：SUCCESS｜provider={provider}', flush=True)
+                print(f'V2.23.6 AI：SUCCESS｜provider={provider}', flush=True)
                 return data
             except Exception as e:
                 msg=str(e)
                 AI_LAST_PROVIDER_STATUS[provider]={'status':'fail','error':msg[:500]}
-                print(f'V2.23.5 AI：FAIL｜provider={provider}｜{type(e).__name__}: {msg}', flush=True)
+                print(f'V2.23.6 AI：FAIL｜provider={provider}｜{type(e).__name__}: {msg}', flush=True)
                 transient=_ai_transient_error(msg)
                 hard_quota=_ai_hard_quota_error(msg)
                 # V2.18.39：Groq/Mistral 偶發只回 {} 或空欄位。第二次不要重送完整資料，
@@ -1882,7 +1882,7 @@ def _ai_call_json(system_prompt, user_prompt, cache_key='', ttl_hours=72, respon
                 if hard_quota:
                     _ai_mark_provider_quota_exhausted(provider,msg)
                     AI_PROVIDER_DISABLED_THIS_RUN.add(provider)
-                    print(f'V2.23.5 AI：{provider} 明確回報期間/帳號 quota exhausted，今日不再呼叫', flush=True)
+                    print(f'V2.23.6 AI：{provider} 明確回報期間/帳號 quota exhausted，今日不再呼叫', flush=True)
                     break
 
                 # V2.18.39：HTTP 429 視為 provider rate-limit，本次 RUN 直接切換下一家，
@@ -1896,7 +1896,7 @@ def _ai_call_json(system_prompt, user_prompt, cache_key='', ttl_hours=72, respon
                     AI_LAST_PROVIDER_STATUS[provider]={'status':'rate_limited','error':msg[:500],'retry_after':wait}
                     _cooldown=min(max(wait,10.0),120.0)
                     AI_PROVIDER_QUOTA_COOLDOWN_UNTIL[provider]=time.time()+_cooldown
-                    print(f'V2.23.5 AI：{provider} HTTP 429，短期 cooldown {_cooldown:.1f}s；本次 RUN 直接切換下一家，不重試',flush=True)
+                    print(f'V2.23.6 AI：{provider} HTTP 429，短期 cooldown {_cooldown:.1f}s；本次 RUN 直接切換下一家，不重試',flush=True)
                     AI_PROVIDER_DISABLED_THIS_RUN.add(provider)
                     break
                 short_rate_limit=is_429 and _ai_short_rate_limit(msg)
@@ -1906,18 +1906,18 @@ def _ai_call_json(system_prompt, user_prompt, cache_key='', ttl_hours=72, respon
                 is_gemini_json_failure=(provider=='gemini' and 'AI_JSON_PARSE_ERROR' in msg)
                 if (transient and not is_429 or is_gemini_json_failure) and attempt < max_attempts:
                     wait=_ai_retry_after_seconds(msg, default=1.0)
-                    print(f'V2.23.5 AI：{provider} 可恢復生成失敗，{wait:.1f}s 後重試一次', flush=True)
+                    print(f'V2.23.6 AI：{provider} 可恢復生成失敗，{wait:.1f}s 後重試一次', flush=True)
                     time.sleep(wait)
                     continue
 
                 AI_PROVIDER_DISABLED_THIS_RUN.add(provider)
                 if transient or is_gemini_json_failure or is_429:
-                    print(f'V2.23.5 AI：{provider} 重試後仍失敗，本次 RUN 切換下一家', flush=True)
+                    print(f'V2.23.6 AI：{provider} 重試後仍失敗，本次 RUN 切換下一家', flush=True)
                 else:
-                    print(f'V2.23.5 AI：{provider} 非暫時性錯誤，本次 RUN 切換下一家，避免重複浪費 request', flush=True)
+                    print(f'V2.23.6 AI：{provider} 非暫時性錯誤，本次 RUN 切換下一家，避免重複浪費 request', flush=True)
                 break
 
-    print('V2.23.5 AI：所有免費供應商均失敗，使用規則 fallback', flush=True)
+    print('V2.23.6 AI：所有免費供應商均失敗，使用規則 fallback', flush=True)
     return None
 
 
@@ -4938,7 +4938,7 @@ def _run_ai_alert_analysis(func, *args, **kwargs):
     global AI_ALERT_MODE_ACTIVE
     identifier = args[0] if args else kwargs.get('symbol') or kwargs.get('name') or ''
     if not _ai_background_session_allowed(identifier):
-        print(f'V2.23.5 AI：非對應市場交易時段，跳過背景股票/ETF AI｜{identifier}', flush=True)
+        print(f'V2.23.6 AI：非對應市場交易時段，跳過背景股票/ETF AI｜{identifier}', flush=True)
         return None
     previous = AI_ALERT_MODE_ACTIVE
     AI_ALERT_MODE_ACTIVE = True
@@ -10943,173 +10943,111 @@ def score_etf(tech,p):
     raw=score/avail*100
     return int(round(raw)),reasons,completeness
 
+def _etf_context_profile(info, code, symbol):
+    """V2.23.6：ETF 第三層環境/題材標籤；不直接改量化分數。"""
+    name=str((info or {}).get('name') or code or symbol); key=str(code or '').upper()
+    profiles={
+        '0050':('台灣大型權值','台灣大型股／半導體權重高',['台灣大型權值','半導體','AI供應鏈']),
+        '006208':('台灣大型權值','台灣大型股／半導體權重高',['台灣大型權值','半導體','AI供應鏈']),
+        '00878':('台灣高股息','台灣高股息／金融與成熟產業',['高股息','金融','防禦']),
+        '00919':('台灣高股息','台灣高股息／金融與成熟產業',['高股息','金融','防禦']),
+        '00713':('台灣高股息低波','高股息低波／防禦型台股',['高股息','低波動','防禦']),
+        '00679B':('美國長天期公債','長天期美國公債／利率敏感',['美債','利率','久期']),
+        '00887':('中國科技','中國科技大型股',['中國科技','AI','平台科技']),
+        'QQQ':('美國大型成長科技','Nasdaq-100／大型科技與成長股',['AI','雲端','大型科技','成長股']),
+        'SPY':('美國大型股','S&P 500／大型股',['美國大型股','科技','金融']),
+        'VOO':('美國大型股','S&P 500／大型股',['美國大型股','科技','金融']),
+        'IVV':('美國大型股','S&P 500／大型股',['美國大型股','科技','金融']),
+        'VTI':('美國全市場','美國全市場股票',['美國股市','大型股','中小型股']),
+        'DIA':('美國道瓊大型股','成熟大型工業與金融股',['工業','金融','美國大型股']),
+        'IWM':('美國小型股','美國小型股／景氣與利率敏感',['小型股','景氣循環','利率']),
+        'SMH':('半導體','半導體與AI算力供應鏈',['半導體','AI算力','先進製程','HBM']),
+        'SOXX':('半導體','半導體供應鏈',['半導體','AI算力','晶片']),
+        'XLK':('美國科技','美國資訊科技大型股',['AI','軟體','半導體','雲端']),
+        'XLF':('美國金融','美國金融股',['金融','利率','信用']),
+        'ARKK':('創新科技','高波動創新科技／成長主題',['AI','機器人','創新科技','高成長'])}
+    industry,desc,themes=profiles.get(key,('ETF綜合市場',name,[]))
+    return {'industry':industry,'description':desc,'themes':themes,'name':name,'code':key,'symbol':symbol}
+
+
+def _ai_final_etf_summary(ctx):
+    """V2.23.6：ETF 專屬 AI 最終整合，不改原始分數。"""
+    if not AI_ENABLE_FINAL_SUMMARY or not _ai_enabled('all'): return None
+    compact=json.dumps(ctx,ensure_ascii=False,default=str)[:12000]
+    prompt=(
+        '你是保守的 ETF 投資決策摘要器。資料已由量化模型、新聞語意、總經、政策與題材模組整理完成。'
+        '不要重新計算分數，也不要捏造缺失資料。分開判斷長中期投資價值與目前買點，再判斷總經、消息、Trump與題材是否支持或抵銷。'
+        'ETF 必須檢查集中度/風格、利率敏感度、估值或成長風險、題材是否只是敘事。廣泛市場 ETF 不要硬套單一題材；SMH/QQQ/XLK/ARKK 等明顯主題 ETF 要說明機會與集中風險。'
+        'Trump 只有存在合理傳導鏈才採用；新聞要區分事實、事件方向與推論。找出最大矛盾。'
+        '固定輸出 JSON：{"recommendation":"🟢 積極配置|🟢 分批配置|🟡 小量配置|🟡 等待更佳買點|🟠 暫緩配置|🔴 不宜配置",'
+        '"confidence":0到1,"core":"一句結論","value_view":"投資價值具體判讀","buy_view":"目前買點具體判讀",'
+        '"macro_view":"總經具體判讀","news_view":"消息具體判讀","trump_view":"政策具體判讀","theme_view":"題材具體判讀",'
+        '"risk_view":"主要風險","conflict":"最大矛盾","strengths":["..."],"risks":["..."],"next_watch":["..."],"reason":"2到4句"}。'
+        '資料不足時降低信心與積極度；所有文字精簡具體。資料：'+compact)
+    schema={'type':'object','properties':{
+        'recommendation':{'type':'string'},'confidence':{'type':'number','minimum':0,'maximum':1},'core':{'type':'string'},
+        'value_view':{'type':'string'},'buy_view':{'type':'string'},'macro_view':{'type':'string'},'news_view':{'type':'string'},
+        'trump_view':{'type':'string'},'theme_view':{'type':'string'},'risk_view':{'type':'string'},'conflict':{'type':'string'},
+        'strengths':{'type':'array','minItems':1,'maxItems':4,'items':{'type':'string'}},'risks':{'type':'array','minItems':1,'maxItems':4,'items':{'type':'string'}},
+        'next_watch':{'type':'array','minItems':1,'maxItems':4,'items':{'type':'string'}},'reason':{'type':'string'}},
+        'required':['recommendation','confidence','core','value_view','buy_view','macro_view','news_view','trump_view','theme_view','risk_view','conflict','strengths','risks','next_watch','reason'],'additionalProperties':False}
+    return _ai_call_json('你是保守的 ETF 投資決策摘要器。只整合既有資料，不得增加事實。',prompt,
+        cache_key='etf_final_v2236:'+str(ctx.get('code',''))+':'+str(ctx.get('snapshot_key','')),ttl_hours=6,response_schema=schema)
+
+
+def _format_ai_final_etf_summary(x):
+    if not isinstance(x,dict): return ''
+    try: conf=f'{float(x.get("confidence"))*100:.0f}%'
+    except Exception: conf='N/A'
+    rows=[('投資價值',x.get('value_view')),('買點',x.get('buy_view')),('總經',x.get('macro_view')),('消息',x.get('news_view')),('Trump',x.get('trump_view')),('題材',x.get('theme_view')),('風險',x.get('risk_view'))]
+    layer='\n'.join(f'• {a}：{str(b).strip()}' for a,b in rows if str(b or '').strip())
+    strengths=x.get('strengths') if isinstance(x.get('strengths'),list) else []; risks=x.get('risks') if isinstance(x.get('risks'),list) else []; nxt=x.get('next_watch') if isinstance(x.get('next_watch'),list) else []
+    return ('🤖 AI ETF 最終綜合判斷\n'+f'建議：{str(x.get("recommendation") or "資料不足")}｜信心：{conf}\n'+f'核心：{str(x.get("core") or "N/A")}\n'+f'🔎 分層判讀：\n{layer or "資料不足"}\n'+f'🟢 優勢：{"、".join(map(str,strengths[:3])) or "無"}\n'+f'🔴 風險：{"、".join(map(str,risks[:3])) or "無"}\n'+f'⚠️ 最大矛盾：{str(x.get("conflict") or "無明顯矛盾")}\n'+f'👀 下一步：{"、".join(map(str,nxt[:3])) or "持續觀察"}\n'+f'判讀：{str(x.get("reason") or "N/A")}')
+
+
 def etf_analysis(query):
-    """V2.14.21：ETF 完整雙層分析。第一層沿用 V2.14.21 ETF 評分；第二層加入獨立買點模型。"""
+    """V2.23.6：ETF 完整多層分析：投資價值 × 買點 × 消息 × 外部環境/題材 × AI。"""
     info=resolve_etf_query(query)
     if not info: return f'❌ 找不到 ETF：{query}'
     symbol=info['symbol']; code=next((k for k,v in ETF_MAP.items() if v is info), str(query).upper())
-
-    # 使用者主動查詢強制刷新，沿用 V2.14.11 的 Yahoo -> Chart -> TWSE 多源路徑。
     tech=technical(symbol, force_refresh=True)
     tp=to_float(tech.get('price')); ma20=to_float(tech.get('ma20')); ma60=to_float(tech.get('ma60'))
     bad_price=(tp is None) or (ma20 is not None and ma20>0 and abs(tp/ma20-1)>0.25) or (ma60 is not None and ma60>0 and abs(tp/ma60-1)>0.25)
     if bad_price:
         d=yahoo_chart_daily_fallback(symbol,'1y')
         if d is not None and not d.empty:
-            alt=_technical_from_df(d)
-            old_av=sum(1 for k in ('rsi','k','d','ma20','ma60','ret5','ret10','ret20') if tech.get(k) is not None)
-            new_av=sum(1 for k in ('rsi','k','d','ma20','ma60','ret5','ret10','ret20') if alt.get(k) is not None)
+            alt=_technical_from_df(d); old_av=sum(1 for k in ('rsi','k','d','ma20','ma60','ret5','ret10','ret20') if tech.get(k) is not None); new_av=sum(1 for k in ('rsi','k','d','ma20','ma60','ret5','ret10','ret20') if alt.get(k) is not None)
             if new_av>=old_av: tech=alt
-
-    p=yahoo_etf_profile(symbol)
-    price=to_float(tech.get('price')) or to_float(p.get('price')); nav=p.get('nav')
-    premium=to_float(p.get('premium'))
+    p=yahoo_etf_profile(symbol); price=to_float(tech.get('price')) or to_float(p.get('price')); nav=p.get('nav'); premium=to_float(p.get('premium'))
     if premium is None and price and nav and nav>0:
-        x=(price/nav-1)*100
-        premium=x if -50<=x<=50 else None
+        x=(price/nav-1)*100; premium=x if -50<=x<=50 else None
     score,reasons,completeness=score_etf(tech,p)
-    trump=trump_stock_factor(symbol)
-    trump_theme=trump_theme_stock_factor(symbol, info.get('industry',''), info.get('subindustries',[]), info.get('name',''))
-    if score is None:
-        verdict='⚪ 資料不足，暫不評估'; score_text='資料不足'
+    trump=trump_stock_factor(symbol); trump_theme=trump_theme_stock_factor(symbol,'',[],info.get('name',''))
+    if score is None: verdict='⚪ 資料不足，暫不評估'; score_text='資料不足'
     else:
-        # V2.14.32：美股/ETF個別標的可納入川普直接交易曝險；第二層買點模型不受影響。
-        score=max(0,min(100,int(score)+int(trump.get('factor',0))+int(trump_theme.get('factor',0))))
-        verdict='🟢 可分批配置' if score>=75 else '🟡 等待回檔/止跌' if score>=60 else '🟠 暫緩配置' if score>=40 else '🔴 不建議配置'
-        score_text=f'{score}/100'
-
-    # 第二層：與 ETF 配置評分完全獨立，只使用價格/技術結構。
-    tech_for_buy=dict(tech)
-    if price is not None: tech_for_buy['price']=price
-    buy=assess_buy_point(tech_for_buy)
-    z1='N/A' if not buy.get('zone1') else f'{buy["zone1"][0]:,.2f}～{buy["zone1"][1]:,.2f}'
-    z2='N/A' if not buy.get('zone2') else f'{buy["zone2"][0]:,.2f}～{buy["zone2"][1]:,.2f}'
-    inv=fmt(buy.get('invalidation'))
-    confirms='、'.join(buy.get('confirms') or []) or '尚無足夠止跌確認'
-    risks='、'.join(buy.get('risks') or []) or '無'
-
-    tech_fields=['rsi','k','d','ma20','ma60']
-    tech_ok=sum(1 for k in tech_fields if tech.get(k) is not None)
-    tech_pct=int(round(tech_ok/len(tech_fields)*100))
-    return (f'📊 ETF「投資價值 × 買點」雙層分析 V2.14.42\n\n標的：{info["name"]}（{code}）\n代號：{symbol}\n\n'
+        score=max(0,min(100,int(score)+int(trump.get('factor',0)))); verdict='🟢 可分批配置' if score>=75 else '🟡 等待回檔/止跌' if score>=60 else '🟠 暫緩配置' if score>=40 else '🔴 不建議配置'; score_text=f'{score}/100'
+    buy=assess_buy_point(dict(tech,price=price)); z1='N/A' if not buy.get('zone1') else f'{buy["zone1"][0]:,.2f}～{buy["zone1"][1]:,.2f}'; z2='N/A' if not buy.get('zone2') else f'{buy["zone2"][0]:,.2f}～{buy["zone2"][1]:,.2f}'; inv=fmt(buy.get('invalidation')); confirms='、'.join(buy.get('confirms') or []) or '尚無足夠止跌確認'; risks='、'.join(buy.get('risks') or []) or '無'
+    tech_fields=['rsi','k','d','ma20','ma60']; tech_ok=sum(1 for k in tech_fields if tech.get(k) is not None); tech_pct=int(round(tech_ok/len(tech_fields)*100))
+    cp=_etf_context_profile(info,code,symbol)
+    news_adj,news_events,news_reasons=score_news(symbol,cp['name'],force=False); macro=macro_stock_factor(cp['industry'],[],cp['name']); macro_adj=int(macro.get('factor',0) or 0); tt=int(trump_theme.get('factor',0) or 0); theme_text='、'.join(cp['themes']) if cp['themes'] else '廣泛市場／無單一主題'
+    snapshot={'code':code,'name':cp['name'],'symbol':symbol,'investment_score':score,'investment_verdict':verdict,'buy_score':buy.get('score'),'buy_verdict':buy.get('verdict'),'price':price,'nav':nav,'premium':premium,'technical':{k:tech.get(k) for k in ('rsi','k','d','ma20','ma60','trend','ret5','ret10','ret20')},'news':{'adjustment':news_adj,'reasons':news_reasons,'events':[{'title':x.get('title',''),'date':x.get('date',''),'adjustment':x.get('adjustment',0),'ai_direction':x.get('ai_direction'),'ai_reason':x.get('ai_reason')} for x in news_events[:5]]},'macro':{'factor':macro_adj,'state':macro.get('state'),'reasons':macro.get('reasons',[])},'trump':{'factor':trump.get('factor',0),'state':trump.get('state','無資料'),'theme_factor':tt,'theme_state':trump_theme.get('state','無資料'),'reasons':trump_theme.get('reasons',[])},'theme':{'label':cp['industry'],'description':cp['description'],'themes':cp['themes']}}
+    snapshot['snapshot_key']=hashlib.sha256(json.dumps({'s':score,'b':buy.get('score'),'n':news_adj,'m':macro_adj,'t':trump.get('factor',0),'tt':tt,'p':price},sort_keys=True,default=str).encode()).hexdigest()[:24]
+    ai=None
+    if AI_ENABLE_FINAL_SUMMARY:
+        try: ai=_ai_final_etf_summary(snapshot)
+        except Exception as e: print(f'V2.23.6 ETF AI 最終結論失敗：{type(e).__name__}: {e}',flush=True)
+    ai_text=_format_ai_final_etf_summary(ai)
+    if not ai_text and AI_ENABLE_FINAL_SUMMARY:
+        conflict='投資價值高但目前買點偏弱' if score is not None and score>=75 and buy.get('score',0)<60 else '目前買點強於長中期投資價值' if score is not None and score<60 and buy.get('score',0)>=75 else '各層訊號大致一致'
+        ai_text=f'🤖 AI ETF 最終綜合判斷（規則 fallback）\n建議：{verdict}\n核心：投資價值 {score_text}、買點 {buy.get("score",0)}/100。\n⚠️ 最大矛盾：{conflict}\n👀 下一步：{", ".join(buy.get("confirms") or []) or "持續觀察趨勢與總經"}'
+    return (f'📊 ETF「投資價值 × 買點 × 環境 × AI」完整分析 V2.23.6\n\n標的：{info["name"]}（{code}）\n代號：{symbol}\n\n'
             f'【第一層｜ETF投資價值】\nETF特性：40分\nNAV：{fmt(nav)}\n溢價/折價：{fmt(premium)}%\n殖利率：{fmt(p.get("yield"))}%\nBeta：{fmt(p.get("beta"))}\n資產規模：{fmt(p.get("assets"),0)}\n\n'
             f'技術面：60分\n價格：{fmt(price)}\nRSI：{fmt(tech.get("rsi"))}\nKD：K={fmt(tech.get("k"))} / D={fmt(tech.get("d"))}\nMA20：{fmt(tech.get("ma20"))}\nMA60：{fmt(tech.get("ma60"))}\n趨勢：{tech.get("trend") or "N/A"}\n'
-            f'技術資料完整度：{tech_ok}/5（{tech_pct}%）\n評分資料完整度：{completeness:.0f}%\n\n'
-            f'ETF綜合評分：{score_text}\n配置結論：{verdict}\n加分因素：{"、".join(reasons) if reasons else "無"}\nTrump直接曝險：{trump.get("factor",0):+d}｜{trump.get("state","無資料")}\n\n'
-            f'【第二層｜🎯 買點評估】\n買點評分：{buy["score"]}/100\n目前買點：{buy["verdict"]}\n短中期趨勢：{buy["trend_state"]}\n5日報酬：{fmt((buy.get("ret5") or 0)*100)}%｜10日：{fmt((buy.get("ret10") or 0)*100)}%｜20日：{fmt((buy.get("ret20") or 0)*100)}%\n第一觀察買點：{z1}\n第二觀察買點：{z2}\n進場策略：{buy["entry"]}\n跌破參考：{inv}\n止跌確認：{confirms}\n風險：{risks}')
+            f'技術資料完整度：{tech_ok}/5（{tech_pct}%）\n評分資料完整度：{completeness:.0f}%\n\nETF綜合評分：{score_text}\n配置結論：{verdict}\n加分因素：{"、".join(reasons) if reasons else "無"}\nTrump直接曝險：{trump.get("factor",0):+d}｜{trump.get("state","無資料")}\n\n'
+            f'【第二層｜🎯 買點評估】\n買點評分：{buy["score"]}/100\n目前買點：{buy["verdict"]}\n短中期趨勢：{buy["trend_state"]}\n5日報酬：{fmt((buy.get("ret5") or 0)*100)}%｜10日：{fmt((buy.get("ret10") or 0)*100)}%｜20日：{fmt((buy.get("ret20") or 0)*100)}%\n第一觀察買點：{z1}\n第二觀察買點：{z2}\n進場策略：{buy["entry"]}\n跌破參考：{inv}\n止跌確認：{confirms}\n風險：{risks}\n\n'
+            f'【第三層｜📰 消息面】\n近期重大消息：{news_adj:+d}\n{("；".join(news_reasons) if news_reasons else "近14日未偵測到重大事件")}\n\n'
+            f'【第四層｜🌐 外部環境】\n總經：{macro_adj:+d}｜{macro.get("state","無資料")}\n總經理由：{("；".join(macro.get("reasons") or []) or "無")}\nTrump：{trump.get("factor",0):+d}｜{trump.get("state","無資料")}\nTrump/產業傳導：{tt:+d}｜{trump_theme.get("state","無資料")}\n題材：{theme_text}\n題材定位：{cp["description"]}\n\n{ai_text}')
 
-
-
-def assess_buy_point(tech):
-    """V2.14.21：第二層買點模型，與投資價值分數完全分離。"""
-    t=tech if isinstance(tech,dict) else {}; p=to_float(t.get('price')); ma20=to_float(t.get('ma20')); ma60=to_float(t.get('ma60'))
-    rv=to_float(t.get('rsi')); k=to_float(t.get('k')); d=to_float(t.get('d')); r5=to_float(t.get('ret5')); r10=to_float(t.get('ret10')); r20=to_float(t.get('ret20'))
-    supports=[x for x in (to_float(t.get('recent_low')),to_float(t.get('low60')),ma20,ma60) if x and x>0]; score=0; confirms=[]; risks=[]
-    if r5 is not None: score+=10 if r5>=.03 else 8 if r5>=0 else 5 if r5>=-.03 else 2
-    if r10 is not None: score+=8 if r10>=.03 else 6 if r10>=0 else 3 if r10>=-.07 else 1
-    if r20 is not None: score+=7 if r20>=.03 else 5 if r20>=0 else 3 if r20>=-.08 else 1
-    if p is not None and ma20: x=p/ma20-1; score+=13 if x>=.02 else 10 if x>=-.02 else 6 if x>=-.06 else 2
-    if p is not None and ma60: x=p/ma60-1; score+=12 if x>=.02 else 9 if x>=-.02 else 5 if x>=-.08 else 1
-    if rv is not None: score+=15 if 45<=rv<=60 else 12 if 40<=rv<45 or 60<rv<=68 else 8 if 30<=rv<40 else 4 if rv<30 else 5
-    if k is not None and d is not None: score+=15 if k>d and k<80 else 11 if k>=d else 5
-    nearest=None
-    if p is not None and supports:
-        below=[x for x in supports if x<=p]; nearest=max(below) if below else min(supports); dist=abs(p/nearest-1); score+=20 if dist<=.015 else 16 if dist<=.03 else 11 if dist<=.06 else 5
-    if p is not None and ma20 and ma60:
-        if p>ma20 and p>ma60 and (r10 is None or r10>=0): trend='🟢 上升趨勢'
-        elif p>ma60 and p<ma20 and (r10 is None or r10<0): trend='🟡 上升趨勢中的回檔'
-        elif p<ma20 and p<ma60 and r10 is not None and r10<0 and (r20 is None or r20<0): trend='🔴 中期下降趨勢'
-        elif p<ma20 and r10 is not None and r10<0: trend='🔴 短期下降趨勢'
-        else: trend='🟠 震盪整理'
-    else: trend=str(t.get('trend') or '🟠 資料不足')
-    if rv is not None and rv>=40: confirms.append('RSI≥40')
-    if k is not None and d is not None and k>d: confirms.append('KD偏多')
-    if p is not None and ma20 and p>=ma20: confirms.append('站回MA20')
-    if r5 is not None and r5>=0: confirms.append('5日跌勢停止')
-    if len(confirms)>=2: score+=3
-    falling=bool(p is not None and ma20 and ma60 and p<ma20 and p<ma60 and r10 is not None and r10<-.03 and r20 is not None and r20<-.03)
-    if falling: score=min(score,39); risks.append('接刀保護：10日/20日同步下跌且跌破MA20/MA60')
-    score=int(max(0,min(100,round(score))))
-    verdict='🟢 現在可分批買進' if score>=75 and not falling else '🟡 可小量試單／等待確認' if score>=60 and not falling else '🟠 等待回檔止跌' if score>=40 else '🔴 暫不進場，避免接刀'
-    levels=sorted(set(supports),reverse=True); first=nearest; second=max([x for x in levels if first and x<first*.995],default=None)
-    z=lambda x:(x*.985,x*1.015) if x else None; z1=z(first); z2=z(second); invalid=(second or first)*.97 if (second or first) else None
-    entry='目前可分批，仍建議靠近支撐而非追高' if trend.startswith('🟢') and score>=75 else '優先等第一買點區止跌，再分批' if trend.startswith('🟡') else '目前不追價，等止跌確認後再進場'
-    return {'score':score,'verdict':verdict,'trend_state':trend,'entry':entry,'zone1':z1,'zone2':z2,'invalidation':invalid,'confirms':confirms,'risks':risks,'ret5':r5,'ret10':r10,'ret20':r20}
-
-
-
-def us_stock_analysis(query):
-    """V2.14.21：一般美股「投資價值 × 買點」雙層分析。
-
-    第一層：Yahoo 基本面 + 技術面，將可取得資料動態正規化到 100 分。
-    第二層：沿用 V2.14.12/13 的獨立買點模型，不與第一層互相污染。
-    不使用台股 T86/融資融券/台股官方 PE，避免把台股資料套到美股。
-    """
-    info=resolve_us_stock_query(query)
-    if not info:
-        return f'❌ 找不到美股：{query}'
-    symbol=info['symbol']
-    if not _us_symbol_has_data(symbol):
-        alt={'DEL':'DELL','DELL TECHNOLOGIES':'DELL','DELL TECH':'DELL','DELL COMPUTER':'DELL','戴爾':'DELL','BERKSHIRE':'BRK-B','BERKSHIRE HATHAWAY':'BRK-B'}.get(str(query or '').strip().upper())
-        if alt and _us_symbol_has_data(alt): symbol=alt; info['symbol']=alt
-        else: return f'❌ Yahoo 找不到可用的美股行情：{query}（例如 DEL 應為 DELL）'
-    tech=technical(symbol, force_refresh=True)
-    price=to_float(tech.get('price'))
-    if price is None:
-        try:
-            qd=yf_download(symbol,period='1y',interval='1d')
-            if qd is not None and not qd.empty:
-                tech=_technical_from_df(qd)
-                price=to_float(tech.get('price'))
-        except Exception as e:
-            print(f'V2.14.21 美股技術資料失敗 {symbol}: {type(e).__name__}',flush=True)
-    fund=yahoo_light_fund(symbol,official={},current_price=price,market='US',industry='',subindustry='')
-    pe=to_float(fund.get('pe')); pb=to_float(fund.get('pb')); yld=to_float(fund.get('yield'))
-    growth=to_float(fund.get('eps_growth')); roe=to_float(fund.get('roe')); peg=to_float(fund.get('peg'))
-    # 美國股票沒有台股同業官方 PE，因此第一層基本面只採有效 Yahoo 指標，動態正規化。
-    fs=0.0; fav=0.0; freasons=[]
-    def add(v,w,points,reason=None):
-        nonlocal fs,fav
-        if v is None: return
-        fav+=w; fs+=points
-        if reason and points>=w*.65: freasons.append(reason)
-    if pe is not None and pe>0: add(pe,10,10 if pe<15 else 7.5 if pe<25 else 5 if pe<35 else 2 if pe<50 else 0,'本益比相對合理')
-    if peg is not None and peg>0: add(peg,8,8 if peg<1 else 6 if peg<1.5 else 4 if peg<2 else 1 if peg<3 else 0,'PEG具吸引力')
-    if pb is not None and pb>0: add(pb,6,6 if pb<2 else 4.5 if pb<4 else 3 if pb<6 else 1 if pb<10 else 0,'PB合理')
-    if yld is not None and yld>=0: add(yld,6,6 if yld>=4 else 4.5 if yld>=2 else 3 if yld>=1 else 1 if yld>0 else 0,'殖利率')
-    if roe is not None: add(roe,5,5 if roe>=25 else 4 if roe>=18 else 3 if roe>=12 else 1 if roe>0 else 0,'ROE良好')
-    if growth is not None: add(growth,5,5 if growth>=30 else 4 if growth>=15 else 3 if growth>0 else 1 if growth>-10 else 0,'獲利成長')
-    fundamental=int(round(fs/fav*40)) if fav else 0
-    ts,treasons=score_tech(tech)
-    risk,rr=score_risk({}, {'20d':None}, {'margin_change':None,'short_change':None})
-    # 美國沒有台股籌碼欄位；以技術風險補足可觀測的 10 分風險層。
-    risk=0; rr=[]
-    r=to_float(tech.get('rsi')); m20=to_float(tech.get('ma20')); m60=to_float(tech.get('ma60'))
-    if r is not None and r>70: risk+=3; rr.append('RSI過熱')
-    if to_float(tech.get('k')) is not None and to_float(tech.get('d')) is not None and to_float(tech.get('k'))>80 and to_float(tech.get('d'))>80: risk+=2; rr.append('KD高檔')
-    if price and m20 and price<m20: risk+=1; rr.append('跌破MA20')
-    if price and m60 and price<m60: risk+=1; rr.append('跌破MA60')
-    if to_float(tech.get('ret20')) is not None and to_float(tech.get('ret20'))<-.15: risk+=2; rr.append('20日跌幅偏大')
-    if to_float(tech.get('ret10')) is not None and to_float(tech.get('ret10'))<-.10: risk+=1; rr.append('10日跌幅偏大')
-    risk=min(10,risk)
-    trump=trump_stock_factor(symbol)
-    first_score=max(0,min(80,fundamental+ts+(10-risk)+trump.get('factor',0)))
-    buy=assess_buy_point(tech)
-    def pct(v): return 'N/A' if v is None else f'{v*100:.2f}%'
-    z1='N/A' if not buy.get('zone1') else f'{buy["zone1"][0]:,.2f}～{buy["zone1"][1]:,.2f}'
-    z2='N/A' if not buy.get('zone2') else f'{buy["zone2"][0]:,.2f}～{buy["zone2"][1]:,.2f}'
-    return (f'📊 美股「投資價值 × 買點」雙層分析 V2.14.21\n\n標的：{symbol}\nYahoo代號：{symbol}\n\n'
-            f'【第一層｜投資價值】\n基本面：{fundamental}/40（有效資料 {int(round(fav/40*100)) if fav else 0}%）\n'
-            f'PE：{fmt(pe)}｜PB：{fmt(pb)}｜殖利率：{fmt(yld)}%\nEPS Growth：{fmt(growth)}%｜ROE：{fmt(roe)}%｜PEG：{fmt(peg)}\n'
-            f'技術面：{ts}/30\n價格：{fmt(price)}｜RSI：{fmt(r)}｜KD：K={fmt(tech.get("k"))} / D={fmt(tech.get("d"))}\n'
-            f'MA20：{fmt(m20)}｜MA60：{fmt(m60)}｜趨勢：{tech.get("trend") or "N/A"}\n'
-            f'風險：{risk}/10｜Trump直接曝險：{trump.get("factor",0):+d}｜綜合投資價值：{first_score}/80（美股模型不套用台股籌碼）\n'
-            f'Trump訊號：{trump.get("state","無資料")}｜近180日直接交易：{trump.get("transactions",0)}筆\n'
-            f'加分因素：{"、".join(freasons+treasons) if freasons+treasons else "無"}\n風險因素：{"、".join(rr) if rr else "無"}\n\n'
-            f'【第二層｜🎯 買點評估】\n買點評分：{buy["score"]}/100\n目前買點：{buy["verdict"]}\n短中期趨勢：{buy["trend_state"]}\n'
-            f'5日報酬：{pct(buy.get("ret5"))}｜10日：{pct(buy.get("ret10"))}｜20日：{pct(buy.get("ret20"))}\n'
-            f'第一觀察買點：{z1}\n第二觀察買點：{z2}\n進場策略：{buy["entry"]}\n跌破參考：{fmt(buy.get("invalidation"))}\n'
-            f'止跌確認：{"、".join(buy.get("confirms") or []) or "尚無足夠止跌確認"}\n風險：{"、".join(buy.get("risks") or []) or "無"}')
 
 def analysis(
     query,
@@ -15108,7 +15046,7 @@ def run_webhook_server():
     app = Flask(__name__)
 
     print('================================')
-    print('LINE Webhook Server V2.23.5')
+    print('LINE Webhook Server V2.23.6')
     print('模式：LINE A 方案｜Reply 結果頁網址 + 背景分析 + Render 完整結果頁｜查詢不 Push')
     print('================================')
 
@@ -15467,7 +15405,7 @@ def run_webhook_server():
         if not isinstance(result, dict):
             # V2.22.0：AI provider 全部失敗時也不能讓使用者得到空白頁；
             # 先建立保守研究入口，後續仍可進官方分類驗證。
-            print(f'V2.23.5 Theme：第一階段 AI 拆題失敗，使用保守 fallback｜{topic}', flush=True)
+            print(f'V2.23.6 Theme：第一階段 AI 拆題失敗，使用保守 fallback｜{topic}', flush=True)
             result={
                 'headline': str(topic), 'trend':'資料不足',
                 'summary':f'目前 AI 無法穩定取得足夠證據，先以「{topic}」作為研究入口。',
@@ -15516,7 +15454,7 @@ def run_webhook_server():
             x['official_subindustries'] = []
             cleaned.append(x)
         result['fine_themes'] = cleaned[:3]
-        # V2.23.5：已知題材的「保守 fallback」不能只回傳原詞。
+        # V2.23.6：已知題材的「保守 fallback」不能只回傳原詞。
         # AI schema/429 失敗時仍要保留可研究的供應鏈方向，否則使用者會看到
         # 「自主智能代理 → 自主智能代理 → 資料不足」而無法繼續研究。
         _topic_norm = re.sub(r'\s+', '', str(topic or '').lower())
@@ -15529,7 +15467,7 @@ def run_webhook_server():
             result['evidence_limitations'] = list(result.get('evidence_limitations') or [])[:2]
             result['evidence_limitations'].insert(0,'AI 拆題結果不足，已使用保守的 Agentic AI 研究框架；以下官方次產業仍須逐項驗證，不代表所有資訊服務公司都直接受惠。')
             cleaned = result['fine_themes']
-            print(f'V2.23.5 Theme：Agentic AI 使用結構化 fallback｜{topic}｜fine=3', flush=True)
+            print(f'V2.23.6 Theme：Agentic AI 使用結構化 fallback｜{topic}｜fine=3', flush=True)
         if not cleaned:
             # V2.22.0：AI 不得因資料不足回傳空細題材。至少建立 1 個可研究方向；
             # 「證據不足」只能放在限制欄，不應阻斷使用者繼續選題。
@@ -15544,7 +15482,7 @@ def run_webhook_server():
             lim=list(result.get('evidence_limitations') or [])
             lim.insert(0,'AI 未取得足夠新聞證據拆出更細方向，先保留原題材作為研究入口。')
             result['evidence_limitations']=lim[:3]
-            print(f'V2.23.5 Theme：AI 細題材為空，已建立保守 fallback｜{topic}',flush=True)
+            print(f'V2.23.6 Theme：AI 細題材為空，已建立保守 fallback｜{topic}',flush=True)
 
         # V2.20.0：以 company-chain 官方 records + market universe 的大產業交集建立候選。
         data = _line_industry_load_data()
@@ -15596,7 +15534,7 @@ def run_webhook_server():
         for score, n in scored:
             dedup[n] = max(score, dedup.get(n, 0))
         official_candidates = [n for n, _ in sorted(dedup.items(), key=lambda kv: (-kv[1], len(kv[0]), kv[0]))][:100]
-        # V2.23.5：禁止「同大產業」直接膨脹成 100 個官方次產業候選。
+        # V2.23.6：禁止「同大產業」直接膨脹成 100 個官方次產業候選。
         # parent 只能作輔助分數，不能在語意分數為 0 時整包放入；否則 AI 會在
         # 一整個母產業中任意挑選，造成「無人機 → 100 個候選」這類假精準。
         # 只把有題材語意命中的官方節點交給第二階段 AI。
@@ -15606,7 +15544,7 @@ def run_webhook_server():
         if not selected_fine:
             for ft in result['fine_themes']:
                 ft['official_subindustries'] = []
-            print(f'V2.23.5 Theme：第一階段完成｜{topic}｜fine={len(result["fine_themes"])}', flush=True)
+            print(f'V2.23.6 Theme：第一階段完成｜{topic}｜fine={len(result["fine_themes"])}', flush=True)
             return result
 
         # 只對使用者選定的細題材做一次「官方名稱映射」。映射失敗會明確保留
@@ -15670,7 +15608,7 @@ def run_webhook_server():
                 if evidence_level not in ('direct_supply_chain','strong_indirect'):
                     subs=[]; ft['official_subindustries']=[]
                     ft['mapping_reason']=reason or '缺乏足夠直接的產品／供應鏈受惠證據，拒絕泛產業硬配。'
-            # V2.23.5：AI 映射若因 provider schema / rate-limit 失敗，不再直接宣告資料不足。
+            # V2.23.6：AI 映射若因 provider schema / rate-limit 失敗，不再直接宣告資料不足。
             # 對已知的 Agentic AI 類題材，僅從「實際存在於官方資料」且名稱具備高語意相關性的
             # 次產業中挑選最多 3 個，並標示為 strong_indirect；絕不把整個 parent 的 100 個候選
             # 當成受惠產業。這是保守的 deterministic bridge，不會創造不存在的官方名稱。
@@ -15695,7 +15633,7 @@ def run_webhook_server():
             if not subs:
                 ft['mapping_reason'] = ft.get('mapping_reason') or '目前官方價值鏈資料無法建立足夠可靠的細產業對應。'
 
-        print(f'V2.23.5 Theme：第二階段完成｜{topic}｜fine={len(result["fine_themes"])}｜官方映射候選={len(official_candidates)}', flush=True)
+        print(f'V2.23.6 Theme：第二階段完成｜{topic}｜fine={len(result["fine_themes"])}｜官方映射候選={len(official_candidates)}', flush=True)
         return result
 
     def _theme_quantitative_results(result, u):
@@ -15754,7 +15692,7 @@ def run_webhook_server():
                 if not candidate_pool: candidate_pool=candidates[:3]
                 cached_codes={clean_code(z[0][1]) for z in cached_rows}
                 full_count=sum(1 for x in candidate_pool if clean_code(x[1]) not in cached_codes)
-                print(f'V2.23.5 Theme：量化快速篩選｜{sub}｜官方候選={len(candidates)}｜cache={len(cached_rows)}｜本次完整分析={full_count}', flush=True)
+                print(f'V2.23.6 Theme：量化快速篩選｜{sub}｜官方候選={len(candidates)}｜cache={len(cached_rows)}｜本次完整分析={full_count}', flush=True)
                 analyzed=_line_industry_run_top3_analysis(candidate_pool,u,label='題材')
                 analyzed.sort(key=lambda r:(-(r[4] if r[4] is not None else -1),-(r[5] if r[5] is not None else -1),-(r[3] if r[3] is not None else -1),str(r[0])))
                 analyzed=analyzed[:3]
@@ -16007,7 +15945,7 @@ def run_webhook_server():
         return (
             '<!doctype html><html><head><meta charset="utf-8">'
             '<meta name="viewport" content="width=device-width,initial-scale=1">'
-            '<title>Stock Alert V2.23.5</title>'
+            '<title>Stock Alert V2.23.6</title>'
             '<style>body{margin:0;padding:20px;background:#f6f7f9;color:#222}'
             '.card{max-width:900px;margin:auto;background:#fff;border-radius:14px;padding:20px;box-shadow:0 2px 12px #0001}'
             'a{word-break:break-all}</style></head><body><div class="card">'
@@ -16016,7 +15954,7 @@ def run_webhook_server():
         )
 
     def _external_web_nav():
-        # V2.23.5：所有外部頁統一使用唯一一份全域導覽。
+        # V2.23.6：所有外部頁統一使用唯一一份全域導覽。
         # 導覽新增「完整分析」，讓台股／ETF／美股不必先從 LINE 查詢。
         return (
             '<div class="card external-nav-card">'
@@ -16032,7 +15970,7 @@ def run_webhook_server():
         )
 
     def _web_page(title, body, include_external_nav=True):
-        # V2.23.5：不再用「body 是否剛好包含四個 href」猜測是否需要導覽。
+        # V2.23.6：不再用「body 是否剛好包含四個 href」猜測是否需要導覽。
         # 每個頁面由 route 明確決定；首頁自己已有入口，因此首頁不再重複插入頁尾導覽。
         nav = _external_web_nav() if include_external_nav else ''
         return (
@@ -16289,7 +16227,7 @@ def run_webhook_server():
 
     @app.get('/analysis')
     def analysis_web_entry():
-        # V2.23.5：外部完整分析入口；實際分析仍由 /stock 共用既有模型。
+        # V2.23.6：外部完整分析入口；實際分析仍由 /stock 共用既有模型。
         symbol=str(request.args.get('symbol') or '').strip()
         if symbol:
             return redirect('/stock?symbol=' + quote(symbol))
@@ -16303,7 +16241,7 @@ def run_webhook_server():
     def direct_stock_page():
         """V2.14.43 + V2.18.39：產業/Trump/總經頁點擊後以背景工作產生完整個股分析。"""
         symbol = str(request.args.get('symbol') or '').strip()
-        # V2.23.5：外部完整分析統一正規化輸入，避免 2330.TW、2330、$NVDA、NASDAQ:NVDA
+        # V2.23.6：外部完整分析統一正規化輸入，避免 2330.TW、2330、$NVDA、NASDAQ:NVDA
         # 因格式不同被 resolver 當成不存在標的。
         raw_symbol = symbol
         symbol = re.sub(r'^\$','',symbol.strip(),flags=re.I)
@@ -17598,6 +17536,11 @@ def _notify_target_buy_point(name, symbol, state, u=None):
                 f'失效參考：{buy.get("invalidation") or "N/A"}\n'
                 f'確認：{"、".join(buy.get("confirms") or []) or "尚無足夠止跌確認"}'
             )
+            # V2.23.6：自動極佳買點通知同步帶入 AI 最終判讀。
+            if isinstance(full_result,str):
+                m_ai=re.search(r'(🤖 AI(?: ETF)? 最終綜合判斷[\s\S]*)$',full_result)
+                if m_ai:
+                    msg += "\n\n" + m_ai.group(1)[:1800]
             sent = send_line(msg[:5000])
             if not sent:
                 print(
