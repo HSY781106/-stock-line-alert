@@ -459,5 +459,37 @@
       ]
     },
     "provider": "groq"
+  },
+  "trump_v21826:__MARKET__:91488cc1b6237a0a5541eb2b": {
+    "ts": 1789394623.8799303,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.7,
+          "policy_stage": "considering",
+          "reason": "Trump投資油氣增值",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "Trump投資→油氣產業利潤提升→市場估值上升",
+          "exposure": "證據不足"
+        },
+        {
+          "id": 1,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.5,
+          "policy_stage": "unknown",
+          "reason": "未證實影響",
+          "relevant": false,
+          "affected_channel": "需求",
+          "transmission": "無實際政策變動",
+          "exposure": "證據不足"
+        }
+      ]
+    },
+    "provider": "groq"
   }
 }
