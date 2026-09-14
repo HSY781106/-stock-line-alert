@@ -1,4 +1,4 @@
-name: Test DaVinci Assistant API
+name: Test DaVinci Assistant API V4
 
 on:
   workflow_dispatch:
@@ -14,7 +14,7 @@ jobs:
           python3 -m pip install --upgrade pip
           python3 -m pip install openai httpx
 
-      - name: Test DaVinci Assistant
+      - name: Diagnose DaVinci Redirect
         env:
           DAVINCI_API_KEY: ${{ secrets.DAVINCI_API_KEY }}
           DAVINCI_ASSISTANT_ID: asst_dvc_o2KvewHb9c1XLXlHsFypCe8N
@@ -22,287 +22,106 @@ jobs:
         run: |
           python3 - <<'PY'
           import os
-          import sys
           import httpx
-
-          from openai import AsyncOpenAI
-          import asyncio
 
           API_KEY = os.environ["DAVINCI_API_KEY"]
           ASSISTANT_ID = os.environ["DAVINCI_ASSISTANT_ID"]
-          API_URL = os.environ["DAVINCI_API_URL"]
+          BASE_URL = os.environ["DAVINCI_API_URL"].rstrip("/")
+
+          THREAD_URL = BASE_URL + "/threads"
 
           print("=" * 70)
-          print("DaVinci Assistant API 測試 V3")
+          print("DaVinci Assistant API 測試 V4")
           print("=" * 70)
           print(f"Assistant ID：{ASSISTANT_ID}")
-          print(f"Endpoint：{API_URL}")
+          print(f"Endpoint：{BASE_URL}")
           print(f"API Key 長度：{len(API_KEY)}")
-          print(f"API Key 前綴：{API_KEY[:10]}...")
           print("=" * 70)
 
-          class DaVinciTransport(httpx.AsyncBaseTransport):
+          headers = {
+              "Authorization": f"Bearer {API_KEY}",
+              "Content-Type": "application/json",
+              "Accept": "application/json",
+          }
 
-              async def handle_async_request(self, request: httpx.Request):
+          payload = {
+              "messages": [
+                  {
+                      "role": "user",
+                      "content": "請用繁體中文回答：什麼是 AI？請簡短回答。"
+                  }
+              ]
+          }
 
-                  print()
-                  print(">>> DaVinci HTTP Request")
-                  print(f"Method：{request.method}")
-                  print(f"URL：{request.url}")
+          print()
+          print("【1】直接呼叫 Thread API")
+          print(f"URL：{THREAD_URL}")
+          print()
 
-                  # 不印出真正 API Key
-                  auth = request.headers.get("authorization")
+          with httpx.Client(
+              follow_redirects=False,
+              timeout=30.0
+          ) as client:
 
-                  if auth:
-                      print("Authorization：已存在")
-                      print(f"Authorization 前綴：{auth[:20]}...")
-                  else:
-                      print("Authorization：❌ 沒有")
-
-                  async with httpx.AsyncClient() as client:
-
-                      response = await client.request(
-                          method=request.method,
-                          url=str(request.url),
-                          headers=request.headers,
-                          content=(
-                              request.content
-                              if request.method not in ["GET", "DELETE"]
-                              else None
-                          ),
-                          timeout=None,
-                      )
-
-                  print(f"<<< HTTP {response.status_code}")
-
-                  return httpx.Response(
-                      status_code=response.status_code,
-                      headers=response.headers,
-                      content=response.content,
-                      request=request,
-                  )
-
-          async def main():
-
-              http_client = httpx.AsyncClient(
-                  transport=DaVinciTransport()
+              response = client.post(
+                  THREAD_URL,
+                  headers=headers,
+                  json=payload,
               )
 
-              client = AsyncOpenAI(
-                  base_url=API_URL,
-                  api_key=API_KEY,
-                  http_client=http_client,
-              )
-
-              prompt = """
-              請用繁體中文回答。
-
-              如果一家台灣公司主要供應 AI 伺服器相關零組件，
-              分析它是否屬於 AI 題材時，應該如何區分：
-
-              1. 直接受惠
-              2. 供應鏈間接受惠
-              3. 只有題材相關但實際受惠有限
-
-              並說明為什麼不能只看到「AI」關鍵字就判定利多。
-
-              請簡短回答。
-              """
-
-              # --------------------------------------------------
-              # 1. 建立 Thread
-              # --------------------------------------------------
+              print(f"HTTP Status：{response.status_code}")
 
               print()
-              print("【1/4】建立 Thread...")
+              print("Response Headers：")
 
-              try:
-
-                  thread = await client.beta.threads.create(
-                      messages=[
-                          {
-                              "role": "user",
-                              "content": prompt,
-                          }
-                      ]
-                  )
-
-              except Exception as e:
-
-                  print()
-                  print("❌ 建立 Thread 失敗")
-                  print(type(e).__name__)
-                  print(str(e))
-
-                  await http_client.aclose()
-
-                  sys.exit(1)
-
-              print(f"Thread ID：{thread.id}")
-
-              # --------------------------------------------------
-              # 2. 執行 Assistant
-              # --------------------------------------------------
-
-              print()
-              print("【2/4】執行 Assistant...")
-
-              try:
-
-                  run = await client.beta.threads.runs.create(
-                      thread_id=thread.id,
-                      assistant_id=ASSISTANT_ID,
-                  )
-
-              except Exception as e:
-
-                  print()
-                  print("❌ 建立 Run 失敗")
-                  print(type(e).__name__)
-                  print(str(e))
-
-                  await http_client.aclose()
-
-                  sys.exit(1)
-
-              print(f"Run ID：{run.id}")
-              print(f"初始狀態：{run.status}")
-
-              # --------------------------------------------------
-              # 3. Polling
-              # --------------------------------------------------
-
-              print()
-              print("【3/4】等待 Assistant 回覆...")
-
-              for i in range(60):
-
-                  await asyncio.sleep(2)
-
-                  try:
-
-                      run = await client.beta.threads.runs.retrieve(
-                          thread_id=thread.id,
-                          run_id=run.id,
-                      )
-
-                  except Exception as e:
-
-                      print()
-                      print("❌ 查詢 Run 失敗")
-                      print(type(e).__name__)
-                      print(str(e))
-
-                      await http_client.aclose()
-
-                      sys.exit(1)
-
-                  print(
-                      f"  Poll {i + 1:02d}：{run.status}"
-                  )
-
-                  if run.status == "completed":
-                      break
-
-                  if run.status in {
-                      "failed",
-                      "cancelled",
-                      "expired",
-                      "requires_action",
+              for key, value in response.headers.items():
+                  if key.lower() in {
+                      "location",
+                      "server",
+                      "content-type",
+                      "www-authenticate",
+                      "x-powered-by",
                   }:
+                      print(f"  {key}: {value}")
 
-                      print()
-                      print("❌ Assistant 執行失敗")
-                      print(f"Status：{run.status}")
+              print()
 
-                      if getattr(run, "last_error", None):
-                          print(
-                              f"Error：{run.last_error}"
-                          )
+              location = response.headers.get("location")
 
-                      await http_client.aclose()
-
-                      sys.exit(1)
-
-              if run.status != "completed":
-
+              if response.status_code in (301, 302, 303, 307, 308):
+                  print("⚠️ 發現 HTTP Redirect")
                   print()
-                  print("❌ 等待 Assistant 超時")
 
-                  await http_client.aclose()
+                  if location:
+                      print(f"Location：{location}")
 
-                  sys.exit(1)
+                      if location.startswith("https://prod.dvcbot.net"):
+                          print("Redirect 類型：同 Host")
+                      elif location.startswith("https://"):
+                          print("Redirect 類型：不同 HTTPS Host")
+                      elif location.startswith("/"):
+                          print("Redirect 類型：同 Host 相對路徑")
+                      else:
+                          print("Redirect 類型：其他")
+                  else:
+                      print("❌ 301/Redirect 沒有 Location Header")
 
-              # --------------------------------------------------
-              # 4. 取得結果
-              # --------------------------------------------------
+              elif response.status_code == 401:
+                  print("❌ 仍然是 401")
+                  print(response.text[:1000])
 
-              print()
-              print("【4/4】取得 Assistant 回覆...")
+              elif response.status_code >= 400:
+                  print("❌ API 錯誤")
+                  print(response.text[:2000])
 
-              messages = await client.beta.threads.messages.list(
-                  thread_id=thread.id,
-                  order="desc",
-              )
+              else:
+                  print("✅ 非 Redirect")
+                  print()
+                  print("Response：")
+                  print(response.text[:3000])
 
-              answer = None
-
-              for message in messages.data:
-
-                  if message.role != "assistant":
-                      continue
-
-                  for content in message.content:
-
-                      if getattr(content, "type", None) == "text":
-
-                          answer = content.text.value
-
-                          if answer:
-                              break
-
-                  if answer:
-                      break
-
-              print()
-              print("=" * 70)
-              print("DaVinci Assistant 回覆")
-              print("=" * 70)
-
-              if not answer:
-
-                  print("❌ 沒有取得文字回答")
-
-                  await http_client.aclose()
-
-                  sys.exit(1)
-
-              print(answer)
-
-              print()
-              print("=" * 70)
-              print("✅ DaVinci API 測試成功")
-              print("=" * 70)
-              print(f"Assistant ID：{ASSISTANT_ID}")
-              print(f"Thread ID：{thread.id}")
-              print(f"Run ID：{run.id}")
-              print("模型：Claude Sonnet 4.6")
-              print("=" * 70)
-
-              # --------------------------------------------------
-              # 清理
-              # --------------------------------------------------
-
-              try:
-
-                  await client.beta.threads.delete(
-                      thread_id=thread.id
-                  )
-
-              except Exception:
-                  pass
-
-              await http_client.aclose()
-
-          asyncio.run(main())
+          print()
+          print("=" * 70)
+          print("V4 診斷完成")
+          print("=" * 70)
           PY
