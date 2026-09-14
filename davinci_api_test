@@ -1,0 +1,191 @@
+#!/usr/bin/env python3
+# DaVinci Assistant API Test V6
+# Purpose: verify the currently documented Production endpoint without changing stock_alert.py.
+# Secrets required:
+#   DAVINCI_ASSISTANT_ID
+#   DAVINCI_API_KEY
+# Optional:
+#   DAVINCI_API_URL  (only if DaVinci/Cyberon gives you a new production endpoint)
+
+import os
+import json
+import sys
+import httpx
+
+ASSISTANT_ID = os.getenv("DAVINCI_ASSISTANT_ID", "").strip()
+API_KEY = os.getenv("DAVINCI_API_KEY", "").strip()
+OVERRIDE = os.getenv("DAVINCI_API_URL", "").strip().rstrip("/")
+
+# The official Assistant API sample currently documents this as Production.
+PROD = "https://prod.dvcbot.net/api/assts/v1"
+# These are diagnostic-only legacy/sandbox hosts appearing in DaVinci API material.
+LEGACY = "https://davinci.cyberon.tw/api/assts/v1"
+SANDBOX = "https://sandbox.davinci.tw/api/assts/v1"
+
+TIMEOUT = 30.0
+
+
+def mask(s, n=8):
+    if not s:
+        return "(empty)"
+    return "***" + s[-n:]
+
+
+def body(r):
+    try:
+        return json.dumps(r.json(), ensure_ascii=False, indent=2)[:4000]
+    except Exception:
+        return r.text[:4000]
+
+
+def post_thread(client, base):
+    url = base + "/threads"
+    headers = {
+        "Authorization": "Bearer " + API_KEY,
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "User-Agent": "stock-line-alert-davinci-api-test-v6",
+    }
+    print(f"\nPOST {url}")
+    print("Authorization header: PRESENT")
+    try:
+        r = client.post(url, headers=headers, json={}, follow_redirects=False)
+    except Exception as e:
+        print(f"❌ Request exception: {type(e).__name__}: {e}")
+        return None, None
+
+    print(f"HTTP {r.status_code}")
+    if r.headers.get("location"):
+        print("Location:", r.headers["location"])
+    print("Response:")
+    print(body(r))
+
+    if r.status_code != 200:
+        return r, None
+    try:
+        d = r.json()
+    except Exception:
+        return r, None
+    tid = d.get("id") or d.get("thread_id") or d.get("threadId")
+    print("Thread ID:", tid or "(not found)")
+    return r, tid
+
+
+def run_assistant(client, base, tid):
+    h = {
+        "Authorization": "Bearer " + API_KEY,
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "User-Agent": "stock-line-alert-davinci-api-test-v6",
+    }
+
+    print("\n[2] POST user message")
+    u = f"{base}/threads/{tid}/messages"
+    r = client.post(
+        u, headers=h,
+        json={"role": "user", "content": "請只回答：DaVinci API 測試成功。"},
+        follow_redirects=False,
+    )
+    print("HTTP", r.status_code)
+    if r.status_code not in (200, 201):
+        print(body(r)); return False
+    print("✅ Message OK")
+
+    print("\n[3] POST Assistant Run")
+    u = f"{base}/threads/{tid}/runs"
+    r = client.post(
+        u, headers=h,
+        json={"assistant_id": ASSISTANT_ID},
+        follow_redirects=False,
+    )
+    print("HTTP", r.status_code)
+    print(body(r))
+    if r.status_code not in (200, 201):
+        return False
+    try:
+        run_id = r.json().get("id") or r.json().get("run_id")
+    except Exception:
+        run_id = None
+    if not run_id:
+        print("❌ No run id")
+        return False
+
+    print("\n[4] Poll Run")
+    u = f"{base}/threads/{tid}/runs/{run_id}"
+    for i in range(15):
+        r = client.get(u, headers=h, follow_redirects=False)
+        print(f"Poll {i+1:02d}: HTTP {r.status_code}")
+        if r.status_code != 200:
+            print(body(r)); return False
+        try:
+            d = r.json(); status = d.get("status")
+        except Exception:
+            d = {}; status = None
+        print("  status:", status)
+        if status == "completed":
+            print("\n🎉 RUN COMPLETED")
+            return True
+        if status in ("failed", "cancelled", "expired", "incomplete"):
+            print(json.dumps(d, ensure_ascii=False, indent=2)[:5000])
+            return False
+        import time; time.sleep(2)
+    print("⚠️ Poll timeout")
+    return False
+
+
+def main():
+    print("=" * 72)
+    print("DaVinci Assistant API Test V6 — Production diagnosis")
+    print("=" * 72)
+    if not ASSISTANT_ID or not API_KEY:
+        print("❌ Missing DAVINCI_ASSISTANT_ID or DAVINCI_API_KEY")
+        sys.exit(1)
+
+    print("Assistant ID:", mask(ASSISTANT_ID))
+    print("API Key length:", len(API_KEY), "(value never printed)")
+    print("\nOfficially documented Production endpoint:")
+    print("  ", PROD)
+
+    # If a new endpoint is explicitly supplied by Cyberon, test only that endpoint.
+    if OVERRIDE:
+        urls = [("OVERRIDE", OVERRIDE)]
+    else:
+        urls = [
+            ("PRODUCTION (documented)", PROD),
+            ("LEGACY / SANDBOX DIAGNOSTIC", LEGACY),
+            ("CURRENT SANDBOX DIAGNOSTIC", SANDBOX),
+        ]
+
+    transport = httpx.HTTPTransport(retries=1)
+    with httpx.Client(timeout=TIMEOUT, transport=transport, trust_env=False) as client:
+        for label, base in urls:
+            print("\n" + "-" * 72)
+            print(label)
+            print(base)
+            print("-" * 72)
+            r, tid = post_thread(client, base)
+            if r is None:
+                continue
+            if r.status_code in (301, 302, 303, 307, 308):
+                print("⚠️ Cross-host redirect: deliberately NOT followed.")
+                print("   This confirms the host is redirecting before Assistant execution.")
+                continue
+            if r.status_code != 200 or not tid:
+                continue
+            if run_assistant(client, base, tid):
+                print("\n" + "=" * 72)
+                print("🎉 完整 Assistant API 測試成功")
+                print("Working endpoint:", base)
+                print("=" * 72)
+                return
+
+    print("\n" + "=" * 72)
+    print("測試完成：目前沒有找到可完成 Assistant Run 的 Production endpoint")
+    print("重點：若 Production 仍 301 到 sandbox，而 sandbox 回 assistant not found，")
+    print("就不是 API Key / Authorization 問題，而是 DaVinci Production routing/environment 問題。")
+    print("請把整段輸出貼回來，不要貼 API Key。")
+    print("=" * 72)
+
+
+if __name__ == "__main__":
+    main()
