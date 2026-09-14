@@ -1,4 +1,5 @@
-# stock_alert.py V2.22.0
+# stock_alert.py V2.23.0
+# V2.23.0：AI 備援品質閘門／硬配額鎖強化／Theme 直接受惠證據／市場市值補正／Top3 語義修正。
 # V2.19.7：Theme Intelligence semantic candidate engine + bounded quantitative analysis；
 # V2.17.0 功能全部保留：Gemini Free 主力 + Mistral/Groq Free 備援、重大消息、Trump 語意、總經預測。
 # V2.15.6：外部產業網頁正確性＋效能修正版：官方價值鏈候選池改為資料驅動，不再只依賴同大產業 Top120；
@@ -255,6 +256,7 @@ AI_ENABLE_NEWS = os.getenv('AI_ENABLE_NEWS', '1').strip().lower() not in ('0','f
 AI_ENABLE_TRUMP = os.getenv('AI_ENABLE_TRUMP', '1').strip().lower() not in ('0','false','no','off')
 # 僅使用明確設定的免費供應商；不自動切換到任何付費方案。
 AI_FALLBACK_PROVIDERS = [x.strip().lower() for x in os.getenv('AI_FALLBACK_PROVIDERS', 'mistral,groq').split(',') if x.strip()]
+AI_PROVIDER_ALIASES = {'gemini':'gemini','google':'gemini','mistral':'mistral','groq':'groq'}
 FRED_API_KEY = os.getenv('FRED_API_KEY', '').strip()
 FRED_GRAPH_URL = 'https://fred.stlouisfed.org/graph/fredgraph.csv?id={series}'
 DGBAS_NEWS_JSON_URL = 'https://www.dgbas.gov.tw/OpenData.aspx?SN=5B2F388DBDFAF866'
@@ -1444,7 +1446,7 @@ def _ai_json(text):
                 try:
                     obj=json.loads(repaired)
                     if isinstance(obj,dict):
-                        print('V2.18.39 AI：偵測到截斷 JSON，已成功保守閉合', flush=True)
+                        print('V2.23.0 AI：偵測到截斷 JSON，已成功保守閉合', flush=True)
                         return obj
                 except Exception:
                     pass
@@ -1458,78 +1460,84 @@ def _ai_quota_today():
     return datetime.now(ZoneInfo('America/Los_Angeles')).strftime('%Y-%m-%d')
 
 def _ai_normalize_quota_state():
-    """V2.22.0：只清除真正跨日失效的「硬配額」鎖；絕不因 429 字樣自動解鎖。
-
-    Gemini Free Tier 的 daily quota 可能依 Pacific Time 重置，因此 quota state
-    以 _ai_quota_today() 判斷。短期 rate-limit 只使用記憶體 cooldown，不寫入 daily exhausted。
-    """
+    """V2.23.0：硬配額鎖結構化保存；短期 429 絕不寫入每日 exhausted。"""
     try:
-        today=_ai_quota_today()
-        d=load_json(AI_QUOTA_STATE_FILE)
+        today=_ai_quota_today(); d=load_json(AI_QUOTA_STATE_FILE)
         if not isinstance(d,dict) or d.get('date')!=today:
-            save_json(AI_QUOTA_STATE_FILE,{'date':today,'exhausted':[]})
-            AI_PROVIDER_DISABLED_THIS_RUN.clear()
-            return
-        if not isinstance(d.get('exhausted'),list):
-            d['exhausted']=[]
-        # V2.22.0：保留硬配額鎖。舊版曾用 regex 把所有 HTTP 429 都清掉，
-        # 導致 Gemini 明明已達每日 free_tier_requests，下一次請求又重新打 API。
-        # 若舊 state 已含「短期 rate limit」原因，移除該 provider 的錯誤鎖；
-        # 若原因明確包含 free_tier/quota exhausted，則整個當日保留。
-        changed=False
-        exhausted=[]
-        for _p in list(d.get('exhausted') or []):
-            reason=str(d.get('reason_'+str(_p),'') or '')
-            hard=bool(re.search(r'free_tier_requests|quota\s+exceeded|quota\s+exhausted|daily\s+quota|resource\s+exhausted|per.?day',reason,re.I))
-            if hard:
-                exhausted.append(_p)
+            save_json(AI_QUOTA_STATE_FILE,{'date':today,'exhausted':[],'hard_exhausted':{},'version':2230}); AI_PROVIDER_DISABLED_THIS_RUN.clear(); return
+        changed=False; hard=d.get('hard_exhausted')
+        if not isinstance(hard,dict): hard={}; changed=True
+        for provider in list(d.get('exhausted') or []):
+            reason=str(d.get('reason_'+str(provider),'') or '')
+            if _ai_hard_quota_error(reason):
+                if provider not in hard: hard[provider]={'reason':reason[:500],'ts':time.time()}; changed=True
             else:
-                changed=True
-                print(f'V2.22.0 AI：清除舊版非硬配額 {_p} lock；HTTP 429/短期 rate-limit 不視為每日配額耗盡',flush=True)
-        d['exhausted']=sorted(set(exhausted))
-        if changed:
-            save_json(AI_QUOTA_STATE_FILE,d)
-    except Exception as e:
-        print(f'V2.22.0 AI：quota 狀態初始化失敗：{type(e).__name__}: {e}',flush=True)
+                print(f'V2.23.0 AI：移除舊版非硬配額 {provider} lock；429/短期 rate-limit 不視為每日額度耗盡',flush=True); changed=True
+        d['hard_exhausted']=hard; d['exhausted']=sorted(hard.keys()); d['version']=2230
+        if changed: save_json(AI_QUOTA_STATE_FILE,d)
+    except Exception as e: print(f'V2.23.0 AI：quota 狀態初始化失敗：{type(e).__name__}: {e}',flush=True)
 
 def _ai_provider_quota_exhausted(provider):
     try:
         d=load_json(AI_QUOTA_STATE_FILE)
-        return isinstance(d,dict) and d.get('date')==_ai_quota_today() and provider in (d.get('exhausted') or [])
-    except Exception:
-        return False
+        if not isinstance(d,dict) or d.get('date')!=_ai_quota_today(): return False
+        hard=d.get('hard_exhausted'); return provider in hard if isinstance(hard,dict) else provider in (d.get('exhausted') or [])
+    except Exception: return False
+
 
 def _ai_mark_provider_quota_exhausted(provider, reason='quota'):
     try:
-        today=_ai_quota_today()
-        d=load_json(AI_QUOTA_STATE_FILE)
-        if not isinstance(d,dict) or d.get('date')!=today:
-            d={'date':today,'exhausted':[]}
-        exhausted=set(d.get('exhausted') or [])
-        exhausted.add(provider)
-        d['exhausted']=sorted(exhausted)
-        d['reason_'+provider]=str(reason)[:300]
-        save_json(AI_QUOTA_STATE_FILE,d)
-        AI_PROVIDER_QUOTA_COOLDOWN_UNTIL[provider]=time.time()+6*3600
-        print(f'V2.18.39 AI：{provider} 今日免費額度/配額已耗盡，今天後續不再呼叫 {provider}', flush=True)
-    except Exception as e:
-        print(f'V2.18.39 AI：無法保存 {provider} quota 狀態：{type(e).__name__}: {e}', flush=True)
+        today=_ai_quota_today(); d=load_json(AI_QUOTA_STATE_FILE)
+        if not isinstance(d,dict) or d.get('date')!=today: d={'date':today,'exhausted':[],'hard_exhausted':{},'version':2230}
+        hard=d.get('hard_exhausted'); hard=hard if isinstance(hard,dict) else {}
+        hard[provider]={'reason':str(reason)[:500],'ts':time.time()}; d['hard_exhausted']=hard; d['exhausted']=sorted(hard.keys()); d['reason_'+provider]=str(reason)[:300]; d['version']=2230
+        save_json(AI_QUOTA_STATE_FILE,d); AI_PROVIDER_QUOTA_COOLDOWN_UNTIL[provider]=time.time()+6*3600
+        print(f'V2.23.0 AI：{provider} 確認為硬配額耗盡，今日後續不再呼叫',flush=True)
+    except Exception as e: print(f'V2.23.0 AI：無法保存 {provider} quota 狀態：{type(e).__name__}: {e}',flush=True)
 
 
 def _ai_provider_order():
-    order=[]
-    preferred=AI_PROVIDER if AI_PROVIDER else 'gemini'
-    now=time.time()
-    for x in [preferred] + AI_FALLBACK_PROVIDERS:
-        if x in ('gemini','mistral','groq') and x not in order and True:
-            if float(AI_PROVIDER_QUOTA_COOLDOWN_UNTIL.get(x,0) or 0) > now:
-                continue
+    order=[]; preferred=AI_PROVIDER_ALIASES.get(str(AI_PROVIDER or 'gemini').strip().lower(),'gemini'); now=time.time()
+    for raw in [preferred]+AI_FALLBACK_PROVIDERS:
+        x=AI_PROVIDER_ALIASES.get(str(raw).strip().lower(),str(raw).strip().lower())
+        if x in ('gemini','mistral','groq') and x not in order and float(AI_PROVIDER_QUOTA_COOLDOWN_UNTIL.get(x,0) or 0)<=now:
             order.append(x)
     return order
 
-
 def _ai_provider_key(provider):
-    return {'gemini': GEMINI_API_KEY, 'mistral': MISTRAL_API_KEY, 'groq': GROQ_API_KEY}.get(provider,'')
+    return {'gemini':GEMINI_API_KEY,'mistral':MISTRAL_API_KEY,'groq':GROQ_API_KEY}.get(provider,'')
+
+def _ai_result_quality_ok(result,response_schema=None):
+    """V2.23.0：HTTP 200 不等於有效 AI 結果；低品質結果交給下一家 provider。"""
+    if not isinstance(result,dict): return False,'不是 JSON object'
+    props=(response_schema or {}).get('properties',{}) if isinstance(response_schema,dict) else {}; keys=set(props.keys())
+    if 'fine_themes' in keys:
+        fine=result.get('fine_themes')
+        if not isinstance(fine,list) or not 1<=len(fine)<=3: return False,'fine_themes 數量不合法'
+        generic={'資料不足','未知','unknown','n/a','無法判斷'}
+        for x in fine:
+            if not isinstance(x,dict) or len(str(x.get('name') or '').strip())<2 or len(str(x.get('logic') or '').strip())<8: return False,'細題材名稱或邏輯過短'
+            if str(x.get('name')).strip().lower() in generic: return False,'細題材過度泛化'
+        return True,''
+    if 'official_subindustries' in keys:
+        subs=result.get('official_subindustries'); reason=str(result.get('mapping_reason') or '').strip()
+        if not isinstance(subs,list): return False,'官方次產業格式錯誤'
+        if subs:
+            if len(reason)<8: return False,'有映射但缺乏分類理由'
+            if not isinstance(result.get('evidence_titles'),list): return False,'證據欄位格式錯誤'
+            if str(result.get('evidence_level') or '').lower() not in ('direct_supply_chain','strong_indirect'): return False,'受惠證據等級不足'
+            return True,''
+        low=reason.lower(); allowed=('沒有可靠','無可靠','無法建立','缺乏可靠','不存在合理','no reliable','no direct')
+        return (True,'') if len(reason)>=10 and any(x in low for x in allowed) else (False,'空映射理由過度泛化')
+    if 'items' in keys:
+        items=result.get('items')
+        if not isinstance(items,list): return False,'items 格式錯誤'
+        if items and not any(isinstance(x,dict) and str(x.get('reason') or '').strip() for x in items): return False,'新聞結果全部缺乏理由'
+        return True,''
+    if 'recommendation' in keys:
+        req=('recommendation','core','fundamental_view','technical_view','chips_view','risk_view','news_view','trump_view','macro_view','buy_view','reason'); missing=[k for k in req if not str(result.get(k) or '').strip()]
+        return (False,'最終整合缺欄：'+','.join(missing[:3])) if missing else (True,'')
+    return True,''
 
 
 def _ai_extract_gemini_text(payload):
@@ -1791,31 +1799,32 @@ def _ai_call_json(system_prompt, user_prompt, cache_key='', ttl_hours=72, respon
     for _p in _ai_provider_order():
         if _ai_provider_key(_p): AI_LAST_PROVIDER_STATUS[_p]={'status':'not_attempted'}
     if not any(_ai_provider_key(p) for p in _ai_provider_order()):
-        print('V2.18.39 AI：未設定 Gemini/Mistral/Groq API Key，使用規則 fallback', flush=True)
+        print('V2.23.0 AI：未設定 Gemini/Mistral/Groq API Key，使用規則 fallback', flush=True)
         return None
     now=time.time()
     if cache_key:
         c=_AI_SEMANTIC_RUN_CACHE.get(cache_key)
         if isinstance(c,dict) and now-float(c.get('ts',0) or 0)<ttl_hours*3600:
-            _cp=str(c.get('provider') or 'cache')
-            AI_LAST_PROVIDER_STATUS[_cp]={'status':'cache_hit','source':'memory'}
-            print(f'V2.18.39 AI：memory cache hit｜provider={_cp}', flush=True)
-            return c.get('data')
+            ok,why=_ai_result_quality_ok(c.get('data'),response_schema)
+            if ok:
+                _cp=str(c.get('provider') or 'cache'); AI_LAST_PROVIDER_STATUS[_cp]={'status':'cache_hit','source':'memory'}
+                print(f'V2.23.0 AI：memory cache hit｜provider={_cp}', flush=True); return c.get('data')
+            print(f'V2.23.0 AI：忽略低品質 memory cache｜{why}',flush=True)
         disk=load_json(AI_NEWS_CACHE_FILE)
         if isinstance(disk,dict):
             d=disk.get(cache_key)
             if isinstance(d,dict) and now-float(d.get('ts',0) or 0)<ttl_hours*3600:
                 data=d.get('data')
                 if isinstance(data,dict):
-                    _cp=str(d.get('provider') or 'cache')
-                    _AI_SEMANTIC_RUN_CACHE[cache_key]={'ts':float(d.get('ts',now) or now),'data':data,'provider':_cp}
-                    AI_LAST_PROVIDER_STATUS[_cp]={'status':'cache_hit','source':'disk'}
-                    print(f'V2.18.39 AI：disk cache hit｜provider={_cp}', flush=True)
-                    return data
+                    ok,why=_ai_result_quality_ok(data,response_schema)
+                    if ok:
+                        _cp=str(d.get('provider') or 'cache'); _AI_SEMANTIC_RUN_CACHE[cache_key]={'ts':float(d.get('ts',now) or now),'data':data,'provider':_cp}; AI_LAST_PROVIDER_STATUS[_cp]={'status':'cache_hit','source':'disk'}
+                        print(f'V2.23.0 AI：disk cache hit｜provider={_cp}', flush=True); return data
+                    print(f'V2.23.0 AI：忽略低品質 disk cache｜{why}',flush=True)
     _ai_normalize_quota_state()
     providers=[p for p in _ai_provider_order() if _ai_provider_key(p) and not _ai_provider_quota_exhausted(p)]
     if not providers:
-        print('V2.18.39 AI：所有已設定免費供應商今日均已耗盡配額，完全停用 AI，使用規則 fallback', flush=True)
+        print('V2.23.0 AI：所有已設定免費供應商今日均已耗盡配額，完全停用 AI，使用規則 fallback', flush=True)
         return None
 
     # V2.18.39：即使環境變數沒特別開 retry，也對 transient error 做最多一次 retry。
@@ -1826,7 +1835,7 @@ def _ai_call_json(system_prompt, user_prompt, cache_key='', ttl_hours=72, respon
         for attempt in range(1,max_attempts+1):
             try:
                 AI_LAST_PROVIDER_STATUS[provider]={'status':'request','attempt':attempt}
-                print(f'V2.18.39 AI：provider={provider} request {attempt}/{max_attempts}', flush=True)
+                print(f'V2.23.0 AI：provider={provider} request {attempt}/{max_attempts}', flush=True)
                 data=_ai_call_provider(
                     provider,
                     system_prompt,
@@ -1834,6 +1843,8 @@ def _ai_call_json(system_prompt, user_prompt, cache_key='', ttl_hours=72, respon
                     response_schema=response_schema,
                     timeout=timeout
                 )
+                ok,why=_ai_result_quality_ok(data,response_schema)
+                if not ok: raise RuntimeError(f'AI_QUALITY_LOW: {why}')
                 if cache_key:
                     _AI_SEMANTIC_RUN_CACHE[cache_key]={'ts':time.time(),'data':data,'provider':provider}
                     disk=load_json(AI_NEWS_CACHE_FILE)
@@ -1844,12 +1855,12 @@ def _ai_call_json(system_prompt, user_prompt, cache_key='', ttl_hours=72, respon
                         for k in old[:-500]: disk.pop(k,None)
                     save_json(AI_NEWS_CACHE_FILE,disk)
                 AI_LAST_PROVIDER_STATUS[provider]={'status':'success','attempt':attempt}
-                print(f'V2.18.39 AI：SUCCESS｜provider={provider}', flush=True)
+                print(f'V2.23.0 AI：SUCCESS｜provider={provider}', flush=True)
                 return data
             except Exception as e:
                 msg=str(e)
                 AI_LAST_PROVIDER_STATUS[provider]={'status':'fail','error':msg[:500]}
-                print(f'V2.18.39 AI：FAIL｜provider={provider}｜{type(e).__name__}: {msg}', flush=True)
+                print(f'V2.23.0 AI：FAIL｜provider={provider}｜{type(e).__name__}: {msg}', flush=True)
                 transient=_ai_transient_error(msg)
                 hard_quota=_ai_hard_quota_error(msg)
                 # V2.18.39：Groq/Mistral 偶發只回 {} 或空欄位。第二次不要重送完整資料，
@@ -1871,7 +1882,7 @@ def _ai_call_json(system_prompt, user_prompt, cache_key='', ttl_hours=72, respon
                 if hard_quota:
                     _ai_mark_provider_quota_exhausted(provider,msg)
                     AI_PROVIDER_DISABLED_THIS_RUN.add(provider)
-                    print(f'V2.18.39 AI：{provider} 明確回報期間/帳號 quota exhausted，今日不再呼叫', flush=True)
+                    print(f'V2.23.0 AI：{provider} 明確回報期間/帳號 quota exhausted，今日不再呼叫', flush=True)
                     break
 
                 # V2.18.39：HTTP 429 視為 provider rate-limit，本次 RUN 直接切換下一家，
@@ -1885,7 +1896,7 @@ def _ai_call_json(system_prompt, user_prompt, cache_key='', ttl_hours=72, respon
                     AI_LAST_PROVIDER_STATUS[provider]={'status':'rate_limited','error':msg[:500],'retry_after':wait}
                     _cooldown=min(max(wait,10.0),120.0)
                     AI_PROVIDER_QUOTA_COOLDOWN_UNTIL[provider]=time.time()+_cooldown
-                    print(f'V2.22.0 AI：{provider} HTTP 429，短期 cooldown {_cooldown:.1f}s；本次 RUN 直接切換下一家，不重試',flush=True)
+                    print(f'V2.23.0 AI：{provider} HTTP 429，短期 cooldown {_cooldown:.1f}s；本次 RUN 直接切換下一家，不重試',flush=True)
                     AI_PROVIDER_DISABLED_THIS_RUN.add(provider)
                     break
                 short_rate_limit=is_429 and _ai_short_rate_limit(msg)
@@ -1895,18 +1906,18 @@ def _ai_call_json(system_prompt, user_prompt, cache_key='', ttl_hours=72, respon
                 is_gemini_json_failure=(provider=='gemini' and 'AI_JSON_PARSE_ERROR' in msg)
                 if (transient and not is_429 or is_gemini_json_failure) and attempt < max_attempts:
                     wait=_ai_retry_after_seconds(msg, default=1.0)
-                    print(f'V2.18.39 AI：{provider} 可恢復生成失敗，{wait:.1f}s 後重試一次', flush=True)
+                    print(f'V2.23.0 AI：{provider} 可恢復生成失敗，{wait:.1f}s 後重試一次', flush=True)
                     time.sleep(wait)
                     continue
 
                 AI_PROVIDER_DISABLED_THIS_RUN.add(provider)
                 if transient or is_gemini_json_failure or is_429:
-                    print(f'V2.18.39 AI：{provider} 重試後仍失敗，本次 RUN 切換下一家', flush=True)
+                    print(f'V2.23.0 AI：{provider} 重試後仍失敗，本次 RUN 切換下一家', flush=True)
                 else:
-                    print(f'V2.18.39 AI：{provider} 非暫時性錯誤，本次 RUN 切換下一家，避免重複浪費 request', flush=True)
+                    print(f'V2.23.0 AI：{provider} 非暫時性錯誤，本次 RUN 切換下一家，避免重複浪費 request', flush=True)
                 break
 
-    print('V2.18.39 AI：所有免費供應商均失敗，使用規則 fallback', flush=True)
+    print('V2.23.0 AI：所有免費供應商均失敗，使用規則 fallback', flush=True)
     return None
 
 
@@ -4927,7 +4938,7 @@ def _run_ai_alert_analysis(func, *args, **kwargs):
     global AI_ALERT_MODE_ACTIVE
     identifier = args[0] if args else kwargs.get('symbol') or kwargs.get('name') or ''
     if not _ai_background_session_allowed(identifier):
-        print(f'V2.18.39 AI：非對應市場交易時段，跳過背景股票/ETF AI｜{identifier}', flush=True)
+        print(f'V2.23.0 AI：非對應市場交易時段，跳過背景股票/ETF AI｜{identifier}', flush=True)
         return None
     previous = AI_ALERT_MODE_ACTIVE
     AI_ALERT_MODE_ACTIVE = True
@@ -15433,7 +15444,7 @@ def run_webhook_server():
             'additionalProperties': False,
         }
         canonical = _theme_canonical_key(topic)
-        decompose_cache_key = 'theme_v2220_decompose:' + canonical
+        decompose_cache_key = 'theme_v2230_decompose:' + canonical
         major_events = _theme_major_event_signal(news)
         cache_key = decompose_cache_key if not major_events else decompose_cache_key + ':event:' + hashlib.sha256('|'.join(major_events).encode('utf-8')).hexdigest()[:12]
         result = _ai_call_json(
@@ -15450,7 +15461,7 @@ def run_webhook_server():
         if not isinstance(result, dict):
             # V2.22.0：AI provider 全部失敗時也不能讓使用者得到空白頁；
             # 先建立保守研究入口，後續仍可進官方分類驗證。
-            print(f'V2.22.0 Theme：第一階段 AI 拆題失敗，使用保守 fallback｜{topic}', flush=True)
+            print(f'V2.23.0 Theme：第一階段 AI 拆題失敗，使用保守 fallback｜{topic}', flush=True)
             result={
                 'headline': str(topic), 'trend':'資料不足',
                 'summary':f'目前 AI 無法穩定取得足夠證據，先以「{topic}」作為研究入口。',
@@ -15513,7 +15524,7 @@ def run_webhook_server():
             lim=list(result.get('evidence_limitations') or [])
             lim.insert(0,'AI 未取得足夠新聞證據拆出更細方向，先保留原題材作為研究入口。')
             result['evidence_limitations']=lim[:3]
-            print(f'V2.22.0 Theme：AI 細題材為空，已建立保守 fallback｜{topic}',flush=True)
+            print(f'V2.23.0 Theme：AI 細題材為空，已建立保守 fallback｜{topic}',flush=True)
 
         # V2.20.0：以 company-chain 官方 records + market universe 的大產業交集建立候選。
         data = _line_industry_load_data()
@@ -15586,7 +15597,7 @@ def run_webhook_server():
         if not selected_fine:
             for ft in result['fine_themes']:
                 ft['official_subindustries'] = []
-            print(f'V2.22.0 Theme：第一階段完成｜{topic}｜fine={len(result["fine_themes"])}', flush=True)
+            print(f'V2.23.0 Theme：第一階段完成｜{topic}｜fine={len(result["fine_themes"])}', flush=True)
             return result
 
         # 只對使用者選定的細題材做一次「官方名稱映射」。映射失敗會明確保留
@@ -15597,8 +15608,9 @@ def run_webhook_server():
                 'official_subindustries': {'type': 'array', 'minItems': 0, 'maxItems': 3, 'items': {'type': 'string'}},
                 'evidence_titles': {'type': 'array', 'minItems': 0, 'maxItems': 3, 'items': {'type': 'string'}},
                 'mapping_reason': {'type': 'string'},
+                'evidence_level': {'type': 'string', 'enum': ['direct_supply_chain','strong_indirect','weak','none']},
             },
-            'required': ['official_subindustries', 'evidence_titles', 'mapping_reason'], 'additionalProperties': False,
+            'required': ['official_subindustries', 'evidence_titles', 'mapping_reason', 'evidence_level'], 'additionalProperties': False,
         }
         valid_official = set(_theme_official_subindustries())
         fine_news = _theme_news_fetch(selected_fine, max_items=18)
@@ -15622,12 +15634,12 @@ def run_webhook_server():
                 'official_candidates': sub_candidates, 'news': combined_news,
                 'semantic_subindustry_hints': alias_terms,
             }
-            mk = 'theme_v2220_map:' + _theme_canonical_key(topic) + ':' + re.sub(r'[^a-z0-9\u4e00-\u9fff]+','_',str(selected_fine).lower()).strip('_')[:80]
+            mk = 'theme_v2230_map:' + _theme_canonical_key(topic) + ':' + re.sub(r'[^a-z0-9\u4e00-\u9fff]+','_',str(selected_fine).lower()).strip('_')[:80]
             mapped = _ai_call_json(
                 '你是台灣產業分類研究員。把這個細題材對應到最合理的官方產業價值鏈細產業。'
                 '只能從 official_candidates 原樣選擇，禁止創造名稱；若沒有合理對應可以輸出空陣列。最多3個。'
                 '同時從 news 中挑選真正與這個細題材相關的新聞標題；沒有可靠新聞就輸出空陣列。'
-                '不要因為新聞不足就放棄官方分類映射；分類可依供應鏈邏輯，但不得捏造公司受惠證據。',
+                '不要因為新聞不足就放棄官方分類映射；分類必須有直接供應鏈關係或強間接受惠關係才可映射；僅因同屬電子業、電機業、資訊業或母產業相近，不得視為受惠；若無法確認產品／供應鏈角色，evidence_level 必須為 weak 或 none 並輸出空陣列。',
                 '資料：' + _ai_compact_payload(map_payload, 11000), cache_key=mk, ttl_hours=THEME_MAPPING_TTL / 3600,
                 response_schema=map_schema, timeout=10
             )
@@ -15645,10 +15657,14 @@ def run_webhook_server():
                 reason = str(mapped.get('mapping_reason') or '').strip()
                 if reason:
                     ft['mapping_reason'] = reason
+                evidence_level=str(mapped.get('evidence_level') or 'none').strip().lower()
+                if evidence_level not in ('direct_supply_chain','strong_indirect'):
+                    subs=[]; ft['official_subindustries']=[]
+                    ft['mapping_reason']=reason or '缺乏足夠直接的產品／供應鏈受惠證據，拒絕泛產業硬配。'
             if not subs:
                 ft['mapping_reason'] = ft.get('mapping_reason') or '目前官方價值鏈資料無法建立足夠可靠的細產業對應。'
 
-        print(f'V2.22.0 Theme：第二階段完成｜{topic}｜fine={len(result["fine_themes"])}｜官方映射候選={len(official_candidates)}', flush=True)
+        print(f'V2.23.0 Theme：第二階段完成｜{topic}｜fine={len(result["fine_themes"])}｜官方映射候選={len(official_candidates)}', flush=True)
         return result
 
     def _theme_quantitative_results(result, u):
@@ -15676,6 +15692,16 @@ def run_webhook_server():
                 # 2) 沒有 cache 時只挑 5 檔做完整既有模型，避免 8~12 檔全部重跑。
                 #    這裡的市值只作「計算資源篩選」，絕不是投資價值排名；真正 Top3
                 #    仍完全依既有第一層投資價值、第二層買點排序。
+                repaired=[]
+                for row in candidates:
+                    try:
+                        cap,code,item=row; cap=to_float(cap); code=clean_code(code)
+                        if cap is None or cap<=0:
+                            uitem=u.get(code) if isinstance(u,dict) else None; ucap=to_float(uitem.get('market_cap')) if isinstance(uitem,dict) else None
+                            if ucap is not None and ucap>0: cap=ucap
+                        repaired.append((cap or 0,code,item))
+                    except Exception: repaired.append(row)
+                candidates=sorted(repaired,key=lambda z:(-(to_float(z[0]) or 0),str(z[1])))
                 cached_rows=[]; uncached=[]
                 now_ts=time.time()
                 for row in candidates:
@@ -15685,26 +15711,24 @@ def run_webhook_server():
                     if isinstance(cc,dict) and now_ts-float(cc.get('ts',0) or 0) < WEB_INDUSTRY_ANALYSIS_CACHE_TTL:
                         fs,bs,bv=_line_extract_analysis_scores(cc.get('detail',''))
                         if fs is not None:
-                            cached_rows.append((row,fs,bs,bv))
-                            continue
+                            cached_rows.append((row,fs,bs,bv)); continue
                     uncached.append(row)
 
                 candidate_pool=[]
-                # 已有完整模型結果優先，最多補到 3 檔最終候選。
+                # 最多 3 檔；不足 3 檔絕不硬湊 Top3。
                 cached_rows.sort(key=lambda z:(-(z[1] if z[1] is not None else -1),-(z[2] if z[2] is not None else -1),-(z[0][0] or 0)))
-                candidate_pool.extend([z[0] for z in cached_rows[:2]])
-                need=max(0,2-len(candidate_pool))
-                if need:
-                    candidate_pool.extend(uncached[:need])
-                if not candidate_pool:
-                    candidate_pool=candidates[:2]
+                candidate_pool.extend([z[0] for z in cached_rows[:3]])
+                need=max(0,3-len(candidate_pool))
+                if need: candidate_pool.extend(uncached[:need])
+                if not candidate_pool: candidate_pool=candidates[:3]
                 cached_codes={clean_code(z[0][1]) for z in cached_rows}
                 full_count=sum(1 for x in candidate_pool if clean_code(x[1]) not in cached_codes)
-                print(f'V2.22.0 Theme：量化快速篩選｜{sub}｜官方候選={len(candidates)}｜cache={len(cached_rows)}｜本次完整分析={full_count}', flush=True)
+                print(f'V2.23.0 Theme：量化快速篩選｜{sub}｜官方候選={len(candidates)}｜cache={len(cached_rows)}｜本次完整分析={full_count}', flush=True)
                 analyzed=_line_industry_run_top3_analysis(candidate_pool,u,label='題材')
                 analyzed.sort(key=lambda r:(-(r[4] if r[4] is not None else -1),-(r[5] if r[5] is not None else -1),-(r[3] if r[3] is not None else -1),str(r[0])))
                 analyzed=analyzed[:3]
-                lines=[f'🏆 {sub} 量化 Top 3','', '📊 排名依第一層「投資價值」由高到低；買點分數次之，市值僅作同分時的最後排序依據。','']
+                rank_label='量化 Top 3' if len(analyzed)>=3 else f'可驗證候選 {len(analyzed)} 檔'
+                lines=[f'🏆 {sub} {rank_label}','', '📊 排名依第一層「投資價值」由高到低；買點分數次之，市值僅作同分時的最後排序依據。','']
                 medals=['🥇','🥈','🥉']
                 for row,medal in zip(analyzed,medals):
                     code,name,price,cap,fs,bs,bv=row
@@ -15741,7 +15765,7 @@ def run_webhook_server():
         lines += ['','⚠️ 風險與限制']
         lines += [f'• {x}' for x in (result.get('risks') or [])[:4]]
         lines += [f'• {x}' for x in (result.get('evidence_limitations') or [])[:3]]
-        lines += ['','📌 AI 題材 Top3 與原有量化分數是兩層不同訊號：AI 負責題材／細題材與研究方向；投資價值、買點、技術與籌碼仍沿用既有模型。']
+        lines += ['','📌 AI 題材 Top3 與原有量化分數是兩層不同訊號：AI 負責題材／細題材與供應鏈研究方向；只有通過官方次產業與直接受惠證據閘門後，才進入既有量化模型。投資價值、買點、技術與籌碼仍由原模型決定。']
         return '\n'.join(lines)[:12000]
 
     @app.get('/theme')
