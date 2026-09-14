@@ -1,318 +1,47 @@
-name: Test DaVinci Assistant API V5
-
+name: DaVinci Assistant API Test
 on:
   workflow_dispatch:
-
+permissions:
+  contents: read
 jobs:
-  test-davinci:
+  davinci-api-test:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
-
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
       - name: Install dependencies
         run: |
-          python3 -m pip install --upgrade pip
-          python3 -m pip install httpx
-
-      - name: Test DaVinci Sandbox API
-        env:
-          DAVINCI_API_KEY: ${{ secrets.DAVINCI_API_KEY }}
-          DAVINCI_ASSISTANT_ID: asst_dvc_o2KvewHb9c1XLXlHsFypCe8N
+          python -m pip install --upgrade pip
+          pip install httpx
+      - name: Check test file
         run: |
-          python3 - <<'PY'
-          import os
-          import sys
-          import time
-          import httpx
-
-          API_KEY = os.environ["DAVINCI_API_KEY"]
-          ASSISTANT_ID = os.environ["DAVINCI_ASSISTANT_ID"]
-
-          BASE_URL = "https://sandbox.davinci.tw/api/assts/v1"
-          THREAD_URL = BASE_URL + "/threads"
-
-          print("=" * 70)
-          print("DaVinci Assistant API 測試 V5")
-          print("=" * 70)
-          print(f"Assistant ID：{ASSISTANT_ID}")
-          print(f"Endpoint：{BASE_URL}")
-          print(f"API Key 長度：{len(API_KEY)}")
-          print("=" * 70)
-
-          headers = {
-              "Authorization": f"Bearer {API_KEY}",
-              "Content-Type": "application/json",
-              "Accept": "application/json",
-          }
-
-          prompt = """
-          請用繁體中文回答。
-
-          如果一家台灣公司主要供應 AI 伺服器相關零組件，
-          分析它是否屬於 AI 題材時，應該如何區分：
-
-          1. 直接受惠
-          2. 供應鏈間接受惠
-          3. 只有題材相關但實際受惠有限
-
-          並說明為什麼不能只看到「AI」關鍵字就判定利多。
-
-          請簡短回答。
-          """
-
-          payload = {
-              "messages": [
-                  {
-                      "role": "user",
-                      "content": prompt
-                  }
-              ]
-          }
-
-          print()
-          print("【1/4】建立 Thread")
-          print("-" * 70)
-
-          try:
-              with httpx.Client(
-                  follow_redirects=False,
-                  timeout=60.0
-              ) as client:
-
-                  response = client.post(
-                      THREAD_URL,
-                      headers=headers,
-                      json=payload,
-                  )
-
-              print(f"HTTP Status：{response.status_code}")
-
-              location = response.headers.get("location")
-
-              if location:
-                  print(f"Location：{location}")
-
-              print(f"Content-Type：{response.headers.get('content-type', '')}")
-
-              if response.status_code >= 400:
-                  print()
-                  print("❌ Thread 建立失敗")
-                  print(response.text[:3000])
-                  sys.exit(1)
-
-              if response.status_code in (301, 302, 303, 307, 308):
-                  print()
-                  print("❌ Sandbox 仍然發生 Redirect")
-                  print(f"Location：{location}")
-                  sys.exit(1)
-
-              print()
-              print("✅ Thread 建立成功")
-
-              data = response.json()
-
-              thread_id = data.get("id")
-
-              if not thread_id:
-                  print("❌ Response 裡沒有 Thread ID")
-                  print(response.text[:3000])
-                  sys.exit(1)
-
-              print(f"Thread ID：{thread_id}")
-
-          except Exception as e:
-              print()
-              print("❌ API Request 發生例外")
-              print(type(e).__name__)
-              print(str(e))
-              sys.exit(1)
-
-          print()
-          print("【2/4】執行 Assistant")
-          print("-" * 70)
-
-          run_url = f"{BASE_URL}/threads/{thread_id}/runs"
-
-          run_payload = {
-              "assistant_id": ASSISTANT_ID
-          }
-
-          try:
-              with httpx.Client(
-                  follow_redirects=False,
-                  timeout=60.0
-              ) as client:
-
-                  response = client.post(
-                      run_url,
-                      headers=headers,
-                      json=run_payload,
-                  )
-
-              print(f"HTTP Status：{response.status_code}")
-
-              if response.status_code >= 400:
-                  print()
-                  print("❌ Assistant Run 失敗")
-                  print(response.text[:3000])
-                  sys.exit(1)
-
-              data = response.json()
-
-              run_id = data.get("id")
-              status = data.get("status")
-
-              print(f"Run ID：{run_id}")
-              print(f"初始狀態：{status}")
-
-              if not run_id:
-                  print("❌ Response 裡沒有 Run ID")
-                  print(response.text[:3000])
-                  sys.exit(1)
-
-          except Exception as e:
-              print()
-              print("❌ Run API 發生例外")
-              print(type(e).__name__)
-              print(str(e))
-              sys.exit(1)
-
-          print()
-          print("【3/4】等待 Assistant")
-          print("-" * 70)
-
-          retrieve_url = (
-              f"{BASE_URL}/threads/{thread_id}/runs/{run_id}"
-          )
-
-          final_status = None
-
-          for i in range(60):
-
-              time.sleep(2)
-
-              try:
-                  with httpx.Client(
-                      follow_redirects=False,
-                      timeout=60.0
-                  ) as client:
-
-                      response = client.get(
-                          retrieve_url,
-                          headers=headers,
-                      )
-
-                  if response.status_code >= 400:
-                      print(
-                          f"Poll {i+1:02d}：HTTP "
-                          f"{response.status_code}"
-                      )
-                      print(response.text[:2000])
-                      sys.exit(1)
-
-                  data = response.json()
-                  status = data.get("status")
-
-                  print(f"Poll {i+1:02d}：{status}")
-
-                  if status == "completed":
-                      final_status = status
-                      break
-
-                  if status in {
-                      "failed",
-                      "cancelled",
-                      "expired",
-                      "requires_action"
-                  }:
-                      print()
-                      print("❌ Assistant 沒有正常完成")
-                      print(response.text[:3000])
-                      sys.exit(1)
-
-              except Exception as e:
-                  print()
-                  print("❌ Poll 發生例外")
-                  print(type(e).__name__)
-                  print(str(e))
-                  sys.exit(1)
-
-          if final_status != "completed":
-              print()
-              print("❌ 等待逾時")
-              sys.exit(1)
-
-          print()
-          print("【4/4】取得 Assistant 回覆")
-          print("-" * 70)
-
-          messages_url = (
-              f"{BASE_URL}/threads/{thread_id}/messages"
-          )
-
-          try:
-              with httpx.Client(
-                  follow_redirects=False,
-                  timeout=60.0
-              ) as client:
-
-                  response = client.get(
-                      messages_url,
-                      headers=headers,
-                  )
-
-              print(f"HTTP Status：{response.status_code}")
-
-              if response.status_code >= 400:
-                  print("❌ 取得 Messages 失敗")
-                  print(response.text[:3000])
-                  sys.exit(1)
-
-              data = response.json()
-
-              answer = None
-
-              for message in data.get("data", []):
-
-                  if message.get("role") != "assistant":
-                      continue
-
-                  for content in message.get("content", []):
-
-                      if content.get("type") == "text":
-
-                          text_obj = content.get("text", {})
-
-                          if isinstance(text_obj, dict):
-                              answer = text_obj.get("value")
-
-                          if answer:
-                              break
-
-                  if answer:
-                      break
-
-              if not answer:
-                  print("❌ 找不到 Assistant 回覆")
-                  print(response.text[:5000])
-                  sys.exit(1)
-
-              print()
-              print("=" * 70)
-              print("🎉 DaVinci Assistant API 成功")
-              print("=" * 70)
-              print()
-              print(answer)
-              print()
-              print("=" * 70)
-
-          except Exception as e:
-              print()
-              print("❌ 取得回覆發生例外")
-              print(type(e).__name__)
-              print(str(e))
-              sys.exit(1)
-
-          print()
-          print("測試完成。")
-          PY
+          echo "========================================"
+          echo "檢查 DaVinci 測試檔"
+          echo "========================================"
+          if [ ! -f "davinci_api_test" ]; then
+            echo "❌ 找不到 Repo 根目錄的 davinci_api_test"
+            echo ""
+            echo "目前 Repo 根目錄："
+            ls -la
+            exit 1
+          fi
+          echo "✅ 找到 davinci_api_test"
+          echo ""
+          echo "檔案資訊："
+          wc -l davinci_api_test
+          echo ""
+      - name: Run DaVinci API diagnostic
+        env:
+          DAVINCI_ASSISTANT_ID: ${{ secrets.DAVINCI_ASSISTANT_ID }}
+          DAVINCI_API_KEY: ${{ secrets.DAVINCI_API_KEY }}
+          DAVINCI_API_URL: ${{ secrets.DAVINCI_API_URL }}
+        run: |
+          echo "========================================"
+          echo "DaVinci Assistant API Diagnostic"
+          echo "========================================"
+          echo ""
+          python davinci_api_test
