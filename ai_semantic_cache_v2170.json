@@ -523,5 +523,61 @@
       ]
     },
     "provider": "groq"
+  },
+  "trump_v21826:__MARKET__:7bc031db69b3b16a481816dd": {
+    "ts": 1789416267.7989638,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.6,
+          "policy_stage": "unknown",
+          "reason": "中東地緣局勢帶動石油投資獲利與油價支撐。",
+          "relevant": true,
+          "affected_channel": "需求與估值",
+          "transmission": "伊朗衝突→地緣政治風險溢價→油價上漲→能源類股及市場波動",
+          "exposure": "整體能源市場與大盤指數"
+        },
+        {
+          "id": 1,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.5,
+          "policy_stage": "threat",
+          "reason": "口頭宣示戰後油價將大幅下跌，影響屬長期假設。",
+          "relevant": true,
+          "affected_channel": "預期心理",
+          "transmission": "政治口頭表態→市場預期心理→短線油價觀望",
+          "exposure": "整體能源市場"
+        },
+        {
+          "id": 2,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.8,
+          "policy_stage": "considering",
+          "reason": "關稅政策不確定性持續引發整體股市數兆美元波動。",
+          "relevant": true,
+          "affected_channel": "估值與風險偏好",
+          "transmission": "關稅威脅→貿易摩擦不確定性升高→市場避險情緒升溫→股市波動下修",
+          "exposure": "美股大盤與跨國貿易相關產業"
+        },
+        {
+          "id": 3,
+          "direction": "positive",
+          "score": 1,
+          "confidence": 0.7,
+          "policy_stage": "threat",
+          "reason": "呼籲降息利好市場流動性，半導體股逆勢上揚。",
+          "relevant": true,
+          "affected_channel": "資金成本與估值",
+          "transmission": "施壓聯準會降息預期→資金成本降低與流動性改善→科技股與大盤估值獲得支撐",
+          "exposure": "半導體產業與整體美股市場"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
