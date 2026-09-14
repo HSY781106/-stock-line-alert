@@ -33,25 +33,25 @@
   },
   "interval_low": {
     "0050 元大台灣50": {
-      "last_check": "2026-09-14T11:08:33.600694+08:00",
-      "last_price": 106.9000015258789,
-      "last_interval_low": 106.75,
+      "last_check": "2026-09-14T11:27:43.365425+08:00",
+      "last_price": 107.0999984741211,
+      "last_interval_low": 106.94999694824219,
       "last_interval_source": "Yahoo-5m",
       "interval_alert": false,
       "session_key": "2026-09-14"
     },
     "2330 台積電": {
-      "last_check": "2026-09-14T11:08:50.233093+08:00",
-      "last_price": 2385.0,
+      "last_check": "2026-09-14T11:27:58.251614+08:00",
+      "last_price": 2390.0,
       "last_interval_low": 2385.0,
       "last_interval_source": "Yahoo-5m",
       "interval_alert": false,
       "session_key": "2026-09-14"
     },
     "3711 日月光投控": {
-      "last_check": "2026-09-14T11:09:36.329033+08:00",
-      "last_price": 617.0,
-      "last_interval_low": 616.0,
+      "last_check": "2026-09-14T11:28:44.874703+08:00",
+      "last_price": 618.0,
+      "last_interval_low": 618.0,
       "last_interval_source": "Yahoo-5m",
       "interval_alert": false,
       "session_key": "2026-09-14"
@@ -65,9 +65,9 @@
       "session_key": "2026-09-11"
     },
     "台灣加權指數": {
-      "last_check": "2026-09-14T11:09:39.361622+08:00",
-      "last_price": 45892.87890625,
-      "last_interval_low": 45804.03125,
+      "last_check": "2026-09-14T11:28:47.830337+08:00",
+      "last_price": 45958.62109375,
+      "last_interval_low": 45866.26953125,
       "last_interval_source": "Yahoo-5m",
       "interval_alert": false,
       "session_key": "2026-09-14"
