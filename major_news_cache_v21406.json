@@ -1,22 +1,32 @@
 {
   "2330": {
-    "fetched_at": "2026-09-12T10:59:20.892586+08:00",
-    "adjustment": -5,
+    "fetched_at": "2026-09-14T09:15:54.027312+08:00",
+    "adjustment": -4,
     "events": [
       {
-        "title": "2330 台積電 - 快訊／美股大跌！台股重挫逾800點台積電跌30元至2420 - 股市爆料同學會 - cmoney.tw",
-        "source": "cmoney.tw",
+        "title": "2330 台積電 - 快訊／美股大跌！台股重挫逾800點台積電跌30元至2420 - 股市爆料同學會 - CMoney",
+        "source": "CMoney",
         "date": "2026-09-11T09:29:27+08:00",
         "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE5GRExNWWw0Rk5MbUdFTnU3UGFfaV9GdVpDUHl4WUVYT2dtR1hsdjdodFRzaE83YkpTSU9iTk42ZXJYMDQ4NXlSb2szRFlEQU00RXJuQmdLNXk?oc=5",
         "raw_adjustment": -5,
-        "adjustment": -5,
+        "adjustment": -4,
         "label": "股價重大下跌",
         "status": "重大負面事件"
       },
       {
+        "title": "【零股排行榜】盤中零股成交量TOP 20｜0050 元大台灣50、2303 聯電、2330 台積電、00919 群益台灣精選高息、2327 國巨* (0907)｜豐雲學堂2026 年 09 月 - sinotrade.com.tw",
+        "source": "sinotrade.com.tw",
+        "date": "2026-09-07T16:54:28+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiuARBVV95cUxPd3NOYi1SUUhDYTZRSXNoOUZleUNUSGRxa3E4QkRwanNBUXJkUW9uNVkzQTBseWF5d3hxLWlmaUdiUktLWnNQNVJia1BJd0dZWXQwY2FVN3A5OUs4RG1kLTF4SVN2V2d3NnJmLVJmWE9jUjR4cHBVWmNFX2U3ZWxvR2tqWXhUTUhobG9XUnkzazhMRFhIRV9lNEpGMVV6NUhNcDQ0WUtkZ0E1RGsxa0tVQUJjRm1BTW1PNlM3eGRLM05DSmg1STF6WEFCWjBNUW9VanVIbElxU0owTWRJekxTSFFNdnJKTER2VEVhZ3lKd0YwXzFqWURUbjNaem1FOHlORmJ1SDJHT2VIVzhzWkRsWm9UandyNGE5TmhJN29uT2lXS1BzOEluWURwRkhYTmpnaGZHSWdZWDdaY2xUTVd5bDlILV9ScWF5S09mTkpGSXhTa29TRUM",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
         "title": "三大法人買賣超 – 外資買超(2330)台積電、(2454)聯發科，投信買超(2454)聯發科、(2303)聯電，法人合計買超1138.65億元 - sinotrade.com.tw",
         "source": "sinotrade.com.tw",
-        "date": "2026-09-07T16:44:45+08:00",
+        "date": "2026-09-07T23:35:55+08:00",
         "link": "https://news.google.com/rss/articles/CBMi4ARBVV95cUxNc0VoZHJxRHkxQXZReExLQWRtVUhMLTlJTjhtUkF4ckxySkRkRDRwc1JrY01QU3hURVpHWVl5QS1FU0d3UjZkemFZTmQtRW9MRnVaTnA4cEY2NDlVMWRIVnBCR1dOY3hqa0FBWlJxYUY0T1hYal92VmVTYlNpa1dlS2gycFBYelIzMjhyaWtEODFzUUM4LVZRS2NMcF85dWd5enU5UVJsREQ5RTBJYUtEVnRZaVJxWWtJUnY0RTB5eFprcnppOHNmczlSLS1EcWwxejkyUER0Z24tUWg3dUFpSFJDakVpSkpwUlh1SWZRLTJGTXFPRlhWVlpIb1Y4LUhyU1IyT3RJLWZscG5oeEx3eXZwamxYMXdDQno4NnYzdTVDcUgyVVNmeUNSZ2ZaWWpNYTBpRC1GNTNOMk5WOFVkVVRfNElQU2ZwdHp3eXBCNEY1b08wdW5",
         "raw_adjustment": 0,
         "adjustment": 0,
@@ -24,18 +34,8 @@
         "status": ""
       },
       {
-        "title": "三大法人買賣超 – 外資買超(2408)南亞科、(2344)華邦電，投信買超(2330)台積電、(6223)旺矽，法人合計賣超99.87億元 - sinotrade.com.tw",
-        "source": "sinotrade.com.tw",
-        "date": "2026-09-08T18:16:21+08:00",
-        "link": "https://news.google.com/rss/articles/CBMi3gRBVV95cUxPbXpuclpmN2twZlZhX1llYkZsZDFzdGJMY1UwNEl5bFcxQWZCVkFKWDctRWRGMVF6Q1dOaElTREdzdm03RDJaS1ZPMFcxUlZxUGRuQTNjRE9lbUNRZUhpb2d6UUluSU9yeFptdndYU3NmbXdxZWZTRm1HMFdnR094MWlWd1dQZkRFZGN2MHdhVFp3MjdoMkt2NzJ2dzlLaEdUZk5MQzFtQUJ2ajA2RWVUbllPTDVralFMd053VkpDd19pVkVCc0VPdUxMaXludDU1YkVEeHZiWDBtbVg3elVVYjJBM2hGZG5sM09JUFFRMHByWHBwbDNlaGl4Tm1qbFRxUmk4ZUhyc1MzdFo5M1RadDZ2dmktTmVsWklXc1F5VmJvVWlZdzJVUVU0TmM4WE5iTmZJTG5scnlCZ2tjbFBRNGYydlZyZnp2MzlMa05KS0pVZy1FQ0F",
-        "raw_adjustment": 0,
-        "adjustment": 0,
-        "label": "",
-        "status": ""
-      },
-      {
-        "title": "2330 台積電 - 📣0910台股觀盤重點- 股市爆料同學會 - cmoney.tw",
-        "source": "cmoney.tw",
+        "title": "2330 台積電 - 📣0910台股觀盤重點- 股市爆料同學會 - CMoney",
+        "source": "CMoney",
         "date": "2026-09-09T03:17:02+08:00",
         "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTFBQUWhLemkwR090TEE1NzJNQnpqQ0dqSFJEUnVCWUUyT0RqWHFvZlNDeTg1d1BtWW11djlKME9LZ2M4MElyakxLUTNadzhWemNoV29YYTViQS0?oc=5",
         "raw_adjustment": 0,
@@ -44,40 +44,40 @@
         "status": ""
       },
       {
-        "title": "2330 台積電 - 09/09 台股盤前：昨夜費半逆勢漲1.30%，英特爾狂飆逾10%台股先看誰？ - 股市爆料同學會 - cmoney.tw",
-        "source": "cmoney.tw",
-        "date": "2026-09-09T08:59:18+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE9YUldZTDhiemJtSllSZFNjNG5RYktiaDhKV0RxR2Y2Z0QzTE9HWVdYdFpqUlRGRGRRTDNmajRFREp4WEhVOHZTVGRMYUtFUkxkTTExSGVOeU4?oc=5",
+        "title": "2330 台積電 - 47000點最怕這件事！ - 股市爆料同學會 - CMoney",
+        "source": "CMoney",
+        "date": "2026-09-09T17:53:14+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTFBVM19mM0ctcFVfSjRiZUxPaXZyczl1eERKMlo2Z25OaHk5c2JrWFRJbWVBai1WclY1U3hna1JVbjNmeXRELTRpQjlhbWtjUFc5RVdWSWUtRU0?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
         "status": ""
       },
       {
-        "title": "2330 台積電 - 【台積電不是蓋1、2座廠，是「20座級別」全球擴廠潮！】 - 股市爆料同學會 - cmoney.tw",
-        "source": "cmoney.tw",
-        "date": "2026-09-09T10:46:24+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTFAyR29uQXIyZzU3S3JONGE1UWk5N3NuTXU5bHN4dDlzaWIzZThwZnhtRmlvSzhtWTU4LVNPZ1BlY0hOV0p6Q1l5WkRJVWs2aUR5MVFNRkQ1MWQ?oc=5",
+        "title": "2330 台積電 - 台積電基本面沒變過，0050長期還是走高，跌的時候不買，難道... - 股市爆料同學會 - CMoney",
+        "source": "CMoney",
+        "date": "2026-09-10T02:26:55+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE9qQUtpVk5WYkhHaTE0b09xd2hTOVhqVUJlN2FHNzcyYlAxbUJyMlI1WTBwcG1Sb1NobEZaV2tyQXYzb0d6bnNjS1RxTW5TYWliTWNBOXhEVWY?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
         "status": ""
       },
       {
-        "title": "2330 台積電 - 快訊／台積電漲10元至2480 台股漲逾200點站上47300 - 股市爆料同學會 - cmoney.tw",
-        "source": "cmoney.tw",
-        "date": "2026-09-09T12:25:44+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE9rVk15ZEJfcm5LNjMyamhrb3ZzTDR6VTNHbWJIRC1hd2x5TnpqMXN0Z054YVhJRFJiMHhUQkVkdk05RkFXUXVXNU83RHBKNXh2VnNqVkxhRWs?oc=5",
+        "title": "2330 台積電 - 台積電8月營收：月增10%、年增53%、累計年增39% - 股市爆料同學會 - CMoney",
+        "source": "CMoney",
+        "date": "2026-09-10T14:05:58+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE5aVHNPZTFJb1c2VHlWd2JpZzljZm5ZaEJLclRCTmpmY1JRazdzcUlQSEV6VllRd2VQekJkQUR2cXhHWm91YWdKQWp5d21DemEwWXZNenZkV1M?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
         "status": ""
       },
       {
-        "title": "台積電等死吧 - cmoney.tw",
-        "source": "cmoney.tw",
-        "date": "2026-09-09T13:38:48+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE9ZRGwwUmFzMWh1MWRzVjUyODZPR1o5b05MSUhXbE0tYmwtUFRJT0dnWFZxZTV0aXdmeXY5TF9sb1hMaC02RTJsTlV6Vnp1NEhuOTFFNGQ5aUo?oc=5",
+        "title": "2330 台積電 - AGI來了！？半導體業重所未見的“黃金年代”！誰是最終贏家？ - 股市爆料同學會 - CMoney",
+        "source": "CMoney",
+        "date": "2026-09-10T14:06:10+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE1lb0xvc2FoRjZkaVdreXVnT2txRjRSQVRGN0J0Znc0TjJiU1VFUnVWU3JBdzg1V2lvbU52MTJNaFZHT3pNRTZFdG9ydUd5dVFCSEtKTG9pOFU?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
@@ -88,32 +88,22 @@
     "lookback_days": 14
   },
   "3711": {
-    "fetched_at": "2026-09-12T11:00:11.329852+08:00",
-    "adjustment": 4,
+    "fetched_at": "2026-09-14T09:16:39.752461+08:00",
+    "adjustment": 3,
     "events": [
       {
-        "title": "3711 日月光投控- 下午陪朋友去銀行辦事， 結果因為發生一些小誤會， 讓她當場氣... - 股市爆料同學會 - cmoney.tw",
-        "source": "cmoney.tw",
-        "date": "2026-08-29T15:00:00+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE5XR0lNNzIyQmNjbkhjRDRRMmlYbmdtWnQza2JDTERsWlhqMnBsemU1bld0djZ6b1ZVXzBHNzBGeUxMWlVFMWxhNGwzYVZqVkpsTHNNUmZxSFI?oc=5",
-        "raw_adjustment": 0,
-        "adjustment": 0,
-        "label": "",
-        "status": ""
-      },
-      {
-        "title": "日月光投控(3711) Q2 獲利大幅成長，先進封裝進入成長加速期！-小資女艾蜜莉 - cmnews.com.tw",
-        "source": "cmnews.com.tw",
+        "title": "【即時新聞】日月光投控(3711)獲先進封裝追單，這「6檔概念股」多空大洗牌！ - CMoney投資網誌",
+        "source": "CMoney投資網誌",
         "date": "2026-08-31T15:00:00+08:00",
-        "link": "https://news.google.com/rss/articles/CBMifEFVX3lxTFAyYW1iMEFTUEFjdjU2VHF1UDFsSHFZOXFzT2dQVVZwekR4UHJxczNkZVNXOFRHWWhlejZGWlhvcWxtZXc4UzRwUHpYY0Y4SnZaRDRQRHdEYnVVYnA0R2lwQVBIeW53eGxHTjdud2dBR0FZdklxLTdVM3B0amM?oc=5",
+        "link": "https://news.google.com/rss/articles/CBMikAFBVV95cUxNdU1aU2ZEajlobTRobUc1NHNCWDJjSmd2ZkJtUW5wYmVoMkZTdnY2cmhHSHFaMVpUYi12ckhDY1VjQmNvbTJPMElMTVo1aVBhbVllVS1RVUtNYW1RalVNUTZDLXBIR2o0R3E3Y3I3WFNaZzBNSW5GVm1fM3Jrbk5yQTFxLUY4YzlCSEZNWFFsQlQ?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
         "status": ""
       },
       {
-        "title": "日月光投控(3711)擴大先進封裝資本支出，股價震盪後能否續強？-林彥廷看盤室 - cmnews.com.tw",
-        "source": "cmnews.com.tw",
+        "title": "日月光投控(3711)擴大先進封裝資本支出，股價震盪後能否續強？-林彥廷看盤室 - CMoney投資網誌",
+        "source": "CMoney投資網誌",
         "date": "2026-08-31T15:00:00+08:00",
         "link": "https://news.google.com/rss/articles/CBMigwFBVV95cUxPS1FET1ZJb081dm80WllMVmNGSHN3d3AyX1Y2NDRPTm1DTDlQNkZxMjhKMjlReTZDdGw0TTFXWndmQ1pNcTdMZUJBZHJvN1R3WGMzVHZxcnNRdk9yU2daOUN1MFYxSW5NbUdYNEhOM29IRk51NDVja3dxVEhJUjh6Z3hmVQ?oc=5",
         "raw_adjustment": 0,
@@ -122,10 +112,10 @@
         "status": ""
       },
       {
-        "title": "【即時新聞】日月光投控(3711)獲先進封裝追單，這「6檔概念股」多空大洗牌！ - cmnews.com.tw",
-        "source": "cmnews.com.tw",
+        "title": "日月光投控(3711) Q2 獲利大幅成長，先進封裝進入成長加速期！-小資女艾蜜莉 - CMoney投資網誌",
+        "source": "CMoney投資網誌",
         "date": "2026-08-31T15:00:00+08:00",
-        "link": "https://news.google.com/rss/articles/CBMikAFBVV95cUxNdU1aU2ZEajlobTRobUc1NHNCWDJjSmd2ZkJtUW5wYmVoMkZTdnY2cmhHSHFaMVpUYi12ckhDY1VjQmNvbTJPMElMTVo1aVBhbVllVS1RVUtNYW1RalVNUTZDLXBIR2o0R3E3Y3I3WFNaZzBNSW5GVm1fM3Jrbk5yQTFxLUY4YzlCSEZNWFFsQlQ?oc=5",
+        "link": "https://news.google.com/rss/articles/CBMifEFVX3lxTFAyYW1iMEFTUEFjdjU2VHF1UDFsSHFZOXFzT2dQVVZwekR4UHJxczNkZVNXOFRHWWhlejZGWlhvcWxtZXc4UzRwUHpYY0Y4SnZaRDRQRHdEYnVVYnA0R2lwQVBIeW53eGxHTjdud2dBR0FZdklxLTdVM3B0amM?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
@@ -142,8 +132,8 @@
         "status": ""
       },
       {
-        "title": "日月光投控(3711)站上AI封測要角，先進封裝比重能否拉高獲利-林彥廷看盤室 - cmnews.com.tw",
-        "source": "cmnews.com.tw",
+        "title": "日月光投控(3711)站上AI封測要角，先進封裝比重能否拉高獲利-林彥廷看盤室 - CMoney投資網誌",
+        "source": "CMoney投資網誌",
         "date": "2026-09-01T15:00:00+08:00",
         "link": "https://news.google.com/rss/articles/CBMigwFBVV95cUxPS2VBQ3I1M212WE9Pd19IRjZKaWdVTlZ3emxsellXeXBPVFhVS3ZLNW54VktmVThaeTlnY2V6a0JqSnpvcjNwcWowWGd5WW00emJpUDdrd2Z2RUV1MjhOR0Q5Q2JQRVlHLVdXaldGRVhKdF9wa3dRNkFoVUJYV25HWFhWdw?oc=5",
         "raw_adjustment": 0,
@@ -166,6 +156,16 @@
         "source": "自由財經",
         "date": "2026-09-02T15:00:00+08:00",
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE94TW92WVpyN2xlei1oRnFZQVpsREpKWGJQMm0yQ2JDaC1KRVpyclQzODdkbmd2S0dnRFZPSTY1WkpzSF9zOTRRX2RKU0E3Sk5BQ0hfaGlOWmpxOTh5WGJR0gFkQVVfeXFMTkpVNU92M2xYX2stcGlVa1VRMGtYOXk1cHhyc1NKVVhvZUI2dXhPOFRHQmZ5RFJSRlVuQTJRN0dad3pQLTVHWmZVR19FQ0tTWkt6cWxScVhlUlB5R2F4S3pLZXh5QQ?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "Factset 最新調查：日月光投控(3711-TW)EPS預估上修至18.57元，預估目標價為700元｜新聞快訊｜豐雲學堂 - sinotrade.com.tw",
+        "source": "sinotrade.com.tw",
+        "date": "2026-09-04T15:00:00+08:00",
+        "link": "https://news.google.com/rss/articles/CBMidkFVX3lxTE5rU2s4YS0tYUhBVzRvdkVrX2J4TGVOWjd5RzRkVnJjbGwybGlTRVBLeXF2eUZfWGo4YV92eVpkRzVHOWRQOVdfdEV5alB2WkxJZjR1aWowREk0ZnJCdS1ZTmdWS21waTlBZkpsWWpRMGhKRldBWVE?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",

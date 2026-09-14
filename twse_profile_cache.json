@@ -1,5 +1,5 @@
 {
-  "cached_at": 1789091504.1600747,
+  "cached_at": 1789348081.169819,
   "data": [
     {
       "code": "1101",
@@ -871,7 +871,7 @@
       "industry": "其他",
       "market": "TWSE",
       "symbol": "1516.TW",
-      "capital": 400081950.0
+      "capital": 300081950.0
     },
     {
       "code": "1517",
@@ -3183,7 +3183,7 @@
       "industry": "其他",
       "market": "TWSE",
       "symbol": "2496.TW",
-      "capital": 191004400.0
+      "capital": 200554620.0
     },
     {
       "code": "2497",
@@ -4135,7 +4135,7 @@
       "industry": "電子零組件業",
       "market": "TWSE",
       "symbol": "3011.TW",
-      "capital": 1296008510.0
+      "capital": 1295658510.0
     },
     {
       "code": "3013",
@@ -6343,7 +6343,7 @@
       "industry": "電腦及週邊設備業",
       "market": "TWSE",
       "symbol": "6166.TW",
-      "capital": 2177692570.0
+      "capital": 2177792570.0
     },
     {
       "code": "6168",
@@ -6471,7 +6471,7 @@
       "industry": "電子零組件業",
       "market": "TWSE",
       "symbol": "6213.TW",
-      "capital": 3635622180.0
+      "capital": 3635972180.0
     },
     {
       "code": "6214",
@@ -6927,7 +6927,7 @@
       "industry": "生技醫療",
       "market": "TWSE",
       "symbol": "6589.TW",
-      "capital": 3068711740.0
+      "capital": 3020681690.0
     },
     {
       "code": "6591",
@@ -7023,7 +7023,7 @@
       "industry": "其他電子業",
       "market": "TWSE",
       "symbol": "6658.TW",
-      "capital": 363700000.0
+      "capital": 383700000.0
     },
     {
       "code": "6666",
@@ -7535,7 +7535,7 @@
       "industry": "電腦及週邊設備業",
       "market": "TWSE",
       "symbol": "6933.TW",
-      "capital": 424428000.0
+      "capital": 424883500.0
     },
     {
       "code": "6934",
@@ -7607,7 +7607,7 @@
       "industry": "生技醫療",
       "market": "TWSE",
       "symbol": "6955.TW",
-      "capital": 248007850.0
+      "capital": 303809600.0
     },
     {
       "code": "6957",
