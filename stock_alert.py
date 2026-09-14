@@ -15812,7 +15812,6 @@ def run_webhook_server():
                         f'<span style="font-weight:400;font-size:13px">{html.escape(str(x.get("why_hot") or ""))}</span></button></form>'
                     )
                 body += '<div class="card"><h2>🔥 最近值得追蹤</h2>' + ''.join(cards) + '</div>'
-            body += '<div class="nav"><a href="/industry">🏭 產業</a><a href="/macro">🌎 總經</a><a href="/trump">🇺🇸 Trump</a><a href="/">首頁</a></div>'
             return _web_page('題材 Intelligence', body)
 
         # 兩階段流程的背景等待頁
@@ -15926,7 +15925,6 @@ def run_webhook_server():
                 + (f'<h3>⏱️ 為什麼現在值得看</h3><ul>{why_html}</ul>' if why_html else '')
                 + '<p><b>以下細題材順序是 AI 依新聞證據與產業邏輯的研究優先順序，不是投資價值排名；選定後才會啟動股票／估值／技術／籌碼分析。</b></p>'
                 + ''.join(cards)
-                + f'<div class="nav"><a href="/theme">← 題材首頁</a><a href="/industry">🏭 產業</a><a href="/">首頁</a></div>'
             )
             return _web_page('題材 Intelligence｜細題材選擇', body)
 
@@ -16057,7 +16055,6 @@ def run_webhook_server():
                 '<form method="get"><label>① 選擇大產業</label><select name="parent">'+opts+'</select><button type="submit">下一步：選擇次產業</button></form></div>'
                 '<div class="card"><h2>🔎 直接查個股所屬產業</h2><p class="muted">輸入台股代碼或公司名稱，例如 2330、台積電；系統會依官方產業價值鏈資料找出對應次產業，直接顯示 Top 3。</p>'
                 '<form method="get"><input name="stock" placeholder="例如：2330 或 台積電" autocomplete="off"><button type="submit">🔍 查詢個股對應產業 Top 3</button></form></div>'
-                '<div class="nav"><a href="/trump">🇺🇸 川普風向</a><a href="/macro">🌎 總經風險</a><a href="/">首頁</a></div>'
             )
             return _web_page('產業分析',body)
         try:
@@ -16078,7 +16075,6 @@ def run_webhook_server():
                 f'<div class="card"><h1>📊 {html.escape(parent)}</h1><p class="muted">請選擇次產業。</p>'
                 '<form method="get"><input type="hidden" name="parent" value="'+html.escape(parent)+'">'
                 '<label>② 選擇次產業</label><select name="sub">'+opts+'</select><button type="submit">🔍 開始分析</button></form></div>'
-                '<div class="nav"><a href="/industry">← 重新選大產業</a><a href="/trump">🇺🇸 川普</a></div>'
             )
             return _web_page('產業分析',body)
         if request.args.get('_ready') != '1':
@@ -16106,7 +16102,6 @@ def run_webhook_server():
         result_html = str(result).replace('\n', '<br>')
         body=(
             f'<div class="card"><h1>📊 {html.escape(sub)}</h1><div class="muted">大產業：{html.escape(display_parent)}</div><div class="industry-result">{result_html}</div></div>'
-            '<div class="nav"><a href="/industry">← 再查一次</a><a href="/trump">🇺🇸 川普</a><a href="/macro">🌎 總經</a></div>'
         )
         return _web_page('產業分析結果',body)
 
@@ -16349,7 +16344,6 @@ def run_webhook_server():
             body.append('<h2>🏭 對產業／個股的作用</h2><p>先由總經五象限推導景氣、利率、成本、勞動、匯率與風險偏好的變化，再映射到產業；個股仍由基本面、估值、技術、籌碼、重大消息、Trump 等原模型決定。</p>')
             body.append('<form method="get" action="/macro-stock"><input name="symbol" placeholder="輸入 2330、3711、QQQ、NVDA…" required><button type="submit">🔍 查詢個股總經曝險</button></form>')
             body.append('<p class="muted">資料更新：'+html.escape(str(info.get('updated_at','')))+'</p>')
-            body.append('<div class="nav"><a href="/industry">🏭 產業</a><a href="/trump">🇺🇸 Trump</a><a href="/macro">🔄 重新整理</a><a href="/">首頁</a></div>')
             return _web_page('Macro & Policy Intelligence',''.join(body))
         except Exception as ex:
             return _web_page('總經風險', f'<div class="card"><h1>🌎 總經資料暫不可用</h1><pre>{html.escape(type(ex).__name__+": "+str(ex))}</pre><div class="nav"><a href="/">首頁</a></div></div>'),200
@@ -16468,7 +16462,6 @@ def run_webhook_server():
         rows.append('</div>')
         if err: rows.append(f'<div class="card"><p>⚠️ {html.escape(err)}</p></div>')
         rows.append('<div class="card"><h2>🔎 查詢任一台股／美股／ETF的 Trump 標的 Intelligence</h2><form method="get" action="/trump-stock"><input name="symbol" placeholder="例如 2330、3711、NVDA、DELL、QQQ、SPY（不限於川普持股）" required><button type="submit">查詢個別標的</button></form></div>')
-        rows.append('<div class="nav"><a href="/industry">🏭 產業分析</a><a href="/macro">🌎 總經</a><a href="/">首頁</a></div>')
         return _web_page('川普投資風向', ''.join(rows))
 
     @app.get('/trump-stock')
