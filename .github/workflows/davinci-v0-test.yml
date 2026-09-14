@@ -3,32 +3,26 @@ name: DaVinci V0 Production API Test
 on:
   workflow_dispatch:
 
-permissions:
-  contents: read
-
 jobs:
   davinci-v0-test:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+
+    timeout-minutes: 10
 
     env:
-      # 使用你原本已存在的 GitHub Secret
-      DVC_API_KEY: ${{ secrets.DAVINCI_API_KEY }}
-
-      # DaVinci Assistant
+      DAVINCI_API_KEY: ${{ secrets.DAVINCI_API_KEY }}
       DVC_ASSISTANT_ID: asst_dvc_o2KvewHb9c1XLXlHsFypCe8N
-
-      # 官方 Production API
       DVC_BASE_URL: https://prod.dvcbot.net/api/assts/v1
 
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up Python
+      - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: "3.11"
 
-      - name: Run DaVinci Production V0 test
-        run: python davinci_prod_official_test.py
+      - name: Run DaVinci Production API Test
+        run: |
+          python davinci_prod_official_test.py
