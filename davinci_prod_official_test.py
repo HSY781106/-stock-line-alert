@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # DaVinci V0 Production API compatibility test
-# API key is read from DVC_API_KEY and is never printed.
+# API key is read from DAVINCI_API_KEY and is never printed.
 
 import json
 import os
@@ -10,7 +10,7 @@ import urllib.error
 import urllib.request
 
 BASE_URL = os.getenv("DVC_BASE_URL", "https://prod.dvcbot.net/api/assts/v1").rstrip("/")
-API_KEY = os.getenv("DVC_API_KEY", "").strip()
+API_KEY = os.getenv("DAVINCI_API_KEY", "").strip()
 ASSISTANT_ID = os.getenv("DVC_ASSISTANT_ID", "asst_dvc_o2KvewHb9c1XLXlHsFypCe8N").strip()
 PROMPT = os.getenv("DVC_TEST_PROMPT", "請只回答：DaVinci Production API 測試成功。")
 
@@ -68,9 +68,10 @@ def main():
     print(f"Base URL: {BASE_URL}")
     print(f"Assistant ID: {ASSISTANT_ID}")
     print("API Key: 已由 GitHub Secret 提供（不顯示）")
+    print(f"API Key length: {len(API_KEY)}")
 
     if not API_KEY:
-        fail(2, "缺少 DVC_API_KEY。請在 GitHub Repository Secrets 建立此 Secret。")
+        fail(2, "缺少 DAVINCI_API_KEY。請確認 GitHub Repository Secrets 中已有此 Secret。")
     if not ASSISTANT_ID:
         fail(2, "缺少 DVC_ASSISTANT_ID。")
 
