@@ -491,5 +491,37 @@
       ]
     },
     "provider": "groq"
+  },
+  "trump_v21826:__MARKET__:26a29a52fc0ce7312a32abc5": {
+    "ts": 1789401204.3265443,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.7,
+          "policy_stage": "considering",
+          "reason": "Trump投資油氣增值",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "Trump投資→油氣公司盈利→市場正面情緒",
+          "exposure": "證據不足"
+        },
+        {
+          "id": 2,
+          "direction": "negative",
+          "score": -3,
+          "confidence": 0.8,
+          "policy_stage": "announced",
+          "reason": "關稅引發股市波動",
+          "relevant": true,
+          "affected_channel": "估值",
+          "transmission": "關稅政策→貿易成本上升→企業估值下降",
+          "exposure": "證據不足"
+        }
+      ]
+    },
+    "provider": "groq"
   }
 }
