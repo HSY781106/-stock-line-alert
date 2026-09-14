@@ -371,5 +371,61 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:5c9c2bedc6e34d2ffc8bb26f": {
+    "ts": 1789393298.6281033,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.7,
+          "policy_stage": "unknown",
+          "reason": "川普地緣政治緊張與投資利得推升石油產業信心",
+          "relevant": true,
+          "affected_channel": "需求",
+          "transmission": "地緣衝突→原油風險溢價升高→能源股收益增加",
+          "exposure": "整體原油與能源產業股票"
+        },
+        {
+          "id": 1,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.8,
+          "policy_stage": "threat",
+          "reason": "川普口頭宣稱油價將大幅下跌，影響尚未實現",
+          "relevant": true,
+          "affected_channel": "估值",
+          "transmission": "口頭預期→影響市場通膨預期→油價短期觀望",
+          "exposure": "整體原油市場與能源類股"
+        },
+        {
+          "id": 2,
+          "direction": "negative",
+          "score": -3,
+          "confidence": 0.85,
+          "policy_stage": "threat",
+          "reason": "關稅政策不確定性持續引發整體股市劇烈波動",
+          "relevant": true,
+          "affected_channel": "估值",
+          "transmission": "關稅威脅→增加企業成本與不確定性→大盤估值承壓",
+          "exposure": "美股大盤指數與進出口相關產業"
+        },
+        {
+          "id": 3,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.75,
+          "policy_stage": "threat",
+          "reason": "川普要求大幅降息有利股市流動性，半導體股抗跌",
+          "relevant": true,
+          "affected_channel": "估值",
+          "transmission": "降息訴求→市場資金鬆綁預期→科技與半導體股受惠",
+          "exposure": "美股大盤及半導體產業標的"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
