@@ -427,5 +427,37 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:8494eee08649ff99bb9aadb3": {
+    "ts": 1789394073.2478933,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.7,
+          "policy_stage": "considering",
+          "reason": "特朗普投資油氣增值",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "投資增值→油氣產業利潤提升→市場正面情緒",
+          "exposure": "證據不足"
+        },
+        {
+          "id": 1,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.5,
+          "policy_stage": "threat",
+          "reason": "預測油價下跌未實施",
+          "relevant": false,
+          "affected_channel": "需求",
+          "transmission": "預測→市場預期未確定→無直接影響",
+          "exposure": "證據不足"
+        }
+      ]
+    },
+    "provider": "groq"
   }
 }
