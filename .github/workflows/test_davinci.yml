@@ -17,10 +17,42 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install httpx
+      - name: Check DaVinci secrets
+        env:
+          DAVINCI_ASSISTANT_ID: ${{ secrets.DAVINCI_ASSISTANT_ID }}
+          DAVINCI_API_KEY: ${{ secrets.DAVINCI_API_KEY }}
+        run: |
+          echo "========================================"
+          echo "DaVinci Secret 設定檢查"
+          echo "========================================"
+          if [ -z "$DAVINCI_ASSISTANT_ID" ]; then
+            echo "❌ DAVINCI_ASSISTANT_ID：未設定"
+            echo ""
+            echo "請到："
+            echo "Settings → Secrets and variables → Actions"
+            echo "建立 Repository secret：DAVINCI_ASSISTANT_ID"
+            exit 1
+          else
+            echo "✅ DAVINCI_ASSISTANT_ID：已載入"
+            echo "Assistant ID 長度：${#DAVINCI_ASSISTANT_ID}"
+          fi
+          if [ -z "$DAVINCI_API_KEY" ]; then
+            echo "❌ DAVINCI_API_KEY：未設定"
+            echo ""
+            echo "請到："
+            echo "Settings → Secrets and variables → Actions"
+            echo "建立 Repository secret：DAVINCI_API_KEY"
+            exit 1
+          else
+            echo "✅ DAVINCI_API_KEY：已載入"
+            echo "API Key 長度：${#DAVINCI_API_KEY}"
+          fi
+          echo ""
+          echo "✅ 兩個 DaVinci Secret 都已成功傳入 GitHub Actions"
       - name: Check test file
         run: |
           echo "========================================"
-          echo "檢查 DaVinci 測試檔"
+          echo "檢查 DaVinci V6 測試檔"
           echo "========================================"
           if [ ! -f "davinci_api_test" ]; then
             echo "❌ 找不到 Repo 根目錄的 davinci_api_test"
@@ -30,10 +62,10 @@ jobs:
             exit 1
           fi
           echo "✅ 找到 davinci_api_test"
-          echo ""
-          echo "檔案資訊："
+          echo "檔案大小："
+          wc -c davinci_api_test
+          echo "檔案行數："
           wc -l davinci_api_test
-          echo ""
       - name: Run DaVinci API diagnostic
         env:
           DAVINCI_ASSISTANT_ID: ${{ secrets.DAVINCI_ASSISTANT_ID }}
@@ -43,5 +75,4 @@ jobs:
           echo "========================================"
           echo "DaVinci Assistant API Diagnostic"
           echo "========================================"
-          echo ""
           python davinci_api_test
