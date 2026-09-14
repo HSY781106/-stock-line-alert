@@ -11005,6 +11005,46 @@ def _format_ai_final_etf_summary(x):
     return ('🤖 AI ETF 最終綜合判斷\n'+f'建議：{str(x.get("recommendation") or "資料不足")}｜信心：{conf}\n'+f'核心：{str(x.get("core") or "N/A")}\n'+f'🔎 分層判讀：\n{layer or "資料不足"}\n'+f'🟢 優勢：{"、".join(map(str,strengths[:3])) or "無"}\n'+f'🔴 風險：{"、".join(map(str,risks[:3])) or "無"}\n'+f'⚠️ 最大矛盾：{str(x.get("conflict") or "無明顯矛盾")}\n'+f'👀 下一步：{"、".join(map(str,nxt[:3])) or "持續觀察"}\n'+f'判讀：{str(x.get("reason") or "N/A")}')
 
 
+
+
+def assess_buy_point(tech):
+    """V2.14.21：第二層買點模型，與投資價值分數完全分離。"""
+    t=tech if isinstance(tech,dict) else {}; p=to_float(t.get('price')); ma20=to_float(t.get('ma20')); ma60=to_float(t.get('ma60'))
+    rv=to_float(t.get('rsi')); k=to_float(t.get('k')); d=to_float(t.get('d')); r5=to_float(t.get('ret5')); r10=to_float(t.get('ret10')); r20=to_float(t.get('ret20'))
+    supports=[x for x in (to_float(t.get('recent_low')),to_float(t.get('low60')),ma20,ma60) if x and x>0]; score=0; confirms=[]; risks=[]
+    if r5 is not None: score+=10 if r5>=.03 else 8 if r5>=0 else 5 if r5>=-.03 else 2
+    if r10 is not None: score+=8 if r10>=.03 else 6 if r10>=0 else 3 if r10>=-.07 else 1
+    if r20 is not None: score+=7 if r20>=.03 else 5 if r20>=0 else 3 if r20>=-.08 else 1
+    if p is not None and ma20: x=p/ma20-1; score+=13 if x>=.02 else 10 if x>=-.02 else 6 if x>=-.06 else 2
+    if p is not None and ma60: x=p/ma60-1; score+=12 if x>=.02 else 9 if x>=-.02 else 5 if x>=-.08 else 1
+    if rv is not None: score+=15 if 45<=rv<=60 else 12 if 40<=rv<45 or 60<rv<=68 else 8 if 30<=rv<40 else 4 if rv<30 else 5
+    if k is not None and d is not None: score+=15 if k>d and k<80 else 11 if k>=d else 5
+    nearest=None
+    if p is not None and supports:
+        below=[x for x in supports if x<=p]; nearest=max(below) if below else min(supports); dist=abs(p/nearest-1); score+=20 if dist<=.015 else 16 if dist<=.03 else 11 if dist<=.06 else 5
+    if p is not None and ma20 and ma60:
+        if p>ma20 and p>ma60 and (r10 is None or r10>=0): trend='🟢 上升趨勢'
+        elif p>ma60 and p<ma20 and (r10 is None or r10<0): trend='🟡 上升趨勢中的回檔'
+        elif p<ma20 and p<ma60 and r10 is not None and r10<0 and (r20 is None or r20<0): trend='🔴 中期下降趨勢'
+        elif p<ma20 and r10 is not None and r10<0: trend='🔴 短期下降趨勢'
+        else: trend='🟠 震盪整理'
+    else: trend=str(t.get('trend') or '🟠 資料不足')
+    if rv is not None and rv>=40: confirms.append('RSI≥40')
+    if k is not None and d is not None and k>d: confirms.append('KD偏多')
+    if p is not None and ma20 and p>=ma20: confirms.append('站回MA20')
+    if r5 is not None and r5>=0: confirms.append('5日跌勢停止')
+    if len(confirms)>=2: score+=3
+    falling=bool(p is not None and ma20 and ma60 and p<ma20 and p<ma60 and r10 is not None and r10<-.03 and r20 is not None and r20<-.03)
+    if falling: score=min(score,39); risks.append('接刀保護：10日/20日同步下跌且跌破MA20/MA60')
+    score=int(max(0,min(100,round(score))))
+    verdict='🟢 現在可分批買進' if score>=75 and not falling else '🟡 可小量試單／等待確認' if score>=60 and not falling else '🟠 等待回檔止跌' if score>=40 else '🔴 暫不進場，避免接刀'
+    levels=sorted(set(supports),reverse=True); first=nearest; second=max([x for x in levels if first and x<first*.995],default=None)
+    z=lambda x:(x*.985,x*1.015) if x else None; z1=z(first); z2=z(second); invalid=(second or first)*.97 if (second or first) else None
+    entry='目前可分批，仍建議靠近支撐而非追高' if trend.startswith('🟢') and score>=75 else '優先等第一買點區止跌，再分批' if trend.startswith('🟡') else '目前不追價，等止跌確認後再進場'
+    return {'score':score,'verdict':verdict,'trend_state':trend,'entry':entry,'zone1':z1,'zone2':z2,'invalidation':invalid,'confirms':confirms,'risks':risks,'ret5':r5,'ret10':r10,'ret20':r20}
+
+
+
 def etf_analysis(query):
     """V2.23.6：ETF 完整多層分析：投資價值 × 買點 × 消息 × 外部環境/題材 × AI。"""
     info=resolve_etf_query(query)
