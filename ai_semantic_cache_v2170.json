@@ -203,5 +203,61 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:94273bc8c0847812cec5aa49": {
+    "ts": 1789355329.6800244,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.75,
+          "policy_stage": "considering",
+          "reason": "關稅計畫擴大引發晶片股貿易戰風險與成本疑慮。",
+          "relevant": true,
+          "affected_channel": "成本與供應鏈",
+          "transmission": "川普考慮擴大關稅→半導體供應鏈成本增加→整體市場與晶片股受壓",
+          "exposure": "科技與半導體產業標的"
+        },
+        {
+          "id": 1,
+          "direction": "positive",
+          "score": 1,
+          "confidence": 0.6,
+          "policy_stage": "unknown",
+          "reason": "伊朗地緣政治局勢升溫推升油價與能源投資收益。",
+          "relevant": true,
+          "affected_channel": "需求與估值",
+          "transmission": "地緣衝突→油價上漲→石油與能源產業獲利提升",
+          "exposure": "能源板塊產業標的"
+        },
+        {
+          "id": 2,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.7,
+          "policy_stage": "threat",
+          "reason": "川普宣稱戰後油價將大幅下跌，口頭言論方向不一。",
+          "relevant": true,
+          "affected_channel": "估值",
+          "transmission": "川普口頭預測油價暴跌→市場觀望情緒加重→油價與整體市場波動",
+          "exposure": "整體市場與能源板塊"
+        },
+        {
+          "id": 3,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.8,
+          "policy_stage": "considering",
+          "reason": "關稅政策不確定性導致整體股市劇烈波動且難以定價。",
+          "relevant": true,
+          "affected_channel": "估值與投資人信心",
+          "transmission": "關稅政策反覆→市場避險情緒升溫→整體股市波動下行",
+          "exposure": "整體美股市場（__MARKET__）"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
