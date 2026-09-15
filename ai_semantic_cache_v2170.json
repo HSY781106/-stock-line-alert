@@ -675,5 +675,37 @@
       ]
     },
     "provider": "groq"
+  },
+  "trump_v21826:__MARKET__:30827accc29b59a462f05b14": {
+    "ts": 1789493706.9344466,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.7,
+          "policy_stage": "announced",
+          "reason": "特朗普推動半導體關稅",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "關稅→半導體成本上升→市場估值下降",
+          "exposure": "證據不足"
+        },
+        {
+          "id": 1,
+          "direction": "negative",
+          "score": -3,
+          "confidence": 0.8,
+          "policy_stage": "announced",
+          "reason": "特朗普加徵關稅導致股市波動",
+          "relevant": true,
+          "affected_channel": "需求",
+          "transmission": "關稅→進口成本上升→需求減少→股價下跌",
+          "exposure": "證據不足"
+        }
+      ]
+    },
+    "provider": "groq"
   }
 }
