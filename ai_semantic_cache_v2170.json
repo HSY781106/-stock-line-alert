@@ -579,5 +579,37 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:919a5fe7e0446dffaab97926": {
+    "ts": 1789480485.5729175,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.7,
+          "policy_stage": "implemented",
+          "reason": "油價上漲帶來投資收益",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "油價上升→投資收益增加→市場正面影響",
+          "exposure": "證據不足"
+        },
+        {
+          "id": 1,
+          "direction": "negative",
+          "score": -3,
+          "confidence": 0.8,
+          "policy_stage": "announced",
+          "reason": "關稅引發市場波動",
+          "relevant": true,
+          "affected_channel": "需求",
+          "transmission": "關稅上升→進口成本上升→需求減少→市場負面影響",
+          "exposure": "證據不足"
+        }
+      ]
+    },
+    "provider": "groq"
   }
 }
