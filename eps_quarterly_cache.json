@@ -10999,7 +10999,7 @@
     "source": "Yahoo earnings dates Reported EPS"
   },
   "1308.TW": {
-    "_cached_at": 1787833109.5176036,
+    "_cached_at": 1789434592.4222102,
     "data": [
       {
         "date": "2011-03-31",
@@ -39929,6 +39929,82 @@
       {
         "date": "2025-03-31",
         "eps": 2.01,
+        "source": "Yahoo Reported EPS"
+      }
+    ],
+    "source": "Yahoo earnings dates Reported EPS"
+  },
+  "2845.TW": {
+    "_cached_at": 1789434594.9216835,
+    "data": [
+      {
+        "date": "2005-06-30",
+        "eps": 0.45,
+        "source": "Yahoo Reported EPS"
+      },
+      {
+        "date": "2011-03-31",
+        "eps": 0.11,
+        "source": "Yahoo Reported EPS"
+      },
+      {
+        "date": "2011-09-30",
+        "eps": 0.24,
+        "source": "Yahoo Reported EPS"
+      },
+      {
+        "date": "2012-03-31",
+        "eps": 0.06,
+        "source": "Yahoo Reported EPS"
+      },
+      {
+        "date": "2012-06-30",
+        "eps": 0.21,
+        "source": "Yahoo Reported EPS"
+      },
+      {
+        "date": "2012-09-30",
+        "eps": 0.19,
+        "source": "Yahoo Reported EPS"
+      },
+      {
+        "date": "2013-03-31",
+        "eps": 0.18,
+        "source": "Yahoo Reported EPS"
+      },
+      {
+        "date": "2013-06-30",
+        "eps": 0.26,
+        "source": "Yahoo Reported EPS"
+      },
+      {
+        "date": "2013-09-30",
+        "eps": 0.26,
+        "source": "Yahoo Reported EPS"
+      },
+      {
+        "date": "2013-12-31",
+        "eps": 0.09,
+        "source": "Yahoo Reported EPS"
+      },
+      {
+        "date": "2014-06-30",
+        "eps": 0.23,
+        "source": "Yahoo Reported EPS"
+      },
+      {
+        "date": "2014-09-30",
+        "eps": 0.23,
+        "source": "Yahoo Reported EPS"
+      },
+      {
+        "date": "2015-03-31",
+        "eps": 0.25,
+        "source": "Yahoo Reported EPS"
+      },
+      {
+        "date": "2015-12-31",
+        "eps": 0.11,
         "source": "Yahoo Reported EPS"
       }
     ],
