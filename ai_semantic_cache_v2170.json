@@ -707,5 +707,61 @@
       ]
     },
     "provider": "groq"
+  },
+  "trump_v21826:__MARKET__:5bc889be7bc21c36ed1f4bba": {
+    "ts": 1789497549.975458,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.5,
+          "policy_stage": "unknown",
+          "reason": "報導個人資產投資，非直接政策宣布。",
+          "relevant": false,
+          "affected_channel": "無",
+          "transmission": "川普個人投資額→無直接政策傳導→整體市場影響有限",
+          "exposure": "整體美股市場估值無直接影響"
+        },
+        {
+          "id": 1,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.7,
+          "policy_stage": "considering",
+          "reason": "關稅政策重複引發市場波動與不確定性。",
+          "relevant": true,
+          "affected_channel": "估值",
+          "transmission": "關稅不確定性→升溫避險情緒→壓抑整體股市估值",
+          "exposure": "跨國製造業、消費品與整體美股市場"
+        },
+        {
+          "id": 2,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.65,
+          "policy_stage": "threat",
+          "reason": "要求大幅降息有利市場資金流動性。",
+          "relevant": true,
+          "affected_channel": "估值",
+          "transmission": "降息施壓→資金成本降低→支撐整體市場估值",
+          "exposure": "高槓桿企業與科技股及整體美股市場"
+        },
+        {
+          "id": 3,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.75,
+          "policy_stage": "considering",
+          "reason": "商務部研擬半導體關稅框架增加產業成本。",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "研擬關稅→晶片進口成本增加→影響科技股及整體大盤",
+          "exposure": "半導體供應鏈、科技股及整體美股市場"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
