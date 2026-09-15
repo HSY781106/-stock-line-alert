@@ -1,14 +1,105 @@
 {
-  "cached_at": 1789479976.4837377,
+  "cached_at": 1789491183.4127038,
   "data": {
-    "items": [],
-    "updated_at": "2026-09-15T21:46:20.580351+08:00",
-    "errors": [
-      "ReadTimeout: HTTPSConnectionPool(host='news.google.com', port=443): Read timed out. (read timeout=4.0)",
-      "ReadTimeout: HTTPSConnectionPool(host='news.google.com', port=443): Read timed out. (read timeout=4.0)",
-      "ReadTimeout: HTTPSConnectionPool(host='news.google.com', port=443): Read timed out. (read timeout=4.0)",
-      "ReadTimeout: HTTPSConnectionPool(host='news.google.com', port=443): Read timed out. (read timeout=4.0)",
-      "ReadTimeout: HTTPSConnectionPool(host='news.google.com', port=443): Read timed out. (read timeout=4.0)"
-    ]
+    "items": [
+      {
+        "title": "A Tiny Shift in the Inflation Rate Could Decide the Fed’s Next Move - WSJ",
+        "link": "https://news.google.com/rss/articles/CBMinAFBVV95cUxQU2VrRkdPcXF6U3ZvMTdqQ1pLT2Jua0N1MHlyQXM4c2hNN1M0SEY4bHZMakxwZm9jRjRKUHpsdnFuemtxSjFLZUhSVFJSTE41NzJQajl5M09PSlZNbkczMlZHTGN4U2wyalN2SnJiZG1JT3Roem00c0hmRXlRX3gtZzRNM2RBaS05VkRabUVSenVyUUV1ODQwUUNyTlE?oc=5",
+        "published": "Thu, 10 Sep 2026 01:00:00 GMT",
+        "query": "Federal Reserve interest rates inflation US economy",
+        "direction": "neutral",
+        "reason": "中性／待確認"
+      },
+      {
+        "title": "Why the Odds of a US Fed Interest Rate Hike Just Shot Higher - Morningstar",
+        "link": "https://news.google.com/rss/articles/CBMinAFBVV95cUxNTzBZZlkwZWhpeGhFSmpPNzc3eGVJdl90Zk1PTXVmV3VpM1lwcFpnZTY5ckV3NmhrekJGendHSEpTYzNkZlMyUXF1M21jTHNUNWhIV3c3U1hHcnF0X3ZNSkNZSnBiV200b3R5WVZVb3A2NkN5N19lUWpjUTVGNF9vVjczNmlQQ1BVVUpiSXNIYUV0R3R3SDVxZXdUbng?oc=5",
+        "published": "Mon, 14 Sep 2026 09:19:25 GMT",
+        "query": "Federal Reserve interest rates inflation US economy",
+        "direction": "negative",
+        "reason": "緊縮／景氣風險"
+      },
+      {
+        "title": "The U.S. economy faces mounting headwinds. Here are the biggest risks. - CBS News",
+        "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTE9QakUtQzNvVVFQV3NVbFZWQy16QzBQM2RxbnU2RnJvdE9CT1VPUDlXeEQ1Q2ltelp1b0VSSDJ2VVM5X1NuMnRxRVpBMjVtMmJzRmc5clBKRlowWTFfSnpmM3o1LTVTYm1LcDkw?oc=5",
+        "published": "Mon, 14 Sep 2026 17:48:50 GMT",
+        "query": "Federal Reserve interest rates inflation US economy",
+        "direction": "neutral",
+        "reason": "中性／待確認"
+      },
+      {
+        "title": "The Fed is preparing to raise rates. What if it doesn’t work? - CNN",
+        "link": "https://news.google.com/rss/articles/CBMigwFBVV95cUxQQzF1NEVQblNId1pHOU1fTlY5cndudGk3MXR5MWh5d2pwNHdxYlVUamQ5TW5VbXk1a3pTRDhxbXhKOTFFUkN0YlhUMVAwTWVCNWNHdzF1MG1XZUZxcU9YSFJSZWhiZzBXVDI0S2lCS2JQNFVTYzNiYjVpUnBfRDM4cWpWVQ?oc=5",
+        "published": "Mon, 14 Sep 2026 09:00:30 GMT",
+        "query": "Federal Reserve interest rates inflation US economy",
+        "direction": "neutral",
+        "reason": "中性／待確認"
+      },
+      {
+        "title": "Trump pushes Fed for lower rates, but consumers may be better off with a hike, experts say - cnbc.com",
+        "link": "https://news.google.com/rss/articles/CBMilgFBVV95cUxOU1FFbFpVa3M2WXNaN21VSmp0aEgteF9aaUNJVVFULVVpMndyQ1Nzd3R6c1pJdDBrQS1xWE9XQXFHVmd4dGRSQkRwRndScHVGZ2doR04yM0NTaE9tNmxiUVdEMVBRN0ZDRHhaN1FSTDF0WmtJM2d5Y2lmUTRCUUpla1Q4WXViNlBSeGJWNU9jNU5OT2RXSUHSAZsBQVVfeXFMTktsSGdLX3N3R1F6MVRpQWJpdXFQQi1KMTBwcTJfcGRTQkNGZFZ2aVFJZVhjYlpEWjJoVXczcmhvS25QZFc2NEdqWmFlYkk3RzRUQ0lwS1VjQnJKT0JtbFZwQnV3dlNnQ2piWDlreFVSN1hvZFV0TTYzS3JVM3ZJUWl5ak1EUDFDYk56dzViS3pjU0ZwVXREbS1hcFk?oc=5",
+        "published": "Wed, 09 Sep 2026 14:58:55 GMT",
+        "query": "Federal Reserve interest rates inflation US economy",
+        "direction": "positive",
+        "reason": "寬鬆／景氣改善"
+      },
+      {
+        "title": "Federal Reserve is expected to raise its benchmark rate, defying Trump's demands - ABC News - Breaking News, Latest News and Videos",
+        "link": "https://news.google.com/rss/articles/CBMirgFBVV95cUxPMGkxXzdZOVpyaTd5dHFsakU2TG1NM3BYUUZvMnQ3aGp3bmMxanhMZ21UMEIyekY4V05kdU5EVkg1WVFNWUFyQ2FocUtkb0F0dms0Yzk5THczNzNqTk4yVFY5Ui1ld2MtXzdoMG5QODlHUUdhQzE3c1A2OHZFVlJKWXpTYjdwRU90aEx4MUs5ZFU0NTczNkg5dnlNSXF4Y0hCWHdFT2xGdldCLVNaY3fSAbMBQVVfeXFMTnZ5cjBHOHYxWnoxSmpFTTNpV0FPczJyNGJyN29TNnhvQ2NNNkh2akV4dG5GcHI0dXRlYmF2Umg2VWZjWWZyekc3Ry12QVNjaUtMclYwczlRdFhYTWV0aVdxUElCTFlIV0tnRllIbDMyM3Z1N0RkaEg3QmFkWFZpekFGN3RWVVJlUV9zV25BSkZpQy16LXJ0dENNX0lDUWJXLUlFWmZURnhQNWxsZ3hZanpxeWM?oc=5",
+        "published": "Tue, 15 Sep 2026 05:28:59 GMT",
+        "query": "Federal Reserve interest rates inflation US economy",
+        "direction": "neutral",
+        "reason": "中性／待確認"
+      },
+      {
+        "title": "Ahead of Fed meeting, Trump says US should have world's lowest interest rate - Reuters",
+        "link": "https://news.google.com/rss/articles/CBMitwFBVV95cUxNNTFWNE1wQVNQdkFJRm1zVXZ1bHgzSTlxVTM5OTVPVVF2ZW9Gb3FFSXlwWXdfVUF6U2RZYVpucVBHcGxfaGIySEt5YW5KczRCT1VXdW1YZVFMZDUxR3hPTW9LQ3VIM2pRci02ZzBtTGxHWE9JOVgxd3o5dklha0sydUlRMTc1RGdRcnRUXy1lS1VRUTRKOTlLUGIwQ1p1SUhLeDVRdGF6aVN2R0NQMVBoNlNtLUc1djg?oc=5",
+        "published": "Sun, 13 Sep 2026 18:14:00 GMT",
+        "query": "Federal Reserve interest rates inflation US economy",
+        "direction": "neutral",
+        "reason": "中性／待確認"
+      },
+      {
+        "title": "Inflation ticked up in August, setting the stage for the Fed to hike interest rates - NBC News",
+        "link": "https://news.google.com/rss/articles/CBMingFBVV95cUxQWm44cERNRk96Tm5Mc3JwMzZKLUJFYzctbDFTLUZqRFJRbTM2N1hjOXIzZzlFWnJtSlFRcDRZZzhjQWQyM1lyR0ZHSUhJLTJ2Z3JiVG84d0E3d25IYndacXR4MHllaGtCTUhYNUhZT0xiTjdJZ0NNa2gtZGZ0d3ZTUmowQ0R1RGxnRUVGMzZodlo1X2txUk5PeUZjSjBOUQ?oc=5",
+        "published": "Fri, 11 Sep 2026 13:11:13 GMT",
+        "query": "Federal Reserve interest rates inflation US economy",
+        "direction": "neutral",
+        "reason": "中性／待確認"
+      },
+      {
+        "title": "Don’t Panic About a Bond Market Selloff. It Could Be a Sign of Economic Strength - Morningstar",
+        "link": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxOblJ5N2t5X3BrMVZFRDZodmI3RUx4WTBTUXM1MnhQZ0xpM1E2WWNmbGxqM1pTU2xlRDJpOVNEbGhhX3YtNUdweDByeE5YQ3c2RUprTkRvdHgxMExBWFVIcnBCaTNtVnp3T2IySHlEblJQaW42b21tSnB3T3JFa3ZYbm1FV1pSRjh3aGk0TkI2My1RY0tlbjhvVmNhQnBnNFo4cjZXQm1UblctTDQ?oc=5",
+        "published": "Wed, 09 Sep 2026 09:04:53 GMT",
+        "query": "US CPI jobs GDP Treasury yields economy",
+        "direction": "neutral",
+        "reason": "中性／待確認"
+      },
+      {
+        "title": "The Weekly Bottom Line - TD Economics",
+        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5iS3JheUxIbE9wdXkzWk1rUkxjT1p6VTJWeW1uMVpPY1hKYTMtNFF2Qzh1ck5JNTNKVGRSWXlBOWFta2xtZ2tVUTVhT0FlUmpqX1M2UngxLXRZZw?oc=5",
+        "published": "Fri, 11 Sep 2026 07:00:00 GMT",
+        "query": "US CPI jobs GDP Treasury yields economy",
+        "direction": "neutral",
+        "reason": "中性／待確認"
+      },
+      {
+        "title": "Weekly market commentary - BlackRock",
+        "link": "https://news.google.com/rss/articles/CBMingFBVV95cUxQLWJDTjBBalYwVHVpc0VxV1BwRE1xeUt1RWlLQ1VJdnJQRXNnb3p6MnFNbjRBV0s0TnlldW4wSVIycFRQeVNISWJ3VV9wMWdjX1ZndE1Tc24tNzc0anNYWjl0SVBsRDhSa0dVTWlyVVYxX0w5b2JhTFB0Tm9Vb2FwYVZubTU1SVJlcy0zMEpXOEM4ZlhiSU1QazdVQVlldw?oc=5",
+        "published": "Tue, 15 Sep 2026 04:12:12 GMT",
+        "query": "US CPI jobs GDP Treasury yields economy",
+        "direction": "neutral",
+        "reason": "中性／待確認"
+      },
+      {
+        "title": "Why The Fed Is Likely To Raise Rates This Week - Forbes",
+        "link": "https://news.google.com/rss/articles/CBMinwFBVV95cUxORWRQRGtCSEd3amJzUVFKOHdPc1lVeWhkeTVOc1VPSUhvbDhydFVWRDVpS1poTmdXa3ZWU1Zwa2JWSkZWT3o5bWlWdHZDR0JFOGJicFV3eThYeGp1RUZiYXpITFRvc1dhVVZjbHR0ZjB6R09ZeVRhRlNzSWZ5dERJR0dXZHp3NmFLVDBSQ2xONDVGU2phTTJkbk54N2JMa0E?oc=5",
+        "published": "Sun, 13 Sep 2026 11:00:00 GMT",
+        "query": "US CPI jobs GDP Treasury yields economy",
+        "direction": "neutral",
+        "reason": "中性／待確認"
+      }
+    ],
+    "updated_at": "2026-09-16T00:53:03.932443+08:00",
+    "errors": []
   }
 }
