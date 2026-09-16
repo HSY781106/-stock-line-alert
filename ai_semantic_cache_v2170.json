@@ -819,5 +819,61 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:56073007411d4fa1093b7304": {
+    "ts": 1789530823.8920178,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.5,
+          "policy_stage": "unknown",
+          "reason": "涉及個人投資爭議，對整體美股大盤直接影響極小。",
+          "relevant": false,
+          "affected_channel": "估值",
+          "transmission": "個人消息→市場情緒微幅波動→整體大盤",
+          "exposure": "整體美股市場"
+        },
+        {
+          "id": 1,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.8,
+          "policy_stage": "threat",
+          "reason": "關稅政策不確定性增加，加劇股市波動與風險溢價。",
+          "relevant": true,
+          "affected_channel": "估值",
+          "transmission": "關稅政策不確定性→企業資本支出保守→整體美股估值承壓",
+          "exposure": "進出口依賴度高之跨國企業與整體大盤"
+        },
+        {
+          "id": 2,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.7,
+          "policy_stage": "threat",
+          "reason": "要求大幅降息有利於提升股市流動性與科技股估值。",
+          "relevant": true,
+          "affected_channel": "估值",
+          "transmission": "降息施壓→資金成本降低→科技股與整體大盤受惠",
+          "exposure": "科技股及高估值成長股"
+        },
+        {
+          "id": 3,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.75,
+          "policy_stage": "considering",
+          "reason": "擬定半導體關稅框架，增加供應鏈成本與貿易不確定性。",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "半導體關稅→晶片與硬體成本上升→科技權重股承壓",
+          "exposure": "半導體與硬體供應鏈相關標的"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
