@@ -29,7 +29,7 @@
     },
     "meta": {
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1789523583.5933435,
+      "updated_at": 1789524538.1615205,
       "first_year": 2001,
       "last_year": 2025,
       "count": 25,
@@ -261,7 +261,7 @@
     },
     "meta": {
       "source": "Yahoo annualBasic/annualDilutedEPS + Yahoo complete quarterly EPS",
-      "updated_at": 1789523594.5748475,
+      "updated_at": 1789524550.1465971,
       "first_year": 2001,
       "last_year": 2025,
       "count": 25,
