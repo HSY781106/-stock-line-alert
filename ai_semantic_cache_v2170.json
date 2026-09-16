@@ -895,5 +895,61 @@
       ]
     },
     "provider": "groq"
+  },
+  "trump_v21826:__MARKET__:90470e8725f8b88b04558030": {
+    "ts": 1789581891.018586,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.7,
+          "policy_stage": "unknown",
+          "reason": "中東局勢地緣政治風險提升能源板塊關注度與獲利期望。",
+          "relevant": true,
+          "affected_channel": "估值與需求",
+          "transmission": "伊朗衝突緊張→原油價格支撐→能源類股及市場原油商品上漲",
+          "exposure": "能源產業、石油巨頭及大盤能源板塊"
+        },
+        {
+          "id": 1,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.8,
+          "policy_stage": "considering",
+          "reason": "關稅政策的不確定性加劇市場波動，壓抑整體股市風險偏好。",
+          "relevant": true,
+          "affected_channel": "估值與信心",
+          "transmission": "關稅言論與政策不確定性→市場避險情緒升溫→整體美股指數承壓",
+          "exposure": "整體美股市場（S&P 500、Nasdaq等大盤指數）"
+        },
+        {
+          "id": 2,
+          "direction": "positive",
+          "score": 1,
+          "confidence": 0.65,
+          "policy_stage": "threat",
+          "reason": "要求聯準會大幅降息有助改善市場資金流動性與科技股估值。",
+          "relevant": true,
+          "affected_channel": "估值與資金面",
+          "transmission": "政治施壓降息→利率預期下降→流動性增加支撐高估值科技股與大盤",
+          "exposure": "科技板塊及整體股市流動性受惠標的"
+        },
+        {
+          "id": 3,
+          "direction": "negative",
+          "score": -3,
+          "confidence": 0.85,
+          "policy_stage": "considering",
+          "reason": "政府考慮對半導體課徵關稅，引發晶片供應鏈成本與需求疑慮。",
+          "relevant": true,
+          "affected_channel": "成本與供應鏈",
+          "transmission": "研議半導體關稅→晶片進出口成本上升→半導體類股下挫拉低大盤",
+          "exposure": "半導體產業鏈、全球晶片股及科技權重股"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
