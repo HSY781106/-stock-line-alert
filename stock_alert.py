@@ -15516,7 +15516,7 @@ def run_webhook_server():
         if not isinstance(result, dict):
             # V2.22.0：AI provider 全部失敗時也不能讓使用者得到空白頁；
             # 先建立保守研究入口，後續仍可進官方分類驗證。
-            print(f'V2.23.6 Theme：第一階段 AI 拆題失敗，使用保守 fallback｜{topic}', flush=True)
+            print(f'V2.23.8 Theme：第一階段 AI 拆題失敗，使用保守 fallback｜{topic}', flush=True)
             result={
                 'headline': str(topic), 'trend':'資料不足',
                 'summary':f'目前 AI 無法穩定取得足夠證據，先以「{topic}」作為研究入口。',
@@ -15578,7 +15578,7 @@ def run_webhook_server():
             result['evidence_limitations'] = list(result.get('evidence_limitations') or [])[:2]
             result['evidence_limitations'].insert(0,'AI 拆題結果不足，已使用保守的 Agentic AI 研究框架；以下官方次產業仍須逐項驗證，不代表所有資訊服務公司都直接受惠。')
             cleaned = result['fine_themes']
-            print(f'V2.23.6 Theme：Agentic AI 使用結構化 fallback｜{topic}｜fine=3', flush=True)
+            print(f'V2.23.8 Theme：Agentic AI 使用結構化 fallback｜{topic}｜fine=3', flush=True)
         if not cleaned:
             # V2.22.0：AI 不得因資料不足回傳空細題材。至少建立 1 個可研究方向；
             # 「證據不足」只能放在限制欄，不應阻斷使用者繼續選題。
@@ -15593,7 +15593,7 @@ def run_webhook_server():
             lim=list(result.get('evidence_limitations') or [])
             lim.insert(0,'AI 未取得足夠新聞證據拆出更細方向，先保留原題材作為研究入口。')
             result['evidence_limitations']=lim[:3]
-            print(f'V2.23.6 Theme：AI 細題材為空，已建立保守 fallback｜{topic}',flush=True)
+            print(f'V2.23.8 Theme：AI 細題材為空，已建立保守 fallback｜{topic}',flush=True)
 
         # V2.20.0：以 company-chain 官方 records + market universe 的大產業交集建立候選。
         data = _line_industry_load_data()
@@ -15628,6 +15628,26 @@ def run_webhook_server():
                         sub = normalize_subindustry(sub)
                         if sub:
                             sub_parent.setdefault(_line_industry_norm(sub), set()).add(parent)
+        # V2.23.8：官方候選池同時參考「上層題材 + AI 拆出的細題材」。
+        # 舊版只看 topic；例如「企業 IT 與數位轉型」沒有固定 alias，
+        # 即使 AI 已拆出「企業 AI Agent 應用」，仍會得到 official_candidates=0。
+        # 這會直接阻斷官方映射與 Top3。
+        fine_semantic_text = ' '.join(
+            str(ft.get('name') or '') + ' ' + str(ft.get('logic') or '')
+            for ft in (result.get('fine_themes') or []) if isinstance(ft, dict)
+        )
+        fine_low = re.sub(r'\s+', '', fine_semantic_text.lower())
+        for k, vals in THEME_PARENT_HINTS.items():
+            kk = re.sub(r'\s+', '', str(k).lower())
+            if kk and (kk in fine_low or fine_low in kk):
+                alias_parents.extend(vals)
+        for k, vals in THEME_SUBINDUSTRY_HINTS.items():
+            kk = re.sub(r'\s+', '', str(k).lower())
+            if kk and (kk in fine_low or fine_low in kk):
+                alias_terms.extend(vals)
+        alias_parents = list(dict.fromkeys(alias_parents))
+        alias_terms = list(dict.fromkeys(alias_terms))
+
         available_parents = {canonical_industry(p) for vals in sub_parent.values() for p in vals if p}
         hinted_parent_norm = {canonical_industry(x) for x in alias_parents if x} & available_parents
         scored = []
@@ -15655,7 +15675,7 @@ def run_webhook_server():
         if not selected_fine:
             for ft in result['fine_themes']:
                 ft['official_subindustries'] = []
-            print(f'V2.23.6 Theme：第一階段完成｜{topic}｜fine={len(result["fine_themes"])}', flush=True)
+            print(f'V2.23.8 Theme：第一階段完成｜{topic}｜fine={len(result["fine_themes"])}', flush=True)
             return result
 
         # 只對使用者選定的細題材做一次「官方名稱映射」。映射失敗會明確保留
@@ -15692,7 +15712,7 @@ def run_webhook_server():
                 'official_candidates': sub_candidates, 'news': combined_news,
                 'semantic_subindustry_hints': alias_terms,
             }
-            mk = 'theme_v2234_map:' + _theme_canonical_key(topic) + ':' + re.sub(r'[^a-z0-9\u4e00-\u9fff]+','_',str(selected_fine).lower()).strip('_')[:80]
+            mk = 'theme_v2238_map:' + _theme_canonical_key(topic) + ':' + re.sub(r'[^a-z0-9\u4e00-\u9fff]+','_',str(selected_fine).lower()).strip('_')[:80]
             mapped = _ai_call_json(
                 '你是台灣產業分類研究員。把這個細題材對應到最合理的官方產業價值鏈細產業。'
                 '只能從 official_candidates 原樣選擇，禁止創造名稱；若沒有合理對應可以輸出空陣列。最多3個。'
@@ -15744,7 +15764,7 @@ def run_webhook_server():
             if not subs:
                 ft['mapping_reason'] = ft.get('mapping_reason') or '目前官方價值鏈資料無法建立足夠可靠的細產業對應。'
 
-        print(f'V2.23.6 Theme：第二階段完成｜{topic}｜fine={len(result["fine_themes"])}｜官方映射候選={len(official_candidates)}', flush=True)
+        print(f'V2.23.8 Theme：第二階段完成｜{topic}｜fine={len(result["fine_themes"])}｜官方映射候選={len(official_candidates)}', flush=True)
         return result
 
     def _theme_quantitative_results(result, u):
@@ -15803,7 +15823,7 @@ def run_webhook_server():
                 if not candidate_pool: candidate_pool=candidates[:3]
                 cached_codes={clean_code(z[0][1]) for z in cached_rows}
                 full_count=sum(1 for x in candidate_pool if clean_code(x[1]) not in cached_codes)
-                print(f'V2.23.6 Theme：量化快速篩選｜{sub}｜官方候選={len(candidates)}｜cache={len(cached_rows)}｜本次完整分析={full_count}', flush=True)
+                print(f'V2.23.8 Theme：量化快速篩選｜{sub}｜官方候選={len(candidates)}｜cache={len(cached_rows)}｜本次完整分析={full_count}', flush=True)
                 analyzed=_line_industry_run_top3_analysis(candidate_pool,u,label='題材')
                 analyzed.sort(key=lambda r:(-(r[4] if r[4] is not None else -1),-(r[5] if r[5] is not None else -1),-(r[3] if r[3] is not None else -1),str(r[0])))
                 analyzed=analyzed[:3]
