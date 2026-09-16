@@ -763,5 +763,61 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:3afbc6bd894481557e09b22e": {
+    "ts": 1789527191.1240032,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.7,
+          "policy_stage": "unknown",
+          "reason": "石油投資收益增加，能源市場需求與價格預期偏向正面。",
+          "relevant": true,
+          "affected_channel": "需求",
+          "transmission": "川普石油投資利多→能源市場關注度提升→大盤整體能源板塊受益",
+          "exposure": "能源產業與大盤能源成分股"
+        },
+        {
+          "id": 1,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.8,
+          "policy_stage": "threat",
+          "reason": "關稅政策持續引發數兆美元市場波動，加劇市場不確定性與估值壓力。",
+          "relevant": true,
+          "affected_channel": "估值",
+          "transmission": "關稅不確定性→市場波動加劇→壓抑整體股市估值與風險偏好",
+          "exposure": "整體股票市場與受關稅影響之貿易敏感型產業"
+        },
+        {
+          "id": 2,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.75,
+          "policy_stage": "threat",
+          "reason": "川普要求大幅降息，且半導體股逆勢上揚，利好市場流動性與估值。",
+          "relevant": true,
+          "affected_channel": "估值",
+          "transmission": "降息呼籲→市場資金流動性預期改善→帶動半導體與整體科技股估值",
+          "exposure": "半導體產業與科技板塊"
+        },
+        {
+          "id": 3,
+          "direction": "negative",
+          "score": -3,
+          "confidence": 0.85,
+          "policy_stage": "considering",
+          "reason": "商務部研擬半導體關稅框架，增加科技供應鏈成本與貿易限制風險。",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "半導體關稅框架研擬→晶片供應鏈成本增加→壓抑整體科技股營運展望",
+          "exposure": "半導體產業鏈與高度依賴海外晶片之科技業"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
