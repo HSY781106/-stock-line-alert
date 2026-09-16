@@ -875,5 +875,25 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:8cfdc0ccca1ffb754428d14b": {
+    "ts": 1789568749.034185,
+    "data": {
+      "items": [
+        {
+          "id": 1,
+          "direction": "negative",
+          "score": -3,
+          "confidence": 0.85,
+          "policy_stage": "announced",
+          "reason": "特朗普關稅政策已引發多兆美元股市波動",
+          "relevant": true,
+          "affected_channel": "成本、出口",
+          "transmission": "關稅→半導體/貿易成本上升→市場估值下跌",
+          "exposure": "受關稅影響的半導體/貿易公司受損"
+        }
+      ]
+    },
+    "provider": "groq"
   }
 }
