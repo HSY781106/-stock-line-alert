@@ -1,18 +1,8 @@
 {
   "2330": {
-    "fetched_at": "2026-09-17T03:48:44.649238+08:00",
+    "fetched_at": "2026-09-17T09:59:08.105249+08:00",
     "adjustment": 0,
     "events": [
-      {
-        "title": "2330 台積電 - 《美股主題週報》ASIC與GPU的競合—NVDA、AVGO、MSFT - 股市爆料同學會 - CMoney",
-        "source": "CMoney",
-        "date": "2026-09-13T14:38:54+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE9JTkhfbDFaWWZDT293MTdEbjROSm1IcFphODZ3dE1KekV4dFl3Um1jOGF1X1dLcm1GM2Y5QnVNZFQ1MzlfS2I0bk14Tm1ibGpXT041azFBMDk?oc=5",
-        "raw_adjustment": 0,
-        "adjustment": 0,
-        "label": "",
-        "status": ""
-      },
       {
         "title": "2330 台積電 - 09/14主動式ETF籌碼日報（金流版） - 股市爆料同學會 - CMoney",
         "source": "CMoney",
@@ -44,26 +34,6 @@
         "status": ""
       },
       {
-        "title": "2330 台積電 - 看好 CPU 需求！富士通最快明年出口2 奈米AI 晶片，交由台積電代工- 股市爆料同學會 - CMoney",
-        "source": "CMoney",
-        "date": "2026-09-14T14:56:26+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE5lUU1QS29MSHlqMzFhbS1rQ19IV3F3WklqZzgtdE45bGhMbHVsOGNpRTdLTlQ2ZFNpX0wzUmFFdzBsdGFtcVN6WFd4RXQ4N1NWZGh5NDNOMWM?oc=5",
-        "raw_adjustment": 0,
-        "adjustment": 0,
-        "label": "",
-        "status": ""
-      },
-      {
-        "title": "2330 台積電 - 誠新綠能涉與股東詐貸銀行47億新光國際投資董事長林伯翰羈押禁見- 股市爆料同學會 - CMoney",
-        "source": "CMoney",
-        "date": "2026-09-14T15:45:52+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTFBpdmdsYk1lMnFiVkwyZlhUT095Y3J0aUhVMjYtUzJQUkFtckUwWTdUTzJrWXkzTWVmakFIOGxMTFpBWFJMbjNCbVd1azIzUkZXZWt5R20zeDg?oc=5",
-        "raw_adjustment": 0,
-        "adjustment": 0,
-        "label": "",
-        "status": ""
-      },
-      {
         "title": "2330 台積電 - 台股震盪資金轉向領息！收益型ETF 包辦受益人成長前五強- 股市爆料同學會 - CMoney",
         "source": "CMoney",
         "date": "2026-09-14T16:43:18+08:00",
@@ -82,13 +52,43 @@
         "adjustment": 0,
         "label": "",
         "status": ""
+      },
+      {
+        "title": "2330 台積電 - 【00406A】09/14 操作日報｜經理人大筆加碼中砂與台積電！ - 股市爆料同學會 - CMoney",
+        "source": "CMoney",
+        "date": "2026-09-14T17:41:02+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE1RbjljSEx4SFVFa0lzTjFnaklPd1FOYkMzU0Faa3BCX3l4ZHQ4dXFKSGxNTlQ1dkVGTTJjV3d5c3VYdGxMRFA5WmwxWVl6a3BYazlmbjdIbXQ?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "2330 台積電 - [情報] 9/14 主動ETF買賣超- 股市爆料同學會 - CMoney",
+        "source": "CMoney",
+        "date": "2026-09-14T18:47:44+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTFBqenhhV3VIWFROZEc4TjRyWGZMaFhVRE5jWE5ZVWcyN3VBd2VKcGd4UnN5MmVnS3VBNmFKcURqVHZDRW9VSzlJWFVHU2pobl91LWlwLUlYajA?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "2330 台積電 - 主力在壓盤的豪勉.....識貨的人就會買- 股市爆料同學會 - CMoney",
+        "source": "CMoney",
+        "date": "2026-09-15T00:04:10+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE5Tc2lHek9GZV9VREpzMjdvc0hqeUlleU1fUHZJVHpmVk5KZ01fYVpSbTB5VlI4QlU3WEttMVp3YkJOZW5DVU9sZG5jWDFPOGo5bkFKNzhuQkI?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
       }
     ],
     "source": "Google News RSS",
     "lookback_days": 14
   },
   "3711": {
-    "fetched_at": "2026-09-17T03:48:47.922564+08:00",
+    "fetched_at": "2026-09-17T09:59:11.504686+08:00",
     "adjustment": 3,
     "events": [
       {
@@ -116,6 +116,16 @@
         "source": "sinotrade.com.tw",
         "date": "2026-09-04T15:00:00+08:00",
         "link": "https://news.google.com/rss/articles/CBMidkFVX3lxTE5rU2s4YS0tYUhBVzRvdkVrX2J4TGVOWjd5RzRkVnJjbGwybGlTRVBLeXF2eUZfWGo4YV92eVpkRzVHOWRQOVdfdEV5alB2WkxJZjR1aWowREk0ZnJCdS1ZTmdWS21waTlBZkpsWWpRMGhKRldBWVE?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "3711 日月光投控- 日月光可能受惠輝達投資- 股市爆料同學會 - CMoney",
+        "source": "CMoney",
+        "date": "2026-09-05T15:00:00+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE1lWGNYeS1VY09fMl9LTHptYnMyeEJSTVN0a1ZHLXdWYTFZY29qaTdzZ0pxb1VWMVdKNlFybGJ5TGhUUGZEYmpfall2LUJhV2lEelJlWTRkeWY?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
@@ -152,20 +162,10 @@
         "status": ""
       },
       {
-        "title": "【2026/08月營收公告】日月光投控(3711) 八月營收822.47億元，表現亮眼、呈現雙成長，創歷史新高，年增45.66% - CMoney投資網誌",
-        "source": "CMoney投資網誌",
-        "date": "2026-09-09T17:10:28+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiigFBVV95cUxPd3ZETUoyTEhVU1pCN1dsZUxJX2VLNjZPV3pSN3lUb2RWR1lpeElQYXdXRzFMSE1WUUpBc3RMQXZWVFdMWHFUWXVmUFNsTUJiQ2xaRzNDSU85b3gxMWhjdWhjR1BBeGJyMWlWWURkdFVGcUtQY0pNQXk4aGZjQkdjRVBBaEVJYUpVTGc?oc=5",
-        "raw_adjustment": 0,
-        "adjustment": 0,
-        "label": "",
-        "status": ""
-      },
-      {
-        "title": "三大法人買賣超 – 外資買超(3711)日月光投控、(2382)廣達，投信買超(2360)致茂、(1815)富喬，法人合計買超220.81億元 - sinotrade.com.tw",
-        "source": "sinotrade.com.tw",
-        "date": "2026-09-09T20:24:27+08:00",
-        "link": "https://news.google.com/rss/articles/CBMi3wRBVV95cUxNbmE5TXNXRTgwaWdMT0c0aVVvNU9Zd0Jac1UwUlpUcnkzQlMyUDRGUkZlajFkbFRvMTBsLTBBTG51X3l5SnlOZXJWcnZqRUtORExBUFVFODFERHZvLTRqcTYxWlNiRTNBY1RmVXE4WDdVbU1zLUVsc0NsVElHbzVZLWJsNkU4MjdNSkFMRzRjVXVSREZha3JhbnFHQlNLeHJIQWU0VHJfTkw4N3JoZ1k1OG1yVm4tT3pncUt1QTJJc0ZaQ05MSFNHRzBpb3V0UXNFSnpwYmlxZmVUdnVKN2ZHbVRpVGktZ2JZTGxybUQ4dnh5UV9LNmlZcjdRQjhwR0IzTDdLWHI0QmdrbFdSZHczQ3JDSUxnLXVtN2hJZWJHZHF1LXlFMVI0bV8wblJRY1ZOQmtGeHFXMDdCaThsTEZhbXZWSmRlR2lXRUFaTkNHMC1BVElxa2l",
+        "title": "3711 日月光投控- 股市最新爆料，掌握股友們對眾個股股價、技術分析、新聞的第一手... - 股市爆料同學會 - CMoney",
+        "source": "CMoney",
+        "date": "2026-09-09T15:37:20+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE9lbWtlWDBxaEFmanZFajRRSXQyc2pob1NaVmZ4WVhJSHFpeVV2cERiYTNWR2VXQ3QwNk5PU004OVBfckZyTUVmUGdhNUZucms1Sks5MVRzZE4?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
@@ -229,12 +229,12 @@
     "lookback_days": 14
   },
   "0050": {
-    "fetched_at": "2026-09-17T03:47:56.854543+08:00",
+    "fetched_at": "2026-09-17T09:58:23.907490+08:00",
     "adjustment": -5,
     "events": [
       {
-        "title": "0050暴跌43％怎麼退休？1000萬跑22年實測…6％提領仍剩2415萬 | 存股族愛ETF | 股市 - udn",
-        "source": "udn",
+        "title": "0050暴跌43％怎麼退休？1000萬跑22年實測…6％提領仍剩2415萬 | 存股族愛ETF | 股市 - UDN",
+        "source": "UDN",
         "date": "2026-09-15T14:43:52+08:00",
         "link": "https://news.google.com/rss/articles/CBMiU0FVX3lxTE5NVmVSb2NnZ2VtUGJrVnFqeGF1QVFBbUhlQmRQS1NnUmJCUWZGalFvWTEwNHpPZzh3ZHBmWjZROXhKYTJKblotU1R5YXYzSmZOUHdr?oc=5",
         "raw_adjustment": -5,
@@ -243,20 +243,20 @@
         "status": "重大負面事件"
       },
       {
-        "title": "【零股排行榜】盤中零股成交量TOP 20｜2408 南亞科、0050 元大台灣50、2327 國巨*、2344 華邦電、4958 臻鼎-KY (0903) - sinotrade.com.tw",
-        "source": "sinotrade.com.tw",
-        "date": "2026-09-03T15:45:55+08:00",
-        "link": "https://news.google.com/rss/articles/CBMi_gNBVV95cUxQWkMxNnhkbW5sTHFHd2NtX3NRRE9CanpHY1FDeDZXNDFBNmdRVEwzSFMyQndDck9EUXlLVmRwNUJReTN2UzE4OGlMemVLX3RRN0RxTnVxMzFKbzBlUm83emN6RURKZVZFRzB1SHRYc0p2UjVFeTc2NThEczZmOXdXbTF4SmFPaVZQbWxCMXJJZ2xSeXJ0Y0tMR3F6ZFVLZnlQbjAtbHFZY2Uwanc4bWRsdU9OdXh4OENQd3FPZU5QczUzeVdVRDA3Y01SbWVjSU8wdGhVbXB4ZmxDcTl5YVRIM2NVSUNycVJqc1doRzBmZVpnUThVMENCRXA0b1VXZ3FkT1NQS0RfSkpvVkpuaW5DbzBiZE5TaERObmFLdER6NmRWUjdWdGVRakZaNzZxRXlmYlZzRkg4QUdYUnJva2ltMm9UeE1MWUdCYUpaMWdDUHA5UURqa2p",
+        "title": "0050明換股！生技黑馬拚回歸 這3檔瀕臨剔除邊緣 - 東森新聞",
+        "source": "東森新聞",
+        "date": "2026-09-03T15:00:00+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiV0FVX3lxTE5WWHhVUjVJOU1aemxEejZ1VS1uTXpIZTZZX3JLVTltOWtHLUhXa2pHQ3dLY1hZODI2TDRja0JuRjVPM1VLYmI0U0VHSElpME9jUHpLcTd4WQ?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
         "status": ""
       },
       {
-        "title": "0050 元大台灣50 - 市場回顧與展望- 股市爆料同學會 - CMoney",
-        "source": "CMoney",
-        "date": "2026-09-04T15:00:00+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE0wdWkyMnFiQVdhcXpDLVZ6WWFwNF9JYU5vd1BXQ09LMFV0NFRQUG1YeGg3NnNfQnRjeXFRczNmQjZmUXhTdjd5UzJia0pRZGVmaFlBUjdpdl8?oc=5",
+        "title": "【零股排行榜】盤中零股成交量TOP 20｜2408 南亞科、0050 元大台灣50、2327 國巨*、2344 華邦電、4958 臻鼎-KY (0903) - sinotrade.com.tw",
+        "source": "sinotrade.com.tw",
+        "date": "2026-09-03T15:45:55+08:00",
+        "link": "https://news.google.com/rss/articles/CBMi_gNBVV95cUxQWkMxNnhkbW5sTHFHd2NtX3NRRE9CanpHY1FDeDZXNDFBNmdRVEwzSFMyQndDck9EUXlLVmRwNUJReTN2UzE4OGlMemVLX3RRN0RxTnVxMzFKbzBlUm83emN6RURKZVZFRzB1SHRYc0p2UjVFeTc2NThEczZmOXdXbTF4SmFPaVZQbWxCMXJJZ2xSeXJ0Y0tMR3F6ZFVLZnlQbjAtbHFZY2Uwanc4bWRsdU9OdXh4OENQd3FPZU5QczUzeVdVRDA3Y01SbWVjSU8wdGhVbXB4ZmxDcTl5YVRIM2NVSUNycVJqc1doRzBmZVpnUThVMENCRXA0b1VXZ3FkT1NQS0RfSkpvVkpuaW5DbzBiZE5TaERObmFLdER6NmRWUjdWdGVRakZaNzZxRXlmYlZzRkg4QUdYUnJva2ltMm9UeE1MWUdCYUpaMWdDUHA5UURqa2p",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
@@ -273,8 +273,8 @@
         "status": ""
       },
       {
-        "title": "0050漲太慢改抱正2？達人點破「單日」2字：它不是0050乘2！ - 上市櫃 - wantrich.chinatimes.com",
-        "source": "wantrich.chinatimes.com",
+        "title": "0050漲太慢改抱正2？達人點破「單日」2字：它不是0050乘2！ - 上市櫃 - 旺得富理財網",
+        "source": "旺得富理財網",
         "date": "2026-09-05T15:00:00+08:00",
         "link": "https://news.google.com/rss/articles/CBMiakFVX3lxTE1kajBVTTV6WEZpcmZIT1JsZEFQZWNxWTFmSF9XZlA5dTNEQmVwTzZTRDl3ZnpuVTNXS2NraDVqMnpyQmRpR1N5RTVVLXA0empvX29Qdks3SHV2ZVk3ZEVQRWVqbDVQVXRXRXc?oc=5",
         "raw_adjustment": 0,
@@ -317,7 +317,7 @@
     "lookback_days": 14
   },
   "QQQ": {
-    "fetched_at": "2026-09-17T03:48:52.424556+08:00",
+    "fetched_at": "2026-09-17T09:59:14.714621+08:00",
     "adjustment": -4,
     "events": [
       {
@@ -361,10 +361,10 @@
         "status": ""
       },
       {
-        "title": "$1,800萬 新增看跌期權重擊SPY和QQQ，CPI數據公佈在即 | 期權收益日報 - Moomoo",
-        "source": "Moomoo",
-        "date": "2026-09-10T09:08:40+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiogFBVV95cUxQOXlPS2JTTmJ1cmVlRmFBWlIxQlpWTXpabVNTOGc4YTd3ZkQ4LWtYZmxXalhUWnRWaWdvUWhPVExnVUhDOURZZDlQSEExQmJ6S19fQjh3VnFwYUJVSHJOR2lGRVRKSjU4R3BVUXZPMEw1OVZxN1VVUWJGRFAwQjV3d2t5aXlQcVRTdEJTVzdCbnJVVHBiOGw2OGFMQXRFM0txV1E?oc=5",
+        "title": "納指100ETF-Invesco QQQ Trust期權聚焦：9月9日成交717.57萬張，未平倉合約為1,258.4萬張 - 富途牛牛",
+        "source": "富途牛牛",
+        "date": "2026-09-10T06:20:59+08:00",
+        "link": "https://news.google.com/rss/articles/CBMimAFBVV95cUxOYUhNakFLRTRaZmxDajQ5MFhkNW5LMEZ0cVhFTUVzcWVUcjEtSjRUTUhHUFRheTZMOE5sei04WU5Nd21qYnB3RWozQ2hqcW55NEZTS2RuTVczcWlIMkZocVVkamxka3g2djhnTW9XS1JjSDItVXIzQnVrUlBHNHZtS3pwS3VCMDJXNUNwTHJrdmx4NTQwcTF4SA?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
