@@ -1340,5 +1340,37 @@
       "reason": "QQQ量化評分極高，技術面維持多頭格局，適合分批佈局。然而半導體關稅風險與期權避險情緒壓抑短線衝勁。保守投資人可分批進場以分散波動風險。"
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:c5c45e4254af54cd03dfdd9a": {
+    "ts": 1789679111.7444897,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.7,
+          "policy_stage": "unknown",
+          "reason": "Trump投資油氣獲利",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "Trump投資→油氣獲利→MARKET",
+          "exposure": "證據不足"
+        },
+        {
+          "id": 2,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.6,
+          "policy_stage": "considering",
+          "reason": "Trump要求降息",
+          "relevant": true,
+          "affected_channel": "估值",
+          "transmission": "Trump降息要求→利率下降→半導體成本/估值→MARKET",
+          "exposure": "證據不足"
+        }
+      ]
+    },
+    "provider": "groq"
   }
 }
