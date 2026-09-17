@@ -1191,5 +1191,68 @@
       "reason": "QQQ長期具備科技成長優勢，短期買點仍可分批進場。總經環境中性但利率偏負面，需留意風險。AI利空與政策正面訊息相衝突，需謹慎觀察。"
     },
     "provider": "groq"
+  },
+  "trump_v21826:__MARKET__:b1db7511f00841907a0273be": {
+    "ts": 1789653888.442351,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "positive",
+          "score": 1,
+          "confidence": 0.7,
+          "policy_stage": "announced",
+          "reason": "Trump-linked firm merger boosts drone supply",
+          "relevant": true,
+          "affected_channel": "供應鏈",
+          "transmission": "Trump-linked firm merger → increased drone production → market supply ↑ → price ↓",
+          "exposure": "證據不足"
+        },
+        {
+          "id": 1,
+          "direction": "positive",
+          "score": 1,
+          "confidence": 0.6,
+          "policy_stage": "considering",
+          "reason": "Trump oil investments increase supply",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "Trump oil investments → oil supply ↑ → price ↓ → market cost ↓",
+          "exposure": "證據不足"
+        }
+      ]
+    },
+    "provider": "groq"
+  },
+  "etf_final_v2237:QQQ:596f7bd1cf0ebde5b12865c4": {
+    "ts": 1789653951.6253126,
+    "data": {
+      "recommendation": "🟢 分批配置",
+      "confidence": 0.7,
+      "core": "QQQ具備長期成長潛力，但短期風險需謹慎",
+      "value_view": "科技成長股估值偏高，利率上升壓力大",
+      "buy_view": "目前價格略高於20日均線，仍可分批買進",
+      "macro_view": "總經環境中性，利率偏負面",
+      "news_view": "期權市場看跌，能源價格上漲推升對沖需求",
+      "trump_view": "半導體/AI政策偏負面",
+      "theme_view": "美國大型成長科技，AI與雲端為主題",
+      "risk_view": "利率上升、估值偏高、集中度高",
+      "conflict": "政策負面與市場成長預期相衝突",
+      "strengths": [
+        "高成長潛力",
+        "多頭技術趨勢"
+      ],
+      "risks": [
+        "利率風險",
+        "估值偏高",
+        "集中度風險"
+      ],
+      "next_watch": [
+        "美聯儲利率決議",
+        "半導體產業政策更新"
+      ],
+      "reason": "QQQ長期成長潛力強，但短期利率與政策風險需留意。"
+    },
+    "provider": "groq"
   }
 }
