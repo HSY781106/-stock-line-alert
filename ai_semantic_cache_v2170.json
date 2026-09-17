@@ -1063,5 +1063,133 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:78faad1fed9223f878db6692": {
+    "ts": 1789652413.486378,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.7,
+          "policy_stage": "announced",
+          "reason": "Trump概念企業合併前獲海外無人機訂單，利好國防航太板塊。",
+          "relevant": true,
+          "affected_channel": "需求",
+          "transmission": "特勤關聯企業併購→海外無人機訂單擴展→提升航太國防板塊情緒",
+          "exposure": "整體國防無人機產業與Trump概念股"
+        },
+        {
+          "id": 1,
+          "direction": "positive",
+          "score": 1,
+          "confidence": 0.6,
+          "policy_stage": "unknown",
+          "reason": "地緣政治衝突推升油價，利好整體能源市場。",
+          "relevant": true,
+          "affected_channel": "產品售價",
+          "transmission": "伊朗局勢緊張→國際油價上漲→能源類股獲利改善",
+          "exposure": "整體上游石油與天然氣開採產業"
+        },
+        {
+          "id": 2,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.5,
+          "policy_stage": "threat",
+          "reason": "Trump口頭宣稱戰爭勝利後油價將大幅下跌，屬口頭言論影響有限。",
+          "relevant": true,
+          "affected_channel": "估值",
+          "transmission": "政治口頭表態→短期市場情緒波動→對實質供需影響有限",
+          "exposure": "整體原油市場與能源股"
+        },
+        {
+          "id": 3,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.8,
+          "policy_stage": "threat",
+          "reason": "Trump要求聯準會大幅降息，市場預期資金成本降低利好科技股。",
+          "relevant": true,
+          "affected_channel": "估值",
+          "transmission": "政治施壓降息→市場流動性預期增加→科技與半導體股估值提升",
+          "exposure": "整體美股市場與半導體科技類股"
+        }
+      ]
+    },
+    "provider": "gemini"
+  },
+  "news:QQQ:d6cfa2117ee9b8b19d8c5c46": {
+    "ts": 1789652475.3579133,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.5,
+          "reason": "散戶社群論壇言論，缺乏實質基本面依據。",
+          "relevant": true
+        },
+        {
+          "id": 1,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.8,
+          "reason": "純粹期權交易量與未平倉統計，無明確多空方向。",
+          "relevant": true
+        },
+        {
+          "id": 2,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.3,
+          "reason": "迷因幣相關資訊，與QQQ基本面無直接關聯。",
+          "relevant": false
+        },
+        {
+          "id": 3,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.7,
+          "reason": "能源價格上漲推升對沖需求，期權市場傾向看跌。",
+          "relevant": true
+        }
+      ]
+    },
+    "provider": "gemini"
+  },
+  "etf_final_v2237:QQQ:a287ada3663e289a7333aa1b": {
+    "ts": 1789652481.6781964,
+    "data": {
+      "recommendation": "🟢 分批配置",
+      "confidence": 0.8,
+      "core": "QQQ具備長期成長價值，短期買點合理",
+      "value_view": "長期科技成長，估值合理",
+      "buy_view": "現價略高於MA20，仍可分批進場",
+      "macro_view": "總經環境中性，利率偏負面",
+      "news_view": "期權市場看跌，AI利空",
+      "trump_view": "政策偏負面，半導體/AI雙面",
+      "theme_view": "美國大型成長科技",
+      "risk_view": "集中度高、利率敏感、AI風險",
+      "conflict": "AI利空與半導體/AI正面政策相衝突",
+      "strengths": [
+        "科技成長",
+        "高流動性",
+        "Nasdaq-100分散"
+      ],
+      "risks": [
+        "高集中度",
+        "利率上升",
+        "AI不確定性"
+      ],
+      "next_watch": [
+        "美聯儲利率決議",
+        "AI產業動態"
+      ],
+      "reason": "QQQ長期具備科技成長優勢，短期買點仍可分批進場。總經環境中性但利率偏負面，需留意風險。AI利空與政策正面訊息相衝突，需謹慎觀察。"
+    },
+    "provider": "groq"
   }
 }

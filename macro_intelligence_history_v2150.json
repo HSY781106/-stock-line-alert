@@ -1093,7 +1093,7 @@
       "overnight": 0.814
     },
     {
-      "ts": "2026-09-17T13:53:12.716341+08:00",
+      "ts": "2026-09-17T21:40:14.134726+08:00",
       "fed_rate": 3.63,
       "us_cpi": 3.3,
       "us_gdp_growth": 1.5,
@@ -1106,8 +1106,8 @@
       "unemployment": 3.39,
       "discount_rate": 2.0,
       "m2_yoy": 7.42,
-      "usd_twd": 31.888,
-      "overnight": 0.814
+      "usd_twd": 31.881,
+      "overnight": 0.817
     }
   ]
 }
