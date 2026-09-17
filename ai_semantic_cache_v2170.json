@@ -1007,5 +1007,61 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:498f1d3f606036440050f19d": {
+    "ts": 1789609204.4458463,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.7,
+          "policy_stage": "implemented",
+          "reason": "中頭地緣政治緊張提振原油價格與石油投資收益。",
+          "relevant": true,
+          "affected_channel": "需求與價格",
+          "transmission": "伊朗局勢緊張→原油供給疑慮→油價上漲→能源股受益",
+          "exposure": "整體原油與傳統能源產業"
+        },
+        {
+          "id": 1,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.85,
+          "policy_stage": "threat",
+          "reason": "關稅政策不確定性增加市場波動性並壓抑估值。",
+          "relevant": true,
+          "affected_channel": "市場估值與情緒",
+          "transmission": "關稅威脅→貿易摩擦風險升高→市場波動加劇→壓抑整體美股估值",
+          "exposure": "跨國貿易與高關稅敏感產業"
+        },
+        {
+          "id": 2,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.75,
+          "policy_stage": "considering",
+          "reason": "川普呼籲大幅降息有利於科技股與整體市場流動性。",
+          "relevant": true,
+          "affected_channel": "資金成本與估值",
+          "transmission": "呼籲降息→市場預期貨幣寬鬆→資金成本降低→科技股估值提升",
+          "exposure": "半導體與高成長科技產業"
+        },
+        {
+          "id": 3,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.7,
+          "policy_stage": "implemented",
+          "reason": "委內瑞拉石油交易戰略成功強化美國能源市場主導權。",
+          "relevant": true,
+          "affected_channel": "供給與市場份額",
+          "transmission": "委內瑞拉石油政策→地緣政治供應重組→美系石油巨頭受益",
+          "exposure": "跨國石油公司與美系能源產業"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }

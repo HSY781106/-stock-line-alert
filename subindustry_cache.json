@@ -1,5 +1,5 @@
 {
-  "_cached_at": 1789608308.544893,
+  "_cached_at": 1789609138.5803854,
   "source": "TPEx/TWSE Industry Value Chain",
   "source_url": "https://ic.tpex.org.tw/company_chain.php",
   "cache_days": 30,
@@ -47162,6 +47162,30 @@
           "industry": "體驗科技",
           "sub_industry": "視覺",
           "date": "2026-09-11"
+        }
+      ]
+    },
+    "2938": {
+      "subindustries": [
+        "製造商",
+        "貿易商、代理商、經銷商",
+        "零售通路"
+      ],
+      "records": [
+        {
+          "industry": "貿易百貨",
+          "sub_industry": "製造商",
+          "date": "2026-09-17"
+        },
+        {
+          "industry": "貿易百貨",
+          "sub_industry": "貿易商、代理商、經銷商",
+          "date": "2026-09-17"
+        },
+        {
+          "industry": "貿易百貨",
+          "sub_industry": "零售通路",
+          "date": "2026-09-17"
         }
       ]
     }
