@@ -1,5 +1,5 @@
 {
-  "cached_at": 1789652456.3455012,
+  "cached_at": 1789667173.4770064,
   "data": {
     "items": [
       {
@@ -27,22 +27,6 @@
         "reason": "緊縮／景氣風險"
       },
       {
-        "title": "The Fed is preparing to raise rates. What if it doesn’t work? - CNN",
-        "link": "https://news.google.com/rss/articles/CBMigwFBVV95cUxQQzF1NEVQblNId1pHOU1fTlY5cndudGk3MXR5MWh5d2pwNHdxYlVUamQ5TW5VbXk1a3pTRDhxbXhKOTFFUkN0YlhUMVAwTWVCNWNHdzF1MG1XZUZxcU9YSFJSZWhiZzBXVDI0S2lCS2JQNFVTYzNiYjVpUnBfRDM4cWpWVQ?oc=5",
-        "published": "Mon, 14 Sep 2026 09:00:30 GMT",
-        "query": "Federal Reserve interest rates inflation US economy",
-        "direction": "neutral",
-        "reason": "中性／待確認"
-      },
-      {
-        "title": "Live Updates: Warsh and Fed Officials Raise Interest Rates to Fight Inflation - The New York Times",
-        "link": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxQM2stY3BUc2U1Z0tFTDJIOWNLMlBTaFh3TUN0bTZ0REtxZnJGVDlFSjdEUjZuYmE3UnBkb2NtTC1UeFlPa2o0Uk9NdXZCX01GN0ZNMnFNTEhQa0l6eFYxMU9fdlVxWmhCdDZwdl9lUXRBWWo1SU9tZ3d1S0NfNEhNdjBVOGZOSDdi?oc=5",
-        "published": "Thu, 17 Sep 2026 01:53:04 GMT",
-        "query": "Federal Reserve interest rates inflation US economy",
-        "direction": "neutral",
-        "reason": "中性／待確認"
-      },
-      {
         "title": "The Fed raises interest rates for the first time in over three years - NPR",
         "link": "https://news.google.com/rss/articles/CBMimAFBVV95cUxOVTl2UWxwMkg4QzNVNll6b0ZoSlhSNlVzOV9sd2Z6bWd0Vm5rS0U5Ni1XTmplTVlNamhVV1d3RDA2ckxWTVJIakVpNnlscEc3b29xRklzRGhwSmVlMmJ5d0dpcDE4eENtYXUtUEU2a3g5MlFNZXI0UkVHeHY3a2tWNU5Fd2dITUtWRnNwQ19Qdy1oS0p3Vkhleg?oc=5",
         "published": "Wed, 16 Sep 2026 09:00:00 GMT",
@@ -59,7 +43,7 @@
         "reason": "中性／待確認"
       },
       {
-        "title": "The U.S. economy faces mounting headwinds. Here are the biggest risks. - CBS News",
+        "title": "The U.S. economy faces mounting headwinds. Here are the biggest risks. - cbsnews.com",
         "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTE9QakUtQzNvVVFQV3NVbFZWQy16QzBQM2RxbnU2RnJvdE9CT1VPUDlXeEQ1Q2ltelp1b0VSSDJ2VVM5X1NuMnRxRVpBMjVtMmJzRmc5clBKRlowWTFfSnpmM3o1LTVTYm1LcDkw?oc=5",
         "published": "Mon, 14 Sep 2026 17:48:50 GMT",
         "query": "Federal Reserve interest rates inflation US economy",
@@ -67,7 +51,23 @@
         "reason": "中性／待確認"
       },
       {
-        "title": "What’s happening this week in economics? - Deloitte",
+        "title": "Live Updates: Warsh and Fed Officials Raise Interest Rates to Fight Inflation - The New York Times",
+        "link": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxQM2stY3BUc2U1Z0tFTDJIOWNLMlBTaFh3TUN0bTZ0REtxZnJGVDlFSjdEUjZuYmE3UnBkb2NtTC1UeFlPa2o0Uk9NdXZCX01GN0ZNMnFNTEhQa0l6eFYxMU9fdlVxWmhCdDZwdl9lUXRBWWo1SU9tZ3d1S0NfNEhNdjBVOGZOSDdi?oc=5",
+        "published": "Thu, 17 Sep 2026 01:53:04 GMT",
+        "query": "Federal Reserve interest rates inflation US economy",
+        "direction": "neutral",
+        "reason": "中性／待確認"
+      },
+      {
+        "title": "Why the Odds of a US Fed Interest Rate Hike Just Shot Higher - Morningstar",
+        "link": "https://news.google.com/rss/articles/CBMinAFBVV95cUxNTzBZZlkwZWhpeGhFSmpPNzc3eGVJdl90Zk1PTXVmV3VpM1lwcFpnZTY5ckV3NmhrekJGendHSEpTYzNkZlMyUXF1M21jTHNUNWhIV3c3U1hHcnF0X3ZNSkNZSnBiV200b3R5WVZVb3A2NkN5N19lUWpjUTVGNF9vVjczNmlQQ1BVVUpiSXNIYUV0R3R3SDVxZXdUbng?oc=5",
+        "published": "Mon, 14 Sep 2026 09:19:25 GMT",
+        "query": "Federal Reserve interest rates inflation US economy",
+        "direction": "negative",
+        "reason": "緊縮／景氣風險"
+      },
+      {
+        "title": "What’s happening this week in economics? - deloitte.com",
         "link": "https://news.google.com/rss/articles/CBMingFBVV95cUxNcV9VYnV0R0RPcWN0d2g1SHJIVlNmaVA1TV9nXzRKdVlFcWtSMjQ1T1B0djE4dDNRanZvSVFGX0ZBNUd6cnZkVnAtenFuMnFzdU9zYzg5cFdkTVRxU1F5YVVXVFhVWGdhd2RsTDBkNS1Xcm9ub1FnMFp5NnB3WVBYa3JJa1FVbG5IT0ZRRHphTUhtNThkenVJS1ZrdWNDdw?oc=5",
         "published": "Tue, 15 Sep 2026 07:00:00 GMT",
         "query": "US CPI jobs GDP Treasury yields economy",
@@ -99,7 +99,7 @@
         "reason": "中性／待確認"
       }
     ],
-    "updated_at": "2026-09-17T21:40:57.219138+08:00",
+    "updated_at": "2026-09-18T01:46:14.150838+08:00",
     "errors": []
   }
 }

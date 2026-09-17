@@ -1254,5 +1254,91 @@
       "reason": "QQQ長期成長潛力強，但短期利率與政策風險需留意。"
     },
     "provider": "groq"
+  },
+  "trump_v21826:__MARKET__:72051919c1e87a15f916b62e": {
+    "ts": 1789667146.2204285,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.7,
+          "policy_stage": "unknown",
+          "reason": "川普持有油價投資收益，市場預期政策將支持傳統能源業。",
+          "relevant": true,
+          "affected_channel": "需求",
+          "transmission": "持股新聞→政策支持預期→能源類股及大盤受益",
+          "exposure": "整體能源產業與大盤市場"
+        },
+        {
+          "id": 1,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.8,
+          "policy_stage": "threat",
+          "reason": "川普宣稱戰勝後油價大跌，屬政治口號，對整體市場影響中性。",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "口頭宣示→油價波動預期→通膨預期改變",
+          "exposure": "整體大盤與能源相關板塊"
+        },
+        {
+          "id": 2,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.75,
+          "policy_stage": "threat",
+          "reason": "川普要求大幅降息，市場流動性預期改善，支撐科技股與大盤。",
+          "relevant": true,
+          "affected_channel": "估值",
+          "transmission": "降息要求→市場流動性增加→科技股與大盤估值提升",
+          "exposure": "半導體產業與總體股票市場"
+        },
+        {
+          "id": 3,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.85,
+          "policy_stage": "considering",
+          "reason": "商務部研擬半導體關稅框架，增加供應鏈成本與貿易不確定性。",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "關稅政策研擬→晶片進口成本上升→半導體供應鏈受壓",
+          "exposure": "全球半導體供應鏈與科技類股"
+        }
+      ]
+    },
+    "provider": "gemini"
+  },
+  "etf_final_v2237:QQQ:c9a58f71d9dfb1866664dd60": {
+    "ts": 1789667191.4034617,
+    "data": {
+      "recommendation": "🟢 分批配置",
+      "confidence": 0.85,
+      "core": "QQQ基本面與買點分數優異，惟須注意關稅政策與能源對沖風險。",
+      "value_view": "長遠具備大型科技與AI成長優勢，投資價值極高。",
+      "buy_view": "技術面呈多頭，短線指標中性，可逢低分批進場。",
+      "macro_view": "總經環境中性，高利率環境對科技股估值仍有壓抑。",
+      "news_view": "能源價格上漲致期權市場看跌需求增加，消息面微幅偏負面。",
+      "trump_view": "半導體關稅框架不確定性抵銷降息預期，政策面偏負面。",
+      "theme_view": "涵蓋AI與大型科技主流題材，受惠於長線科技趨勢。",
+      "risk_view": "科技股集中度高、高估值修正及貿易關稅風險。",
+      "conflict": "強勁的技術面多頭與基本面，與短線期權看跌避險及關稅政策形成矛盾。",
+      "strengths": [
+        "技術面維持多頭趨勢",
+        "長線AI與科技成長題材強勁"
+      ],
+      "risks": [
+        "半導體關稅政策風險",
+        "能源價格上漲推升對沖需求"
+      ],
+      "next_watch": [
+        "美聯儲利率政策走向",
+        "美國半導體關稅細節"
+      ],
+      "reason": "QQQ量化評分極高，技術面維持多頭格局，適合分批佈局。然而半導體關稅風險與期權避險情緒壓抑短線衝勁。保守投資人可分批進場以分散波動風險。"
+    },
+    "provider": "gemini"
   }
 }
