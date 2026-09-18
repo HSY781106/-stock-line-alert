@@ -1372,5 +1372,61 @@
       ]
     },
     "provider": "groq"
+  },
+  "trump_v21826:__MARKET__:6b669c21b54b491ceb03e069": {
+    "ts": 1789693661.57265,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.7,
+          "policy_stage": "unknown",
+          "reason": "特朗普石油投資獲利反映地緣政治緊張推升原油風險溢價。",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "地緣政治衝突→原油供給疑慮→推升整體市場通膨與能源類股估值",
+          "exposure": "整體能源產業與高通膨敏感型資產"
+        },
+        {
+          "id": 1,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.6,
+          "policy_stage": "threat",
+          "reason": "口頭宣示戰後油價將大幅下跌，短期對市場實質影響有限。",
+          "relevant": true,
+          "affected_channel": "需求",
+          "transmission": "口頭預期→影響市場信心→油價長期預期回落",
+          "exposure": "整體能源市場與航空物流等下游產業"
+        },
+        {
+          "id": 2,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.8,
+          "policy_stage": "threat",
+          "reason": "呼籲聯準會大幅降息有利於市場資金流動性與科技股估值。",
+          "relevant": true,
+          "affected_channel": "估值",
+          "transmission": "政治施壓降息→利率預期下降→提振半導體與高估值成長股",
+          "exposure": "半導體產業及整體科技巨擘標的"
+        },
+        {
+          "id": 3,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.75,
+          "policy_stage": "considering",
+          "reason": "擬定半導體關稅框架增加供應鏈不確定性與成本壓力。",
+          "relevant": true,
+          "affected_channel": "供應鏈",
+          "transmission": "關稅政策研擬→晶片進口成本上升→壓抑半導體供應鏈毛利率",
+          "exposure": "全球半導體供應鏈與代工進口業者"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
