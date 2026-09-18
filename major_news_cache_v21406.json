@@ -317,7 +317,7 @@
     "lookback_days": 14
   },
   "QQQ": {
-    "fetched_at": "2026-09-18T13:56:49.568768+08:00",
+    "fetched_at": "2026-09-19T01:15:30.588071+08:00",
     "adjustment": -4,
     "events": [
       {
@@ -331,8 +331,8 @@
         "status": "重大負面事件"
       },
       {
-        "title": "納指100ETF-Invesco QQQ Trust期權聚焦：9月4日成交739.27萬張，未平倉合約為1,269.86萬張 - 富途牛牛",
-        "source": "富途牛牛",
+        "title": "納指100ETF-Invesco QQQ Trust期權聚焦：9月4日成交739.27萬張，未平倉合約為1,269.86萬張 - news.futunn.com",
+        "source": "news.futunn.com",
         "date": "2026-09-05T05:13:08+08:00",
         "link": "https://news.google.com/rss/articles/CBMimAFBVV95cUxOaVdMVGZqUmcyVC1yNWdZZXdZZ1lqVWJmNW9kZHRRTGp3Yi04ZURPeWs3ZGlSTWZqaFVDTTFyYllCYkxRb0dMRGh5aWdjSGo4ZWhRSWdpOG9DYjNfRXhPcGoyT29ZVUtVc3Ayc0g5RHNJVkJPQ2NnTFoyZXc1amZxU09mMk44NFFLcVpoS0xhcnNHa3pTZHg0Mg?oc=5",
         "raw_adjustment": 0,
@@ -361,8 +361,8 @@
         "status": ""
       },
       {
-        "title": "納指100ETF-Invesco QQQ Trust期權聚焦：9月9日成交717.57萬張，未平倉合約為1,258.4萬張 - 富途牛牛",
-        "source": "富途牛牛",
+        "title": "納指100ETF-Invesco QQQ Trust期權聚焦：9月9日成交717.57萬張，未平倉合約為1,258.4萬張 - news.futunn.com",
+        "source": "news.futunn.com",
         "date": "2026-09-10T06:20:59+08:00",
         "link": "https://news.google.com/rss/articles/CBMimAFBVV95cUxOYUhNakFLRTRaZmxDajQ5MFhkNW5LMEZ0cVhFTUVzcWVUcjEtSjRUTUhHUFRheTZMOE5sei04WU5Nd21qYnB3RWozQ2hqcW55NEZTS2RuTVczcWlIMkZocVVkamxka3g2djhnTW9XS1JjSDItVXIzQnVrUlBHNHZtS3pwS3VCMDJXNUNwTHJrdmx4NTQwcTF4SA?oc=5",
         "raw_adjustment": 0,
@@ -371,10 +371,20 @@
         "status": ""
       },
       {
-        "title": "納指100ETF-Invesco QQQ Trust期權聚焦：9月10日成交738.91萬張，未平倉合約為1,266.2萬張 - 富途牛牛",
-        "source": "富途牛牛",
+        "title": "納指100ETF-Invesco QQQ Trust期權聚焦：9月10日成交738.91萬張，未平倉合約為1,266.2萬張 - news.futunn.com",
+        "source": "news.futunn.com",
         "date": "2026-09-11T06:26:32+08:00",
         "link": "https://news.google.com/rss/articles/CBMimgFBVV95cUxOeGFWcFFhem9GRnBEckZqdHJNX24yQXVlVDVHbWJzNVRDTE1TdzBWeXlLaTB0SUJhaVZSSE1VdkZxSDZfSFlsZktRYnlOUjRra3dUVDNLVmJoVlBESTNRb013a29hb1FOWS1HSFhJMzZZSVBFQVhmVkVvU1RRYkFXRW1Wd2tYOUxveVFYODVqenlDeHV3RkEtSVpn?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "$納指100ETF-Invesco QQQ Trust (QQQ.US)$ $英偉達 (NVDA.US)$ - Moomoo",
+        "source": "Moomoo",
+        "date": "2026-09-11T15:00:00+08:00",
+        "link": "https://news.google.com/rss/articles/CBMinwFBVV95cUxNWGpKM2dQakJZbDItSGE1UVZITXhNS21wMEVzYW1vQ1NsdVo2TW93d0FrbGVQY0dRQlQ0SVJUckw4ZnQzbHY1S2piQTlCa2lBR09PcHhka3o4OEc0dmNWTlB3TXF6Wnk4alIycDB2QmxTTU1tZGtHSGM0ZDNVV180MW5oV3BZRVVkRTJwN0VBdzROdEI0QzlVYW15LXNWZ1U?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
@@ -385,16 +395,6 @@
         "source": "Moomoo",
         "date": "2026-09-11T19:03:47+08:00",
         "link": "https://news.google.com/rss/articles/CBMisgFBVV95cUxQQlNLMWtEbHdiZDFKT2FrdWtfTzBFb3hYbzFjNzV1UktsOGZKZVlVX09FN1g4SThtU3N6VmV2enNHWTdOY05QZUxJOFJMZlBzSUh1b04yRzVLcnplalphVnVJdnlLS3dTM1Qyb0R6bk5RcEVMN2x6ejdjaDEyRWVfazEzVm5ENzUzQnRzWExyclozSjVNVXNnc3JrWkRfUncwYXFHQnlYV1NCTVEtWWVsLTZR?oc=5",
-        "raw_adjustment": 0,
-        "adjustment": 0,
-        "label": "",
-        "status": ""
-      },
-      {
-        "title": "$納指100ETF-Invesco QQQ Trust (QQQ.US)$ - Moomoo",
-        "source": "Moomoo",
-        "date": "2026-09-11T23:51:22+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiiwFBVV95cUxPSXBRRGREUkF4Tl9TaFQ0SVgxUmhxZDJEcVRFcnFuLThBcGJTMFVOc2c4QmY5cF9qRWdaLVNIN29rS3VPeThEc25HY1FSZ3R4MXBjeE9xc0dLcXpPZnJNNVRXSDY4OFFxZlZtdlV2cnN1Yzkwb0lkOW8wZzBXS01UZ201UkVLRlI4NTBB?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
