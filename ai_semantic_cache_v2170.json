@@ -1428,5 +1428,25 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:5026d140c9022d58d2b025a8": {
+    "ts": 1789970119.8671558,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "negative",
+          "score": -3,
+          "confidence": 0.8,
+          "policy_stage": "announced",
+          "reason": "特朗普關稅政策導致市場波動",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "關稅→貿易成本上升→市場估值下調",
+          "exposure": "證據不足"
+        }
+      ]
+    },
+    "provider": "groq"
   }
 }
