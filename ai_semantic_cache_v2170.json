@@ -1480,5 +1480,37 @@
       ]
     },
     "provider": "groq"
+  },
+  "trump_v21826:__MARKET__:be44f3a5da8576bdb1cfabbb": {
+    "ts": 1790017151.7568338,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "negative",
+          "score": -3,
+          "confidence": 0.8,
+          "policy_stage": "considering",
+          "reason": "Trump討論AI與關稅調整，可能加重半導體成本",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "政策→半導體產業→AI基礎設施股價下跌",
+          "exposure": "受影響"
+        },
+        {
+          "id": 2,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.7,
+          "policy_stage": "announced",
+          "reason": "Trump投資油氣，預期油價下跌利好能源股",
+          "relevant": true,
+          "affected_channel": "需求",
+          "transmission": "政策→能源產業→油氣股價上升",
+          "exposure": "受影響"
+        }
+      ]
+    },
+    "provider": "groq"
   }
 }
