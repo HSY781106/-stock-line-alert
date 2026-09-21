@@ -1512,5 +1512,61 @@
       ]
     },
     "provider": "groq"
+  },
+  "trump_v21826:__MARKET__:cffa8d02e5be626d354c81f4": {
+    "ts": 1790029565.1328433,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.7,
+          "policy_stage": "considering",
+          "reason": "川習會及關稅重置預期利好AI基礎設施需求。",
+          "relevant": true,
+          "affected_channel": "需求與估值",
+          "transmission": "川習會談判預期→關稅壓力緩和→AI基礎設施投資成長→大盤上漲",
+          "exposure": "整體市場與AI科技股受惠"
+        },
+        {
+          "id": 1,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.6,
+          "policy_stage": "unknown",
+          "reason": "中國稀土出口下降顯示供應鏈緊張，但影響尚不明確。",
+          "relevant": true,
+          "affected_channel": "供應鏈與成本",
+          "transmission": "稀土出口減少→製造業原料成本上升與供應鏈風險→大盤波動",
+          "exposure": "汽車與電子製造業受威脅，大盤總體影響中性"
+        },
+        {
+          "id": 2,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.75,
+          "policy_stage": "considering",
+          "reason": "AI協議與關稅減免預期推升全球市場情緒。",
+          "relevant": true,
+          "affected_channel": "估值與出口",
+          "transmission": "川習會潛在協議→貿易摩擦降溫→全球市場風險偏好回升→大盤上漲",
+          "exposure": "跨國企業與整體市場受惠"
+        },
+        {
+          "id": 3,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.5,
+          "policy_stage": "unknown",
+          "reason": "川普個人石油投資獲利屬政治新聞，對大盤無直接傳導。",
+          "relevant": false,
+          "affected_channel": "估值",
+          "transmission": "個人資產新聞→無直接產業傳導→對大盤無影響",
+          "exposure": "證據不足"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
