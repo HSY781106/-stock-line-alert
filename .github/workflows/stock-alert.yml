@@ -1,4 +1,4 @@
-name: Stock Alert V2.18.12
+name: Stock Alert V2.23.9
 
 on:
   schedule:
@@ -44,7 +44,7 @@ jobs:
         run: |
           pip install -r requirements.txt pypdf
 
-      - name: Run stock alert V2.18.12
+      - name: Run stock alert V2.23.9
         env:
           LINE_CHANNEL_ACCESS_TOKEN: ${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }}
           LINE_CHANNEL_SECRET: ${{ secrets.LINE_CHANNEL_SECRET }}
@@ -85,18 +85,150 @@ jobs:
 
         run: python stock_alert.py
 
+      # ============================================================
+      # Runtime state / cache 大小檢查
+      #
+      # GitHub 單一檔案上限為 100 MB。
+      # chip_history.json 是執行期間會持續增加的資料，
+      # 不允許讓它一路長到 GitHub 才被拒絕。
+      # ============================================================
+      - name: Check runtime state and cache sizes
+        if: always()
+        shell: bash
+        run: |
+          echo "========== Runtime state / cache size check =========="
+
+          MAX_BYTES=$((80 * 1024 * 1024))
+
+          check_file() {
+            FILE="$1"
+
+            if [ -f "$FILE" ]; then
+              SIZE=$(stat -c%s "$FILE")
+              SIZE_MB=$(awk "BEGIN {printf \"%.2f\", $SIZE/1024/1024}")
+
+              echo "$FILE : ${SIZE_MB} MB"
+
+              if [ "$SIZE" -gt "$MAX_BYTES" ]; then
+                echo "::error file=$FILE::${FILE} exceeds 80 MB protection limit."
+                exit 1
+              fi
+            else
+              echo "$FILE : not found"
+            fi
+          }
+
+          check_file "chip_history.json"
+          check_file "pe_history.json"
+          check_file "alert_state.json"
+
+          echo "======================================================"
+
+      # ============================================================
+      # 儲存 state / cache
+      #
+      # 只 commit 真正有變更的檔案。
+      # 若有任何檔案 > 100 MB，直接停止，不讓 GitHub push
+      # 到 pre-receive hook 才失敗。
+      # ============================================================
       - name: Save state and caches
         if: always()
         shell: bash
         run: |
+          set -e
+
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
+          echo "========== Git status before save =========="
+          git status --short
+          echo "==========================================="
+
+          # ----------------------------------------------------------
+          # GitHub 單檔硬限制保護：100 MB
+          # 這裡使用 90 MB 作為最後一道保護。
+          # ----------------------------------------------------------
+          MAX_PUSH_BYTES=$((90 * 1024 * 1024))
+
+          for FILE in chip_history.json pe_history.json alert_state.json; do
+            if [ -f "$FILE" ]; then
+              SIZE=$(stat -c%s "$FILE")
+              SIZE_MB=$(awk "BEGIN {printf \"%.2f\", $SIZE/1024/1024}")
+
+              echo "Pre-push check: $FILE = ${SIZE_MB} MB"
+
+              if [ "$SIZE" -gt "$MAX_PUSH_BYTES" ]; then
+                echo "::error file=$FILE::${FILE} is larger than 90 MB. Push cancelled to protect GitHub 100 MB limit."
+                exit 1
+              fi
+            fi
+          done
+
+          # ----------------------------------------------------------
+          # 先同步遠端，避免多個 schedule / 手動執行互相覆蓋。
+          # ----------------------------------------------------------
+          git fetch origin main
+
+          git rebase origin/main
+
+          # ----------------------------------------------------------
+          # 重新加入目前工作樹的變更
+          # ----------------------------------------------------------
           git add -A
 
-          if ! git diff --cached --quiet; then
-            git commit -m "Update V2.18.12 alert state and caches"
+          echo "========== Staged changes =========="
+          git status --short
+          echo "===================================="
+
+          # ----------------------------------------------------------
+          # 沒有變更就直接結束
+          # ----------------------------------------------------------
+          if git diff --cached --quiet; then
+            echo "No state/cache changes to commit."
+            exit 0
           fi
 
-          git pull --rebase origin main || true
+          # ----------------------------------------------------------
+          # 額外檢查 staged 檔案是否存在超過 100 MB 的 blob
+          # ----------------------------------------------------------
+          echo "========== Checking staged blobs =========="
+
+          while IFS=$'\t' read -r MODE TYPE OBJECT SIZE PATH; do
+            if [ "$TYPE" = "blob" ] && [ "$SIZE" -gt 94371840 ]; then
+              SIZE_MB=$(awk "BEGIN {printf \"%.2f\", $SIZE/1024/1024}")
+              echo "::error file=$PATH::Staged blob is ${SIZE_MB} MB. Push cancelled."
+              exit 1
+            fi
+          done < <(
+            git ls-files -s |
+            while read -r MODE OBJECT STAGE PATH; do
+              TYPE=$(git cat-file -t "$OBJECT")
+              SIZE=$(git cat-file -s "$OBJECT")
+              printf '%s\t%s\t%s\t%s\t%s\n' \
+                "$MODE" "$TYPE" "$OBJECT" "$SIZE" "$PATH"
+            done
+          )
+
+          echo "==========================================="
+
+          # ----------------------------------------------------------
+          # Commit
+          # ----------------------------------------------------------
+          git commit -m "Update V2.23.9 alert state and caches"
+
+          # ----------------------------------------------------------
+          # 最後再同步一次，避免 rebase 後遠端又有新 commit。
+          # ----------------------------------------------------------
+          git fetch origin main
+
+          if ! git merge-base --is-ancestor origin/main HEAD; then
+            echo "Remote main advanced after the previous sync."
+            git rebase origin/main
+          fi
+
+          # ----------------------------------------------------------
+          # Push
+          # ----------------------------------------------------------
           git push origin HEAD:main
+
+          echo "========== Save state completed =========="
