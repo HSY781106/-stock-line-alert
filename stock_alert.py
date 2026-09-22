@@ -1091,11 +1091,57 @@ def load_json(f):
         return {}
 
 
+def _prune_chip_history_for_save(data, max_bytes=50 * 1024 * 1024, keep_days=45):
+    """V2.23.9：限制法人全市場歷史快取，避免 chip_history.json 超過 GitHub 單檔上限。
+
+    保留最近日期；若仍超過 50 MiB，逐步刪除最舊日期。
+    僅處理市場 -> YYYYMMDD -> 當日資料的標準結構；其他結構原樣保留。
+    """
+    if not isinstance(data, dict):
+        return data
+
+    import copy
+    cleaned = copy.deepcopy(data)
+
+    def encoded_size(obj):
+        return len(json.dumps(obj, ensure_ascii=False, separators=(',', ':')).encode('utf-8'))
+
+    # 每個市場先限留最近 45 個日期（約 9 週交易日）。
+    for market, dates in list(cleaned.items()):
+        if not isinstance(dates, dict):
+            continue
+        date_keys = [k for k, v in dates.items()
+                     if isinstance(k, str) and k.isdigit() and len(k) == 8 and isinstance(v, dict)]
+        date_keys.sort(reverse=True)
+        for old_date in date_keys[keep_days:]:
+            dates.pop(old_date, None)
+
+    # 若仍太大，按日期由舊至新逐日移除；不碰非日期 metadata。
+    while encoded_size(cleaned) > max_bytes:
+        candidates = []
+        for market, dates in cleaned.items():
+            if isinstance(dates, dict):
+                for day in dates:
+                    if isinstance(day, str) and day.isdigit() and len(day) == 8:
+                        candidates.append((day, market))
+        if not candidates:
+            break
+        day, market = min(candidates)
+        cleaned[market].pop(day, None)
+
+    final_size = encoded_size(cleaned)
+    if final_size < encoded_size(data):
+        print(f'V2.23.9 chip_history 自動清理：{encoded_size(data)/1024/1024:.2f} MB → {final_size/1024/1024:.2f} MB', flush=True)
+    return cleaned
+
+
 def save_json(f, d):
 
     t = f + '.tmp'
 
     d = _repair_json_strings(d)
+    if os.path.basename(str(f)).lower() == 'chip_history.json':
+        d = _prune_chip_history_for_save(d)
 
     with open(
         t,
@@ -15516,7 +15562,7 @@ def run_webhook_server():
         if not isinstance(result, dict):
             # V2.22.0：AI provider 全部失敗時也不能讓使用者得到空白頁；
             # 先建立保守研究入口，後續仍可進官方分類驗證。
-            print(f'V2.23.8 Theme：第一階段 AI 拆題失敗，使用保守 fallback｜{topic}', flush=True)
+            print(f'V2.23.9 Theme：第一階段 AI 拆題失敗，使用保守 fallback｜{topic}', flush=True)
             result={
                 'headline': str(topic), 'trend':'資料不足',
                 'summary':f'目前 AI 無法穩定取得足夠證據，先以「{topic}」作為研究入口。',
@@ -15578,7 +15624,7 @@ def run_webhook_server():
             result['evidence_limitations'] = list(result.get('evidence_limitations') or [])[:2]
             result['evidence_limitations'].insert(0,'AI 拆題結果不足，已使用保守的 Agentic AI 研究框架；以下官方次產業仍須逐項驗證，不代表所有資訊服務公司都直接受惠。')
             cleaned = result['fine_themes']
-            print(f'V2.23.8 Theme：Agentic AI 使用結構化 fallback｜{topic}｜fine=3', flush=True)
+            print(f'V2.23.9 Theme：Agentic AI 使用結構化 fallback｜{topic}｜fine=3', flush=True)
         if not cleaned:
             # V2.22.0：AI 不得因資料不足回傳空細題材。至少建立 1 個可研究方向；
             # 「證據不足」只能放在限制欄，不應阻斷使用者繼續選題。
@@ -15593,7 +15639,7 @@ def run_webhook_server():
             lim=list(result.get('evidence_limitations') or [])
             lim.insert(0,'AI 未取得足夠新聞證據拆出更細方向，先保留原題材作為研究入口。')
             result['evidence_limitations']=lim[:3]
-            print(f'V2.23.8 Theme：AI 細題材為空，已建立保守 fallback｜{topic}',flush=True)
+            print(f'V2.23.9 Theme：AI 細題材為空，已建立保守 fallback｜{topic}',flush=True)
 
         # V2.20.0：以 company-chain 官方 records + market universe 的大產業交集建立候選。
         data = _line_industry_load_data()
@@ -15628,7 +15674,7 @@ def run_webhook_server():
                         sub = normalize_subindustry(sub)
                         if sub:
                             sub_parent.setdefault(_line_industry_norm(sub), set()).add(parent)
-        # V2.23.8：官方候選池同時參考「上層題材 + AI 拆出的細題材」。
+        # V2.23.9：官方候選池同時參考「上層題材 + AI 拆出的細題材」。
         # 舊版只看 topic；例如「企業 IT 與數位轉型」沒有固定 alias，
         # 即使 AI 已拆出「企業 AI Agent 應用」，仍會得到 official_candidates=0。
         # 這會直接阻斷官方映射與 Top3。
@@ -15675,7 +15721,7 @@ def run_webhook_server():
         if not selected_fine:
             for ft in result['fine_themes']:
                 ft['official_subindustries'] = []
-            print(f'V2.23.8 Theme：第一階段完成｜{topic}｜fine={len(result["fine_themes"])}', flush=True)
+            print(f'V2.23.9 Theme：第一階段完成｜{topic}｜fine={len(result["fine_themes"])}', flush=True)
             return result
 
         # 只對使用者選定的細題材做一次「官方名稱映射」。映射失敗會明確保留
@@ -15764,7 +15810,7 @@ def run_webhook_server():
             if not subs:
                 ft['mapping_reason'] = ft.get('mapping_reason') or '目前官方價值鏈資料無法建立足夠可靠的細產業對應。'
 
-        print(f'V2.23.8 Theme：第二階段完成｜{topic}｜fine={len(result["fine_themes"])}｜官方映射候選={len(official_candidates)}', flush=True)
+        print(f'V2.23.9 Theme：第二階段完成｜{topic}｜fine={len(result["fine_themes"])}｜官方映射候選={len(official_candidates)}', flush=True)
         return result
 
     def _theme_quantitative_results(result, u):
@@ -15823,7 +15869,7 @@ def run_webhook_server():
                 if not candidate_pool: candidate_pool=candidates[:3]
                 cached_codes={clean_code(z[0][1]) for z in cached_rows}
                 full_count=sum(1 for x in candidate_pool if clean_code(x[1]) not in cached_codes)
-                print(f'V2.23.8 Theme：量化快速篩選｜{sub}｜官方候選={len(candidates)}｜cache={len(cached_rows)}｜本次完整分析={full_count}', flush=True)
+                print(f'V2.23.9 Theme：量化快速篩選｜{sub}｜官方候選={len(candidates)}｜cache={len(cached_rows)}｜本次完整分析={full_count}', flush=True)
                 analyzed=_line_industry_run_top3_analysis(candidate_pool,u,label='題材')
                 analyzed.sort(key=lambda r:(-(r[4] if r[4] is not None else -1),-(r[5] if r[5] is not None else -1),-(r[3] if r[3] is not None else -1),str(r[0])))
                 analyzed=analyzed[:3]
