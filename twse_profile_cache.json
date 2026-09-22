@@ -1,5 +1,5 @@
 {
-  "cached_at": 1789969686.6675248,
+  "cached_at": 1790118572.5958107,
   "data": [
     {
       "code": "1101",
@@ -2791,7 +2791,7 @@
       "industry": "光電業",
       "market": "TWSE",
       "symbol": "2429.TW",
-      "capital": 855000000.0
+      "capital": 861000000.0
     },
     {
       "code": "2430",
@@ -3359,7 +3359,7 @@
       "industry": "建材營造",
       "market": "TWSE",
       "symbol": "2539.TW",
-      "capital": 11931025810.0
+      "capital": 14555851490.0
     },
     {
       "code": "2540",
@@ -4607,7 +4607,7 @@
       "industry": "電子通路業",
       "market": "TWSE",
       "symbol": "3209.TW",
-      "capital": 2353911890.0
+      "capital": 2471607480.0
     },
     {
       "code": "3229",
@@ -7495,7 +7495,7 @@
       "industry": "半導體業",
       "market": "TWSE",
       "symbol": "6921.TW",
-      "capital": 318369410.0
+      "capital": 322619410.0
     },
     {
       "code": "6923",
@@ -7856,6 +7856,14 @@
       "market": "TWSE",
       "symbol": "7803.TW",
       "capital": 944128880.0
+    },
+    {
+      "code": "7812",
+      "name": "稜研科技*-創",
+      "industry": "通信網路業",
+      "market": "TWSE",
+      "symbol": "7812.TW",
+      "capital": 1750325594.0
     },
     {
       "code": "7818",

@@ -1,5 +1,5 @@
 {
-  "cached_at": 1790055996.9832413,
+  "cached_at": 1790119048.3194842,
   "data": {
     "items": [
       {
@@ -35,9 +35,17 @@
         "reason": "緊縮／景氣風險"
       },
       {
-        "title": "The Fed raises interest rates for the first time in over three years - NPR",
-        "link": "https://news.google.com/rss/articles/CBMimAFBVV95cUxOVTl2UWxwMkg4QzNVNll6b0ZoSlhSNlVzOV9sd2Z6bWd0Vm5rS0U5Ni1XTmplTVlNamhVV1d3RDA2ckxWTVJIakVpNnlscEc3b29xRklzRGhwSmVlMmJ5d0dpcDE4eENtYXUtUEU2a3g5MlFNZXI0UkVHeHY3a2tWNU5Fd2dITUtWRnNwQ19Qdy1oS0p3Vkhleg?oc=5",
-        "published": "Wed, 16 Sep 2026 09:00:00 GMT",
+        "title": "Ever wonder how the Fed's interest rate actually works? We've got answers - NPR",
+        "link": "https://news.google.com/rss/articles/CBMilwFBVV95cUxNanRyTXM4ZE00RFhRWlRSYXlhNUx5cGxxRENEUTFSZmlyUU1rNmFGcmpQdVdleGtBNkRoRVZYVkY3ZEY1UU9McXZsQ0ZBNFllQWR2RXhSU0xsc0dCcDVIWUVOeUNZNU9xcTd3MHNJVE5fUE9KMHhxM2tGQ3NDam1CVnJxT0M4MEp3ZllkNEZnRmxWS19JOVBj?oc=5",
+        "published": "Sat, 19 Sep 2026 09:00:00 GMT",
+        "query": "Federal Reserve interest rates inflation US economy",
+        "direction": "neutral",
+        "reason": "中性／待確認"
+      },
+      {
+        "title": "Fed Raises Rates in First Major Step by Warsh to Contain Inflation - The New York Times",
+        "link": "https://news.google.com/rss/articles/CBMimAFBVV95cUxNRXNJaUw1MEZvcHA2N19Dd0hBbjlCYkFqOFNjclNYRTl4WkxkRENSbnZ2b1djdnZEN2FXZjJWVktja1BINHUxNkp6dFNPTHdkYy1nWXNVSUV4U1RzazVUajhndFlwUU5NVU10WkJ6MmU0YUhsa2tMTUVoVmV0c1BidFU1OHFiOXZ0bkpoaHdjWjh1a2piWWVqSw?oc=5",
+        "published": "Wed, 16 Sep 2026 21:23:09 GMT",
         "query": "Federal Reserve interest rates inflation US economy",
         "direction": "neutral",
         "reason": "中性／待確認"
@@ -51,26 +59,10 @@
         "reason": "中性／待確認"
       },
       {
-        "title": "Fed Raises Interest Rates in Push for ‘Timelier’ Retreat in Inflation - The New York Times",
-        "link": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxQM2stY3BUc2U1Z0tFTDJIOWNLMlBTaFh3TUN0bTZ0REtxZnJGVDlFSjdEUjZuYmE3UnBkb2NtTC1UeFlPa2o0Uk9NdXZCX01GN0ZNMnFNTEhQa0l6eFYxMU9fdlVxWmhCdDZwdl9lUXRBWWo1SU9tZ3d1S0NfNEhNdjBVOGZOSDdi?oc=5",
-        "published": "Fri, 18 Sep 2026 07:00:00 GMT",
-        "query": "Federal Reserve interest rates inflation US economy",
-        "direction": "neutral",
-        "reason": "中性／待確認"
-      },
-      {
         "title": "Watch: How will higher interest rates impact US consumers? - BBC",
         "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE1pZUpoek50eVBGY09QVlgzejJuYmJwcVpwNzliUHljNGNmcUtrNm9vN0J3ems0OFV2VlhjbWo4LU9BMk1uVlRxZFc5LUtxSTZXdXBESWF2bHc?oc=5",
         "published": "Wed, 16 Sep 2026 22:26:10 GMT",
         "query": "Federal Reserve interest rates inflation US economy",
-        "direction": "neutral",
-        "reason": "中性／待確認"
-      },
-      {
-        "title": "What’s happening this week in economics? - Deloitte",
-        "link": "https://news.google.com/rss/articles/CBMingFBVV95cUxNcV9VYnV0R0RPcWN0d2g1SHJIVlNmaVA1TV9nXzRKdVlFcWtSMjQ1T1B0djE4dDNRanZvSVFGX0ZBNUd6cnZkVnAtenFuMnFzdU9zYzg5cFdkTVRxU1F5YVVXVFhVWGdhd2RsTDBkNS1Xcm9ub1FnMFp5NnB3WVBYa3JJa1FVbG5IT0ZRRHphTUhtNThkenVJS1ZrdWNDdw?oc=5",
-        "published": "Tue, 15 Sep 2026 07:00:00 GMT",
-        "query": "US CPI jobs GDP Treasury yields economy",
         "direction": "neutral",
         "reason": "中性／待確認"
       },
@@ -83,23 +75,31 @@
         "reason": "中性／待確認"
       },
       {
+        "title": "Weekly market commentary - BlackRock",
+        "link": "https://news.google.com/rss/articles/CBMiogFBVV95cUxORkJPa3I0ekJyVEI0RFJhY210TmplVHJZQ0xJNy1qenNkc0lMMHk0TmZwdDV1TEVZNmJoV3dfVlNTT3UyZHE5Q01SdmQ4eDd4WjAzZVhFMFB3VUd5QjlYXzZ5MWFRYzdIQVRVM1JMZXNyQ05aTExrejM4cHdBSktKSlJOOWxkY0V4YkNRRDZZTzlDZUYzZHlUWXdhTFUxNXJSNXc?oc=5",
+        "published": "Sun, 20 Sep 2026 07:00:00 GMT",
+        "query": "US CPI jobs GDP Treasury yields economy",
+        "direction": "neutral",
+        "reason": "中性／待確認"
+      },
+      {
+        "title": "What’s Ahead in 2027 and Beyond for Inflation, Fed Rate Cuts, and More - morningstar.com",
+        "link": "https://news.google.com/rss/articles/CBMikgFBVV95cUxQOUd2VE9hNG5jbU1hTGcwVEJQR1pJdXJualh2SERqZ2hKTGhmRHF6TVBuUW9fMmxWRTJzZ3dwdDg2R3hvUHNuek5QMjFyN2hLM05xR1lfbkpzV2lNQXF2YXhiLWlOQjRHY1FxZld6aW9aTXdkLTQwaGZVdUtxMTRXQjFRM1QxQ2tUTEd6RzFjYkZJUQ?oc=5",
+        "published": "Thu, 17 Sep 2026 07:00:00 GMT",
+        "query": "US CPI jobs GDP Treasury yields economy",
+        "direction": "positive",
+        "reason": "寬鬆／景氣改善"
+      },
+      {
         "title": "U.S. 10-Year Treasury Yield Hits Highest Since 2007 Ahead Of Federal Reserve Decision: 11 outlets compared - NewsCord",
         "link": "https://news.google.com/rss/articles/CBMi6gFBVV95cUxONGg4cld4RF9mWW9aY0trWktsZ0o0MmRTOXpOMFJlUXVfSXNOV3ByLWdhQktGQVA5YkxwMWdiMG10Zk5fV0FnRWlkc1VFVWZmSFg4UmJGUmh2cDlqcEFzMVp4LS05VF9FNzFMTEVBVjMybEpiR1prLVFfSmpMRFNDX0xKcDRYekFPM1c4U0lKMFdyQUpldWExUXpJMzBPb0dEYm8xcV9wU05QTkZva0hLcDZVcUtUT21nMkdLTnN5Qlk0ZEtRZjZxdi1WWU5zajdwRnlfLURTYUhaMFNOblJ0aWF5N0JYWVBIYXc?oc=5",
         "published": "Wed, 16 Sep 2026 01:44:10 GMT",
         "query": "US CPI jobs GDP Treasury yields economy",
         "direction": "neutral",
         "reason": "中性／待確認"
-      },
-      {
-        "title": "What’s Ahead in 2027 and Beyond for Inflation, Fed Rate Cuts, and More - Morningstar",
-        "link": "https://news.google.com/rss/articles/CBMikgFBVV95cUxQOUd2VE9hNG5jbU1hTGcwVEJQR1pJdXJualh2SERqZ2hKTGhmRHF6TVBuUW9fMmxWRTJzZ3dwdDg2R3hvUHNuek5QMjFyN2hLM05xR1lfbkpzV2lNQXF2YXhiLWlOQjRHY1FxZld6aW9aTXdkLTQwaGZVdUtxMTRXQjFRM1QxQ2tUTEd6RzFjYkZJUQ?oc=5",
-        "published": "Thu, 17 Sep 2026 07:00:00 GMT",
-        "query": "US CPI jobs GDP Treasury yields economy",
-        "direction": "positive",
-        "reason": "寬鬆／景氣改善"
       }
     ],
-    "updated_at": "2026-09-22T13:46:37.501169+08:00",
+    "updated_at": "2026-09-23T07:17:28.926216+08:00",
     "errors": []
   }
 }

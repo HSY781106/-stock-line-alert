@@ -1,5 +1,5 @@
 {
-  "_cached_at": 1790055891.1858964,
+  "_cached_at": 1790118590.1512048,
   "source": "TPEx/TWSE Industry Value Chain",
   "source_url": "https://ic.tpex.org.tw/company_chain.php",
   "cache_days": 30,
@@ -47186,6 +47186,30 @@
           "industry": "貿易百貨",
           "sub_industry": "零售通路",
           "date": "2026-09-17"
+        }
+      ]
+    },
+    "7856": {
+      "subindustries": [
+        "生產製程及檢測設備"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "生產製程及檢測設備",
+          "date": "2026-09-23"
+        }
+      ]
+    },
+    "7812": {
+      "subindustries": [
+        "主/被動元件"
+      ],
+      "records": [
+        {
+          "industry": "通信網路",
+          "sub_industry": "主/被動元件",
+          "date": "2026-09-23"
         }
       ]
     }
