@@ -1568,5 +1568,61 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:0281c5279bacd356e1b7440c": {
+    "ts": 1790055971.152871,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.7,
+          "policy_stage": "considering",
+          "reason": "川習會若達成關稅重置，有助於舒緩AI基礎建設供應鏈壓力。",
+          "relevant": true,
+          "affected_channel": "成本與供應鏈",
+          "transmission": "關稅重置預期→降低硬體進口成本→利好AI基礎建設股與整體市場",
+          "exposure": "整體科技股與AI供應鏈市場"
+        },
+        {
+          "id": 1,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.8,
+          "policy_stage": "implemented",
+          "reason": "中國對美出口稀土磁鐵減少，增加美國製造業與供應鏈瓶頸風險。",
+          "relevant": true,
+          "affected_channel": "供應鏈與成本",
+          "transmission": "稀土出口減少→關鍵原料短缺→高科技與國防製造業成本上升",
+          "exposure": "汽車、國防與科技製造業"
+        },
+        {
+          "id": 2,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.65,
+          "policy_stage": "considering",
+          "reason": "川習會談判預期可能帶來關稅寬減與AI協議，提振全球市場情緒。",
+          "relevant": true,
+          "affected_channel": "估值與需求",
+          "transmission": "貿易摩擦趨緩預期→改善跨國貿易環境→提振全球整體市場風險偏好",
+          "exposure": "跨國企業與全球股票市場"
+        },
+        {
+          "id": 3,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.5,
+          "policy_stage": "unknown",
+          "reason": "報導聚焦於川普個人石油投資獲利，對整體股市傳導效應不明顯。",
+          "relevant": false,
+          "affected_channel": "估值",
+          "transmission": "個人投資新聞→市場實質影響微弱→無顯著傳導",
+          "exposure": "證據不足"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }

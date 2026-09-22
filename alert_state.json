@@ -1,19 +1,19 @@
 {
   "drop_alert": {
     "0050 元大台灣50": {
-      "date": "2026-09-21",
+      "date": "2026-09-22",
       "daily_alert_sent": false,
       "weekly_alert_sent": false,
       "alert_sent": false
     },
     "2330 台積電": {
-      "date": "2026-09-21",
+      "date": "2026-09-22",
       "daily_alert_sent": false,
       "weekly_alert_sent": false,
       "alert_sent": false
     },
     "3711 日月光投控": {
-      "date": "2026-09-21",
+      "date": "2026-09-22",
       "daily_alert_sent": false,
       "weekly_alert_sent": false,
       "alert_sent": false
@@ -25,7 +25,7 @@
       "alert_sent": false
     },
     "台灣加權指數": {
-      "date": "2026-09-21",
+      "date": "2026-09-22",
       "daily_alert_sent": false,
       "weekly_alert_sent": false,
       "alert_sent": false
@@ -33,28 +33,28 @@
   },
   "interval_low": {
     "0050 元大台灣50": {
-      "last_check": "2026-09-21T13:54:52.138562+08:00",
-      "last_price": 111.30000305175781,
+      "last_check": "2026-09-22T13:45:27.369114+08:00",
+      "last_price": 111.8499984741211,
       "last_interval_low": 108.8499984741211,
       "last_interval_source": "Yahoo-5m",
       "interval_alert": false,
-      "session_key": "2026-09-21"
+      "session_key": "2026-09-22"
     },
     "2330 台積電": {
-      "last_check": "2026-09-21T13:55:48.829955+08:00",
-      "last_price": 2480.0,
+      "last_check": "2026-09-22T13:46:38.109939+08:00",
+      "last_price": 2465.0,
       "last_interval_low": 2435.0,
       "last_interval_source": "Yahoo-5m",
       "interval_alert": false,
-      "session_key": "2026-09-21"
+      "session_key": "2026-09-22"
     },
     "3711 日月光投控": {
-      "last_check": "2026-09-21T13:55:52.956748+08:00",
-      "last_price": 663.0,
+      "last_check": "2026-09-22T13:46:42.330080+08:00",
+      "last_price": 692.0,
       "last_interval_low": 627.0,
       "last_interval_source": "Yahoo-5m",
       "interval_alert": false,
-      "session_key": "2026-09-21"
+      "session_key": "2026-09-22"
     },
     "QQQ": {
       "last_check": "2026-09-22T02:59:44.535860+08:00",
@@ -65,16 +65,16 @@
       "session_key": "2026-09-21"
     },
     "台灣加權指數": {
-      "last_check": "2026-09-21T13:55:58.684448+08:00",
-      "last_price": 47712.3515625,
+      "last_check": "2026-09-22T13:46:48.423666+08:00",
+      "last_price": 47842.30859375,
       "last_interval_low": 46663.33984375,
       "last_interval_source": "Yahoo-5m",
       "interval_alert": false,
-      "session_key": "2026-09-21"
+      "session_key": "2026-09-22"
     }
   },
   "high_score_alert": {
-    "date": "2026-09-21",
+    "date": "2026-09-22",
     "active": []
   },
   "target_buy_point_alert": {
