@@ -1,5 +1,5 @@
 {
-  "cached_at": 1790118572.5958107,
+  "cached_at": 1790205392.2929516,
   "data": [
     {
       "code": "1101",
@@ -951,7 +951,7 @@
       "industry": "電機機械",
       "market": "TWSE",
       "symbol": "1529.TW",
-      "capital": 1628498270.0
+      "capital": 2028498270.0
     },
     {
       "code": "1530",
@@ -2431,7 +2431,7 @@
       "industry": "電腦及週邊設備業",
       "market": "TWSE",
       "symbol": "2364.TW",
-      "capital": 523897100.0
+      "capital": 576285750.0
     },
     {
       "code": "2365",
@@ -5839,7 +5839,7 @@
       "industry": "通信網路業",
       "market": "TWSE",
       "symbol": "4977.TW",
-      "capital": 826898410.0
+      "capital": 909898410.0
     },
     {
       "code": "4989",
@@ -7463,7 +7463,7 @@
       "industry": "其他",
       "market": "TWSE",
       "symbol": "6914.TW",
-      "capital": 662260000.0
+      "capital": 794712000.0
     },
     {
       "code": "6916",
