@@ -1,4 +1,4 @@
-# stock_alert.py V2.23.11
+# stock_alert.py V2.23.12
 # V2.23.11：chip_history 改為「每日分檔」儲存，完整保留歷史資料，避免單一 JSON 超過 GitHub 100 MiB 限制；分析介面與 20 日法人口徑不變。
 # V2.23.10：法人歷史補抓限流與分段計時；TWSE T86 單次逾時 6 秒、取消重試；最近20日不足時最多額外補抓3個工作日，避免每輪大量逾時請求。
 # V2.23.11：不再用刪除舊日期的方式壓縮 chip_history；改為每日分檔，保留完整歷史。Theme 細題材候選池修正維持。
@@ -198,7 +198,9 @@ TRUMP_PDF_TIMEOUT = 20
 TRUMP_MAX_HOLDINGS = 30
 TRUMP_TRANSACTION_CACHE_FILE = 'trump_transaction_cache.json'
 TRUMP_TRANSACTION_CACHE_DAYS = 2
-TRUMP_TRANSACTION_CACHE_VERSION = 12
+TRUMP_TRANSACTION_CACHE_VERSION = 13
+TRUMP_TRANSACTION_STALE_DAYS = 60
+TRUMP_TRANSACTION_FRESHNESS_CHECK_HOURS = 24
 # V2.14.42：Trump 訊號拆成兩層：① OGE/Open Cabinet 官方已申報交易；② 最近 30 日公開新聞/市場動向。
 TRUMP_RECENT_NEWS_CACHE_HOURS = 6
 TRUMP_RECENT_NEWS_LOOKBACK_DAYS = 30
@@ -13911,6 +13913,32 @@ def _load_trump_transactions():
     required_sources=set(TRUMP_OGE_TRANSACTION_URLS)
     open_cabinet_url='https://raw.githubusercontent.com/tbrown034/open-cabinet/main/data/officials/trump-donald-j.json'
 
+    def _cache_meta(c):
+        data=c.get('data',[]) if isinstance(c,dict) else []
+        dates=[]
+        for row in data:
+            if not isinstance(row,dict):
+                continue
+            raw=str(row.get('date') or '').strip()
+            try:
+                dates.append(datetime.fromisoformat(raw[:10]).date())
+            except Exception:
+                continue
+        latest=max(dates) if dates else None
+        today=datetime.now(TW_TZ).date()
+        lag=(today-latest).days if latest else None
+        return latest,lag
+
+    def _cache_freshness(c):
+        latest,lag=_cache_meta(c)
+        if latest is None:
+            status='❌ 無法判定最新交易日'
+        elif lag > TRUMP_TRANSACTION_STALE_DAYS:
+            status=f'⚠️ 交易資料落後 {lag} 天（最新交易日 {latest.isoformat()}）'
+        else:
+            status=f'✅ 交易資料最新至 {latest.isoformat()}（落後 {lag} 天）'
+        return latest,lag,status
+
     def valid_cache(c, require_open_cabinet=True):
         if not isinstance(c,dict): return False
         data=c.get('data',[])
@@ -13921,7 +13949,17 @@ def _load_trump_transactions():
                 and time.time()-ts<TRUMP_TRANSACTION_CACHE_DAYS*86400):
             return False
         if require_open_cabinet:
-            return source=='open_cabinet' and open_cabinet_url in set(c.get('source_url',[]) or [])
+            if not (source=='open_cabinet' and open_cabinet_url in set(c.get('source_url',[]) or [])):
+                return False
+        # V2.23.12：快取本身若已在最近一次檢查後仍未超過 24 小時，
+        # 即使來源的最新交易日暫時落後 60 天，也不每 15 分鐘重抓；
+        # 第一次偵測到過舊時會強制重新抓 Open Cabinet。
+        latest,lag=_cache_meta(c)
+        checked=float(c.get('_freshness_checked_at',0) or 0)
+        if latest is None:
+            return False
+        if lag > TRUMP_TRANSACTION_STALE_DAYS:
+            return bool(checked and time.time()-checked < TRUMP_TRANSACTION_FRESHNESS_CHECK_HOURS*3600)
         return True
 
     def save_authoritative(rows, raw_count, source_url):
@@ -13938,6 +13976,7 @@ def _load_trump_transactions():
             'diagnostics':[{'source':'Open Cabinet published Trump JSON','raw_trump_rows':int(raw_count or 0),
                             'parsed_stock_etf':len(rows),
                             'detail':getattr(_trump_open_cabinet_fallback,'last_diagnostics',{})}],
+            '_freshness_checked_at':time.time(),
             'data':rows
         }
         save_json(TRUMP_TRANSACTION_CACHE_FILE,payload)
@@ -13947,8 +13986,13 @@ def _load_trump_transactions():
     local=load_json(TRUMP_TRANSACTION_CACHE_FILE)
     if valid_cache(local, require_open_cabinet=True):
         data=local.get('data',[])
-        print(f'Trump 278-T：使用 Open Cabinet V12 cache，共 {len(data)} 筆',flush=True)
+        latest,lag,status=_cache_freshness(local)
+        print(f'Trump 278-T：使用 Open Cabinet V13 cache，共 {len(data)} 筆｜{status}',flush=True)
         return data
+    elif isinstance(local,dict):
+        latest,lag,status=_cache_freshness(local)
+        if latest is not None and lag is not None and lag > TRUMP_TRANSACTION_STALE_DAYS:
+            print(f'Trump 278-T：⚠️ cache 最新交易日 {latest.isoformat()}，已落後 {lag} 天；重新抓取 Open Cabinet published JSON',flush=True)
 
     # 2) Render/LINE：同樣只接受 Open Cabinet 產生的 V11 remote cache。
     try:
@@ -13957,7 +14001,8 @@ def _load_trump_transactions():
             data=remote.get('data',[])
             try: save_json(TRUMP_TRANSACTION_CACHE_FILE,remote)
             except Exception: pass
-            print(f'Trump 278-T：使用 GitHub Open Cabinet 最新 V12 cache，共 {len(data)} 筆',flush=True)
+            latest,lag,status=_cache_freshness(remote)
+            print(f'Trump 278-T：使用 GitHub Open Cabinet 最新 V13 cache，共 {len(data)} 筆｜{status}',flush=True)
             return data
     except Exception as e:
         print(f'Trump 278-T：GitHub V11 cache 讀取失敗：{type(e).__name__}: {e}',flush=True)
@@ -14070,12 +14115,30 @@ def trump_market_factor():
         '🔴 小幅降低股票曝險' if factor<=-2 else '⚪ 中性'
     )
 
+    tx_dates=[]
+    for row in tx:
+        if not isinstance(row,dict): continue
+        try:
+            tx_dates.append(datetime.fromisoformat(str(row.get('date',''))[:10]).date())
+        except Exception:
+            pass
+    latest_tx_date=max(tx_dates) if tx_dates else None
+    lag_days=(now-latest_tx_date).days if latest_tx_date else None
+    freshness_status=(
+        '❌ 無法判定最新交易日' if latest_tx_date is None else
+        f'⚠️ 交易資料落後 {lag_days} 天（最新交易日 {latest_tx_date.isoformat()}）' if lag_days>TRUMP_TRANSACTION_STALE_DAYS else
+        f'✅ 交易資料最新至 {latest_tx_date.isoformat()}（落後 {lag_days} 天）'
+    )
+
     _TRUMP_MARKET_FACTOR_CACHE={
         'factor':factor,'state':state,
         'net30':nets[30],'net60':nets[60],'net90':nets[90],'net180':nets[180],
         'buy_count':counts[180][0],'sell_count':counts[180][1],
         'transaction_count':len(tx),'valid_transaction_count':valid,
-        'window_counts':counts,'weighted180':weighted
+        'window_counts':counts,'weighted180':weighted,
+        'latest_transaction_date':latest_tx_date.isoformat() if latest_tx_date else '',
+        'transaction_data_lag_days':lag_days,
+        'transaction_data_status':freshness_status
     }
     return _TRUMP_MARKET_FACTOR_CACHE
 
@@ -16613,7 +16676,7 @@ def run_webhook_server():
         rows=[]
         rows.append(f'<div class="card"><h1>🇺🇸 川普投資風向</h1><p><b>{html.escape(factor.get("state","⚪ 資料不足"))}</b>　全球股票風向調整：<b>{int(factor.get("factor",0)):+d}</b></p>')
         rows.append(f'<p>近180日淨買賣（主訊號）：{factor.get("net180",0):,.0f}<br>近30日：{factor.get("net30",0):,.0f}<br>近60日：{factor.get("net60",0):,.0f}<br>近90日：{factor.get("net90",0):,.0f}</p>')
-        rows.append(f'<p class="muted">近180日股票／ETF交易：{factor.get("valid_transaction_count",0)} 筆；買進：{factor.get("buy_count",0)}；賣出：{factor.get("sell_count",0)}<br>資料庫已解析交易總筆數：{factor.get("transaction_count",0)}</p></div>')
+        rows.append(f'<p class="muted">近180日股票／ETF交易：{factor.get("valid_transaction_count",0)} 筆；買進：{factor.get("buy_count",0)}；賣出：{factor.get("sell_count",0)}<br>資料庫已解析交易總筆數：{factor.get("transaction_count",0)}<br>交易資料最新日：{html.escape(str(factor.get("latest_transaction_date") or "N/A"))}<br>資料狀態：{html.escape(str(factor.get("transaction_data_status") or "N/A"))}</p></div>')
         news=trump_recent_news_factor()
         ai_trump=_ai_trump_summary(news, factor=factor, portfolio=portfolio)
         _ai_trump_diag=_ai_trump_runtime_status()
