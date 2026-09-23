@@ -1,4 +1,6 @@
-# stock_alert.py V2.23.6
+# stock_alert.py V2.23.10
+# V2.23.10：法人歷史補抓限流與分段計時；TWSE T86 單次逾時 6 秒、取消重試；最近20日不足時最多額外補抓3個工作日，避免每輪大量逾時請求。
+# V2.23.10：保留 V2.23.9 chip_history 清理與 Theme 細題材候選池修正。
 # V2.23.6：AI 備援品質閘門／硬配額鎖強化／Theme 直接受惠證據／市場市值補正／Top3 語義修正。
 # V2.19.7：Theme Intelligence semantic candidate engine + bounded quantitative analysis；
 # V2.17.0 功能全部保留：Gemini Free 主力 + Mistral/Groq Free 備援、重大消息、Trump 語意、總經預測。
@@ -9223,8 +9225,8 @@ def institutional(
                     'selectType': 'ALL',
                     'response': 'json'
                 },
-                timeout=10,
-                retries=1
+                timeout=6,
+                retries=0
             )
             parsed = parse_t86(x) if x else {}
 
@@ -9279,16 +9281,18 @@ def institutional(
     )
 
     if available < days:
+        # V2.23.10：只做有限補抓。舊版一次追加10個工作日，遇到
+        # 假日/來源缺漏時容易造成多輪慢速 API timeout。
         extended = weekday_dates(
             today - timedelta(days=1),
-            days + 10
+            days + 3
         )
         extra = [
             dt for dt in extended
             if dt.strftime('%Y%m%d') not in {
                 x.strftime('%Y%m%d') for x in dates
             }
-        ][:10]
+        ][:3]
 
         if extra:
             print(
