@@ -1624,5 +1624,37 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:cbf11da9120c7c2ec202b575": {
+    "ts": 1790187667.103893,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "negative",
+          "score": -3,
+          "confidence": 0.8,
+          "policy_stage": "considering",
+          "reason": "AI供應鏈受限",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "政策→AI產業→半導體成本上升",
+          "exposure": "證據不足"
+        },
+        {
+          "id": 2,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.7,
+          "policy_stage": "threat",
+          "reason": "關稅升高",
+          "relevant": true,
+          "affected_channel": "出口",
+          "transmission": "政策→貿易→美中出口受阻",
+          "exposure": "證據不足"
+        }
+      ]
+    },
+    "provider": "groq"
   }
 }
