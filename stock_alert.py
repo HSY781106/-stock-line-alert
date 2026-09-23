@@ -1,6 +1,7 @@
-# stock_alert.py V2.23.10
+# stock_alert.py V2.23.11
+# V2.23.11：chip_history 改為「每日分檔」儲存，完整保留歷史資料，避免單一 JSON 超過 GitHub 100 MiB 限制；分析介面與 20 日法人口徑不變。
 # V2.23.10：法人歷史補抓限流與分段計時；TWSE T86 單次逾時 6 秒、取消重試；最近20日不足時最多額外補抓3個工作日，避免每輪大量逾時請求。
-# V2.23.10：保留 V2.23.9 chip_history 清理與 Theme 細題材候選池修正。
+# V2.23.11：不再用刪除舊日期的方式壓縮 chip_history；改為每日分檔，保留完整歷史。Theme 細題材候選池修正維持。
 # V2.23.6：AI 備援品質閘門／硬配額鎖強化／Theme 直接受惠證據／市場市值補正／Top3 語義修正。
 # V2.19.7：Theme Intelligence semantic candidate engine + bounded quantitative analysis；
 # V2.17.0 功能全部保留：Gemini Free 主力 + Mistral/Groq Free 備援、重大消息、Trump 語意、總經預測。
@@ -135,6 +136,10 @@ TW_TZ = ZoneInfo('Asia/Taipei')
 STATE_FILE = 'alert_state.json'
 PE_HISTORY_FILE = 'pe_history.json'
 CHIP_HISTORY_FILE = 'chip_history.json'
+# V2.23.11：法人歷史改為每日分檔；舊 CHIP_HISTORY_FILE 僅作一次性 migration 來源。
+CHIP_HISTORY_DIR = 'chip_history'
+CHIP_HISTORY_MARKETS = ('TWSE', 'TPEX')
+CHIP_HISTORY_SCHEMA_VERSION = 1
 LINE_CHIP_CACHE_FILE = 'line_chip_cache.json'
 LINE_MARGIN_CACHE_FILE = 'line_margin_cache.json'
 LINE_CHIP_SUMMARY_CACHE_FILE = 'line_chip_summary_cache.json'
@@ -1093,71 +1098,152 @@ def load_json(f):
         return {}
 
 
-def _prune_chip_history_for_save(data, max_bytes=50 * 1024 * 1024, keep_days=45):
-    """V2.23.9：限制法人全市場歷史快取，避免 chip_history.json 超過 GitHub 單檔上限。
+def _chip_history_day_path(market, ds):
+    """V2.23.11：取得單一市場/交易日法人歷史檔案路徑。"""
+    market = str(market or '').upper()
+    ds = str(ds or '')
+    if market not in CHIP_HISTORY_MARKETS or not (len(ds) == 8 and ds.isdigit()):
+        return None
+    return os.path.join(CHIP_HISTORY_DIR, market, f'{ds}.json')
 
-    保留最近日期；若仍超過 50 MiB，逐步刪除最舊日期。
-    僅處理市場 -> YYYYMMDD -> 當日資料的標準結構；其他結構原樣保留。
+
+def _chip_history_write_day(market, ds, data):
+    """V2.23.11：原子寫入單日全市場 T86/TPEX 法人資料。"""
+    path = _chip_history_day_path(market, ds)
+    if not path or not isinstance(data, dict) or not data:
+        return False
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    tmp = path + '.tmp'
+    payload = {
+        '_schema_version': CHIP_HISTORY_SCHEMA_VERSION,
+        'market': market,
+        'date': ds,
+        'data': _repair_json_strings(data),
+    }
+    with open(tmp, 'w', encoding='utf-8') as x:
+        json.dump(payload, x, ensure_ascii=False, separators=(',', ':'))
+    os.replace(tmp, path)
+    return True
+
+
+def _chip_history_read_day(market, ds):
+    """V2.23.11：讀取單日法人資料；相容裸 dict 與帶 metadata 格式。"""
+    path = _chip_history_day_path(market, ds)
+    if not path or not os.path.exists(path):
+        return {}
+    try:
+        with open(path, encoding='utf-8') as x:
+            obj = json.load(x)
+        obj = _repair_json_strings(obj)
+        if isinstance(obj, dict) and isinstance(obj.get('data'), dict):
+            return obj['data']
+        return obj if isinstance(obj, dict) else {}
+    except Exception as e:
+        print(f'V2.23.11 chip_history 單日讀取失敗：{market}/{ds}：{type(e).__name__}: {e}', flush=True)
+        return {}
+
+
+def _chip_history_available_days(market):
+    """V2.23.11：列出市場已有的日期檔。"""
+    root = os.path.join(CHIP_HISTORY_DIR, str(market or '').upper())
+    if not os.path.isdir(root):
+        return []
+    out = []
+    for name in os.listdir(root):
+        if name.endswith('.json') and len(name) == 13 and name[:8].isdigit():
+            out.append(name[:8])
+    return sorted(set(out), reverse=True)
+
+
+def _chip_history_load_market(market):
+    """V2.23.11：把每日分檔組回舊 institutional() 使用的 date -> data 結構。"""
+    return {
+        ds: _chip_history_read_day(market, ds)
+        for ds in _chip_history_available_days(market)
+    }
+
+
+def _chip_history_migrate_legacy():
+    """V2.23.11：首次升版把舊 chip_history.json 無損拆成每日檔。
+
+    只有所有有效日期都成功寫入且驗證數量一致後才刪除舊檔；
+    migration 失敗時保留舊檔，不會為了過 100 MiB 而犧牲歷史資料。
     """
-    if not isinstance(data, dict):
-        return data
+    if not os.path.exists(CHIP_HISTORY_FILE):
+        return True
 
-    import copy
-    cleaned = copy.deepcopy(data)
+    try:
+        print('========== V2.23.11 CHIP HISTORY MIGRATION ==========', flush=True)
+        old = load_json(CHIP_HISTORY_FILE)
+        if not isinstance(old, dict) or not old:
+            print('V2.23.11 chip_history：舊檔不存在有效資料，略過 migration', flush=True)
+            return True
 
-    def encoded_size(obj):
-        return len(json.dumps(obj, ensure_ascii=False, separators=(',', ':')).encode('utf-8'))
+        written = 0
+        expected = 0
+        verify_ok = True
+        for market in CHIP_HISTORY_MARKETS:
+            dates = old.get(market, {})
+            if not isinstance(dates, dict):
+                continue
+            for ds, data in dates.items():
+                if not (isinstance(ds, str) and len(ds) == 8 and ds.isdigit() and isinstance(data, dict) and data):
+                    continue
+                expected += 1
+                if _chip_history_write_day(market, ds, data):
+                    check = _chip_history_read_day(market, ds)
+                    if isinstance(check, dict) and check:
+                        written += 1
+                    else:
+                        verify_ok = False
+                else:
+                    verify_ok = False
 
-    # 每個市場先限留最近 45 個日期（約 9 週交易日）。
-    for market, dates in list(cleaned.items()):
-        if not isinstance(dates, dict):
-            continue
-        date_keys = [k for k, v in dates.items()
-                     if isinstance(k, str) and k.isdigit() and len(k) == 8 and isinstance(v, dict)]
-        date_keys.sort(reverse=True)
-        for old_date in date_keys[keep_days:]:
-            dates.pop(old_date, None)
+        if expected == 0:
+            print('V2.23.11 chip_history：舊檔沒有可拆分日期，保留舊檔', flush=True)
+            return True
 
-    # 若仍太大，按日期由舊至新逐日移除；不碰非日期 metadata。
-    while encoded_size(cleaned) > max_bytes:
-        candidates = []
-        for market, dates in cleaned.items():
-            if isinstance(dates, dict):
-                for day in dates:
-                    if isinstance(day, str) and day.isdigit() and len(day) == 8:
-                        candidates.append((day, market))
-        if not candidates:
-            break
-        day, market = min(candidates)
-        cleaned[market].pop(day, None)
+        if written != expected or not verify_ok:
+            print(f'❌ V2.23.11 chip_history migration 驗證失敗：寫入 {written}/{expected}，舊檔保留', flush=True)
+            return False
 
-    final_size = encoded_size(cleaned)
-    if final_size < encoded_size(data):
-        print(f'V2.23.9 chip_history 自動清理：{encoded_size(data)/1024/1024:.2f} MB → {final_size/1024/1024:.2f} MB', flush=True)
-    return cleaned
+        # 再做市場/日期數量驗證。
+        for market in CHIP_HISTORY_MARKETS:
+            expected_dates = sorted([
+                ds for ds, data in (old.get(market, {}) or {}).items()
+                if isinstance(ds, str) and len(ds) == 8 and ds.isdigit() and isinstance(data, dict) and data
+            ])
+            actual_dates = sorted(_chip_history_available_days(market))
+            if expected_dates != actual_dates:
+                print(f'❌ V2.23.11 {market} 日期驗證失敗：舊 {len(expected_dates)} / 新 {len(actual_dates)}', flush=True)
+                return False
+
+        os.remove(CHIP_HISTORY_FILE)
+        print(f'✅ V2.23.11 chip_history migration 完成：{written} 個每日檔；舊檔已移除', flush=True)
+        print('======================================================', flush=True)
+        return True
+    except Exception as e:
+        print(f'❌ V2.23.11 chip_history migration 失敗：{type(e).__name__}: {e}；舊檔保留', flush=True)
+        traceback.print_exc()
+        return False
+
+
+def _chip_history_legacy_fallback_market(market):
+    """V2.23.11：若新分檔尚不存在，才讀舊 JSON；不再於正常流程寫回舊 JSON。"""
+    try:
+        old = load_json(CHIP_HISTORY_FILE)
+        dates = old.get(market, {}) if isinstance(old, dict) else {}
+        return dates if isinstance(dates, dict) else {}
+    except Exception:
+        return {}
 
 
 def save_json(f, d):
-
+    """一般 JSON 儲存器；V2.23.11 不再對 chip_history.json 做隱性刪資料。"""
     t = f + '.tmp'
-
     d = _repair_json_strings(d)
-    if os.path.basename(str(f)).lower() == 'chip_history.json':
-        d = _prune_chip_history_for_save(d)
-
-    with open(
-        t,
-        'w',
-        encoding='utf-8'
-    ) as x:
-
-        json.dump(
-            d,
-            x,
-            ensure_ascii=False,
-            indent=2
-        )
-
+    with open(t, 'w', encoding='utf-8') as x:
+        json.dump(d, x, ensure_ascii=False, indent=2)
     os.replace(t, f)
 
 
@@ -9156,21 +9242,18 @@ def institutional(
     market,
     days=20
 ):
-    """
-    V2.9.9 法人資料：
-    - TWSE T86 timeout 由 4 秒提高至 10 秒
-    - 暫時性失敗允許 1 次重試
-    - 先抓最近 20 個交易日，若不足 20 日，再自動往前補抓 10 日
-    - 已成功資料立即寫入 chip_history.json，避免單日 timeout 造成整批失敗
+    """V2.23.11 法人資料：每日分檔儲存，分析口徑維持最近20個可用交易日。
+
+    - TWSE/TPEX 全市場每日資料各自存成 chip_history/<market>/YYYYMMDD.json
+    - 不再把全部歷史資料寫回單一 chip_history.json
+    - 首次升版由 _chip_history_migrate_legacy() 無損拆分舊檔
+    - 最近20日不足時維持 V2.23.10 的最多額外補抓3個工作日
     """
     key = ('inst', market, days)
 
     if key in INSTITUTIONAL_CACHE:
         return INSTITUTIONAL_CACHE[key]
 
-    # V2.10.19：LINE 查詢絕不載入完整 chip_history.json。
-    # T86 每日回傳全市場資料，若把 20 天全部留在 Render 記憶體會很容易
-    # 超過 512MB。LINE 模式改用只保存「查詢股票」的精簡快取。
     if LINE_MODE_ACTIVE:
         line_history = load_json(LINE_CHIP_CACHE_FILE)
         if not isinstance(line_history, dict) or not line_history:
@@ -9179,20 +9262,37 @@ def institutional(
         history = {'LINE': line_history}
         market_hist = history['LINE'].setdefault(market, {})
 
-        # 若 LINE 專用快取尚未建立，直接從 GitHub 的 chip_history.json
-        # 讀取目標股資料；只保留這一支股票，避免把全市場 20 日資料留在 Render。
         existing_days = sum(1 for x in market_hist.values() if isinstance(x, dict) and code in x)
         if existing_days < days:
-            remote_full = load_remote_json_cache(CHIP_HISTORY_FILE, timeout=6)
-            remote_market = remote_full.get(market, {}) if isinstance(remote_full, dict) else {}
-            if isinstance(remote_market, dict):
-                for ds, daydata in remote_market.items():
-                    if isinstance(daydata, dict) and code in daydata:
-                        market_hist[ds] = {code: daydata.get(code)}
-
+            # V2.23.11：Render 不再下載整個 chip_history.json；逐日讀取需要的日期。
+            for ds in _chip_history_available_days(market):
+                if code in market_hist.get(ds, {}):
+                    continue
+                one_day = _chip_history_read_day(market, ds)
+                if not one_day:
+                    # 本機不存在時，直接嘗試 GitHub 每日檔。
+                    url = (
+                        'https://raw.githubusercontent.com/HSY781106/-stock-line-alert/'
+                        f'main/{CHIP_HISTORY_DIR}/{market}/{ds}.json'
+                    )
+                    try:
+                        rr = requests.get(url, timeout=4, headers={'User-Agent': 'stock-alert/2.23.11'})
+                        rr.raise_for_status()
+                        obj = rr.json()
+                        one_day = obj.get('data', {}) if isinstance(obj, dict) else {}
+                    except Exception:
+                        one_day = {}
+                item = one_day.get(code) if isinstance(one_day, dict) else None
+                if item:
+                    market_hist[ds] = {code: item}
+                if sum(1 for x in market_hist.values() if isinstance(x, dict) and code in x) >= days:
+                    break
     else:
-        history = load_json(CHIP_HISTORY_FILE)
-        market_hist = history.setdefault(market, {})
+        market_hist = _chip_history_load_market(market)
+        if not market_hist:
+            # migration 若因舊版本檔案仍存在而尚未完成，保守讀取舊檔，絕不清除。
+            market_hist = _chip_history_legacy_fallback_market(market)
+
     today = datetime.now(TW_TZ).date()
 
     def weekday_dates(start_date, count):
@@ -9204,56 +9304,35 @@ def institutional(
             d -= timedelta(days=1)
         return out
 
-    # V2.9.9：把今天也納入候選；若 T86 尚未發布，該日會自然失敗，
-    # 程式會繼續使用前一交易日資料。
     dates = weekday_dates(today, days)
 
     def fetch(dt):
         ds = dt.strftime('%Y%m%d')
-
         if market == 'TPEX':
-            x = tpex_get(
-                '/tpex_3insti_daily_trading',
-                {'date': ds}
-            )
+            x = tpex_get('/tpex_3insti_daily_trading', {'date': ds})
             parsed = parse_tpex_inst(x) if x else {}
         else:
             x = http_json(
                 TWSE_WEB_BASE + '/fund/T86',
-                {
-                    'date': ds,
-                    'selectType': 'ALL',
-                    'response': 'json'
-                },
+                {'date': ds, 'selectType': 'ALL', 'response': 'json'},
                 timeout=6,
                 retries=0
             )
             parsed = parse_t86(x) if x else {}
-
-        # LINE 模式：解析後立刻只留下目標股票，不能把整個市場資料留在 memory。
         if LINE_MODE_ACTIVE:
             one = parsed.get(code) if isinstance(parsed, dict) else None
             return ds, ({code: one} if one else {})
-
         return ds, parsed
 
     def fetch_missing(target_dates):
-        missing = [
-            x for x in target_dates
-            if x.strftime('%Y%m%d') not in market_hist
-        ]
-
+        missing = [x for x in target_dates if x.strftime('%Y%m%d') not in market_hist]
         print(
-            f'法人資料：{market} 已有 '
-            f'{len(target_dates)-len(missing)}/{len(target_dates)} 日快取，'
+            f'法人資料：{market} 已有 {len(target_dates)-len(missing)}/{len(target_dates)} 日快取，'
             f'需補 {len(missing)} 日'
         )
-
         if not missing:
             return
-
         from concurrent.futures import ThreadPoolExecutor, as_completed
-
         with ThreadPoolExecutor(max_workers=min(5, len(missing))) as ex:
             futs = [ex.submit(fetch, x) for x in missing]
             for f in as_completed(futs):
@@ -9261,69 +9340,38 @@ def institutional(
                     ds, data = f.result()
                     if data:
                         market_hist[ds] = data
+                        if not LINE_MODE_ACTIVE:
+                            _chip_history_write_day(market, ds, data)
                 except Exception as e:
                     print('法人批次失敗：', e)
-
         if LINE_MODE_ACTIVE:
-            save_json(
-                LINE_CHIP_CACHE_FILE,
-                history.get('LINE', {})
-            )
-        else:
-            save_json(CHIP_HISTORY_FILE, history)
+            save_json(LINE_CHIP_CACHE_FILE, history.get('LINE', {}))
 
     fetch_missing(dates)
 
-    # 若最近 20 個交易日仍不足 20 日，向前再補 10 個交易日。
-    available = sum(
-        1 for dt in dates
-        if dt.strftime('%Y%m%d') in market_hist
-    )
-
+    available = sum(1 for dt in dates if dt.strftime('%Y%m%d') in market_hist)
     if available < days:
-        # V2.23.10：只做有限補抓。舊版一次追加10個工作日，遇到
-        # 假日/來源缺漏時容易造成多輪慢速 API timeout。
-        extended = weekday_dates(
-            today - timedelta(days=1),
-            days + 3
-        )
+        extended = weekday_dates(today - timedelta(days=1), days + 3)
         extra = [
             dt for dt in extended
-            if dt.strftime('%Y%m%d') not in {
-                x.strftime('%Y%m%d') for x in dates
-            }
+            if dt.strftime('%Y%m%d') not in {x.strftime('%Y%m%d') for x in dates}
         ][:3]
-
         if extra:
-            print(
-                f'法人資料不足 {days} 日，追加往前補抓：{len(extra)} 日'
-            )
+            print(f'法人資料不足 {days} 日，追加往前補抓：{len(extra)} 日')
             fetch_missing(extra)
 
-    # 重新建立最近可用交易日清單，最多取 days 日。
     all_dates = weekday_dates(today, days + 10)
-    usable = [
-        dt for dt in all_dates
-        if dt.strftime('%Y%m%d') in market_hist
-    ][:days]
-
+    usable = [dt for dt in all_dates if dt.strftime('%Y%m%d') in market_hist][:days]
     result = [
-        {
-            'date': dt.strftime('%Y%m%d'),
-            'data': market_hist[dt.strftime('%Y%m%d')]
-        }
+        {'date': dt.strftime('%Y%m%d'), 'data': market_hist[dt.strftime('%Y%m%d')]}
         for dt in usable
     ]
-
     INSTITUTIONAL_CACHE[key] = result
-
     print(
         f'法人資料完成：{len(result)} 個交易日'
         + ('（完整20日）' if len(result) >= days else '（目前不足20日）')
     )
-
     return result
-
 
 def parse_tpex_inst(data):
 
@@ -17756,6 +17804,9 @@ def _notify_target_buy_point(name, symbol, state, u=None):
 
 
 def run_alerts():
+    # V2.23.11：首次啟動先無損拆分舊 chip_history.json；失敗則保留舊檔並由 institutional fallback 讀取。
+    _chip_history_migrate_legacy()
+
     # V2.14.28：Actions 順便維護川普公開投資組合快取；Render 查詢時可直接讀 GitHub，
     # 不需要在 LINE webhook 期間下載 900+ 頁 OGE PDF。
     try:
@@ -18155,12 +18206,12 @@ def main():
 
     else:
 
-        print('========== V2.19.0 RUN START ==========', flush=True)
+        print('========== V2.23.11 RUN START ==========', flush=True)
         _print_ai_runtime_status()
         print('V2.19.0 AI 閘門：每15分鐘自動掃描只有達到 LINE 發送門檻後才啟用 AI；未觸發時完全不呼叫 AI｜跌幅自動通知：每標的一天最多1次｜觸發後立即持久化LOCK', flush=True)
         print(f'執行時間（台灣）：{datetime.now(TW_TZ).strftime("%Y-%m-%d %H:%M:%S")}', flush=True)
         run_alerts()
-        print('========== V2.19.0 RUN END ==========', flush=True)
+        print('========== V2.23.11 RUN END ==========', flush=True)
 
 
 if __name__ == '__main__':
