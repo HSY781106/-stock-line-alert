@@ -1,5 +1,5 @@
 {
-  "cached_at": 1790205392.2929516,
+  "cached_at": 1790293885.0203602,
   "data": [
     {
       "code": "1101",
@@ -1423,7 +1423,7 @@
       "industry": "生技醫療",
       "market": "TWSE",
       "symbol": "1734.TW",
-      "capital": 1901967740.0
+      "capital": 2016085810.0
     },
     {
       "code": "1735",
@@ -1519,7 +1519,7 @@
       "industry": "生技醫療",
       "market": "TWSE",
       "symbol": "1795.TW",
-      "capital": 2667382290.0
+      "capital": 2701547570.0
     },
     {
       "code": "1802",
@@ -5767,7 +5767,7 @@
       "industry": "光電業",
       "market": "TWSE",
       "symbol": "4949.TW",
-      "capital": 677031430.0
+      "capital": 677515430.0
     },
     {
       "code": "4952",
@@ -8551,7 +8551,7 @@
       "industry": "其他",
       "market": "TWSE",
       "symbol": "9917.TW",
-      "capital": 4511970930.0
+      "capital": 4737569480.0
     },
     {
       "code": "9918",
@@ -8759,7 +8759,7 @@
       "industry": "鋼鐵工業",
       "market": "TWSE",
       "symbol": "9958.TW",
-      "capital": 2468966650.0
+      "capital": 2668966650.0
     }
   ]
 }
