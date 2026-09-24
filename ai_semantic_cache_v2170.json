@@ -1656,5 +1656,37 @@
       ]
     },
     "provider": "groq"
+  },
+  "trump_v21826:__MARKET__:b5e54c105477d4326b535e37": {
+    "ts": 1790228331.3855004,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.6,
+          "policy_stage": "considering",
+          "reason": "未見具體政策變動",
+          "relevant": true,
+          "affected_channel": "需求",
+          "transmission": "無明確政策→無產業變化→市場不受影響",
+          "exposure": "證據不足"
+        },
+        {
+          "id": 1,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.8,
+          "policy_stage": "announced",
+          "reason": "AI 供應鏈受關稅影響",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "關稅上升→半導體成本上升→AI 股價受壓",
+          "exposure": "受關稅影響"
+        }
+      ]
+    },
+    "provider": "groq"
   }
 }
