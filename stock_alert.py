@@ -1,4 +1,4 @@
-# stock_alert.py V2.23.12
+# stock_alert.py V2.23.13
 # V2.23.11：chip_history 改為「每日分檔」儲存，完整保留歷史資料，避免單一 JSON 超過 GitHub 100 MiB 限制；分析介面與 20 日法人口徑不變。
 # V2.23.10：法人歷史補抓限流與分段計時；TWSE T86 單次逾時 6 秒、取消重試；最近20日不足時最多額外補抓3個工作日，避免每輪大量逾時請求。
 # V2.23.11：不再用刪除舊日期的方式壓縮 chip_history；改為每日分檔，保留完整歷史。Theme 細題材候選池修正維持。
@@ -198,7 +198,7 @@ TRUMP_PDF_TIMEOUT = 20
 TRUMP_MAX_HOLDINGS = 30
 TRUMP_TRANSACTION_CACHE_FILE = 'trump_transaction_cache.json'
 TRUMP_TRANSACTION_CACHE_DAYS = 2
-TRUMP_TRANSACTION_CACHE_VERSION = 13
+TRUMP_TRANSACTION_CACHE_VERSION = 14
 TRUMP_TRANSACTION_STALE_DAYS = 60
 TRUMP_TRANSACTION_FRESHNESS_CHECK_HOURS = 24
 # V2.14.42：Trump 訊號拆成兩層：① OGE/Open Cabinet 官方已申報交易；② 最近 30 日公開新聞/市場動向。
@@ -13795,8 +13795,9 @@ def _trump_open_cabinet_fallback():
     page_url='https://open-cabinet.org/officials/trump-donald-j'
     _trump_open_cabinet_fallback.last_raw_count=0
     try:
-        r=requests.get(json_url,timeout=max(TRUMP_PDF_TIMEOUT,60),
-                       headers={'User-Agent':'stock-alert/2.14.40','Accept':'application/json,text/plain,*/*'})
+        r=requests.get(json_url + '?_fresh=' + str(int(time.time())),timeout=max(TRUMP_PDF_TIMEOUT,60),
+                       headers={'User-Agent':'stock-alert/2.23.13','Accept':'application/json,text/plain,*/*',
+                                'Cache-Control':'no-cache, no-store, max-age=0','Pragma':'no-cache'})
         r.raise_for_status()
         payload=r.json()
         tx=payload.get('transactions',[]) if isinstance(payload,dict) else []
@@ -13982,7 +13983,24 @@ def _load_trump_transactions():
         save_json(TRUMP_TRANSACTION_CACHE_FILE,payload)
         return payload
 
-    # 1) 只有 Open Cabinet published JSON 才視為 V12 的權威完整 cache。
+    # V2.23.13：每次執行先向 Open Cabinet published JSON 發出 live request，
+    # 不讓 2 天內的本機/GitHub cache 擋住來源更新；cache-busting + no-cache headers。
+    live_rows=_trump_open_cabinet_fallback()
+    if live_rows:
+        try:
+            save_authoritative(live_rows, getattr(_trump_open_cabinet_fallback,'last_raw_count',0), open_cabinet_url)
+        except Exception as e:
+            print(f'Trump 278-T：live 資料已抓到，但快取寫入失敗：{type(e).__name__}: {e}',flush=True)
+        latest_dates=[]
+        for _row in live_rows:
+            try: latest_dates.append(datetime.fromisoformat(str(_row.get('date',''))[:10]).date())
+            except Exception: pass
+        _latest=max(latest_dates).isoformat() if latest_dates else 'NA'
+        print(f'Trump 278-T：V2.23.13 每次執行強制 live refresh｜原始={getattr(_trump_open_cabinet_fallback,"last_raw_count",0)}｜解析={len(live_rows)}｜最新交易日={_latest}',flush=True)
+        return live_rows
+    print('Trump 278-T：⚠️ Open Cabinet live refresh 失敗，才改用既有 cache/PDF fallback',flush=True)
+
+    # 1) Live source 失敗時才允許 cache 作為 emergency fallback。
     local=load_json(TRUMP_TRANSACTION_CACHE_FILE)
     if valid_cache(local, require_open_cabinet=True):
         data=local.get('data',[])
