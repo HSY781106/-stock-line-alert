@@ -1,5 +1,5 @@
 {
-  "cached_at": 1790272997.5915341,
+  "cached_at": 1790286455.0412028,
   "data": {
     "items": [
       {
@@ -17,6 +17,14 @@
         "query": "Federal Reserve interest rates inflation US economy",
         "direction": "negative",
         "reason": "緊縮／景氣風險"
+      },
+      {
+        "title": "Fed Raises Interest Rates in Push for ‘Timelier’ Retreat in Inflation - The New York Times",
+        "link": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxQM2stY3BUc2U1Z0tFTDJIOWNLMlBTaFh3TUN0bTZ0REtxZnJGVDlFSjdEUjZuYmE3UnBkb2NtTC1UeFlPa2o0Uk9NdXZCX01GN0ZNMnFNTEhQa0l6eFYxMU9fdlVxWmhCdDZwdl9lUXRBWWo1SU9tZ3d1S0NfNEhNdjBVOGZOSDdi?oc=5",
+        "published": "Tue, 22 Sep 2026 07:00:00 GMT",
+        "query": "Federal Reserve interest rates inflation US economy",
+        "direction": "neutral",
+        "reason": "中性／待確認"
       },
       {
         "title": "Inflation pressures raise prospect of Fed rate hike on eve of elections - Reuters",
@@ -43,7 +51,7 @@
         "reason": "中性／待確認"
       },
       {
-        "title": "Solid Economic Data Show U.S. Economy Running Hot Ahead of Fed Decision - WSJ",
+        "title": "Solid Economic Data Show U.S. Economy Running Hot Ahead of Fed Decision - wsj.com",
         "link": "https://news.google.com/rss/articles/CBMiwAFBVV95cUxPUllxQzMyRkk0Q2JWXzlkS0lNS2xqZkFuRUl1c01TYlMzd0JyeFhzUkZSYlBXY0hCdllwek1MVnNDOVozY0FGZnpSa1AzWHV2eWVZbGozRWlxdEloZjJCRE1Ha1VuaFNvaU43c2pGQlVLMThvM1BBMGdYUEEyZWNLMWVGT1llUGpqUTVETVBNLVpmNHRxTTRHLXZoVTRUUEJ1TlVJTXJKUzAySUVNNEFISzZQZzFpVnZsTHo3UzRIR3o?oc=5",
         "published": "Thu, 24 Sep 2026 00:03:37 GMT",
         "query": "Federal Reserve interest rates inflation US economy",
@@ -51,20 +59,12 @@
         "reason": "中性／待確認"
       },
       {
-        "title": "What Is Stagflation, and How Would It Affect the National Debt? - Peter G. Peterson Foundation",
-        "link": "https://news.google.com/rss/articles/CBMilgFBVV95cUxPaU50NWVpM01qcVNNWDBxbXNyMFVIeGVlaVIzUFkwSjRWT2x5TjFPNXQwU0lLbjJKZVNWaVh4UGtMQkh0RDZVZ2hHeHJTXzBsN2tMaHN6Uk44TzBVNUhxeWdnR0VaTHRsRnFvb09wUjFfRDI3VWcyM25pa0hmMkFTYmVjdjFvZFYwb3lERUdYY2o0REtKNlE?oc=5",
-        "published": "Mon, 21 Sep 2026 22:08:37 GMT",
+        "title": "4 Reasons to Think US Inflation Will Come Back Down - Morningstar",
+        "link": "https://news.google.com/rss/articles/CBMimAFBVV95cUxOY1BfNWt5TXRQcnp5aF9yS1RRUmFmR3BOSmVjUEhJU05Ydk16ZU1wRnk0dHhUZWx2bXFvUjhLbUtqZ3hwbVRLczZDcmFveHlDU0l2T2VYcGMxdVJ6SU9WNVRZZzVTUEVBYVQ2c18yb0t0bGNsdEV0OUtrdVhjbXpSVVpRd1UtS3hfQU5vZXIzT2UtOVlEUS05TA?oc=5",
+        "published": "Tue, 22 Sep 2026 06:10:23 GMT",
         "query": "Federal Reserve interest rates inflation US economy",
         "direction": "neutral",
         "reason": "中性／待確認"
-      },
-      {
-        "title": "How Kevin Warsh's rate hike exposed a 2-speed U.S. economy, with AI and housing at the poles - Fortune",
-        "link": "https://news.google.com/rss/articles/CBMif0FVX3lxTE1RQnBCb1JvMGRndVl1MG9NX241MGNHODBMUkVCU2NGZE5sdjJEWHVKZ3VzSXpQSnFsd1BkcEgxUnFycnlVeDBFTjdyZWR2eGJ4bE5ZOXVKRlhZZXZkT2s4ZkNTU1p2ZG5nZ2RNdGpBOUZYOThzeUVUOXNIaVpodzQ?oc=5",
-        "published": "Tue, 22 Sep 2026 15:01:00 GMT",
-        "query": "Federal Reserve interest rates inflation US economy",
-        "direction": "negative",
-        "reason": "緊縮／景氣風險"
       },
       {
         "title": "What’s happening this week in economics? - Deloitte",
@@ -99,7 +99,7 @@
         "reason": "中性／待確認"
       }
     ],
-    "updated_at": "2026-09-25T02:03:18.130725+08:00",
+    "updated_at": "2026-09-25T05:47:35.463143+08:00",
     "errors": []
   }
 }
