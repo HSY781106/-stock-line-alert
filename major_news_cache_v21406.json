@@ -317,7 +317,7 @@
     "lookback_days": 14
   },
   "QQQ": {
-    "fetched_at": "2026-09-25T15:39:32.570808+08:00",
+    "fetched_at": "2026-09-26T02:04:09.731165+08:00",
     "adjustment": 0,
     "events": [
       {
@@ -345,16 +345,6 @@
         "source": "CMoney",
         "date": "2026-09-16T12:02:59+08:00",
         "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTFBya0pFQUJwalZEcjBOMkhGWmVBUW1zeTFDN1dibFVqU0JHRTBLMU5NRmZ0Z3NMUWUwV1hsYUZ3d3psYVl1eU9tVzA3Y2VGU2Z1LWE0dzBJQXY?oc=5",
-        "raw_adjustment": 0,
-        "adjustment": 0,
-        "label": "",
-        "status": ""
-      },
-      {
-        "title": "$納指100ETF-Invesco QQQ Trust (QQQ.US)$$博通 (AVGO.US)$ 完全按照我的劇本走，懂你的聯儲局 - Moomoo",
-        "source": "Moomoo",
-        "date": "2026-09-16T15:00:00+08:00",
-        "link": "https://news.google.com/rss/articles/CBMirAFBVV95cUxQU1h1NzViT3VTQVp2cWhaNjZHeDZIcGFXenZieVlLVzFWZmdkb1JtdjF3UmV3czU4bnhabmdjV3NReWw3VFdaRmJVZG9qWkE1RlhqWkx3ZVdlR3J0UDhieE55ajRFckFWSGZ4QmNWa1FPZDhFT2JZVHBzanZUT3lkUG1WY1N0cTJ3c3c2eTJzUk4wMWQ0dUZGaHdTQnhfNFpodF91YUJySlZmdGdk?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
@@ -395,6 +385,16 @@
         "source": "Yahoo 財經",
         "date": "2026-09-18T04:44:26+08:00",
         "link": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE00TUhULVBXR19lRU1XOVo5VnhGZEZVenpUSHBneVlZcy1vU0tZdnVMSm9rX1NqbzZHYW54MEhTWHFTQUhnaTR0eW9obG9wcFlpTWFoTU1id3ROcmhwRXIyMjVhT0c?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "QQQ正在蓄勢待發，醞釀大動作。如果我知道，我會告訴你，但其實我也不知道。而且每當我預測什麼，結果通常都會相反。 - Moomoo",
+        "source": "Moomoo",
+        "date": "2026-09-18T10:35:01+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxPUXZDamlTRHJOS0E0YzNTTkdkSzE5VHJUZWdVam81UUtZblk5X1RNOFQtel8wbUhIeHF4aWd6V0YzSEFPaElwU0xUZnBBbFh6NFBnUUhTR1V1MU1SLUlKcGFWQ0JIUzJOQ2xMUEpHaHJSUXZxd1FKUnFJV2pyTi1FN1dEcks4ZHZFLWNIdDJ2bkVxaVY4THVhUnN3RXZKSm5MMUFhX0VsVno?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",

@@ -1688,5 +1688,37 @@
       ]
     },
     "provider": "groq"
+  },
+  "trump_v21826:__MARKET__:9644484def04ebcd15a93bad": {
+    "ts": 1790359449.7219203,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.7,
+          "policy_stage": "considering",
+          "reason": "特朗普能源主張引發市場擔憂",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "特朗普能源主張→能源成本上升→市場下跌",
+          "exposure": "證據不足"
+        },
+        {
+          "id": 3,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.6,
+          "policy_stage": "implemented",
+          "reason": "特朗普油投資帶來收益",
+          "relevant": true,
+          "affected_channel": "估值",
+          "transmission": "特朗普油投資→投資收益提升→市場估值上升",
+          "exposure": "證據不足"
+        }
+      ]
+    },
+    "provider": "groq"
   }
 }
