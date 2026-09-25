@@ -1720,5 +1720,37 @@
       ]
     },
     "provider": "groq"
+  },
+  "trump_v21826:__MARKET__:dc218ffb4487ed9a59701bc2": {
+    "ts": 1790361068.5332305,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.7,
+          "policy_stage": "announced",
+          "reason": "能源政策不利",
+          "relevant": true,
+          "affected_channel": "成本上升",
+          "transmission": "能源政策→能源產業→市場成本上升",
+          "exposure": "證據不足"
+        },
+        {
+          "id": 1,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.6,
+          "policy_stage": "announced",
+          "reason": "AI產業受限",
+          "relevant": true,
+          "affected_channel": "需求下降",
+          "transmission": "AI政策→半導體產業→市場需求下降",
+          "exposure": "證據不足"
+        }
+      ]
+    },
+    "provider": "groq"
   }
 }
