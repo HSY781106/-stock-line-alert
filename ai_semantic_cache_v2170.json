@@ -1848,5 +1848,61 @@
       ]
     },
     "provider": "groq"
+  },
+  "trump_v21826:__MARKET__:f025528da292d0882c4dd4f5": {
+    "ts": 1790577992.7079794,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "positive",
+          "score": 3,
+          "confidence": 0.85,
+          "policy_stage": "considering",
+          "reason": "前水力壓裂高層推進 Trump 能源霸權政策，有利傳統能源產業。",
+          "relevant": true,
+          "affected_channel": "成本與供給",
+          "transmission": "川普放寬能源管制→增加油氣開採→降低能源成本並利好能源股",
+          "exposure": "整體整體美股市場及能源類股（如 XLE）"
+        },
+        {
+          "id": 1,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.75,
+          "policy_stage": "threat",
+          "reason": "中國掌控稀土影響川習會，屬於雙方談判籌碼角力。",
+          "relevant": true,
+          "affected_channel": "供應鏈",
+          "transmission": "中國稀土限制→供應鏈風險增加→市場觀望川習會談判結果",
+          "exposure": "科技、電動車及國防供應鏈"
+        },
+        {
+          "id": 2,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.7,
+          "policy_stage": "considering",
+          "reason": "川習會與關稅重置可能緩減科技限制風險，利好 AI 基建。",
+          "relevant": true,
+          "affected_channel": "需求與估值",
+          "transmission": "關稅政策重置→緩解供應鏈關稅壓力→提升 AI 基礎設施科技股估值",
+          "exposure": "AI 硬體與半導體類股（如 NVDA, AMD）"
+        },
+        {
+          "id": 3,
+          "direction": "neutral",
+          "score": -1,
+          "confidence": 0.8,
+          "policy_stage": "threat",
+          "reason": "川習會前稀土磁鐵出口下降，顯示供應鏈緊張但屬會前角力。",
+          "relevant": true,
+          "affected_channel": "出口與供應鏈",
+          "transmission": "中國減少出口→原料成本上升風險→製造業與科技業供應鏈受壓",
+          "exposure": "美股製造業與高科技硬體產業"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }

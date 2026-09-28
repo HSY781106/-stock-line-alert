@@ -1,31 +1,7 @@
 {
-  "cached_at": 1790378184.0488112,
+  "cached_at": 1790578018.7257743,
   "data": {
     "items": [
-      {
-        "title": "Ever wonder how the Fed's interest rate actually works? We've got answers - NPR",
-        "link": "https://news.google.com/rss/articles/CBMilwFBVV95cUxNanRyTXM4ZE00RFhRWlRSYXlhNUx5cGxxRENEUTFSZmlyUU1rNmFGcmpQdVdleGtBNkRoRVZYVkY3ZEY1UU9McXZsQ0ZBNFllQWR2RXhSU0xsc0dCcDVIWUVOeUNZNU9xcTd3MHNJVE5fUE9KMHhxM2tGQ3NDam1CVnJxT0M4MEp3ZllkNEZnRmxWS19JOVBj?oc=5",
-        "published": "Sat, 19 Sep 2026 09:00:00 GMT",
-        "query": "Federal Reserve interest rates inflation US economy",
-        "direction": "neutral",
-        "reason": "中性／待確認"
-      },
-      {
-        "title": "Federal Reserve rate hike reflects new world of sticky inflation and faster growth - AP News",
-        "link": "https://news.google.com/rss/articles/CBMiogFBVV95cUxPeUxpb0hhaEY4MGl0T21yM2ZObndRRlBrc0owTWxDM1FKMlFrWmF5Q21aNGFXdFh2QW5RRTJMMkVZSnJkdnpJMEdTWEFzTjFLQ2RCUWNqWXdlVVJoalBTLUxTMFJHN3pQVlAyLTdGLXBDdnlWbFlzMEJRTlowcklrY2NOaXEyOUE0cG4zQS1oRkxFR1JORWFBNHdJUXRnSGpILWc?oc=5",
-        "published": "Sun, 20 Sep 2026 13:45:00 GMT",
-        "query": "Federal Reserve interest rates inflation US economy",
-        "direction": "negative",
-        "reason": "緊縮／景氣風險"
-      },
-      {
-        "title": "Fed Confronts the Prospect of Another Rate Increase Ahead of Midterms - nytimes.com",
-        "link": "https://news.google.com/rss/articles/CBMiggFBVV95cUxOMGdRWGMwS19RQ1QwQVhydF9udFh2SkVwN2RYaXZMZGd6UzdGdXJOQ1JUMlFuLUw3VExKTm5XbldCLVBWVHpWSmNSWlQyN0tYUzVtRTg5Rlk3SnMxRklVWHVzbWJ4RFgtajBvVGM1cEhJcVZnTkhVNXNmWFVvZXZiRmt3?oc=5",
-        "published": "Fri, 25 Sep 2026 13:37:14 GMT",
-        "query": "Federal Reserve interest rates inflation US economy",
-        "direction": "neutral",
-        "reason": "中性／待確認"
-      },
       {
         "title": "Inflation pressures raise prospect of Fed rate hike on eve of elections - Reuters",
         "link": "https://news.google.com/rss/articles/CBMiogFBVV95cUxNU0ZXSlEta0N4WGxzcHJBNUM1cUI0d0U4TGFwa2NMbDM4U0Q3MWt0YXY5TGpQQ2xxdmJWNm0yeGl0ckJNanVPOU5HOUd5R0hNc19pZXcyd3FwWkFkY1hyUEpOdTZyMVZoN3R0eHZLdkxUYzRXV1hoRDctTXhUa3pvckNvLUktNDBmWm1OV3lhOTluQVRDQzUyQTN3Q0V0YmN2Q1E?oc=5",
@@ -35,36 +11,60 @@
         "reason": "緊縮／景氣風險"
       },
       {
-        "title": "Fighting inflation likely to be 'painful,' Chicago Fed president says - PBS",
-        "link": "https://news.google.com/rss/articles/CBMipgFBVV95cUxOQVR1azg4WmktY0lXSExsMzBsSVpRVzhqR2pFTUN2YkNRNVNDeFgxU0VfdzFzbHRJMHdHd1ZPWDdxdWl0eXdFRVoxdTNUQ0xISHI3Y1ZlTm8tQzZvLXZDR1EwOFVUNE9WdWhNYWFPMVB0cHFXU2szS2l0TzVPM08xNXRYMHdCN2lXdXBIdGNoTEhDWk1aYVZvaUJjcmxpRDlFUUllRGRR?oc=5",
-        "published": "Mon, 21 Sep 2026 17:36:10 GMT",
+        "title": "Fed Confronts the Prospect of Another Rate Increase Ahead of Midterms - The New York Times",
+        "link": "https://news.google.com/rss/articles/CBMiggFBVV95cUxOMGdRWGMwS19RQ1QwQVhydF9udFh2SkVwN2RYaXZMZGd6UzdGdXJOQ1JUMlFuLUw3VExKTm5XbldCLVBWVHpWSmNSWlQyN0tYUzVtRTg5Rlk3SnMxRklVWHVzbWJ4RFgtajBvVGM1cEhJcVZnTkhVNXNmWFVvZXZiRmt3?oc=5",
+        "published": "Fri, 25 Sep 2026 13:37:14 GMT",
         "query": "Federal Reserve interest rates inflation US economy",
         "direction": "neutral",
         "reason": "中性／待確認"
       },
       {
-        "title": "Fed's Kashkari reportedly says inflation is still too high across the U.S. economy - CNBC",
-        "link": "https://news.google.com/rss/articles/CBMid0FVX3lxTE9ZVEFneno2MUFKYkdpMjZpQk94SXpCd3NRZ0pub3p4MFRnUUY2cngzMUhKOXBaQ1ZyR3hnajN5TGtRaTdDdy1kYUZ5OFJDaGJ6bXMtN0ZRa05oSXd4WDBzaHRMREFXdi1yQWttNUVnSWh1eDFFcWlV?oc=5",
-        "published": "Sun, 20 Sep 2026 17:04:54 GMT",
+        "title": "The Moves That Backfired on Trump and Drove Interest Rates and Inflation Higher - WSJ",
+        "link": "https://news.google.com/rss/articles/CBMic0FVX3lxTE5GeVBIaXBxUF9Gcm9KVkxGMElRYUNUZW9kSTdKTl9JTlBvOTdodTd2ZDAwTERMUk51SWdEY0tTUDNVcHEtM1ZlMDhURDFoQzh2anlLQ2wtSlEwcjVKVTd1eUxmWm9Jai1UaWZQUGpFTWozRjA?oc=5",
+        "published": "Sun, 27 Sep 2026 21:31:34 GMT",
         "query": "Federal Reserve interest rates inflation US economy",
         "direction": "neutral",
         "reason": "中性／待確認"
       },
       {
-        "title": "What Is Stagflation, and How Would It Affect the National Debt? - Peter G. Peterson Foundation",
-        "link": "https://news.google.com/rss/articles/CBMilgFBVV95cUxPaU50NWVpM01qcVNNWDBxbXNyMFVIeGVlaVIzUFkwSjRWT2x5TjFPNXQwU0lLbjJKZVNWaVh4UGtMQkh0RDZVZ2hHeHJTXzBsN2tMaHN6Uk44TzBVNUhxeWdnR0VaTHRsRnFvb09wUjFfRDI3VWcyM25pa0hmMkFTYmVjdjFvZFYwb3lERUdYY2o0REtKNlE?oc=5",
-        "published": "Mon, 21 Sep 2026 22:08:37 GMT",
-        "query": "Federal Reserve interest rates inflation US economy",
-        "direction": "neutral",
-        "reason": "中性／待確認"
-      },
-      {
-        "title": "The Robust U.S. Economy Powers Through Rate Hikes and Rising Bond Yields - WSJ",
-        "link": "https://news.google.com/rss/articles/CBMieEFVX3lxTE90YXlaem55eWk3bnFDQ3FXQXN4SVNGSDg0cFB1UDRiZl8zMmducUlRQjdGc0hEcTRSZ1pITzJhNFVXT1FEQ0Y4bEdnVkhxTHpjTDRYckdlcEVSTUJMVGY2MHN0Wk5LQnZXUzBYQ3ZQOXZjaWwwNlVBZw?oc=5",
-        "published": "Fri, 25 Sep 2026 01:00:00 GMT",
+        "title": "How Kevin Warsh's rate hike exposed a 2-speed U.S. economy, with AI and housing at the poles - Fortune",
+        "link": "https://news.google.com/rss/articles/CBMif0FVX3lxTE1RQnBCb1JvMGRndVl1MG9NX241MGNHODBMUkVCU2NGZE5sdjJEWHVKZ3VzSXpQSnFsd1BkcEgxUnFycnlVeDBFTjdyZWR2eGJ4bE5ZOXVKRlhZZXZkT2s4ZkNTU1p2ZG5nZ2RNdGpBOUZYOThzeUVUOXNIaVpodzQ?oc=5",
+        "published": "Tue, 22 Sep 2026 15:01:00 GMT",
         "query": "Federal Reserve interest rates inflation US economy",
         "direction": "negative",
         "reason": "緊縮／景氣風險"
+      },
+      {
+        "title": "Federal Reserve rate hike reflects new world of sticky inflation, faster growth - The North State Journal",
+        "link": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxQZGJJZE56ck9EbFhYeDNlUmNKQkpfNzhLUXdGOUhlazF3ZFI3eWFLVXdZWEZ6Qmo3OFlScW5SaUlqbzR0VF82Yk1ZZ2pXRW9OeE1fb0REYzA4U1hOZV9Kcm1SVXVUTDh4Q2dQZGdoOXd0R1dNVXNibm55VnpDRkh5U2ZUekZpRFdvcDZNNkRLMm1GaTljQTJyT2JBQTJBTlpqNk1OLU5sTmsyUXRFbHdxVThMRGxOaUFI?oc=5",
+        "published": "Sat, 26 Sep 2026 15:55:52 GMT",
+        "query": "Federal Reserve interest rates inflation US economy",
+        "direction": "negative",
+        "reason": "緊縮／景氣風險"
+      },
+      {
+        "title": "What’s Next for US Stocks After the Fed Rate Hike - Morningstar",
+        "link": "https://news.google.com/rss/articles/CBMijgFBVV95cUxOZko0WU1kUWFDbVBBaXdJT09qeTFSY000SVlCd3diMHFVMjNodUtGWFlBMUtkdmZSRmlmTnRmWXBYaGlpbHVpOTdyZHN2QjNMampxSTM3czM0VE5MMlk4OU1kVUFsUkZhMHBxYXJhbFlpNnQzLVgteXNySXplRkFDVVRHUHNha182TmJNUDRB?oc=5",
+        "published": "Tue, 22 Sep 2026 10:13:58 GMT",
+        "query": "Federal Reserve interest rates inflation US economy",
+        "direction": "negative",
+        "reason": "緊縮／景氣風險"
+      },
+      {
+        "title": "Why the bond market is freaking out, and what it means for your money - CBS News",
+        "link": "https://news.google.com/rss/articles/CBMie0FVX3lxTE9TdmlpTmlrZWppS2ZjMHJSMll0aXF5Q2tYc1FRcmdrbldENHRiTW9RVE5QWVZJOEtRTTEzMmFfdjIxMnpGd1FCTmxyUnF6dUZDY2ZDTUpTc3N4cWlZRWo4RmFuVUdKbWRTYkg3blRvbjdrOVJwTXpkUkFaSQ?oc=5",
+        "published": "Thu, 24 Sep 2026 19:08:00 GMT",
+        "query": "Federal Reserve interest rates inflation US economy",
+        "direction": "neutral",
+        "reason": "中性／待確認"
+      },
+      {
+        "title": "Gold Holds Drop as Higher Oil and Hot US Data Fan Rate-Hike Bets - Yahoo Finance",
+        "link": "https://news.google.com/rss/articles/CBMinAFBVV95cUxOaldONXlrTDc4eGlWZlBMb0pWRFFkV2hfZWNaVXphNzNVN0RldFpDTWt2Nl8yTEJVT3VaWjJpYjVIUHA3MFhTQzhKbFpKMGNaMEpFSFI4OTlBd3RBNW5hQmpBRjdVQkRwX3VlaUpFcGp6aHRqdVRlMXRFLWJrY2E1Ymh5TlRtd1hPZUdqdTZyVkRubUNZV3pZVFRrd28?oc=5",
+        "published": "Thu, 24 Sep 2026 00:12:00 GMT",
+        "query": "Federal Reserve interest rates inflation US economy",
+        "direction": "neutral",
+        "reason": "中性／待確認"
       },
       {
         "title": "What’s happening this week in economics? - Deloitte",
@@ -75,9 +75,17 @@
         "reason": "中性／待確認"
       },
       {
-        "title": "Weekly market commentary - BlackRock",
-        "link": "https://news.google.com/rss/articles/CBMiogFBVV95cUxORkJPa3I0ekJyVEI0RFJhY210TmplVHJZQ0xJNy1qenNkc0lMMHk0TmZwdDV1TEVZNmJoV3dfVlNTT3UyZHE5Q01SdmQ4eDd4WjAzZVhFMFB3VUd5QjlYXzZ5MWFRYzdIQVRVM1JMZXNyQ05aTExrejM4cHdBSktKSlJOOWxkY0V4YkNRRDZZTzlDZUYzZHlUWXdhTFUxNXJSNXc?oc=5",
-        "published": "Sun, 20 Sep 2026 07:00:00 GMT",
+        "title": "How Is the Economy Doing Right Now? - NerdWallet",
+        "link": "https://news.google.com/rss/articles/CBMibkFVX3lxTE1nRU1VZTZjeXA1TTdRU1g5d1Zha0RvU1phVU1LaGIwVmN6Wk5wTk5WRG5fTHMxZUZCZkdrb0oyVk1DU1VhM05Felp2WXNmbHktdzEwSTNYOTlTWmNtMmYyMjV6RkFTYUYwSVEtRWZn?oc=5",
+        "published": "Fri, 25 Sep 2026 07:00:00 GMT",
+        "query": "US CPI jobs GDP Treasury yields economy",
+        "direction": "neutral",
+        "reason": "中性／待確認"
+      },
+      {
+        "title": "Market Movers blog: US Treasuries sell-off continues as yields hit two-decade highs - Investment Week",
+        "link": "https://news.google.com/rss/articles/CBMickFVX3lxTE5mZHNUUnlOeExDV2hSRjhxWEs0blpwaGhqUzIzQ054d1JaTnNIcGZWbkhtTDVwZFdwUXM5ekRkX2Z5UFJEWW5uMGtRSzVnd2NwZDFRUWZnYm9JWHFlTUptZzJGSHdKOS1oTEJxOUk0bFRWdw?oc=5",
+        "published": "Fri, 25 Sep 2026 07:00:00 GMT",
         "query": "US CPI jobs GDP Treasury yields economy",
         "direction": "neutral",
         "reason": "中性／待確認"
@@ -89,17 +97,9 @@
         "query": "US CPI jobs GDP Treasury yields economy",
         "direction": "neutral",
         "reason": "中性／待確認"
-      },
-      {
-        "title": "Week ahead: ECB, US Core PCE & Payrolls | Market Outlook - equiti.com",
-        "link": "https://news.google.com/rss/articles/CBMioAFBVV95cUxNbXB2NDRvcE9HU2stR2N2RG43UUVXRmI4WlNTVGVpVnQxbEZ1WjFqZE9rbk42WHY3dTNRaEVVUmQxZnhjTU55aG1DR1ExeFlKUVFyUzJHeGZyZndXQmt4c2c3OE1uaGhEdUxiNGRYNXZqMnhkN29HWElabUJUaGJqS1lDT0xiMWEtd0VWa1QtX3lVeXdZQmMtZW1EblNzVEM2?oc=5",
-        "published": "Fri, 25 Sep 2026 13:51:27 GMT",
-        "query": "US CPI jobs GDP Treasury yields economy",
-        "direction": "neutral",
-        "reason": "中性／待確認"
       }
     ],
-    "updated_at": "2026-09-26T07:16:24.498182+08:00",
+    "updated_at": "2026-09-28T14:46:59.352437+08:00",
     "errors": []
   }
 }
