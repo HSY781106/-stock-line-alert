@@ -1,5 +1,5 @@
-# stock_alert.py V2.23.15
-# V2.23.15：修復一般美股分析函式遺失；保留 V2.23.14 Theme Intelligence 修正。 保留第一階段使用者選定細題材為 canonical 名稱，避免第二階段 AI 重寫名稱後 /theme 誤判 404；Groq 維持 JSON object mode，避免 GPT-OSS strict schema 導致 json_validate_failed 400。
+# stock_alert.py V2.23.16
+# V2.23.16：修正美股 ticker 解析，避免 USAR 被錯誤截成 AR；保留 V2.23.15 修正。 保留第一階段使用者選定細題材為 canonical 名稱，避免第二階段 AI 重寫名稱後 /theme 誤判 404；Groq 維持 JSON object mode，避免 GPT-OSS strict schema 導致 json_validate_failed 400。
 # V2.23.11：chip_history 改為「每日分檔」儲存，完整保留歷史資料，避免單一 JSON 超過 GitHub 100 MiB 限制；分析介面與 20 日法人口徑不變。
 # V2.23.10：法人歷史補抓限流與分段計時；TWSE T86 單次逾時 6 秒、取消重試；最近20日不足時最多額外補抓3個工作日，避免每輪大量逾時請求。
 # V2.23.11：不再用刪除舊日期的方式壓縮 chip_history；改為每日分檔，保留完整歷史。Theme 細題材候選池修正維持。
@@ -598,7 +598,10 @@ def resolve_us_stock_query(q):
     if not q:
         return None
     nq=q.upper().strip()
-    nq=re.sub(r'^(?:美股|US|NASDAQ|NYSE|AMEX)\s*[:：]?\s*','',nq)
+    nq=re.sub(r'^(?:美股|NASDAQ|NYSE|AMEX)\s*[:：]?\s*','',nq)
+    # V2.23.16：USAR 等以 US 開頭的真實 ticker 不得被誤當成 US 市場前綴。
+    # 只有 US:AAPL / US AAPL 這類明確市場前綴才移除 US。
+    nq=re.sub(r'^US(?:\s+|[:：])(?=[A-Z$])','',nq)
     nq=re.sub(r'^(?:NASDAQ|NYSE|AMEX)\s*[:：]\s*','',nq)
     nq=re.sub(r'^\$','',nq)
     nq=re.sub(r'\.US$','',nq)
@@ -18373,12 +18376,12 @@ def main():
 
     else:
 
-        print('========== V2.23.15 RUN START ==========', flush=True)
+        print('========== V2.23.16 RUN START ==========', flush=True)
         _print_ai_runtime_status()
         print('V2.19.0 AI 閘門：每15分鐘自動掃描只有達到 LINE 發送門檻後才啟用 AI；未觸發時完全不呼叫 AI｜跌幅自動通知：每標的一天最多1次｜觸發後立即持久化LOCK', flush=True)
         print(f'執行時間（台灣）：{datetime.now(TW_TZ).strftime("%Y-%m-%d %H:%M:%S")}', flush=True)
         run_alerts()
-        print('========== V2.23.15 RUN END ==========', flush=True)
+        print('========== V2.23.16 RUN END ==========', flush=True)
 
 
 if __name__ == '__main__':
