@@ -1,4 +1,5 @@
-# stock_alert.py V2.23.13
+# stock_alert.py V2.23.14
+# V2.23.14：Theme Intelligence 保留第一階段使用者選定細題材為 canonical 名稱，避免第二階段 AI 重寫名稱後 /theme 誤判 404；Groq 維持 JSON object mode，避免 GPT-OSS strict schema 導致 json_validate_failed 400。
 # V2.23.11：chip_history 改為「每日分檔」儲存，完整保留歷史資料，避免單一 JSON 超過 GitHub 100 MiB 限制；分析介面與 20 日法人口徑不變。
 # V2.23.10：法人歷史補抓限流與分段計時；TWSE T86 單次逾時 6 秒、取消重試；最近20日不足時最多額外補抓3個工作日，避免每輪大量逾時請求。
 # V2.23.11：不再用刪除舊日期的方式壓縮 chip_history；改為每日分檔，保留完整歷史。Theme 細題材候選池修正維持。
@@ -15850,12 +15851,22 @@ def run_webhook_server():
         # 只把有題材語意命中的官方節點交給第二階段 AI。
         official_candidates = official_candidates[:30]
 
+        # V2.23.14：第一階段使用者選定名稱是 canonical，第二階段 AI 不得用改寫名稱使其失效。
         selected_fine = str(selected_fine or '').strip()
         if not selected_fine:
             for ft in result['fine_themes']:
                 ft['official_subindustries'] = []
-            print(f'V2.23.9 Theme：第一階段完成｜{topic}｜fine={len(result["fine_themes"])}', flush=True)
+            print(f'V2.23.14 Theme：第一階段完成｜{topic}｜fine={len(result["fine_themes"])}', flush=True)
             return result
+        selected_norm = _line_industry_norm(selected_fine)
+        selected_ft = next((ft for ft in result.get('fine_themes', []) if isinstance(ft, dict) and _line_industry_norm(str(ft.get('name') or '').strip()) == selected_norm), None)
+        if selected_ft is None:
+            selected_ft = {'name': selected_fine, 'logic': f'使用者在第一階段選定「{selected_fine}」。第二階段改以近期新聞與官方產業價值鏈資料重新驗證實際受惠環節。', 'evidence_titles': [], 'official_subindustries': []}
+            result['fine_themes'] = [selected_ft] + [ft for ft in result.get('fine_themes', []) if isinstance(ft, dict) and _line_industry_norm(str(ft.get('name') or '').strip()) != selected_norm]
+            result['fine_themes'] = result['fine_themes'][:3]
+            print(f'V2.23.14 Theme：保留第一階段使用者選定細題材｜{topic}｜selected={selected_fine}', flush=True)
+        else:
+            selected_ft['name'] = selected_fine
 
         # 只對使用者選定的細題材做一次「官方名稱映射」。映射失敗會明確保留
         # 細題材，但第二階段不會拿不存在的官方名稱去跑股票。
@@ -15882,7 +15893,7 @@ def run_webhook_server():
             combined_news.append(item)
         combined_news = combined_news[:24]
         for ft in result['fine_themes']:
-            if str(ft.get('name') or '').strip() != selected_fine:
+            if _line_industry_norm(str(ft.get('name') or '').strip()) != selected_norm:
                 ft['official_subindustries'] = []
                 continue
             sub_candidates = official_candidates
@@ -15891,7 +15902,7 @@ def run_webhook_server():
                 'official_candidates': sub_candidates, 'news': combined_news,
                 'semantic_subindustry_hints': alias_terms,
             }
-            mk = 'theme_v2238_map:' + _theme_canonical_key(topic) + ':' + re.sub(r'[^a-z0-9\u4e00-\u9fff]+','_',str(selected_fine).lower()).strip('_')[:80]
+            mk = 'theme_v2239_map:' + _theme_canonical_key(topic) + ':' + re.sub(r'[^a-z0-9\u4e00-\u9fff]+','_',str(selected_fine).lower()).strip('_')[:80]
             mapped = _ai_call_json(
                 '你是台灣產業分類研究員。把這個細題材對應到最合理的官方產業價值鏈細產業。'
                 '只能從 official_candidates 原樣選擇，禁止創造名稱；若沒有合理對應可以輸出空陣列。最多3個。'
@@ -15943,7 +15954,7 @@ def run_webhook_server():
             if not subs:
                 ft['mapping_reason'] = ft.get('mapping_reason') or '目前官方價值鏈資料無法建立足夠可靠的細產業對應。'
 
-        print(f'V2.23.9 Theme：第二階段完成｜{topic}｜fine={len(result["fine_themes"])}｜官方映射候選={len(official_candidates)}', flush=True)
+        print(f'V2.23.14 Theme：第二階段完成｜{topic}｜selected={selected_fine}｜fine={len(result["fine_themes"])}｜官方映射候選={len(official_candidates)}', flush=True)
         return result
 
     def _theme_quantitative_results(result, u):
@@ -18287,12 +18298,12 @@ def main():
 
     else:
 
-        print('========== V2.23.11 RUN START ==========', flush=True)
+        print('========== V2.23.14 RUN START ==========', flush=True)
         _print_ai_runtime_status()
         print('V2.19.0 AI 閘門：每15分鐘自動掃描只有達到 LINE 發送門檻後才啟用 AI；未觸發時完全不呼叫 AI｜跌幅自動通知：每標的一天最多1次｜觸發後立即持久化LOCK', flush=True)
         print(f'執行時間（台灣）：{datetime.now(TW_TZ).strftime("%Y-%m-%d %H:%M:%S")}', flush=True)
         run_alerts()
-        print('========== V2.23.11 RUN END ==========', flush=True)
+        print('========== V2.23.14 RUN END ==========', flush=True)
 
 
 if __name__ == '__main__':
