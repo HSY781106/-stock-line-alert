@@ -1,5 +1,5 @@
-# stock_alert.py V2.23.14
-# V2.23.14：Theme Intelligence 保留第一階段使用者選定細題材為 canonical 名稱，避免第二階段 AI 重寫名稱後 /theme 誤判 404；Groq 維持 JSON object mode，避免 GPT-OSS strict schema 導致 json_validate_failed 400。
+# stock_alert.py V2.23.15
+# V2.23.15：修復一般美股分析函式遺失；保留 V2.23.14 Theme Intelligence 修正。 保留第一階段使用者選定細題材為 canonical 名稱，避免第二階段 AI 重寫名稱後 /theme 誤判 404；Groq 維持 JSON object mode，避免 GPT-OSS strict schema 導致 json_validate_failed 400。
 # V2.23.11：chip_history 改為「每日分檔」儲存，完整保留歷史資料，避免單一 JSON 超過 GitHub 100 MiB 限制；分析介面與 20 日法人口徑不變。
 # V2.23.10：法人歷史補抓限流與分段計時；TWSE T86 單次逾時 6 秒、取消重試；最近20日不足時最多額外補抓3個工作日，避免每輪大量逾時請求。
 # V2.23.11：不再用刪除舊日期的方式壓縮 chip_history；改為每日分檔，保留完整歷史。Theme 細題材候選池修正維持。
@@ -11261,6 +11261,81 @@ def etf_analysis(query):
             f'【第四層｜🌐 外部環境】\n總經：{macro_adj:+d}｜{macro.get("state","無資料")}\n總經理由：{("；".join(macro.get("reasons") or []) or "無")}\nTrump：{trump.get("factor",0):+d}｜{trump.get("state","無資料")}\nTrump/產業傳導：{tt:+d}｜{trump_theme.get("state","無資料")}\n題材：{theme_text}\n題材定位：{cp["description"]}\n\n{ai_text}')
 
 
+def us_stock_analysis(query):
+    """V2.23.15：一般美股「投資價值 × 買點」雙層分析。
+
+    第一層：Yahoo 基本面 + 技術面，將可取得資料動態正規化到 100 分。
+    第二層：沿用 V2.14.12/13 的獨立買點模型，不與第一層互相污染。
+    不使用台股 T86/融資融券/台股官方 PE，避免把台股資料套到美股。
+    """
+    info=resolve_us_stock_query(query)
+    if not info:
+        return f'❌ 找不到美股：{query}'
+    symbol=info['symbol']
+    if not _us_symbol_has_data(symbol):
+        alt={'DEL':'DELL','DELL TECHNOLOGIES':'DELL','戴爾':'DELL','BERKSHIRE':'BRK-B','BERKSHIRE HATHAWAY':'BRK-B'}.get(str(query or '').strip().upper())
+        if alt and _us_symbol_has_data(alt): symbol=alt; info['symbol']=alt
+        else: return f'❌ Yahoo 找不到可用的美股行情：{query}（例如 DEL 應為 DELL）'
+    tech=technical(symbol, force_refresh=True)
+    price=to_float(tech.get('price'))
+    if price is None:
+        try:
+            qd=yf_download(symbol,period='1y',interval='1d')
+            if qd is not None and not qd.empty:
+                tech=_technical_from_df(qd)
+                price=to_float(tech.get('price'))
+        except Exception as e:
+            print(f'V2.14.21 美股技術資料失敗 {symbol}: {type(e).__name__}',flush=True)
+    fund=yahoo_light_fund(symbol,official={},current_price=price,market='US',industry='',subindustry='')
+    pe=to_float(fund.get('pe')); pb=to_float(fund.get('pb')); yld=to_float(fund.get('yield'))
+    growth=to_float(fund.get('eps_growth')); roe=to_float(fund.get('roe')); peg=to_float(fund.get('peg'))
+    # 美國股票沒有台股同業官方 PE，因此第一層基本面只採有效 Yahoo 指標，動態正規化。
+    fs=0.0; fav=0.0; freasons=[]
+    def add(v,w,points,reason=None):
+        nonlocal fs,fav
+        if v is None: return
+        fav+=w; fs+=points
+        if reason and points>=w*.65: freasons.append(reason)
+    if pe is not None and pe>0: add(pe,10,10 if pe<15 else 7.5 if pe<25 else 5 if pe<35 else 2 if pe<50 else 0,'本益比相對合理')
+    if peg is not None and peg>0: add(peg,8,8 if peg<1 else 6 if peg<1.5 else 4 if peg<2 else 1 if peg<3 else 0,'PEG具吸引力')
+    if pb is not None and pb>0: add(pb,6,6 if pb<2 else 4.5 if pb<4 else 3 if pb<6 else 1 if pb<10 else 0,'PB合理')
+    if yld is not None and yld>=0: add(yld,6,6 if yld>=4 else 4.5 if yld>=2 else 3 if yld>=1 else 1 if yld>0 else 0,'殖利率')
+    if roe is not None: add(roe,5,5 if roe>=25 else 4 if roe>=18 else 3 if roe>=12 else 1 if roe>0 else 0,'ROE良好')
+    if growth is not None: add(growth,5,5 if growth>=30 else 4 if growth>=15 else 3 if growth>0 else 1 if growth>-10 else 0,'獲利成長')
+    fundamental=int(round(fs/fav*40)) if fav else 0
+    ts,treasons=score_tech(tech)
+    risk,rr=score_risk({}, {'20d':None}, {'margin_change':None,'short_change':None})
+    # 美國沒有台股籌碼欄位；以技術風險補足可觀測的 10 分風險層。
+    risk=0; rr=[]
+    r=to_float(tech.get('rsi')); m20=to_float(tech.get('ma20')); m60=to_float(tech.get('ma60'))
+    if r is not None and r>70: risk+=3; rr.append('RSI過熱')
+    if to_float(tech.get('k')) is not None and to_float(tech.get('d')) is not None and to_float(tech.get('k'))>80 and to_float(tech.get('d'))>80: risk+=2; rr.append('KD高檔')
+    if price and m20 and price<m20: risk+=1; rr.append('跌破MA20')
+    if price and m60 and price<m60: risk+=1; rr.append('跌破MA60')
+    if to_float(tech.get('ret20')) is not None and to_float(tech.get('ret20'))<-.15: risk+=2; rr.append('20日跌幅偏大')
+    if to_float(tech.get('ret10')) is not None and to_float(tech.get('ret10'))<-.10: risk+=1; rr.append('10日跌幅偏大')
+    risk=min(10,risk)
+    trump=trump_stock_factor(symbol)
+    first_score=max(0,min(80,fundamental+ts+(10-risk)+trump.get('factor',0)))
+    buy=assess_buy_point(tech)
+    def pct(v): return 'N/A' if v is None else f'{v*100:.2f}%'
+    z1='N/A' if not buy.get('zone1') else f'{buy["zone1"][0]:,.2f}～{buy["zone1"][1]:,.2f}'
+    z2='N/A' if not buy.get('zone2') else f'{buy["zone2"][0]:,.2f}～{buy["zone2"][1]:,.2f}'
+    return (f'📊 美股「投資價值 × 買點」雙層分析 V2.14.21\n\n標的：{symbol}\nYahoo代號：{symbol}\n\n'
+            f'【第一層｜投資價值】\n基本面：{fundamental}/40（有效資料 {int(round(fav/40*100)) if fav else 0}%）\n'
+            f'PE：{fmt(pe)}｜PB：{fmt(pb)}｜殖利率：{fmt(yld)}%\nEPS Growth：{fmt(growth)}%｜ROE：{fmt(roe)}%｜PEG：{fmt(peg)}\n'
+            f'技術面：{ts}/30\n價格：{fmt(price)}｜RSI：{fmt(r)}｜KD：K={fmt(tech.get("k"))} / D={fmt(tech.get("d"))}\n'
+            f'MA20：{fmt(m20)}｜MA60：{fmt(m60)}｜趨勢：{tech.get("trend") or "N/A"}\n'
+            f'風險：{risk}/10｜Trump直接曝險：{trump.get("factor",0):+d}｜綜合投資價值：{first_score}/80（美股模型不套用台股籌碼）\n'
+            f'Trump訊號：{trump.get("state","無資料")}｜近180日直接交易：{trump.get("transactions",0)}筆\n'
+            f'加分因素：{"、".join(freasons+treasons) if freasons+treasons else "無"}\n風險因素：{"、".join(rr) if rr else "無"}\n\n'
+            f'【第二層｜🎯 買點評估】\n買點評分：{buy["score"]}/100\n目前買點：{buy["verdict"]}\n短中期趨勢：{buy["trend_state"]}\n'
+            f'5日報酬：{pct(buy.get("ret5"))}｜10日：{pct(buy.get("ret10"))}｜20日：{pct(buy.get("ret20"))}\n'
+            f'第一觀察買點：{z1}\n第二觀察買點：{z2}\n進場策略：{buy["entry"]}\n跌破參考：{fmt(buy.get("invalidation"))}\n'
+            f'止跌確認：{"、".join(buy.get("confirms") or []) or "尚無足夠止跌確認"}\n風險：{"、".join(buy.get("risks") or []) or "無"}')
+
+
+
 def analysis(
     query,
     u,
@@ -18298,12 +18373,12 @@ def main():
 
     else:
 
-        print('========== V2.23.14 RUN START ==========', flush=True)
+        print('========== V2.23.15 RUN START ==========', flush=True)
         _print_ai_runtime_status()
         print('V2.19.0 AI 閘門：每15分鐘自動掃描只有達到 LINE 發送門檻後才啟用 AI；未觸發時完全不呼叫 AI｜跌幅自動通知：每標的一天最多1次｜觸發後立即持久化LOCK', flush=True)
         print(f'執行時間（台灣）：{datetime.now(TW_TZ).strftime("%Y-%m-%d %H:%M:%S")}', flush=True)
         run_alerts()
-        print('========== V2.23.14 RUN END ==========', flush=True)
+        print('========== V2.23.15 RUN END ==========', flush=True)
 
 
 if __name__ == '__main__':
