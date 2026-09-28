@@ -1,7 +1,7 @@
 {
   "_version": 14,
-  "_cached_at": 1790627564.5699487,
-  "_generated_at": "2026-09-29T04:32:44.569955+08:00",
+  "_cached_at": 1790632346.8530836,
+  "_generated_at": "2026-09-29T05:52:26.853091+08:00",
   "_source_count": 5,
   "_parsed_count": 24224,
   "_stock_etf_count": 24224,
@@ -30,7 +30,7 @@
       }
     }
   ],
-  "_freshness_checked_at": 1790627564.5713298,
+  "_freshness_checked_at": 1790632346.8551164,
   "data": [
     {
       "ticker": "ABT",
