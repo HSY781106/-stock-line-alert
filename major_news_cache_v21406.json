@@ -1,33 +1,13 @@
 {
   "2330": {
-    "fetched_at": "2026-09-28T14:47:02.333145+08:00",
-    "adjustment": 3,
+    "fetched_at": "2026-09-29T04:14:43.481786+08:00",
+    "adjustment": 5,
     "events": [
       {
         "title": "三大法人買賣超 – 外資買超(2330)台積電、(6770)力積電，投信買超(1303)南亞、(2303)聯電，法人合計買超214.77億元 - sinotrade.com.tw",
         "source": "sinotrade.com.tw",
         "date": "2026-09-18T02:48:08+08:00",
         "link": "https://news.google.com/rss/articles/CBMi0wRBVV95cUxQQ2FwUFN0dWtsWFVsVnpseGs4b0JKTnQxalo4YzBmS1c2MDZ3MlFDVTFCZURNdjJHYkc3NmRmSEU2STFHbGM0YXZ3cTUtVmdrellxR0VoUWtfbnR2cXFFQU1IUUZlQW1RMHFaQVlJdWd2WnZVUVJzNnpZTVplQ2JBUGx4WjVpckVUZlBFdXJFSUNldmRqNlZBYVBkOXVuRG1EXy1EakhWcndkaHVjdzR2MEFxdS00UWxlZ25jTTdUdnExNTR4eGRpM1o3c19hdGtHTmZmdGRiTkVPMUllVHVqZ3BIaGp6bnlaR0lvM3JUa1lEREpNVWhYM05TZGNIMHh2eV84NWpKVVBxUXl4NlNtMnhZVi1KOWh0anU0Tnk3anVFb2w0R3lQdzBrUzAyb1pfNmVuN2NHSEhHNS1SVUk4N3NrWU96QjcxMGRRRk1JYU5XdFpwVXl",
-        "raw_adjustment": 0,
-        "adjustment": 0,
-        "label": "",
-        "status": ""
-      },
-      {
-        "title": "2330 台積電 - 買了5只股'台積電買了最多'結果漲最少丶世上事總是事與願違 - 股市爆料同學會 - CMoney",
-        "source": "CMoney",
-        "date": "2026-09-22T04:45:25+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE1HYnhodmVjLUlXYkZYbjZNbGJrYnVYUGNfVFZrWnd0dGdSeFRINjFnTFpEbkRPZzFpVGl5Z19IX2dROXI2c2dSVHlfOVI3V1RJWjhuMjQ3d0I?oc=5",
-        "raw_adjustment": 0,
-        "adjustment": 0,
-        "label": "",
-        "status": ""
-      },
-      {
-        "title": "2330 台積電 - 大家早安 美國指數供參考！ - 股市爆料同學會 - CMoney",
-        "source": "CMoney",
-        "date": "2026-09-22T05:21:24+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE5fMGlLQVNsZEt1UW9hdVA4YXBScUZZdHlNTUVyTE1wdjVfVWhkVkNkcjdzSTYyb1Z0Q2pDX0ZaSWpxZlM4RTZJVFpQcjRRM0tGUE8waTRiT0M?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
@@ -64,20 +44,40 @@
         "status": ""
       },
       {
-        "title": "2330 台積電 - 台股五萬點聯致持續破底- 股市爆料同學會 - CMoney",
-        "source": "CMoney",
-        "date": "2026-09-23T07:59:27+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE02ZlpGMzREZGd3STdZaDVoQkNndWlYbFNzSWxKenBNblFDdF9UM0dSUlFOT0RtTXlvT1J4QlcyMW5LcmJ4RzIwc0RBZzBnczNoSjhiQklzYlA?oc=5",
+        "title": "三大法人買賣超 – 外資買超(2330)台積電、(2408)南亞科，投信買超(3529)力旺、(6805)富世達，法人合計買超389.22億元 - sinotrade.com.tw",
+        "source": "sinotrade.com.tw",
+        "date": "2026-09-23T15:00:00+08:00",
+        "link": "https://news.google.com/rss/articles/CBMi3wRBVV95cUxOQktmdDJlcHpCNm9xLTVPaklveGp5VE04d1FPZVVPeW9rQzh5elM2d21xRW0tS1FyR19hZkJWa3dweGk5c3B4SUUxZE9CeWlqTE84ME9NdnM5b0lQTUhnUkVPcmNGT0dCR1dPME90MEw2RkZTd3dYWTdjaVB3bXI5UVZPdkREX0ZzSjQxYUpZYmVNQjd2NjRuMEVBZ2dvb3ZWUnVTREJ2YjRHWmtVbHo4QU9qUklZV25QX1lrdVR2SWFMdFQweDMyY3VzdVd5eV9kTDl2cDI4VHlCWW13OWp2blpDc2hlT3dSTUpqeWsySzVzeDU1Sk0wTFdkcVNXNXp6X2FuUC1mcHJGcTFSczlSUE8zWjlFYW9wSFlMNTBQMFJ3dEVkbFFMTDROSzFZY0lLYVY2NHRFYnI0blVvVGJJeUdaOUp0Qndmd0ItNTZyNEI5RklFcE1",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
         "status": ""
       },
       {
-        "title": "三大法人買賣超 – 外資買超(2330)台積電、(2408)南亞科，投信買超(3529)力旺、(6805)富世達，法人合計買超389.22億元 - sinotrade.com.tw",
-        "source": "sinotrade.com.tw",
-        "date": "2026-09-23T15:00:00+08:00",
-        "link": "https://news.google.com/rss/articles/CBMi3wRBVV95cUxOQktmdDJlcHpCNm9xLTVPaklveGp5VE04d1FPZVVPeW9rQzh5elM2d21xRW0tS1FyR19hZkJWa3dweGk5c3B4SUUxZE9CeWlqTE84ME9NdnM5b0lQTUhnUkVPcmNGT0dCR1dPME90MEw2RkZTd3dYWTdjaVB3bXI5UVZPdkREX0ZzSjQxYUpZYmVNQjd2NjRuMEVBZ2dvb3ZWUnVTREJ2YjRHWmtVbHo4QU9qUklZV25QX1lrdVR2SWFMdFQweDMyY3VzdVd5eV9kTDl2cDI4VHlCWW13OWp2blpDc2hlT3dSTUpqeWsySzVzeDU1Sk0wTFdkcVNXNXp6X2FuUC1mcHJGcTFSczlSUE8zWjlFYW9wSFlMNTBQMFJ3dEVkbFFMTDROSzFZY0lLYVY2NHRFYnI0blVvVGJJeUdaOUp0Qndmd0ItNTZyNEI5RklFcE1",
+        "title": "2330 台積電 - 指數今天開低走高60分下跌三波向上重疊留意連假不確定風險- 股市爆料同學會 - CMoney",
+        "source": "CMoney",
+        "date": "2026-09-24T07:06:36+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE13N25EOHJJMi1JU2NON3Z5MXpTTFlTMkR6UE9TVjB3Wk9YT19CYzZzb0x6X3RRNmV0UDNYZlYzWEhHQ0FDSkFHNEZXMlJWbzZsMlZHczZURjg?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "瞄準 AI 與 HPC 晶片設計，Cadence 攜手台積電布局 A14 製程與小晶片生態系 - CMoney",
+        "source": "CMoney",
+        "date": "2026-09-24T07:59:47+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE5iSmtaN3ZhX0s4S3pFXzc3bWVJNFRNbHVfa1MwekpWVmxnYW1na1J5RVBtcWZtd215eHBUVmIzOC1zUkFENGQ2QkZwRDFVTTVQb1UzeURyREY?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "2330 台積電 - 【美股巨頭】雲端五巨頭明年資本支出破8000億美元，錢從哪來？ - 股市爆料同學會 - CMoney",
+        "source": "CMoney",
+        "date": "2026-09-24T15:06:54+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE5jQ3RMM2pNSi1GblJuVWcyNFhrT1IyQXlmZUExQ240WE9DRll2ZEtldkZJcG5jbGNvRVRyUl9VSlJidkVGajNqQm5VaWk3eEFPb3Q4TUZrWS0?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
@@ -88,7 +88,7 @@
     "lookback_days": 14
   },
   "3711": {
-    "fetched_at": "2026-09-28T14:47:07.772193+08:00",
+    "fetched_at": "2026-09-29T04:14:48.163155+08:00",
     "adjustment": 2,
     "events": [
       {
@@ -106,16 +106,6 @@
         "source": "台視全球資訊網",
         "date": "2026-09-16T19:53:08+08:00",
         "link": "https://news.google.com/rss/articles/CBMikgFBVV95cUxNVWFMb1RwcGhDTFpVUU56OHZrVlV3cE1McmZtN0ktejVYbWF2d0hXdmxJSWI4YTNnSldQN2N1Y0xzOXVSRXE1MjhPOTNtQ3JGMlhoeFNVU0ZWd0JjaFJ3aXZJWC1tOXA1aWtUSVNiZDZPd3hZZDFFbmczVV9hTDlhQlFiZ0Fsc3huR1hIOFlUVGxvQQ?oc=5",
-        "raw_adjustment": 0,
-        "adjustment": 0,
-        "label": "",
-        "status": ""
-      },
-      {
-        "title": "3711 日月光投控 - 【日月光投控(3711)盤後解析】外資回補助攻，股價重返60... - 股市爆料同學會 - CMoney",
-        "source": "CMoney",
-        "date": "2026-09-16T21:12:09+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTFBoUFpYUF9hTlUyeWx2c0lHUk9xbTB6d2xoOTBsWFB4Q3hfRnl3bVp0VnVDbVNTLXN1NFFmTTBaQnJpOUk3TkttSFlGMkhCYXNJdDNWQTRBeHE?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
@@ -166,6 +156,16 @@
         "source": "CMoney投資網誌",
         "date": "2026-09-22T11:45:14+08:00",
         "link": "https://news.google.com/rss/articles/CBMijgFBVV95cUxNTHJxZTdJV0dWT1JWajV5WlhxN2FpN3FnSEoxYXlzdXJMeXNsVmhTcGFQTXFPZWF6cmhhTEtCUWVVV0plTVU2V2hiSGRCNzdIdXpzR3hqdWxXazZKZ0IxTWJ4bEM1d25vRDVfdnFwTGlEbWNXZ2VNLUtwbzJ6ZE5fZnNLVzhZbHpiWUJOdVJn?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "3711 日月光投控 - ADR快創歷史新高了.剩不到2% - 股市爆料同學會 - CMoney",
+        "source": "CMoney",
+        "date": "2026-09-22T22:36:09+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE5LOGVnd28xVkxiR2N3TVRlNk9peUMycDNfMXJXRDhVdmJyNmZibDc0TGNyQXFRbjMyVmh2Wlgyc2szYTVWM3h0bWFsSk11Sy0xTjF3bFNBQlg?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
@@ -229,19 +229,9 @@
     "lookback_days": 14
   },
   "0050": {
-    "fetched_at": "2026-09-28T14:46:32.717321+08:00",
+    "fetched_at": "2026-09-29T04:14:13.846825+08:00",
     "adjustment": 0,
     "events": [
-      {
-        "title": "0050股價110元直逼分拆後新高，現在還能買？10年賺9倍狂勝大盤！下個10年「學一招」墊高財富 - 今周刊",
-        "source": "今周刊",
-        "date": "2026-09-14T15:00:00+08:00",
-        "link": "https://news.google.com/rss/articles/CBMigAFBVV95cUxNeVhtLVZVZFRPSER5UDdwVmpkeWIwSnc1Uy01NHIzbGJ1RGd3akQxX2JkTUZFSU9ucmh4aGFfazRJMF9CdG9aSGlDQ3lSQXMtOE9iNE44ekMtNjFINDlPM1lYSi1pbnVXaXMxby01RXN3SXJOQVJVNXpfOWNnYmNNMQ?oc=5",
-        "raw_adjustment": 0,
-        "adjustment": 0,
-        "label": "",
-        "status": ""
-      },
       {
         "title": "0050 元大台灣50 - 買新潤不如買0050 - 股市爆料同學會 - CMoney",
         "source": "CMoney",
@@ -263,8 +253,8 @@
         "status": ""
       },
       {
-        "title": "9/18 0050(元大台灣50) 持股異動｜新增 1 檔-ETF股長 - cmnews.com.tw",
-        "source": "cmnews.com.tw",
+        "title": "9/18 0050(元大台灣50) 持股異動｜新增 1 檔-ETF股長 - CMoney投資網誌",
+        "source": "CMoney投資網誌",
         "date": "2026-09-18T15:00:00+08:00",
         "link": "https://news.google.com/rss/articles/CBMigAFBVV95cUxOenhKTzV1RndJYklWdkxTdFo0ODBJcHcxSmdsUENLZlhiMFpQLTdHVkFfOE5LMTNUbE1peVI4LVJZeUhLd0pJMm5VMVYtQndBY0JiM0F4dEgtdllPclZMdmluWnFnbVZYTnZTaXpMV2pqdFl4YjN3Yzl5RHYzMUtmbA?oc=5",
         "raw_adjustment": 0,
@@ -311,19 +301,29 @@
         "adjustment": 0,
         "label": "",
         "status": ""
+      },
+      {
+        "title": "0050今年狂漲逾66％！網問「現在還能買嗎？」掀熱議 - 自由財經",
+        "source": "自由財經",
+        "date": "2026-09-21T14:53:30+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE1rMC1scm1rTnN6VFFmUHEtMmJyTVU2alBMaGFROGVJdHMxZ2JTMTY2RGJmMjcyaHhtS0FkZ3JybjlJdFNPZzdwX1FRazNWX1ljaUJ1a2tDcmdkcFpmWnBV0gFkQVVfeXFMTmRGZE4zbUJ3S2dRX2pxZHM0Zzd6RjlwVFhHRmk2M0NQODl2QURST0lSSy00MHo5eW5Pb1QzMEptZ3lyZklYQUMyQzd6dHZqRTJuS3Zrbm52am9JWFRSUjdXUUNiYQ?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
       }
     ],
     "source": "Google News RSS",
     "lookback_days": 14
   },
   "QQQ": {
-    "fetched_at": "2026-09-28T14:47:13.049456+08:00",
+    "fetched_at": "2026-09-29T04:14:53.910398+08:00",
     "adjustment": 0,
     "events": [
       {
         "title": "QQQ Invesco QQQ Trust Series I - 🔥😱升息1碼不怕，怕2027利率上修！😱🔥 - 股市爆料同學會 - CMoney",
         "source": "CMoney",
-        "date": "2026-09-16T12:02:59+08:00",
+        "date": "2026-09-15T15:00:00+08:00",
         "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTFBya0pFQUJwalZEcjBOMkhGWmVBUW1zeTFDN1dibFVqU0JHRTBLMU5NRmZ0Z3NMUWUwV1hsYUZ3d3psYVl1eU9tVzA3Y2VGU2Z1LWE0dzBJQXY?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
@@ -331,8 +331,8 @@
         "status": ""
       },
       {
-        "title": "QQQ正在蓄勢待發，醞釀大動作。如果我知道，我會告訴你，但其實我也不知道。而且每當我預測什麼，結果通常都會相反。 - moomoo.com",
-        "source": "moomoo.com",
+        "title": "QQQ正在蓄勢待發，醞釀大動作。如果我知道，我會告訴你，但其實我也不知道。而且每當我預測什麼，結果通常都會相反。 - Moomoo",
+        "source": "Moomoo",
         "date": "2026-09-18T10:35:01+08:00",
         "link": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxPUXZDamlTRHJOS0E0YzNTTkdkSzE5VHJUZWdVam81UUtZblk5X1RNOFQtel8wbUhIeHF4aWd6V0YzSEFPaElwU0xUZnBBbFh6NFBnUUhTR1V1MU1SLUlKcGFWQ0JIUzJOQ2xMUEpHaHJSUXZxd1FKUnFJV2pyTi1FN1dEcks4ZHZFLWNIdDJ2bkVxaVY4THVhUnN3RXZKSm5MMUFhX0VsVno?oc=5",
         "raw_adjustment": 0,
