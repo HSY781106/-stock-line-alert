@@ -1,5 +1,5 @@
-# stock_alert.py V2.23.16
-# V2.23.16：修正美股 ticker 解析，避免 USAR 被錯誤截成 AR；保留 V2.23.15 修正。 保留第一階段使用者選定細題材為 canonical 名稱，避免第二階段 AI 重寫名稱後 /theme 誤判 404；Groq 維持 JSON object mode，避免 GPT-OSS strict schema 導致 json_validate_failed 400。
+# stock_alert.py V2.23.17
+# V2.23.17：修正美股 ticker 解析，避免 USAR 被錯誤截成 AR；保留 V2.23.15 修正。 保留第一階段使用者選定細題材為 canonical 名稱，避免第二階段 AI 重寫名稱後 /theme 誤判 404；Groq 維持 JSON object mode，避免 GPT-OSS strict schema 導致 json_validate_failed 400。
 # V2.23.11：chip_history 改為「每日分檔」儲存，完整保留歷史資料，避免單一 JSON 超過 GitHub 100 MiB 限制；分析介面與 20 日法人口徑不變。
 # V2.23.10：法人歷史補抓限流與分段計時；TWSE T86 單次逾時 6 秒、取消重試；最近20日不足時最多額外補抓3個工作日，避免每輪大量逾時請求。
 # V2.23.11：不再用刪除舊日期的方式壓縮 chip_history；改為每日分檔，保留完整歷史。Theme 細題材候選池修正維持。
@@ -11321,6 +11321,47 @@ def us_stock_analysis(query):
     trump=trump_stock_factor(symbol)
     first_score=max(0,min(80,fundamental+ts+(10-risk)+trump.get('factor',0)))
     buy=assess_buy_point(tech)
+
+    # V2.23.17：一般美股補上與台股個股一致的 AI 最終綜合結論。
+    _us_verdict = ('🟢 可分批關注' if first_score>=60 and buy.get('score',0)>=75 else
+                   '🟡 等待更佳買點' if first_score>=45 else
+                   '🟠 暫停進場' if first_score>=30 else '🔴 不宜進場')
+    _us_snapshot={
+        'market':'US','code':symbol,'name':symbol,'price':price,
+        'investment_score':first_score,'investment_value_verdict':_us_verdict,
+        'fundamental':{'score':fundamental,'max':40,'effective_data_pct':int(round(fav/40*100)) if fav else 0,
+                       'pe':pe,'pb':pb,'yield':yld,'eps_growth':growth,'roe':roe,'peg':peg,'reasons':freasons},
+        'technical':{'score':ts,'max':30,'price':price,'rsi':r,'k':to_float(tech.get('k')),'d':to_float(tech.get('d')),
+                     'ma20':m20,'ma60':m60,'trend':tech.get('trend'),'reasons':treasons},
+        'chips':{'score':0,'max':0,'view':'美股一般股票不適用台股 T86／融資融券資料'},
+        'risk':{'score':risk,'max':10,'reasons':rr},
+        'news':{'adjustment':0,'reasons':[],'events':[],'view':'本次一般美股模型未納入個股新聞分數'},
+        'trump_global':0,'trump_industry':0,'trump_reasons':[trump.get('state','無資料')],
+        'macro':0,'macro_reasons':[],
+        'buy_score':buy.get('score'),'buy_verdict':buy.get('verdict'),'buy_entry':buy.get('entry'),
+        'buy_confirms':buy.get('confirms'),'buy_risks':buy.get('risks'),'buy_zone1':buy.get('zone1'),'buy_zone2':buy.get('zone2'),
+        'buy_invalidation':buy.get('invalidation'),
+        'snapshot_key':hashlib.sha256(json.dumps({'s':first_score,'f':fundamental,'ts':ts,'r':risk,'b':buy.get('score'),'p':price},sort_keys=True,default=str).encode()).hexdigest()[:24]
+    }
+    _ai_final_text=''
+    if AI_ENABLE_FINAL_SUMMARY:
+        try:
+            _ai_final=_ai_final_investment_summary(_us_snapshot)
+            _ai_final_text=_format_ai_final_summary(_ai_final)
+        except Exception as e:
+            print(f'V2.23.17 美股 AI 最終結論失敗：{type(e).__name__}: {e}',flush=True)
+    if not _ai_final_text and AI_ENABLE_FINAL_SUMMARY:
+        _conflict='基本面弱、技術面仍在下降趨勢，但短線已接近低檔' if fundamental<20 and buy.get('score',0)<60 else '投資價值與目前買點不同步' if ((first_score<45 and buy.get('score',0)>=60) or (first_score>=45 and buy.get('score',0)<60)) else '各層訊號大致一致'
+        _next='等待站回MA20並觀察KD重新轉強' if price is not None and m20 is not None and price<m20 else '持續觀察趨勢與基本面改善'
+        _ai_final_text=(f'🤖 綜合結論（規則 fallback｜AI 未成功取得）\n'
+                         f'建議：{_us_verdict}\n核心：投資價值 {first_score}/80、買點 {buy.get("score",0)}/100。\n'
+                         f'🔎 分層判讀：\n• 基本面：{fundamental}/40；EPS Growth {fmt(growth)}%、ROE {fmt(roe)}%、PB {fmt(pb)}，目前基本面評分偏弱。\n'
+                         f'• 技術面：{ts}/30；價格相對 MA20/MA60 偏弱，RSI/KD 位於低檔。\n'
+                         f'• 籌碼面：美股一般股票不套用台股 T86／融資融券資料。\n'
+                         f'• 買點：{buy.get("score",0)}/100；{buy.get("verdict","資料不足")}。\n'
+                         f'🟢 優勢：{("、".join(freasons+treasons) or "短線接近低檔") }\n'
+                         f'🔴 風險：{("、".join(rr+list(buy.get("risks") or [])) or "無") }\n'
+                         f'⚠️ 最大矛盾：{_conflict}\n👀 下一步：{_next}')
     def pct(v): return 'N/A' if v is None else f'{v*100:.2f}%'
     z1='N/A' if not buy.get('zone1') else f'{buy["zone1"][0]:,.2f}～{buy["zone1"][1]:,.2f}'
     z2='N/A' if not buy.get('zone2') else f'{buy["zone2"][0]:,.2f}～{buy["zone2"][1]:,.2f}'
@@ -11335,7 +11376,7 @@ def us_stock_analysis(query):
             f'【第二層｜🎯 買點評估】\n買點評分：{buy["score"]}/100\n目前買點：{buy["verdict"]}\n短中期趨勢：{buy["trend_state"]}\n'
             f'5日報酬：{pct(buy.get("ret5"))}｜10日：{pct(buy.get("ret10"))}｜20日：{pct(buy.get("ret20"))}\n'
             f'第一觀察買點：{z1}\n第二觀察買點：{z2}\n進場策略：{buy["entry"]}\n跌破參考：{fmt(buy.get("invalidation"))}\n'
-            f'止跌確認：{"、".join(buy.get("confirms") or []) or "尚無足夠止跌確認"}\n風險：{"、".join(buy.get("risks") or []) or "無"}')
+            f'止跌確認：{"、".join(buy.get("confirms") or []) or "尚無足夠止跌確認"}\n風險：{"、".join(buy.get("risks") or []) or "無"}\n\n{_ai_final_text}')
 
 
 
@@ -18376,12 +18417,12 @@ def main():
 
     else:
 
-        print('========== V2.23.16 RUN START ==========', flush=True)
+        print('========== V2.23.17 RUN START ==========', flush=True)
         _print_ai_runtime_status()
         print('V2.19.0 AI 閘門：每15分鐘自動掃描只有達到 LINE 發送門檻後才啟用 AI；未觸發時完全不呼叫 AI｜跌幅自動通知：每標的一天最多1次｜觸發後立即持久化LOCK', flush=True)
         print(f'執行時間（台灣）：{datetime.now(TW_TZ).strftime("%Y-%m-%d %H:%M:%S")}', flush=True)
         run_alerts()
-        print('========== V2.23.16 RUN END ==========', flush=True)
+        print('========== V2.23.17 RUN END ==========', flush=True)
 
 
 if __name__ == '__main__':
