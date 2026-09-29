@@ -1,48 +1,49 @@
-name: Stock Alert V2.23.9
+name: Stock Alert V2.23.10
 
 on:
   schedule:
     # =========================================
-    # 台灣時間 09:07–13:52
+    # 台灣時間 09:00–13:45
     # 週一～週五，每 15 分鐘
     # =========================================
-    - cron: "7,22,37,52 9-13 * * 1-5"
+    - cron: "*/15 9-13 * * 1-5"
       timezone: "Asia/Taipei"
 
     # =========================================
-    # 台灣時間 21:37、21:52
+    # 台灣時間 21:30、21:45
     # 週一～週五
     # =========================================
-    - cron: "37,52 21 * * 1-5"
+    - cron: "30,45 21 * * 1-5"
       timezone: "Asia/Taipei"
 
     # =========================================
-    # 台灣時間 22:07–23:52
-    # 週一～週五
+    # 台灣時間 22:00–23:45
+    # 週一～週五，每 15 分鐘
     # =========================================
-    - cron: "7,22,37,52 22-23 * * 1-5"
+    - cron: "*/15 22-23 * * 1-5"
       timezone: "Asia/Taipei"
 
     # =========================================
-    # 台灣時間 00:07–04:52
+    # 台灣時間 00:00–04:45
     # 週二～週六
     # 對應週一～週五晚上的美股時段
     # =========================================
-    - cron: "7,22,37,52 0-4 * * 2-6"
+    - cron: "*/15 0-4 * * 2-6"
       timezone: "Asia/Taipei"
 
     # =========================================
-    # 台灣時間 05:07
+    # 台灣時間 05:00
     # 週二～週六
     # =========================================
-    - cron: "7 5 * * 2-6"
+    - cron: "0 5 * * 2-6"
       timezone: "Asia/Taipei"
 
   workflow_dispatch:
 
 concurrency:
   group: stock-alert-main
-  cancel-in-progress: true
+  # GitHub schedule 可能延遲；不要因下一個排程而取消已觸發的 run。
+  cancel-in-progress: false
 
 jobs:
   stock-alert:
@@ -90,7 +91,7 @@ jobs:
       # =========================================
       # 4. Run Stock Alert
       # =========================================
-      - name: Run Stock Alert V2.23.9
+      - name: Run Stock Alert V2.23.10
         env:
           LINE_CHANNEL_ACCESS_TOKEN: ${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
@@ -103,7 +104,7 @@ jobs:
 
         run: |
           echo "=============================================="
-          echo "Stock Alert Schedule Diagnostic"
+          echo "Stock Alert Schedule Diagnostic V2.23.10"
           echo "Taiwan time:"
           TZ=Asia/Taipei date '+%Y-%m-%d %H:%M:%S %Z'
           echo "UTC time:"
@@ -155,7 +156,7 @@ jobs:
             exit 0
           fi
 
-          git commit -m "Update V2.23.9 alert state and caches"
+          git commit -m "Update V2.23.10 alert state and caches"
 
           git fetch origin main
           git rebase origin/main
