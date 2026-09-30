@@ -1,5 +1,5 @@
 {
-  "cached_at": 1790749960.6261778,
+  "cached_at": 1790793231.2412984,
   "data": {
     "items": [
       {
@@ -19,12 +19,28 @@
         "reason": "中性／待確認"
       },
       {
-        "title": "The Moves That Backfired on Trump and Drove Interest Rates and Inflation Higher - WSJ",
-        "link": "https://news.google.com/rss/articles/CBMic0FVX3lxTE5GeVBIaXBxUF9Gcm9KVkxGMElRYUNUZW9kSTdKTl9JTlBvOTdodTd2ZDAwTERMUk51SWdEY0tTUDNVcHEtM1ZlMDhURDFoQzh2anlLQ2wtSlEwcjVKVTd1eUxmWm9Jai1UaWZQUGpFTWozRjA?oc=5",
-        "published": "Mon, 28 Sep 2026 01:00:00 GMT",
+        "title": "Good news in US inflation report boosts chances Fed won’t hike rates - The Guardian",
+        "link": "https://news.google.com/rss/articles/CBMijAFBVV95cUxNOG1kblJocTd1TEd5WHdyX1lUeWs0aEhXdWx4TV9ROVljd3RaSW1XdkNSTzVzeXFqRDBCaEFMSU9zY3k1WER6VkVYNWhfU0RHUnFTaHZkYlBzYXUxVjBzcnBuWUg2bU1pa1AtajI2bmZ6NDg2Z0hpTG5RV0tpc3U3bEJNdmN5ZHdGLU5GMg?oc=5",
+        "published": "Tue, 29 Sep 2026 07:00:00 GMT",
         "query": "Federal Reserve interest rates inflation US economy",
         "direction": "neutral",
         "reason": "中性／待確認"
+      },
+      {
+        "title": "The Robust U.S. Economy Powers Through Rate Hikes and Rising Bond Yields - WSJ",
+        "link": "https://news.google.com/rss/articles/CBMieEFVX3lxTE90YXlaem55eWk3bnFDQ3FXQXN4SVNGSDg0cFB1UDRiZl8zMmducUlRQjdGc0hEcTRSZ1pITzJhNFVXT1FEQ0Y4bEdnVkhxTHpjTDRYckdlcEVSTUJMVGY2MHN0Wk5LQnZXUzBYQ3ZQOXZjaWwwNlVBZw?oc=5",
+        "published": "Fri, 25 Sep 2026 01:00:00 GMT",
+        "query": "Federal Reserve interest rates inflation US economy",
+        "direction": "negative",
+        "reason": "緊縮／景氣風險"
+      },
+      {
+        "title": "Cooler inflation could buy the Fed, Trump time on another rate hike - politico.com",
+        "link": "https://news.google.com/rss/articles/CBMihgFBVV95cUxNZzJfQWhLZERBOWlKa2tUckR6a21vVjhPeGNJck00UU45Z0cyVkl0THA0eERjWUo1QXpBcmlPUVFGTHpabHdpWU1LQnpqZzhwT0E4T3NWd0hTdUtPeWZLNVZ5SXNFMG1qX0dmQlVReHNYRTVsNzQySXZYdmVaeWx1T0dvd000dw?oc=5",
+        "published": "Wed, 30 Sep 2026 13:55:00 GMT",
+        "query": "Federal Reserve interest rates inflation US economy",
+        "direction": "negative",
+        "reason": "緊縮／景氣風險"
       },
       {
         "title": "The US economy is stuck on a hamster wheel as GDP must outrun borrowing costs—or risk a debt spiral - Fortune",
@@ -35,20 +51,12 @@
         "reason": "中性／待確認"
       },
       {
-        "title": "Key US Data This Week Seen Bolstering Case for October Rate Hike - Yahoo Finance",
-        "link": "https://news.google.com/rss/articles/CBMijwFBVV95cUxOZ3M5MGlxcXloYURjcHRBOW84RnZuWmxXUWVXX1VmRUVoTmZvOVZIVGVUdkd2d2xScDhnOW5HelpRWHRDQ1FQZXRCNGJBdHVGMUJZY0xkSS1RUl9Cbi1yRkRFX2JRQVhkQl9hY2ZEeGU5TmQ2c3ExNk8xMTFaNGZDOXdFT3NzekZqN3hOd1NWSQ?oc=5",
-        "published": "Mon, 28 Sep 2026 10:00:00 GMT",
+        "title": "Bessent Urges Fed to Keep ‘Open Mind’ on US Inflation Outlook - Yahoo Finance",
+        "link": "https://news.google.com/rss/articles/CBMilwFBVV95cUxPc1VZdWVINEF3dnpTMkstRWwwQlQ0djZVcVBUX1FDaXJNazdRMEpNbDZFWU5xY2dLeUVmTVpQWDdEc2xKVmF5LWl2S25oTm5NcGoxZF9ma1pVUUx4RWp6ZElhU253ZnZtcWdQUWZqTHVDd1k0eThjaU9fMVNndnc3bnlkWkk0ZVJOSEhMY3Q2cWtJbXNUeUNn?oc=5",
+        "published": "Sun, 27 Sep 2026 16:19:18 GMT",
         "query": "Federal Reserve interest rates inflation US economy",
-        "direction": "negative",
-        "reason": "緊縮／景氣風險"
-      },
-      {
-        "title": "Federal Reserve rate hike reflects new world of sticky inflation, faster growth - The North State Journal",
-        "link": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxQZGJJZE56ck9EbFhYeDNlUmNKQkpfNzhLUXdGOUhlazF3ZFI3eWFLVXdZWEZ6Qmo3OFlScW5SaUlqbzR0VF82Yk1ZZ2pXRW9OeE1fb0REYzA4U1hOZV9Kcm1SVXVUTDh4Q2dQZGdoOXd0R1dNVXNibm55VnpDRkh5U2ZUekZpRFdvcDZNNkRLMm1GaTljQTJyT2JBQTJBTlpqNk1OLU5sTmsyUXRFbHdxVThMRGxOaUFI?oc=5",
-        "published": "Sat, 26 Sep 2026 15:55:52 GMT",
-        "query": "Federal Reserve interest rates inflation US economy",
-        "direction": "negative",
-        "reason": "緊縮／景氣風險"
+        "direction": "neutral",
+        "reason": "中性／待確認"
       },
       {
         "title": "Why the bond market is freaking out, and what it means for your money - CBS News",
@@ -59,25 +67,17 @@
         "reason": "中性／待確認"
       },
       {
-        "title": "Inflation pressures raise prospect of Fed rate hike on eve of elections - Reuters",
-        "link": "https://news.google.com/rss/articles/CBMiogFBVV95cUxNU0ZXSlEta0N4WGxzcHJBNUM1cUI0d0U4TGFwa2NMbDM4U0Q3MWt0YXY5TGpQQ2xxdmJWNm0yeGl0ckJNanVPOU5HOUd5R0hNc19pZXcyd3FwWkFkY1hyUEpOdTZyMVZoN3R0eHZLdkxUYzRXV1hoRDctTXhUa3pvckNvLUktNDBmWm1OV3lhOTluQVRDQzUyQTN3Q0V0YmN2Q1E?oc=5",
-        "published": "Wed, 23 Sep 2026 20:24:49 GMT",
-        "query": "Federal Reserve interest rates inflation US economy",
-        "direction": "negative",
-        "reason": "緊縮／景氣風險"
-      },
-      {
-        "title": "Why the surge in bond yields could be a positive - Axios",
-        "link": "https://news.google.com/rss/articles/CBMib0FVX3lxTE1MM1NpM3dOSGVRcE1rRHFTeVhJODRGYkg3X05tTjA2dmVFSGNEdmRBV2FDcGFhTDYwcE90cTF1UzFndGc4NFN1WWVpZEIzVnlwWHVPQ0tub2RncnJnRFltVVF4bXA2OVc3TjRGYjVoMA?oc=5",
-        "published": "Tue, 29 Sep 2026 05:24:33 GMT",
+        "title": "AI investments keep US economic growth in gear, for now - Deloitte",
+        "link": "https://news.google.com/rss/articles/CBMisAFBVV95cUxPenRYbVVidzhLTkVVbXN2VHd4VjY3ZGlZWjBFa0NCQ2xPcEhneHlWZVhud3p2cUVMcWNsdkEzLTlpcmVxREZBbDBkOGFEa0wySEx4YkdoMkdzT3N6NXRnQ19waFNqM3BCdkE1bmczY1pHNVNxQkxoRnpkMk15cERnSklGLTc0ZlZvMzFxeEEtalR1UWF3R0VWNjZCWXFqMUk0VERZWHdpaHplWTdFdmlldQ?oc=5",
+        "published": "Wed, 30 Sep 2026 09:24:36 GMT",
         "query": "US CPI jobs GDP Treasury yields economy",
         "direction": "neutral",
         "reason": "中性／待確認"
       },
       {
-        "title": "Weekly market commentary - BlackRock",
-        "link": "https://news.google.com/rss/articles/CBMiogFBVV95cUxORkJPa3I0ekJyVEI0RFJhY210TmplVHJZQ0xJNy1qenNkc0lMMHk0TmZwdDV1TEVZNmJoV3dfVlNTT3UyZHE5Q01SdmQ4eDd4WjAzZVhFMFB3VUd5QjlYXzZ5MWFRYzdIQVRVM1JMZXNyQ05aTExrejM4cHdBSktKSlJOOWxkY0V4YkNRRDZZTzlDZUYzZHlUWXdhTFUxNXJSNXc?oc=5",
-        "published": "Sun, 27 Sep 2026 07:00:00 GMT",
+        "title": "Why the surge in bond yields could be a positive - Axios",
+        "link": "https://news.google.com/rss/articles/CBMib0FVX3lxTE1MM1NpM3dOSGVRcE1rRHFTeVhJODRGYkg3X05tTjA2dmVFSGNEdmRBV2FDcGFhTDYwcE90cTF1UzFndGc4NFN1WWVpZEIzVnlwWHVPQ0tub2RncnJnRFltVVF4bXA2OVc3TjRGYjVoMA?oc=5",
+        "published": "Mon, 28 Sep 2026 11:23:08 GMT",
         "query": "US CPI jobs GDP Treasury yields economy",
         "direction": "neutral",
         "reason": "中性／待確認"
@@ -91,15 +91,15 @@
         "reason": "中性／待確認"
       },
       {
-        "title": "The battle between the Fed and Trump - Financial Times",
-        "link": "https://news.google.com/rss/articles/CBMihAFBVV95cUxNaUNLdHRQTUpsQTdOZEN1WTRteHNWZ0g3Q09GcmNOMEp5aG1Nb3NwYkNPaHlzRGV4a0pEa2V3cUp1ZFEzdXdzc3RyalhHTUdiN09ORnVoOUhpUWhaOENzNzhMTUtjdURaOTFIUm1fWjB1WnlldnVxbnpKNGtOWDBLd2dscks?oc=5",
-        "published": "Wed, 23 Sep 2026 09:46:10 GMT",
+        "title": "Weekly market commentary - BlackRock",
+        "link": "https://news.google.com/rss/articles/CBMingFBVV95cUxQLWJDTjBBalYwVHVpc0VxV1BwRE1xeUt1RWlLQ1VJdnJQRXNnb3p6MnFNbjRBV0s0TnlldW4wSVIycFRQeVNISWJ3VV9wMWdjX1ZndE1Tc24tNzc0anNYWjl0SVBsRDhSa0dVTWlyVVYxX0w5b2JhTFB0Tm9Vb2FwYVZubTU1SVJlcy0zMEpXOEM4ZlhiSU1QazdVQVlldw?oc=5",
+        "published": "Mon, 28 Sep 2026 07:00:00 GMT",
         "query": "US CPI jobs GDP Treasury yields economy",
         "direction": "neutral",
         "reason": "中性／待確認"
       }
     ],
-    "updated_at": "2026-09-30T14:32:41.111484+08:00",
+    "updated_at": "2026-10-01T02:33:51.778822+08:00",
     "errors": []
   }
 }

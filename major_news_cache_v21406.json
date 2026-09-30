@@ -1,6 +1,6 @@
 {
   "2330": {
-    "fetched_at": "2026-09-30T14:32:43.989587+08:00",
+    "fetched_at": "2026-10-01T02:33:54.583042+08:00",
     "adjustment": 4,
     "events": [
       {
@@ -8,26 +8,6 @@
         "source": "CMoney",
         "date": "2026-09-22T04:44:23+08:00",
         "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE5yTU1RQmFlN3ltRFBWelM4MjRFb0VEVUFuQk1wZ2x1bGUwcWFMeF9oNllVdlI1ZEN2b0M1ZnFESXZkSUxjSkFoOERQVnplWmk1Yy1qZldZR3o?oc=5",
-        "raw_adjustment": 0,
-        "adjustment": 0,
-        "label": "",
-        "status": ""
-      },
-      {
-        "title": "2330 台積電 - 🇹🇼 詹姆士美台股市早報📅 2026/09/22（二）｜盤前版- 股市爆料同學會 - CMoney",
-        "source": "CMoney",
-        "date": "2026-09-22T08:36:31+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE1icERKRi0tSnNoYnhFNDg4NldQd09oUFRlVU51Ym9pWGxWSE9fV2ZJNG5VRlVfb0FSLWpjRndNVWdvSzFMTjZIM3c0Ym1pSkR5UTZoa3ZuLXU?oc=5",
-        "raw_adjustment": 0,
-        "adjustment": 0,
-        "label": "",
-        "status": ""
-      },
-      {
-        "title": "2330 台積電 - 個人是台積電的支持者，但看到這消息，心裡很期待，但現實告訴我... - 股市爆料同學會 - CMoney",
-        "source": "CMoney",
-        "date": "2026-09-22T19:35:25+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE9mQnB0amN1eF9YSENoMmRFRnBqSm1GcTBXVmxmMXRWTDhncUUxX1FkRnFpSVVGOFA3YUdqaks1aFZ3Z2sxeHFpVEx1VU1RUU5NZ0xuSVpNdk0?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
@@ -74,10 +54,30 @@
         "status": ""
       },
       {
-        "title": "2330 台積電 - 【美股巨頭】57億美元專利敗訴，蘋果Taptic Engine惹禍了？ - 股市爆料同學會 - CMoney",
+        "title": "2330 台積電 - 【點靈週更｜中秋後是否變盤？】 - 股市爆料同學會 - CMoney",
         "source": "CMoney",
-        "date": "2026-09-26T15:02:07+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE9mQlZRRGE1Y2M0OTFMcmxWUlNjZGZKWGx5WFh4c20zTVVudTZwTHZRYmVfaFNWWHI4NUx4bEhBQzF6bFNZaU93QVdlaFQ5UHFrYVE1eEZoclE?oc=5",
+        "date": "2026-09-27T04:30:00+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE9VMHJUSXBPbUZWbzdBa01VY01HaU5qOWJBUEFOYmxBc0lESmR4WnN1VVh3Mk9kd1FlSjRsTlA2ZDFUNklUb2luRHRqd1Y3V2FISEU1bUZ0R0Q?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "2330 台積電 - 全球12吋矽晶圓與8吋矽晶圓產能今年的產出與需求大約相當持平... - 股市爆料同學會 - CMoney",
+        "source": "CMoney",
+        "date": "2026-09-27T06:10:02+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE9QQ3djNmp1eXVkMTVwcEVMbWNhZHdCejVnVkladjgxeGk0UlMxME43TW1IZzJoMzVpMV9OZldVeVIxU3M3VHVlSV82MUI2VWdJZ3hMZzJFejg?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "2330 台積電 - 下週台股怎麼走？三種情境先準備好！ - 股市爆料同學會 - CMoney",
+        "source": "CMoney",
+        "date": "2026-09-27T07:54:17+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE9JX1VVai0yeHJtUDRrcE10WkRhUGt5bGdEV0xQMWJ5UGx6OF9EUFAwVjN4eV8wRzR4RXRkdlJ1cXNoWS1USFJ5azdGZVRuT3RkcHVmTnl0WGI?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
@@ -88,29 +88,9 @@
     "lookback_days": 14
   },
   "3711": {
-    "fetched_at": "2026-09-30T14:32:49.809589+08:00",
+    "fetched_at": "2026-10-01T02:34:00.746493+08:00",
     "adjustment": 2,
     "events": [
-      {
-        "title": "日月光投控：日月光半導體製造8/28~9/16向萬潤取得供營業用機器設備，計約18億 - 台視全球資訊網",
-        "source": "台視全球資訊網",
-        "date": "2026-09-16T19:53:08+08:00",
-        "link": "https://news.google.com/rss/articles/CBMikgFBVV95cUxNVWFMb1RwcGhDTFpVUU56OHZrVlV3cE1McmZtN0ktejVYbWF2d0hXdmxJSWI4YTNnSldQN2N1Y0xzOXVSRXE1MjhPOTNtQ3JGMlhoeFNVU0ZWd0JjaFJ3aXZJWC1tOXA1aWtUSVNiZDZPd3hZZDFFbmczVV9hTDlhQlFiZ0Fsc3huR1hIOFlUVGxvQQ?oc=5",
-        "raw_adjustment": 0,
-        "adjustment": 0,
-        "label": "",
-        "status": ""
-      },
-      {
-        "title": "3711 日月光投控- ADR換算為605 - 股市爆料同學會 - CMoney",
-        "source": "CMoney",
-        "date": "2026-09-17T10:39:04+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE8yZnQ2WmdOOVQ5ZExqTnBFVWFVcFprUE5NOTVBUFR2UUxRbmZ0dVFOemRFcnRfdXQ3UFZhUmFoMlN4bFFkMU4tXzQycEhaVkVQUXl4cVYwUmg?oc=5",
-        "raw_adjustment": 0,
-        "adjustment": 0,
-        "label": "",
-        "status": ""
-      },
       {
         "title": "日月光投控：日月光半導體製造8/25~9/17向聖暉*取得廠務設備及工程，計約4.62億元 - 台視全球資訊網",
         "source": "台視全球資訊網",
@@ -132,20 +112,20 @@
         "status": ""
       },
       {
-        "title": "【11:44 即時新聞】日月光投控(3711)股價走強，主力與法人買盤同步聚焦 - CMoney投資網誌",
-        "source": "CMoney投資網誌",
-        "date": "2026-09-22T11:45:14+08:00",
-        "link": "https://news.google.com/rss/articles/CBMijgFBVV95cUxNTHJxZTdJV0dWT1JWajV5WlhxN2FpN3FnSEoxYXlzdXJMeXNsVmhTcGFQTXFPZWF6cmhhTEtCUWVVV0plTVU2V2hiSGRCNzdIdXpzR3hqdWxXazZKZ0IxTWJ4bEM1d25vRDVfdnFwTGlEbWNXZ2VNLUtwbzJ6ZE5fZnNLVzhZbHpiWUJOdVJn?oc=5",
+        "title": "3711 日月光投控 - ADR快創歷史新高了.剩不到2% - 股市爆料同學會 - CMoney",
+        "source": "CMoney",
+        "date": "2026-09-22T15:00:00+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE5LOGVnd28xVkxiR2N3TVRlNk9peUMycDNfMXJXRDhVdmJyNmZibDc0TGNyQXFRbjMyVmh2Wlgyc2szYTVWM3h0bWFsSk11Sy0xTjF3bFNBQlg?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
         "status": ""
       },
       {
-        "title": "3711 日月光投控 - ADR快創歷史新高了.剩不到2% - 股市爆料同學會 - CMoney",
-        "source": "CMoney",
-        "date": "2026-09-22T22:36:09+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE5LOGVnd28xVkxiR2N3TVRlNk9peUMycDNfMXJXRDhVdmJyNmZibDc0TGNyQXFRbjMyVmh2Wlgyc2szYTVWM3h0bWFsSk11Sy0xTjF3bFNBQlg?oc=5",
+        "title": "【11:44 即時新聞】日月光投控(3711)股價走強，主力與法人買盤同步聚焦 - CMoney投資網誌",
+        "source": "CMoney投資網誌",
+        "date": "2026-09-22T15:00:00+08:00",
+        "link": "https://news.google.com/rss/articles/CBMijgFBVV95cUxNTHJxZTdJV0dWT1JWajV5WlhxN2FpN3FnSEoxYXlzdXJMeXNsVmhTcGFQTXFPZWF6cmhhTEtCUWVVV0plTVU2V2hiSGRCNzdIdXpzR3hqdWxXazZKZ0IxTWJ4bEM1d25vRDVfdnFwTGlEbWNXZ2VNLUtwbzJ6ZE5fZnNLVzhZbHpiWUJOdVJn?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
@@ -166,6 +146,26 @@
         "source": "CMoney",
         "date": "2026-09-23T12:01:03+08:00",
         "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE5IaFFzVWFYMU5HUGdHVHJiNkVsMTVqVVZqcUN2WEVwN1pOc2QwS2QwZmRxZ2lPSElOMHlVNHBTTXNwYnVVMUI0bEhFZWlIVkxlMDUxX2pwUnc?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "3711 日月光投控- 封測雙雄，中秋節後挑戰新高。 - 股市爆料同學會 - CMoney",
+        "source": "CMoney",
+        "date": "2026-09-27T07:59:12+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE9XZU1jT1NDQUJWeGZJdHBENE5BZXRwSm85dE9xUTdIemFPRlJHa3phSFRDc2ZqVURpNmpIZHJ0dlFGLS04OG5vVFNsXzlaeW5LV3pMd0tuTW0?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "聯電、日月光投控、國巨都被賣了…00981A連砍30檔，重災區有誰？瑤池金母看空台股？他揭先觀察這件事 - businesstoday.com.tw",
+        "source": "businesstoday.com.tw",
+        "date": "2026-09-27T16:21:00+08:00",
+        "link": "https://news.google.com/rss/articles/CBMigAFBVV95cUxOcVFVenI3dkRvbldpVTRwYVlwSlJaam9tZ2FpWGZQTXJ0MHA1WU5ESTFfLXAweHBXdHZIQUhIdTYtcVhxMzFrazBGV1FsTEpTTVpORmhHMnU3YjBaSWxOSUFETW1QaVhPcUVhOU1jV0dMbWtOUjVaZDE2MU81Zy14cQ?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
@@ -229,7 +229,7 @@
     "lookback_days": 14
   },
   "0050": {
-    "fetched_at": "2026-09-30T14:32:15.569104+08:00",
+    "fetched_at": "2026-10-01T02:33:17.387602+08:00",
     "adjustment": 0,
     "events": [
       {
@@ -237,16 +237,6 @@
         "source": "CMoney",
         "date": "2026-09-17T15:00:00+08:00",
         "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE5Yem9NNk9CemNsYlgzS0s2aTJVOXBobUZpTEgwWEFFd1hHekd3YjQ5b1VDYUNDODAtLVA2VVJ6SHVkX0NxSTVjZm01WDFhUHhBcDlYUXFjSnA?oc=5",
-        "raw_adjustment": 0,
-        "adjustment": 0,
-        "label": "",
-        "status": ""
-      },
-      {
-        "title": "0050 元大台灣50 - 這盤小心了！ - 股市爆料同學會 - CMoney",
-        "source": "CMoney",
-        "date": "2026-09-17T15:00:00+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE04R0QydllXQ1J1cHhDX21ySzloT0tKdFlsVFhGbzM2aEdiQi1xY19rWWdEZ2ZoaTJYZEk2aUx4VXFJWE13QlB3Z0xkOVZibDVnNEl4c0VKRTU?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
@@ -293,8 +283,8 @@
         "status": ""
       },
       {
-        "title": "今年狂賺106%！專家點名10檔高績效ETF 0050慘淪中段班 - TVBS新聞網",
-        "source": "TVBS新聞網",
+        "title": "今年狂賺106%！專家點名10檔高績效ETF 0050慘淪中段班 - news.tvbs.com.tw",
+        "source": "news.tvbs.com.tw",
         "date": "2026-09-21T14:13:00+08:00",
         "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTFBRU2stRDJjS0VEakk3VlZnTFJnRmcwOE5wMTQ0MHQ2Q3RkbHV5R1lLVG1EWV84aVlfaG05Sl8wb05VcDFuWnI0cTRmNXBpdTQ?oc=5",
         "raw_adjustment": 0,
@@ -311,13 +301,23 @@
         "adjustment": 0,
         "label": "",
         "status": ""
+      },
+      {
+        "title": "0050今年狂漲逾66％！網問「現在還能買嗎？」掀熱議 - 自由財經",
+        "source": "自由財經",
+        "date": "2026-09-21T15:00:00+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE1rMC1scm1rTnN6VFFmUHEtMmJyTVU2alBMaGFROGVJdHMxZ2JTMTY2RGJmMjcyaHhtS0FkZ3JybjlJdFNPZzdwX1FRazNWX1ljaUJ1a2tDcmdkcFpmWnBV0gFkQVVfeXFMTmRGZE4zbUJ3S2dRX2pxZHM0Zzd6RjlwVFhHRmk2M0NQODl2QURST0lSSy00MHo5eW5Pb1QzMEptZ3lyZklYQUMyQzd6dHZqRTJuS3Zrbm52am9JWFRSUjdXUUNiYQ?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
       }
     ],
     "source": "Google News RSS",
     "lookback_days": 14
   },
   "QQQ": {
-    "fetched_at": "2026-09-30T14:32:55.233278+08:00",
+    "fetched_at": "2026-10-01T02:34:06.194590+08:00",
     "adjustment": 0,
     "events": [
       {
@@ -371,8 +371,8 @@
         "status": ""
       },
       {
-        "title": "景順QQQ ETF〈83455.HK〉 - MoneyDJ",
-        "source": "MoneyDJ",
+        "title": "景順QQQ ETF〈83455.HK〉 - MoneyDJ理財網",
+        "source": "MoneyDJ理財網",
         "date": "2026-09-24T15:00:00+08:00",
         "link": "https://news.google.com/rss/articles/CBMifEFVX3lxTE5kRFZld1cxUzdWNldsWTRoMzBDZTg2MDVrb2ZwZGZRUGx4RHFBVDZxdUxGWGc5aV9LYjA1TmktYnFyMGlQZkhtREJQdUxCZTBsc2ZfSmF5QXBGNnI3SVNWTDhnYVI2dUlQVUhhcVMycTRQVV9mLWZCQW8xRm8?oc=5",
         "raw_adjustment": 0,
@@ -381,8 +381,8 @@
         "status": ""
       },
       {
-        "title": "$標普500指數ETF-SPDR (SPY.US)$$納指100ETF-Invesco QQQ Trust (QQQ.U... - Moomoo",
-        "source": "Moomoo",
+        "title": "$標普500指數ETF-SPDR (SPY.US)$$納指100ETF-Invesco QQQ Trust (QQQ.U... - moomoo.com",
+        "source": "moomoo.com",
         "date": "2026-09-24T17:54:57+08:00",
         "link": "https://news.google.com/rss/articles/CBMiogFBVV95cUxQV3prVFFoVVIxZlZvUGNMRjlyYVVhbDA3T3Jrc0paaEdqVThJUUxaVFQyLS1udV9NSHBhU1IteG5XTXNmQklpbG5ncmNvUjREV3ZsX1BaRzhWQ2h4ZEFwWXd0U3Z6emxFb1U0TEdrbmZpTUJJTFZRVFZrSWdsSmRaQ3dwY1dBaGg2THhFX1NPRmlYMEtwOHRScnVpd1M2aEJaZUE?oc=5",
         "raw_adjustment": 0,
