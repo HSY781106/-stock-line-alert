@@ -1956,5 +1956,61 @@
       ]
     },
     "provider": "groq"
+  },
+  "trump_v21826:__MARKET__:bb207799879ee2744bf875e0": {
+    "ts": 1790800421.820696,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "positive",
+          "score": 3,
+          "confidence": 0.85,
+          "policy_stage": "considering",
+          "reason": "川普推動能源獨立政策，有利傳統能源產業與市場信心。",
+          "relevant": true,
+          "affected_channel": "需求與法規環境",
+          "transmission": "放寬能源管制→促進油氣開採→提振整體市場與能源板塊",
+          "exposure": "整體美股市場與能源類股"
+        },
+        {
+          "id": 1,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.75,
+          "policy_stage": "considering",
+          "reason": "中美峰會前夕稀土控制議題浮現，市場觀望氣氛濃後。",
+          "relevant": true,
+          "affected_channel": "供應鏈與成本",
+          "transmission": "稀土出口管制限制→科技與工業供應鏈受壓→市場整體影響中性",
+          "exposure": "科技與工業供應鏈"
+        },
+        {
+          "id": 2,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.8,
+          "policy_stage": "considering",
+          "reason": "關稅重置與高峰會談判預期有助緩和 AI 基建股貿易壓力。",
+          "relevant": true,
+          "affected_channel": "出口與估值",
+          "transmission": "貿易緊張趨緩預期→科技資本支出回升→帶動整體市場風險偏好",
+          "exposure": "AI 基礎設施與半導體板塊"
+        },
+        {
+          "id": 3,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.8,
+          "policy_stage": "implemented",
+          "reason": "峰會前中國對美稀土磁鐵出口下降，加劇供應鏈不確定性。",
+          "relevant": true,
+          "affected_channel": "供應鏈與成本",
+          "transmission": "稀土出口下滑→關鍵零組件成本上升→壓抑製造業與市場信心",
+          "exposure": "科技、汽車與國防製造業"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
