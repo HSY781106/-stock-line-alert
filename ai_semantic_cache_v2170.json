@@ -2132,5 +2132,61 @@
       ]
     },
     "provider": "groq"
+  },
+  "trump_v21826:__MARKET__:77fa1798a7d2925b464d93d6": {
+    "ts": 1790887747.3921735,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "positive",
+          "score": 3,
+          "confidence": 0.85,
+          "policy_stage": "considering",
+          "reason": "前頁岩油高層推動川普能源霸權政策，有利傳統能源開採。",
+          "relevant": true,
+          "affected_channel": "成本與供給",
+          "transmission": "鬆綁管制政策→降低開採成本→推升傳統能源供給與企業獲利",
+          "exposure": "傳統能源與頁岩油開採產業"
+        },
+        {
+          "id": 1,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.75,
+          "policy_stage": "threat",
+          "reason": "中國主導稀土供應威脅美國供應鏈安全，增加貿易談判不確定性。",
+          "relevant": true,
+          "affected_channel": "供應鏈風險",
+          "transmission": "貿易摩擦→稀土出口管制風險→科技與國防製造業成本上升",
+          "exposure": "國防、電動車與關鍵零組件產業"
+        },
+        {
+          "id": 2,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.7,
+          "policy_stage": "considering",
+          "reason": "川習會談及關稅重置可能緩解AI基建供應鏈壓力。",
+          "relevant": true,
+          "affected_channel": "需求與估值",
+          "transmission": "關稅風險緩和→降低硬體進口成本→利好AI基礎設施投資",
+          "exposure": "半導體與AI伺服器供應鏈"
+        },
+        {
+          "id": 3,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.8,
+          "policy_stage": "implemented",
+          "reason": "中國對美稀土磁鐵出口下降，實質加劇美國製造業原料短缺風險。",
+          "relevant": true,
+          "affected_channel": "供應鏈與成本",
+          "transmission": "中國減少出口→稀土磁鐵供需緊繃→下游製造業成本增加",
+          "exposure": "汽車、電機與高端製造業"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
