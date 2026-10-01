@@ -2012,5 +2012,61 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:0e20d41478f72e9baa1d1126": {
+    "ts": 1790838651.7533634,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "positive",
+          "score": 3,
+          "confidence": 0.85,
+          "policy_stage": "announced",
+          "reason": "川普推動能源主導政策，傳統水力壓裂與石化能源迎來法規放寬利多。",
+          "relevant": true,
+          "affected_channel": "成本與法規",
+          "transmission": "能源主導政策→放寬採掘限制與審查→傳統能源產業成本下降並擴大產能",
+          "exposure": "整體美國油氣水力壓裂業者及傳統採掘設備商"
+        },
+        {
+          "id": 1,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.75,
+          "policy_stage": "threat",
+          "reason": "中國掌控稀土為川習會談籌碼，雙方互有制衡，短期走向尚不明朗。",
+          "relevant": true,
+          "affected_channel": "供應鏈",
+          "transmission": "川習會談博弈→稀土出口管制威脅→市場觀望高科技與國防供應鏈受阻風險",
+          "exposure": "仰賴稀土進口的國防、電動車及高科技製造業"
+        },
+        {
+          "id": 2,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.7,
+          "policy_stage": "considering",
+          "reason": "關稅重置與川習會談可能緩和地緣政治緊張，利好AI基礎設施概念股。",
+          "relevant": true,
+          "affected_channel": "估值與需求",
+          "transmission": "川習會關稅重置預期→減輕貿易戰地緣政治折價→AI基礎設施建設需求穩健",
+          "exposure": "伺服器、網通與AI晶片硬體製造商"
+        },
+        {
+          "id": 3,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.8,
+          "policy_stage": "implemented",
+          "reason": "會前中國稀土磁鐵對美出口下降，實質增加美系高科技與高端製造供應鏈成本。",
+          "relevant": true,
+          "affected_channel": "供應鏈與成本",
+          "transmission": "稀土磁鐵出口下降→關鍵原料短缺及價格上漲→美國下游製造業生產成本增加",
+          "exposure": "美國精密機械、電動車馬達及國防供應鏈標的"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
