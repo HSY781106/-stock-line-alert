@@ -2068,5 +2068,37 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:af1eee14eda0f71255eccb95": {
+    "ts": 1790881289.6741037,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "negative",
+          "score": -3,
+          "confidence": 0.7,
+          "policy_stage": "announced",
+          "reason": "能源政策推廣不利於市場",
+          "relevant": true,
+          "affected_channel": "需求",
+          "transmission": "能源政策→能源產業→市場需求下降",
+          "exposure": "證據不足"
+        },
+        {
+          "id": 2,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.6,
+          "policy_stage": "announced",
+          "reason": "AI產業受關稅影響",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "關稅政策→半導體產業→AI股成本上升",
+          "exposure": "證據不足"
+        }
+      ]
+    },
+    "provider": "groq"
   }
 }
