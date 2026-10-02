@@ -2300,5 +2300,61 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:043cabf09dfc3a13f9eb46aa": {
+    "ts": 1790972955.076953,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "positive",
+          "score": 3,
+          "confidence": 0.85,
+          "policy_stage": "announced",
+          "reason": "川普資本投資高度集中於國防領域，提振整體國防工業需求。",
+          "relevant": true,
+          "affected_channel": "政府需求",
+          "transmission": "川普國防投資承諾→增加國防預算與訂單→推升國防航太產業估值與營收",
+          "exposure": "整體國防航太產業及軍工代表性標的"
+        },
+        {
+          "id": 1,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.8,
+          "policy_stage": "considering",
+          "reason": "推動能源主導地位政策，放寬監管有利傳統油氣與頁岩油產業。",
+          "relevant": true,
+          "affected_channel": "監管與供給成本",
+          "transmission": "能源主導政策→放寬採掘監管與增加租賃→降低能源業者合規成本並擴大產能",
+          "exposure": "傳統能源、頁岩油開採及設備服務業"
+        },
+        {
+          "id": 2,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.7,
+          "policy_stage": "considering",
+          "reason": "中國控制稀土威脅整體供應鏈，雙方會晤結果未定，影響尚不明朗。",
+          "relevant": true,
+          "affected_channel": "供應鏈風險",
+          "transmission": "中美科技關鍵礦物博弈→關鍵原料供應受限疑慮→市場對高科技供應鏈維持觀望",
+          "exposure": "關鍵礦物、稀土加工及高科技製造業"
+        },
+        {
+          "id": 3,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.75,
+          "policy_stage": "considering",
+          "reason": "中美峰會若能緩和關稅緊張，有利AI基礎設施與半導體供應鏈重組。",
+          "relevant": true,
+          "affected_channel": "出口與貿易壁壘",
+          "transmission": "川習會關稅重塑談判→減少貿易壁壘預期→資本支出回升帶動AI基礎設施需求",
+          "exposure": "AI伺服器、半導體晶片及基礎設施相關標的"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }

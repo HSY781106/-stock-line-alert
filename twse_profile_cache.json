@@ -1,5 +1,5 @@
 {
-  "cached_at": 1790881234.4550025,
+  "cached_at": 1790972529.8774643,
   "data": [
     {
       "code": "1101",
@@ -647,7 +647,7 @@
       "industry": "建材營造",
       "market": "TWSE",
       "symbol": "1453.TW",
-      "capital": 1132430480.0
+      "capital": 1166403400.0
     },
     {
       "code": "1454",
@@ -2279,7 +2279,7 @@
       "industry": "半導體業",
       "market": "TWSE",
       "symbol": "2338.TW",
-      "capital": 3668491830.0
+      "capital": 3703491830.0
     },
     {
       "code": "2340",
@@ -5679,7 +5679,7 @@
       "industry": "電子零組件業",
       "market": "TWSE",
       "symbol": "4912.TW",
-      "capital": 669930990.0
+      "capital": 669530990.0
     },
     {
       "code": "4915",
@@ -6487,7 +6487,7 @@
       "industry": "其他電子業",
       "market": "TWSE",
       "symbol": "6215.TW",
-      "capital": 827896930.0
+      "capital": 835296930.0
     },
     {
       "code": "6216",
@@ -7615,7 +7615,7 @@
       "industry": "其他",
       "market": "TWSE",
       "symbol": "6957.TW",
-      "capital": 555603140.0
+      "capital": 557364550.0
     },
     {
       "code": "6958",
