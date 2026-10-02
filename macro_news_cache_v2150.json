@@ -1,25 +1,17 @@
 {
-  "cached_at": 1790923978.2702167,
+  "cached_at": 1790966449.9325564,
   "data": {
     "items": [
       {
-        "title": "Fed Confronts the Prospect of Another Rate Increase Ahead of Midterms - The New York Times",
-        "link": "https://news.google.com/rss/articles/CBMiggFBVV95cUxOMGdRWGMwS19RQ1QwQVhydF9udFh2SkVwN2RYaXZMZGd6UzdGdXJOQ1JUMlFuLUw3VExKTm5XbldCLVBWVHpWSmNSWlQyN0tYUzVtRTg5Rlk3SnMxRklVWHVzbWJ4RFgtajBvVGM1cEhJcVZnTkhVNXNmWFVvZXZiRmt3?oc=5",
-        "published": "Fri, 25 Sep 2026 13:37:14 GMT",
-        "query": "Federal Reserve interest rates inflation US economy",
-        "direction": "neutral",
-        "reason": "中性／待確認"
-      },
-      {
-        "title": "Fed's Williams sees no urgency for next rate hike - reuters.com",
-        "link": "https://news.google.com/rss/articles/CBMimAFBVV95cUxNQW15c0ZrS2lrMUlHZDZjZlpxRG5GazRlendBenpXeWZSR3NCaXBFLXA5LVBlbWNEeDNsWnRnS25CYWwxc3AzRDhrTjhUZTNZcl8xN2VDT3JtZHk1eVpHUzFaaXpVVy1HbUk1Y3hKOEtoTmxpNTVwWkJHZXVvTWl1cm5QdWVpWXhFQkxBdmt4enRJRkF3NUlxTQ?oc=5",
-        "published": "Tue, 29 Sep 2026 18:01:00 GMT",
+        "title": "Fed's Logan calls for '50 bps or more' in rate hikes - Reuters",
+        "link": "https://news.google.com/rss/articles/CBMijAFBVV95cUxPY25fbkF3U3FzTGZISkVoSW1IeGNCbXhTYUZIVWRzRkpIZGpWZ3FxWjNkS3c3d19fS2cyLTZHcnpVTUt3elpTQTdhMkxVd2VRM0JQaHRVOGVkV2FFS1RDc0FPbFZfcHpwNXNRUHEtcUx3VENpeWxiOWI2Q1lOb19kVFliWFptNXM1Y21rcw?oc=5",
+        "published": "Thu, 01 Oct 2026 23:33:06 GMT",
         "query": "Federal Reserve interest rates inflation US economy",
         "direction": "negative",
         "reason": "緊縮／景氣風險"
       },
       {
-        "title": "Good news in US inflation report boosts chances Fed won’t hike rates - theguardian.com",
+        "title": "Good news in US inflation report boosts chances Fed won’t hike rates - The Guardian",
         "link": "https://news.google.com/rss/articles/CBMijAFBVV95cUxNOG1kblJocTd1TEd5WHdyX1lUeWs0aEhXdWx4TV9ROVljd3RaSW1XdkNSTzVzeXFqRDBCaEFMSU9zY3k1WER6VkVYNWhfU0RHUnFTaHZkYlBzYXUxVjBzcnBuWUg2bU1pa1AtajI2bmZ6NDg2Z0hpTG5RV0tpc3U3bEJNdmN5ZHdGLU5GMg?oc=5",
         "published": "Tue, 29 Sep 2026 07:00:00 GMT",
         "query": "Federal Reserve interest rates inflation US economy",
@@ -27,9 +19,9 @@
         "reason": "中性／待確認"
       },
       {
-        "title": "The Moves That Backfired on Trump and Drove Interest Rates and Inflation Higher - WSJ",
-        "link": "https://news.google.com/rss/articles/CBMic0FVX3lxTE5GeVBIaXBxUF9Gcm9KVkxGMElRYUNUZW9kSTdKTl9JTlBvOTdodTd2ZDAwTERMUk51SWdEY0tTUDNVcHEtM1ZlMDhURDFoQzh2anlLQ2wtSlEwcjVKVTd1eUxmWm9Jai1UaWZQUGpFTWozRjA?oc=5",
-        "published": "Mon, 28 Sep 2026 01:00:00 GMT",
+        "title": "Fed’s Williams Hints Next Rate Increase Can Wait - WSJ",
+        "link": "https://news.google.com/rss/articles/CBMiugFBVV95cUxPUlJqZW8zbmpLc2tYN0lzcHhDaEdoNHp3cHBmVjVnSF9GVElVTmV4NkZpeklLTVNfTHRCZ1pUX3FpOGE5ckoxbllKX3hwQ19CMjBkMi0yRmpGeDZoRWxpa0owNlVScDktSjlIOUxsaWxORUx0T3QzSm9pelRxd2xwSU4xQlBMYllsNkJjUFRka2oyQi0xVkZyTVdwZi1Hald0NWdNTTlLMlJVUm82YmFtUE1VV2NYTWVWX1E?oc=5",
+        "published": "Tue, 29 Sep 2026 19:10:00 GMT",
         "query": "Federal Reserve interest rates inflation US economy",
         "direction": "neutral",
         "reason": "中性／待確認"
@@ -43,9 +35,17 @@
         "reason": "中性／待確認"
       },
       {
-        "title": "The US economy is stuck on a hamster wheel as GDP must outrun borrowing costs—or risk a debt spiral - Fortune",
-        "link": "https://news.google.com/rss/articles/CBMimAFBVV95cUxOdUpkcU9seG5TUjBld1V2Y0hucDlSY1hMMDR0dUNRcXZLaFBDZldwYnpFZUl0ZWtKU3FGOW5neUxQai1TeXQwUU1EVDRYLUFnWlNKUXhTajNTMWZLQ1pYMGpLYVd4UURnNlJDbmFhUzNLUW5wbFBsVF9Hek9GWHM3MW02cnBTUkhydVNkRGhjRThfbS1RVDNGZw?oc=5",
-        "published": "Sun, 27 Sep 2026 17:24:00 GMT",
+        "title": "Federal Reserve raises interest rates for the 1st time since 2023 - ABC News - Breaking News, Latest News and Videos",
+        "link": "https://news.google.com/rss/articles/CBMipgFBVV95cUxOYktxZlJxRVNrdUZFRWViQjVMLUh3OGJwNGhrVFpJY2E5QTAyajNfcnFSb09rZUVkSnVMUHd4WkpsYktvZGczX05nRzVhSTdKNWtfU2hWb09IYnNQQ01tTlMwMV95YzJkbWVDMklwZ19XMC1RNmVsckpGS3FpNUpiRlUxZkVtNXk5NE5YRnpBSTI4eEhVOWxaUlBzZDlxb3p1ZVBFeHFR0gGrAUFVX3lxTFBrZzU3UXhjRlBBblFYNzJZZ3dINVFwMnpIOFQwRlJ1NmRTa3JNUGlkamJyS08wRjM5UlFuMkRJcHAtUEQxYjF3b2Yyc2E2V1hOOEhQRHRPckpidllEOHpLRG9VUTFxSUwyaE95SzNNZ0pkemQwQkNBYkZPbTBpN0ZMYTBWU25nT3FrUVNNal9Eb0lCNnJwZTVFUVVhM0dDRlMzQ1pQTF8xRTV6bw?oc=5",
+        "published": "Wed, 30 Sep 2026 23:57:29 GMT",
+        "query": "Federal Reserve interest rates inflation US economy",
+        "direction": "neutral",
+        "reason": "中性／待確認"
+      },
+      {
+        "title": "Fed’s Preferred Inflation Gauge Points to Continued Price Pressures - The New York Times",
+        "link": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxQYlhkRWRnNTd1WFFKa3k0RF8yNmVNSG5MNHdRZk1PVi1na01fMHB4bldhb2JZeTdWc0gwZmhWbE5wWkVzWHF6eHBHUThHc1hnNWN3ZEJQN0FYVGFlRW1RQl9MMEZfaFhIeGY1OUl6Nk9aM3VURmFlVFZQNEJhU2hGU01VZ2ZOdWlX?oc=5",
+        "published": "Wed, 30 Sep 2026 12:39:54 GMT",
         "query": "Federal Reserve interest rates inflation US economy",
         "direction": "neutral",
         "reason": "中性／待確認"
@@ -69,7 +69,7 @@
       {
         "title": "AI investments keep US economic growth in gear, for now - Deloitte",
         "link": "https://news.google.com/rss/articles/CBMisAFBVV95cUxPenRYbVVidzhLTkVVbXN2VHd4VjY3ZGlZWjBFa0NCQ2xPcEhneHlWZVhud3p2cUVMcWNsdkEzLTlpcmVxREZBbDBkOGFEa0wySEx4YkdoMkdzT3N6NXRnQ19waFNqM3BCdkE1bmczY1pHNVNxQkxoRnpkMk15cERnSklGLTc0ZlZvMzFxeEEtalR1UWF3R0VWNjZCWXFqMUk0VERZWHdpaHplWTdFdmlldQ?oc=5",
-        "published": "Tue, 29 Sep 2026 07:00:00 GMT",
+        "published": "Wed, 30 Sep 2026 07:00:00 GMT",
         "query": "US CPI jobs GDP Treasury yields economy",
         "direction": "neutral",
         "reason": "中性／待確認"
@@ -83,23 +83,23 @@
         "reason": "中性／待確認"
       },
       {
-        "title": "Week Ahead for FX, Bonds: U.S. Jobs Data in Focus as Another Fed Rate Hike Looks Possible - WSJ",
-        "link": "https://news.google.com/rss/articles/CBMiwAFBVV95cUxQVmJuaDFNY3BwcS1HQmg4VjIzX3hBU0JMS3FCeDM2YnVlTm9CcGR1eE1yYzlKd1BKcVJoX2tyNTZLYmFEblhZMmZia3JoYWxmRFY5WmZfdXlvbW04cVFudlFJa0dHdTN3RFY3ZEU5SnVoMHZ0dDc5ZEd5aVlJSDBCOEFJd2RPYjlTU3p1N2NoVndLWU5pcXpQX25nQzhfdmd2ejBpYXVwS3VkVlJrdXBtZEV6SzFpS2tIVEJaUVZaWjQ?oc=5",
-        "published": "Fri, 25 Sep 2026 15:46:00 GMT",
+        "title": "Weekly market commentary - BlackRock",
+        "link": "https://news.google.com/rss/articles/CBMingFBVV95cUxQLWJDTjBBalYwVHVpc0VxV1BwRE1xeUt1RWlLQ1VJdnJQRXNnb3p6MnFNbjRBV0s0TnlldW4wSVIycFRQeVNISWJ3VV9wMWdjX1ZndE1Tc24tNzc0anNYWjl0SVBsRDhSa0dVTWlyVVYxX0w5b2JhTFB0Tm9Vb2FwYVZubTU1SVJlcy0zMEpXOEM4ZlhiSU1QazdVQVlldw?oc=5",
+        "published": "Mon, 28 Sep 2026 07:00:00 GMT",
         "query": "US CPI jobs GDP Treasury yields economy",
-        "direction": "negative",
-        "reason": "緊縮／景氣風險"
+        "direction": "neutral",
+        "reason": "中性／待確認"
       },
       {
-        "title": "The Weekly Bottom Line - TD Economics",
-        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5iS3JheUxIbE9wdXkzWk1rUkxjT1p6VTJWeW1uMVpPY1hKYTMtNFF2Qzh1ck5JNTNKVGRSWXlBOWFta2xtZ2tVUTVhT0FlUmpqX1M2UngxLXRZZw?oc=5",
-        "published": "Fri, 25 Sep 2026 07:00:00 GMT",
+        "title": "What’s happening this week in economics? - Deloitte",
+        "link": "https://news.google.com/rss/articles/CBMingFBVV95cUxNcV9VYnV0R0RPcWN0d2g1SHJIVlNmaVA1TV9nXzRKdVlFcWtSMjQ1T1B0djE4dDNRanZvSVFGX0ZBNUd6cnZkVnAtenFuMnFzdU9zYzg5cFdkTVRxU1F5YVVXVFhVWGdhd2RsTDBkNS1Xcm9ub1FnMFp5NnB3WVBYa3JJa1FVbG5IT0ZRRHphTUhtNThkenVJS1ZrdWNDdw?oc=5",
+        "published": "Tue, 29 Sep 2026 07:00:00 GMT",
         "query": "US CPI jobs GDP Treasury yields economy",
         "direction": "neutral",
         "reason": "中性／待確認"
       }
     ],
-    "updated_at": "2026-10-02T14:52:58.689107+08:00",
+    "updated_at": "2026-10-03T02:40:50.546240+08:00",
     "errors": []
   }
 }
