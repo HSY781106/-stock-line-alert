@@ -2244,5 +2244,61 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:33ac4eb87f533f19d0a14646": {
+    "ts": 1790966831.4267073,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "positive",
+          "score": 3,
+          "confidence": 0.85,
+          "policy_stage": "announced",
+          "reason": "川普投資大幅傾斜至國防領域，有利國防航太產業。",
+          "relevant": true,
+          "affected_channel": "需求",
+          "transmission": "政府資本投入→國防採購增加→國防與航太產業獲利提升",
+          "exposure": "整體國防航太板塊與大型軍工承包商"
+        },
+        {
+          "id": 1,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.75,
+          "policy_stage": "considering",
+          "reason": "推動頁岩油能源主導政策，短期增產可能壓低全球油價。",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "能源主導政策→頁岩油供給增加→油價承壓及能源股利潤收窄",
+          "exposure": "傳統石油與天然氣探勘生產產業"
+        },
+        {
+          "id": 2,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.7,
+          "policy_stage": "threat",
+          "reason": "中國稀土控制權隱憂影響川習會，供應鏈風險與談判地緣動態抵銷。",
+          "relevant": true,
+          "affected_channel": "供應鏈",
+          "transmission": "地緣政治談判→稀土出口限制疑慮→關鍵礦物與科技製造業供應鏈不確定性",
+          "exposure": "稀土磁鐵採購依賴度高的科技與車用供應鏈"
+        },
+        {
+          "id": 3,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.8,
+          "policy_stage": "considering",
+          "reason": "關稅重置與貿易談判對半導體及AI基礎設施帶來短期政策風險。",
+          "relevant": true,
+          "affected_channel": "估值",
+          "transmission": "關稅風險再起→科技供應鏈成本上升→AI基礎設施概念股估值修正",
+          "exposure": "跨國晶片製造與AI基礎設施設備供應商"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
