@@ -2188,5 +2188,61 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:3e2832ce1b3310d6c964db2f": {
+    "ts": 1790923952.8507617,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "positive",
+          "score": 3,
+          "confidence": 0.85,
+          "policy_stage": "implemented",
+          "reason": "川普投資大幅傾斜國防領域，有利軍工產業。",
+          "relevant": true,
+          "affected_channel": "需求",
+          "transmission": "政府投資增加→國防訂單上升→軍工企業獲利擴大",
+          "exposure": "國防與航太產業"
+        },
+        {
+          "id": 1,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.75,
+          "policy_stage": "considering",
+          "reason": "推動能源霸權增加頁岩油供給，壓抑油價。",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "能源主導政策→頁岩油供給增加→原油價格承壓",
+          "exposure": "傳統石油與天然氣探勘業者"
+        },
+        {
+          "id": 2,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.7,
+          "policy_stage": "considering",
+          "reason": "中國掌控稀土為長期地緣議題，會談結果未定。",
+          "relevant": true,
+          "affected_channel": "供應鏈",
+          "transmission": "稀土出口管制限制→高科技供應鏈受阻→市場觀望",
+          "exposure": "關鍵礦物與高科技製造業"
+        },
+        {
+          "id": 3,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.8,
+          "policy_stage": "considering",
+          "reason": "川習會與關稅重置增添AI基礎設施股不確定性。",
+          "relevant": true,
+          "affected_channel": "估值",
+          "transmission": "關稅風險上升→科技供應鏈成本增加→AI股估值承壓",
+          "exposure": "AI基礎設施與半導體類股"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
