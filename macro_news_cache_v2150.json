@@ -1,15 +1,7 @@
 {
-  "cached_at": 1791356705.7592435,
+  "cached_at": 1791401496.8962002,
   "data": {
     "items": [
-      {
-        "title": "US inflation rises below expectations in August, gives the Fed breathing space - Reuters",
-        "link": "https://news.google.com/rss/articles/CBMitwFBVV95cUxNSktrS2JqeGdwTmowTVBNV2lPbnZwcVdwSzJPVi1aRzZuVDVQU3RtRGZ1UExTOVJnWm9CcTNYbnFneF9wOWlCMU5MNXEwMDN4UmhVVkx2MFVWOC1EYVdyb3Y3WXNYYXhNUzZSUExKQzNZOWk4U1dRaVBMMUZBeklyT0VqNFVhbUV3RjJmbThsM3FOejFUV2lBV0ZtZjNTZjVqRFYwcGZqZWdKdjBRa3FvcmdKRTRWak0?oc=5",
-        "published": "Wed, 30 Sep 2026 12:49:00 GMT",
-        "query": "Federal Reserve interest rates inflation US economy",
-        "direction": "negative",
-        "reason": "緊縮／景氣風險"
-      },
       {
         "title": "High Interest Rates Aren’t Slowing the A.I. Boom. That’s a Problem for the Fed. - The New York Times",
         "link": "https://news.google.com/rss/articles/CBMigAFBVV95cUxNX21iaktYMmNNQ0pVZllMTXgyVVRoV1hSYTZaNUNsVkdSX1k2WmVYRmZNckNZMVFIZzZZa1RZRVZMSHQ5MHBqbmUyd2ZJV0pRVW9fSWFLOWhvdkVEZDhPTlgzSEhJX0ZiekV4S0ppOC1JSDgteHdWWVdZN09Kd2ZRNQ?oc=5",
@@ -19,20 +11,20 @@
         "reason": "中性／待確認"
       },
       {
+        "title": "Fed may skip October but pull rate hike trigger in December - Reuters",
+        "link": "https://news.google.com/rss/articles/CBMingFBVV95cUxNOVRfM1dqWHpoenJab09IVXh3am1peVNMWFFPOFhOSjl1SkI5MklDUDl6VFpkSkZxUE8tU0Q4S3R3VXNxd0t5Mlc3NGxXNTBid1N4U0czdVA2b09hVmRyT0VtaEU3M243T09TQjVTSzVMYURvSkg5WjBSc2tjVnpzM29ZMHdTMC1hUGlRUzBJRXBQdWk3bG9heTJOQjQ3QQ?oc=5",
+        "published": "Fri, 02 Oct 2026 17:56:09 GMT",
+        "query": "Federal Reserve interest rates inflation US economy",
+        "direction": "negative",
+        "reason": "緊縮／景氣風險"
+      },
+      {
         "title": "Traders now see little chance of a Fed rate hike in October after weak jobs report - CNBC",
         "link": "https://news.google.com/rss/articles/CBMilgFBVV95cUxPOU1aVUFEOV9MWl9TVVdodDl4eFoyUjgxN2tLZ1QtRWYzbEUtMEpVQll0ZkhSekJFZUFVZzdNeXVqTzdUYXI3OWNMcC1YQ19XVDN2MFNTOWQzNjFLLTBDWFVvLXlWMWZRZ1R6RTRhVVRuS0dkZnJBMTd2dWhGV2hPdUg0b3hJQkZncFhCMnljc2lwYmw3TFHSAZsBQVVfeXFMTzNmZkRlUzhSSXlhMzhWV3lyN0pyeUstczZQXy1HZFNMRUh6TjNPN2Q0bGdrU2tCZjg2YkFZN3RrdndRcEs2TlAxRVlmNlhQVldRd3VZRmtZUlZock5uWTFsQ3dXdDMycWJSbXQwTDBSYVBWa1RZTG9qRWxkQTk1R1Y1WmtuUW9DSF9tUGs0NF8xdmE2RHlYQVJidFk?oc=5",
         "published": "Fri, 02 Oct 2026 13:29:27 GMT",
         "query": "Federal Reserve interest rates inflation US economy",
         "direction": "negative",
         "reason": "緊縮／景氣風險"
-      },
-      {
-        "title": "Global growth remains solid in a challenging environment - Peterson Institute for International Economics",
-        "link": "https://news.google.com/rss/articles/CBMipAFBVV95cUxQU0NqejZ2Zzh2ek5sUE5DUkRVSXBrZFVGVzZKODJBOXhGdFlEcFRVOFgxVUhIT3FSZWNhOUMydGRiR0pYY2d0NnRSaG45c2Vybk9neWJWNVp3UEFXem1TNFN3M2tmZjdrTWJ1QnRfdzZrM0M0bGxEcGFBbFg0aEwxVXdidkRtTEdjd3RWR3g4S0RVVktxcFNZbTRQMk5xOFFUek1YUQ?oc=5",
-        "published": "Tue, 06 Oct 2026 17:05:41 GMT",
-        "query": "Federal Reserve interest rates inflation US economy",
-        "direction": "neutral",
-        "reason": "中性／待確認"
       },
       {
         "title": "Jobs report shows US unexpectedly lost jobs in February - ABC7 Los Angeles",
@@ -46,6 +38,14 @@
         "title": "Another Fed Official Suggests Next Rate Increase Can Wait - WSJ",
         "link": "https://news.google.com/rss/articles/CBMirAFBVV95cUxORTZnd1ZqTlhvYkRrdnA5dGxLSkU0LWozZzBWSFZFOVlMeU8tZ1FkdkdDYWY4Zk9UaGNaY3FERkNJQlhtZUlibnRNcHB6MXpGSHplSXBCLVRhOTBxdnY4MWVnaDkyY1ItZFJfcDVfZXpaZTJENGJmeW91d1B4WTF2RzBGN1NXVFVPWWFHNHE4MmxMRk1FNXBHbFpSU084TTZBZ2VSTmRLaDBXSTNu?oc=5",
         "published": "Thu, 01 Oct 2026 23:42:00 GMT",
+        "query": "Federal Reserve interest rates inflation US economy",
+        "direction": "neutral",
+        "reason": "中性／待確認"
+      },
+      {
+        "title": "Global growth remains solid in a challenging environment - Peterson Institute for International Economics",
+        "link": "https://news.google.com/rss/articles/CBMipAFBVV95cUxQU0NqejZ2Zzh2ek5sUE5DUkRVSXBrZFVGVzZKODJBOXhGdFlEcFRVOFgxVUhIT3FSZWNhOUMydGRiR0pYY2d0NnRSaG45c2Vybk9neWJWNVp3UEFXem1TNFN3M2tmZjdrTWJ1QnRfdzZrM0M0bGxEcGFBbFg0aEwxVXdidkRtTEdjd3RWR3g4S0RVVktxcFNZbTRQMk5xOFFUek1YUQ?oc=5",
+        "published": "Tue, 06 Oct 2026 17:05:41 GMT",
         "query": "Federal Reserve interest rates inflation US economy",
         "direction": "neutral",
         "reason": "中性／待確認"
@@ -67,17 +67,17 @@
         "reason": "中性／待確認"
       },
       {
-        "title": "The Weekly Bottom Line - TD Economics",
-        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5iS3JheUxIbE9wdXkzWk1rUkxjT1p6VTJWeW1uMVpPY1hKYTMtNFF2Qzh1ck5JNTNKVGRSWXlBOWFta2xtZ2tVUTVhT0FlUmpqX1M2UngxLXRZZw?oc=5",
-        "published": "Fri, 02 Oct 2026 07:00:00 GMT",
+        "title": "What’s happening this week in economics? - Deloitte",
+        "link": "https://news.google.com/rss/articles/CBMingFBVV95cUxNcV9VYnV0R0RPcWN0d2g1SHJIVlNmaVA1TV9nXzRKdVlFcWtSMjQ1T1B0djE4dDNRanZvSVFGX0ZBNUd6cnZkVnAtenFuMnFzdU9zYzg5cFdkTVRxU1F5YVVXVFhVWGdhd2RsTDBkNS1Xcm9ub1FnMFp5NnB3WVBYa3JJa1FVbG5IT0ZRRHphTUhtNThkenVJS1ZrdWNDdw?oc=5",
+        "published": "Mon, 05 Oct 2026 07:00:00 GMT",
         "query": "US CPI jobs GDP Treasury yields economy",
         "direction": "neutral",
         "reason": "中性／待確認"
       },
       {
-        "title": "US Market Pulse October 2026 - Goldman Sachs Asset Management",
-        "link": "https://news.google.com/rss/articles/CBMib0FVX3lxTE9KMEdjQUdsUmJtNWdoa0ZPYnZkYVJnOXJRa0RqM0xuT0lWZkZ4NlpVcC1aeGU3NjY0RmpZYmh4am1OelZGcHFnYVFIcmRLTXFBZV9YZ28wNHNHUWJKNXBPZ01MMmQxOHRuVmtydnhNWQ?oc=5",
-        "published": "Tue, 06 Oct 2026 19:32:49 GMT",
+        "title": "The Weekly Bottom Line - TD Economics",
+        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5iS3JheUxIbE9wdXkzWk1rUkxjT1p6VTJWeW1uMVpPY1hKYTMtNFF2Qzh1ck5JNTNKVGRSWXlBOWFta2xtZ2tVUTVhT0FlUmpqX1M2UngxLXRZZw?oc=5",
+        "published": "Fri, 02 Oct 2026 07:00:00 GMT",
         "query": "US CPI jobs GDP Treasury yields economy",
         "direction": "neutral",
         "reason": "中性／待確認"
@@ -91,15 +91,15 @@
         "reason": "中性／待確認"
       },
       {
-        "title": "What to Look Out for in Economic Data This Week (October 5-9) - Kiplinger",
-        "link": "https://news.google.com/rss/articles/CBMifEFVX3lxTE1MeVNwMVVnVmhvRWo4b0N4WkhCRXQxTVRtb2ZmTWhCSmd4eERsN3Nfdllwejg0eG5ueFFCRUdPTzVUaXh4dEFZaWJqN3FFZnlFWTBlZ2ZvVkFFRzVScTR3TXRhZGl6MHp2RUF1clppVDRvR1lveC1FaXNCeXQ?oc=5",
-        "published": "Fri, 02 Oct 2026 14:50:46 GMT",
+        "title": "US Market Pulse October 2026 - Goldman Sachs Asset Management",
+        "link": "https://news.google.com/rss/articles/CBMib0FVX3lxTE9KMEdjQUdsUmJtNWdoa0ZPYnZkYVJnOXJRa0RqM0xuT0lWZkZ4NlpVcC1aeGU3NjY0RmpZYmh4am1OelZGcHFnYVFIcmRLTXFBZV9YZ28wNHNHUWJKNXBPZ01MMmQxOHRuVmtydnhNWQ?oc=5",
+        "published": "Tue, 06 Oct 2026 19:32:49 GMT",
         "query": "US CPI jobs GDP Treasury yields economy",
         "direction": "neutral",
         "reason": "中性／待確認"
       }
     ],
-    "updated_at": "2026-10-07T15:05:06.215198+08:00",
+    "updated_at": "2026-10-08T03:31:37.456782+08:00",
     "errors": []
   }
 }
