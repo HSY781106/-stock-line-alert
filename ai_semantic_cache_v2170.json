@@ -2432,5 +2432,61 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:1ed1c9be05e64ed01e891e75": {
+    "ts": 1791493359.4236772,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.8,
+          "policy_stage": "unknown",
+          "reason": "川普大量投資Meta及SpaceX債務，展現對科技與太空產業之信心。",
+          "relevant": true,
+          "affected_channel": "估值",
+          "transmission": "政治人物投資→提升市場信心→利好太空與科技產業",
+          "exposure": "美股大盤、太空與科技類股"
+        },
+        {
+          "id": 1,
+          "direction": "positive",
+          "score": 3,
+          "confidence": 0.85,
+          "policy_stage": "announced",
+          "reason": "國防造船廠獲巨額資金挹注與川普造訪，強化國防預算支持預期。",
+          "relevant": true,
+          "affected_channel": "需求",
+          "transmission": "政府資金挹注與參訪→增加國防訂單→造福國防軍工產業",
+          "exposure": "國防造船及航太軍工產業"
+        },
+        {
+          "id": 2,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.75,
+          "policy_stage": "considering",
+          "reason": "前頁岩油高層推動能源霸權願景，利好傳統水力壓裂及油氣開發。",
+          "relevant": true,
+          "affected_channel": "需求",
+          "transmission": "政策推動能源霸權→放寬監管與增加許可→傳統能源業者受益",
+          "exposure": "美國傳統頁岩油氣與能源產業"
+        },
+        {
+          "id": 3,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.7,
+          "policy_stage": "threat",
+          "reason": "中國持續掌握稀土主導權，增加川習會與關鍵礦物供應鏈不確定性。",
+          "relevant": true,
+          "affected_channel": "供應鏈",
+          "transmission": "中國掌控稀土出口→供應鏈瓶頸風險增加→影響下游高科技與地緣政治市場",
+          "exposure": "關鍵礦物及高科技製造業"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
