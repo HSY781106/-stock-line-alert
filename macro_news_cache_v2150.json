@@ -1,15 +1,7 @@
 {
-  "cached_at": 1791401496.8962002,
+  "cached_at": 1791420267.756966,
   "data": {
     "items": [
-      {
-        "title": "High Interest Rates Aren’t Slowing the A.I. Boom. That’s a Problem for the Fed. - The New York Times",
-        "link": "https://news.google.com/rss/articles/CBMigAFBVV95cUxNX21iaktYMmNNQ0pVZllMTXgyVVRoV1hSYTZaNUNsVkdSX1k2WmVYRmZNckNZMVFIZzZZa1RZRVZMSHQ5MHBqbmUyd2ZJV0pRVW9fSWFLOWhvdkVEZDhPTlgzSEhJX0ZiekV4S0ppOC1JSDgteHdWWVdZN09Kd2ZRNQ?oc=5",
-        "published": "Mon, 05 Oct 2026 15:27:51 GMT",
-        "query": "Federal Reserve interest rates inflation US economy",
-        "direction": "neutral",
-        "reason": "中性／待確認"
-      },
       {
         "title": "Fed may skip October but pull rate hike trigger in December - Reuters",
         "link": "https://news.google.com/rss/articles/CBMingFBVV95cUxNOVRfM1dqWHpoenJab09IVXh3am1peVNMWFFPOFhOSjl1SkI5MklDUDl6VFpkSkZxUE8tU0Q4S3R3VXNxd0t5Mlc3NGxXNTBid1N4U0czdVA2b09hVmRyT0VtaEU3M243T09TQjVTSzVMYURvSkg5WjBSc2tjVnpzM29ZMHdTMC1hUGlRUzBJRXBQdWk3bG9heTJOQjQ3QQ?oc=5",
@@ -17,6 +9,14 @@
         "query": "Federal Reserve interest rates inflation US economy",
         "direction": "negative",
         "reason": "緊縮／景氣風險"
+      },
+      {
+        "title": "High Interest Rates Aren’t Slowing the A.I. Boom. That’s a Problem for the Fed. - The New York Times",
+        "link": "https://news.google.com/rss/articles/CBMigAFBVV95cUxNX21iaktYMmNNQ0pVZllMTXgyVVRoV1hSYTZaNUNsVkdSX1k2WmVYRmZNckNZMVFIZzZZa1RZRVZMSHQ5MHBqbmUyd2ZJV0pRVW9fSWFLOWhvdkVEZDhPTlgzSEhJX0ZiekV4S0ppOC1JSDgteHdWWVdZN09Kd2ZRNQ?oc=5",
+        "published": "Mon, 05 Oct 2026 15:27:51 GMT",
+        "query": "Federal Reserve interest rates inflation US economy",
+        "direction": "neutral",
+        "reason": "中性／待確認"
       },
       {
         "title": "Traders now see little chance of a Fed rate hike in October after weak jobs report - CNBC",
@@ -27,17 +27,17 @@
         "reason": "緊縮／景氣風險"
       },
       {
-        "title": "Jobs report shows US unexpectedly lost jobs in February - ABC7 Los Angeles",
-        "link": "https://news.google.com/rss/articles/CBMizgdBVV95cUxQclMzZVFJY1JHLVRQM0xfQktFTERjTEpaZ0pWMlRCRDlxckNMZXJCNzdUM1E4X0h0dy1VOHoxUmJQaTZZNWktTjZwOFFrM3lQb05xcDE0RW1RMGx0OFkwcV9DNG9pRzN0MUtNUmREX3VQNzgtOUp6VU53b3MySHc5TElDOVhBUWIyMlY5bkpTMFhwNEgzNWFTcU9RSHJLaXVkOGxFa1NWTWdsMEhUbVJ3QXRuZ0JNM3dSai1VbXZLc0NBYkNWVzd0SWpnMkFDSmRONG51Y3dlbmdoTzZWM0ZFc3JhM1pKWHAxckNkMmlUYTBWYkRaVHpjbFRDWURWRFZ2TlNQREl5bEQtNjJLWEpxN0RZUG9kQy13Y0xxSDloUWtyalFXQUJtMURlb0VGLTRZbGhrd2lndV96OXlaNk1hVGVaRnhBQ1lTZkw3Vk0tUW5tSGFJVlk4c0NFZ1h2S3VvMk1SVmtscU1FM19ReG9neWFCNDF6UFRqTzdLTml1VTM5UGFpZmcxNEFFQnROcGdBRUI1d3RENThyaGVwSXR6S2gzRnphY1hpSkNCTG1kU0llbllaM0xSVHJ4ZFc5bEZoQ2ptR003dk14UHVXSlBfeHo3dUxuMVhCaUxjZWEwNm8zeEliMGJIX01pMVZ1b1o0bkN5bWlvaHVTZVhzWFU0RkM2R2dUYS1MUWFjY1h2SEt6dF9waGdDOXNXTTkzQk9ZT1RuZHJ3RDBlTEhQQ0hqMHdpNmt6WnZLWHd1Vll4NjhBSkZnR2lKQzR3Y0VnTHdiQzBROWxaZ0FjN0FCQjJUX2hodHdXRFdQM28xZjJFQmRoRVlKUHZabDdrUlBhaXFjRURhaTVXZWZzMUhCVkhQNUtKa3lxeXVfRlFET2JjczZzNHEzUmtzOHZ1YlgzSXg2d0pYQzJKSF8xNm9ERnVmVWE2NFlSX2d3QlVZOTA5OF9qNGFlUUxhMG1fR0hLeTU3TmRUanRLNG9rRU9ENHg4eHdyd0Q3RUVsbVExTEdEeU5fQjlYbGxaM3lrQU9jT21zZDdsQWRBLUlpcWh6Z3NHYi05Z3FIdkRaSFhHQ2pxSGR1UXR1ZHczTzdPN3FUNnk3bXFzS21jZVZabUw0Z19EOFJEZUJNUWl1b3k1QWxZUzJDMmkzMV82UXFHSDZCSUtseExDMnRJenFQd2kxYUNYQ0lXTm9JbElJeVkybU1ManJtdFBRWkNXeUZSOTZhVGhEQ0VnejBjZno4emU3ZEpnOTAwQ3dtaGtjaFdQSDRONXJraS11c1I4aWl4S0JfQQ?oc=5",
-        "published": "Mon, 05 Oct 2026 22:22:18 GMT",
+        "title": "Fed Minutes Signal Further Rate Increase This Year, but No Urgency for October Hike - WSJ",
+        "link": "https://news.google.com/rss/articles/CBMi0AFBVV95cUxOR2tScE5NcWVPRHZQczVlWmRZalNkYW5pT0VLYWxPT2JJZS0yTHN0NWZhM2dmSlIxRVBNbjZyRnJRcXJXYk9ycFlZX0EwQWF2OWFzNG5TQ0FvblZRQ0djbFE2QWJVT0RzUExlZGx6VTF3YTZsdDBuVGFDRDZrVzZuMnZkZ25RZnhLb2JsVnFEZHRjRGp6YVhQVE9xXzZjWXZDbTNfNlpPV19nWkxLY09NanZQM2hlNXdpR0w4OXZCNi03Z0I2bmdnenk3WDNpY2lM?oc=5",
+        "published": "Wed, 07 Oct 2026 18:24:00 GMT",
         "query": "Federal Reserve interest rates inflation US economy",
         "direction": "neutral",
         "reason": "中性／待確認"
       },
       {
-        "title": "Another Fed Official Suggests Next Rate Increase Can Wait - WSJ",
-        "link": "https://news.google.com/rss/articles/CBMirAFBVV95cUxORTZnd1ZqTlhvYkRrdnA5dGxLSkU0LWozZzBWSFZFOVlMeU8tZ1FkdkdDYWY4Zk9UaGNaY3FERkNJQlhtZUlibnRNcHB6MXpGSHplSXBCLVRhOTBxdnY4MWVnaDkyY1ItZFJfcDVfZXpaZTJENGJmeW91d1B4WTF2RzBGN1NXVFVPWWFHNHE4MmxMRk1FNXBHbFpSU084TTZBZ2VSTmRLaDBXSTNu?oc=5",
-        "published": "Thu, 01 Oct 2026 23:42:00 GMT",
+        "title": "Jobs report shows US unexpectedly lost jobs in February - ABC7 Los Angeles",
+        "link": "https://news.google.com/rss/articles/CBMizgdBVV95cUxQclMzZVFJY1JHLVRQM0xfQktFTERjTEpaZ0pWMlRCRDlxckNMZXJCNzdUM1E4X0h0dy1VOHoxUmJQaTZZNWktTjZwOFFrM3lQb05xcDE0RW1RMGx0OFkwcV9DNG9pRzN0MUtNUmREX3VQNzgtOUp6VU53b3MySHc5TElDOVhBUWIyMlY5bkpTMFhwNEgzNWFTcU9RSHJLaXVkOGxFa1NWTWdsMEhUbVJ3QXRuZ0JNM3dSai1VbXZLc0NBYkNWVzd0SWpnMkFDSmRONG51Y3dlbmdoTzZWM0ZFc3JhM1pKWHAxckNkMmlUYTBWYkRaVHpjbFRDWURWRFZ2TlNQREl5bEQtNjJLWEpxN0RZUG9kQy13Y0xxSDloUWtyalFXQUJtMURlb0VGLTRZbGhrd2lndV96OXlaNk1hVGVaRnhBQ1lTZkw3Vk0tUW5tSGFJVlk4c0NFZ1h2S3VvMk1SVmtscU1FM19ReG9neWFCNDF6UFRqTzdLTml1VTM5UGFpZmcxNEFFQnROcGdBRUI1d3RENThyaGVwSXR6S2gzRnphY1hpSkNCTG1kU0llbllaM0xSVHJ4ZFc5bEZoQ2ptR003dk14UHVXSlBfeHo3dUxuMVhCaUxjZWEwNm8zeEliMGJIX01pMVZ1b1o0bkN5bWlvaHVTZVhzWFU0RkM2R2dUYS1MUWFjY1h2SEt6dF9waGdDOXNXTTkzQk9ZT1RuZHJ3RDBlTEhQQ0hqMHdpNmt6WnZLWHd1Vll4NjhBSkZnR2lKQzR3Y0VnTHdiQzBROWxaZ0FjN0FCQjJUX2hodHdXRFdQM28xZjJFQmRoRVlKUHZabDdrUlBhaXFjRURhaTVXZWZzMUhCVkhQNUtKa3lxeXVfRlFET2JjczZzNHEzUmtzOHZ1YlgzSXg2d0pYQzJKSF8xNm9ERnVmVWE2NFlSX2d3QlVZOTA5OF9qNGFlUUxhMG1fR0hLeTU3TmRUanRLNG9rRU9ENHg4eHdyd0Q3RUVsbVExTEdEeU5fQjlYbGxaM3lrQU9jT21zZDdsQWRBLUlpcWh6Z3NHYi05Z3FIdkRaSFhHQ2pxSGR1UXR1ZHczTzdPN3FUNnk3bXFzS21jZVZabUw0Z19EOFJEZUJNUWl1b3k1QWxZUzJDMmkzMV82UXFHSDZCSUtseExDMnRJenFQd2kxYUNYQ0lXTm9JbElJeVkybU1ManJtdFBRWkNXeUZSOTZhVGhEQ0VnejBjZno4emU3ZEpnOTAwQ3dtaGtjaFdQSDRONXJraS11c1I4aWl4S0JfQQ?oc=5",
+        "published": "Mon, 05 Oct 2026 22:22:18 GMT",
         "query": "Federal Reserve interest rates inflation US economy",
         "direction": "neutral",
         "reason": "中性／待確認"
@@ -51,12 +51,12 @@
         "reason": "中性／待確認"
       },
       {
-        "title": "Chorus of Fed officials warn inflation is still too high, signaling more work to do on interest rates - Yahoo Finance",
-        "link": "https://news.google.com/rss/articles/CBMi9wFBVV95cUxPMjRpUHIyVERBUjFYOERwVGV0Qzd6OVZNLWxZVDRWQnBIOGZ2ZUZiMzg4MUV1OExVUkNqdGZQb3d2YmhjNHJtS0hiMExoX1lCZVJaLTVJVXZiSk0zMDFWekFqbWZoVTRiOVFsVlpWeHFYblZzbHdGYmRvalQtQWJfSlNHN0NVRDlCeFhkSlJLb2hvbFpqcElUU1E5ckRtMUlBTWd1eWJWVDQ5VTNLWl9HYzhteGFld21lb1R4a2pka25nVHEza2ZWQzlwMEZoZnNpUmd5Rm1XZE9BV2tyVmlXNFctZUZIcmFBTHJUTXl3UVlxdzZaV0Nr?oc=5",
-        "published": "Thu, 01 Oct 2026 15:19:47 GMT",
+        "title": "Fed Telegraphs Another Interest Rate Hike This Year | Economy | U.S. News - U.S. News & World Report",
+        "link": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxOOEhjMDU4NFJob2h1bXdWZUlrRE52N190X0FXTnpUQ3JYZU16dWNYYVhyOWdHTF9TZE50VXR0X0otWHlBdklleVJlNmh4aWdYWXBLYXF0QkM2MHZtSFpLTmM1Zl9KS1FkRF9uQms1SlF5Y19ScmZSbnFJbHhxZEx0NlVRSDlOYkpFblhCMkZHVUNzWGZtdkJuNGhuZjhPV0JYUGVWeXNmdjV6WlU?oc=5",
+        "published": "Wed, 07 Oct 2026 21:02:01 GMT",
         "query": "Federal Reserve interest rates inflation US economy",
-        "direction": "neutral",
-        "reason": "中性／待確認"
+        "direction": "negative",
+        "reason": "緊縮／景氣風險"
       },
       {
         "title": "What a hiring slowdown signals about the state of the U.S. economy - PBS",
@@ -83,23 +83,23 @@
         "reason": "中性／待確認"
       },
       {
-        "title": "Weekly market commentary - BlackRock",
-        "link": "https://news.google.com/rss/articles/CBMiogFBVV95cUxORkJPa3I0ekJyVEI0RFJhY210TmplVHJZQ0xJNy1qenNkc0lMMHk0TmZwdDV1TEVZNmJoV3dfVlNTT3UyZHE5Q01SdmQ4eDd4WjAzZVhFMFB3VUd5QjlYXzZ5MWFRYzdIQVRVM1JMZXNyQ05aTExrejM4cHdBSktKSlJOOWxkY0V4YkNRRDZZTzlDZUYzZHlUWXdhTFUxNXJSNXc?oc=5",
-        "published": "Sun, 04 Oct 2026 07:00:00 GMT",
-        "query": "US CPI jobs GDP Treasury yields economy",
-        "direction": "neutral",
-        "reason": "中性／待確認"
-      },
-      {
         "title": "US Market Pulse October 2026 - Goldman Sachs Asset Management",
         "link": "https://news.google.com/rss/articles/CBMib0FVX3lxTE9KMEdjQUdsUmJtNWdoa0ZPYnZkYVJnOXJRa0RqM0xuT0lWZkZ4NlpVcC1aeGU3NjY0RmpZYmh4am1OelZGcHFnYVFIcmRLTXFBZV9YZ28wNHNHUWJKNXBPZ01MMmQxOHRuVmtydnhNWQ?oc=5",
         "published": "Tue, 06 Oct 2026 19:32:49 GMT",
         "query": "US CPI jobs GDP Treasury yields economy",
         "direction": "neutral",
         "reason": "中性／待確認"
+      },
+      {
+        "title": "Weekly market commentary - BlackRock",
+        "link": "https://news.google.com/rss/articles/CBMingFBVV95cUxQLWJDTjBBalYwVHVpc0VxV1BwRE1xeUt1RWlLQ1VJdnJQRXNnb3p6MnFNbjRBV0s0TnlldW4wSVIycFRQeVNISWJ3VV9wMWdjX1ZndE1Tc24tNzc0anNYWjl0SVBsRDhSa0dVTWlyVVYxX0w5b2JhTFB0Tm9Vb2FwYVZubTU1SVJlcy0zMEpXOEM4ZlhiSU1QazdVQVlldw?oc=5",
+        "published": "Mon, 05 Oct 2026 07:00:00 GMT",
+        "query": "US CPI jobs GDP Treasury yields economy",
+        "direction": "neutral",
+        "reason": "中性／待確認"
       }
     ],
-    "updated_at": "2026-10-08T03:31:37.456782+08:00",
+    "updated_at": "2026-10-08T08:44:28.288684+08:00",
     "errors": []
   }
 }
