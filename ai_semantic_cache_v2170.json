@@ -2376,5 +2376,61 @@
       ]
     },
     "provider": "groq"
+  },
+  "trump_v21826:__MARKET__:09baaba287e061ffdcbb324a": {
+    "ts": 1791488074.799452,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "positive",
+          "score": 1,
+          "confidence": 0.7,
+          "policy_stage": "implemented",
+          "reason": "川普排除期中選舉前攻擊伊朗，減輕地緣政治短期風險，對整體市場情緒略有支撐。",
+          "relevant": true,
+          "affected_channel": "估值",
+          "transmission": "排除軍事衝突→地緣風險溢價下降→市場信心穩定",
+          "exposure": "整體美股市場估值與風險偏好"
+        },
+        {
+          "id": 1,
+          "direction": "positive",
+          "score": 1,
+          "confidence": 0.7,
+          "policy_stage": "threat",
+          "reason": "排除對伊朗軍事行動降低短期突發戰爭風險，有助於大盤整體穩定。",
+          "relevant": true,
+          "affected_channel": "估值",
+          "transmission": "避開中東戰事升級→市場不確定性降低→支撐大盤整體風險偏好",
+          "exposure": "整體美股市場"
+        },
+        {
+          "id": 2,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.6,
+          "policy_stage": "considering",
+          "reason": "加拿大考慮核子選項反制川普，但文章指出執行難度高，對市場整體影響有限。",
+          "relevant": true,
+          "affected_channel": "供應鏈",
+          "transmission": "關稅報復威脅→雙邊貿易不確定性→大盤觀望",
+          "exposure": "整體美股市場"
+        },
+        {
+          "id": 3,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.85,
+          "policy_stage": "announced",
+          "reason": "馬里蘭州國防造船廠獲得66億美元投資，展現軍工國防政策支持強度。",
+          "relevant": true,
+          "affected_channel": "需求",
+          "transmission": "政府國防預算挹注→軍工產業訂單增加→帶動國防板塊及整體市場成長",
+          "exposure": "美國國防工業與整體市場"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
