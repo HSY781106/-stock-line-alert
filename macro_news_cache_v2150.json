@@ -1,5 +1,5 @@
 {
-  "cached_at": 1791507658.2795415,
+  "cached_at": 1791530207.5404725,
   "data": {
     "items": [
       {
@@ -75,14 +75,6 @@
         "reason": "中性／待確認"
       },
       {
-        "title": "The Weekly Bottom Line - TD Economics",
-        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5iS3JheUxIbE9wdXkzWk1rUkxjT1p6VTJWeW1uMVpPY1hKYTMtNFF2Qzh1ck5JNTNKVGRSWXlBOWFta2xtZ2tVUTVhT0FlUmpqX1M2UngxLXRZZw?oc=5",
-        "published": "Fri, 02 Oct 2026 07:00:00 GMT",
-        "query": "US CPI jobs GDP Treasury yields economy",
-        "direction": "neutral",
-        "reason": "中性／待確認"
-      },
-      {
         "title": "Weekly market commentary - BlackRock",
         "link": "https://news.google.com/rss/articles/CBMiogFBVV95cUxORkJPa3I0ekJyVEI0RFJhY210TmplVHJZQ0xJNy1qenNkc0lMMHk0TmZwdDV1TEVZNmJoV3dfVlNTT3UyZHE5Q01SdmQ4eDd4WjAzZVhFMFB3VUd5QjlYXzZ5MWFRYzdIQVRVM1JMZXNyQ05aTExrejM4cHdBSktKSlJOOWxkY0V4YkNRRDZZTzlDZUYzZHlUWXdhTFUxNXJSNXc?oc=5",
         "published": "Sun, 04 Oct 2026 07:00:00 GMT",
@@ -97,9 +89,17 @@
         "query": "US CPI jobs GDP Treasury yields economy",
         "direction": "neutral",
         "reason": "中性／待確認"
+      },
+      {
+        "title": "Empowering Investor Success - Morningstar",
+        "link": "https://news.google.com/rss/articles/CBMie0FVX3lxTE12d2ZPNGtUQzVBdkpPYl8tNjlBVGY3bXV5VjI1anRCYnFBTms1Q2s1X1Y3LUVjSXA2RVNIc0JQT2tSb2lqV25QYUhEQ0JLQzBPek9CYV9aTzUwUTZUbkVzdEZubHpwWk1VQTJnUXZaVmwyMnU0QWd0RkI4QQ?oc=5",
+        "published": "Tue, 06 Oct 2026 07:00:00 GMT",
+        "query": "US CPI jobs GDP Treasury yields economy",
+        "direction": "neutral",
+        "reason": "中性／待確認"
       }
     ],
-    "updated_at": "2026-10-09T09:00:58.711704+08:00",
+    "updated_at": "2026-10-09T15:16:48.005620+08:00",
     "errors": []
   }
 }

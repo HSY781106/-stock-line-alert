@@ -1,7 +1,7 @@
 {
   "2330": {
-    "fetched_at": "2026-10-09T03:24:54.946739+08:00",
-    "adjustment": -5,
+    "fetched_at": "2026-10-09T15:16:50.592325+08:00",
+    "adjustment": -4,
     "events": [
       {
         "title": "2330 台積電 - 台股盤中》台積電、聯發科疲軟無力指數一度大跌逾600點 - 股市爆料同學會 - CMoney",
@@ -9,7 +9,7 @@
         "date": "2026-10-07T12:27:57+08:00",
         "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE94WngzQmF5Z3FreUN0Rm1lT3FKRWhNMFdlMEJHMDlORHljV0RpY0toLTdzbFFqdWs3MnAwVFBIRXZBTTZBc2hqMFY3U2VJU1FKMUE3eUFXQWk?oc=5",
         "raw_adjustment": -5,
-        "adjustment": -5,
+        "adjustment": -4,
         "label": "股價重大下跌",
         "status": "重大負面事件"
       },
@@ -64,20 +64,20 @@
         "status": ""
       },
       {
-        "title": "0050、台積電（2330）讓他3年賺4000萬！卻照常上班：錢好像沒改變什麼 - UDN",
-        "source": "UDN",
-        "date": "2026-10-06T08:28:38+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiU0FVX3lxTE9xYWdOa2NxbktYc0xpQ0hvTFA0TE1YV1NGb1pmRVRYNE1WVjFweF9HVENTc3NWNVlTcldxX1VyaFhBT0p6a1gtNWluMHdzdVZIVVVB0gFYQVVfeXFMTlV0b1p3cDJkai1INTJ1bFBIajVCcU5iQnZMVlVudERfT2EzbS0xaUY3TU92M1MwLWRtYy1TQ0NkZVNSVjVCYTNseFQ4NzVZTlpMMnFQYXlMZQ?oc=5",
+        "title": "2330 台積電 - 元大投顧指台積電先進製程近期無對手，維持買進給目標價到3,500 元 - 股市爆料同學會 - CMoney",
+        "source": "CMoney",
+        "date": "2026-10-06T14:04:17+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTFBNYlItMFJ4ek1HZjZTZW1XYW9UeDdxMlkyay1Qc2Zwd0NmR2o3b2ZoZzZXUWtUMjBjVDNNaTNMNUlaTkVFeDB6RFZDRnhnenhnM25GZ3ZfNWM?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
         "status": ""
       },
       {
-        "title": "2330 台積電 - 快訊／台股拚5萬！大盤漲256點衝至49968點台積電創高至2585 - 股市爆料同學會 - CMoney",
+        "title": "2330 台積電 - 蘇姿丰「旋風訪台」加碼投資6大談話重點一次看- 股市爆料同學會 - CMoney",
         "source": "CMoney",
-        "date": "2026-10-06T09:39:07+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE5OWk5hcmN6UUl5d0NraHJTRkxkNDVZYS11Y091MTJVRm5zbUE2WlRYbWhmOUlqa3FKQk1SSm1OUzU2aFlKeWxpQmVCNEdDT2ZqdmdfVlM4Wjk?oc=5",
+        "date": "2026-10-06T14:23:44+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE5HaTVoc0l6NW00a1NEdkdPSEdDRjhmb19fbWI5c2M1bno4a094ZzZBdi1HRXMtUDU2eE9BXzhIN0toQ3lTY2hxd05OaFo2Y3hIRWw1R0ppZjk?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
@@ -88,7 +88,7 @@
     "lookback_days": 14
   },
   "3711": {
-    "fetched_at": "2026-10-09T03:25:00.745850+08:00",
+    "fetched_at": "2026-10-09T15:16:55.491506+08:00",
     "adjustment": 0,
     "events": [
       {
@@ -112,10 +112,10 @@
         "status": ""
       },
       {
-        "title": "3711 日月光投控- 先進製程，瓶頸在封測. - 股市爆料同學會 - CMoney",
+        "title": "3711 日月光投控- 11家封測大廠-新產能/擴廠時間一欄表- 股市爆料同學會 - CMoney",
         "source": "CMoney",
-        "date": "2026-10-01T21:58:43+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE5BQjRJZXMxUE1XX0ZIaDZfVlRNRDhjVDVFRmptTDhLSFlwbmVaLThWLUhpTDlHa1laaVc5TTNnNGx5X0RYY1RfY3plSURSRFY1c0JEMUdOelY?oc=5",
+        "date": "2026-09-30T06:53:11+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE9kaU1PUUt3VW40RnlGZ3lWLVVJUE5YM3BvZGZPekp5bG00cjFmaFQ5dDBBeWhNUzhBcFhDMFByamxCeVJOVkpRdnZ5cjljOGZweklpcjUxcEs?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
@@ -142,16 +142,6 @@
         "status": ""
       },
       {
-        "title": "3711 日月光投控- 下周一760起跳,衝到漲停板應該也不意外- 股市爆料同學會 - CMoney",
-        "source": "CMoney",
-        "date": "2026-10-03T00:20:00+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE13Y1FYdnNSNXJEREFTUDJ5YmhzXzMzQUczdXRlTmQtOGNkdmJBSnF2bjA0TkFXZTlveVU4MktGWE5jbGdvX0NheFR6NGlEMTd4dmJNSXJabjU?oc=5",
-        "raw_adjustment": 0,
-        "adjustment": 0,
-        "label": "",
-        "status": ""
-      },
-      {
         "title": "日月光投控：矽品精密工業9/9~10/5向盟立取得營業用機器設備7批，計約20.3億元 - 台視全球資訊網",
         "source": "台視全球資訊網",
         "date": "2026-10-06T04:25:49+08:00",
@@ -162,10 +152,20 @@
         "status": ""
       },
       {
-        "title": "日月光投控：矽品精密工業8/10~10/5取得廠務工程，計約9.53億元 - 台視全球資訊網",
-        "source": "台視全球資訊網",
-        "date": "2026-10-06T10:48:45+08:00",
-        "link": "https://news.google.com/rss/articles/CBMinAFBVV95cUxOcGJfYkEweE5BeWRUWjFhQzMxRWpweWZfRXd2TkJpSmR1U2VLRmplZ1BtdkNpR3pPNnYzc0xRck80dUNoQURvRkQtZTFoVld2eGpzbmY2aHFHR1pheG4wY0kya2hGYVhlQ3g0dlIxWHNPR2Jnc0lSYUJneldTcmxaMTM4QXNrSW9EbWJYQTlVMUh0X2p6d0taWUFYVlg?oc=5",
+        "title": "日月光投資控股股份有限公司 | 3711.TW 股價走勢與即時報價 - BigGo 財經",
+        "source": "BigGo 財經",
+        "date": "2026-10-06T15:16:23+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiVEFVX3lxTE5rcDdudXVRTEdqQl90eU9UVlFTREdoMml5WmYwZTJ4NHRNTGJiRi1IcG8zZmQ3SXphZTd2cUhLNGt4MDg4Q1ZqVHU1ZTNYa3l6YWV0RQ?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "3711 日月光投控- 測跳空低點729，守730也守5ma - 股市爆料同學會 - CMoney",
+        "source": "CMoney",
+        "date": "2026-10-07T10:21:03+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTFAxQkRTZG51UUxKN0NkdGdqVUQzQ0RkLTVRMF9CTENwUUhYR0tRYWJDQl9jMHN1V0lGMUstRHBwbHlpNk9PakYweWNlU05PMXVWQW11dFctaC0?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
@@ -229,7 +229,7 @@
     "lookback_days": 14
   },
   "0050": {
-    "fetched_at": "2026-10-09T03:24:22.759434+08:00",
+    "fetched_at": "2026-10-09T15:16:22.456232+08:00",
     "adjustment": 0,
     "events": [
       {
@@ -283,6 +283,16 @@
         "status": ""
       },
       {
+        "title": "0050 元大台灣50 - 上市外資賣超一週以來排行- 股市爆料同學會 - CMoney",
+        "source": "CMoney",
+        "date": "2026-10-02T17:03:44+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE9JcmN0Qnlyc1A3ZWZuN1p2ZFNMWDc2cFpOS3IxNUx5cU1wbnR6bm1Zekd6UXp4Q05CNGNOT2JRWU8yMk11dnRVVU13N0FtcWZrQU5lZlRvVi0?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
         "title": "【零股排行榜】盤中零股成交量TOP 20｜3481 群創、0050 元大台灣50、2409 友達、2330 台積電、3105 穩懋 - 永豐金證券",
         "source": "永豐金證券",
         "date": "2026-10-02T19:44:05+08:00",
@@ -301,23 +311,13 @@
         "adjustment": 0,
         "label": "",
         "status": ""
-      },
-      {
-        "title": "【零股排行榜】盤中零股成交量TOP 20｜00919 群益台灣精選高息、2327 國巨*、0050 元大台灣50、3481 群創、2409 友達 (1001)｜豐雲學堂2026 年 10 月 - 永豐金證券",
-        "source": "永豐金證券",
-        "date": "2026-10-02T19:44:43+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiqwRBVV95cUxQNHdpX2ZnQlc3UDAzdGx4WU9ObEgwa2FwVm1NcFc4UDRvLW5val9yRHQ2RU1TOU5ac0hfZ3RtZWtBQkhXbkQzeWRQdFF0MWJfM2NNSV9hSGM0QlRZZElsSmdCRkw2SUZQRXJwaTBTN1U0Qm5vNWUxbVo1d3FZN0VrV0l2Z0ZEUkdTMDRsNS0xanVqREhucDJqdHdlOHhfbUhkSzNwR2ZjcERCLUlLczEyYjVvc242YXNhZVZ3dk5vdE1DU2N1ckIyc2M0eE50RVFwa1dtb2tKTHhrdkw2MlNvOS1GampDLVhkMW83YXd0eFB1MzUyRWZ1QlR6bWdFM0dXMmdrMXVfeHMzbTB2QUlUREhJVnh0MXZuWWc5ci01NV90b0ZwSVFlS0RYOEQ5NjZFYXpJTDFxWVVyRTc4MWhPV3NqOEZKVVhxOWJjbXVEeVp3YWh2UUw",
-        "raw_adjustment": 0,
-        "adjustment": 0,
-        "label": "",
-        "status": ""
       }
     ],
     "source": "Google News RSS",
     "lookback_days": 14
   },
   "QQQ": {
-    "fetched_at": "2026-10-09T03:25:07.496202+08:00",
+    "fetched_at": "2026-10-09T15:17:02.621835+08:00",
     "adjustment": 0,
     "events": [
       {
@@ -343,7 +343,7 @@
       {
         "title": "【即時新聞】最新牛市分析出爐！長期利率回穩後，Invesco QQQ Trust(QQQ)將成領漲美股關鍵 - CMoney投資網誌",
         "source": "CMoney投資網誌",
-        "date": "2026-09-29T00:42:13+08:00",
+        "date": "2026-09-29T15:00:00+08:00",
         "link": "https://news.google.com/rss/articles/CBMikAFBVV95cUxNTnBMZXhHbGpsdkFSM1ljRm1zVldJUm80bE9fdTBCMWZDZlBRX3NVTjBOdU9ucFdxc0JyWmc5bGc1VEEyQ3lHU0J6WGJEaUx0ekVELVdYdWk4YkszMWE5LW44WS1yb2phTXVuQ3l1T0JqeWpYTGtyeWJYVHQ5TWxvRXRiZklWQ1ZheEhVNHRncXg?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
