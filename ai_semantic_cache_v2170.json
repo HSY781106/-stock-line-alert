@@ -2544,5 +2544,61 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:c9416cb05242f7ed2e9b36bc": {
+    "ts": 1791841873.0050843,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.8,
+          "policy_stage": "considering",
+          "reason": "潛在關稅政策擬擴大貿易戰，增加半導體供應鏈成本與不確定性。",
+          "relevant": true,
+          "affected_channel": "成本與供應鏈",
+          "transmission": "關稅計畫擬議→半導體供應鏈成本增加→整體晶片市場受壓",
+          "exposure": "半導體產業與相關科技股"
+        },
+        {
+          "id": 1,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.7,
+          "policy_stage": "announced",
+          "reason": "川普購買公司債且白宮公布新太空政策，有利太空產業發展。",
+          "relevant": true,
+          "affected_channel": "需求與政策支持",
+          "transmission": "太空政策公布→政府採購與政策紅利→太空與衛星產業受益",
+          "exposure": "太空與衛星概念股／SpaceX供應鏈"
+        },
+        {
+          "id": 2,
+          "direction": "positive",
+          "score": 1,
+          "confidence": 0.6,
+          "policy_stage": "unknown",
+          "reason": "川普投資相關企業債券，帶來市場正面關注與資金信心。",
+          "relevant": true,
+          "affected_channel": "市場估值與信心",
+          "transmission": "個人投資揭露→市場情緒提升→相關巨頭及太空產業受惠",
+          "exposure": "大型科技股(Meta)與太空產業"
+        },
+        {
+          "id": 3,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.8,
+          "policy_stage": "announced",
+          "reason": "造船廠獲得66億美元資金挹注及政要造訪，利好國防造船業。",
+          "relevant": true,
+          "affected_channel": "需求與資本支出",
+          "transmission": "政府資金挹注國防造船廠→訂單能見度提升→國防軍工產業受益",
+          "exposure": "國防造船業與航太軍工供應鏈"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }

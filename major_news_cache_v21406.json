@@ -1,8 +1,18 @@
 {
   "2330": {
-    "fetched_at": "2026-10-12T15:23:02.031145+08:00",
-    "adjustment": 0,
+    "fetched_at": "2026-10-13T05:51:35.769846+08:00",
+    "adjustment": 3,
     "events": [
+      {
+        "title": "三大法人買賣超 – 外資買超(2327)國巨*、(2330)台積電，投信買超(8046)南電、(3189)景碩，法人合計買超292.53億元 - 永豐金證券",
+        "source": "永豐金證券",
+        "date": "2026-10-02T19:39:19+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiyARBVV95cUxPVE1KemVTOTlfQXlnaHJvb0tteFd4czhUM0drSGVoQl9rbm1sdGE0dGVzWlE2OW9URy1Kbzd6cTBneGhrdkpXeV83aUlMWGlNSTVVaUZRNDJWZW00aGx2WjZfVnh0YnFHSzJBVzdDYTZTMURmOFBoRUF5dDFuRmg3S1RMQjV3dkdyYlpOQ1dQNlQ1TjZRb3VaTTRMUWFzMlUtRk9KSDY2U2xZdGVTZTNpXzEzY3JMUHRTVHJvcnQwM0szbk42bERmZWJ4MnFtNmN3VFBZSWtVSEoyd0RXZWpfYV81bmVBM1pwQk5MZUdvQkZINlVMWW1pNHJWcUJSZ1dtTlhUaTgxbWd6MUc3Y1h1RHlPR0tfaUk3N1RaQzFQOWtoR3JuSHhzN0QzbVRBOFkxZG5TTVFpcGlGcDNKSGNURGJfTVNPd1Joa0JORHNfbkhNbWg0cU5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
       {
         "title": "2330 台積電 - 10/15台積電世界先進- 股市爆料同學會 - CMoney",
         "source": "CMoney",
@@ -14,40 +24,10 @@
         "status": ""
       },
       {
-        "title": "2330 台積電 - 【宏觀週報】48,475再創新高，但外資賣超背離下的下一步- 股市爆料同學會 - CMoney",
-        "source": "CMoney",
-        "date": "2026-10-03T22:42:48+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTFBRRHpjLWxRcEkxSUdKeVo4MkttOC1pMUw5SFdTTGZ2M0NqNkl0UWRaeURSS1pIRVlIaWNsSUU0aHFTTExFdnFHQWVnWVh2UHhSNjA5V19yMGw?oc=5",
-        "raw_adjustment": 0,
-        "adjustment": 0,
-        "label": "",
-        "status": ""
-      },
-      {
         "title": "三大法人買賣超 – 外資買超(2330)台積電、(2308)台達電，投信買超(3081)聯亞、(2327)國巨*，法人合計買超764.5億元 - 永豐金證券",
         "source": "永豐金證券",
         "date": "2026-10-05T16:36:08+08:00",
         "link": "https://news.google.com/rss/articles/CBMi0wRBVV95cUxNdDRQWlNmcTAwdFdJeXAxQzcwMjRSX0c1dk55WmxLbEhhYi1leURZc2hfbExXQmE5VGllSVh4Q0d1cEpVajV4MFBiLUdmbkcxSnlmTHh2UkJTcDBEYS03UGZLbmtRVEwtOVhsUXZWOFZzTU9iS0dJSVJLbk5xX1RmcmlhX2tFVXBmU0daY0d1ZTJyblVEOVV4VXRSUDhWUWFWcFE1OGlLdU9qRGg3eXIyNTZYOWRvOWVSUDZtMnZHSkpxUUxCc1BVNUpSbUtET0tUaG0zM2RFZlFkWUtVazdpX0tOMExqYWVuNU4xRm9ZSzMzMWlrWHJtTGZNOUNyR3RnMHNUUFhhTE9SUUh0NF94eFE1b0RpLWtDNkhuQ3dwN3FUMUlGYlo3SU5rTEI1V2t3V2NyZGxORmdFRDVJSWhMc1RGNTdOZldwcWtPcm1feHQ1NTBac0Z",
-        "raw_adjustment": 0,
-        "adjustment": 0,
-        "label": "",
-        "status": ""
-      },
-      {
-        "title": "2330 台積電 - 最近0052漲幅落後0050 - 股市爆料同學會 - CMoney",
-        "source": "CMoney",
-        "date": "2026-10-06T00:10:55+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTFAtOW15c0p1akllTGFMdHpVVFpITVkwZ0VrdUNpYnUzcUFrZVpaZDc2ampnOEZxWlNENm9WY2UzYndvRXpUclpsMXFFNXQ4TDJiR3BRV0pjQmE?oc=5",
-        "raw_adjustment": 0,
-        "adjustment": 0,
-        "label": "",
-        "status": ""
-      },
-      {
-        "title": "2330 台積電 - 台積電10月底前上3,000元，感謝哲家爸爸！ - 股市爆料同學會 - CMoney",
-        "source": "CMoney",
-        "date": "2026-10-06T09:03:21+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE1pdFFDcHZSWFBOU01aT0lyZ2FWcS1nSVQtLXlLNzdKVHBrbFoxN2VzVkk0QzhfVGtIVEdYNmUwWE1jdWFiZ2FZUUNWNk92bnlEVFgyVTFhRDc?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
@@ -74,10 +54,30 @@
         "status": ""
       },
       {
-        "title": "2330 台積電 - 〈台股盤後〉台積最後一單神救援近5萬關情怯小跌16點守住49800點 - 股市爆料同學會 - CMoney",
+        "title": "2330 台積電 - 昨天提醒日K收疊進入第四浪整理，跌破15分長均先偏空做- 股市爆料同學會 - CMoney",
         "source": "CMoney",
-        "date": "2026-10-07T14:27:52+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE5EN2R2a09EM2tCTjlPdy1GVUc2UFVXWXZ3el92THEtYlpLMjFiMENYcDh2X0hRbVVDZlFFVlFlUUdBRDVxZlhELXg4amJDaHJnMW12REZ0aHY?oc=5",
+        "date": "2026-10-07T22:20:07+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE5HLWp0NVhCcmdxY2JFQnFSVzRmVGMxWmg2SVVLVUd5U1h1UFZhaERNRzUtQkpramMwdnFUaHlDaFZ5eGpFS2M2cG0zWGRoTTlDUThjQUR1NXQ?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "2330 台積電 - 夜盤跌-372有小小拉回5日線 錢現在又跑回去被動元件 老a... - 股市爆料同學會 - CMoney",
+        "source": "CMoney",
+        "date": "2026-10-08T07:03:26+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE9LaVgzZ3dnNC1kMFQ5SGIxLUh0aGxQUmVBdEhiNzcxOGU1NExwdjZpWGFqUkxKRzRXemRvdVdlc0pOY0I4cHMwNEtMQU5BZVAtbUZXdHhoTnk?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "2330 台積電 - 台積電股價預估- 股市爆料同學會 - CMoney",
+        "source": "CMoney",
+        "date": "2026-10-08T09:10:05+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE5QU2FYM1ltbGJmNkJERVlvbHVQQjY1Rm5pMTJRWE11emQ4ZmVJZ3dmY0Y3anVoSlZ6QVpzaXoxSGpCbmpHRTFlNGNqbTZ0cHo2U2NhdW5Ubmw?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
@@ -88,7 +88,7 @@
     "lookback_days": 14
   },
   "3711": {
-    "fetched_at": "2026-10-12T15:23:06.246131+08:00",
+    "fetched_at": "2026-10-13T05:51:40.889554+08:00",
     "adjustment": 0,
     "events": [
       {
@@ -122,6 +122,16 @@
         "status": ""
       },
       {
+        "title": "3711 日月光投控- 早安！10/1 外電綜合整理- 股市爆料同學會 - CMoney",
+        "source": "CMoney",
+        "date": "2026-09-30T15:00:00+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE1OTnF3VzYwSS1UM1hKS0hybTVfRjdWeFY5U3ZkeUtfMnlDVHp2SXF0bHdRdnJ6b1V4T2VBRTNCeGRleDRSWmY1OWxVdGUyaUUwbmRQMEV2X08?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
         "title": "日月光投控：矽品精密工業9/2~30向聖暉*取得廠務工程，計約20.37億元 - 台視全球資訊網",
         "source": "台視全球資訊網",
         "date": "2026-09-30T18:32:47+08:00",
@@ -142,16 +152,6 @@
         "status": ""
       },
       {
-        "title": "3711 日月光投控 - 要挑戰720上了嗎? - 股市爆料同學會 - CMoney",
-        "source": "CMoney",
-        "date": "2026-10-01T20:26:40+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE40V3FSM21IMlFuYW5feDA2MnppNm85bmR0UXNUZWJGa2Q4TGRrWHA2OVRoYmdVbEdLSEhKNERfcGZ2UVJHdWppdWhBaXNLLTJTbXlJZ01ORmg?oc=5",
-        "raw_adjustment": 0,
-        "adjustment": 0,
-        "label": "",
-        "status": ""
-      },
-      {
         "title": "日月光投控：環鴻科技取得南投縣草屯鎮中興段不動產，合計約8.85億元 - 台視全球資訊網",
         "source": "台視全球資訊網",
         "date": "2026-10-02T11:01:38+08:00",
@@ -162,10 +162,10 @@
         "status": ""
       },
       {
-        "title": "3711 日月光投控 - 日月光ADR創新高了！！ 至少是好的開始. - 股市爆料同學會 - CMoney",
+        "title": "3711 日月光投控 - 超級沒料 禮拜一直接空 - 股市爆料同學會 - CMoney",
         "source": "CMoney",
-        "date": "2026-10-02T20:50:44+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE4xU2tqXzd5eXNYd1BheEFhb2J3LU9XM1RsMXdTMFVLdXQ2eUlqaWdER2p1TmdKVUYxMXFGeWpvc1hocGFaRmdTVGQxU3d5dnIyY2NaME9pNkE?oc=5",
+        "date": "2026-10-02T15:00:00+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE53bldRSWFFYTdZZlFVMnlEVTZyOWdVSFBOdnRZelFsSTVocnBfb094RkRmc0t6NllPWEdqM1BxdlBJWWdhbTVRVHZKVERxaE1lVWE2Z1FUMWU?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
@@ -229,7 +229,7 @@
     "lookback_days": 14
   },
   "0050": {
-    "fetched_at": "2026-10-12T15:22:35.849213+08:00",
+    "fetched_at": "2026-10-13T05:51:13.017096+08:00",
     "adjustment": 0,
     "events": [
       {
@@ -243,10 +243,10 @@
         "status": ""
       },
       {
-        "title": "0053改名元大科技市值！0050、0052與0053差在哪？含積量比較 - 口袋證券",
-        "source": "口袋證券",
-        "date": "2026-09-29T15:00:00+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE1kaE00dXhQV2xTb2Z1Zk5qbGZ5amt3QmlHNk1NQl9DTDItQ3o2RE1MbVdWNzE2eEFKdEVKbGhkMzRaWGRlU2VqVF9TeUk4cUd0Q3pxTkhDWTg?oc=5",
+        "title": "【零股排行榜】盤中零股成交量TOP 20｜3481 群創、0050 元大台灣50、2409 友達、2330 台積電、3105 穩懋 - 永豐金證券",
+        "source": "永豐金證券",
+        "date": "2026-09-30T15:00:00+08:00",
+        "link": "https://news.google.com/rss/articles/CBMi7ANBVV95cUxQWlZadUh5VGtvTjlsQ0ZZZ0Z5eThtYkQxd2VpWXdYb3dZLXdjYXJYUnhlZmxPWFRjd1BscHhoRzhfUHh3S0pQbUtMMVZYY1kwN1p2a1ZWWXFLX3REMHNzMHVyUXlocHc4QWJ3RmtQbjMyRUhSWGxidk9MbEtaTFdtdHFhYWJITHlMak1FZVpSQUo1X2lOai1KZkZ4b2U0ZWR5TW9VUXBGS0ZhUml5dm80SkRjRVdWR240UU5nNFN1aXVqdUhRbHdNVEhISV9ZZDNjT09YWEd0dFpJSGVLSVB0cWVQMjBhNjJwV012YnlyVk9ZbXZ1TXdFdjQzUFoyZTJGOERLRzBocGJkVG9YaWhFMy1oOVhXUmFqWGtodHpCRUJqNGRPN0xrZXliV0pXdFlZQ3hiY2ZCa0ExRXRubFFwTXBzUmlITEZvWVZpUm96cDk0bS1jemV",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
@@ -273,26 +273,6 @@
         "status": ""
       },
       {
-        "title": "【零股排行榜】盤中零股成交量TOP 20｜3481 群創、0050 元大台灣50、2409 友達、2330 台積電、3105 穩懋 - 永豐金證券",
-        "source": "永豐金證券",
-        "date": "2026-10-02T19:44:05+08:00",
-        "link": "https://news.google.com/rss/articles/CBMi7ANBVV95cUxQWlZadUh5VGtvTjlsQ0ZZZ0Z5eThtYkQxd2VpWXdYb3dZLXdjYXJYUnhlZmxPWFRjd1BscHhoRzhfUHh3S0pQbUtMMVZYY1kwN1p2a1ZWWXFLX3REMHNzMHVyUXlocHc4QWJ3RmtQbjMyRUhSWGxidk9MbEtaTFdtdHFhYWJITHlMak1FZVpSQUo1X2lOai1KZkZ4b2U0ZWR5TW9VUXBGS0ZhUml5dm80SkRjRVdWR240UU5nNFN1aXVqdUhRbHdNVEhISV9ZZDNjT09YWEd0dFpJSGVLSVB0cWVQMjBhNjJwV012YnlyVk9ZbXZ1TXdFdjQzUFoyZTJGOERLRzBocGJkVG9YaWhFMy1oOVhXUmFqWGtodHpCRUJqNGRPN0xrZXliV0pXdFlZQ3hiY2ZCa0ExRXRubFFwTXBzUmlITEZvWVZpUm96cDk0bS1jemV",
-        "raw_adjustment": 0,
-        "adjustment": 0,
-        "label": "",
-        "status": ""
-      },
-      {
-        "title": "【零股排行榜】盤中零股成交量TOP 20｜2303 聯電、2409 友達、0050 元大台灣50、2449 京元電子、2408 南亞科 - 永豐金證券",
-        "source": "永豐金證券",
-        "date": "2026-10-02T19:44:06+08:00",
-        "link": "https://news.google.com/rss/articles/CBMihARBVV95cUxPVExBNjRIaE9ocHZUUmJkbjNsNUNoSHEzSklISGJmZ29RbWt4TU1NeF9kNlZfeHptLWo0VC1yeTBpbFRjTTVYTlBlbUFXam1Uc0o0LXBkek1uQVMxbF9ZaHhWNDZteGNuUTMtX1FjelRQZFdSdGdvUlFMZ1A3MHNpQzlfbC1VUFpGUV8tWmNQT3A1Yk1UMFhfMXlMTDZFTDlDazN0d2toMjFsOVBiU1F1ME5nSlVfMWxTb0E1VnNwLWx6V2FDaElFNTlrYUV2QWt5MG42TE9lTFlqd2tnU2F1S2ZqaWkwQnpNZU41d1dSVERjS3F6aFRvZUh0RzVnbkFKck0wbk16bF9INnlhOElPQ1NWdlI1UGRJa2FHeTFyUXpVRGhUSHBaUTJoY05ZcEo0Z0JvTV9MUUdoN3ZIUkoxNjBZRHRjekVYVXdyOE5kamZBTkRicVF",
-        "raw_adjustment": 0,
-        "adjustment": 0,
-        "label": "",
-        "status": ""
-      },
-      {
         "title": "【零股排行榜】盤中零股成交量TOP 20｜00919 群益台灣精選高息、2327 國巨*、0050 元大台灣50、3481 群創、2409 友達 (1001)｜豐雲學堂2026 年 10 月 - 永豐金證券",
         "source": "永豐金證券",
         "date": "2026-10-02T19:44:43+08:00",
@@ -311,13 +291,33 @@
         "adjustment": 0,
         "label": "",
         "status": ""
+      },
+      {
+        "title": "一周熱門零股／0050、高息ETF、友達 搶手 - 經濟日報",
+        "source": "經濟日報",
+        "date": "2026-10-03T00:52:01+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5Bb0NHYm1Sc0ZvZGViZ1U2bFc4QldUeGk4YU82MlJiZ05rUzBMTVd1UElPcVNXeXlnejVYbGsydkhpd2g0bXBlTTBreUo3eWJVUEY0b3FSamtiUdIBX0FVX3lxTE9rckxHdl9uQU1vc09RdzFCUlpiTG9NSC1BR1BOQzgydkJrX091Zmlfa2x3V3hpVHl4Q2FxbkVoUy1ZamZFSURCMDJhTV9fSVJ1Y3hRaWw2SlFkeFB3NVhN?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "0050衝112元該下車？他想賣又怕噴到120好糾結 網友1句戳破盲點 - 自由財經",
+        "source": "自由財經",
+        "date": "2026-10-04T15:00:00+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE0taTYzY1ZkNWxMOXd3ZjUwOUpWWVl2WEJoTy14cmMxdHNMRWYtS3lfQ0xrYjFqQnVYYVhMSE5XZkd1V2NSaHpjOTlkdGdDTDljRGhBTXVQNTFHcktjbHpz0gFkQVVfeXFMT3l0dkFWM292VkNOMkVHMDFLdV9DUk5aQ0dYWTVQLWNOZHoydXJNX19uYmw0VUdXa09tUDdPTUhMSmd1N2U5RHZ1dUY3WlpjajVfY3NDWG10R0xEcjZOZ3Rqall3aA?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
       }
     ],
     "source": "Google News RSS",
     "lookback_days": 14
   },
   "QQQ": {
-    "fetched_at": "2026-10-12T15:23:11.370962+08:00",
+    "fetched_at": "2026-10-13T05:51:46.750696+08:00",
     "adjustment": 0,
     "events": [
       {
