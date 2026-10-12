@@ -2488,5 +2488,61 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:cd785a0594bcedaa9fc007d0": {
+    "ts": 1791789755.8424845,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.75,
+          "policy_stage": "considering",
+          "reason": "關稅計畫擬擴大，掩蓋輝達財報利多並引發貿易戰疑慮。",
+          "relevant": true,
+          "affected_channel": "成本/供應鏈",
+          "transmission": "關稅擴大→半導體供應鏈成本增加→整體股市與科技股承壓",
+          "exposure": "全球半導體供應鏈與整體美股市場"
+        },
+        {
+          "id": 1,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.7,
+          "policy_stage": "unknown",
+          "reason": "川普購買科技與航太資產，增加相關市場投資信心。",
+          "relevant": true,
+          "affected_channel": "估值",
+          "transmission": "川普投資個資產→提升市場對大型科技與航太資產信心→帶動市場情緒",
+          "exposure": "大型科技股與航太國防相關產業"
+        },
+        {
+          "id": 2,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.8,
+          "policy_stage": "announced",
+          "reason": "造船廠獲巨額資金承諾且川普造訪，強化國防工業成長預期。",
+          "relevant": true,
+          "affected_channel": "需求",
+          "transmission": "政府資金挹注造船廠→國防供應鏈訂單增加→國防航太類股受惠",
+          "exposure": "美國國防造船與航太產業"
+        },
+        {
+          "id": 3,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.8,
+          "policy_stage": "considering",
+          "reason": "推廣能源主導地位願景，有利於美國傳統頁岩油與油氣產業發展。",
+          "relevant": true,
+          "affected_channel": "需求/供給",
+          "transmission": "能源主導政策→放寬油氣開采限制與補貼→傳統能源產業受惠",
+          "exposure": "傳統能源與水力壓裂（Fracking）產業"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
