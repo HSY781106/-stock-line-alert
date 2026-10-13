@@ -1,6 +1,6 @@
 {
   "2330": {
-    "fetched_at": "2026-10-14T04:04:15.233084+08:00",
+    "fetched_at": "2026-10-14T04:10:32.890105+08:00",
     "adjustment": -5,
     "events": [
       {
@@ -88,7 +88,7 @@
     "lookback_days": 14
   },
   "3711": {
-    "fetched_at": "2026-10-14T04:04:21.403222+08:00",
+    "fetched_at": "2026-10-14T04:10:37.726479+08:00",
     "adjustment": 0,
     "events": [
       {
@@ -250,7 +250,7 @@
     "lookback_days": 14
   },
   "0050": {
-    "fetched_at": "2026-10-14T04:03:52.312184+08:00",
+    "fetched_at": "2026-10-14T04:10:10.458435+08:00",
     "adjustment": 0,
     "events": [
       {
@@ -314,20 +314,20 @@
         "status": ""
       },
       {
-        "title": "【零股排行榜】盤中零股成交量TOP 20｜2303 聯電、0050 元大台灣50、2409 友達、2308 台達電、00981A 主動統一台股增長(1005)｜豐雲學堂2026 年 10 月 - 永豐金證券",
-        "source": "永豐金證券",
-        "date": "2026-10-05T14:45:11+08:00",
-        "link": "https://news.google.com/rss/articles/CBMitwRBVV95cUxNSGdmRHJybFdfbXBleXdFTExOUHVYMTNlR0E4czUxdVFLWlk3bTIxT3haTERWOHRKeVRqS2MydzJvTUpEbnlYbEl4c3JzNWVjblFPV3dVcGpvYmxMWlN1NkRsbnN5STBhaTFLeHFwME5pQlp0cGpzT1lkaHdXZmtyTl9MZFJVendCOVI2cEtIbHlGZlJsU05KSE9sQWFCNW1NTElKeVR6R1pQWFM0OGZOUmFZNEZWVGVSSjEzTHUxQ2VqMzc5akpMc295S2UzY3BiUVpacVJtZVBLdzZYblhHLXRmYkJpWGE0WThDSHhEbTd5NmFnZHV4Z3JNVHhvaW1KTElpV2d3bkxvYXhZUmV3QzhHbGl4d3ViXy1nZzBCOHd1ZS1qaHhZYjlqQ2JuNWpfUTY3WDRwdkxGenY4VUxUejljaHZXR284RGttblJjX2tOUHlOY1k",
+        "title": "0050 元大台灣50 - ETF期貨缺乏流動性- 股市爆料同學會 - CMoney",
+        "source": "CMoney",
+        "date": "2026-10-04T15:44:43+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE0tdHl3VVBJejE5UGJ2RllOWC1YalNJUTRYRnY1bWpHdnBMNjFuN1BYeU1EenZ4QlQ1bnNjZ01XQi1VV1hGdEllcTZ1N1NkOFh3cmt5QVlLY1g?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
         "status": ""
       },
       {
-        "title": "00631L暴衝5%！0050正2怎麼買？四檔ETF比較 - 遠見雜誌",
-        "source": "遠見雜誌",
-        "date": "2026-10-05T15:00:00+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiTkFVX3lxTE1GM0xXT1BWMWhOSXB0TXY4bXN6RGZPUnl3bHNVbUg4djItSWQtQ3dYWG1xelA3RUQ5VkxpMkxOVVJMajN1YkxNcENza0I3Zw?oc=5",
+        "title": "【零股排行榜】盤中零股成交量TOP 20｜2303 聯電、0050 元大台灣50、2409 友達、2308 台達電、00981A 主動統一台股增長(1005)｜豐雲學堂2026 年 10 月 - 永豐金證券",
+        "source": "永豐金證券",
+        "date": "2026-10-05T14:45:11+08:00",
+        "link": "https://news.google.com/rss/articles/CBMitwRBVV95cUxNSGdmRHJybFdfbXBleXdFTExOUHVYMTNlR0E4czUxdVFLWlk3bTIxT3haTERWOHRKeVRqS2MydzJvTUpEbnlYbEl4c3JzNWVjblFPV3dVcGpvYmxMWlN1NkRsbnN5STBhaTFLeHFwME5pQlp0cGpzT1lkaHdXZmtyTl9MZFJVendCOVI2cEtIbHlGZlJsU05KSE9sQWFCNW1NTElKeVR6R1pQWFM0OGZOUmFZNEZWVGVSSjEzTHUxQ2VqMzc5akpMc295S2UzY3BiUVpacVJtZVBLdzZYblhHLXRmYkJpWGE0WThDSHhEbTd5NmFnZHV4Z3JNVHhvaW1KTElpV2d3bkxvYXhZUmV3QzhHbGl4d3ViXy1nZzBCOHd1ZS1qaHhZYjlqQ2JuNWpfUTY3WDRwdkxGenY4VUxUejljaHZXR284RGttblJjX2tOUHlOY1k",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
@@ -338,7 +338,7 @@
     "lookback_days": 14
   },
   "QQQ": {
-    "fetched_at": "2026-10-14T04:04:27.994712+08:00",
+    "fetched_at": "2026-10-14T04:10:43.330941+08:00",
     "adjustment": 0,
     "events": [
       {
