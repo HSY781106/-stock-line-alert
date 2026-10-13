@@ -1,8 +1,18 @@
 {
   "2330": {
-    "fetched_at": "2026-10-13T05:51:35.769846+08:00",
-    "adjustment": 3,
+    "fetched_at": "2026-10-13T15:35:28.210874+08:00",
+    "adjustment": -5,
     "events": [
+      {
+        "title": "2330 台積電 - 美光重挫拖累費半急殺、大盤退守4.85 萬防線，市場等待台積電法說會指引- 股市爆料同學會 - CMoney",
+        "source": "CMoney",
+        "date": "2026-10-13T12:17:40+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE93ZWh1TkVkb3Z6LTZOTlBQcXpseEozLU42Mm9keVdKdl9JU0IteGNnQVBHMWU5elZFb1c5Rl9UUjd5MDBqZEkyWGVLaFM5RzNEOTZHSk13SHU?oc=5",
+        "raw_adjustment": -5,
+        "adjustment": -5,
+        "label": "股價重大下跌",
+        "status": "重大負面事件"
+      },
       {
         "title": "三大法人買賣超 – 外資買超(2327)國巨*、(2330)台積電，投信買超(8046)南電、(3189)景碩，法人合計買超292.53億元 - 永豐金證券",
         "source": "永豐金證券",
@@ -72,35 +82,15 @@
         "adjustment": 0,
         "label": "",
         "status": ""
-      },
-      {
-        "title": "2330 台積電 - 台積電股價預估- 股市爆料同學會 - CMoney",
-        "source": "CMoney",
-        "date": "2026-10-08T09:10:05+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE5QU2FYM1ltbGJmNkJERVlvbHVQQjY1Rm5pMTJRWE11emQ4ZmVJZ3dmY0Y3anVoSlZ6QVpzaXoxSGpCbmpHRTFlNGNqbTZ0cHo2U2NhdW5Ubmw?oc=5",
-        "raw_adjustment": 0,
-        "adjustment": 0,
-        "label": "",
-        "status": ""
       }
     ],
     "source": "Google News RSS",
     "lookback_days": 14
   },
   "3711": {
-    "fetched_at": "2026-10-13T05:51:40.889554+08:00",
+    "fetched_at": "2026-10-13T15:35:32.741837+08:00",
     "adjustment": 0,
     "events": [
-      {
-        "title": "日月光投控：ASE Singapore Pte.董事會通過購買廠房，計約6845萬美元 - 台視全球資訊網",
-        "source": "台視全球資訊網",
-        "date": "2026-09-29T15:00:00+08:00",
-        "link": "https://news.google.com/rss/articles/CBMikgFBVV95cUxOT01Dck5kR3o0SzVSRzFZZnd1TkJsYUQwQ3FMWWxzSGFfMmd2SExIaGZpeFh6dG94emtnbzdTX19mQlJvc0UtSER2akRnSFB0YlBxc3V5bkxwSm9xVkZJbTd3T1lDZVVGcWl3aW80eHJZWjVUaldNaVAtb215aVplaTBjUnVBbXdIeUlzYXA0YnNVUQ?oc=5",
-        "raw_adjustment": 0,
-        "adjustment": 0,
-        "label": "",
-        "status": ""
-      },
       {
         "title": "3711 日月光投控- 【日月光投控(3711)盤後解析】高檔震盪，法人主力同站賣方... - 股市爆料同學會 - CMoney",
         "source": "CMoney",
@@ -166,6 +156,16 @@
         "source": "CMoney",
         "date": "2026-10-02T15:00:00+08:00",
         "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE53bldRSWFFYTdZZlFVMnlEVTZyOWdVSFBOdnRZelFsSTVocnBfb094RkRmc0t6NllPWEdqM1BxdlBJWWdhbTVRVHZKVERxaE1lVWE2Z1FUMWU?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "Q3營收將創高 日月光投控上看862元 - 台灣好新聞",
+        "source": "台灣好新聞",
+        "date": "2026-10-07T15:46:03+08:00",
+        "link": "https://news.google.com/rss/articles/CBMi9AFBVV95cUxQTHprTjhwVEw5dl9KWW1nQUxJU0VoWlBpdjFQWW9FOGZPT2piREZhUFVibTg4T1FQdUp2UDlNWVBOZkZ2Yk5YVmR3Wml4YWVfQk1IU3VDWG8xSlNzbU92b1JjcHpmczBlVWswRVBNVHNGYTVaVGE2REpzdVJLYWx4T1FDR2Zxbnk5eVNNY00tdjcxTmE4MnR1cE54QlMxWVJwRmdaNkZab09aQzJiS2R3U0h5WkpiaWhuYVZRTjBTbm55WEhiZWphOHI0UDA1Ri00b0F0em0xb0RtMk5aRFJqc01IWFlsYkkxYlNXOTMzbGUxRUhQ?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
@@ -250,19 +250,9 @@
     "lookback_days": 14
   },
   "0050": {
-    "fetched_at": "2026-10-13T05:51:13.017096+08:00",
+    "fetched_at": "2026-10-13T15:35:05.480757+08:00",
     "adjustment": 0,
     "events": [
-      {
-        "title": "0050 元大台灣50 - 權證也漲翻惹^^ - 股市爆料同學會 - CMoney",
-        "source": "CMoney",
-        "date": "2026-09-29T15:00:00+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE41LU5XY0xDWUhkTWtBakZqc1prYnR3bktzN1RXdEp6bkhWUklidWdGTWZEaVExWXFOUW1GenBtZUJOc0JHTUZ3cVlsNmVyNHB6NEg1UFFoNHQ?oc=5",
-        "raw_adjustment": 0,
-        "adjustment": 0,
-        "label": "",
-        "status": ""
-      },
       {
         "title": "【零股排行榜】盤中零股成交量TOP 20｜3481 群創、0050 元大台灣50、2409 友達、2330 台積電、3105 穩懋 - 永豐金證券",
         "source": "永豐金證券",
@@ -314,20 +304,30 @@
         "status": ""
       },
       {
-        "title": "一周熱門零股／0050、高息ETF、友達 搶手 - 經濟日報",
-        "source": "經濟日報",
-        "date": "2026-10-03T00:52:01+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5Bb0NHYm1Sc0ZvZGViZ1U2bFc4QldUeGk4YU82MlJiZ05rUzBMTVd1UElPcVNXeXlnejVYbGsydkhpd2g0bXBlTTBreUo3eWJVUEY0b3FSamtiUdIBX0FVX3lxTE9rckxHdl9uQU1vc09RdzFCUlpiTG9NSC1BR1BOQzgydkJrX091Zmlfa2x3V3hpVHl4Q2FxbkVoUy1ZamZFSURCMDJhTV9fSVJ1Y3hRaWw2SlFkeFB3NVhN?oc=5",
+        "title": "0050 元大台灣50 - ETF期貨缺乏流動性- 股市爆料同學會 - CMoney",
+        "source": "CMoney",
+        "date": "2026-10-04T15:44:43+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE0tdHl3VVBJejE5UGJ2RllOWC1YalNJUTRYRnY1bWpHdnBMNjFuN1BYeU1EenZ4QlQ1bnNjZ01XQi1VV1hGdEllcTZ1N1NkOFh3cmt5QVlLY1g?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
         "status": ""
       },
       {
-        "title": "0050衝112元該下車？他想賣又怕噴到120好糾結 網友1句戳破盲點 - 自由財經",
-        "source": "自由財經",
-        "date": "2026-10-04T15:00:00+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE0taTYzY1ZkNWxMOXd3ZjUwOUpWWVl2WEJoTy14cmMxdHNMRWYtS3lfQ0xrYjFqQnVYYVhMSE5XZkd1V2NSaHpjOTlkdGdDTDljRGhBTXVQNTFHcktjbHpz0gFkQVVfeXFMT3l0dkFWM292VkNOMkVHMDFLdV9DUk5aQ0dYWTVQLWNOZHoydXJNX19uYmw0VUdXa09tUDdPTUhMSmd1N2U5RHZ1dUY3WlpjajVfY3NDWG10R0xEcjZOZ3Rqall3aA?oc=5",
+        "title": "【零股排行榜】盤中零股成交量TOP 20｜2303 聯電、0050 元大台灣50、2409 友達、2308 台達電、00981A 主動統一台股增長(1005)｜豐雲學堂2026 年 10 月 - 永豐金證券",
+        "source": "永豐金證券",
+        "date": "2026-10-05T14:45:11+08:00",
+        "link": "https://news.google.com/rss/articles/CBMitwRBVV95cUxNSGdmRHJybFdfbXBleXdFTExOUHVYMTNlR0E4czUxdVFLWlk3bTIxT3haTERWOHRKeVRqS2MydzJvTUpEbnlYbEl4c3JzNWVjblFPV3dVcGpvYmxMWlN1NkRsbnN5STBhaTFLeHFwME5pQlp0cGpzT1lkaHdXZmtyTl9MZFJVendCOVI2cEtIbHlGZlJsU05KSE9sQWFCNW1NTElKeVR6R1pQWFM0OGZOUmFZNEZWVGVSSjEzTHUxQ2VqMzc5akpMc295S2UzY3BiUVpacVJtZVBLdzZYblhHLXRmYkJpWGE0WThDSHhEbTd5NmFnZHV4Z3JNVHhvaW1KTElpV2d3bkxvYXhZUmV3QzhHbGl4d3ViXy1nZzBCOHd1ZS1qaHhZYjlqQ2JuNWpfUTY3WDRwdkxGenY4VUxUejljaHZXR284RGttblJjX2tOUHlOY1k",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "00631L暴衝5%！0050正2怎麼買？四檔ETF比較 - 遠見雜誌",
+        "source": "遠見雜誌",
+        "date": "2026-10-05T15:00:00+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiTkFVX3lxTE1GM0xXT1BWMWhOSXB0TXY4bXN6RGZPUnl3bHNVbUg4djItSWQtQ3dYWG1xelA3RUQ5VkxpMkxOVVJMajN1YkxNcENza0I3Zw?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
@@ -338,34 +338,14 @@
     "lookback_days": 14
   },
   "QQQ": {
-    "fetched_at": "2026-10-13T05:51:46.750696+08:00",
+    "fetched_at": "2026-10-13T15:35:38.381934+08:00",
     "adjustment": 0,
     "events": [
-      {
-        "title": "【即時新聞】最新牛市分析出爐！長期利率回穩後，Invesco QQQ Trust(QQQ)將成領漲美股關鍵 - CMoney投資網誌",
-        "source": "CMoney投資網誌",
-        "date": "2026-09-29T15:00:00+08:00",
-        "link": "https://news.google.com/rss/articles/CBMikAFBVV95cUxNTnBMZXhHbGpsdkFSM1ljRm1zVldJUm80bE9fdTBCMWZDZlBRX3NVTjBOdU9ucFdxc0JyWmc5bGc1VEEyQ3lHU0J6WGJEaUx0ekVELVdYdWk4YkszMWE5LW44WS1yb2phTXVuQ3l1T0JqeWpYTGtyeWJYVHQ5TWxvRXRiZklWQ1ZheEhVNHRncXg?oc=5",
-        "raw_adjustment": 0,
-        "adjustment": 0,
-        "label": "",
-        "status": ""
-      },
       {
         "title": "2026大家都在買哪些美股ETF？VOO、QQQ、SMH⋯10檔熱門排行榜：費用率、規模、績效一次看｜豐雲學堂2026 年 10 月 - 永豐金證券",
         "source": "永豐金證券",
         "date": "2026-10-02T19:41:01+08:00",
         "link": "https://news.google.com/rss/articles/CBMi0wNBVV95cUxPOV94RWJ6NllMa2RxLWlVekRlamZVUzlGaWJLai1pMnVNNGVFT25vMlY0WlBvQkdjdFFJNUtDUXV1S3BGRDFYUGV4cm44V2JmOHd2TXNEbGUwVGQ0bUxSN3ZqTDNrRXMzbDRKRktWYzF4ZHJ3azNFT2xTV1NiQzJ5U3VZa2V1VjNqRUU3ZFRKVHFHdTQxUGx5NXEzQVlVZjdTLXdQOC1MMXhBbFQ0eGh3cWxuV3FtREhfbk5hcDc0TGQ0bkZRTmFfVVRjemJMVTFxY1BpaE1EQWFhNDVBRjB2cU5iYm4wdnNfcmRLcGR3ZDlnRU9KV0ZPblYtVE9aYVZYRjVpUTNqZEx0T2pzUlROU0dWaHAycWplSnhZb1Vmam5IalIwTE0xZWdHSndjdkhBTWIxT0hZWU9xQ2h6Y3VIZnBQVThBTTd3OVlaS0JKbzhtSkRJR3V",
-        "raw_adjustment": 0,
-        "adjustment": 0,
-        "label": "",
-        "status": ""
-      },
-      {
-        "title": "Invesco QQQ aStock (AQQQ) 2026 年至 2031 年價格預測 - Bybit",
-        "source": "Bybit",
-        "date": "2026-10-05T02:23:50+08:00",
-        "link": "https://news.google.com/rss/articles/CBMickFVX3lxTE5uNWhOVWhpVTBCVjctdVItODI1UmZybmFHUV9MSlNSQURUbjRFTndtZ1gtbFVUZDFWMUx3Sml2WWRqOEQ2S2tDUWdHaEZpMlZxd3liMWo5cFhla1p0aXEzQndvU2t4VWdmYXpmNk5EcGM3QQ?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
@@ -416,6 +396,26 @@
         "source": "Yahoo 財經",
         "date": "2026-10-10T14:17:05+08:00",
         "link": "https://news.google.com/rss/articles/CBMigwFBVV95cUxOTzVrSHBOdjdmdlFDbEFqVG45ZDNkcE9iZXc2a00zY01YcTJuRmZIemJKcnVfdmI2Sm1GNFV6MF9xUWhud3o2M0VwSlJtNjJsVWVYUTZFVV82a1VFRTh4ZTFLd3dnUUx1ZU5uRHk2dXM5SWNmVzdWbzQ5UEtzdXpBOVRJVQ?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "$納指100ETF-Invesco QQQ Trust (QQQ.US)$ 週一速查表 - Moomoo",
+        "source": "Moomoo",
+        "date": "2026-10-10T14:45:00+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxQQkRicmNXR1l5bGpVcG8xcUhJZS1kODBtRmFFQ2FQMG5NdHlEekdycy1XT1FOaGxLREFsS05SQU4zOHVLYzVMSTV2RE9IZWVieENjZHpFMFRNd2EwOHNlcE1KU3dyY01oR29nQlZuSXlMNk92WnU3ekxvZktod0ItTEQ4QU5kbGhUU3JoUWlKdkFyQTRVMWEtQXFWOTRBOTBDX0FhTWszeTF1Zw?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "Invesco QQQ Trust Series I Shs Cert Deposito Arg Repr 0.05 Sh的員工人數 – BCBA:QQQ.CI - TradingView",
+        "source": "TradingView",
+        "date": "2026-10-10T15:23:30+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiogFBVV95cUxNVUVvTWpVTW82M3N4TUFWMzhCQVlacl9nOUNaaHNMbVY3Z095dnZlbWxYNm9TdVJ6ZEIyaXFveUE1cW9iRlp2UWZ4SDZZSUV1dG1ZYTYwMUdXc3ZpdURrRXUzYlFUcWQ1a1J2b0dQMDl3ekM3QWRRT19TcVdLMTIzUTY4UDc2TmhMZ1NxLVFDX1VOYkJoN09lRHdnWXVhRy0xa3c?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
