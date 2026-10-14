@@ -2620,5 +2620,61 @@
       ]
     },
     "provider": "groq"
+  },
+  "trump_v21826:__MARKET__:237fbf754bcd3d299baf3c1c": {
+    "ts": 1791957535.2789414,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.7,
+          "policy_stage": "unknown",
+          "reason": "川普個人投資展現對航太及科技巨頭個人信心支持。",
+          "relevant": true,
+          "affected_channel": "估值",
+          "transmission": "川普個人資金挹注→提升市場信心→利好太空與科技產業估值",
+          "exposure": "太空產業及科技巨頭標的"
+        },
+        {
+          "id": 1,
+          "direction": "positive",
+          "score": 3,
+          "confidence": 0.85,
+          "policy_stage": "announced",
+          "reason": "造船廠獲大型投資與川普參訪，帶動國防造船需求。",
+          "relevant": true,
+          "affected_channel": "需求",
+          "transmission": "政府與私部門資金挹注造船廠→國防訂單增加→利好國防造船產業",
+          "exposure": "國防軍工與造船產業標的"
+        },
+        {
+          "id": 2,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.75,
+          "policy_stage": "announced",
+          "reason": "川普家族關聯資金挹注加拿大無人機公司，利好軍用無人機鏈。",
+          "relevant": true,
+          "affected_channel": "需求",
+          "transmission": "川普家族相關資本入股→無人機資金充足加速研發→利好無人機產業",
+          "exposure": "無人機與國防科技標的"
+        },
+        {
+          "id": 3,
+          "direction": "positive",
+          "score": 3,
+          "confidence": 0.8,
+          "policy_stage": "announced",
+          "reason": "前頁岩油高層推動川普能源主導政策，加速頁岩油與傳統能源發展。",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "行政政策放寬能源管制→降低傳統能源開發成本與審查阻礙→利好頁岩油產業",
+          "exposure": "傳統能源與頁岩油開採產業標的"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
