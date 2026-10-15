@@ -1,5 +1,5 @@
 {
-  "_cached_at": 1792086947.4742663,
+  "_cached_at": 1792093368.0920534,
   "source": "TPEx/TWSE Industry Value Chain",
   "source_url": "https://ic.tpex.org.tw/company_chain.php",
   "cache_days": 30,
@@ -47222,6 +47222,18 @@
           "industry": "汽車",
           "sub_industry": "車燈",
           "date": "2026-10-08"
+        }
+      ]
+    },
+    "7806": {
+      "subindustries": [
+        "加工食品"
+      ],
+      "records": [
+        {
+          "industry": "食品",
+          "sub_industry": "加工食品",
+          "date": "2026-10-16"
         }
       ]
     }
