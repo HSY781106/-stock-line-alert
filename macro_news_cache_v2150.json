@@ -1,11 +1,19 @@
 {
-  "cached_at": 1792043125.167786,
+  "cached_at": 1792060277.2196496,
   "data": {
     "items": [
       {
         "title": "Fed rate hike call seen tight as inflation heats up - Reuters",
         "link": "https://news.google.com/rss/articles/CBMinwFBVV95cUxPMjl1ZWZGd2lIRXg1US1hUjNacTVDN2o5S2lIcXpCdnZ1VHBXcEpqOHV5SzJJZHJrT3RxYjdrRjRrRU03eHNGTTFRMnVCVEdZa0VfLU9BeFdSeTE1aFRrc3ZRampyOFVTczZRbWk0azFBakVndUJ1X0NjVmJmV1JmeXNXSlFkNzF0NUZKTUUyUnlHWi1sOXFpVHV5NnVvcDA?oc=5",
         "published": "Wed, 14 Oct 2026 14:22:26 GMT",
+        "query": "Federal Reserve interest rates inflation US economy",
+        "direction": "negative",
+        "reason": "緊縮／景氣風險"
+      },
+      {
+        "title": "US inflation rises more than expected - here's what is happening with prices - BBC",
+        "link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE94cm1GbWVRWGF6Si04Sjk1aS0wRjBZYWZLbHZKbFNQTjBGRXN0S2pmZExNN2wzdEhQdmRUWlZTT19JQkdLbER4aFA2TEhBTFJqRGNLWkdYbEdIdTg?oc=5",
+        "published": "Wed, 14 Oct 2026 15:26:14 GMT",
         "query": "Federal Reserve interest rates inflation US economy",
         "direction": "negative",
         "reason": "緊縮／景氣風險"
@@ -19,14 +27,6 @@
         "reason": "中性／待確認"
       },
       {
-        "title": "A Top Fed Official Casts Further Doubt on a Rate Rise This Month - The New York Times",
-        "link": "https://news.google.com/rss/articles/CBMikwFBVV95cUxNckNMd0xCc1RMemJpSlNXQVBEeVFKUktQWmFwTlBZWTFrM19DWTA1d1dtN3djS0tSbTY3VzhWYlp2NEdpQ1RIdUthT2xGMVhPNmxqRXFyUEloVVNRQWZ6S3VQeHlZaklEbGh2SWRmckNONnZXaV81TjItOTAwZlBPakZsTzRoVHpMUDVEYlFpbTJraXM?oc=5",
-        "published": "Thu, 08 Oct 2026 08:38:57 GMT",
-        "query": "Federal Reserve interest rates inflation US economy",
-        "direction": "neutral",
-        "reason": "中性／待確認"
-      },
-      {
         "title": "One More U.S. Interest-Rate Increase May Be Appropriate, Fed’s Williams Says - WSJ",
         "link": "https://news.google.com/rss/articles/CBMixAFBVV95cUxPSW1RS05MdnMwMjY4RW1VR0dhSkw0dUpSdkp6NFBFcllqMTdmcVpqZkZhbEx3ZWZSMnR3UVYzbTZVUEZkUVFOUWxMWFpzZDZ0SkxZOTBnYVVJNWFMTGZkd3IxaFBobG1JV2tmSm8yQTVqNm5rSDhwMEpPbVBQejFWM0VzR2ZOMmJ6YU5RR0RyeHF4LUZBb3ZfQkJpczVKd01yRFBpcXV1UWh3ZC11ajM4VjdjdHZxaFlfMFpTRmxEOTV0RWNG?oc=5",
         "published": "Tue, 13 Oct 2026 20:07:00 GMT",
@@ -35,12 +35,12 @@
         "reason": "中性／待確認"
       },
       {
-        "title": "US inflation rises more than expected - here's what is happening with prices - BBC",
-        "link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE94cm1GbWVRWGF6Si04Sjk1aS0wRjBZYWZLbHZKbFNQTjBGRXN0S2pmZExNN2wzdEhQdmRUWlZTT19JQkdLbER4aFA2TEhBTFJqRGNLWkdYbEdIdTg?oc=5",
-        "published": "Wed, 14 Oct 2026 15:26:14 GMT",
+        "title": "CPI Report Live Updates: New Insights on Inflation, U.S. Economy and the Fed - The New York Times",
+        "link": "https://news.google.com/rss/articles/CBMihgFBVV95cUxOVXRrRmpmSC1sM1BwYWdHVzBVbzZRemV3N04yeEdCUV85anBMemFQSXFyMUotV3FLNzdUazB3aWF4ck9fZXlYbTlfUUJUVlhJUkNyTHkyTWZ1R3JIWnJBMFlEMUxCX0VYV2x5R2w1cGF1SVpEc2pFZnJkSWhxMXFLTFEzR050dw?oc=5",
+        "published": "Wed, 14 Oct 2026 14:43:24 GMT",
         "query": "Federal Reserve interest rates inflation US economy",
-        "direction": "negative",
-        "reason": "緊縮／景氣風險"
+        "direction": "neutral",
+        "reason": "中性／待確認"
       },
       {
         "title": "Inflation worsened last month to 3.7% as midterm elections near - PBS",
@@ -59,9 +59,9 @@
         "reason": "中性／待確認"
       },
       {
-        "title": "US inflation rose to 3.7% in September in blow to Republicans before midterms - The Guardian",
-        "link": "https://news.google.com/rss/articles/CBMiggFBVV95cUxPMFE3TXhWUmdRb1NVSndEckRNWFB2c1oyS2JReTVha0ZYREtvR0tUSTJ6Uy1ValBTZ0E4eG1ndmxiN05ZTWRITmlzbnZXTGRnaU5GNExUUEZjb1pwUTRTNmNmZjI0emsyLWpyWTY4YjU5UC1XVGl3UV9zRE9uRHdzSWxR?oc=5",
-        "published": "Wed, 14 Oct 2026 12:36:00 GMT",
+        "title": "Steve Moore warns stubborn inflation could complicate Fed rate decision - KOKI FOX 23",
+        "link": "https://news.google.com/rss/articles/CBMizAJBVV95cUxNejVfWDhyUzB6dGFvbG1VcnRQRk5oSmgzWDdkYm9lMWJzRVdaMHlDUDVRNzQ2T0ZiUjhzZy0zTzZ1NlVyZlJmeTd0eGZ1anduUURnU25oT3R4U3pHSXVDbS1nY3UzUUctNU9pelB3aDJmeVo1WmVzNUVvd25KQXZ2T3pQUUNxTWl1R0xqemY1WmV5aDNhZlBuTUE1cF9OZXhySEVJaGFiYmRYU05VcXVUUUVWN0pLcG1hMmw3S3pjRkp2SEJneUQ3WmZrSFpDd0M3Zndjb1hDT0NmZHoxWkNuc18zNnNIWFRCckd0T1VEaFd3eks5cjVpMnpUWnV2M1hCTFIzZjF6WUtjYXRyeTlRbW5uY3NrUWRCZ0w4UGQtZHM3bWR2c2xNTUhqdm16WFRHeHEyZ0Y4ZjM3bDFGVm56U2ppd1R0Q214NkViQQ?oc=5",
+        "published": "Wed, 14 Oct 2026 20:21:18 GMT",
         "query": "Federal Reserve interest rates inflation US economy",
         "direction": "neutral",
         "reason": "中性／待確認"
@@ -99,7 +99,7 @@
         "reason": "中性／待確認"
       }
     ],
-    "updated_at": "2026-10-15T13:45:25.638793+08:00",
+    "updated_at": "2026-10-15T18:31:17.736872+08:00",
     "errors": []
   }
 }
