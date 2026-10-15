@@ -2708,5 +2708,75 @@
       ]
     },
     "provider": "groq"
+  },
+  "trump_v21826:__MARKET__:a958b48ae6cacc12d68527ea": {
+    "ts": 1792043105.967344,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.5,
+          "policy_stage": "announced",
+          "reason": "能源開發未決定市場影響",
+          "relevant": true,
+          "affected_channel": "供應鏈",
+          "transmission": "政策→能源開發→市場",
+          "exposure": "證據不足"
+        }
+      ]
+    },
+    "provider": "groq"
+  },
+  "news:3711:11618931b73070ecfaa82b76": {
+    "ts": 1792043157.2739775,
+    "data": {
+      "items": [
+        {
+          "id": 2,
+          "direction": "positive",
+          "score": 3,
+          "confidence": 0.8,
+          "reason": "Q3營收創高",
+          "relevant": true
+        }
+      ]
+    },
+    "provider": "groq"
+  },
+  "final_v21826:3711:24dc12787c609e0980fcd4c4": {
+    "ts": 1792043164.8414314,
+    "data": {
+      "recommendation": "🟠 暫停加碼",
+      "confidence": 0.6,
+      "core": "日月光投控基本面成長但估值偏高，技術超買，籌碼支持，風險在於RSI過熱，消息正面但需等待止跌確認。",
+      "fundamental_view": "獲利成長率22.96%，ROE11.7%，但PE54.05遠高於同業中位28.38，估值偏高。",
+      "technical_view": "多頭趨勢，RSI73.86超買，K80.04、D80.04，MA20高於MA60，短期回調可能。",
+      "chips_view": "機構持股111.6萬，5日增幅169.3萬，20日大幅增持，融資減少，籌碼偏向支持。",
+      "risk_view": "RSI過熱，短期可能回調，需留意市場風險。",
+      "news_view": "Q3營收創高正面，外資回補正面，其他新聞無負面。",
+      "trump_view": "全球負面，產業中性，無明顯影響。",
+      "macro_view": "利率負面、匯率正面、市場風險偏低，總體環境較為穩健。",
+      "buy_view": "買點與投資價值不完全一致，需等止跌確認後再進場。",
+      "strengths": [
+        "獲利成長率高",
+        "機構持股增長",
+        "外資回補"
+      ],
+      "risks": [
+        "估值偏高",
+        "RSI超買",
+        "短期回調可能"
+      ],
+      "conflict": "估值偏高與技術超買形成最大矛盾，投資價值與買點不一致。",
+      "next_watch": [
+        "觀察RSI回落",
+        "確認MA20回復",
+        "留意外資持股變化"
+      ],
+      "reason": "基本面成長但估值偏高，技術超買需等待止跌，籌碼支持但風險仍在。"
+    },
+    "provider": "groq"
   }
 }

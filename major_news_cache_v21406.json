@@ -1,18 +1,8 @@
 {
   "2330": {
-    "fetched_at": "2026-10-15T02:11:05.665954+08:00",
-    "adjustment": -5,
+    "fetched_at": "2026-10-15T13:45:28.541435+08:00",
+    "adjustment": 4,
     "events": [
-      {
-        "title": "2330 台積電 - 美光重挫拖累費半急殺、大盤退守4.85 萬防線，市場等待台積電法說會指引- 股市爆料同學會 - CMoney",
-        "source": "CMoney",
-        "date": "2026-10-13T12:17:40+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE93ZWh1TkVkb3Z6LTZOTlBQcXpseEozLU42Mm9keVdKdl9JU0IteGNnQVBHMWU5elZFb1c5Rl9UUjd5MDBqZEkyWGVLaFM5RzNEOTZHSk13SHU?oc=5",
-        "raw_adjustment": -5,
-        "adjustment": -5,
-        "label": "股價重大下跌",
-        "status": "重大負面事件"
-      },
       {
         "title": "三大法人買賣超 – 外資買超(2327)國巨*、(2330)台積電，投信買超(8046)南電、(3189)景碩，法人合計買超292.53億元 - 永豐金證券",
         "source": "永豐金證券",
@@ -64,20 +54,30 @@
         "status": ""
       },
       {
-        "title": "2330 台積電 - 神山即將跌落神壇，準備賣！ - 股市爆料同學會 - CMoney",
+        "title": "2330 台積電 - 台積電供應鏈、南亞科到屏科關鍵年屏東卓越企業獎表揚32家業者- 股市爆料同學會 - CMoney",
         "source": "CMoney",
-        "date": "2026-10-12T07:17:02+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE9tTFNwVERRNnNQVW9IR0FMM1NVc0NEUXplWUdkSkM1OWN0U0xlUmJsMnF1UUY1MzRBaXY1STExRmR4Wmtla0ZCdmtMTXV4clFuWXRYaVptSk0?oc=5",
+        "date": "2026-10-13T00:00:57+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTFBGVXJ2Y1V4NlF6ZUNkanNkelhmME5MSlhHaUFUdW9VOXlqSWppOHN5bnlnRkstWXpQR3htXzBIcVJIQXNFSXkycTRrdkEyVmVodkU0cXhNX3I?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
         "status": ""
       },
       {
-        "title": "2330 台積電 - 10/13 台指期盤前分析- 股市爆料同學會 - CMoney",
+        "title": "2330 台積電 - 股市最新爆料，掌握股友們對眾個股股價、技術分析、新聞的第一手... - 股市爆料同學會 - CMoney",
         "source": "CMoney",
-        "date": "2026-10-12T07:19:43+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE5CdFVDR294NndnZjk4LUJSMEJnc0M4ckNqNGctcFBoZHFtTklLdUQwMUVhWXRUdUVxaXNHZkdzNl9FSWpDb1ZiWU9ZNW9RbXJoM1hqc2tKOE8?oc=5",
+        "date": "2026-10-13T05:40:35+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE9YeksyU1NzUGt5UHdfSV9vVld2Rk9XMDRaQ092Ti1qU2ZzWXc4UlE2N2hDaHVaTHgwaXMtd3E5c2RBcHFhelJsWk02ZU8tVm4tTFdxUWhGMWU?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "2330 台積電 - 台積法說前跌什麼？博通執行長發言、長鑫進逼一次看- 股市爆料同學會 - CMoney",
+        "source": "CMoney",
+        "date": "2026-10-13T05:48:28+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE9NOV9VMXVteVNCZkhPS0hvdlV5YWR5eDhteWZrWTA4MFpTa2x4MkljcEg4Zl9EZDQ0Q28wRWhFY2JxZDdLYWEwUkNWVVhtVF9wLXdJMTFzNS0?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
@@ -88,7 +88,7 @@
     "lookback_days": 14
   },
   "3711": {
-    "fetched_at": "2026-10-15T02:11:11.024221+08:00",
+    "fetched_at": "2026-10-15T13:45:40.224084+08:00",
     "adjustment": 0,
     "events": [
       {
@@ -132,16 +132,6 @@
         "status": ""
       },
       {
-        "title": "日月光投控：日月光半導體製造取得供營業用之廠務工程一批，計7.48億元 - 台視全球資訊網",
-        "source": "台視全球資訊網",
-        "date": "2026-10-08T22:20:57+08:00",
-        "link": "https://news.google.com/rss/articles/CBMikgFBVV95cUxNeWk4MHNoUWpFUnNEdnVqQ1Z3X2NaN2ZkS0I0UVQtVmxTdnlNQ1Q4SGRud1pvR2pETUpzb0s2cHYwSTBkRG56Z3ZPTTZJM0FWWVZueFc5eXFkZHVHLVY1NE13ci00UG1xRWZLQ3BULUV3eUtyMDI1TUIxNEkzM3BHdXV0cE1mbGxVVXBLb3ZUMmVmdw?oc=5",
-        "raw_adjustment": 0,
-        "adjustment": 0,
-        "label": "",
-        "status": ""
-      },
-      {
         "title": "外資回補日月光投控，籌碼避風港的潛力 - CMoney",
         "source": "CMoney",
         "date": "2026-10-10T13:00:53+08:00",
@@ -166,6 +156,16 @@
         "source": "CMoney",
         "date": "2026-10-12T12:11:48+08:00",
         "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE1ZMXU0SlhxQzNNNFdxUFFVTmsxUmd4VnFCM2Fsbk05TVUzMy1wb3lzOFAwd3VFeDZFOXBpM2FOQl9jMWNVRGRDSHhSeExtYzZENm8wQUhNYWY?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "2330 台積電 - 👍持續慢慢買進~^^ 🏆3711日月光投控， 今日收盤... - 股市爆料同學會 - CMoney",
+        "source": "CMoney",
+        "date": "2026-10-12T14:09:44+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTFBsZmtuMVVPUlJmSHVyVk04dHp4aGV5M2ZQTXhMSkktSFBkbzRrbW96LWRhQkdyZGNRTERqN3ZRS09GNEZtQU0wUks0TkdyeXoxdHRyaGFTNHY?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
@@ -250,7 +250,7 @@
     "lookback_days": 14
   },
   "0050": {
-    "fetched_at": "2026-10-15T02:10:41.801412+08:00",
+    "fetched_at": "2026-10-15T13:45:05.980045+08:00",
     "adjustment": 0,
     "events": [
       {
@@ -258,16 +258,6 @@
         "source": "CMoney",
         "date": "2026-10-01T15:00:00+08:00",
         "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE55VXBoa1VBMXdSVm5jSkRuNFFjUVY4LXU2UkY4U29VN1dWWjhlZmh4Ry1JUnhfNE1raERYSk5ZSzExZUdVb0lLMHZYYjJqNWVHN2xXU1pxRUc?oc=5",
-        "raw_adjustment": 0,
-        "adjustment": 0,
-        "label": "",
-        "status": ""
-      },
-      {
-        "title": "0050 元大台灣50 - 上市外資賣超一週以來排行- 股市爆料同學會 - CMoney",
-        "source": "CMoney",
-        "date": "2026-10-02T17:03:44+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE9JcmN0Qnlyc1A3ZWZuN1p2ZFNMWDc2cFpOS3IxNUx5cU1wbnR6bm1Zekd6UXp4Q05CNGNOT2JRWU8yMk11dnRVVU13N0FtcWZrQU5lZlRvVi0?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
@@ -332,13 +322,23 @@
         "adjustment": 0,
         "label": "",
         "status": ""
+      },
+      {
+        "title": "0050 元大台灣50 - 0050定期投資，輕鬆致富！ - 股市爆料同學會 - CMoney",
+        "source": "CMoney",
+        "date": "2026-10-06T15:00:00+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE0zd0FfemRUc0szWlRnR0ZsWlJKWFk0UHZQVy1DZEVmaU5BbUZVQjlIMkdlZHFfNElZdWlYN1o4RG10TlZTcnVlcjFkRkt6SlpyQzFzVWlmT20?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
       }
     ],
     "source": "Google News RSS",
     "lookback_days": 14
   },
   "QQQ": {
-    "fetched_at": "2026-10-15T02:11:16.825128+08:00",
+    "fetched_at": "2026-10-15T13:46:11.869833+08:00",
     "adjustment": 0,
     "events": [
       {

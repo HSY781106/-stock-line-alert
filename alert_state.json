@@ -28,7 +28,7 @@
       "alert_sent": false
     },
     "台灣加權指數": {
-      "date": "2026-10-14",
+      "date": "2026-10-15",
       "daily_alert_sent": false,
       "weekly_alert_sent": false,
       "alert_sent": false
@@ -52,12 +52,12 @@
       "session_key": "2026-10-15"
     },
     "3711 日月光投控": {
-      "last_check": "2026-10-14T13:59:20.218195+08:00",
-      "last_price": 749.0,
+      "last_check": "2026-10-15T13:46:05.327835+08:00",
+      "last_price": 673.0,
       "last_interval_low": 691.0,
       "last_interval_source": "Yahoo-5m",
       "interval_alert": false,
-      "session_key": "2026-10-14"
+      "session_key": "2026-10-15"
     },
     "QQQ": {
       "last_check": "2026-10-15T04:00:08.938551+08:00",
@@ -68,16 +68,16 @@
       "session_key": "2026-10-14"
     },
     "台灣加權指數": {
-      "last_check": "2026-10-14T13:59:26.603749+08:00",
-      "last_price": 48782.609375,
+      "last_check": "2026-10-15T13:46:12.728654+08:00",
+      "last_price": 46965.96875,
       "last_interval_low": 47997.69140625,
       "last_interval_source": "Yahoo-5m",
       "interval_alert": false,
-      "session_key": "2026-10-14"
+      "session_key": "2026-10-15"
     }
   },
   "high_score_alert": {
-    "date": "2026-10-14",
+    "date": "2026-10-15",
     "active": []
   },
   "target_buy_point_alert": {
