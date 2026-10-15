@@ -2890,5 +2890,61 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:d191406e3ec25b3202856518": {
+    "ts": 1792107221.4761674,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.7,
+          "policy_stage": "considering",
+          "reason": "川普推動格陵蘭能源與礦產開發，有利全球傳統能源與採礦業。",
+          "relevant": true,
+          "affected_channel": "需求",
+          "transmission": "開放開發政策→增加礦業與石油探勘活動→能源及原物料產業受益",
+          "exposure": "全球能源與資源開發相關企業"
+        },
+        {
+          "id": 1,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.6,
+          "policy_stage": "unknown",
+          "reason": "川普個人投資操作，對整體大盤與政策傳導無直接影響。",
+          "relevant": false,
+          "affected_channel": "估值",
+          "transmission": "個人投資行為→市場短期情緒→無實質產業傳導",
+          "exposure": "加密貨幣相關平台與個股"
+        },
+        {
+          "id": 2,
+          "direction": "positive",
+          "score": 1,
+          "confidence": 0.6,
+          "policy_stage": "unknown",
+          "reason": "川普投資科技與太空產業，提升市場對航太與科技股關注度。",
+          "relevant": true,
+          "affected_channel": "估值",
+          "transmission": "資金注入與關注度提升→帶動科技與航太板塊情緒→大盤相關類股受益",
+          "exposure": "大型科技股與航太衛星產業"
+        },
+        {
+          "id": 3,
+          "direction": "positive",
+          "score": 3,
+          "confidence": 0.85,
+          "policy_stage": "announced",
+          "reason": "66億美元國防造船廠投資，提振美國國防與軍工產業前景。",
+          "relevant": true,
+          "affected_channel": "需求",
+          "transmission": "政府國防預算挹注→造船與軍工供應鏈訂單增加→國防航太板塊受益",
+          "exposure": "美國國防造船與軍工製造業"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
