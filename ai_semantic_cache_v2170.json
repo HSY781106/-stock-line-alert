@@ -2834,5 +2834,61 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:7f0383cc52b2be60ded67c25": {
+    "ts": 1792086987.9389632,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.7,
+          "policy_stage": "announced",
+          "reason": "台灣計畫購買美國天然氣，有利於美能源出口與整體市場需求。",
+          "relevant": true,
+          "affected_channel": "出口/需求",
+          "transmission": "川普宣布採購計畫→增加美國天然氣出口→嘉惠美國能源產業與整體市場",
+          "exposure": "美國天然氣出口商與整體能源市場"
+        },
+        {
+          "id": 1,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.65,
+          "policy_stage": "announced",
+          "reason": "川普表示將在格陵蘭開採油氣與礦產，增加資源供給與投資機會。",
+          "relevant": true,
+          "affected_channel": "供應鏈/投資",
+          "transmission": "政策推動格陵蘭開發→能源與礦業投資增加→擴大整體市場資源供給",
+          "exposure": "美系能源與資源開發相關產業"
+        },
+        {
+          "id": 2,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.65,
+          "policy_stage": "announced",
+          "reason": "格陵蘭油氣與礦產開採準備啟動，利好資源開發與相關產業。",
+          "relevant": true,
+          "affected_channel": "供應鏈/投資",
+          "transmission": "政策推動資源開採→帶動能源及探勘相關供應鏈→擴大整體市場規模",
+          "exposure": "能源與探勘裝備相關產業"
+        },
+        {
+          "id": 3,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.65,
+          "policy_stage": "announced",
+          "reason": "格陵蘭大規模油氣與礦務探勘即將展開，提升能源產業投資情緒。",
+          "relevant": true,
+          "affected_channel": "估值/需求",
+          "transmission": "開採計畫啟動→提升市場對能源與原物料產業預期→對整體市場產生正面外溢",
+          "exposure": "全球及美國原物料與能源板塊"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
