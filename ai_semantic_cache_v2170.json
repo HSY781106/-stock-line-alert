@@ -2778,5 +2778,61 @@
       "reason": "基本面成長但估值偏高，技術超買需等待止跌，籌碼支持但風險仍在。"
     },
     "provider": "groq"
+  },
+  "trump_v21826:__MARKET__:2166e71edfa9ffa657f430e4": {
+    "ts": 1792086773.541231,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.8,
+          "policy_stage": "threat",
+          "reason": "格陵蘭當局否認川普關於開採石油的說法，市場影響未明。",
+          "relevant": true,
+          "affected_channel": "供應鏈",
+          "transmission": "川普言論→格陵蘭否認→市場觀望資源供給變動",
+          "exposure": "全球能源與礦產市場（如埃克森美孚、必和必拓）"
+        },
+        {
+          "id": 1,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.85,
+          "policy_stage": "announced",
+          "reason": "台灣計畫購買美國天然氣，利好美國LNG出口業者與相關供應鏈。",
+          "relevant": true,
+          "affected_channel": "需求",
+          "transmission": "美台協議→增加美國天然氣出口需求→提振美國能源業營收",
+          "exposure": "美國天然氣出口商（如 Cheniere Energy）與全球LNG市場"
+        },
+        {
+          "id": 2,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.75,
+          "policy_stage": "considering",
+          "reason": "川普宣稱將在格陵蘭開採資源，但實際可行性與政策進展存疑。",
+          "relevant": true,
+          "affected_channel": "估值",
+          "transmission": "川普口頭主張→引發資源開發話題→短期未形成實質供給",
+          "exposure": "全球油氣與關鍵礦產市場"
+        },
+        {
+          "id": 3,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.75,
+          "policy_stage": "considering",
+          "reason": "川普指格陵蘭即將展開資源探索，屬口頭表態，無實質執行細節。",
+          "relevant": true,
+          "affected_channel": "估值",
+          "transmission": "川普言論→影響能源板塊投資情緒→實質供需未變",
+          "exposure": "全球油氣與礦業投資板塊"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
