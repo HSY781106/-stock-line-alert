@@ -83,7 +83,7 @@
   "target_buy_point_alert": {
     "0050 元大台灣50": {
       "date": "2026-10-16",
-      "locked": true,
+      "locked": false,
       "notified_at": "2026-09-07 11:59:19",
       "notified_score": 87
     },
