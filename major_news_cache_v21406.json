@@ -338,19 +338,9 @@
     "lookback_days": 14
   },
   "QQQ": {
-    "fetched_at": "2026-10-16T13:41:33.347421+08:00",
+    "fetched_at": "2026-10-17T01:40:03.568056+08:00",
     "adjustment": 0,
     "events": [
-      {
-        "title": "2026大家都在買哪些美股ETF？VOO、QQQ、SMH⋯10檔熱門排行榜：費用率、規模、績效一次看｜豐雲學堂2026 年 10 月 - 永豐金證券",
-        "source": "永豐金證券",
-        "date": "2026-10-02T19:41:01+08:00",
-        "link": "https://news.google.com/rss/articles/CBMi0wNBVV95cUxPOV94RWJ6NllMa2RxLWlVekRlamZVUzlGaWJLai1pMnVNNGVFT25vMlY0WlBvQkdjdFFJNUtDUXV1S3BGRDFYUGV4cm44V2JmOHd2TXNEbGUwVGQ0bUxSN3ZqTDNrRXMzbDRKRktWYzF4ZHJ3azNFT2xTV1NiQzJ5U3VZa2V1VjNqRUU3ZFRKVHFHdTQxUGx5NXEzQVlVZjdTLXdQOC1MMXhBbFQ0eGh3cWxuV3FtREhfbk5hcDc0TGQ0bkZRTmFfVVRjemJMVTFxY1BpaE1EQWFhNDVBRjB2cU5iYm4wdnNfcmRLcGR3ZDlnRU9KV0ZPblYtVE9aYVZYRjVpUTNqZEx0T2pzUlROU0dWaHAycWplSnhZb1Vmam5IalIwTE0xZWdHSndjdkhBTWIxT0hZWU9xQ2h6Y3VIZnBQVThBTTd3OVlaS0JKbzhtSkRJR3V",
-        "raw_adjustment": 0,
-        "adjustment": 0,
-        "label": "",
-        "status": ""
-      },
       {
         "title": "Invesco QQQ ETF (QQQ) 今日股票價格、走勢圖與新聞 - CoinGecko",
         "source": "CoinGecko",
@@ -416,6 +406,16 @@
         "source": "Moomoo",
         "date": "2026-10-13T00:17:32+08:00",
         "link": "https://news.google.com/rss/articles/CBMiY0FVX3lxTE1lT3haSThUdzkwbkY2Wllkc0VjaHUxSGc3b0FLeXpmTVdnRy1oalo5UU9XaTkxT2dOcVVwTjdZSXZIUlBOeEJPVVZ1VTl3V3YxWFd4bVA1LXRCS2l5NUZUSWp6QQ?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "納指100ETF-Invesco QQQ Trust(QQQ)股價、新聞、報價和圖表 - Moomoo",
+        "source": "Moomoo",
+        "date": "2026-10-14T07:41:03+08:00",
+        "link": "https://news.google.com/rss/articles/CBMi5AJBVV95cUxOVEkyNmZyX19qTUtGYkxOTThYMEZ5SkFPUFk0VmpQMmNlVEs0UjJPWnpIUXRoWThidzR4ejltQXh6Ml9wM282cEJsYzYtYmtkVVJrWThHOHBIS2V2N1FuUU44Ukc1OGYtczV2dHZaRV9qYk9hTEZUQ1JfcHUwX202VC1qcjQ0WjlUb3hIQ1hVdzM0LUJqdGNmRUVXY013UUlSLVhjNy1FV1UzSlMxdVNrQzFSdldqVlViYlhNTjdGdi12ZlVZLUxMbFFCR3lIWEU3NEhBdll2Q0dVTEhBT1Y4Y1QxNFJhOUhyU1ZNVUQ0WVVhUUFoSkJVSDQxMnExcTFhYXhhTTFPQ0FJSDR4Yi1sYTh3UXJuYmZyaDl0bkpxWnBTWjJSVldIb0J1RGV4VWZJTTkzYmV2MzUwUzNCd19SUDVPMUxHQk9lU0lnamFGd0ZpY1hKWVh",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
