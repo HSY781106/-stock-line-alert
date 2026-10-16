@@ -1,18 +1,8 @@
 {
   "2330": {
-    "fetched_at": "2026-10-16T01:53:17.428672+08:00",
-    "adjustment": -5,
+    "fetched_at": "2026-10-16T13:41:08.067015+08:00",
+    "adjustment": 5,
     "events": [
-      {
-        "title": "2330 台積電 - 😇美國通膨指數超過預估費半大跌，果然整死台股大盤，台積電沒- 股市爆料同學會 - CMoney",
-        "source": "CMoney",
-        "date": "2026-10-15T14:34:19+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE1lTDdFbHp6RGlPOUJkaHNTMDhxQnAzZlQwZW1KTVJVWVlYZ3VScEFLTEtsbkpvSDFaWkRmY08waFY3eE5tbURRWklBaUhQaU9mZDdUdklmTnU?oc=5",
-        "raw_adjustment": -5,
-        "adjustment": -5,
-        "label": "股價重大下跌",
-        "status": "重大負面事件"
-      },
       {
         "title": "2330 台積電 - 🌟10/13 追蹤個股，重點分析🧐 - 股市爆料同學會 - CMoney",
         "source": "CMoney",
@@ -34,50 +24,60 @@
         "status": ""
       },
       {
-        "title": "2330 台積電 - ASML預估需求「大爆單」！透露台積電這三大關鍵訊息- 股市爆料同學會 - CMoney",
-        "source": "CMoney",
-        "date": "2026-10-14T04:11:57+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTFBLV2k3eWRXUWhJU3dwMnFveFBsSFc0TUtNN3VqckhYTWdTOEVKMVVDakVvWFlBMi0tU0Z4TkFGcWlWX2xZS20tT3JWMVZ6OThFODM0T19IeWk?oc=5",
-        "raw_adjustment": 0,
-        "adjustment": 0,
-        "label": "",
-        "status": ""
-      },
-      {
-        "title": "2330 台積電 - 迎戰台積電超級法說紀律布局美股科技龍頭正是時候- 股市爆料同學會 - CMoney",
-        "source": "CMoney",
-        "date": "2026-10-14T04:24:46+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE4ySmRqdElKV0FHVGJ6b3V4WnVrREF1dkpGVlJlVHZKTlRudGxMeDY0Uzd1dFZab3dfZktnaTh4OEhacUhHNGF4b1c5ZURPSFllNEZvbVpXR1Y?oc=5",
-        "raw_adjustment": 0,
-        "adjustment": 0,
-        "label": "",
-        "status": ""
-      },
-      {
-        "title": "2330 台積電 - 【00406A】10/14 操作日報｜經理人爆買大立光近一倍持股- 股市爆料同學會 - CMoney",
-        "source": "CMoney",
-        "date": "2026-10-14T06:33:17+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTFB3ZXM0TkdpTDNEbkU4YUR1QU1jTHZ0Tm5sT2NocnZZMjZ4SUh5dzF0cXN3YVE2LUc5clplMGZrVERXMk12dFZVUW9XTDdmWHdlVDhHdWd2M24?oc=5",
-        "raw_adjustment": 0,
-        "adjustment": 0,
-        "label": "",
-        "status": ""
-      },
-      {
-        "title": "2330 台積電 - 法人一日賣超金額排行榜- 股市爆料同學會 - CMoney",
-        "source": "CMoney",
-        "date": "2026-10-14T08:18:11+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE85cHQ5UFZDVjM0b1NKeU1acjVDRWFwMEhBWXdsd3N3b18xb1RiOEVTWWd0VjB2SE14eXhVMXRmalVYYWVROEhlRFd5NmkxTFV2RzlhRUlQRWk?oc=5",
-        "raw_adjustment": 0,
-        "adjustment": 0,
-        "label": "",
-        "status": ""
-      },
-      {
         "title": "2330 台積電 - 我喜歡逢低買。但四寶也大漲。現在還有什麼標的能買的？全部都漲... - 股市爆料同學會 - CMoney",
         "source": "CMoney",
         "date": "2026-10-14T11:24:17+08:00",
         "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE5oUl9wTzV6ZGdzUnNQN1luRUYxcUxWOVpOQVV0MkhSV3FENFJTa1ZEcHNJbzZCOVRucUVMc0U5MTNQWmp4TXZoa1NYUEpHWEU1cXdoWXZKTHU?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "2330 台積電 - 台積電救世主扇出形封裝本次最大看點- 股市爆料同學會 - CMoney",
+        "source": "CMoney",
+        "date": "2026-10-14T12:15:40+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE1UbkROaVAwZ3h5MkZJY09oS016OTdQR3V3MzUzaFc5YnhFYnFSQldkMllLeG1Gbng1MGNlV0FnY18tcHdoUG9fZFhjTDdwX3VEQlZvaGxWNEc?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "2330 台積電 - CoreWeave 債殖利率逼15% 股價崩馬斯克驚呼不妙- 股市爆料同學會 - CMoney",
+        "source": "CMoney",
+        "date": "2026-10-14T12:34:37+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE5uS2dONVN3dzVPTGdtYWlhVkpmdkdLMlBRbXRqaDdyZzJDZVp1RkpSVmhiZXcxMFdvS28xYkI5RFFsVVZXckNTaHZGdXJmTFpjZXJ6OURNQ0k?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "2330 台積電 - 艾司摩爾財測三度上調台積法說前夕重要夥伴搶先釋出好消息- 股市爆料同學會 - CMoney",
+        "source": "CMoney",
+        "date": "2026-10-14T13:00:02+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE1MWTdsODJUMEpScmhSTkNEamIxeWFuenJPLTd1Q3lRc1pQSEg3eEZoMnpiUWwxN18wcVpHeGxoQzVaMnFJMkF6eno1VEhKZDFDQ0FmQ3lCdHE?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "2330 台積電 - 📣1015台股觀盤重點- 股市爆料同學會 - CMoney",
+        "source": "CMoney",
+        "date": "2026-10-14T15:23:43+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE5naUI2dzNsWktVZ1lZVWJ2bi1EdDlyTGcxcXVIZnZvcUdkSkhHS3FuNEFVZDRObTMyU0R0aEt1UVRHbUZtTlFUZ0R1QVRPYXhJeWllMHA3Zlo?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "輝達、超微、蘋果爭相下單！美銀：台積電2027年產能有望提前達標 2奈米營收貢獻升至11% - CMoney",
+        "source": "CMoney",
+        "date": "2026-10-14T15:27:28+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE1JcVpLMGxJdExmcC02c3dGRy01YzZwQXdSUVpLdDRLVE1Bc2JNUFZCTkt4a0pRUUtzcXhDRUpWTlZZNE5oMnQ1ZGtFbTJBZ2FsNlZXMEVNUGQ?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
@@ -88,19 +88,9 @@
     "lookback_days": 14
   },
   "3711": {
-    "fetched_at": "2026-10-16T01:53:22.967643+08:00",
+    "fetched_at": "2026-10-16T13:41:16.551557+08:00",
     "adjustment": 0,
     "events": [
-      {
-        "title": "日月光投控：環鴻科技取得南投縣草屯鎮中興段不動產，合計約8.85億元 - 台視全球資訊網",
-        "source": "台視全球資訊網",
-        "date": "2026-10-02T11:01:38+08:00",
-        "link": "https://news.google.com/rss/articles/CBMikgFBVV95cUxNR1hBNm1QZkhxNkxmRG5iSkVpWVlnMVdrb1RvMV9lQWFlc0JITWptbWd4VmJ3Yk9WbElSWTlVWkpfRmdzMTVFX3doOHppN3FibmVvc05NZWwxd0ZWS1h5ekV2OF8ybU5lOVNFbG5ySTFHdTVxUENtMVVONXN0RVJrMjNISUtWTVd4Z25LSGl1SzB5QQ?oc=5",
-        "raw_adjustment": 0,
-        "adjustment": 0,
-        "label": "",
-        "status": ""
-      },
       {
         "title": "3711 日月光投控 - 超級沒料 禮拜一直接空 - 股市爆料同學會 - CMoney",
         "source": "CMoney",
@@ -166,6 +156,16 @@
         "source": "永豐金證券",
         "date": "2026-10-12T03:50:00+08:00",
         "link": "https://news.google.com/rss/articles/CBMidkFVX3lxTE1VbXVtQjdPSGhEV0FkdzY0aVpvMk5QVFJZTC1NcmtZYVhFVVlmeGpsNTJENFd1M01rWFhEZjVveUxjQnBGcVdaMVVNX0lGLTlpX2ZuRWtXbG9sVTdxejdFbGJmZzBqT2dxaWpnUnVWSDd1Vm42WlE?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "3711 日月光投控 - 帥啊 - 股市爆料同學會 - CMoney",
+        "source": "CMoney",
+        "date": "2026-10-12T12:11:48+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE1ZMXU0SlhxQzNNNFdxUFFVTmsxUmd4VnFCM2Fsbk05TVUzMy1wb3lzOFAwd3VFeDZFOXBpM2FOQl9jMWNVRGRDSHhSeExtYzZENm8wQUhNYWY?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
@@ -250,7 +250,7 @@
     "lookback_days": 14
   },
   "0050": {
-    "fetched_at": "2026-10-16T01:52:53.554292+08:00",
+    "fetched_at": "2026-10-16T13:40:45.745996+08:00",
     "adjustment": 0,
     "events": [
       {
@@ -338,7 +338,7 @@
     "lookback_days": 14
   },
   "QQQ": {
-    "fetched_at": "2026-10-16T01:53:29.050169+08:00",
+    "fetched_at": "2026-10-16T13:41:33.347421+08:00",
     "adjustment": 0,
     "events": [
       {
@@ -366,16 +366,6 @@
         "source": "Yahoo 財經",
         "date": "2026-10-05T14:43:30+08:00",
         "link": "https://news.google.com/rss/articles/CBMiV0FVX3lxTFB4cU1OZUFYTFYzbl95QkpFYWJPbnhaLUotZkVaellWS0tCU19GMXRDUVZlcUF0YzZ0YnNyWlk0aDdYeUhFcGJRVEc4TFVpd3ZPWDdqdmNScw?oc=5",
-        "raw_adjustment": 0,
-        "adjustment": 0,
-        "label": "",
-        "status": ""
-      },
-      {
-        "title": "【深度解析】QQQ現價753，爲什麼接下來能看到850-880區間 - Moomoo",
-        "source": "Moomoo",
-        "date": "2026-10-06T00:45:43+08:00",
-        "link": "https://news.google.com/rss/articles/CBMie0FVX3lxTE5QeVIzRU1LQ1NRaDdOZEdSSXlaNklCQXNNZ0wwQmk3SWl5bDl2Y3liRmtKakVtWW9ZLXNjMXQ5Yk9OVnBIR3lOVGhwby1WNy13OWtoYTllbWwxVWpuR1VXdWFTWjFic1hhUmtKXzh4U09KUEtKeGtzRWE5cw?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
@@ -420,6 +410,16 @@
         "adjustment": 0,
         "label": "",
         "status": ""
+      },
+      {
+        "title": "QQQ 261012 748.00P(QQQ261012P748000)股票期權和價格 - Moomoo",
+        "source": "Moomoo",
+        "date": "2026-10-13T00:17:32+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiY0FVX3lxTE1lT3haSThUdzkwbkY2Wllkc0VjaHUxSGc3b0FLeXpmTVdnRy1oalo5UU9XaTkxT2dOcVVwTjdZSXZIUlBOeEJPVVZ1VTl3V3YxWFd4bVA1LXRCS2l5NUZUSWp6QQ?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
       }
     ],
     "source": "Google News RSS",
@@ -454,6 +454,94 @@
         "source": "LINE TODAY",
         "date": "2026-09-21T07:41:48+08:00",
         "link": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE94NFFoSGJZVjFUWGx2ekp0Ml82SW9iNjJoajQ5MVFBdE1QSmdaU001UjlmWTNsLWFsamxhTEdpaU1ZS3EyVUh3cXl4bXR2eXhnZW1DVTRlWHVVZFJBOFBDV0g3R2M?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      }
+    ],
+    "source": "Google News RSS",
+    "lookback_days": 14
+  },
+  "2707": {
+    "fetched_at": "2026-10-16T13:41:44.973256+08:00",
+    "adjustment": 0,
+    "events": [
+      {
+        "title": "2707 晶華- 藍營指控私幼餵藥案幫兇蘇巧慧競辦：國民黨又為了選舉扭曲事實- 股市爆料同學會 - CMoney",
+        "source": "CMoney",
+        "date": "2026-10-05T11:43:49+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE4yYm9tQ3laWFJEdjF3VXZhRlJEczFNMkxZRktpWWhvZlJXakZlWGM1VXNYZWFmblE3WjlNVTJiUUNUenJ5NDgyWHdaS1hNTWJOYkxqWlJCdWs?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "2707 晶華- 生銅鑼燒是什麼？日韓名店搶著來，晶華如何憑快閃店每年多賺一億？ - 股市爆料同學會 - CMoney",
+        "source": "CMoney",
+        "date": "2026-10-08T02:50:53+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTFBiQ2dObFBkNWFUWGV5OTBXUm5YekNkcjZybzlwSXVjc2lscVJuR093R2xSREZhVWItSjhVc0xoM1lqd28wTU9MSEZtNEtBUE5WV3NaSklyWEU?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "營收：晶華(2707)9月營收5億7149萬元，月增率-3.98%，年增率9.16% - 富聯網",
+        "source": "富聯網",
+        "date": "2026-10-08T08:33:00+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxQUV9wTFVGaHZtcVBGa3J5S0g3X2pkM3oybG80eEM4eVpJQnIxekt6eVFsc2dScVFycS1ROTBvVXhHMzZkbTF6MmF4dGZFMzk3eE5wS25sZTB5b0NyWFFEQ1pWYnFZaGgtY0laNFJKdVZzV0VkTktlc09hbVNOWXllUjdEUEZ2SXc0?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "個股：晶華(2707)前三季營收寫同期高點，看好連假、旅展、尾牙助攻Q4動能 - 富聯網",
+        "source": "富聯網",
+        "date": "2026-10-08T09:43:00+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxOdDZ3WXoxUHNscTB2andVYUdzbWpCUmdodWRXNG5VMFZkMERzd2UydzV2a3BndmRKVzVWQjV2MG13YkdpZHRNcXBJU3NwT0doUEh2VDAtZDVnVHFPU2M2RmlBT2JxLTZYOVlVSVBTZEkwN2lpazFYRENfdW5zN1lSU1FlNUFJOWpy?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "2707 晶華- 晶華9月營收創同期高樂看飯店餐飲業Q4續迎利多- 股市爆料同學會 - CMoney",
+        "source": "CMoney",
+        "date": "2026-10-08T11:06:44+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE1JZmljYTFSa1dyMGVnNW13NjdzbnQ3QWxRLV93cmozaEJjajFYUEJPOVRMRXVHZUFhcGJldVdnRGRNWks2d0VhSHlKNnVIR0M4M2I4cG9NVEE?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "2707 晶華- 香港最難訂位火鍋店來台！晶華快閃7天溫體牛、港式海鮮鍋4人開鍋- 股市爆料同學會 - CMoney",
+        "source": "CMoney",
+        "date": "2026-10-13T17:45:33+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE5KX3hBbHgxMkRpWm1tbXRmZWUzUGphM0t2V1J6SHFBdTVUUWRxazhaU25UdXJldWVQaTEyeE1mR1hDMDB5ZlViaGs4ZENGVm0yZ2JOeTRzM2M?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "華航重啟直飛重慶航班 晶華搶搭高端商旅商機 - CMoney",
+        "source": "CMoney",
+        "date": "2026-10-14T13:34:12+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE1NMHVEUEhEMTBGV2VILWtUU0ZIS1ZtM3BUdTFULUdhQzNRVEM0dE1ESDRVSUxFTGlIcmE0TlpvOXZKUXVNbUtvQU5ENnpHdVJRTE13V1JVQ2c?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "2707 晶華- 重慶麗晶獲米其林一星鑰肯定晶華搶搭高端商旅商機- 股市爆料同學會 - CMoney",
+        "source": "CMoney",
+        "date": "2026-10-14T17:04:54+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE1JNmFtQ2xpclk4aW5tTTdIeHZNM1hnZ1RuVFdrWEt2X2ZhVGo5VW1hdUZfMG82YW5jRXlsd1JaQXhqX2hfNVZBbWJzYjVIbUhnQno4aGxTUW0?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",

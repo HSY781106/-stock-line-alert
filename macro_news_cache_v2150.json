@@ -1,11 +1,19 @@
 {
-  "cached_at": 1792104153.9462216,
+  "cached_at": 1792129265.358138,
   "data": {
     "items": [
       {
         "title": "Fed's Collins sees another rate hike on the table before end of 2026 - Reuters",
         "link": "https://news.google.com/rss/articles/CBMipAFBVV95cUxPQTNoWUtZWjdLcTc2ZmNycnptRmR1cmluWThZU2ZTYU5JUkdaazY1Z2hEdjIxNWZ3VU5RSVZvejc3VnlueGZoN0JyNlNmdkptQk9ZNEZqU1MyLTNUblpOaF9FMkdGbnZhX1hTVllLTzYxNFEwamlyazZKem00N1k1UFBablNQSVRCZTgySWNNR3pHemxzSEl1S0VBeE1DQlYyS0Ntdw?oc=5",
         "published": "Tue, 13 Oct 2026 20:08:52 GMT",
+        "query": "Federal Reserve interest rates inflation US economy",
+        "direction": "negative",
+        "reason": "緊縮／景氣風險"
+      },
+      {
+        "title": "Warsh says Fed is focused on taming rising prices, but gives no hint about next rate hike - NBC News",
+        "link": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxPUm1YY3gtQVZrcEhOQm9iNE1idzlmNnRZTzQxOXd6dUl2XzBhZTBsZk04a1U1R1VBbEw0VG1keFVhdUNrUEc2N3JlOGVCcDhtLXR6NG1OLTc2OE9RM0hKM1J5N2tCTnVvNEJyR1FhUXA4dFYwMS1BTmszaHZSODNHWjJIQ1NvQU1SMGdzbzZjVHhwTWc1VlJqOWlaTXBvWVRjNHNMXy1CdDM?oc=5",
+        "published": "Thu, 15 Oct 2026 19:59:00 GMT",
         "query": "Federal Reserve interest rates inflation US economy",
         "direction": "negative",
         "reason": "緊縮／景氣風險"
@@ -19,9 +27,9 @@
         "reason": "中性／待確認"
       },
       {
-        "title": "Soaring Energy Prices Push Inflation Higher - The New York Times",
+        "title": "CPI Report Live Updates: New Insights on Inflation, U.S. Economy and the Fed - The New York Times",
         "link": "https://news.google.com/rss/articles/CBMihgFBVV95cUxOVXRrRmpmSC1sM1BwYWdHVzBVbzZRemV3N04yeEdCUV85anBMemFQSXFyMUotV3FLNzdUazB3aWF4ck9fZXlYbTlfUUJUVlhJUkNyTHkyTWZ1R3JIWnJBMFlEMUxCX0VYV2x5R2w1cGF1SVpEc2pFZnJkSWhxMXFLTFEzR050dw?oc=5",
-        "published": "Thu, 15 Oct 2026 20:46:00 GMT",
+        "published": "Thu, 15 Oct 2026 02:24:07 GMT",
         "query": "Federal Reserve interest rates inflation US economy",
         "direction": "neutral",
         "reason": "中性／待確認"
@@ -35,17 +43,9 @@
         "reason": "中性／待確認"
       },
       {
-        "title": "Will the Fed raise interest rates this month? A Kevin Warsh speech could offer clues - NBC News",
-        "link": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxPUm1YY3gtQVZrcEhOQm9iNE1idzlmNnRZTzQxOXd6dUl2XzBhZTBsZk04a1U1R1VBbEw0VG1keFVhdUNrUEc2N3JlOGVCcDhtLXR6NG1OLTc2OE9RM0hKM1J5N2tCTnVvNEJyR1FhUXA4dFYwMS1BTmszaHZSODNHWjJIQ1NvQU1SMGdzbzZjVHhwTWc1VlJqOWlaTXBvWVRjNHNMXy1CdDM?oc=5",
-        "published": "Thu, 15 Oct 2026 20:28:24 GMT",
-        "query": "Federal Reserve interest rates inflation US economy",
-        "direction": "neutral",
-        "reason": "中性／待確認"
-      },
-      {
-        "title": "Consumer prices rose 3.7% annually in September as gas prices skyrocket - CNBC",
-        "link": "https://news.google.com/rss/articles/CBMifEFVX3lxTE1IZEUyWDE5aTVyU1VTMEhhNW9LV3pZdUkwcFI4WVlIOEhHUzBmUTZGbUlWTDVfN05zdzhFTlR4RERqUHROMDJ2T3dCN2I0UDI2dmZhOTBVTVRIYVlIYjRKQ2RZcjdNQWdWTTkyV0owQU1Xekt4U2ZHUFc4NnPSAYIBQVVfeXFMT3U1UnZTdHN4U2tIM1lZcHlGRGZLUXNaYjhDTHl4bllqdzY3ek9XYl9ZdzNBaUdJQjNndF9HSm1yci15X3ZnMEdaazNzMjVTZ204TzJ1cFJEOE81bUF0RFBJWTR6RWF2YU9BWm1PMnhTVGNWVnc5bkxNWlRpT0RuU2t2Zw?oc=5",
-        "published": "Wed, 14 Oct 2026 12:31:19 GMT",
+        "title": "Steve Moore warns stubborn inflation could complicate Fed rate decision - KOKI FOX 23",
+        "link": "https://news.google.com/rss/articles/CBMizAJBVV95cUxNejVfWDhyUzB6dGFvbG1VcnRQRk5oSmgzWDdkYm9lMWJzRVdaMHlDUDVRNzQ2T0ZiUjhzZy0zTzZ1NlVyZlJmeTd0eGZ1anduUURnU25oT3R4U3pHSXVDbS1nY3UzUUctNU9pelB3aDJmeVo1WmVzNUVvd25KQXZ2T3pQUUNxTWl1R0xqemY1WmV5aDNhZlBuTUE1cF9OZXhySEVJaGFiYmRYU05VcXVUUUVWN0pLcG1hMmw3S3pjRkp2SEJneUQ3WmZrSFpDd0M3Zndjb1hDT0NmZHoxWkNuc18zNnNIWFRCckd0T1VEaFd3eks5cjVpMnpUWnV2M1hCTFIzZjF6WUtjYXRyeTlRbW5uY3NrUWRCZ0w4UGQtZHM3bWR2c2xNTUhqdm16WFRHeHEyZ0Y4ZjM3bDFGVm56U2ppd1R0Q214NkViQQ?oc=5",
+        "published": "Wed, 14 Oct 2026 20:21:18 GMT",
         "query": "Federal Reserve interest rates inflation US economy",
         "direction": "neutral",
         "reason": "中性／待確認"
@@ -59,9 +59,9 @@
         "reason": "中性／待確認"
       },
       {
-        "title": "Steve Moore warns stubborn inflation could complicate Fed rate decision - KOKI FOX 23",
-        "link": "https://news.google.com/rss/articles/CBMizAJBVV95cUxNejVfWDhyUzB6dGFvbG1VcnRQRk5oSmgzWDdkYm9lMWJzRVdaMHlDUDVRNzQ2T0ZiUjhzZy0zTzZ1NlVyZlJmeTd0eGZ1anduUURnU25oT3R4U3pHSXVDbS1nY3UzUUctNU9pelB3aDJmeVo1WmVzNUVvd25KQXZ2T3pQUUNxTWl1R0xqemY1WmV5aDNhZlBuTUE1cF9OZXhySEVJaGFiYmRYU05VcXVUUUVWN0pLcG1hMmw3S3pjRkp2SEJneUQ3WmZrSFpDd0M3Zndjb1hDT0NmZHoxWkNuc18zNnNIWFRCckd0T1VEaFd3eks5cjVpMnpUWnV2M1hCTFIzZjF6WUtjYXRyeTlRbW5uY3NrUWRCZ0w4UGQtZHM3bWR2c2xNTUhqdm16WFRHeHEyZ0Y4ZjM3bDFGVm56U2ppd1R0Q214NkViQQ?oc=5",
-        "published": "Wed, 14 Oct 2026 20:21:18 GMT",
+        "title": "Consumer prices rose 3.7% annually in September as gas prices skyrocket - CNBC",
+        "link": "https://news.google.com/rss/articles/CBMifEFVX3lxTE1IZEUyWDE5aTVyU1VTMEhhNW9LV3pZdUkwcFI4WVlIOEhHUzBmUTZGbUlWTDVfN05zdzhFTlR4RERqUHROMDJ2T3dCN2I0UDI2dmZhOTBVTVRIYVlIYjRKQ2RZcjdNQWdWTTkyV0owQU1Xekt4U2ZHUFc4NnPSAYIBQVVfeXFMT3U1UnZTdHN4U2tIM1lZcHlGRGZLUXNaYjhDTHl4bllqdzY3ek9XYl9ZdzNBaUdJQjNndF9HSm1yci15X3ZnMEdaazNzMjVTZ204TzJ1cFJEOE81bUF0RFBJWTR6RWF2YU9BWm1PMnhTVGNWVnc5bkxNWlRpT0RuU2t2Zw?oc=5",
+        "published": "Wed, 14 Oct 2026 12:31:19 GMT",
         "query": "Federal Reserve interest rates inflation US economy",
         "direction": "neutral",
         "reason": "中性／待確認"
@@ -99,7 +99,7 @@
         "reason": "中性／待確認"
       }
     ],
-    "updated_at": "2026-10-16T06:42:34.452970+08:00",
+    "updated_at": "2026-10-16T13:41:05.853891+08:00",
     "errors": []
   }
 }
