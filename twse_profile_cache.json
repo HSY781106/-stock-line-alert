@@ -1,5 +1,5 @@
 {
-  "cached_at": 1792093354.3635492,
+  "cached_at": 1792188644.2313013,
   "data": [
     {
       "code": "1101",
@@ -2487,7 +2487,7 @@
       "industry": "光電業",
       "market": "TWSE",
       "symbol": "2374.TW",
-      "capital": 3379921330.0
+      "capital": 3379765330.0
     },
     {
       "code": "2375",
@@ -3303,7 +3303,7 @@
       "industry": "建材營造",
       "market": "TWSE",
       "symbol": "2528.TW",
-      "capital": 4359964670.0
+      "capital": 5015904370.0
     },
     {
       "code": "2530",
@@ -4303,7 +4303,7 @@
       "industry": "半導體業",
       "market": "TWSE",
       "symbol": "3034.TW",
-      "capital": 6085114690.0
+      "capital": 6115114690.0
     },
     {
       "code": "3035",
@@ -5583,7 +5583,7 @@
       "industry": "生技醫療",
       "market": "TWSE",
       "symbol": "4737.TW",
-      "capital": 773280530.0
+      "capital": 773982530.0
     },
     {
       "code": "4739",
@@ -5623,7 +5623,7 @@
       "industry": "化學工業",
       "market": "TWSE",
       "symbol": "4764.TW",
-      "capital": 855420620.0
+      "capital": 915420620.0
     },
     {
       "code": "4766",
@@ -7247,7 +7247,7 @@
       "industry": "半導體業",
       "market": "TWSE",
       "symbol": "6789.TW",
-      "capital": 3182991190.0
+      "capital": 3184131190.0
     },
     {
       "code": "6790",
@@ -7535,7 +7535,7 @@
       "industry": "電腦及週邊設備業",
       "market": "TWSE",
       "symbol": "6933.TW",
-      "capital": 424863500.0
+      "capital": 425718510.0
     },
     {
       "code": "6934",
@@ -7943,7 +7943,7 @@
       "industry": "其他電子業",
       "market": "TWSE",
       "symbol": "8021.TW",
-      "capital": 1450424670.0
+      "capital": 1470880740.0
     },
     {
       "code": "8028",
@@ -8354,6 +8354,14 @@
       "capital": 411655570.0
     },
     {
+      "code": "8908",
+      "name": "欣雄",
+      "industry": "油電燃氣業",
+      "market": "TWSE",
+      "symbol": "8908.TW",
+      "capital": 3247645240.0
+    },
+    {
       "code": "8926",
       "name": "台汽電",
       "industry": "油電燃氣業",
@@ -8647,7 +8655,7 @@
       "industry": "其他",
       "market": "TWSE",
       "symbol": "9933.TW",
-      "capital": 9444370340.0
+      "capital": 9620117180.0
     },
     {
       "code": "9934",
