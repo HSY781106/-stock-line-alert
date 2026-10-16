@@ -1,25 +1,25 @@
 {
   "drop_alert": {
     "0050 元大台灣50": {
-      "date": "2026-10-15",
+      "date": "2026-10-16",
       "daily_alert_sent": false,
       "weekly_alert_sent": false,
       "alert_sent": false
     },
     "2330 台積電": {
-      "date": "2026-10-15",
+      "date": "2026-10-16",
       "daily_alert_sent": false,
       "weekly_alert_sent": false,
       "alert_sent": false
     },
     "3711 日月光投控": {
-      "date": "2026-10-15",
-      "daily_alert_sent": true,
+      "date": "2026-10-16",
+      "daily_alert_sent": false,
       "weekly_alert_sent": true,
       "alert_sent": true,
-      "alert_time": "2026-10-15T13:45:32.222802+08:00",
-      "trigger_day": -0.099063,
-      "trigger_week": -0.120261
+      "alert_time": "2026-10-16T13:41:10.958922+08:00",
+      "trigger_day": -0.002972,
+      "trigger_week": -0.122876
     },
     "QQQ": {
       "date": "2026-10-16",
@@ -36,20 +36,20 @@
   },
   "interval_low": {
     "0050 元大台灣50": {
-      "last_check": "2026-10-15T13:44:36.046409+08:00",
-      "last_price": 109.0,
+      "last_check": "2026-10-16T13:40:33.681718+08:00",
+      "last_price": 109.1500015258789,
       "last_interval_low": 112.30000305175781,
       "last_interval_source": "Yahoo-5m",
       "interval_alert": false,
-      "session_key": "2026-10-15"
+      "session_key": "2026-10-16"
     },
     "2330 台積電": {
-      "last_check": "2026-10-15T13:45:26.216613+08:00",
-      "last_price": 2435.0,
+      "last_check": "2026-10-16T13:41:06.267031+08:00",
+      "last_price": 2430.0,
       "last_interval_low": 2485.0,
       "last_interval_source": "Yahoo-5m",
       "interval_alert": false,
-      "session_key": "2026-10-15"
+      "session_key": "2026-10-16"
     },
     "3711 日月光投控": {
       "last_check": "2026-10-15T13:46:05.327835+08:00",
@@ -89,7 +89,7 @@
     },
     "2330 台積電": {
       "date": "2026-10-16",
-      "locked": true,
+      "locked": false,
       "notified_at": "2026-09-07 11:59:22",
       "notified_score": 92
     },
