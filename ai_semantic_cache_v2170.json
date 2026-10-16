@@ -3017,5 +3017,61 @@
       "reason": "日月光投控基本面具成長動能，惟目前本益比偏高且技術面呈偏空修正。籌碼面三大法人賣超且融資增加，加上川普貿易政策不確定性影響。建議等待股價拉回至支撐區止跌後再評估分批佈局。"
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:027622d6294b45a4a91e5e46": {
+    "ts": 1792192911.2705815,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.7,
+          "policy_stage": "considering",
+          "reason": "開採格陵蘭能源礦產，增加整體資源供應",
+          "relevant": true,
+          "affected_channel": "供應鏈",
+          "transmission": "川普政策→格陵蘭開採→擴大全球油氣與礦產供給",
+          "exposure": "美股能源與採礦整體市場"
+        },
+        {
+          "id": 1,
+          "direction": "positive",
+          "score": 3,
+          "confidence": 0.8,
+          "policy_stage": "considering",
+          "reason": "與石油巨頭合作，放寬傳統能源監管",
+          "relevant": true,
+          "affected_channel": "估值",
+          "transmission": "川普政策→能源監管放寬→提升石油巨頭獲利與市場估值",
+          "exposure": "美股傳統能源產業"
+        },
+        {
+          "id": 2,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.85,
+          "policy_stage": "announced",
+          "reason": "台灣計畫購買美國天然氣，擴大美國LNG出口需求",
+          "relevant": true,
+          "affected_channel": "出口",
+          "transmission": "美台協議→台灣採購天然氣→提振美國LNG出口業者營收",
+          "exposure": "美國天然氣出口與能源市場"
+        },
+        {
+          "id": 3,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.75,
+          "policy_stage": "threat",
+          "reason": "丹麥對格陵蘭開發推回，政策落地性存在變數",
+          "relevant": true,
+          "affected_channel": "需求",
+          "transmission": "丹麥抵制→地緣政治阻力→減緩格陵蘭資源開發推進",
+          "exposure": "海外資源開發與國際能源板塊"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
