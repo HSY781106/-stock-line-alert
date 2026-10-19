@@ -3164,5 +3164,37 @@
       ]
     },
     "provider": "groq"
+  },
+  "trump_v21826:__MARKET__:7a425e32ec47f704335744a9": {
+    "ts": 1792438430.5760884,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "negative",
+          "score": -3,
+          "confidence": 0.7,
+          "policy_stage": "threat",
+          "reason": "伊朗威脅油價上升",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "伊朗威脅→油價上升→能源成本上升→市場受影響",
+          "exposure": "油市"
+        },
+        {
+          "id": 3,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.6,
+          "policy_stage": "announced",
+          "reason": "特朗普投資Meta、SpaceX",
+          "relevant": true,
+          "affected_channel": "估值",
+          "transmission": "特朗普投資→Meta、SpaceX估值上升→市場受影響",
+          "exposure": "Meta、SpaceX"
+        }
+      ]
+    },
+    "provider": "groq"
   }
 }
