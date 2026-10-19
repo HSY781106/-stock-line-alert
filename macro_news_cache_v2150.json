@@ -1,15 +1,7 @@
 {
-  "cached_at": 1792374109.4818482,
+  "cached_at": 1792389382.296576,
   "data": {
     "items": [
-      {
-        "title": "Fed chair Warsh says price stability is key but shies away from signals about rates - PBS",
-        "link": "https://news.google.com/rss/articles/CBMivAFBVV95cUxNWGRPeVhZRldYUzJNQ3NTYzB0eW5LVlVHMThkMEMxZ3VqUVlVNkN4WVNHTHBtZ2lBeTJ6alU2Y1NmN25kTGw5am5jSFk4Ul8xcHFhVTRJYWtCV3VWMi14TW5EYkloYm9GQlBwVGFnX0hmOTkyUFctQl9oQW92ZHRwSzFqaHhfSmpsZjdKejE3WkVXU1lKR3F1RXNnamlSUWlJdUpnZW8tUGUyXzJCYU5PRGZneEpaMkhPYWt4btIBwgFBVV95cUxNN1JwTW9kMkgtTnp1QWNuS2ZkTXNuWWRncV9MWDFqRFAzYWRDdk50anp1WVJ4OVE0UnRtTko0dE1ORnh1cFhMUmFBSXZRSzllMlR3QXlQMDlxa2tQanVGdUlGQnJUTURuM0J0Um5MbTVtWlg4SXJHS2d2SHhESzR1b3BFNElrWXBXWlM0R3BoOG5lcmV3NWNmQ3NfdnRubHpUVzMxd0ViclBmQk9DbWwwTlhJWV9NQ2VNTVphcVR6QjhKQQ?oc=5",
-        "published": "Fri, 16 Oct 2026 17:21:26 GMT",
-        "query": "Federal Reserve interest rates inflation US economy",
-        "direction": "neutral",
-        "reason": "中性／待確認"
-      },
       {
         "title": "Warsh says Fed is focused on taming rising prices, but gives no hint about next rate hike - NBC News",
         "link": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxPUm1YY3gtQVZrcEhOQm9iNE1idzlmNnRZTzQxOXd6dUl2XzBhZTBsZk04a1U1R1VBbEw0VG1keFVhdUNrUEc2N3JlOGVCcDhtLXR6NG1OLTc2OE9RM0hKM1J5N2tCTnVvNEJyR1FhUXA4dFYwMS1BTmszaHZSODNHWjJIQ1NvQU1SMGdzbzZjVHhwTWc1VlJqOWlaTXBvWVRjNHNMXy1CdDM?oc=5",
@@ -19,12 +11,28 @@
         "reason": "緊縮／景氣風險"
       },
       {
-        "title": "Fed rate hike call seen tight as inflation heats up - Reuters",
-        "link": "https://news.google.com/rss/articles/CBMinwFBVV95cUxPMjl1ZWZGd2lIRXg1US1hUjNacTVDN2o5S2lIcXpCdnZ1VHBXcEpqOHV5SzJJZHJrT3RxYjdrRjRrRU03eHNGTTFRMnVCVEdZa0VfLU9BeFdSeTE1aFRrc3ZRampyOFVTczZRbWk0azFBakVndUJ1X0NjVmJmV1JmeXNXSlFkNzF0NUZKTUUyUnlHWi1sOXFpVHV5NnVvcDA?oc=5",
-        "published": "Wed, 14 Oct 2026 14:22:26 GMT",
+        "title": "Fed chair Warsh says price stability is key but shies away from signals about rates - PBS",
+        "link": "https://news.google.com/rss/articles/CBMivAFBVV95cUxNWGRPeVhZRldYUzJNQ3NTYzB0eW5LVlVHMThkMEMxZ3VqUVlVNkN4WVNHTHBtZ2lBeTJ6alU2Y1NmN25kTGw5am5jSFk4Ul8xcHFhVTRJYWtCV3VWMi14TW5EYkloYm9GQlBwVGFnX0hmOTkyUFctQl9oQW92ZHRwSzFqaHhfSmpsZjdKejE3WkVXU1lKR3F1RXNnamlSUWlJdUpnZW8tUGUyXzJCYU5PRGZneEpaMkhPYWt4btIBwgFBVV95cUxNN1JwTW9kMkgtTnp1QWNuS2ZkTXNuWWRncV9MWDFqRFAzYWRDdk50anp1WVJ4OVE0UnRtTko0dE1ORnh1cFhMUmFBSXZRSzllMlR3QXlQMDlxa2tQanVGdUlGQnJUTURuM0J0Um5MbTVtWlg4SXJHS2d2SHhESzR1b3BFNElrWXBXWlM0R3BoOG5lcmV3NWNmQ3NfdnRubHpUVzMxd0ViclBmQk9DbWwwTlhJWV9NQ2VNTVphcVR6QjhKQQ?oc=5",
+        "published": "Fri, 16 Oct 2026 17:21:26 GMT",
+        "query": "Federal Reserve interest rates inflation US economy",
+        "direction": "neutral",
+        "reason": "中性／待確認"
+      },
+      {
+        "title": "Fed's Collins sees another rate hike on the table before end of 2026 - Reuters",
+        "link": "https://news.google.com/rss/articles/CBMipAFBVV95cUxPQTNoWUtZWjdLcTc2ZmNycnptRmR1cmluWThZU2ZTYU5JUkdaazY1Z2hEdjIxNWZ3VU5RSVZvejc3VnlueGZoN0JyNlNmdkptQk9ZNEZqU1MyLTNUblpOaF9FMkdGbnZhX1hTVllLTzYxNFEwamlyazZKem00N1k1UFBablNQSVRCZTgySWNNR3pHemxzSEl1S0VBeE1DQlYyS0Ntdw?oc=5",
+        "published": "Tue, 13 Oct 2026 20:08:52 GMT",
         "query": "Federal Reserve interest rates inflation US economy",
         "direction": "negative",
         "reason": "緊縮／景氣風險"
+      },
+      {
+        "title": "Fed officials are warning of more pain. Many Americans are already feeling it - CNN",
+        "link": "https://news.google.com/rss/articles/CBMieEFVX3lxTE5KOEVDdVNYS0FUZGlpbEJTYVRMT1U0MzE1ZVUzM1pfcjdIeUhJN1ExRm1oYWZzR0lLcU8zYVJRZkI5dm9wckNpWkplUnRVQmhqUkFwb1hSN3dEbTl5ZFJOTkthcWYwYWh0ZjNBbEtkV1NDTUNnOURuVw?oc=5",
+        "published": "Mon, 12 Oct 2026 09:30:45 GMT",
+        "query": "Federal Reserve interest rates inflation US economy",
+        "direction": "neutral",
+        "reason": "中性／待確認"
       },
       {
         "title": "One More U.S. Interest-Rate Increase May Be Appropriate, Fed’s Williams Says - WSJ",
@@ -59,14 +67,6 @@
         "reason": "中性／待確認"
       },
       {
-        "title": "Fed Chair Kevin Warsh warns of AI 'shock' for economy, pledges to contain inflation - ABC News - Breaking News, Latest News and Videos",
-        "link": "https://news.google.com/rss/articles/CBMilwFBVV95cUxOSHRMYTRHanJFWjJnNGNLRExKaGZOdEtWWlNKdHFhdmRHc3dJcnZNV2NfZmxkTFJQdmRKYkllRFVsN1lIbGVsWFdxN3NJRVZCLWNVNzhPaU5aUGlSMDE3bTN4RFpCT01KVlZ1R0dieUhhQ1pmNlh5RjhXLWpCWFE2VEhYQy10OHRFU2dLX0owMlMtbnVTR0NN0gGcAUFVX3lxTE9NczBRSGxTSUhocXdVbmRiQVdhRUg2d0FaTk9nZkpQRDdnNUlMS1BJeFZrOVhiU0RYZEt6VUVjRm52SDdJaHFWeHFSQVI3Q09hZVB1dFQtZDRGb3pfVndMY1lJVklyRUVwM2p5R2c0cmJIc3VLbXJsczR1SHlCNGZfUVB2R1dnTlBIamphWUtQQzNQdnRzY2xsSTNEVw?oc=5",
-        "published": "Fri, 16 Oct 2026 16:12:34 GMT",
-        "query": "Federal Reserve interest rates inflation US economy",
-        "direction": "neutral",
-        "reason": "中性／待確認"
-      },
-      {
         "title": "Treasury, Eurozone Yields Decline as Markets Look to U.S. Inflation Data - WSJ",
         "link": "https://news.google.com/rss/articles/CBMivAFBVV95cUxQaVJGTVRQcWlpaDNiZVFTYW1od1ZiMVNKRU14QWVocUs2SnlZLW1KNzFwTVliUHczVUZhMURPSEtiay01cXJ0cnZOMkllU3phWk8xWVlIT2lzQlZFOE5rRTBFNlJjRTJYb1JPT2h5aFhrX2M2MjllVGc2NHhuNGJoMFVnOFFoY05SRnRsUEkxX25ZM1JndThkVGZjMW9XZDBrVFYtWEVDdmxmVFNseFotZW5pOExsSTZHRVVVNg?oc=5",
         "published": "Tue, 13 Oct 2026 18:47:00 GMT",
@@ -91,15 +91,15 @@
         "reason": "中性／待確認"
       },
       {
-        "title": "Market Movers blog: European markets in the green as inflation rises in the eurozone - Investment Week",
-        "link": "https://news.google.com/rss/articles/CBMickFVX3lxTE5mZHNUUnlOeExDV2hSRjhxWEs0blpwaGhqUzIzQ054d1JaTnNIcGZWbkhtTDVwZFdwUXM5ekRkX2Z5UFJEWW5uMGtRSzVnd2NwZDFRUWZnYm9JWHFlTUptZzJGSHdKOS1oTEJxOUk0bFRWdw?oc=5",
-        "published": "Fri, 16 Oct 2026 07:00:00 GMT",
+        "title": "Hot Inflation Sank Stocks. Why Didn’t Bonds Panic Too? - tastylive",
+        "link": "https://news.google.com/rss/articles/CBMilwFBVV95cUxNcDl2dEdKc0VrUVBZeFplNW1wVVhCSlRxcjc2SjJyMzJ6QWdKRkQ4eDdPRjRJNlItZzM5VTNvNXlyOG4wRWh5emF4ZWNKRGt2cU15azViZ1VydVZZUU1jRFNTMkdwekM2SkVRZzI5OUFFQ21zSU9mMXBscnBWbHlJUlZkczBUVnphc3hsSzZpZDlnNHprMzFR?oc=5",
+        "published": "Thu, 15 Oct 2026 05:57:05 GMT",
         "query": "US CPI jobs GDP Treasury yields economy",
-        "direction": "negative",
-        "reason": "緊縮／景氣風險"
+        "direction": "neutral",
+        "reason": "中性／待確認"
       }
     ],
-    "updated_at": "2026-10-19T09:41:50.010588+08:00",
+    "updated_at": "2026-10-19T13:56:22.774773+08:00",
     "errors": []
   }
 }
