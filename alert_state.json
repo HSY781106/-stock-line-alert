@@ -1,25 +1,25 @@
 {
   "drop_alert": {
     "0050 元大台灣50": {
-      "date": "2026-10-16",
+      "date": "2026-10-19",
       "daily_alert_sent": false,
       "weekly_alert_sent": false,
       "alert_sent": false
     },
     "2330 台積電": {
-      "date": "2026-10-16",
+      "date": "2026-10-19",
       "daily_alert_sent": false,
       "weekly_alert_sent": false,
       "alert_sent": false
     },
     "3711 日月光投控": {
-      "date": "2026-10-16",
+      "date": "2026-10-19",
       "daily_alert_sent": false,
       "weekly_alert_sent": true,
       "alert_sent": true,
-      "alert_time": "2026-10-16T13:41:10.958922+08:00",
-      "trigger_day": -0.002972,
-      "trigger_week": -0.122876
+      "alert_time": "2026-10-19T09:41:58.485582+08:00",
+      "trigger_day": -0.016393,
+      "trigger_week": -0.137255
     },
     "QQQ": {
       "date": "2026-10-17",
@@ -36,20 +36,20 @@
   },
   "interval_low": {
     "0050 元大台灣50": {
-      "last_check": "2026-10-16T13:40:33.681718+08:00",
-      "last_price": 109.1500015258789,
+      "last_check": "2026-10-19T09:41:06.974635+08:00",
+      "last_price": 107.5,
       "last_interval_low": 112.30000305175781,
       "last_interval_source": "Yahoo-5m",
       "interval_alert": false,
-      "session_key": "2026-10-16"
+      "session_key": "2026-10-19"
     },
     "2330 台積電": {
-      "last_check": "2026-10-16T13:41:06.267031+08:00",
-      "last_price": 2430.0,
+      "last_check": "2026-10-19T09:41:50.955026+08:00",
+      "last_price": 2400.0,
       "last_interval_low": 2485.0,
       "last_interval_source": "Yahoo-5m",
       "interval_alert": false,
-      "session_key": "2026-10-16"
+      "session_key": "2026-10-19"
     },
     "3711 日月光投控": {
       "last_check": "2026-10-16T13:41:27.908187+08:00",
@@ -82,13 +82,13 @@
   },
   "target_buy_point_alert": {
     "0050 元大台灣50": {
-      "date": "2026-10-16",
+      "date": "2026-10-19",
       "locked": false,
       "notified_at": "2026-09-07 11:59:19",
       "notified_score": 87
     },
     "2330 台積電": {
-      "date": "2026-10-16",
+      "date": "2026-10-19",
       "locked": false,
       "notified_at": "2026-09-07 11:59:22",
       "notified_score": 92
