@@ -3144,5 +3144,25 @@
       "reason": "日月光投控雖具備營收與獲利成長優勢，但目前PE偏高且面臨Trump關稅壓抑。籌碼面法人賣超且技術面偏空，建議等待回檔至623-642元止跌訊號出現再行佈局。"
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:6bbfd108f29a22246e6782fc": {
+    "ts": 1792438059.1748068,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.5,
+          "policy_stage": "unknown",
+          "reason": "無直接影響市場",
+          "relevant": false,
+          "affected_channel": "證據不足",
+          "transmission": "無",
+          "exposure": "證據不足"
+        }
+      ]
+    },
+    "provider": "groq"
   }
 }
