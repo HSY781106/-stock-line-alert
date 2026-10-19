@@ -1,5 +1,5 @@
 {
-  "_cached_at": 1792188660.9778743,
+  "_cached_at": 1792373496.3757808,
   "data": {
     "1101": {
       "code": "1101",
@@ -17351,7 +17351,7 @@
       "market": "TPEX",
       "symbol": "1240.TWO",
       "capital": null,
-      "price": 54.1,
+      "price": null,
       "market_cap": 2512.0,
       "subindustries": [
         "農業科技業"
@@ -17365,7 +17365,7 @@
       "market": "TPEX",
       "symbol": "1259.TWO",
       "capital": null,
-      "price": 65.6,
+      "price": null,
       "market_cap": 2124.0,
       "subindustries": [
         "餐飲連鎖"
@@ -17379,7 +17379,7 @@
       "market": "TPEX",
       "symbol": "1264.TWO",
       "capital": null,
-      "price": 246.5,
+      "price": null,
       "market_cap": 9133.0,
       "subindustries": [
         "原物料"
@@ -17393,7 +17393,7 @@
       "market": "TPEX",
       "symbol": "1268.TWO",
       "capital": null,
-      "price": 180.0,
+      "price": null,
       "market_cap": 7600.0,
       "subindustries": [
         "餐飲連鎖"
@@ -17407,7 +17407,7 @@
       "market": "TPEX",
       "symbol": "1294.TWO",
       "capital": null,
-      "price": 49.35,
+      "price": null,
       "market_cap": 1807.0,
       "subindustries": [
         "原物料",
@@ -17422,7 +17422,7 @@
       "market": "TPEX",
       "symbol": "1295.TWO",
       "capital": null,
-      "price": 48.35,
+      "price": null,
       "market_cap": 1817.0,
       "subindustries": [
         "原物料"
@@ -17436,7 +17436,7 @@
       "market": "TPEX",
       "symbol": "1336.TWO",
       "capital": null,
-      "price": 18.15,
+      "price": null,
       "market_cap": 1408.0,
       "subindustries": [
         "金屬、塑膠模具",
@@ -17452,7 +17452,7 @@
       "market": "TPEX",
       "symbol": "1565.TWO",
       "capital": null,
-      "price": 90.0,
+      "price": null,
       "market_cap": 4537.0,
       "subindustries": [
         "隱型眼鏡、光學鏡片"
@@ -17466,7 +17466,7 @@
       "market": "TPEX",
       "symbol": "1569.TWO",
       "capital": null,
-      "price": 78.9,
+      "price": null,
       "market_cap": 11381.0,
       "subindustries": [
         "機殼",
@@ -17481,7 +17481,7 @@
       "market": "TPEX",
       "symbol": "1570.TWO",
       "capital": null,
-      "price": 32.35,
+      "price": null,
       "market_cap": 1666.0,
       "subindustries": [
         "手工具機"
@@ -17495,7 +17495,7 @@
       "market": "TPEX",
       "symbol": "1580.TWO",
       "capital": null,
-      "price": 96.0,
+      "price": null,
       "market_cap": 4736.0,
       "subindustries": [
         "專用機械(如紡織成衣生產用機械、食品飲料生產用機械、農林用機械等)"
@@ -17509,7 +17509,7 @@
       "market": "TPEX",
       "symbol": "1584.TWO",
       "capital": null,
-      "price": 17.95,
+      "price": null,
       "market_cap": 4172.0,
       "subindustries": [
         "其他"
@@ -17523,7 +17523,7 @@
       "market": "TPEX",
       "symbol": "1586.TWO",
       "capital": null,
-      "price": 18.5,
+      "price": null,
       "market_cap": 2395.0,
       "subindustries": [
         "金屬、塑膠模具",
@@ -17540,7 +17540,7 @@
       "market": "TPEX",
       "symbol": "1591.TWO",
       "capital": null,
-      "price": 38.4,
+      "price": null,
       "market_cap": 1461.0,
       "subindustries": [
         "生產製程及檢測設備",
@@ -17558,7 +17558,7 @@
       "market": "TPEX",
       "symbol": "1593.TWO",
       "capital": null,
-      "price": 31.3,
+      "price": null,
       "market_cap": 1245.0,
       "subindustries": [
         "裝置/器材零組件",
@@ -17575,7 +17575,7 @@
       "market": "TPEX",
       "symbol": "1595.TWO",
       "capital": null,
-      "price": 74.4,
+      "price": null,
       "market_cap": 4294.0,
       "subindustries": [
         "生產製程及檢測設備"
@@ -17589,7 +17589,7 @@
       "market": "TPEX",
       "symbol": "1599.TWO",
       "capital": null,
-      "price": 23.0,
+      "price": null,
       "market_cap": 1679.0,
       "subindustries": [
         "休閒車業",
@@ -17604,7 +17604,7 @@
       "market": "TPEX",
       "symbol": "1742.TWO",
       "capital": null,
-      "price": 19.75,
+      "price": null,
       "market_cap": 1830.0,
       "subindustries": [
         "化學品",
@@ -17619,7 +17619,7 @@
       "market": "TPEX",
       "symbol": "1777.TWO",
       "capital": null,
-      "price": 76.7,
+      "price": null,
       "market_cap": 3420.0,
       "subindustries": [
         "中藥材、西藥原料藥"
@@ -17633,7 +17633,7 @@
       "market": "TPEX",
       "symbol": "1780.TWO",
       "capital": null,
-      "price": 24.4,
+      "price": null,
       "market_cap": 2661.0,
       "subindustries": [
         "原料",
@@ -17648,7 +17648,7 @@
       "market": "TPEX",
       "symbol": "1781.TWO",
       "capital": null,
-      "price": 10.0,
+      "price": null,
       "market_cap": 474.0,
       "subindustries": [
         "體溫計、血壓計"
@@ -17662,7 +17662,7 @@
       "market": "TPEX",
       "symbol": "1784.TWO",
       "capital": null,
-      "price": 56.5,
+      "price": null,
       "market_cap": 3001.0,
       "subindustries": [
         "幹細胞收集儲存",
@@ -17678,7 +17678,7 @@
       "market": "TPEX",
       "symbol": "1785.TWO",
       "capital": null,
-      "price": 99.5,
+      "price": null,
       "market_cap": 59297.0,
       "subindustries": [
         "化學品",
@@ -17700,7 +17700,7 @@
       "market": "TPEX",
       "symbol": "1788.TWO",
       "capital": null,
-      "price": 128.0,
+      "price": null,
       "market_cap": 5698.0,
       "subindustries": [
         "藥品代理銷售及通路",
@@ -17716,7 +17716,7 @@
       "market": "TPEX",
       "symbol": "1796.TWO",
       "capital": null,
-      "price": 29.25,
+      "price": null,
       "market_cap": 1212.0,
       "subindustries": [
         "原料",
@@ -17732,7 +17732,7 @@
       "market": "TPEX",
       "symbol": "1799.TWO",
       "capital": null,
-      "price": 28.2,
+      "price": null,
       "market_cap": 7015.0,
       "subindustries": [
         "中、西藥製劑",
@@ -17747,7 +17747,7 @@
       "market": "TPEX",
       "symbol": "1813.TWO",
       "capital": null,
-      "price": 11.1,
+      "price": null,
       "market_cap": 517.0,
       "subindustries": [
         "隱型眼鏡、光學鏡片"
@@ -17761,7 +17761,7 @@
       "market": "TPEX",
       "symbol": "1815.TWO",
       "capital": null,
-      "price": 140.0,
+      "price": null,
       "market_cap": 86058.0,
       "subindustries": [
         "玻璃纖維/玻纖布"
@@ -17775,7 +17775,7 @@
       "market": "TPEX",
       "symbol": "2035.TWO",
       "capital": null,
-      "price": 27.5,
+      "price": null,
       "market_cap": 9625.0,
       "subindustries": [
         "不鏽鋼胚"
@@ -17789,7 +17789,7 @@
       "market": "TPEX",
       "symbol": "2061.TWO",
       "capital": null,
-      "price": 61.3,
+      "price": null,
       "market_cap": 3517.0,
       "subindustries": [
         "其他"
@@ -17803,7 +17803,7 @@
       "market": "TPEX",
       "symbol": "2063.TWO",
       "capital": null,
-      "price": 23.75,
+      "price": null,
       "market_cap": 1142.0,
       "subindustries": [
         "不鏽鋼棒線",
@@ -17818,7 +17818,7 @@
       "market": "TPEX",
       "symbol": "2064.TWO",
       "capital": null,
-      "price": 11.7,
+      "price": null,
       "market_cap": 811.0,
       "subindustries": [
         "線材盤元",
@@ -17834,7 +17834,7 @@
       "market": "TPEX",
       "symbol": "2065.TWO",
       "capital": null,
-      "price": 35.8,
+      "price": null,
       "market_cap": 2273.0,
       "subindustries": [
         "螺絲螺帽"
@@ -17848,7 +17848,7 @@
       "market": "TPEX",
       "symbol": "2066.TWO",
       "capital": null,
-      "price": 52.0,
+      "price": null,
       "market_cap": 2311.0,
       "subindustries": [
         "五金元件及零配件",
@@ -17880,7 +17880,7 @@
       "market": "TPEX",
       "symbol": "2070.TWO",
       "capital": null,
-      "price": 59.4,
+      "price": null,
       "market_cap": 2481.0,
       "subindustries": [
         "專用機械(如紡織成衣生產用機械、食品飲料生產用機械、農林用機械等)"
@@ -17911,7 +17911,7 @@
       "market": "TPEX",
       "symbol": "2221.TWO",
       "capital": null,
-      "price": 122.0,
+      "price": null,
       "market_cap": 5163.0,
       "subindustries": [
         "金屬製品"
@@ -17925,7 +17925,7 @@
       "market": "TPEX",
       "symbol": "2230.TWO",
       "capital": null,
-      "price": 22.1,
+      "price": null,
       "market_cap": 1503.0,
       "subindustries": [
         "車用機械傳動設備及零配件",
@@ -17940,7 +17940,7 @@
       "market": "TPEX",
       "symbol": "2235.TWO",
       "capital": null,
-      "price": 28.7,
+      "price": null,
       "market_cap": 1029.0,
       "subindustries": [
         "車用機械傳動設備及零配件",
@@ -17955,7 +17955,7 @@
       "market": "TPEX",
       "symbol": "2596.TWO",
       "capital": null,
-      "price": 33.55,
+      "price": null,
       "market_cap": 3355.0,
       "subindustries": [
         "建設業"
@@ -17969,7 +17969,7 @@
       "market": "TPEX",
       "symbol": "2640.TWO",
       "capital": null,
-      "price": 158.5,
+      "price": null,
       "market_cap": 9393.0,
       "subindustries": [
         "交易撮(媒)合"
@@ -17983,7 +17983,7 @@
       "market": "TPEX",
       "symbol": "2641.TWO",
       "capital": null,
-      "price": 17.15,
+      "price": null,
       "market_cap": 5665.0,
       "subindustries": [
         "散裝航運"
@@ -17997,7 +17997,7 @@
       "market": "TPEX",
       "symbol": "2643.TWO",
       "capital": null,
-      "price": 63.1,
+      "price": null,
       "market_cap": 2208.0,
       "subindustries": [
         "海陸空貨運承攬"
@@ -18011,7 +18011,7 @@
       "market": "TPEX",
       "symbol": "2718.TWO",
       "capital": null,
-      "price": 39.35,
+      "price": null,
       "market_cap": 3446.0,
       "subindustries": [
         "建設業"
@@ -18025,7 +18025,7 @@
       "market": "TPEX",
       "symbol": "2719.TWO",
       "capital": null,
-      "price": 19.4,
+      "price": null,
       "market_cap": 1347.0,
       "subindustries": [
         "旅遊服務業"
@@ -18039,7 +18039,7 @@
       "market": "TPEX",
       "symbol": "2724.TWO",
       "capital": null,
-      "price": 12.0,
+      "price": null,
       "market_cap": 715.0,
       "subindustries": [
         "其他"
@@ -18053,7 +18053,7 @@
       "market": "TPEX",
       "symbol": "2726.TWO",
       "capital": null,
-      "price": 7.99,
+      "price": null,
       "market_cap": 301.0,
       "subindustries": [
         "餐飲連鎖"
@@ -18067,7 +18067,7 @@
       "market": "TPEX",
       "symbol": "2729.TWO",
       "capital": null,
-      "price": 156.5,
+      "price": null,
       "market_cap": 6735.0,
       "subindustries": [
         "餐飲連鎖"
@@ -18081,7 +18081,7 @@
       "market": "TPEX",
       "symbol": "2732.TWO",
       "capital": null,
-      "price": 62.0,
+      "price": null,
       "market_cap": 2884.0,
       "subindustries": [
         "餐飲連鎖"
@@ -18095,7 +18095,7 @@
       "market": "TPEX",
       "symbol": "2734.TWO",
       "capital": null,
-      "price": 14.6,
+      "price": null,
       "market_cap": 835.0,
       "subindustries": [
         "旅遊服務業"
@@ -18109,7 +18109,7 @@
       "market": "TPEX",
       "symbol": "2736.TWO",
       "capital": null,
-      "price": 10.55,
+      "price": null,
       "market_cap": 843.0,
       "subindustries": [
         "旅館服務業"
@@ -18123,7 +18123,7 @@
       "market": "TPEX",
       "symbol": "2740.TWO",
       "capital": null,
-      "price": 28.8,
+      "price": null,
       "market_cap": 482.0,
       "subindustries": [
         "餐飲連鎖"
@@ -18137,7 +18137,7 @@
       "market": "TPEX",
       "symbol": "2743.TWO",
       "capital": null,
-      "price": 50.9,
+      "price": null,
       "market_cap": 2382.0,
       "subindustries": [
         "旅遊服務業"
@@ -18151,7 +18151,7 @@
       "market": "TPEX",
       "symbol": "2745.TWO",
       "capital": null,
-      "price": 86.4,
+      "price": null,
       "market_cap": 2921.0,
       "subindustries": [
         "旅遊服務業"
@@ -18165,7 +18165,7 @@
       "market": "TPEX",
       "symbol": "2751.TWO",
       "capital": null,
-      "price": 52.5,
+      "price": null,
       "market_cap": 1041.0,
       "subindustries": [
         "餐飲連鎖"
@@ -18179,7 +18179,7 @@
       "market": "TPEX",
       "symbol": "2752.TWO",
       "capital": null,
-      "price": 179.5,
+      "price": null,
       "market_cap": 4791.0,
       "subindustries": [
         "餐飲連鎖"
@@ -18193,7 +18193,7 @@
       "market": "TPEX",
       "symbol": "2754.TWO",
       "capital": null,
-      "price": 66.6,
+      "price": null,
       "market_cap": 3124.0,
       "subindustries": [
         "餐飲連鎖"
@@ -18207,7 +18207,7 @@
       "market": "TPEX",
       "symbol": "2755.TWO",
       "capital": null,
-      "price": 96.7,
+      "price": null,
       "market_cap": 4534.0,
       "subindustries": [
         "餐飲連鎖"
@@ -18221,7 +18221,7 @@
       "market": "TPEX",
       "symbol": "2756.TWO",
       "capital": null,
-      "price": 60.7,
+      "price": null,
       "market_cap": 1493.0,
       "subindustries": [
         "餐飲連鎖"
@@ -18235,7 +18235,7 @@
       "market": "TPEX",
       "symbol": "2916.TWO",
       "capital": null,
-      "price": 40.0,
+      "price": null,
       "market_cap": 2585.0,
       "subindustries": [
         "製造商",
@@ -18250,7 +18250,7 @@
       "market": "TPEX",
       "symbol": "2924.TWO",
       "capital": null,
-      "price": 17.8,
+      "price": null,
       "market_cap": 926.0,
       "subindustries": [
         "製造商",
@@ -18265,7 +18265,7 @@
       "market": "TPEX",
       "symbol": "2926.TWO",
       "capital": null,
-      "price": 30.3,
+      "price": null,
       "market_cap": 1435.0,
       "subindustries": [
         "貿易商、代理商、經銷商",
@@ -18281,7 +18281,7 @@
       "market": "TPEX",
       "symbol": "2937.TWO",
       "capital": null,
-      "price": 45.0,
+      "price": null,
       "market_cap": 2155.0,
       "subindustries": [
         "零售通路"
@@ -18295,7 +18295,7 @@
       "market": "TPEX",
       "symbol": "2938.TWO",
       "capital": null,
-      "price": 18.0,
+      "price": null,
       "market_cap": 411.0,
       "subindustries": [
         "製造商",
@@ -18311,7 +18311,7 @@
       "market": "TPEX",
       "symbol": "2941.TWO",
       "capital": null,
-      "price": 31.5,
+      "price": null,
       "market_cap": 484.0,
       "subindustries": [
         "零售通路"
@@ -18325,7 +18325,7 @@
       "market": "TPEX",
       "symbol": "2947.TWO",
       "capital": null,
-      "price": 58.5,
+      "price": null,
       "market_cap": 1383.0,
       "subindustries": [
         "零售通路"
@@ -18339,7 +18339,7 @@
       "market": "TPEX",
       "symbol": "2948.TWO",
       "capital": null,
-      "price": 37.05,
+      "price": null,
       "market_cap": 1185.0,
       "subindustries": [
         "貿易商、代理商、經銷商"
@@ -18353,7 +18353,7 @@
       "market": "TPEX",
       "symbol": "2949.TWO",
       "capital": null,
-      "price": 67.8,
+      "price": null,
       "market_cap": 2077.0,
       "subindustries": [
         "物流倉儲服務",
@@ -18389,7 +18389,7 @@
       "market": "TPEX",
       "symbol": "3066.TWO",
       "capital": null,
-      "price": 25.95,
+      "price": null,
       "market_cap": 2155.0,
       "subindustries": [
         "封裝/模組",
@@ -18404,7 +18404,7 @@
       "market": "TPEX",
       "symbol": "3067.TWO",
       "capital": null,
-      "price": 18.05,
+      "price": null,
       "market_cap": 361.0,
       "subindustries": [
         "其他電子產品及電子服務產業"
@@ -18418,7 +18418,7 @@
       "market": "TPEX",
       "symbol": "3071.TWO",
       "capital": null,
-      "price": 21.95,
+      "price": null,
       "market_cap": 2414.0,
       "subindustries": [
         "散熱片、風扇馬達、散熱模組"
@@ -18432,7 +18432,7 @@
       "market": "TPEX",
       "symbol": "3073.TWO",
       "capital": null,
-      "price": 21.75,
+      "price": null,
       "market_cap": 859.0,
       "subindustries": [
         "消費性IC",
@@ -18448,7 +18448,7 @@
       "market": "TPEX",
       "symbol": "3078.TWO",
       "capital": null,
-      "price": 47.3,
+      "price": null,
       "market_cap": 10755.0,
       "subindustries": [
         "電源供應器"
@@ -18462,7 +18462,7 @@
       "market": "TPEX",
       "symbol": "3081.TWO",
       "capital": null,
-      "price": 2545.0,
+      "price": null,
       "market_cap": 259002.0,
       "subindustries": [
         "主/被動元件"
@@ -18476,7 +18476,7 @@
       "market": "TPEX",
       "symbol": "3083.TWO",
       "capital": null,
-      "price": 23.35,
+      "price": null,
       "market_cap": 2019.0,
       "subindustries": [
         "數位內容產業",
@@ -18492,7 +18492,7 @@
       "market": "TPEX",
       "symbol": "3085.TWO",
       "capital": null,
-      "price": 15.25,
+      "price": null,
       "market_cap": 817.0,
       "subindustries": [
         "物流倉儲服務",
@@ -18509,7 +18509,7 @@
       "market": "TPEX",
       "symbol": "3086.TWO",
       "capital": null,
-      "price": 26.4,
+      "price": null,
       "market_cap": 7199.0,
       "subindustries": [
         "數位內容產業",
@@ -18525,7 +18525,7 @@
       "market": "TPEX",
       "symbol": "3088.TWO",
       "capital": null,
-      "price": 122.5,
+      "price": null,
       "market_cap": 13843.0,
       "subindustries": [
         "工業電腦",
@@ -18542,7 +18542,7 @@
       "market": "TPEX",
       "symbol": "3093.TWO",
       "capital": null,
-      "price": 38.85,
+      "price": null,
       "market_cap": 5639.0,
       "subindustries": [
         "生產製程及檢測設備"
@@ -18556,7 +18556,7 @@
       "market": "TPEX",
       "symbol": "3095.TWO",
       "capital": null,
-      "price": 33.55,
+      "price": null,
       "market_cap": 492.0,
       "subindustries": [
         "機殼",
@@ -18572,7 +18572,7 @@
       "market": "TPEX",
       "symbol": "3105.TWO",
       "capital": null,
-      "price": 501.0,
+      "price": null,
       "market_cap": 212394.0,
       "subindustries": [
         "晶圓製造",
@@ -18587,7 +18587,7 @@
       "market": "TPEX",
       "symbol": "3114.TWO",
       "capital": null,
-      "price": 41.5,
+      "price": null,
       "market_cap": 2810.0,
       "subindustries": [
         "生產製程及檢測設備",
@@ -18606,7 +18606,7 @@
       "market": "TPEX",
       "symbol": "3115.TWO",
       "capital": null,
-      "price": 8.17,
+      "price": null,
       "market_cap": 589.0,
       "subindustries": [
         "硬板、軟板、IC載板製造"
@@ -18620,7 +18620,7 @@
       "market": "TPEX",
       "symbol": "3118.TWO",
       "capital": null,
-      "price": 30.8,
+      "price": null,
       "market_cap": 999.0,
       "subindustries": [
         "中、西藥製劑",
@@ -18637,7 +18637,7 @@
       "market": "TPEX",
       "symbol": "3122.TWO",
       "capital": null,
-      "price": 23.55,
+      "price": null,
       "market_cap": 960.0,
       "subindustries": [
         "消費性IC",
@@ -18653,7 +18653,7 @@
       "market": "TPEX",
       "symbol": "3128.TWO",
       "capital": null,
-      "price": 20.0,
+      "price": null,
       "market_cap": 1003.0,
       "subindustries": [
         "磁碟儲存系統",
@@ -18671,7 +18671,7 @@
       "market": "TPEX",
       "symbol": "3131.TWO",
       "capital": null,
-      "price": 2190.0,
+      "price": null,
       "market_cap": 66015.0,
       "subindustries": [
         "生產製程及檢測設備"
@@ -18685,7 +18685,7 @@
       "market": "TPEX",
       "symbol": "3141.TWO",
       "capital": null,
-      "price": 74.1,
+      "price": null,
       "market_cap": 5591.0,
       "subindustries": [
         "平面顯示器驅動IC"
@@ -18699,7 +18699,7 @@
       "market": "TPEX",
       "symbol": "3147.TWO",
       "capital": null,
-      "price": 291.0,
+      "price": null,
       "market_cap": 12712.0,
       "subindustries": [
         "伺服器",
@@ -18716,7 +18716,7 @@
       "market": "TPEX",
       "symbol": "3152.TWO",
       "capital": null,
-      "price": 229.5,
+      "price": null,
       "market_cap": 8954.0,
       "subindustries": [
         "主/被動元件",
@@ -18732,7 +18732,7 @@
       "market": "TPEX",
       "symbol": "3158.TWO",
       "capital": null,
-      "price": 85.0,
+      "price": null,
       "market_cap": 2607.0,
       "subindustries": [
         "應用/系統軟體設計開發",
@@ -18748,7 +18748,7 @@
       "market": "TPEX",
       "symbol": "3162.TWO",
       "capital": null,
-      "price": 80.9,
+      "price": null,
       "market_cap": 12470.0,
       "subindustries": [
         "休閒車業",
@@ -18768,7 +18768,7 @@
       "market": "TPEX",
       "symbol": "3163.TWO",
       "capital": null,
-      "price": 589.0,
+      "price": null,
       "market_cap": 55740.0,
       "subindustries": [
         "光通訊設備(如光纖電纜、光傳輸設備)"
@@ -18782,7 +18782,7 @@
       "market": "TPEX",
       "symbol": "3169.TWO",
       "capital": null,
-      "price": 103.0,
+      "price": null,
       "market_cap": 6520.0,
       "subindustries": [
         "網路卡",
@@ -18798,7 +18798,7 @@
       "market": "TPEX",
       "symbol": "3171.TWO",
       "capital": null,
-      "price": 59.2,
+      "price": null,
       "market_cap": 1960.0,
       "subindustries": [
         "貿易商、代理商、經銷商"
@@ -18812,7 +18812,7 @@
       "market": "TPEX",
       "symbol": "3176.TWO",
       "capital": null,
-      "price": 35.5,
+      "price": null,
       "market_cap": 4945.0,
       "subindustries": [
         "原材料",
@@ -18829,7 +18829,7 @@
       "market": "TPEX",
       "symbol": "3178.TWO",
       "capital": null,
-      "price": 65.6,
+      "price": null,
       "market_cap": 2955.0,
       "subindustries": [
         "生產製程及檢測設備",
@@ -18844,7 +18844,7 @@
       "market": "TPEX",
       "symbol": "3188.TWO",
       "capital": null,
-      "price": 22.9,
+      "price": null,
       "market_cap": 4330.0,
       "subindustries": [
         "建設業"
@@ -18858,7 +18858,7 @@
       "market": "TPEX",
       "symbol": "3191.TWO",
       "capital": null,
-      "price": 16.7,
+      "price": null,
       "market_cap": 728.0,
       "subindustries": [
         "其他電腦及週邊設備之零組件"
@@ -18872,7 +18872,7 @@
       "market": "TPEX",
       "symbol": "3205.TWO",
       "capital": null,
-      "price": 46.85,
+      "price": null,
       "market_cap": 3164.0,
       "subindustries": [
         "中、西藥製劑",
@@ -18887,7 +18887,7 @@
       "market": "TPEX",
       "symbol": "3206.TWO",
       "capital": null,
-      "price": 33.8,
+      "price": null,
       "market_cap": 1991.0,
       "subindustries": [
         "其他電腦及週邊設備之零組件",
@@ -18902,7 +18902,7 @@
       "market": "TPEX",
       "symbol": "3207.TWO",
       "capital": null,
-      "price": 37.3,
+      "price": null,
       "market_cap": 2477.0,
       "subindustries": [
         "電感器"
@@ -18916,7 +18916,7 @@
       "market": "TPEX",
       "symbol": "3211.TWO",
       "capital": null,
-      "price": 346.0,
+      "price": null,
       "market_cap": 53427.0,
       "subindustries": [
         "電池",
@@ -18932,7 +18932,7 @@
       "market": "TPEX",
       "symbol": "3213.TWO",
       "capital": null,
-      "price": 122.0,
+      "price": null,
       "market_cap": 7159.0,
       "subindustries": [
         "筆記型電腦",
@@ -18949,7 +18949,7 @@
       "market": "TPEX",
       "symbol": "3217.TWO",
       "capital": null,
-      "price": 131.0,
+      "price": null,
       "market_cap": 11803.0,
       "subindustries": [
         "其他電腦及週邊設備之零組件",
@@ -18964,7 +18964,7 @@
       "market": "TPEX",
       "symbol": "3218.TWO",
       "capital": null,
-      "price": 132.5,
+      "price": null,
       "market_cap": 11226.0,
       "subindustries": [
         "醫療器材代理",
@@ -18979,7 +18979,7 @@
       "market": "TPEX",
       "symbol": "3219.TWO",
       "capital": null,
-      "price": 116.5,
+      "price": null,
       "market_cap": 8362.0,
       "subindustries": [
         "自動化機台",
@@ -18995,7 +18995,7 @@
       "market": "TPEX",
       "symbol": "3221.TWO",
       "capital": null,
-      "price": 51.1,
+      "price": null,
       "market_cap": 5364.0,
       "subindustries": [
         "主/被動元件",
@@ -19010,7 +19010,7 @@
       "market": "TPEX",
       "symbol": "3224.TWO",
       "capital": null,
-      "price": 30.8,
+      "price": null,
       "market_cap": 2407.0,
       "subindustries": [
         "IC通路",
@@ -19025,7 +19025,7 @@
       "market": "TPEX",
       "symbol": "3226.TWO",
       "capital": null,
-      "price": 55.0,
+      "price": null,
       "market_cap": 3543.0,
       "subindustries": [
         "車用機械傳動設備及零配件",
@@ -19041,7 +19041,7 @@
       "market": "TPEX",
       "symbol": "3227.TWO",
       "capital": null,
-      "price": 188.5,
+      "price": null,
       "market_cap": 28635.0,
       "subindustries": [
         "其他電腦及週邊設備之零組件",
@@ -19071,7 +19071,7 @@
       "market": "TPEX",
       "symbol": "3228.TWO",
       "capital": null,
-      "price": 153.5,
+      "price": null,
       "market_cap": 11042.0,
       "subindustries": [
         "微控制器IC"
@@ -19085,7 +19085,7 @@
       "market": "TPEX",
       "symbol": "3230.TWO",
       "capital": null,
-      "price": 23.7,
+      "price": null,
       "market_cap": 2038.0,
       "subindustries": [
         "機殼",
@@ -19100,7 +19100,7 @@
       "market": "TPEX",
       "symbol": "3232.TWO",
       "capital": null,
-      "price": 20.1,
+      "price": null,
       "market_cap": 936.0,
       "subindustries": [
         "IC通路"
@@ -19114,7 +19114,7 @@
       "market": "TPEX",
       "symbol": "3234.TWO",
       "capital": null,
-      "price": 176.5,
+      "price": null,
       "market_cap": 22322.0,
       "subindustries": [
         "主/被動元件",
@@ -19130,7 +19130,7 @@
       "market": "TPEX",
       "symbol": "3236.TWO",
       "capital": null,
-      "price": 54.3,
+      "price": null,
       "market_cap": 5701.0,
       "subindustries": [
         "電感器"
@@ -19144,7 +19144,7 @@
       "market": "TPEX",
       "symbol": "3252.TWO",
       "capital": null,
-      "price": 15.1,
+      "price": null,
       "market_cap": 757.0,
       "subindustries": [
         "旅館服務業",
@@ -19159,7 +19159,7 @@
       "market": "TPEX",
       "symbol": "3259.TWO",
       "capital": null,
-      "price": 10.35,
+      "price": null,
       "market_cap": 755.0,
       "subindustries": [
         "記憶體控制IC"
@@ -19173,7 +19173,7 @@
       "market": "TPEX",
       "symbol": "3260.TWO",
       "capital": null,
-      "price": 360.0,
+      "price": null,
       "market_cap": 128326.0,
       "subindustries": [
         "IC模組",
@@ -19190,7 +19190,7 @@
       "market": "TPEX",
       "symbol": "3264.TWO",
       "capital": null,
-      "price": 258.5,
+      "price": null,
       "market_cap": 126708.0,
       "subindustries": [
         "IC封裝測試"
@@ -19204,7 +19204,7 @@
       "market": "TPEX",
       "symbol": "3265.TWO",
       "capital": null,
-      "price": 269.0,
+      "price": null,
       "market_cap": 36654.0,
       "subindustries": [
         "IC封裝測試"
@@ -19218,7 +19218,7 @@
       "market": "TPEX",
       "symbol": "3268.TWO",
       "capital": null,
-      "price": 26.15,
+      "price": null,
       "market_cap": 907.0,
       "subindustries": [
         "消費性IC"
@@ -19232,7 +19232,7 @@
       "market": "TPEX",
       "symbol": "3272.TWO",
       "capital": null,
-      "price": 13.6,
+      "price": null,
       "market_cap": 832.0,
       "subindustries": [
         "輸出入模組/介面卡",
@@ -19250,7 +19250,7 @@
       "market": "TPEX",
       "symbol": "3276.TWO",
       "capital": null,
-      "price": 14.65,
+      "price": null,
       "market_cap": 1021.0,
       "subindustries": [
         "硬板、軟板、IC載板製造"
@@ -19264,7 +19264,7 @@
       "market": "TPEX",
       "symbol": "3284.TWO",
       "capital": null,
-      "price": 19.65,
+      "price": null,
       "market_cap": 2134.0,
       "subindustries": [
         "文化印刷業"
@@ -19278,7 +19278,7 @@
       "market": "TPEX",
       "symbol": "3285.TWO",
       "capital": null,
-      "price": 42.5,
+      "price": null,
       "market_cap": 1816.0,
       "subindustries": [
         "其他電腦及週邊設備"
@@ -19292,7 +19292,7 @@
       "market": "TPEX",
       "symbol": "3287.TWO",
       "capital": null,
-      "price": 59.6,
+      "price": null,
       "market_cap": 2620.0,
       "subindustries": [
         "其他電腦及週邊設備之零組件"
@@ -19306,7 +19306,7 @@
       "market": "TPEX",
       "symbol": "3288.TWO",
       "capital": null,
-      "price": 21.85,
+      "price": null,
       "market_cap": 357.0,
       "subindustries": [
         "LED驅動IC",
@@ -19322,7 +19322,7 @@
       "market": "TPEX",
       "symbol": "3289.TWO",
       "capital": null,
-      "price": 135.5,
+      "price": null,
       "market_cap": 11754.0,
       "subindustries": [
         "其他電子產品及電子服務產業"
@@ -19336,7 +19336,7 @@
       "market": "TPEX",
       "symbol": "3290.TWO",
       "capital": null,
-      "price": 50.6,
+      "price": null,
       "market_cap": 4564.0,
       "subindustries": [
         "其他電腦及週邊設備之零組件",
@@ -19352,7 +19352,7 @@
       "market": "TPEX",
       "symbol": "3293.TWO",
       "capital": null,
-      "price": 795.0,
+      "price": null,
       "market_cap": 224032.0,
       "subindustries": [
         "線上遊戲業",
@@ -19376,7 +19376,7 @@
       "market": "TPEX",
       "symbol": "3294.TWO",
       "capital": null,
-      "price": 30.45,
+      "price": null,
       "market_cap": 4019.0,
       "subindustries": [
         "機殼",
@@ -19396,7 +19396,7 @@
       "market": "TPEX",
       "symbol": "3297.TWO",
       "capital": null,
-      "price": 31.0,
+      "price": null,
       "market_cap": 1117.0,
       "subindustries": [
         "安全監控系統",
@@ -19412,7 +19412,7 @@
       "market": "TPEX",
       "symbol": "3303.TWO",
       "capital": null,
-      "price": 52.1,
+      "price": null,
       "market_cap": 4938.0,
       "subindustries": [
         "PET膜",
@@ -19429,7 +19429,7 @@
       "market": "TPEX",
       "symbol": "3306.TWO",
       "capital": null,
-      "price": 45.2,
+      "price": null,
       "market_cap": 2287.0,
       "subindustries": [
         "無線通訊設備(如行動電話、衛星定位系統、衛星通訊設備、微波通訊設備、數位機上盒)"
@@ -19443,7 +19443,7 @@
       "market": "TPEX",
       "symbol": "3310.TWO",
       "capital": null,
-      "price": 68.2,
+      "price": null,
       "market_cap": 5111.0,
       "subindustries": [
         "導線架",
@@ -19463,7 +19463,7 @@
       "market": "TPEX",
       "symbol": "3313.TWO",
       "capital": null,
-      "price": 10.3,
+      "price": null,
       "market_cap": 2277.0,
       "subindustries": [
         "建設業"
@@ -19477,7 +19477,7 @@
       "market": "TPEX",
       "symbol": "3317.TWO",
       "capital": null,
-      "price": 63.2,
+      "price": null,
       "market_cap": 5688.0,
       "subindustries": [
         "電源管理IC"
@@ -19491,7 +19491,7 @@
       "market": "TPEX",
       "symbol": "3322.TWO",
       "capital": null,
-      "price": 10.4,
+      "price": null,
       "market_cap": 1430.0,
       "subindustries": [
         "隨身碟、記憶卡讀卡機",
@@ -19506,7 +19506,7 @@
       "market": "TPEX",
       "symbol": "3323.TWO",
       "capital": null,
-      "price": 30.45,
+      "price": null,
       "market_cap": 3032.0,
       "subindustries": [
         "電池",
@@ -19522,7 +19522,7 @@
       "market": "TPEX",
       "symbol": "3324.TWO",
       "capital": null,
-      "price": 1425.0,
+      "price": null,
       "market_cap": 132634.0,
       "subindustries": [
         "散熱片、風扇馬達、散熱模組"
@@ -19536,7 +19536,7 @@
       "market": "TPEX",
       "symbol": "3325.TWO",
       "capital": null,
-      "price": 11.2,
+      "price": null,
       "market_cap": 1233.0,
       "subindustries": [
         "機殼"
@@ -19564,7 +19564,7 @@
       "market": "TPEX",
       "symbol": "3339.TWO",
       "capital": null,
-      "price": 43.1,
+      "price": null,
       "market_cap": 2869.0,
       "subindustries": [
         "生產製程及檢測設備",
@@ -19582,7 +19582,7 @@
       "market": "TPEX",
       "symbol": "3349.TWO",
       "capital": null,
-      "price": 18.5,
+      "price": null,
       "market_cap": 884.0,
       "subindustries": [
         "伺服器",
@@ -19597,7 +19597,7 @@
       "market": "TPEX",
       "symbol": "3354.TWO",
       "capital": null,
-      "price": 41.8,
+      "price": null,
       "market_cap": 2930.0,
       "subindustries": [
         "銅箔基板"
@@ -19611,7 +19611,7 @@
       "market": "TPEX",
       "symbol": "3357.TWO",
       "capital": null,
-      "price": 208.5,
+      "price": null,
       "market_cap": 24593.0,
       "subindustries": [
         "電感器材料(如鐵氧體、導電漿墨)",
@@ -19626,7 +19626,7 @@
       "market": "TPEX",
       "symbol": "3360.TWO",
       "capital": null,
-      "price": 14.3,
+      "price": null,
       "market_cap": 1092.0,
       "subindustries": [
         "IC模組",
@@ -19641,7 +19641,7 @@
       "market": "TPEX",
       "symbol": "3362.TWO",
       "capital": null,
-      "price": 172.0,
+      "price": null,
       "market_cap": 25360.0,
       "subindustries": [
         "光學鏡片、鏡頭"
@@ -19655,7 +19655,7 @@
       "market": "TPEX",
       "symbol": "3363.TWO",
       "capital": null,
-      "price": 531.0,
+      "price": null,
       "market_cap": 60343.0,
       "subindustries": [
         "光通訊設備(如光纖電纜、光傳輸設備)"
@@ -19669,7 +19669,7 @@
       "market": "TPEX",
       "symbol": "3372.TWO",
       "capital": null,
-      "price": 15.6,
+      "price": null,
       "market_cap": 3671.0,
       "subindustries": [
         "IC封裝測試"
@@ -19683,7 +19683,7 @@
       "market": "TPEX",
       "symbol": "3373.TWO",
       "capital": null,
-      "price": 16.6,
+      "price": null,
       "market_cap": 790.0,
       "subindustries": [
         "體溫計、血壓計"
@@ -19697,7 +19697,7 @@
       "market": "TPEX",
       "symbol": "3374.TWO",
       "capital": null,
-      "price": 433.5,
+      "price": null,
       "market_cap": 117636.0,
       "subindustries": [
         "IC封裝測試"
@@ -19711,7 +19711,7 @@
       "market": "TPEX",
       "symbol": "3379.TWO",
       "capital": null,
-      "price": 26.15,
+      "price": null,
       "market_cap": 994.0,
       "subindustries": [
         "專用機械(如紡織成衣生產用機械、食品飲料生產用機械、農林用機械等)"
@@ -19725,7 +19725,7 @@
       "market": "TPEX",
       "symbol": "3388.TWO",
       "capital": null,
-      "price": 82.8,
+      "price": null,
       "market_cap": 7037.0,
       "subindustries": [
         "擴散膜、增亮膜、導光板",
@@ -19749,7 +19749,7 @@
       "market": "TPEX",
       "symbol": "3390.TWO",
       "capital": null,
-      "price": 22.65,
+      "price": null,
       "market_cap": 1796.0,
       "subindustries": [
         "軟性電路板",
@@ -19764,7 +19764,7 @@
       "market": "TPEX",
       "symbol": "3402.TWO",
       "capital": null,
-      "price": 132.0,
+      "price": null,
       "market_cap": 9642.0,
       "subindustries": [
         "生產製程及檢測設備",
@@ -19780,7 +19780,7 @@
       "market": "TPEX",
       "symbol": "3430.TWO",
       "capital": null,
-      "price": 92.0,
+      "price": null,
       "market_cap": 3101.0,
       "subindustries": [
         "膠材",
@@ -19799,7 +19799,7 @@
       "market": "TPEX",
       "symbol": "3434.TWO",
       "capital": null,
-      "price": 31.25,
+      "price": null,
       "market_cap": 1117.0,
       "subindustries": [
         "工業電腦",
@@ -19815,7 +19815,7 @@
       "market": "TPEX",
       "symbol": "3438.TWO",
       "capital": null,
-      "price": 58.3,
+      "price": null,
       "market_cap": 2749.0,
       "subindustries": [
         "電源管理IC"
@@ -19829,7 +19829,7 @@
       "market": "TPEX",
       "symbol": "3441.TWO",
       "capital": null,
-      "price": 237.5,
+      "price": null,
       "market_cap": 9509.0,
       "subindustries": [
         "光學鏡片、鏡頭"
@@ -19843,7 +19843,7 @@
       "market": "TPEX",
       "symbol": "3444.TWO",
       "capital": null,
-      "price": 72.4,
+      "price": null,
       "market_cap": 3257.0,
       "subindustries": [
         "基板",
@@ -19864,7 +19864,7 @@
       "market": "TPEX",
       "symbol": "3455.TWO",
       "capital": null,
-      "price": 277.0,
+      "price": null,
       "market_cap": 16578.0,
       "subindustries": [
         "生產製程及檢測設備",
@@ -19879,7 +19879,7 @@
       "market": "TPEX",
       "symbol": "3465.TWO",
       "capital": null,
-      "price": 28.15,
+      "price": null,
       "market_cap": 1191.0,
       "subindustries": [
         "其他電子產品及電子服務產業"
@@ -19893,7 +19893,7 @@
       "market": "TPEX",
       "symbol": "3466.TWO",
       "capital": null,
-      "price": 29.2,
+      "price": null,
       "market_cap": 2274.0,
       "subindustries": [
         "無線通訊設備(如行動電話、衛星定位系統、衛星通訊設備、微波通訊設備、數位機上盒)"
@@ -19907,7 +19907,7 @@
       "market": "TPEX",
       "symbol": "3467.TWO",
       "capital": null,
-      "price": 62.5,
+      "price": null,
       "market_cap": 1944.0,
       "subindustries": [
         "生產製程及檢測設備"
@@ -19921,7 +19921,7 @@
       "market": "TPEX",
       "symbol": "3479.TWO",
       "capital": null,
-      "price": 130.5,
+      "price": null,
       "market_cap": 9531.0,
       "subindustries": [
         "工業電腦"
@@ -19935,7 +19935,7 @@
       "market": "TPEX",
       "symbol": "3483.TWO",
       "capital": null,
-      "price": 90.0,
+      "price": null,
       "market_cap": 8914.0,
       "subindustries": [
         "散熱片、風扇馬達、散熱模組",
@@ -19950,7 +19950,7 @@
       "market": "TPEX",
       "symbol": "3484.TWO",
       "capital": null,
-      "price": 49.2,
+      "price": null,
       "market_cap": 3878.0,
       "subindustries": [
         "其他電腦及週邊設備之零組件"
@@ -19964,7 +19964,7 @@
       "market": "TPEX",
       "symbol": "3485.TWO",
       "capital": null,
-      "price": 239.0,
+      "price": null,
       "market_cap": 9201.0,
       "subindustries": [
         "生產製程及檢測設備"
@@ -19978,7 +19978,7 @@
       "market": "TPEX",
       "symbol": "3489.TWO",
       "capital": null,
-      "price": 22.7,
+      "price": null,
       "market_cap": 2053.0,
       "subindustries": [
         "建設業"
@@ -19992,7 +19992,7 @@
       "market": "TPEX",
       "symbol": "3490.TWO",
       "capital": null,
-      "price": 43.9,
+      "price": null,
       "market_cap": 2414.0,
       "subindustries": [
         "生產製程及檢測設備",
@@ -20009,7 +20009,7 @@
       "market": "TPEX",
       "symbol": "3491.TWO",
       "capital": null,
-      "price": 1455.0,
+      "price": null,
       "market_cap": 100111.0,
       "subindustries": [
         "主/被動元件",
@@ -20030,7 +20030,7 @@
       "market": "TPEX",
       "symbol": "3492.TWO",
       "capital": null,
-      "price": 19.8,
+      "price": null,
       "market_cap": 703.0,
       "subindustries": [
         "連接器設計、組裝及製造"
@@ -20044,7 +20044,7 @@
       "market": "TPEX",
       "symbol": "3498.TWO",
       "capital": null,
-      "price": 237.5,
+      "price": null,
       "market_cap": 14552.0,
       "subindustries": [
         "生產製程及檢測設備",
@@ -20060,7 +20060,7 @@
       "market": "TPEX",
       "symbol": "3499.TWO",
       "capital": null,
-      "price": 12.8,
+      "price": null,
       "market_cap": 703.0,
       "subindustries": [
         "無線通訊設備(如行動電話、衛星定位系統、衛星通訊設備、微波通訊設備、數位機上盒)"
@@ -20074,7 +20074,7 @@
       "market": "TPEX",
       "symbol": "3508.TWO",
       "capital": null,
-      "price": 23.85,
+      "price": null,
       "market_cap": 2596.0,
       "subindustries": [
         "其他電子產品及電子服務產業"
@@ -20088,7 +20088,7 @@
       "market": "TPEX",
       "symbol": "3511.TWO",
       "capital": null,
-      "price": 19.35,
+      "price": null,
       "market_cap": 1547.0,
       "subindustries": [
         "連接器設計、組裝及製造"
@@ -20102,7 +20102,7 @@
       "market": "TPEX",
       "symbol": "3512.TWO",
       "capital": null,
-      "price": 19.0,
+      "price": null,
       "market_cap": 2148.0,
       "subindustries": [
         "散熱片、風扇馬達、散熱模組",
@@ -20117,7 +20117,7 @@
       "market": "TPEX",
       "symbol": "3516.TWO",
       "capital": null,
-      "price": 25.05,
+      "price": null,
       "market_cap": 1491.0,
       "subindustries": [
         "顯示器模組",
@@ -20133,7 +20133,7 @@
       "market": "TPEX",
       "symbol": "3520.TWO",
       "capital": null,
-      "price": 17.85,
+      "price": null,
       "market_cap": 1496.0,
       "subindustries": [
         "連接器設計、組裝及製造",
@@ -20150,7 +20150,7 @@
       "market": "TPEX",
       "symbol": "3521.TWO",
       "capital": null,
-      "price": 12.05,
+      "price": null,
       "market_cap": 2238.0,
       "subindustries": [
         "工業電腦",
@@ -20165,7 +20165,7 @@
       "market": "TPEX",
       "symbol": "3522.TWO",
       "capital": null,
-      "price": 11.4,
+      "price": null,
       "market_cap": 1186.0,
       "subindustries": [
         "餐飲連鎖"
@@ -20179,7 +20179,7 @@
       "market": "TPEX",
       "symbol": "3523.TWO",
       "capital": null,
-      "price": 13.75,
+      "price": null,
       "market_cap": 883.0,
       "subindustries": [
         "稜鏡片"
@@ -20193,7 +20193,7 @@
       "market": "TPEX",
       "symbol": "3526.TWO",
       "capital": null,
-      "price": 267.0,
+      "price": null,
       "market_cap": 18013.0,
       "subindustries": [
         "連接器設計、組裝及製造"
@@ -20207,7 +20207,7 @@
       "market": "TPEX",
       "symbol": "3527.TWO",
       "capital": null,
-      "price": 48.9,
+      "price": null,
       "market_cap": 2173.0,
       "subindustries": [
         "LED驅動IC",
@@ -20225,7 +20225,7 @@
       "market": "TPEX",
       "symbol": "3529.TWO",
       "capital": null,
-      "price": 2750.0,
+      "price": null,
       "market_cap": 205387.0,
       "subindustries": [
         "IP設計/IC設計代工服務"
@@ -20239,7 +20239,7 @@
       "market": "TPEX",
       "symbol": "3531.TWO",
       "capital": null,
-      "price": 21.35,
+      "price": null,
       "market_cap": 1306.0,
       "subindustries": [
         "背光模組"
@@ -20253,7 +20253,7 @@
       "market": "TPEX",
       "symbol": "3537.TWO",
       "capital": null,
-      "price": 57.0,
+      "price": null,
       "market_cap": 3205.0,
       "subindustries": [
         "IC通路",
@@ -20268,7 +20268,7 @@
       "market": "TPEX",
       "symbol": "3540.TWO",
       "capital": null,
-      "price": 24.65,
+      "price": null,
       "market_cap": 2081.0,
       "subindustries": [
         "機殼",
@@ -20283,7 +20283,7 @@
       "market": "TPEX",
       "symbol": "3541.TWO",
       "capital": null,
-      "price": 24.15,
+      "price": null,
       "market_cap": 1360.0,
       "subindustries": [
         "其他電腦及週邊設備",
@@ -20301,7 +20301,7 @@
       "market": "TPEX",
       "symbol": "3546.TWO",
       "capital": null,
-      "price": 74.3,
+      "price": null,
       "market_cap": 4558.0,
       "subindustries": [
         "數位內容產業",
@@ -20316,7 +20316,7 @@
       "market": "TPEX",
       "symbol": "3548.TWO",
       "capital": null,
-      "price": 73.5,
+      "price": null,
       "market_cap": 5015.0,
       "subindustries": [
         "機構樞紐"
@@ -20330,7 +20330,7 @@
       "market": "TPEX",
       "symbol": "3551.TWO",
       "capital": null,
-      "price": 185.0,
+      "price": null,
       "market_cap": 11520.0,
       "subindustries": [
         "生產製程及檢測設備",
@@ -20348,7 +20348,7 @@
       "market": "TPEX",
       "symbol": "3552.TWO",
       "capital": null,
-      "price": 40.65,
+      "price": null,
       "market_cap": 3980.0,
       "subindustries": [
         "其他"
@@ -20362,7 +20362,7 @@
       "market": "TPEX",
       "symbol": "3555.TWO",
       "capital": null,
-      "price": 149.0,
+      "price": null,
       "market_cap": 5959.0,
       "subindustries": [
         "IC通路",
@@ -20377,7 +20377,7 @@
       "market": "TPEX",
       "symbol": "3556.TWO",
       "capital": null,
-      "price": 61.5,
+      "price": null,
       "market_cap": 3917.0,
       "subindustries": [
         "控制IC",
@@ -20393,7 +20393,7 @@
       "market": "TPEX",
       "symbol": "3558.TWO",
       "capital": null,
-      "price": 136.5,
+      "price": null,
       "market_cap": 8061.0,
       "subindustries": [
         "網路設備(如數據機、網路卡、閘道器、路由器、網路電話)",
@@ -20408,7 +20408,7 @@
       "market": "TPEX",
       "symbol": "3564.TWO",
       "capital": null,
-      "price": 68.4,
+      "price": null,
       "market_cap": 4044.0,
       "subindustries": [
         "其他電腦及週邊設備",
@@ -20424,7 +20424,7 @@
       "market": "TPEX",
       "symbol": "3567.TWO",
       "capital": null,
-      "price": 25.75,
+      "price": null,
       "market_cap": 874.0,
       "subindustries": [
         "IC封裝測試"
@@ -20438,7 +20438,7 @@
       "market": "TPEX",
       "symbol": "3570.TWO",
       "capital": null,
-      "price": 166.0,
+      "price": null,
       "market_cap": 2838.0,
       "subindustries": [
         "系統整合服務"
@@ -20452,7 +20452,7 @@
       "market": "TPEX",
       "symbol": "3577.TWO",
       "capital": null,
-      "price": 93.4,
+      "price": null,
       "market_cap": 5974.0,
       "subindustries": [
         "輸出入模組/介面卡",
@@ -20467,7 +20467,7 @@
       "market": "TPEX",
       "symbol": "3580.TWO",
       "capital": null,
-      "price": 121.5,
+      "price": null,
       "market_cap": 4795.0,
       "subindustries": [
         "其他電子產品及電子服務產業"
@@ -20481,7 +20481,7 @@
       "market": "TPEX",
       "symbol": "3581.TWO",
       "capital": null,
-      "price": 105.5,
+      "price": null,
       "market_cap": 5381.0,
       "subindustries": [
         "生產製程及檢測設備"
@@ -20495,7 +20495,7 @@
       "market": "TPEX",
       "symbol": "3587.TWO",
       "capital": null,
-      "price": 228.5,
+      "price": null,
       "market_cap": 16379.0,
       "subindustries": [
         "其他電子產品及電子服務產業"
@@ -20509,7 +20509,7 @@
       "market": "TPEX",
       "symbol": "3594.TWO",
       "capital": null,
-      "price": 46.15,
+      "price": null,
       "market_cap": 4428.0,
       "subindustries": [
         "工業電腦"
@@ -20523,7 +20523,7 @@
       "market": "TPEX",
       "symbol": "3597.TWO",
       "capital": null,
-      "price": 51.2,
+      "price": null,
       "market_cap": 2008.0,
       "subindustries": [
         "連接器設計、組裝及製造",
@@ -20539,7 +20539,7 @@
       "market": "TPEX",
       "symbol": "3609.TWO",
       "capital": null,
-      "price": 25.3,
+      "price": null,
       "market_cap": 972.0,
       "subindustries": [
         "銷售、進出口業務",
@@ -20554,7 +20554,7 @@
       "market": "TPEX",
       "symbol": "3611.TWO",
       "capital": null,
-      "price": 183.5,
+      "price": null,
       "market_cap": 8726.0,
       "subindustries": [
         "硬體元件",
@@ -20573,7 +20573,7 @@
       "market": "TPEX",
       "symbol": "3615.TWO",
       "capital": null,
-      "price": 39.75,
+      "price": null,
       "market_cap": 2721.0,
       "subindustries": [
         "ITO導電基板",
@@ -20589,7 +20589,7 @@
       "market": "TPEX",
       "symbol": "3623.TWO",
       "capital": null,
-      "price": 26.45,
+      "price": null,
       "market_cap": 771.0,
       "subindustries": [
         "硬體元件",
@@ -20608,7 +20608,7 @@
       "market": "TPEX",
       "symbol": "3624.TWO",
       "capital": null,
-      "price": 149.5,
+      "price": null,
       "market_cap": 17542.0,
       "subindustries": [
         "電阻器",
@@ -20639,7 +20639,7 @@
       "market": "TPEX",
       "symbol": "3628.TWO",
       "capital": null,
-      "price": 71.5,
+      "price": null,
       "market_cap": 3217.0,
       "subindustries": [
         "其他電子產品及電子服務產業"
@@ -20653,7 +20653,7 @@
       "market": "TPEX",
       "symbol": "3629.TWO",
       "capital": null,
-      "price": 13.95,
+      "price": null,
       "market_cap": 459.0,
       "subindustries": [
         "數位內容產業",
@@ -20668,7 +20668,7 @@
       "market": "TPEX",
       "symbol": "3630.TWO",
       "capital": null,
-      "price": 29.3,
+      "price": null,
       "market_cap": 5982.0,
       "subindustries": [
         "光學鏡片、鏡頭"
@@ -20682,7 +20682,7 @@
       "market": "TPEX",
       "symbol": "3631.TWO",
       "capital": null,
-      "price": 44.05,
+      "price": null,
       "market_cap": 3604.0,
       "subindustries": [
         "其他電腦及週邊設備之零組件"
@@ -20716,7 +20716,7 @@
       "market": "TPEX",
       "symbol": "3646.TWO",
       "capital": null,
-      "price": 25.25,
+      "price": null,
       "market_cap": 992.0,
       "subindustries": [
         "連接器設計、組裝及製造"
@@ -20730,7 +20730,7 @@
       "market": "TPEX",
       "symbol": "3663.TWO",
       "capital": null,
-      "price": 68.6,
+      "price": null,
       "market_cap": 7442.0,
       "subindustries": [
         "化學品",
@@ -20752,7 +20752,7 @@
       "market": "TPEX",
       "symbol": "3664.TWO",
       "capital": null,
-      "price": 8.8,
+      "price": null,
       "market_cap": 668.0,
       "subindustries": [
         "網路設備(如數據機、網路卡、閘道器、路由器、網路電話)",
@@ -20767,7 +20767,7 @@
       "market": "TPEX",
       "symbol": "3666.TWO",
       "capital": null,
-      "price": 28.1,
+      "price": null,
       "market_cap": 3904.0,
       "subindustries": [
         "稜鏡片"
@@ -20781,7 +20781,7 @@
       "market": "TPEX",
       "symbol": "3672.TWO",
       "capital": null,
-      "price": 11.65,
+      "price": null,
       "market_cap": 475.0,
       "subindustries": [
         "網路設備(如數據機、網路卡、閘道器、路由器、網路電話)"
@@ -20795,7 +20795,7 @@
       "market": "TPEX",
       "symbol": "3675.TWO",
       "capital": null,
-      "price": 295.0,
+      "price": null,
       "market_cap": 15652.0,
       "subindustries": [
         "其他IC/二極體製造"
@@ -20809,7 +20809,7 @@
       "market": "TPEX",
       "symbol": "3680.TWO",
       "capital": null,
-      "price": 513.0,
+      "price": null,
       "market_cap": 49365.0,
       "subindustries": [
         "生產製程及檢測設備"
@@ -20823,7 +20823,7 @@
       "market": "TPEX",
       "symbol": "3684.TWO",
       "capital": null,
-      "price": 54.5,
+      "price": null,
       "market_cap": 1651.0,
       "subindustries": [
         "無線通訊設備(如行動電話、衛星定位系統、衛星通訊設備、微波通訊設備、數位機上盒)"
@@ -20837,7 +20837,7 @@
       "market": "TPEX",
       "symbol": "3685.TWO",
       "capital": null,
-      "price": 36.3,
+      "price": null,
       "market_cap": 2888.0,
       "subindustries": [
         "擴散膜、增亮膜、導光板",
@@ -20854,7 +20854,7 @@
       "market": "TPEX",
       "symbol": "3687.TWO",
       "capital": null,
-      "price": 60.0,
+      "price": null,
       "market_cap": 1807.0,
       "subindustries": [
         "線上遊戲業",
@@ -20871,7 +20871,7 @@
       "market": "TPEX",
       "symbol": "3689.TWO",
       "capital": null,
-      "price": 121.5,
+      "price": null,
       "market_cap": 10877.0,
       "subindustries": [
         "連接器設計、組裝及製造"
@@ -20885,7 +20885,7 @@
       "market": "TPEX",
       "symbol": "3691.TWO",
       "capital": null,
-      "price": 98.3,
+      "price": null,
       "market_cap": 9032.0,
       "subindustries": [
         "材料"
@@ -20899,7 +20899,7 @@
       "market": "TPEX",
       "symbol": "3693.TWO",
       "capital": null,
-      "price": 715.0,
+      "price": null,
       "market_cap": 30738.0,
       "subindustries": [
         "磁碟儲存系統",
@@ -20915,7 +20915,7 @@
       "market": "TPEX",
       "symbol": "3707.TWO",
       "capital": null,
-      "price": 77.6,
+      "price": null,
       "market_cap": 31100.0,
       "subindustries": [
         "IC/晶圓製造",
@@ -20932,7 +20932,7 @@
       "market": "TPEX",
       "symbol": "3709.TWO",
       "capital": null,
-      "price": 65.6,
+      "price": null,
       "market_cap": 9549.0,
       "subindustries": [
         "中央處理器",
@@ -20978,7 +20978,7 @@
       "market": "TPEX",
       "symbol": "3710.TWO",
       "capital": null,
-      "price": 8.25,
+      "price": null,
       "market_cap": 1460.0,
       "subindustries": [
         "主/被動元件",
@@ -20994,7 +20994,7 @@
       "market": "TPEX",
       "symbol": "3713.TWO",
       "capital": null,
-      "price": 14.6,
+      "price": null,
       "market_cap": 1286.0,
       "subindustries": [
         "太陽能電池模組",
@@ -21010,7 +21010,7 @@
       "market": "TPEX",
       "symbol": "3718.TWO",
       "capital": null,
-      "price": 61.0,
+      "price": null,
       "market_cap": 23849.0,
       "subindustries": [
         "產業鏈簡介"
@@ -21024,7 +21024,7 @@
       "market": "TPEX",
       "symbol": "4102.TWO",
       "capital": null,
-      "price": 18.9,
+      "price": null,
       "market_cap": 800.0,
       "subindustries": [
         "中藥材、西藥原料藥"
@@ -21038,7 +21038,7 @@
       "market": "TPEX",
       "symbol": "4105.TWO",
       "capital": null,
-      "price": 83.2,
+      "price": null,
       "market_cap": 20687.0,
       "subindustries": [
         "原材料",
@@ -21054,7 +21054,7 @@
       "market": "TPEX",
       "symbol": "4107.TWO",
       "capital": null,
-      "price": 109.5,
+      "price": null,
       "market_cap": 7588.0,
       "subindustries": [
         "醫療耗材"
@@ -21068,7 +21068,7 @@
       "market": "TPEX",
       "symbol": "4109.TWO",
       "capital": null,
-      "price": 11.1,
+      "price": null,
       "market_cap": 1317.0,
       "subindustries": [
         "加工製成品",
@@ -21083,7 +21083,7 @@
       "market": "TPEX",
       "symbol": "4111.TWO",
       "capital": null,
-      "price": 28.75,
+      "price": null,
       "market_cap": 1720.0,
       "subindustries": [
         "中、西藥製劑"
@@ -21097,7 +21097,7 @@
       "market": "TPEX",
       "symbol": "4113.TWO",
       "capital": null,
-      "price": 14.35,
+      "price": null,
       "market_cap": 3316.0,
       "subindustries": [
         "建設業"
@@ -21111,7 +21111,7 @@
       "market": "TPEX",
       "symbol": "4114.TWO",
       "capital": null,
-      "price": 30.3,
+      "price": null,
       "market_cap": 16678.0,
       "subindustries": [
         "中、西藥製劑",
@@ -21126,7 +21126,7 @@
       "market": "TPEX",
       "symbol": "4116.TWO",
       "capital": null,
-      "price": 40.1,
+      "price": null,
       "market_cap": 1787.0,
       "subindustries": [
         "其他",
@@ -21141,7 +21141,7 @@
       "market": "TPEX",
       "symbol": "4120.TWO",
       "capital": null,
-      "price": 45.85,
+      "price": null,
       "market_cap": 3977.0,
       "subindustries": [
         "中、西藥製劑",
@@ -21157,7 +21157,7 @@
       "market": "TPEX",
       "symbol": "4121.TWO",
       "capital": null,
-      "price": 12.95,
+      "price": null,
       "market_cap": 1076.0,
       "subindustries": [
         "藥品代理銷售及通路",
@@ -21174,7 +21174,7 @@
       "market": "TPEX",
       "symbol": "4123.TWO",
       "capital": null,
-      "price": 31.0,
+      "price": null,
       "market_cap": 25031.0,
       "subindustries": [
         "中、西藥製劑"
@@ -21188,7 +21188,7 @@
       "market": "TPEX",
       "symbol": "4126.TWO",
       "capital": null,
-      "price": 77.1,
+      "price": null,
       "market_cap": 5597.0,
       "subindustries": [
         "醫療耗材"
@@ -21202,7 +21202,7 @@
       "market": "TPEX",
       "symbol": "4127.TWO",
       "capital": null,
-      "price": 40.05,
+      "price": null,
       "market_cap": 1832.0,
       "subindustries": [
         "中、西藥製劑",
@@ -21219,7 +21219,7 @@
       "market": "TPEX",
       "symbol": "4128.TWO",
       "capital": null,
-      "price": 15.5,
+      "price": null,
       "market_cap": 9116.0,
       "subindustries": [
         "原材料",
@@ -21236,7 +21236,7 @@
       "market": "TPEX",
       "symbol": "4129.TWO",
       "capital": null,
-      "price": 77.2,
+      "price": null,
       "market_cap": 7444.0,
       "subindustries": [
         "人工關節"
@@ -21250,7 +21250,7 @@
       "market": "TPEX",
       "symbol": "4131.TWO",
       "capital": null,
-      "price": 30.2,
+      "price": null,
       "market_cap": 1204.0,
       "subindustries": [
         "生物檢測"
@@ -21264,7 +21264,7 @@
       "market": "TPEX",
       "symbol": "4138.TWO",
       "capital": null,
-      "price": 54.8,
+      "price": null,
       "market_cap": 2188.0,
       "subindustries": [
         "醫療器材代理",
@@ -21279,7 +21279,7 @@
       "market": "TPEX",
       "symbol": "4139.TWO",
       "capital": null,
-      "price": 44.4,
+      "price": null,
       "market_cap": 1998.0,
       "subindustries": [
         "醫療院所"
@@ -21293,7 +21293,7 @@
       "market": "TPEX",
       "symbol": "4147.TWO",
       "capital": null,
-      "price": 61.1,
+      "price": null,
       "market_cap": 16692.0,
       "subindustries": [
         "原材料"
@@ -21307,7 +21307,7 @@
       "market": "TPEX",
       "symbol": "4153.TWO",
       "capital": null,
-      "price": 31.15,
+      "price": null,
       "market_cap": 1827.0,
       "subindustries": [
         "顯示器"
@@ -21321,7 +21321,7 @@
       "market": "TPEX",
       "symbol": "4154.TWO",
       "capital": null,
-      "price": 12.1,
+      "price": null,
       "market_cap": 464.0,
       "subindustries": [
         "其他"
@@ -21335,7 +21335,7 @@
       "market": "TPEX",
       "symbol": "4157.TWO",
       "capital": null,
-      "price": 8.96,
+      "price": null,
       "market_cap": 6378.0,
       "subindustries": [
         "中、西藥製劑"
@@ -21349,7 +21349,7 @@
       "market": "TPEX",
       "symbol": "4160.TWO",
       "capital": null,
-      "price": 38.8,
+      "price": null,
       "market_cap": 1086.0,
       "subindustries": [
         "應用/系統軟體設計開發",
@@ -21372,7 +21372,7 @@
       "market": "TPEX",
       "symbol": "4161.TWO",
       "capital": null,
-      "price": 21.4,
+      "price": null,
       "market_cap": 1279.0,
       "subindustries": [
         "衛生用品",
@@ -21388,7 +21388,7 @@
       "market": "TPEX",
       "symbol": "4162.TWO",
       "capital": null,
-      "price": 57.4,
+      "price": null,
       "market_cap": 8247.0,
       "subindustries": [
         "原材料"
@@ -21402,7 +21402,7 @@
       "market": "TPEX",
       "symbol": "4163.TWO",
       "capital": null,
-      "price": 126.5,
+      "price": null,
       "market_cap": 6410.0,
       "subindustries": [
         "主/被動元件",
@@ -21421,7 +21421,7 @@
       "market": "TPEX",
       "symbol": "4166.TWO",
       "capital": null,
-      "price": 24.25,
+      "price": null,
       "market_cap": 5893.0,
       "subindustries": [
         "中、西藥製劑"
@@ -21435,7 +21435,7 @@
       "market": "TPEX",
       "symbol": "4167.TWO",
       "capital": null,
-      "price": 21.8,
+      "price": null,
       "market_cap": 7227.0,
       "subindustries": [
         "中藥材、西藥原料藥",
@@ -21450,7 +21450,7 @@
       "market": "TPEX",
       "symbol": "4168.TWO",
       "capital": null,
-      "price": 21.8,
+      "price": null,
       "market_cap": 2452.0,
       "subindustries": [
         "中、西藥製劑"
@@ -21464,7 +21464,7 @@
       "market": "TPEX",
       "symbol": "4171.TWO",
       "capital": null,
-      "price": 17.45,
+      "price": null,
       "market_cap": 1013.0,
       "subindustries": [
         "農業科技業",
@@ -21479,7 +21479,7 @@
       "market": "TPEX",
       "symbol": "4173.TWO",
       "capital": null,
-      "price": 17.85,
+      "price": null,
       "market_cap": 1331.0,
       "subindustries": [
         "藥品代理銷售及通路"
@@ -21493,7 +21493,7 @@
       "market": "TPEX",
       "symbol": "4174.TWO",
       "capital": null,
-      "price": 56.9,
+      "price": null,
       "market_cap": 7486.0,
       "subindustries": [
         "原材料"
@@ -21507,7 +21507,7 @@
       "market": "TPEX",
       "symbol": "4175.TWO",
       "capital": null,
-      "price": 50.8,
+      "price": null,
       "market_cap": 2150.0,
       "subindustries": [
         "藥品代理銷售及通路",
@@ -21525,7 +21525,7 @@
       "market": "TPEX",
       "symbol": "4183.TWO",
       "capital": null,
-      "price": 14.2,
+      "price": null,
       "market_cap": 337.0,
       "subindustries": [
         "電子零組件、塑膠零件、五金零件",
@@ -21544,7 +21544,7 @@
       "market": "TPEX",
       "symbol": "4188.TWO",
       "capital": null,
-      "price": 14.4,
+      "price": null,
       "market_cap": 911.0,
       "subindustries": [
         "其他"
@@ -21573,7 +21573,7 @@
       "market": "TPEX",
       "symbol": "4198.TWO",
       "capital": null,
-      "price": 46.2,
+      "price": null,
       "market_cap": 1113.0,
       "subindustries": [
         "生物檢測"
@@ -21587,7 +21587,7 @@
       "market": "TPEX",
       "symbol": "4205.TWO",
       "capital": null,
-      "price": 67.1,
+      "price": null,
       "market_cap": 6552.0,
       "subindustries": [
         "加工食品"
@@ -21601,7 +21601,7 @@
       "market": "TPEX",
       "symbol": "4207.TWO",
       "capital": null,
-      "price": 19.3,
+      "price": null,
       "market_cap": 3831.0,
       "subindustries": [
         "加工食品"
@@ -21615,7 +21615,7 @@
       "market": "TPEX",
       "symbol": "4303.TWO",
       "capital": null,
-      "price": 31.95,
+      "price": null,
       "market_cap": 4231.0,
       "subindustries": [
         "塑膠製品",
@@ -21630,7 +21630,7 @@
       "market": "TPEX",
       "symbol": "4304.TWO",
       "capital": null,
-      "price": 16.75,
+      "price": null,
       "market_cap": 1022.0,
       "subindustries": [
         "塑膠製品"
@@ -21658,7 +21658,7 @@
       "market": "TPEX",
       "symbol": "4401.TWO",
       "capital": null,
-      "price": 13.65,
+      "price": null,
       "market_cap": 1674.0,
       "subindustries": [
         "人造纖維產品(例如尼龍纖維、聚酯纖維、嫘縈纖維等)",
@@ -21675,7 +21675,7 @@
       "market": "TPEX",
       "symbol": "4402.TWO",
       "capital": null,
-      "price": 12.5,
+      "price": null,
       "market_cap": 849.0,
       "subindustries": [
         "人造纖維產品(例如尼龍纖維、聚酯纖維、嫘縈纖維等)"
@@ -21689,7 +21689,7 @@
       "market": "TPEX",
       "symbol": "4406.TWO",
       "capital": null,
-      "price": 10.25,
+      "price": null,
       "market_cap": 532.0,
       "subindustries": [
         "人造纖維產品(例如尼龍纖維、聚酯纖維、嫘縈纖維等)"
@@ -21717,7 +21717,7 @@
       "market": "TPEX",
       "symbol": "4416.TWO",
       "capital": null,
-      "price": 12.95,
+      "price": null,
       "market_cap": 952.0,
       "subindustries": [
         "建設業"
@@ -21731,7 +21731,7 @@
       "market": "TPEX",
       "symbol": "4417.TWO",
       "capital": null,
-      "price": 47.5,
+      "price": null,
       "market_cap": 3988.0,
       "subindustries": [
         "成衣及其它家居紡織類品"
@@ -21745,7 +21745,7 @@
       "market": "TPEX",
       "symbol": "4419.TWO",
       "capital": null,
-      "price": 47.2,
+      "price": null,
       "market_cap": 7984.0,
       "subindustries": [
         "餐飲連鎖"
@@ -21759,7 +21759,7 @@
       "market": "TPEX",
       "symbol": "4420.TWO",
       "capital": null,
-      "price": 35.15,
+      "price": null,
       "market_cap": 1421.0,
       "subindustries": [
         "人造纖維產品(例如尼龍纖維、聚酯纖維、嫘縈纖維等)"
@@ -21773,7 +21773,7 @@
       "market": "TPEX",
       "symbol": "4430.TWO",
       "capital": null,
-      "price": 22.0,
+      "price": null,
       "market_cap": 1238.0,
       "subindustries": [
         "其他"
@@ -21787,7 +21787,7 @@
       "market": "TPEX",
       "symbol": "4432.TWO",
       "capital": null,
-      "price": 15.5,
+      "price": null,
       "market_cap": 784.0,
       "subindustries": [
         "成衣及其它家居紡織類品"
@@ -21801,7 +21801,7 @@
       "market": "TPEX",
       "symbol": "4433.TWO",
       "capital": null,
-      "price": 17.65,
+      "price": null,
       "market_cap": 1081.0,
       "subindustries": [
         "染整",
@@ -21816,7 +21816,7 @@
       "market": "TPEX",
       "symbol": "4442.TWO",
       "capital": null,
-      "price": 55.0,
+      "price": null,
       "market_cap": 1807.0,
       "subindustries": [
         "成衣及其它家居紡織類品"
@@ -21845,7 +21845,7 @@
       "market": "TPEX",
       "symbol": "4503.TWO",
       "capital": null,
-      "price": 24.3,
+      "price": null,
       "market_cap": 1903.0,
       "subindustries": [
         "自動販賣機",
@@ -21862,7 +21862,7 @@
       "market": "TPEX",
       "symbol": "4506.TWO",
       "capital": null,
-      "price": 118.0,
+      "price": null,
       "market_cap": 20887.0,
       "subindustries": [
         "機電系統工程"
@@ -21876,7 +21876,7 @@
       "market": "TPEX",
       "symbol": "4510.TWO",
       "capital": null,
-      "price": 41.0,
+      "price": null,
       "market_cap": 4468.0,
       "subindustries": [
         "金屬加工用機械"
@@ -21890,7 +21890,7 @@
       "market": "TPEX",
       "symbol": "4513.TWO",
       "capital": null,
-      "price": 15.6,
+      "price": null,
       "market_cap": 2242.0,
       "subindustries": [
         "金屬加工用機械"
@@ -21904,7 +21904,7 @@
       "market": "TPEX",
       "symbol": "4523.TWO",
       "capital": null,
-      "price": 24.3,
+      "price": null,
       "market_cap": 1578.0,
       "subindustries": [
         "車用機械傳動設備及零配件",
@@ -21919,7 +21919,7 @@
       "market": "TPEX",
       "symbol": "4527.TWO",
       "capital": null,
-      "price": 45.1,
+      "price": null,
       "market_cap": 3091.0,
       "subindustries": [
         "冷凍空調設備及零件"
@@ -21933,7 +21933,7 @@
       "market": "TPEX",
       "symbol": "4528.TWO",
       "capital": null,
-      "price": 15.0,
+      "price": null,
       "market_cap": 1262.0,
       "subindustries": [
         "傳動元件",
@@ -21950,7 +21950,7 @@
       "market": "TPEX",
       "symbol": "4529.TWO",
       "capital": null,
-      "price": 3.29,
+      "price": null,
       "market_cap": 278.0,
       "subindustries": [
         "其他"
@@ -21978,7 +21978,7 @@
       "market": "TPEX",
       "symbol": "4533.TWO",
       "capital": null,
-      "price": 26.3,
+      "price": null,
       "market_cap": 4692.0,
       "subindustries": [
         "金屬加工用機械"
@@ -21992,7 +21992,7 @@
       "market": "TPEX",
       "symbol": "4534.TWO",
       "capital": null,
-      "price": 28.05,
+      "price": null,
       "market_cap": 2434.0,
       "subindustries": [
         "傳動元件",
@@ -22025,7 +22025,7 @@
       "market": "TPEX",
       "symbol": "4538.TWO",
       "capital": null,
-      "price": 17.3,
+      "price": null,
       "market_cap": 1028.0,
       "subindustries": [
         "鋼鑄鐵元件"
@@ -22039,7 +22039,7 @@
       "market": "TPEX",
       "symbol": "4541.TWO",
       "capital": null,
-      "price": 59.3,
+      "price": null,
       "market_cap": 4307.0,
       "subindustries": [
         "其他"
@@ -22053,7 +22053,7 @@
       "market": "TPEX",
       "symbol": "4542.TWO",
       "capital": null,
-      "price": 358.0,
+      "price": null,
       "market_cap": 12809.0,
       "subindustries": [
         "工業用設備",
@@ -22068,7 +22068,7 @@
       "market": "TPEX",
       "symbol": "4543.TWO",
       "capital": null,
-      "price": 29.6,
+      "price": null,
       "market_cap": 1857.0,
       "subindustries": [
         "五金元件及零配件",
@@ -22084,7 +22084,7 @@
       "market": "TPEX",
       "symbol": "4549.TWO",
       "capital": null,
-      "price": 93.3,
+      "price": null,
       "market_cap": 5424.0,
       "subindustries": [
         "電控元件",
@@ -22099,7 +22099,7 @@
       "market": "TPEX",
       "symbol": "4550.TWO",
       "capital": null,
-      "price": 24.05,
+      "price": null,
       "market_cap": 910.0,
       "subindustries": [
         "機電系統工程"
@@ -22113,7 +22113,7 @@
       "market": "TPEX",
       "symbol": "4554.TWO",
       "capital": null,
-      "price": 27.05,
+      "price": null,
       "market_cap": 818.0,
       "subindustries": [
         "其他"
@@ -22127,7 +22127,7 @@
       "market": "TPEX",
       "symbol": "4556.TWO",
       "capital": null,
-      "price": 131.5,
+      "price": null,
       "market_cap": 5562.0,
       "subindustries": [
         "其他"
@@ -22141,7 +22141,7 @@
       "market": "TPEX",
       "symbol": "4558.TWO",
       "capital": null,
-      "price": 17.95,
+      "price": null,
       "market_cap": 897.0,
       "subindustries": [
         "金屬加工處理",
@@ -22156,7 +22156,7 @@
       "market": "TPEX",
       "symbol": "4561.TWO",
       "capital": null,
-      "price": 41.0,
+      "price": null,
       "market_cap": 2399.0,
       "subindustries": [
         "傳動元件"
@@ -22170,7 +22170,7 @@
       "market": "TPEX",
       "symbol": "4563.TWO",
       "capital": null,
-      "price": 52.8,
+      "price": null,
       "market_cap": 2901.0,
       "subindustries": [
         "金屬加工用機械"
@@ -22184,7 +22184,7 @@
       "market": "TPEX",
       "symbol": "4568.TWO",
       "capital": null,
-      "price": 41.55,
+      "price": null,
       "market_cap": 1331.0,
       "subindustries": [
         "傳動元件",
@@ -22199,7 +22199,7 @@
       "market": "TPEX",
       "symbol": "4577.TWO",
       "capital": null,
-      "price": 92.5,
+      "price": null,
       "market_cap": 4545.0,
       "subindustries": [
         "生產製程及檢測設備",
@@ -22214,7 +22214,7 @@
       "market": "TPEX",
       "symbol": "4580.TWO",
       "capital": null,
-      "price": 82.1,
+      "price": null,
       "market_cap": 3842.0,
       "subindustries": [
         "鋼鑄鐵元件",
@@ -22229,7 +22229,7 @@
       "market": "TPEX",
       "symbol": "4584.TWO",
       "capital": null,
-      "price": 37.85,
+      "price": null,
       "market_cap": 1135.0,
       "subindustries": [
         "傳動元件",
@@ -22246,7 +22246,7 @@
       "market": "TPEX",
       "symbol": "4609.TWO",
       "capital": null,
-      "price": 5.0,
+      "price": null,
       "market_cap": 239.0,
       "subindustries": [
         "零售通路"
@@ -22260,7 +22260,7 @@
       "market": "TPEX",
       "symbol": "4702.TWO",
       "capital": null,
-      "price": 9.37,
+      "price": null,
       "market_cap": 677.0,
       "subindustries": [
         "貿易商、代理商、經銷商"
@@ -22274,7 +22274,7 @@
       "market": "TPEX",
       "symbol": "4706.TWO",
       "capital": null,
-      "price": 43.15,
+      "price": null,
       "market_cap": 3410.0,
       "subindustries": [
         "顏染料",
@@ -22290,7 +22290,7 @@
       "market": "TPEX",
       "symbol": "4707.TWO",
       "capital": null,
-      "price": 29.6,
+      "price": null,
       "market_cap": 12248.0,
       "subindustries": [
         "界面活性劑"
@@ -22304,7 +22304,7 @@
       "market": "TPEX",
       "symbol": "4711.TWO",
       "capital": null,
-      "price": 16.7,
+      "price": null,
       "market_cap": 1019.0,
       "subindustries": [
         "接著劑(合成樹脂)"
@@ -22318,7 +22318,7 @@
       "market": "TPEX",
       "symbol": "4714.TWO",
       "capital": null,
-      "price": 12.45,
+      "price": null,
       "market_cap": 2761.0,
       "subindustries": [
         "塑膠製品",
@@ -22335,7 +22335,7 @@
       "market": "TPEX",
       "symbol": "4716.TWO",
       "capital": null,
-      "price": 18.4,
+      "price": null,
       "market_cap": 1737.0,
       "subindustries": [
         "工業用合成樹脂"
@@ -22349,7 +22349,7 @@
       "market": "TPEX",
       "symbol": "4721.TWO",
       "capital": null,
-      "price": 77.9,
+      "price": null,
       "market_cap": 5841.0,
       "subindustries": [
         "PTA(對苯二甲酸)觸媒",
@@ -22364,7 +22364,7 @@
       "market": "TPEX",
       "symbol": "4726.TWO",
       "capital": null,
-      "price": 23.2,
+      "price": null,
       "market_cap": 4803.0,
       "subindustries": [
         "中藥材、西藥原料藥",
@@ -22379,7 +22379,7 @@
       "market": "TPEX",
       "symbol": "4728.TWO",
       "capital": null,
-      "price": 395.0,
+      "price": null,
       "market_cap": 21512.0,
       "subindustries": [
         "醫療耗材"
@@ -22393,7 +22393,7 @@
       "market": "TPEX",
       "symbol": "4729.TWO",
       "capital": null,
-      "price": 19.25,
+      "price": null,
       "market_cap": 1525.0,
       "subindustries": [
         "觸控面板",
@@ -22408,7 +22408,7 @@
       "market": "TPEX",
       "symbol": "4735.TWO",
       "capital": null,
-      "price": 36.8,
+      "price": null,
       "market_cap": 1529.0,
       "subindustries": [
         "體溫計、血壓計"
@@ -22422,7 +22422,7 @@
       "market": "TPEX",
       "symbol": "4741.TWO",
       "capital": null,
-      "price": 38.0,
+      "price": null,
       "market_cap": 1322.0,
       "subindustries": [
         "顏染料"
@@ -22436,7 +22436,7 @@
       "market": "TPEX",
       "symbol": "4743.TWO",
       "capital": null,
-      "price": 49.5,
+      "price": null,
       "market_cap": 23786.0,
       "subindustries": [
         "中藥材、西藥原料藥",
@@ -22452,7 +22452,7 @@
       "market": "TPEX",
       "symbol": "4744.TWO",
       "capital": null,
-      "price": 26.6,
+      "price": null,
       "market_cap": 1514.0,
       "subindustries": [
         "其他"
@@ -22466,7 +22466,7 @@
       "market": "TPEX",
       "symbol": "4745.TWO",
       "capital": null,
-      "price": 11.95,
+      "price": null,
       "market_cap": 791.0,
       "subindustries": [
         "醫療器材代理",
@@ -22481,7 +22481,7 @@
       "market": "TPEX",
       "symbol": "4747.TWO",
       "capital": null,
-      "price": 23.45,
+      "price": null,
       "market_cap": 2132.0,
       "subindustries": [
         "中、西藥製劑",
@@ -22496,7 +22496,7 @@
       "market": "TPEX",
       "symbol": "4749.TWO",
       "capital": null,
-      "price": 744.0,
+      "price": null,
       "market_cap": 70481.0,
       "subindustries": [
         "化學品",
@@ -22512,7 +22512,7 @@
       "market": "TPEX",
       "symbol": "4754.TWO",
       "capital": null,
-      "price": 37.3,
+      "price": null,
       "market_cap": 1129.0,
       "subindustries": [
         "其他"
@@ -22526,7 +22526,7 @@
       "market": "TPEX",
       "symbol": "4760.TWO",
       "capital": null,
-      "price": 375.0,
+      "price": null,
       "market_cap": 12291.0,
       "subindustries": [
         "IC封裝測試",
@@ -22545,7 +22545,7 @@
       "market": "TPEX",
       "symbol": "4767.TWO",
       "capital": null,
-      "price": 28.3,
+      "price": null,
       "market_cap": 889.0,
       "subindustries": [
         "接著劑(合成樹脂)"
@@ -22559,7 +22559,7 @@
       "market": "TPEX",
       "symbol": "4768.TWO",
       "capital": null,
-      "price": 362.0,
+      "price": null,
       "market_cap": 17448.0,
       "subindustries": [
         "化學品",
@@ -22576,7 +22576,7 @@
       "market": "TPEX",
       "symbol": "4772.TWO",
       "capital": null,
-      "price": 265.0,
+      "price": null,
       "market_cap": 39135.0,
       "subindustries": [
         "生產製程及檢測設備",
@@ -22606,7 +22606,7 @@
       "market": "TPEX",
       "symbol": "4806.TWO",
       "capital": null,
-      "price": 10.95,
+      "price": null,
       "market_cap": 765.0,
       "subindustries": [
         "廣播電視/電影產業"
@@ -22620,7 +22620,7 @@
       "market": "TPEX",
       "symbol": "4903.TWO",
       "capital": null,
-      "price": 58.0,
+      "price": null,
       "market_cap": 6109.0,
       "subindustries": [
         "光通訊設備(如光纖電纜、光傳輸設備)"
@@ -22634,7 +22634,7 @@
       "market": "TPEX",
       "symbol": "4905.TWO",
       "capital": null,
-      "price": 84.7,
+      "price": null,
       "market_cap": 2478.0,
       "subindustries": [
         "網路設備(如數據機、網路卡、閘道器、路由器、網路電話)",
@@ -22649,7 +22649,7 @@
       "market": "TPEX",
       "symbol": "4907.TWO",
       "capital": null,
-      "price": 42.25,
+      "price": null,
       "market_cap": 4991.0,
       "subindustries": [
         "建設業"
@@ -22663,7 +22663,7 @@
       "market": "TPEX",
       "symbol": "4908.TWO",
       "capital": null,
-      "price": 213.5,
+      "price": null,
       "market_cap": 16699.0,
       "subindustries": [
         "主/被動元件"
@@ -22677,7 +22677,7 @@
       "market": "TPEX",
       "symbol": "4909.TWO",
       "capital": null,
-      "price": 36.0,
+      "price": null,
       "market_cap": 3360.0,
       "subindustries": [
         "印刷電路板",
@@ -22699,7 +22699,7 @@
       "market": "TPEX",
       "symbol": "4911.TWO",
       "capital": null,
-      "price": 27.25,
+      "price": null,
       "market_cap": 1875.0,
       "subindustries": [
         "原材料",
@@ -22715,7 +22715,7 @@
       "market": "TPEX",
       "symbol": "4923.TWO",
       "capital": null,
-      "price": 49.8,
+      "price": null,
       "market_cap": 1863.0,
       "subindustries": [
         "電源管理IC"
@@ -22729,7 +22729,7 @@
       "market": "TPEX",
       "symbol": "4924.TWO",
       "capital": null,
-      "price": 19.9,
+      "price": null,
       "market_cap": 739.0,
       "subindustries": [
         "其他電腦及週邊設備",
@@ -22746,7 +22746,7 @@
       "market": "TPEX",
       "symbol": "4931.TWO",
       "capital": null,
-      "price": 217.0,
+      "price": null,
       "market_cap": 14227.0,
       "subindustries": [
         "電池",
@@ -22763,7 +22763,7 @@
       "market": "TPEX",
       "symbol": "4933.TWO",
       "capital": null,
-      "price": 51.6,
+      "price": null,
       "market_cap": 4266.0,
       "subindustries": [
         "稜鏡片",
@@ -22778,7 +22778,7 @@
       "market": "TPEX",
       "symbol": "4939.TWO",
       "capital": null,
-      "price": 83.3,
+      "price": null,
       "market_cap": 8180.0,
       "subindustries": [
         "銅箔基板"
@@ -22792,7 +22792,7 @@
       "market": "TPEX",
       "symbol": "4946.TWO",
       "capital": null,
-      "price": 96.0,
+      "price": null,
       "market_cap": 849.0,
       "subindustries": [
         "數位內容產業",
@@ -22807,7 +22807,7 @@
       "market": "TPEX",
       "symbol": "4950.TWO",
       "capital": null,
-      "price": 15.65,
+      "price": null,
       "market_cap": 903.0,
       "subindustries": [
         "不鏽鋼棒線",
@@ -22822,7 +22822,7 @@
       "market": "TPEX",
       "symbol": "4951.TWO",
       "capital": null,
-      "price": 87.0,
+      "price": null,
       "market_cap": 2970.0,
       "subindustries": [
         "輸出入介面IC"
@@ -22836,7 +22836,7 @@
       "market": "TPEX",
       "symbol": "4953.TWO",
       "capital": null,
-      "price": 116.5,
+      "price": null,
       "market_cap": 8521.0,
       "subindustries": [
         "IP設計/IC設計代工服務",
@@ -22854,7 +22854,7 @@
       "market": "TPEX",
       "symbol": "4966.TWO",
       "capital": null,
-      "price": 540.0,
+      "price": null,
       "market_cap": 42637.0,
       "subindustries": [
         "平面顯示器驅動IC"
@@ -22868,7 +22868,7 @@
       "market": "TPEX",
       "symbol": "4971.TWO",
       "capital": null,
-      "price": 491.0,
+      "price": null,
       "market_cap": 23168.0,
       "subindustries": [
         "其他IC/二極體製造"
@@ -22882,7 +22882,7 @@
       "market": "TPEX",
       "symbol": "4972.TWO",
       "capital": null,
-      "price": 16.15,
+      "price": null,
       "market_cap": 918.0,
       "subindustries": [
         "燈具/應用"
@@ -22896,7 +22896,7 @@
       "market": "TPEX",
       "symbol": "4973.TWO",
       "capital": null,
-      "price": 142.0,
+      "price": null,
       "market_cap": 9271.0,
       "subindustries": [
         "IC模組",
@@ -22912,7 +22912,7 @@
       "market": "TPEX",
       "symbol": "4974.TWO",
       "capital": null,
-      "price": 69.0,
+      "price": null,
       "market_cap": 5002.0,
       "subindustries": [
         "印表機、傳真機、掃瞄器、多功能事務機、投影機"
@@ -22926,7 +22926,7 @@
       "market": "TPEX",
       "symbol": "4979.TWO",
       "capital": null,
-      "price": 520.0,
+      "price": null,
       "market_cap": 74294.0,
       "subindustries": [
         "主/被動元件"
@@ -22940,7 +22940,7 @@
       "market": "TPEX",
       "symbol": "4991.TWO",
       "capital": null,
-      "price": 443.0,
+      "price": null,
       "market_cap": 53760.0,
       "subindustries": [
         "晶圓製造",
@@ -22955,7 +22955,7 @@
       "market": "TPEX",
       "symbol": "4995.TWO",
       "capital": null,
-      "price": 45.3,
+      "price": null,
       "market_cap": 1929.0,
       "subindustries": [
         "顯示器模組",
@@ -22974,7 +22974,7 @@
       "market": "TPEX",
       "symbol": "5009.TWO",
       "capital": null,
-      "price": 34.3,
+      "price": null,
       "market_cap": 20664.0,
       "subindustries": [
         "鋼胚",
@@ -22990,7 +22990,7 @@
       "market": "TPEX",
       "symbol": "5011.TWO",
       "capital": null,
-      "price": 22.15,
+      "price": null,
       "market_cap": 2229.0,
       "subindustries": [
         "螺絲螺帽"
@@ -23004,7 +23004,7 @@
       "market": "TPEX",
       "symbol": "5013.TWO",
       "capital": null,
-      "price": 43.75,
+      "price": null,
       "market_cap": 5836.0,
       "subindustries": [
         "金屬製品"
@@ -23018,7 +23018,7 @@
       "market": "TPEX",
       "symbol": "5014.TWO",
       "capital": null,
-      "price": 10.0,
+      "price": null,
       "market_cap": 1832.0,
       "subindustries": [
         "冷熱軋不鏽鋼板捲",
@@ -23033,7 +23033,7 @@
       "market": "TPEX",
       "symbol": "5015.TWO",
       "capital": null,
-      "price": 22.1,
+      "price": null,
       "market_cap": 1340.0,
       "subindustries": [
         "螺絲螺帽"
@@ -23047,7 +23047,7 @@
       "market": "TPEX",
       "symbol": "5016.TWO",
       "capital": null,
-      "price": 25.35,
+      "price": null,
       "market_cap": 1257.0,
       "subindustries": [
         "鋼線鋼纜"
@@ -23061,7 +23061,7 @@
       "market": "TPEX",
       "symbol": "5201.TWO",
       "capital": null,
-      "price": 27.9,
+      "price": null,
       "market_cap": 1079.0,
       "subindustries": [
         "應用/系統軟體設計開發",
@@ -23076,7 +23076,7 @@
       "market": "TPEX",
       "symbol": "5202.TWO",
       "capital": null,
-      "price": 14.45,
+      "price": null,
       "market_cap": 1287.0,
       "subindustries": [
         "應用/系統軟體設計開發",
@@ -23092,7 +23092,7 @@
       "market": "TPEX",
       "symbol": "5205.TWO",
       "capital": null,
-      "price": 28.15,
+      "price": null,
       "market_cap": 399.0,
       "subindustries": [
         "環保潔能服務產業",
@@ -23107,7 +23107,7 @@
       "market": "TPEX",
       "symbol": "5206.TWO",
       "capital": null,
-      "price": 23.15,
+      "price": null,
       "market_cap": 4655.0,
       "subindustries": [
         "系統整合服務",
@@ -23122,7 +23122,7 @@
       "market": "TPEX",
       "symbol": "5209.TWO",
       "capital": null,
-      "price": 186.0,
+      "price": null,
       "market_cap": 5436.0,
       "subindustries": [
         "系統整合服務",
@@ -23152,7 +23152,7 @@
       "market": "TPEX",
       "symbol": "5210.TWO",
       "capital": null,
-      "price": 32.95,
+      "price": null,
       "market_cap": 2707.0,
       "subindustries": [
         "應用/系統軟體設計開發",
@@ -23168,7 +23168,7 @@
       "market": "TPEX",
       "symbol": "5211.TWO",
       "capital": null,
-      "price": 20.15,
+      "price": null,
       "market_cap": 645.0,
       "subindustries": [
         "應用/系統軟體設計開發"
@@ -23182,7 +23182,7 @@
       "market": "TPEX",
       "symbol": "5212.TWO",
       "capital": null,
-      "price": 47.9,
+      "price": null,
       "market_cap": 1658.0,
       "subindustries": [
         "系統整合服務"
@@ -23196,7 +23196,7 @@
       "market": "TPEX",
       "symbol": "5213.TWO",
       "capital": null,
-      "price": 20.05,
+      "price": null,
       "market_cap": 15281.0,
       "subindustries": [
         "建設業"
@@ -23210,7 +23210,7 @@
       "market": "TPEX",
       "symbol": "5220.TWO",
       "capital": null,
-      "price": 22.0,
+      "price": null,
       "market_cap": 872.0,
       "subindustries": [
         "觸控面板"
@@ -23224,7 +23224,7 @@
       "market": "TPEX",
       "symbol": "5223.TWO",
       "capital": null,
-      "price": 23.25,
+      "price": null,
       "market_cap": 1035.0,
       "subindustries": [
         "散熱片、風扇馬達、散熱模組",
@@ -23245,7 +23245,7 @@
       "market": "TPEX",
       "symbol": "5227.TWO",
       "capital": null,
-      "price": 26.7,
+      "price": null,
       "market_cap": 2563.0,
       "subindustries": [
         "鋰電池材料",
@@ -23261,7 +23261,7 @@
       "market": "TPEX",
       "symbol": "5228.TWO",
       "capital": null,
-      "price": 55.9,
+      "price": null,
       "market_cap": 2127.0,
       "subindustries": [
         "電感器"
@@ -23275,7 +23275,7 @@
       "market": "TPEX",
       "symbol": "5230.TWO",
       "capital": null,
-      "price": 27.8,
+      "price": null,
       "market_cap": 1565.0,
       "subindustries": [
         "散熱片、風扇馬達、散熱模組",
@@ -23292,7 +23292,7 @@
       "market": "TPEX",
       "symbol": "5245.TWO",
       "capital": null,
-      "price": 19.2,
+      "price": null,
       "market_cap": 866.0,
       "subindustries": [
         "面板",
@@ -23307,7 +23307,7 @@
       "market": "TPEX",
       "symbol": "5251.TWO",
       "capital": null,
-      "price": 28.1,
+      "price": null,
       "market_cap": 947.0,
       "subindustries": [
         "安全監控系統"
@@ -23321,7 +23321,7 @@
       "market": "TPEX",
       "symbol": "5263.TWO",
       "capital": null,
-      "price": 89.7,
+      "price": null,
       "market_cap": 7080.0,
       "subindustries": [
         "娛樂服務業",
@@ -23353,7 +23353,7 @@
       "market": "TPEX",
       "symbol": "5272.TWO",
       "capital": null,
-      "price": 17.2,
+      "price": null,
       "market_cap": 950.0,
       "subindustries": [
         "消費性IC"
@@ -23367,7 +23367,7 @@
       "market": "TPEX",
       "symbol": "5274.TWO",
       "capital": null,
-      "price": 16480.0,
+      "price": null,
       "market_cap": 685287.0,
       "subindustries": [
         "網路通訊IC"
@@ -23381,7 +23381,7 @@
       "market": "TPEX",
       "symbol": "5276.TWO",
       "capital": null,
-      "price": 17.85,
+      "price": null,
       "market_cap": 705.0,
       "subindustries": [
         "其他"
@@ -23395,7 +23395,7 @@
       "market": "TPEX",
       "symbol": "5278.TWO",
       "capital": null,
-      "price": 23.5,
+      "price": null,
       "market_cap": 7050.0,
       "subindustries": [
         "交易撮(媒)合",
@@ -23410,7 +23410,7 @@
       "market": "TPEX",
       "symbol": "5287.TWO",
       "capital": null,
-      "price": 136.0,
+      "price": null,
       "market_cap": 8940.0,
       "subindustries": [
         "行銷廣告服務",
@@ -23426,7 +23426,7 @@
       "market": "TPEX",
       "symbol": "5289.TWO",
       "capital": null,
-      "price": 1175.0,
+      "price": null,
       "market_cap": 115544.0,
       "subindustries": [
         "其他電腦及週邊設備"
@@ -23440,7 +23440,7 @@
       "market": "TPEX",
       "symbol": "5291.TWO",
       "capital": null,
-      "price": 59.8,
+      "price": null,
       "market_cap": 2505.0,
       "subindustries": [
         "硬板、軟板、IC載板製造",
@@ -23455,7 +23455,7 @@
       "market": "TPEX",
       "symbol": "5299.TWO",
       "capital": null,
-      "price": 94.3,
+      "price": null,
       "market_cap": 4824.0,
       "subindustries": [
         "電源管理IC"
@@ -23469,7 +23469,7 @@
       "market": "TPEX",
       "symbol": "5301.TWO",
       "capital": null,
-      "price": 6.01,
+      "price": null,
       "market_cap": 324.0,
       "subindustries": [
         "旅遊服務業",
@@ -23485,7 +23485,7 @@
       "market": "TPEX",
       "symbol": "5302.TWO",
       "capital": null,
-      "price": 9.59,
+      "price": null,
       "market_cap": 1533.0,
       "subindustries": [
         "消費性IC"
@@ -23499,7 +23499,7 @@
       "market": "TPEX",
       "symbol": "5309.TWO",
       "capital": null,
-      "price": 71.6,
+      "price": null,
       "market_cap": 16588.0,
       "subindustries": [
         "其他電腦及週邊設備",
@@ -23514,7 +23514,7 @@
       "market": "TPEX",
       "symbol": "5310.TWO",
       "capital": null,
-      "price": 26.8,
+      "price": null,
       "market_cap": 775.0,
       "subindustries": [
         "線上遊戲業",
@@ -23531,7 +23531,7 @@
       "market": "TPEX",
       "symbol": "5312.TWO",
       "capital": null,
-      "price": 89.9,
+      "price": null,
       "market_cap": 5399.0,
       "subindustries": [
         "醫療院所、醫療器材專賣店、藥局等通路"
@@ -23545,7 +23545,7 @@
       "market": "TPEX",
       "symbol": "5314.TWO",
       "capital": null,
-      "price": 27.25,
+      "price": null,
       "market_cap": 32862.0,
       "subindustries": [
         "裝潢業"
@@ -23559,7 +23559,7 @@
       "market": "TPEX",
       "symbol": "5315.TWO",
       "capital": null,
-      "price": 19.1,
+      "price": null,
       "market_cap": 2031.0,
       "subindustries": [
         "面板",
@@ -23574,7 +23574,7 @@
       "market": "TPEX",
       "symbol": "5321.TWO",
       "capital": null,
-      "price": 62.6,
+      "price": null,
       "market_cap": 3727.0,
       "subindustries": [
         "自有產品(服務)銷售",
@@ -23589,7 +23589,7 @@
       "market": "TPEX",
       "symbol": "5324.TWO",
       "capital": null,
-      "price": 12.5,
+      "price": null,
       "market_cap": 2829.0,
       "subindustries": [
         "旅館服務業",
@@ -23604,7 +23604,7 @@
       "market": "TPEX",
       "symbol": "5328.TWO",
       "capital": null,
-      "price": 54.6,
+      "price": null,
       "market_cap": 9430.0,
       "subindustries": [
         "電容器"
@@ -23618,7 +23618,7 @@
       "market": "TPEX",
       "symbol": "5340.TWO",
       "capital": null,
-      "price": 93.0,
+      "price": null,
       "market_cap": 18125.0,
       "subindustries": [
         "玻璃纖維/玻纖布"
@@ -23632,7 +23632,7 @@
       "market": "TPEX",
       "symbol": "5344.TWO",
       "capital": null,
-      "price": 13.75,
+      "price": null,
       "market_cap": 1092.0,
       "subindustries": [
         "IC封裝測試",
@@ -23647,7 +23647,7 @@
       "market": "TPEX",
       "symbol": "5345.TWO",
       "capital": null,
-      "price": 20.4,
+      "price": null,
       "market_cap": 771.0,
       "subindustries": [
         "其他電子產品及電子服務產業"
@@ -23661,7 +23661,7 @@
       "market": "TPEX",
       "symbol": "5347.TWO",
       "capital": null,
-      "price": 167.5,
+      "price": null,
       "market_cap": 314649.0,
       "subindustries": [
         "晶圓製造"
@@ -23675,7 +23675,7 @@
       "market": "TPEX",
       "symbol": "5348.TWO",
       "capital": null,
-      "price": 17.25,
+      "price": null,
       "market_cap": 254.0,
       "subindustries": [
         "無線通訊設備(如行動電話、衛星定位系統、衛星通訊設備、微波通訊設備、數位機上盒)",
@@ -23697,7 +23697,7 @@
       "market": "TPEX",
       "symbol": "5351.TWO",
       "capital": null,
-      "price": 105.0,
+      "price": null,
       "market_cap": 34526.0,
       "subindustries": [
         "系統整合",
@@ -23734,7 +23734,7 @@
       "market": "TPEX",
       "symbol": "5353.TWO",
       "capital": null,
-      "price": 27.75,
+      "price": null,
       "market_cap": 2102.0,
       "subindustries": [
         "工業電腦",
@@ -23751,7 +23751,7 @@
       "market": "TPEX",
       "symbol": "5355.TWO",
       "capital": null,
-      "price": 6.89,
+      "price": null,
       "market_cap": 1144.0,
       "subindustries": [
         "硬板、軟板、IC載板製造",
@@ -23766,7 +23766,7 @@
       "market": "TPEX",
       "symbol": "5356.TWO",
       "capital": null,
-      "price": 25.65,
+      "price": null,
       "market_cap": 2642.0,
       "subindustries": [
         "印表機、傳真機、掃瞄器、多功能事務機、投影機",
@@ -23788,7 +23788,7 @@
       "market": "TPEX",
       "symbol": "5364.TWO",
       "capital": null,
-      "price": 8.33,
+      "price": null,
       "market_cap": 531.0,
       "subindustries": [
         "旅館服務業"
@@ -23802,7 +23802,7 @@
       "market": "TPEX",
       "symbol": "5381.TWO",
       "capital": null,
-      "price": 21.05,
+      "price": null,
       "market_cap": 4371.0,
       "subindustries": [
         "印刷電路板",
@@ -23821,7 +23821,7 @@
       "market": "TPEX",
       "symbol": "5386.TWO",
       "capital": null,
-      "price": 248.0,
+      "price": null,
       "market_cap": 13422.0,
       "subindustries": [
         "顯示器模組",
@@ -23840,7 +23840,7 @@
       "market": "TPEX",
       "symbol": "5392.TWO",
       "capital": null,
-      "price": 38.45,
+      "price": null,
       "market_cap": 6924.0,
       "subindustries": [
         "機殼"
@@ -23854,7 +23854,7 @@
       "market": "TPEX",
       "symbol": "5398.TWO",
       "capital": null,
-      "price": 16.75,
+      "price": null,
       "market_cap": 828.0,
       "subindustries": [
         "連接器設計、組裝及製造",
@@ -23874,7 +23874,7 @@
       "market": "TPEX",
       "symbol": "5403.TWO",
       "capital": null,
-      "price": 91.6,
+      "price": null,
       "market_cap": 7155.0,
       "subindustries": [
         "應用/系統軟體設計開發",
@@ -23889,7 +23889,7 @@
       "market": "TPEX",
       "symbol": "5410.TWO",
       "capital": null,
-      "price": 32.8,
+      "price": null,
       "market_cap": 3066.0,
       "subindustries": [
         "應用/系統軟體設計開發",
@@ -23904,7 +23904,7 @@
       "market": "TPEX",
       "symbol": "5425.TWO",
       "capital": null,
-      "price": 92.6,
+      "price": null,
       "market_cap": 24398.0,
       "subindustries": [
         "其他IC/二極體製造"
@@ -23918,7 +23918,7 @@
       "market": "TPEX",
       "symbol": "5426.TWO",
       "capital": null,
-      "price": 27.7,
+      "price": null,
       "market_cap": 3983.0,
       "subindustries": [
         "其他電腦及週邊設備之零組件"
@@ -23932,7 +23932,7 @@
       "market": "TPEX",
       "symbol": "5432.TWO",
       "capital": null,
-      "price": 203.5,
+      "price": null,
       "market_cap": 4209.0,
       "subindustries": [
         "顯示器模組",
@@ -23947,7 +23947,7 @@
       "market": "TPEX",
       "symbol": "5438.TWO",
       "capital": null,
-      "price": 16.9,
+      "price": null,
       "market_cap": 1901.0,
       "subindustries": [
         "印表機、傳真機、掃瞄器、多功能事務機、投影機"
@@ -23961,7 +23961,7 @@
       "market": "TPEX",
       "symbol": "5439.TWO",
       "capital": null,
-      "price": 233.5,
+      "price": null,
       "market_cap": 21710.0,
       "subindustries": [
         "印刷電路板",
@@ -23977,7 +23977,7 @@
       "market": "TPEX",
       "symbol": "5443.TWO",
       "capital": null,
-      "price": 105.5,
+      "price": null,
       "market_cap": 17380.0,
       "subindustries": [
         "生產製程及檢測設備"
@@ -23991,7 +23991,7 @@
       "market": "TPEX",
       "symbol": "5450.TWO",
       "capital": null,
-      "price": 15.2,
+      "price": null,
       "market_cap": 1860.0,
       "subindustries": [
         "成衣及其它家居紡織類品"
@@ -24005,7 +24005,7 @@
       "market": "TPEX",
       "symbol": "5452.TWO",
       "capital": null,
-      "price": 28.6,
+      "price": null,
       "market_cap": 4254.0,
       "subindustries": [
         "其他電子產品及電子服務產業"
@@ -24033,7 +24033,7 @@
       "market": "TPEX",
       "symbol": "5457.TWO",
       "capital": null,
-      "price": 23.3,
+      "price": null,
       "market_cap": 4572.0,
       "subindustries": [
         "機殼",
@@ -24075,7 +24075,7 @@
       "market": "TPEX",
       "symbol": "5460.TWO",
       "capital": null,
-      "price": 20.6,
+      "price": null,
       "market_cap": 1210.0,
       "subindustries": [
         "金屬、塑膠模具",
@@ -24094,7 +24094,7 @@
       "market": "TPEX",
       "symbol": "5464.TWO",
       "capital": null,
-      "price": 71.8,
+      "price": null,
       "market_cap": 5466.0,
       "subindustries": [
         "旅館服務業",
@@ -24109,7 +24109,7 @@
       "market": "TPEX",
       "symbol": "5465.TWO",
       "capital": null,
-      "price": 36.05,
+      "price": null,
       "market_cap": 5323.0,
       "subindustries": [
         "機殼"
@@ -24123,7 +24123,7 @@
       "market": "TPEX",
       "symbol": "5468.TWO",
       "capital": null,
-      "price": 22.05,
+      "price": null,
       "market_cap": 1299.0,
       "subindustries": [
         "光通訊IC"
@@ -24137,7 +24137,7 @@
       "market": "TPEX",
       "symbol": "5474.TWO",
       "capital": null,
-      "price": 149.5,
+      "price": null,
       "market_cap": 5943.0,
       "subindustries": [
         "多功能視訊卡",
@@ -24155,7 +24155,7 @@
       "market": "TPEX",
       "symbol": "5475.TWO",
       "capital": null,
-      "price": 198.5,
+      "price": null,
       "market_cap": 25234.0,
       "subindustries": [
         "玻璃纖維/玻纖布"
@@ -24169,7 +24169,7 @@
       "market": "TPEX",
       "symbol": "5478.TWO",
       "capital": null,
-      "price": 98.9,
+      "price": null,
       "market_cap": 15435.0,
       "subindustries": [
         "線上遊戲業",
@@ -24190,7 +24190,7 @@
       "market": "TPEX",
       "symbol": "5481.TWO",
       "capital": null,
-      "price": 20.85,
+      "price": null,
       "market_cap": 1488.0,
       "subindustries": [
         "其他"
@@ -24204,7 +24204,7 @@
       "market": "TPEX",
       "symbol": "5483.TWO",
       "capital": null,
-      "price": 200.0,
+      "price": null,
       "market_cap": 128244.0,
       "subindustries": [
         "化學品",
@@ -24225,7 +24225,7 @@
       "market": "TPEX",
       "symbol": "5487.TWO",
       "capital": null,
-      "price": 29.15,
+      "price": null,
       "market_cap": 706.0,
       "subindustries": [
         "消費性IC",
@@ -24240,7 +24240,7 @@
       "market": "TPEX",
       "symbol": "5488.TWO",
       "capital": null,
-      "price": 11.8,
+      "price": null,
       "market_cap": 1080.0,
       "subindustries": [
         "連接線"
@@ -24254,7 +24254,7 @@
       "market": "TPEX",
       "symbol": "5489.TWO",
       "capital": null,
-      "price": 40.2,
+      "price": null,
       "market_cap": 4128.0,
       "subindustries": [
         "安全監控系統",
@@ -24269,7 +24269,7 @@
       "market": "TPEX",
       "symbol": "5490.TWO",
       "capital": null,
-      "price": 25.05,
+      "price": null,
       "market_cap": 2408.0,
       "subindustries": [
         "工業電腦",
@@ -24284,7 +24284,7 @@
       "market": "TPEX",
       "symbol": "5493.TWO",
       "capital": null,
-      "price": 87.8,
+      "price": null,
       "market_cap": 3835.0,
       "subindustries": [
         "生產製程及檢測設備",
@@ -24305,7 +24305,7 @@
       "market": "TPEX",
       "symbol": "5498.TWO",
       "capital": null,
-      "price": 59.8,
+      "price": null,
       "market_cap": 11574.0,
       "subindustries": [
         "基板組裝加工及相關製造",
@@ -24320,7 +24320,7 @@
       "market": "TPEX",
       "symbol": "5508.TWO",
       "capital": null,
-      "price": 52.9,
+      "price": null,
       "market_cap": 11501.0,
       "subindustries": [
         "建設業"
@@ -24334,7 +24334,7 @@
       "market": "TPEX",
       "symbol": "5511.TWO",
       "capital": null,
-      "price": 69.5,
+      "price": null,
       "market_cap": 9452.0,
       "subindustries": [
         "營造業"
@@ -24348,7 +24348,7 @@
       "market": "TPEX",
       "symbol": "5512.TWO",
       "capital": null,
-      "price": 7.64,
+      "price": null,
       "market_cap": 5854.0,
       "subindustries": [
         "建設業"
@@ -24362,7 +24362,7 @@
       "market": "TPEX",
       "symbol": "5514.TWO",
       "capital": null,
-      "price": 14.8,
+      "price": null,
       "market_cap": 3494.0,
       "subindustries": [
         "建設業"
@@ -24376,7 +24376,7 @@
       "market": "TPEX",
       "symbol": "5516.TWO",
       "capital": null,
-      "price": 13.05,
+      "price": null,
       "market_cap": 672.0,
       "subindustries": [
         "營造業"
@@ -24404,7 +24404,7 @@
       "market": "TPEX",
       "symbol": "5523.TWO",
       "capital": null,
-      "price": 30.35,
+      "price": null,
       "market_cap": 4704.0,
       "subindustries": [
         "建設業"
@@ -24418,7 +24418,7 @@
       "market": "TPEX",
       "symbol": "5529.TWO",
       "capital": null,
-      "price": 25.05,
+      "price": null,
       "market_cap": 2649.0,
       "subindustries": [
         "建設業"
@@ -24432,7 +24432,7 @@
       "market": "TPEX",
       "symbol": "5530.TWO",
       "capital": null,
-      "price": 48.45,
+      "price": null,
       "market_cap": 20353.0,
       "subindustries": [
         "建設業",
@@ -24447,7 +24447,7 @@
       "market": "TPEX",
       "symbol": "5536.TWO",
       "capital": null,
-      "price": 857.0,
+      "price": null,
       "market_cap": 106337.0,
       "subindustries": [
         "生產製程及檢測設備",
@@ -24474,7 +24474,7 @@
       "market": "TPEX",
       "symbol": "5543.TWO",
       "capital": null,
-      "price": 26.05,
+      "price": null,
       "market_cap": 1216.0,
       "subindustries": [
         "建材原料",
@@ -24491,7 +24491,7 @@
       "market": "TPEX",
       "symbol": "5547.TWO",
       "capital": null,
-      "price": 20.2,
+      "price": null,
       "market_cap": 1030.0,
       "subindustries": [
         "營造業"
@@ -24505,7 +24505,7 @@
       "market": "TPEX",
       "symbol": "5548.TWO",
       "capital": null,
-      "price": 20.0,
+      "price": null,
       "market_cap": 1274.0,
       "subindustries": [
         "營造業"
@@ -24519,7 +24519,7 @@
       "market": "TPEX",
       "symbol": "5601.TWO",
       "capital": null,
-      "price": 33.15,
+      "price": null,
       "market_cap": 2148.0,
       "subindustries": [
         "貨櫃運輸集散及倉儲"
@@ -24533,7 +24533,7 @@
       "market": "TPEX",
       "symbol": "5603.TWO",
       "capital": null,
-      "price": 14.25,
+      "price": null,
       "market_cap": 1494.0,
       "subindustries": [
         "貨櫃運輸集散及倉儲"
@@ -24547,7 +24547,7 @@
       "market": "TPEX",
       "symbol": "5604.TWO",
       "capital": null,
-      "price": 31.45,
+      "price": null,
       "market_cap": 3421.0,
       "subindustries": [
         "其他"
@@ -24561,7 +24561,7 @@
       "market": "TPEX",
       "symbol": "5609.TWO",
       "capital": null,
-      "price": 79.1,
+      "price": null,
       "market_cap": 11302.0,
       "subindustries": [
         "海陸空貨運承攬"
@@ -24575,7 +24575,7 @@
       "market": "TPEX",
       "symbol": "5701.TWO",
       "capital": null,
-      "price": 3.95,
+      "price": null,
       "market_cap": 564.0,
       "subindustries": [
         "娛樂服務業",
@@ -24604,7 +24604,7 @@
       "market": "TPEX",
       "symbol": "5704.TWO",
       "capital": null,
-      "price": 22.4,
+      "price": null,
       "market_cap": 1318.0,
       "subindustries": [
         "旅館服務業"
@@ -24618,7 +24618,7 @@
       "market": "TPEX",
       "symbol": "5864.TWO",
       "capital": null,
-      "price": 38.7,
+      "price": null,
       "market_cap": 19523.0,
       "subindustries": [
         "證券業"
@@ -24632,7 +24632,7 @@
       "market": "TPEX",
       "symbol": "5878.TWO",
       "capital": null,
-      "price": 36.9,
+      "price": null,
       "market_cap": 923.0,
       "subindustries": [
         "金控業/銀行業/保險業"
@@ -24646,7 +24646,7 @@
       "market": "TPEX",
       "symbol": "5902.TWO",
       "capital": null,
-      "price": 34.4,
+      "price": null,
       "market_cap": 3250.0,
       "subindustries": [
         "貿易商、代理商、經銷商"
@@ -24660,7 +24660,7 @@
       "market": "TPEX",
       "symbol": "5903.TWO",
       "capital": null,
-      "price": 186.0,
+      "price": null,
       "market_cap": 41518.0,
       "subindustries": [
         "零售通路"
@@ -24674,7 +24674,7 @@
       "market": "TPEX",
       "symbol": "5904.TWO",
       "capital": null,
-      "price": 73.9,
+      "price": null,
       "market_cap": 78661.0,
       "subindustries": [
         "零售通路"
@@ -24688,7 +24688,7 @@
       "market": "TPEX",
       "symbol": "5905.TWO",
       "capital": null,
-      "price": 7.23,
+      "price": null,
       "market_cap": 2036.0,
       "subindustries": [
         "旅館服務業",
@@ -24703,7 +24703,7 @@
       "market": "TPEX",
       "symbol": "6015.TWO",
       "capital": null,
-      "price": 17.85,
+      "price": null,
       "market_cap": 7420.0,
       "subindustries": [
         "證券業"
@@ -24717,7 +24717,7 @@
       "market": "TPEX",
       "symbol": "6016.TWO",
       "capital": null,
-      "price": 23.25,
+      "price": null,
       "market_cap": 17958.0,
       "subindustries": [
         "證券業"
@@ -24731,7 +24731,7 @@
       "market": "TPEX",
       "symbol": "6020.TWO",
       "capital": null,
-      "price": 21.1,
+      "price": null,
       "market_cap": 5324.0,
       "subindustries": [
         "證券業"
@@ -24745,7 +24745,7 @@
       "market": "TPEX",
       "symbol": "6021.TWO",
       "capital": null,
-      "price": 55.8,
+      "price": null,
       "market_cap": 17409.0,
       "subindustries": [
         "證券業"
@@ -24759,7 +24759,7 @@
       "market": "TPEX",
       "symbol": "6023.TWO",
       "capital": null,
-      "price": 84.0,
+      "price": null,
       "market_cap": 37629.0,
       "subindustries": [
         "期貨業"
@@ -24773,7 +24773,7 @@
       "market": "TPEX",
       "symbol": "6026.TWO",
       "capital": null,
-      "price": 15.7,
+      "price": null,
       "market_cap": 6219.0,
       "subindustries": [
         "證券業"
@@ -24787,7 +24787,7 @@
       "market": "TPEX",
       "symbol": "6028.TWO",
       "capital": null,
-      "price": 111.5,
+      "price": null,
       "market_cap": 2787.0,
       "subindustries": [
         "金控業/銀行業/保險業"
@@ -24801,7 +24801,7 @@
       "market": "TPEX",
       "symbol": "6101.TWO",
       "capital": null,
-      "price": 37.0,
+      "price": null,
       "market_cap": 4314.0,
       "subindustries": [
         "流行音樂及文化內容產業"
@@ -24815,7 +24815,7 @@
       "market": "TPEX",
       "symbol": "6103.TWO",
       "capital": null,
-      "price": 36.3,
+      "price": null,
       "market_cap": 493.0,
       "subindustries": [
         "消費性IC"
@@ -24829,7 +24829,7 @@
       "market": "TPEX",
       "symbol": "6104.TWO",
       "capital": null,
-      "price": 87.2,
+      "price": null,
       "market_cap": 7946.0,
       "subindustries": [
         "輸出入介面IC"
@@ -24843,7 +24843,7 @@
       "market": "TPEX",
       "symbol": "6109.TWO",
       "capital": null,
-      "price": 10.2,
+      "price": null,
       "market_cap": 895.0,
       "subindustries": [
         "電源供應器",
@@ -24858,7 +24858,7 @@
       "market": "TPEX",
       "symbol": "6111.TWO",
       "capital": null,
-      "price": 35.5,
+      "price": null,
       "market_cap": 3852.0,
       "subindustries": [
         "數位內容產業",
@@ -24874,7 +24874,7 @@
       "market": "TPEX",
       "symbol": "6113.TWO",
       "capital": null,
-      "price": 22.9,
+      "price": null,
       "market_cap": 1203.0,
       "subindustries": [
         "IC通路"
@@ -24888,7 +24888,7 @@
       "market": "TPEX",
       "symbol": "6114.TWO",
       "capital": null,
-      "price": 25.75,
+      "price": null,
       "market_cap": 1130.0,
       "subindustries": [
         "其他電腦及週邊設備之零組件"
@@ -24902,7 +24902,7 @@
       "market": "TPEX",
       "symbol": "6118.TWO",
       "capital": null,
-      "price": 15.8,
+      "price": null,
       "market_cap": 1436.0,
       "subindustries": [
         "其他電子產品及電子服務產業"
@@ -24916,7 +24916,7 @@
       "market": "TPEX",
       "symbol": "6121.TWO",
       "capital": null,
-      "price": 370.0,
+      "price": null,
       "market_cap": 68439.0,
       "subindustries": [
         "電池",
@@ -24932,7 +24932,7 @@
       "market": "TPEX",
       "symbol": "6122.TWO",
       "capital": null,
-      "price": 61.6,
+      "price": null,
       "market_cap": 4810.0,
       "subindustries": [
         "機電系統工程",
@@ -24948,7 +24948,7 @@
       "market": "TPEX",
       "symbol": "6123.TWO",
       "capital": null,
-      "price": 42.85,
+      "price": null,
       "market_cap": 2660.0,
       "subindustries": [
         "系統整合服務",
@@ -24974,7 +24974,7 @@
       "market": "TPEX",
       "symbol": "6124.TWO",
       "capital": null,
-      "price": 26.5,
+      "price": null,
       "market_cap": 4835.0,
       "subindustries": [
         "散熱片、風扇馬達、散熱模組",
@@ -24989,7 +24989,7 @@
       "market": "TPEX",
       "symbol": "6125.TWO",
       "capital": null,
-      "price": 48.2,
+      "price": null,
       "market_cap": 12484.0,
       "subindustries": [
         "整體解決方案",
@@ -25007,7 +25007,7 @@
       "market": "TPEX",
       "symbol": "6126.TWO",
       "capital": null,
-      "price": 29.85,
+      "price": null,
       "market_cap": 3887.0,
       "subindustries": [
         "連接器設計、組裝及製造"
@@ -25021,7 +25021,7 @@
       "market": "TPEX",
       "symbol": "6127.TWO",
       "capital": null,
-      "price": 62.0,
+      "price": null,
       "market_cap": 6700.0,
       "subindustries": [
         "電阻器材料(氧化鋁陶瓷基板、導電漿墨)"
@@ -25035,7 +25035,7 @@
       "market": "TPEX",
       "symbol": "6129.TWO",
       "capital": null,
-      "price": 13.75,
+      "price": null,
       "market_cap": 2482.0,
       "subindustries": [
         "LED驅動IC",
@@ -25054,7 +25054,7 @@
       "market": "TPEX",
       "symbol": "6130.TWO",
       "capital": null,
-      "price": 22.2,
+      "price": null,
       "market_cap": 1094.0,
       "subindustries": [
         "藥品代理銷售及通路",
@@ -25071,7 +25071,7 @@
       "market": "TPEX",
       "symbol": "6134.TWO",
       "capital": null,
-      "price": 26.0,
+      "price": null,
       "market_cap": 2128.0,
       "subindustries": [
         "連接線"
@@ -25085,7 +25085,7 @@
       "market": "TPEX",
       "symbol": "6138.TWO",
       "capital": null,
-      "price": 258.0,
+      "price": null,
       "market_cap": 19513.0,
       "subindustries": [
         "LED驅動IC",
@@ -25102,7 +25102,7 @@
       "market": "TPEX",
       "symbol": "6140.TWO",
       "capital": null,
-      "price": 21.0,
+      "price": null,
       "market_cap": 1152.0,
       "subindustries": [
         "筆記型電腦",
@@ -25132,7 +25132,7 @@
       "market": "TPEX",
       "symbol": "6143.TWO",
       "capital": null,
-      "price": 79.1,
+      "price": null,
       "market_cap": 6807.0,
       "subindustries": [
         "網路卡",
@@ -25151,7 +25151,7 @@
       "market": "TPEX",
       "symbol": "6144.TWO",
       "capital": null,
-      "price": 13.5,
+      "price": null,
       "market_cap": 516.0,
       "subindustries": [
         "其他",
@@ -25166,7 +25166,7 @@
       "market": "TPEX",
       "symbol": "6146.TWO",
       "capital": null,
-      "price": 213.0,
+      "price": null,
       "market_cap": 21697.0,
       "subindustries": [
         "其他電子產品及電子服務產業"
@@ -25180,7 +25180,7 @@
       "market": "TPEX",
       "symbol": "6147.TWO",
       "capital": null,
-      "price": 207.5,
+      "price": null,
       "market_cap": 154499.0,
       "subindustries": [
         "IC封裝測試",
@@ -25195,7 +25195,7 @@
       "market": "TPEX",
       "symbol": "6148.TWO",
       "capital": null,
-      "price": 41.95,
+      "price": null,
       "market_cap": 1955.0,
       "subindustries": [
         "系統整合服務",
@@ -25210,7 +25210,7 @@
       "market": "TPEX",
       "symbol": "6150.TWO",
       "capital": null,
-      "price": 73.0,
+      "price": null,
       "market_cap": 3529.0,
       "subindustries": [
         "顯示卡",
@@ -25225,7 +25225,7 @@
       "market": "TPEX",
       "symbol": "6151.TWO",
       "capital": null,
-      "price": 34.15,
+      "price": null,
       "market_cap": 1887.0,
       "subindustries": [
         "塑膠材料",
@@ -25240,7 +25240,7 @@
       "market": "TPEX",
       "symbol": "6154.TWO",
       "capital": null,
-      "price": 14.15,
+      "price": null,
       "market_cap": 1133.0,
       "subindustries": [
         "筆記型電腦",
@@ -25264,7 +25264,7 @@
       "market": "TPEX",
       "symbol": "6156.TWO",
       "capital": null,
-      "price": 24.7,
+      "price": null,
       "market_cap": 2664.0,
       "subindustries": [
         "電感器",
@@ -25279,7 +25279,7 @@
       "market": "TPEX",
       "symbol": "6158.TWO",
       "capital": null,
-      "price": 17.9,
+      "price": null,
       "market_cap": 985.0,
       "subindustries": [
         "連接器設計、組裝及製造"
@@ -25293,7 +25293,7 @@
       "market": "TPEX",
       "symbol": "6160.TWO",
       "capital": null,
-      "price": 13.95,
+      "price": null,
       "market_cap": 955.0,
       "subindustries": [
         "工業電腦"
@@ -25307,7 +25307,7 @@
       "market": "TPEX",
       "symbol": "6161.TWO",
       "capital": null,
-      "price": 48.25,
+      "price": null,
       "market_cap": 2713.0,
       "subindustries": [
         "主機板",
@@ -25322,7 +25322,7 @@
       "market": "TPEX",
       "symbol": "6163.TWO",
       "capital": null,
-      "price": 42.75,
+      "price": null,
       "market_cap": 6362.0,
       "subindustries": [
         "網路設備(如數據機、網路卡、閘道器、路由器、網路電話)",
@@ -25371,7 +25371,7 @@
       "market": "TPEX",
       "symbol": "6169.TWO",
       "capital": null,
-      "price": 12.0,
+      "price": null,
       "market_cap": 280.0,
       "subindustries": [
         "線上遊戲業",
@@ -25388,7 +25388,7 @@
       "market": "TPEX",
       "symbol": "6170.TWO",
       "capital": null,
-      "price": 49.6,
+      "price": null,
       "market_cap": 4824.0,
       "subindustries": [
         "電信服務業"
@@ -25402,7 +25402,7 @@
       "market": "TPEX",
       "symbol": "6171.TWO",
       "capital": null,
-      "price": 24.0,
+      "price": null,
       "market_cap": 2400.0,
       "subindustries": [
         "建設業"
@@ -25433,7 +25433,7 @@
       "market": "TPEX",
       "symbol": "6174.TWO",
       "capital": null,
-      "price": 53.0,
+      "price": null,
       "market_cap": 2650.0,
       "subindustries": [
         "濾波器、振盪器"
@@ -25447,7 +25447,7 @@
       "market": "TPEX",
       "symbol": "6175.TWO",
       "capital": null,
-      "price": 72.7,
+      "price": null,
       "market_cap": 10913.0,
       "subindustries": [
         "電容器材料(如電蝕／化成鋁箔、介面瓷粉)"
@@ -25461,7 +25461,7 @@
       "market": "TPEX",
       "symbol": "6179.TWO",
       "capital": null,
-      "price": 37.05,
+      "price": null,
       "market_cap": 6610.0,
       "subindustries": [
         "工程承攬"
@@ -25475,7 +25475,7 @@
       "market": "TPEX",
       "symbol": "6180.TWO",
       "capital": null,
-      "price": 40.45,
+      "price": null,
       "market_cap": 7098.0,
       "subindustries": [
         "數位內容產業",
@@ -25491,7 +25491,7 @@
       "market": "TPEX",
       "symbol": "6182.TWO",
       "capital": null,
-      "price": 110.5,
+      "price": null,
       "market_cap": 70455.0,
       "subindustries": [
         "晶圓製造"
@@ -25505,7 +25505,7 @@
       "market": "TPEX",
       "symbol": "6185.TWO",
       "capital": null,
-      "price": 13.3,
+      "price": null,
       "market_cap": 1993.0,
       "subindustries": [
         "連接器設計、組裝及製造"
@@ -25519,7 +25519,7 @@
       "market": "TPEX",
       "symbol": "6186.TWO",
       "capital": null,
-      "price": 29.25,
+      "price": null,
       "market_cap": 6637.0,
       "subindustries": [
         "建設業"
@@ -25533,7 +25533,7 @@
       "market": "TPEX",
       "symbol": "6187.TWO",
       "capital": null,
-      "price": 1410.0,
+      "price": null,
       "market_cap": 138550.0,
       "subindustries": [
         "其他電子產品及電子服務產業"
@@ -25547,7 +25547,7 @@
       "market": "TPEX",
       "symbol": "6188.TWO",
       "capital": null,
-      "price": 63.8,
+      "price": null,
       "market_cap": 17759.0,
       "subindustries": [
         "其他電腦及週邊設備"
@@ -25561,7 +25561,7 @@
       "market": "TPEX",
       "symbol": "6190.TWO",
       "capital": null,
-      "price": 71.3,
+      "price": null,
       "market_cap": 13963.0,
       "subindustries": [
         "線材"
@@ -25575,7 +25575,7 @@
       "market": "TPEX",
       "symbol": "6194.TWO",
       "capital": null,
-      "price": 32.75,
+      "price": null,
       "market_cap": 1572.0,
       "subindustries": [
         "硬板、軟板、IC載板製造"
@@ -25589,7 +25589,7 @@
       "market": "TPEX",
       "symbol": "6195.TWO",
       "capital": null,
-      "price": 27.85,
+      "price": null,
       "market_cap": 1397.0,
       "subindustries": [
         "零售通路"
@@ -25603,7 +25603,7 @@
       "market": "TPEX",
       "symbol": "6198.TWO",
       "capital": null,
-      "price": 19.5,
+      "price": null,
       "market_cap": 3342.0,
       "subindustries": [
         "建設業"
@@ -25617,7 +25617,7 @@
       "market": "TPEX",
       "symbol": "6199.TWO",
       "capital": null,
-      "price": 144.0,
+      "price": null,
       "market_cap": 8893.0,
       "subindustries": [
         "其他"
@@ -25631,7 +25631,7 @@
       "market": "TPEX",
       "symbol": "6203.TWO",
       "capital": null,
-      "price": 57.7,
+      "price": null,
       "market_cap": 4754.0,
       "subindustries": [
         "電源供應器"
@@ -25645,7 +25645,7 @@
       "market": "TPEX",
       "symbol": "6204.TWO",
       "capital": null,
-      "price": 112.5,
+      "price": null,
       "market_cap": 2598.0,
       "subindustries": [
         "其他電腦及週邊設備",
@@ -25673,7 +25673,7 @@
       "market": "TPEX",
       "symbol": "6207.TWO",
       "capital": null,
-      "price": 131.5,
+      "price": null,
       "market_cap": 12289.0,
       "subindustries": [
         "生產製程及檢測設備",
@@ -25695,7 +25695,7 @@
       "market": "TPEX",
       "symbol": "6208.TWO",
       "capital": null,
-      "price": 72.8,
+      "price": null,
       "market_cap": 6876.0,
       "subindustries": [
         "生產製程及檢測設備"
@@ -25709,7 +25709,7 @@
       "market": "TPEX",
       "symbol": "6210.TWO",
       "capital": null,
-      "price": 18.75,
+      "price": null,
       "market_cap": 657.0,
       "subindustries": [
         "硬板、軟板、IC載板製造"
@@ -25723,7 +25723,7 @@
       "market": "TPEX",
       "symbol": "6212.TWO",
       "capital": null,
-      "price": 32.05,
+      "price": null,
       "market_cap": 3269.0,
       "subindustries": [
         "建設業"
@@ -25737,7 +25737,7 @@
       "market": "TPEX",
       "symbol": "6217.TWO",
       "capital": null,
-      "price": 194.0,
+      "price": null,
       "market_cap": 22738.0,
       "subindustries": [
         "連接器設計、組裝及製造"
@@ -25751,7 +25751,7 @@
       "market": "TPEX",
       "symbol": "6218.TWO",
       "capital": null,
-      "price": 53.1,
+      "price": null,
       "market_cap": 3412.0,
       "subindustries": [
         "自動化機台",
@@ -25795,7 +25795,7 @@
       "market": "TPEX",
       "symbol": "6219.TWO",
       "capital": null,
-      "price": 11.95,
+      "price": null,
       "market_cap": 1493.0,
       "subindustries": [
         "建設業"
@@ -25809,7 +25809,7 @@
       "market": "TPEX",
       "symbol": "6220.TWO",
       "capital": null,
-      "price": 25.1,
+      "price": null,
       "market_cap": 3676.0,
       "subindustries": [
         "電源供應器",
@@ -25827,7 +25827,7 @@
       "market": "TPEX",
       "symbol": "6221.TWO",
       "capital": null,
-      "price": 36.05,
+      "price": null,
       "market_cap": 6078.0,
       "subindustries": [
         "伺服器",
@@ -25858,7 +25858,7 @@
       "market": "TPEX",
       "symbol": "6222.TWO",
       "capital": null,
-      "price": 19.25,
+      "price": null,
       "market_cap": 1842.0,
       "subindustries": [
         "光源/磊晶",
@@ -25874,7 +25874,7 @@
       "market": "TPEX",
       "symbol": "6223.TWO",
       "capital": null,
-      "price": 5205.0,
+      "price": null,
       "market_cap": 509992.0,
       "subindustries": [
         "生產製程及檢測設備",
@@ -25889,7 +25889,7 @@
       "market": "TPEX",
       "symbol": "6227.TWO",
       "capital": null,
-      "price": 128.0,
+      "price": null,
       "market_cap": 9742.0,
       "subindustries": [
         "IC通路"
@@ -25903,7 +25903,7 @@
       "market": "TPEX",
       "symbol": "6228.TWO",
       "capital": null,
-      "price": 18.4,
+      "price": null,
       "market_cap": 533.0,
       "subindustries": [
         "印表機、傳真機、掃瞄器、多功能事務機、投影機",
@@ -25925,7 +25925,7 @@
       "market": "TPEX",
       "symbol": "6229.TWO",
       "capital": null,
-      "price": 23.2,
+      "price": null,
       "market_cap": 936.0,
       "subindustries": [
         "微控制器IC"
@@ -25939,7 +25939,7 @@
       "market": "TPEX",
       "symbol": "6231.TWO",
       "capital": null,
-      "price": 243.5,
+      "price": null,
       "market_cap": 11116.0,
       "subindustries": [
         "BIOS(嵌入式軟體)"
@@ -25953,7 +25953,7 @@
       "market": "TPEX",
       "symbol": "6233.TWO",
       "capital": null,
-      "price": 25.4,
+      "price": null,
       "market_cap": 2056.0,
       "subindustries": [
         "晶片組",
@@ -25968,7 +25968,7 @@
       "market": "TPEX",
       "symbol": "6234.TWO",
       "capital": null,
-      "price": 48.1,
+      "price": null,
       "market_cap": 4828.0,
       "subindustries": [
         "自動化機台",
@@ -26003,7 +26003,7 @@
       "market": "TPEX",
       "symbol": "6237.TWO",
       "capital": null,
-      "price": 33.05,
+      "price": null,
       "market_cap": 2632.0,
       "subindustries": [
         "消費性IC"
@@ -26017,7 +26017,7 @@
       "market": "TPEX",
       "symbol": "6240.TWO",
       "capital": null,
-      "price": 27.4,
+      "price": null,
       "market_cap": 626.0,
       "subindustries": [
         "應用/系統軟體設計開發",
@@ -26032,7 +26032,7 @@
       "market": "TPEX",
       "symbol": "6241.TWO",
       "capital": null,
-      "price": 16.8,
+      "price": null,
       "market_cap": 764.0,
       "subindustries": [
         "網路設備(如數據機、網路卡、閘道器、路由器、網路電話)"
@@ -26046,7 +26046,7 @@
       "market": "TPEX",
       "symbol": "6242.TWO",
       "capital": null,
-      "price": 34.0,
+      "price": null,
       "market_cap": 1081.0,
       "subindustries": [
         "原料",
@@ -26062,7 +26062,7 @@
       "market": "TPEX",
       "symbol": "6244.TWO",
       "capital": null,
-      "price": 21.6,
+      "price": null,
       "market_cap": 8360.0,
       "subindustries": [
         "太陽能電池",
@@ -26079,7 +26079,7 @@
       "market": "TPEX",
       "symbol": "6245.TWO",
       "capital": null,
-      "price": 89.3,
+      "price": null,
       "market_cap": 13092.0,
       "subindustries": [
         "主機板",
@@ -26095,7 +26095,7 @@
       "market": "TPEX",
       "symbol": "6246.TWO",
       "capital": null,
-      "price": 12.5,
+      "price": null,
       "market_cap": 473.0,
       "subindustries": [
         "背光源(發光二極體、冷陰極管)",
@@ -26112,7 +26112,7 @@
       "market": "TPEX",
       "symbol": "6248.TWO",
       "capital": null,
-      "price": 17.2,
+      "price": null,
       "market_cap": 1719.0,
       "subindustries": [
         "裁剪加工"
@@ -26126,7 +26126,7 @@
       "market": "TPEX",
       "symbol": "6259.TWO",
       "capital": null,
-      "price": 31.15,
+      "price": null,
       "market_cap": 873.0,
       "subindustries": [
         "電感器"
@@ -26140,7 +26140,7 @@
       "market": "TPEX",
       "symbol": "6261.TWO",
       "capital": null,
-      "price": 78.2,
+      "price": null,
       "market_cap": 10048.0,
       "subindustries": [
         "生產製程及檢測設備",
@@ -26157,7 +26157,7 @@
       "market": "TPEX",
       "symbol": "6263.TWO",
       "capital": null,
-      "price": 172.0,
+      "price": null,
       "market_cap": 10750.0,
       "subindustries": [
         "網路設備(如數據機、網路卡、閘道器、路由器、網路電話)",
@@ -26194,7 +26194,7 @@
       "market": "TPEX",
       "symbol": "6264.TWO",
       "capital": null,
-      "price": 6.05,
+      "price": null,
       "market_cap": 824.0,
       "subindustries": [
         "旅館服務業",
@@ -26210,7 +26210,7 @@
       "market": "TPEX",
       "symbol": "6265.TWO",
       "capital": null,
-      "price": 45.5,
+      "price": null,
       "market_cap": 5376.0,
       "subindustries": [
         "IC通路"
@@ -26224,7 +26224,7 @@
       "market": "TPEX",
       "symbol": "6266.TWO",
       "capital": null,
-      "price": 25.05,
+      "price": null,
       "market_cap": 3854.0,
       "subindustries": [
         "基板組裝加工及相關製造"
@@ -26238,7 +26238,7 @@
       "market": "TPEX",
       "symbol": "6270.TWO",
       "capital": null,
-      "price": 28.75,
+      "price": null,
       "market_cap": 2074.0,
       "subindustries": [
         "IC通路"
@@ -26252,7 +26252,7 @@
       "market": "TPEX",
       "symbol": "6274.TWO",
       "capital": null,
-      "price": 1615.0,
+      "price": null,
       "market_cap": 483681.0,
       "subindustries": [
         "銅箔基板"
@@ -26266,7 +26266,7 @@
       "market": "TPEX",
       "symbol": "6275.TWO",
       "capital": null,
-      "price": 45.5,
+      "price": null,
       "market_cap": 3655.0,
       "subindustries": [
         "散熱片、風扇馬達、散熱模組",
@@ -26286,7 +26286,7 @@
       "market": "TPEX",
       "symbol": "6276.TWO",
       "capital": null,
-      "price": 18.5,
+      "price": null,
       "market_cap": 407.0,
       "subindustries": [
         "記憶體",
@@ -26304,7 +26304,7 @@
       "market": "TPEX",
       "symbol": "6279.TWO",
       "capital": null,
-      "price": 116.0,
+      "price": null,
       "market_cap": 13805.0,
       "subindustries": [
         "連接器設計、組裝及製造",
@@ -26319,7 +26319,7 @@
       "market": "TPEX",
       "symbol": "6284.TWO",
       "capital": null,
-      "price": 75.3,
+      "price": null,
       "market_cap": 11218.0,
       "subindustries": [
         "主/被動元件",
@@ -26336,7 +26336,7 @@
       "market": "TPEX",
       "symbol": "6290.TWO",
       "capital": null,
-      "price": 265.0,
+      "price": null,
       "market_cap": 44958.0,
       "subindustries": [
         "連接器設計、組裝及製造"
@@ -26350,7 +26350,7 @@
       "market": "TPEX",
       "symbol": "6291.TWO",
       "capital": null,
-      "price": 400.0,
+      "price": null,
       "market_cap": 16800.0,
       "subindustries": [
         "電源管理IC"
@@ -26364,7 +26364,7 @@
       "market": "TPEX",
       "symbol": "6292.TWO",
       "capital": null,
-      "price": 66.8,
+      "price": null,
       "market_cap": 3112.0,
       "subindustries": [
         "電感器"
@@ -26378,7 +26378,7 @@
       "market": "TPEX",
       "symbol": "6294.TWO",
       "capital": null,
-      "price": 27.35,
+      "price": null,
       "market_cap": 712.0,
       "subindustries": [
         "數位內容產業"
@@ -26392,7 +26392,7 @@
       "market": "TPEX",
       "symbol": "6411.TWO",
       "capital": null,
-      "price": 76.0,
+      "price": null,
       "market_cap": 7562.0,
       "subindustries": [
         "輸出入介面IC"
@@ -26406,7 +26406,7 @@
       "market": "TPEX",
       "symbol": "6417.TWO",
       "capital": null,
-      "price": 103.0,
+      "price": null,
       "market_cap": 4354.0,
       "subindustries": [
         "無線通訊設備(如行動電話、衛星定位系統、衛星通訊設備、微波通訊設備、數位機上盒)"
@@ -26420,7 +26420,7 @@
       "market": "TPEX",
       "symbol": "6418.TWO",
       "capital": null,
-      "price": 36.4,
+      "price": null,
       "market_cap": 1256.0,
       "subindustries": [
         "連接線",
@@ -26435,7 +26435,7 @@
       "market": "TPEX",
       "symbol": "6419.TWO",
       "capital": null,
-      "price": 154.0,
+      "price": null,
       "market_cap": 2026.0,
       "subindustries": [
         "安全監控系統"
@@ -26449,7 +26449,7 @@
       "market": "TPEX",
       "symbol": "6423.TWO",
       "capital": null,
-      "price": 83.0,
+      "price": null,
       "market_cap": 2574.0,
       "subindustries": [
         "IP設計/IC設計代工服務"
@@ -26463,7 +26463,7 @@
       "market": "TPEX",
       "symbol": "6425.TWO",
       "capital": null,
-      "price": 72.8,
+      "price": null,
       "market_cap": 3740.0,
       "subindustries": [
         "自動化機台",
@@ -26478,7 +26478,7 @@
       "market": "TPEX",
       "symbol": "6432.TWO",
       "capital": null,
-      "price": 61.1,
+      "price": null,
       "market_cap": 2453.0,
       "subindustries": [
         "電感器"
@@ -26492,7 +26492,7 @@
       "market": "TPEX",
       "symbol": "6435.TWO",
       "capital": null,
-      "price": 228.0,
+      "price": null,
       "market_cap": 8541.0,
       "subindustries": [
         "電源管理IC"
@@ -26506,7 +26506,7 @@
       "market": "TPEX",
       "symbol": "6441.TWO",
       "capital": null,
-      "price": 21.8,
+      "price": null,
       "market_cap": 1162.0,
       "subindustries": [
         "工業電腦",
@@ -26522,7 +26522,7 @@
       "market": "TPEX",
       "symbol": "6461.TWO",
       "capital": null,
-      "price": 28.9,
+      "price": null,
       "market_cap": 3188.0,
       "subindustries": [
         "中、西藥製劑",
@@ -26543,7 +26543,7 @@
       "market": "TPEX",
       "symbol": "6462.TWO",
       "capital": null,
-      "price": 96.0,
+      "price": null,
       "market_cap": 8760.0,
       "subindustries": [
         "應用/系統軟體設計開發",
@@ -26560,7 +26560,7 @@
       "market": "TPEX",
       "symbol": "6465.TWO",
       "capital": null,
-      "price": 45.15,
+      "price": null,
       "market_cap": 2667.0,
       "subindustries": [
         "無線通訊設備(如行動電話、衛星定位系統、衛星通訊設備、微波通訊設備、數位機上盒)"
@@ -26574,7 +26574,7 @@
       "market": "TPEX",
       "symbol": "6469.TWO",
       "capital": null,
-      "price": 69.5,
+      "price": null,
       "market_cap": 11058.0,
       "subindustries": [
         "藥品代理銷售及通路",
@@ -26590,7 +26590,7 @@
       "market": "TPEX",
       "symbol": "6470.TWO",
       "capital": null,
-      "price": 45.95,
+      "price": null,
       "market_cap": 1732.0,
       "subindustries": [
         "網路IC",
@@ -26616,7 +26616,7 @@
       "market": "TPEX",
       "symbol": "6474.TWO",
       "capital": null,
-      "price": 35.5,
+      "price": null,
       "market_cap": 1864.0,
       "subindustries": [
         "IC通路"
@@ -26630,7 +26630,7 @@
       "market": "TPEX",
       "symbol": "6482.TWO",
       "capital": null,
-      "price": 23.1,
+      "price": null,
       "market_cap": 661.0,
       "subindustries": [
         "數位內容產業"
@@ -26644,7 +26644,7 @@
       "market": "TPEX",
       "symbol": "6485.TWO",
       "capital": null,
-      "price": 80.5,
+      "price": null,
       "market_cap": 3813.0,
       "subindustries": [
         "記憶體控制IC"
@@ -26658,7 +26658,7 @@
       "market": "TPEX",
       "symbol": "6486.TWO",
       "capital": null,
-      "price": 79.4,
+      "price": null,
       "market_cap": 4040.0,
       "subindustries": [
         "網路設備(如數據機、網路卡、閘道器、路由器、網路電話)",
@@ -26675,7 +26675,7 @@
       "market": "TPEX",
       "symbol": "6488.TWO",
       "capital": null,
-      "price": 902.0,
+      "price": null,
       "market_cap": 476358.0,
       "subindustries": [
         "晶圓製造"
@@ -26689,7 +26689,7 @@
       "market": "TPEX",
       "symbol": "6492.TWO",
       "capital": null,
-      "price": 33.55,
+      "price": null,
       "market_cap": 3855.0,
       "subindustries": [
         "原材料"
@@ -26703,7 +26703,7 @@
       "market": "TPEX",
       "symbol": "6494.TWO",
       "capital": null,
-      "price": 47.35,
+      "price": null,
       "market_cap": 1494.0,
       "subindustries": [
         "消費性IC"
@@ -26717,7 +26717,7 @@
       "market": "TPEX",
       "symbol": "6496.TWO",
       "capital": null,
-      "price": 23.9,
+      "price": null,
       "market_cap": 1130.0,
       "subindustries": [
         "原材料",
@@ -26736,7 +26736,7 @@
       "market": "TPEX",
       "symbol": "6498.TWO",
       "capital": null,
-      "price": 68.5,
+      "price": null,
       "market_cap": 3252.0,
       "subindustries": [
         "光學鏡片、鏡頭"
@@ -26750,7 +26750,7 @@
       "market": "TPEX",
       "symbol": "6499.TWO",
       "capital": null,
-      "price": 83.5,
+      "price": null,
       "market_cap": 8094.0,
       "subindustries": [
         "醫療耗材"
@@ -26764,7 +26764,7 @@
       "market": "TPEX",
       "symbol": "6506.TWO",
       "capital": null,
-      "price": 18.65,
+      "price": null,
       "market_cap": 1536.0,
       "subindustries": [
         "接著劑(合成樹脂)",
@@ -26779,7 +26779,7 @@
       "market": "TPEX",
       "symbol": "6508.TWO",
       "capital": null,
-      "price": 26.5,
+      "price": null,
       "market_cap": 2293.0,
       "subindustries": [
         "塑膠製品",
@@ -26795,7 +26795,7 @@
       "market": "TPEX",
       "symbol": "6509.TWO",
       "capital": null,
-      "price": 50.3,
+      "price": null,
       "market_cap": 9930.0,
       "subindustries": [
         "清潔用品",
@@ -26819,7 +26819,7 @@
       "market": "TPEX",
       "symbol": "6510.TWO",
       "capital": null,
-      "price": 3120.0,
+      "price": null,
       "market_cap": 102738.0,
       "subindustries": [
         "生產製程及檢測設備"
@@ -26833,7 +26833,7 @@
       "market": "TPEX",
       "symbol": "6512.TWO",
       "capital": null,
-      "price": 20.15,
+      "price": null,
       "market_cap": 508.0,
       "subindustries": [
         "網路設備(如數據機、網路卡、閘道器、路由器、網路電話)",
@@ -26849,7 +26849,7 @@
       "market": "TPEX",
       "symbol": "6516.TWO",
       "capital": null,
-      "price": 55.4,
+      "price": null,
       "market_cap": 3121.0,
       "subindustries": [
         "應用/系統軟體設計開發",
@@ -26865,7 +26865,7 @@
       "market": "TPEX",
       "symbol": "6517.TWO",
       "capital": null,
-      "price": 77.0,
+      "price": null,
       "market_cap": 2354.0,
       "subindustries": [
         "光學鏡片、鏡頭"
@@ -26879,7 +26879,7 @@
       "market": "TPEX",
       "symbol": "6523.TWO",
       "capital": null,
-      "price": 86.5,
+      "price": null,
       "market_cap": 3896.0,
       "subindustries": [
         "保健食品代理銷售及通路"
@@ -26893,7 +26893,7 @@
       "market": "TPEX",
       "symbol": "6527.TWO",
       "capital": null,
-      "price": 72.5,
+      "price": null,
       "market_cap": 1845.0,
       "subindustries": [
         "其他"
@@ -26907,7 +26907,7 @@
       "market": "TPEX",
       "symbol": "6530.TWO",
       "capital": null,
-      "price": 93.3,
+      "price": null,
       "market_cap": 3148.0,
       "subindustries": [
         "主/被動元件",
@@ -26922,7 +26922,7 @@
       "market": "TPEX",
       "symbol": "6532.TWO",
       "capital": null,
-      "price": 123.0,
+      "price": null,
       "market_cap": 4605.0,
       "subindustries": [
         "生產製程及檢測設備"
@@ -26936,7 +26936,7 @@
       "market": "TPEX",
       "symbol": "6535.TWO",
       "capital": null,
-      "price": 75.9,
+      "price": null,
       "market_cap": 12739.0,
       "subindustries": [
         "原材料"
@@ -26950,7 +26950,7 @@
       "market": "TPEX",
       "symbol": "6538.TWO",
       "capital": null,
-      "price": 285.0,
+      "price": null,
       "market_cap": 11096.0,
       "subindustries": [
         "其他電子產品及電子服務產業"
@@ -26964,7 +26964,7 @@
       "market": "TPEX",
       "symbol": "6542.TWO",
       "capital": null,
-      "price": 37.7,
+      "price": null,
       "market_cap": 1583.0,
       "subindustries": [
         "線上遊戲業",
@@ -26980,7 +26980,7 @@
       "market": "TPEX",
       "symbol": "6546.TWO",
       "capital": null,
-      "price": 60.7,
+      "price": null,
       "market_cap": 4057.0,
       "subindustries": [
         "其他零組件"
@@ -26994,7 +26994,7 @@
       "market": "TPEX",
       "symbol": "6547.TWO",
       "capital": null,
-      "price": 52.7,
+      "price": null,
       "market_cap": 17832.0,
       "subindustries": [
         "中藥材、西藥原料藥",
@@ -27009,7 +27009,7 @@
       "market": "TPEX",
       "symbol": "6548.TWO",
       "capital": null,
-      "price": 83.4,
+      "price": null,
       "market_cap": 79268.0,
       "subindustries": [
         "導線架"
@@ -27023,7 +27023,7 @@
       "market": "TPEX",
       "symbol": "6556.TWO",
       "capital": null,
-      "price": 65.4,
+      "price": null,
       "market_cap": 1880.0,
       "subindustries": [
         "安全監控系統"
@@ -27037,7 +27037,7 @@
       "market": "TPEX",
       "symbol": "6560.TWO",
       "capital": null,
-      "price": 32.0,
+      "price": null,
       "market_cap": 1071.0,
       "subindustries": [
         "安全監控系統"
@@ -27051,7 +27051,7 @@
       "market": "TPEX",
       "symbol": "6561.TWO",
       "capital": null,
-      "price": 308.0,
+      "price": null,
       "market_cap": 24011.0,
       "subindustries": [
         "網路設備(如數據機、網路卡、閘道器、路由器、網路電話)",
@@ -27082,7 +27082,7 @@
       "market": "TPEX",
       "symbol": "6568.TWO",
       "capital": null,
-      "price": 138.0,
+      "price": null,
       "market_cap": 4249.0,
       "subindustries": [
         "光通訊IC",
@@ -27099,7 +27099,7 @@
       "market": "TPEX",
       "symbol": "6569.TWO",
       "capital": null,
-      "price": 90.2,
+      "price": null,
       "market_cap": 3862.0,
       "subindustries": [
         "顯示器",
@@ -27114,7 +27114,7 @@
       "market": "TPEX",
       "symbol": "6570.TWO",
       "capital": null,
-      "price": 46.75,
+      "price": null,
       "market_cap": 1735.0,
       "subindustries": [
         "工業電腦"
@@ -27128,7 +27128,7 @@
       "market": "TPEX",
       "symbol": "6574.TWO",
       "capital": null,
-      "price": 116.5,
+      "price": null,
       "market_cap": 2561.0,
       "subindustries": [
         "保健食品代理銷售及通路"
@@ -27142,7 +27142,7 @@
       "market": "TPEX",
       "symbol": "6576.TWO",
       "capital": null,
-      "price": 77.6,
+      "price": null,
       "market_cap": 12228.0,
       "subindustries": [
         "中、西藥製劑"
@@ -27156,7 +27156,7 @@
       "market": "TPEX",
       "symbol": "6577.TWO",
       "capital": null,
-      "price": 79.3,
+      "price": null,
       "market_cap": 4762.0,
       "subindustries": [
         "塑膠框",
@@ -27184,7 +27184,7 @@
       "market": "TPEX",
       "symbol": "6578.TWO",
       "capital": null,
-      "price": 16.6,
+      "price": null,
       "market_cap": 1194.0,
       "subindustries": [
         "原物料"
@@ -27198,7 +27198,7 @@
       "market": "TPEX",
       "symbol": "6584.TWO",
       "capital": null,
-      "price": 475.0,
+      "price": null,
       "market_cap": 33905.0,
       "subindustries": [
         "其他電腦及週邊設備之零組件",
@@ -27213,7 +27213,7 @@
       "market": "TPEX",
       "symbol": "6588.TWO",
       "capital": null,
-      "price": 93.2,
+      "price": null,
       "market_cap": 3234.0,
       "subindustries": [
         "其他零組件"
@@ -27227,7 +27227,7 @@
       "market": "TPEX",
       "symbol": "6590.TWO",
       "capital": null,
-      "price": 71.7,
+      "price": null,
       "market_cap": 2057.0,
       "subindustries": [
         "應用/系統軟體設計開發",
@@ -27254,7 +27254,7 @@
       "market": "TPEX",
       "symbol": "6593.TWO",
       "capital": null,
-      "price": 32.05,
+      "price": null,
       "market_cap": 1021.0,
       "subindustries": [
         "資料處理服務"
@@ -27268,7 +27268,7 @@
       "market": "TPEX",
       "symbol": "6596.TWO",
       "capital": null,
-      "price": 96.1,
+      "price": null,
       "market_cap": 3651.0,
       "subindustries": [
         "流行音樂及文化內容產業"
@@ -27282,7 +27282,7 @@
       "market": "TPEX",
       "symbol": "6597.TWO",
       "capital": null,
-      "price": 68.4,
+      "price": null,
       "market_cap": 2054.0,
       "subindustries": [
         "其他零組件",
@@ -27298,7 +27298,7 @@
       "market": "TPEX",
       "symbol": "6603.TWO",
       "capital": null,
-      "price": 27.15,
+      "price": null,
       "market_cap": 4546.0,
       "subindustries": [
         "專用機械(如紡織成衣生產用機械、食品飲料生產用機械、農林用機械等)"
@@ -27312,7 +27312,7 @@
       "market": "TPEX",
       "symbol": "6604.TWO",
       "capital": null,
-      "price": 24.6,
+      "price": null,
       "market_cap": 1247.0,
       "subindustries": [
         "車燈"
@@ -27326,7 +27326,7 @@
       "market": "TPEX",
       "symbol": "6609.TWO",
       "capital": null,
-      "price": 39.8,
+      "price": null,
       "market_cap": 2883.0,
       "subindustries": [
         "金屬加工用機械"
@@ -27340,7 +27340,7 @@
       "market": "TPEX",
       "symbol": "6612.TWO",
       "capital": null,
-      "price": 69.5,
+      "price": null,
       "market_cap": 3632.0,
       "subindustries": [
         "醫療耗材",
@@ -27355,7 +27355,7 @@
       "market": "TPEX",
       "symbol": "6613.TWO",
       "capital": null,
-      "price": 269.5,
+      "price": null,
       "market_cap": 20967.0,
       "subindustries": [
         "生產製程及檢測設備",
@@ -27370,7 +27370,7 @@
       "market": "TPEX",
       "symbol": "6615.TWO",
       "capital": null,
-      "price": 33.25,
+      "price": null,
       "market_cap": 717.0,
       "subindustries": [
         "其他"
@@ -27384,7 +27384,7 @@
       "market": "TPEX",
       "symbol": "6616.TWO",
       "capital": null,
-      "price": 8.75,
+      "price": null,
       "market_cap": 309.0,
       "subindustries": [
         "其他"
@@ -27398,7 +27398,7 @@
       "market": "TPEX",
       "symbol": "6617.TWO",
       "capital": null,
-      "price": 126.5,
+      "price": null,
       "market_cap": 16129.0,
       "subindustries": [
         "中藥材、西藥原料藥",
@@ -27413,7 +27413,7 @@
       "market": "TPEX",
       "symbol": "6620.TWO",
       "capital": null,
-      "price": 143.5,
+      "price": null,
       "market_cap": 23818.0,
       "subindustries": [
         "中、西藥製劑"
@@ -27441,7 +27441,7 @@
       "market": "TPEX",
       "symbol": "6629.TWO",
       "capital": null,
-      "price": 103.0,
+      "price": null,
       "market_cap": 3953.0,
       "subindustries": [
         "製造商"
@@ -27455,7 +27455,7 @@
       "market": "TPEX",
       "symbol": "6637.TWO",
       "capital": null,
-      "price": 54.2,
+      "price": null,
       "market_cap": 1453.0,
       "subindustries": [
         "醫療器材代理銷售及通路",
@@ -27471,7 +27471,7 @@
       "market": "TPEX",
       "symbol": "6640.TWO",
       "capital": null,
-      "price": 1015.0,
+      "price": null,
       "market_cap": 29345.0,
       "subindustries": [
         "生產製程及檢測設備"
@@ -27485,7 +27485,7 @@
       "market": "TPEX",
       "symbol": "6642.TWO",
       "capital": null,
-      "price": 73.6,
+      "price": null,
       "market_cap": 2752.0,
       "subindustries": [
         "電阻器"
@@ -27499,7 +27499,7 @@
       "market": "TPEX",
       "symbol": "6643.TWO",
       "capital": null,
-      "price": 455.0,
+      "price": null,
       "market_cap": 19392.0,
       "subindustries": [
         "IP設計/IC設計代工服務"
@@ -27513,7 +27513,7 @@
       "market": "TPEX",
       "symbol": "6649.TWO",
       "capital": null,
-      "price": 36.75,
+      "price": null,
       "market_cap": 1543.0,
       "subindustries": [
         "醫療耗材"
@@ -27527,7 +27527,7 @@
       "market": "TPEX",
       "symbol": "6651.TWO",
       "capital": null,
-      "price": 143.5,
+      "price": null,
       "market_cap": 4965.0,
       "subindustries": [
         "電源管理IC"
@@ -27541,7 +27541,7 @@
       "market": "TPEX",
       "symbol": "6654.TWO",
       "capital": null,
-      "price": 202.5,
+      "price": null,
       "market_cap": 8294.0,
       "subindustries": [
         "其他電子產品及電子服務產業"
@@ -27555,7 +27555,7 @@
       "market": "TPEX",
       "symbol": "6661.TWO",
       "capital": null,
-      "price": 17.0,
+      "price": null,
       "market_cap": 396.0,
       "subindustries": [
         "原材料",
@@ -27576,7 +27576,7 @@
       "market": "TPEX",
       "symbol": "6662.TWO",
       "capital": null,
-      "price": 28.2,
+      "price": null,
       "market_cap": 722.0,
       "subindustries": [
         "中、西藥製劑",
@@ -27593,7 +27593,7 @@
       "market": "TPEX",
       "symbol": "6664.TWO",
       "capital": null,
-      "price": 345.5,
+      "price": null,
       "market_cap": 21127.0,
       "subindustries": [
         "自動化機台",
@@ -27610,7 +27610,7 @@
       "market": "TPEX",
       "symbol": "6667.TWO",
       "capital": null,
-      "price": 264.0,
+      "price": null,
       "market_cap": 14118.0,
       "subindustries": [
         "生產製程及檢測設備",
@@ -27625,7 +27625,7 @@
       "market": "TPEX",
       "symbol": "6679.TWO",
       "capital": null,
-      "price": 191.0,
+      "price": null,
       "market_cap": 10500.0,
       "subindustries": [
         "感測裝置",
@@ -27642,7 +27642,7 @@
       "market": "TPEX",
       "symbol": "6680.TWO",
       "capital": null,
-      "price": 50.0,
+      "price": null,
       "market_cap": 1253.0,
       "subindustries": [
         "工業電腦",
@@ -27662,7 +27662,7 @@
       "market": "TPEX",
       "symbol": "6683.TWO",
       "capital": null,
-      "price": 1315.0,
+      "price": null,
       "market_cap": 36231.0,
       "subindustries": [
         "生產製程及檢測設備"
@@ -27676,7 +27676,7 @@
       "market": "TPEX",
       "symbol": "6684.TWO",
       "capital": null,
-      "price": 45.75,
+      "price": null,
       "market_cap": 2038.0,
       "subindustries": [
         "消費性IC",
@@ -27691,7 +27691,7 @@
       "market": "TPEX",
       "symbol": "6690.TWO",
       "capital": null,
-      "price": 179.5,
+      "price": null,
       "market_cap": 5384.0,
       "subindustries": [
         "系統整合服務",
@@ -27719,7 +27719,7 @@
       "market": "TPEX",
       "symbol": "6692.TWO",
       "capital": null,
-      "price": 22.25,
+      "price": null,
       "market_cap": 1309.0,
       "subindustries": [
         "太陽能發電設備/系統及系統工程"
@@ -27733,7 +27733,7 @@
       "market": "TPEX",
       "symbol": "6693.TWO",
       "capital": null,
-      "price": 181.0,
+      "price": null,
       "market_cap": 8275.0,
       "subindustries": [
         "電源管理IC"
@@ -27747,7 +27747,7 @@
       "market": "TPEX",
       "symbol": "6697.TWO",
       "capital": null,
-      "price": 41.4,
+      "price": null,
       "market_cap": 1131.0,
       "subindustries": [
         "系統整合服務",
@@ -27778,7 +27778,7 @@
       "market": "TPEX",
       "symbol": "6703.TWO",
       "capital": null,
-      "price": 99.9,
+      "price": null,
       "market_cap": 3622.0,
       "subindustries": [
         "自有產品(服務)銷售",
@@ -27794,7 +27794,7 @@
       "market": "TPEX",
       "symbol": "6708.TWO",
       "capital": null,
-      "price": 55.0,
+      "price": null,
       "market_cap": 1595.0,
       "subindustries": [
         "網路通訊IC",
@@ -27810,7 +27810,7 @@
       "market": "TPEX",
       "symbol": "6712.TWO",
       "capital": null,
-      "price": 157.0,
+      "price": null,
       "market_cap": 15776.0,
       "subindustries": [
         "幹細胞收集儲存",
@@ -27826,7 +27826,7 @@
       "market": "TPEX",
       "symbol": "6716.TWO",
       "capital": null,
-      "price": 92.6,
+      "price": null,
       "market_cap": 2800.0,
       "subindustries": [
         "微控制器IC"
@@ -27840,7 +27840,7 @@
       "market": "TPEX",
       "symbol": "6720.TWO",
       "capital": null,
-      "price": 103.0,
+      "price": null,
       "market_cap": 3113.0,
       "subindustries": [
         "消費性IC"
@@ -27854,7 +27854,7 @@
       "market": "TPEX",
       "symbol": "6721.TWO",
       "capital": null,
-      "price": 48.0,
+      "price": null,
       "market_cap": 1176.0,
       "subindustries": [
         "環保潔能服務產業",
@@ -27869,7 +27869,7 @@
       "market": "TPEX",
       "symbol": "6725.TWO",
       "capital": null,
-      "price": 191.0,
+      "price": null,
       "market_cap": 7091.0,
       "subindustries": [
         "生產製程及檢測設備",
@@ -27884,7 +27884,7 @@
       "market": "TPEX",
       "symbol": "6727.TWO",
       "capital": null,
-      "price": 524.0,
+      "price": null,
       "market_cap": 14087.0,
       "subindustries": [
         "生產製程及檢測設備"
@@ -27898,7 +27898,7 @@
       "market": "TPEX",
       "symbol": "6728.TWO",
       "capital": null,
-      "price": 108.0,
+      "price": null,
       "market_cap": 3252.0,
       "subindustries": [
         "貿易商、代理商、經銷商",
@@ -27913,7 +27913,7 @@
       "market": "TPEX",
       "symbol": "6730.TWO",
       "capital": null,
-      "price": 31.1,
+      "price": null,
       "market_cap": 1129.0,
       "subindustries": [
         "醫療耗材"
@@ -27927,7 +27927,7 @@
       "market": "TPEX",
       "symbol": "6732.TWO",
       "capital": null,
-      "price": 153.0,
+      "price": null,
       "market_cap": 7483.0,
       "subindustries": [
         "光源管理IC"
@@ -27941,7 +27941,7 @@
       "market": "TPEX",
       "symbol": "6733.TWO",
       "capital": null,
-      "price": 24.4,
+      "price": null,
       "market_cap": 3277.0,
       "subindustries": [
         "醫療耗材"
@@ -27955,7 +27955,7 @@
       "market": "TPEX",
       "symbol": "6735.TWO",
       "capital": null,
-      "price": 59.0,
+      "price": null,
       "market_cap": 2724.0,
       "subindustries": [
         "生產製程及檢測設備",
@@ -27970,7 +27970,7 @@
       "market": "TPEX",
       "symbol": "6739.TWO",
       "capital": null,
-      "price": 960.0,
+      "price": null,
       "market_cap": 22456.0,
       "subindustries": [
         "自動化機台",
@@ -28001,7 +28001,7 @@
       "market": "TPEX",
       "symbol": "6741.TWO",
       "capital": null,
-      "price": 53.5,
+      "price": null,
       "market_cap": 6450.0,
       "subindustries": [
         "資訊系統建置服務",
@@ -28041,7 +28041,7 @@
       "market": "TPEX",
       "symbol": "6751.TWO",
       "capital": null,
-      "price": 54.5,
+      "price": null,
       "market_cap": 1209.0,
       "subindustries": [
         "系統整合服務"
@@ -28055,7 +28055,7 @@
       "market": "TPEX",
       "symbol": "6752.TWO",
       "capital": null,
-      "price": 96.0,
+      "price": null,
       "market_cap": 3672.0,
       "subindustries": [
         "應用/系統軟體設計開發",
@@ -28110,7 +28110,7 @@
       "market": "TPEX",
       "symbol": "6761.TWO",
       "capital": null,
-      "price": 151.5,
+      "price": null,
       "market_cap": 5295.0,
       "subindustries": [
         "其他電子產品及電子服務產業"
@@ -28124,7 +28124,7 @@
       "market": "TPEX",
       "symbol": "6762.TWO",
       "capital": null,
-      "price": 145.0,
+      "price": null,
       "market_cap": 5354.0,
       "subindustries": [
         "醫療耗材"
@@ -28138,7 +28138,7 @@
       "market": "TPEX",
       "symbol": "6763.TWO",
       "capital": null,
-      "price": 41.25,
+      "price": null,
       "market_cap": 7591.0,
       "subindustries": [
         "金流串接處理服務",
@@ -28153,7 +28153,7 @@
       "market": "TPEX",
       "symbol": "6767.TWO",
       "capital": null,
-      "price": 24.0,
+      "price": null,
       "market_cap": 940.0,
       "subindustries": [
         "人工關節",
@@ -28168,7 +28168,7 @@
       "market": "TPEX",
       "symbol": "6785.TWO",
       "capital": null,
-      "price": 85.7,
+      "price": null,
       "market_cap": 5724.0,
       "subindustries": [
         "中、西藥製劑"
@@ -28182,7 +28182,7 @@
       "market": "TPEX",
       "symbol": "6788.TWO",
       "capital": null,
-      "price": 361.5,
+      "price": null,
       "market_cap": 14004.0,
       "subindustries": [
         "生產製程及檢測設備"
@@ -28196,7 +28196,7 @@
       "market": "TPEX",
       "symbol": "6791.TWO",
       "capital": null,
-      "price": 96.0,
+      "price": null,
       "market_cap": 2001.0,
       "subindustries": [
         "系統整合服務",
@@ -28212,7 +28212,7 @@
       "market": "TPEX",
       "symbol": "6803.TWO",
       "capital": null,
-      "price": 261.5,
+      "price": null,
       "market_cap": 19035.0,
       "subindustries": [
         "環保潔能服務產業"
@@ -28226,7 +28226,7 @@
       "market": "TPEX",
       "symbol": "6804.TWO",
       "capital": null,
-      "price": 16.95,
+      "price": null,
       "market_cap": 805.0,
       "subindustries": [
         "休閒車業"
@@ -28240,7 +28240,7 @@
       "market": "TPEX",
       "symbol": "6811.TWO",
       "capital": null,
-      "price": 280.5,
+      "price": null,
       "market_cap": 11626.0,
       "subindustries": [
         "應用/系統軟體設計開發",
@@ -28278,7 +28278,7 @@
       "market": "TPEX",
       "symbol": "6821.TWO",
       "capital": null,
-      "price": 44.35,
+      "price": null,
       "market_cap": 1586.0,
       "subindustries": [
         "電感器",
@@ -28293,7 +28293,7 @@
       "market": "TPEX",
       "symbol": "6823.TWO",
       "capital": null,
-      "price": 59.9,
+      "price": null,
       "market_cap": 1990.0,
       "subindustries": [
         "生產製程及檢測設備"
@@ -28307,7 +28307,7 @@
       "market": "TPEX",
       "symbol": "6829.TWO",
       "capital": null,
-      "price": 194.0,
+      "price": null,
       "market_cap": 11478.0,
       "subindustries": [
         "生產製程及檢測設備",
@@ -28323,7 +28323,7 @@
       "market": "TPEX",
       "symbol": "6840.TWO",
       "capital": null,
-      "price": 83.1,
+      "price": null,
       "market_cap": 2598.0,
       "subindustries": [
         "其他電子產品及電子服務產業"
@@ -28337,7 +28337,7 @@
       "market": "TPEX",
       "symbol": "6841.TWO",
       "capital": null,
-      "price": 55.7,
+      "price": null,
       "market_cap": 5303.0,
       "subindustries": [
         "領域解決方案",
@@ -28352,7 +28352,7 @@
       "market": "TPEX",
       "symbol": "6843.TWO",
       "capital": null,
-      "price": 37.45,
+      "price": null,
       "market_cap": 1247.0,
       "subindustries": [
         "輸送機械及零配件"
@@ -28366,7 +28366,7 @@
       "market": "TPEX",
       "symbol": "6844.TWO",
       "capital": null,
-      "price": 56.0,
+      "price": null,
       "market_cap": 2095.0,
       "subindustries": [
         "藥品代理銷售及通路",
@@ -28382,7 +28382,7 @@
       "market": "TPEX",
       "symbol": "6846.TWO",
       "capital": null,
-      "price": 57.4,
+      "price": null,
       "market_cap": 1553.0,
       "subindustries": [
         "原物料",
@@ -28400,7 +28400,7 @@
       "market": "TPEX",
       "symbol": "6855.TWO",
       "capital": null,
-      "price": 110.0,
+      "price": null,
       "market_cap": 2557.0,
       "subindustries": [
         "其他電子產品及電子服務產業"
@@ -28414,7 +28414,7 @@
       "market": "TPEX",
       "symbol": "6856.TWO",
       "capital": null,
-      "price": 41.1,
+      "price": null,
       "market_cap": 1159.0,
       "subindustries": [
         "一般零售",
@@ -28430,7 +28430,7 @@
       "market": "TPEX",
       "symbol": "6859.TWO",
       "capital": null,
-      "price": 115.0,
+      "price": null,
       "market_cap": 4782.0,
       "subindustries": [
         "光學鏡片、鏡頭"
@@ -28444,7 +28444,7 @@
       "market": "TPEX",
       "symbol": "6865.TWO",
       "capital": null,
-      "price": 27.45,
+      "price": null,
       "market_cap": 434.0,
       "subindustries": [
         "監理法遵",
@@ -28501,7 +28501,7 @@
       "market": "TPEX",
       "symbol": "6870.TWO",
       "capital": null,
-      "price": 304.0,
+      "price": null,
       "market_cap": 8689.0,
       "subindustries": [
         "應用/系統軟體設計開發",
@@ -28539,7 +28539,7 @@
       "market": "TPEX",
       "symbol": "6872.TWO",
       "capital": null,
-      "price": 20.25,
+      "price": null,
       "market_cap": 1432.0,
       "subindustries": [
         "其他"
@@ -28553,7 +28553,7 @@
       "market": "TPEX",
       "symbol": "6874.TWO",
       "capital": null,
-      "price": 70.4,
+      "price": null,
       "market_cap": 1700.0,
       "subindustries": [
         "應用/系統軟體設計開發",
@@ -28570,7 +28570,7 @@
       "market": "TPEX",
       "symbol": "6875.TWO",
       "capital": null,
-      "price": 27.95,
+      "price": null,
       "market_cap": 3610.0,
       "subindustries": [
         "中、西藥製劑"
@@ -28584,7 +28584,7 @@
       "market": "TPEX",
       "symbol": "6877.TWO",
       "capital": null,
-      "price": 163.0,
+      "price": null,
       "market_cap": 7688.0,
       "subindustries": [
         "生產製程及檢測設備",
@@ -28634,7 +28634,7 @@
       "market": "TPEX",
       "symbol": "6894.TWO",
       "capital": null,
-      "price": 377.0,
+      "price": null,
       "market_cap": 8975.0,
       "subindustries": [
         "環保潔能服務產業"
@@ -28648,7 +28648,7 @@
       "market": "TPEX",
       "symbol": "6895.TWO",
       "capital": null,
-      "price": 150.5,
+      "price": null,
       "market_cap": 5132.0,
       "subindustries": [
         "生產製程及檢測設備"
@@ -28662,7 +28662,7 @@
       "market": "TPEX",
       "symbol": "6899.TWO",
       "capital": null,
-      "price": 49.0,
+      "price": null,
       "market_cap": 2077.0,
       "subindustries": [
         "膠材",
@@ -28677,7 +28677,7 @@
       "market": "TPEX",
       "symbol": "6903.TWO",
       "capital": null,
-      "price": 326.5,
+      "price": null,
       "market_cap": 21769.0,
       "subindustries": [
         "其他電子產品及電子服務產業"
@@ -28691,7 +28691,7 @@
       "market": "TPEX",
       "symbol": "6904.TWO",
       "capital": null,
-      "price": 118.0,
+      "price": null,
       "market_cap": 2183.0,
       "subindustries": [
         "其他"
@@ -28705,7 +28705,7 @@
       "market": "TPEX",
       "symbol": "6907.TWO",
       "capital": null,
-      "price": 174.5,
+      "price": null,
       "market_cap": 10917.0,
       "subindustries": [
         "微控制器IC"
@@ -28719,7 +28719,7 @@
       "market": "TPEX",
       "symbol": "6910.TWO",
       "capital": null,
-      "price": 25.3,
+      "price": null,
       "market_cap": 772.0,
       "subindustries": [
         "應用/系統軟體設計開發",
@@ -28756,7 +28756,7 @@
       "market": "TPEX",
       "symbol": "6913.TWO",
       "capital": null,
-      "price": 135.5,
+      "price": null,
       "market_cap": 5941.0,
       "subindustries": [
         "連接線",
@@ -28775,7 +28775,7 @@
       "market": "TPEX",
       "symbol": "6922.TWO",
       "capital": null,
-      "price": 195.5,
+      "price": null,
       "market_cap": 5308.0,
       "subindustries": [
         "工業電腦"
@@ -28789,7 +28789,7 @@
       "market": "TPEX",
       "symbol": "6925.TWO",
       "capital": null,
-      "price": 90.5,
+      "price": null,
       "market_cap": 1810.0,
       "subindustries": [
         "應用/系統軟體設計開發",
@@ -28820,7 +28820,7 @@
       "market": "TPEX",
       "symbol": "6929.TWO",
       "capital": null,
-      "price": 21.9,
+      "price": null,
       "market_cap": 987.0,
       "subindustries": [
         "醫療院所、醫療器材專賣店、藥局等通路"
@@ -28834,7 +28834,7 @@
       "market": "TPEX",
       "symbol": "6945.TWO",
       "capital": null,
-      "price": 122.0,
+      "price": null,
       "market_cap": 11903.0,
       "subindustries": [
         "原材料"
@@ -28848,7 +28848,7 @@
       "market": "TPEX",
       "symbol": "6953.TWO",
       "capital": null,
-      "price": 238.0,
+      "price": null,
       "market_cap": 7143.0,
       "subindustries": [
         "生產製程及檢測設備"
@@ -28862,7 +28862,7 @@
       "market": "TPEX",
       "symbol": "6961.TWO",
       "capital": null,
-      "price": 45.25,
+      "price": null,
       "market_cap": 1214.0,
       "subindustries": [
         "旅遊服務業"
@@ -28876,7 +28876,7 @@
       "market": "TPEX",
       "symbol": "6967.TWO",
       "capital": null,
-      "price": 70.2,
+      "price": null,
       "market_cap": 2134.0,
       "subindustries": [
         "其他電腦及週邊設備之零組件",
@@ -28891,7 +28891,7 @@
       "market": "TPEX",
       "symbol": "6968.TWO",
       "capital": null,
-      "price": 41.0,
+      "price": null,
       "market_cap": 2067.0,
       "subindustries": [
         "貿易商、代理商、經銷商",
@@ -28906,7 +28906,7 @@
       "market": "TPEX",
       "symbol": "6971.TWO",
       "capital": null,
-      "price": 24.75,
+      "price": null,
       "market_cap": 957.0,
       "subindustries": [
         "環保潔能服務產業"
@@ -28920,7 +28920,7 @@
       "market": "TPEX",
       "symbol": "6982.TWO",
       "capital": null,
-      "price": 44.3,
+      "price": null,
       "market_cap": 1805.0,
       "subindustries": [
         "傳動元件"
@@ -28934,7 +28934,7 @@
       "market": "TPEX",
       "symbol": "6983.TWO",
       "capital": null,
-      "price": 350.0,
+      "price": null,
       "market_cap": 6307.0,
       "subindustries": [
         "生產製程及檢測設備"
@@ -28948,7 +28948,7 @@
       "market": "TPEX",
       "symbol": "6986.TWO",
       "capital": null,
-      "price": 44.75,
+      "price": null,
       "market_cap": 2332.0,
       "subindustries": [
         "幹細胞收集儲存",
@@ -28964,7 +28964,7 @@
       "market": "TPEX",
       "symbol": "6996.TWO",
       "capital": null,
-      "price": 165.5,
+      "price": null,
       "market_cap": 6965.0,
       "subindustries": [
         "平面顯示器驅動IC"
@@ -28978,7 +28978,7 @@
       "market": "TPEX",
       "symbol": "6997.TWO",
       "capital": null,
-      "price": 68.4,
+      "price": null,
       "market_cap": 1511.0,
       "subindustries": [
         "通路經銷",
@@ -29011,7 +29011,7 @@
       "market": "TPEX",
       "symbol": "7402.TWO",
       "capital": null,
-      "price": 95.4,
+      "price": null,
       "market_cap": 3365.0,
       "subindustries": [
         "其他電腦及週邊設備"
@@ -29025,7 +29025,7 @@
       "market": "TPEX",
       "symbol": "7547.TWO",
       "capital": null,
-      "price": 59.6,
+      "price": null,
       "market_cap": 2024.0,
       "subindustries": [
         "應用/系統軟體設計開發",
@@ -29054,7 +29054,7 @@
       "market": "TPEX",
       "symbol": "7556.TWO",
       "capital": null,
-      "price": 282.5,
+      "price": null,
       "market_cap": 8242.0,
       "subindustries": [
         "生產製程及檢測設備"
@@ -29068,7 +29068,7 @@
       "market": "TPEX",
       "symbol": "7584.TWO",
       "capital": null,
-      "price": 28.45,
+      "price": null,
       "market_cap": 485.0,
       "subindustries": [
         "數位內容產業",
@@ -29083,7 +29083,7 @@
       "market": "TPEX",
       "symbol": "7642.TWO",
       "capital": null,
-      "price": 64.1,
+      "price": null,
       "market_cap": 1932.0,
       "subindustries": [
         "電控元件",
@@ -29098,7 +29098,7 @@
       "market": "TPEX",
       "symbol": "7703.TWO",
       "capital": null,
-      "price": 184.0,
+      "price": null,
       "market_cap": 6393.0,
       "subindustries": [
         "生產製程及檢測設備",
@@ -29113,7 +29113,7 @@
       "market": "TPEX",
       "symbol": "7704.TWO",
       "capital": null,
-      "price": 61.0,
+      "price": null,
       "market_cap": 2059.0,
       "subindustries": [
         "生產製程及檢測設備"
@@ -29127,7 +29127,7 @@
       "market": "TPEX",
       "symbol": "7708.TWO",
       "capital": null,
-      "price": 91.0,
+      "price": null,
       "market_cap": 2320.0,
       "subindustries": [
         "餐飲連鎖"
@@ -29141,7 +29141,7 @@
       "market": "TPEX",
       "symbol": "7709.TWO",
       "capital": null,
-      "price": 73.9,
+      "price": null,
       "market_cap": 2889.0,
       "subindustries": [
         "自動化機台",
@@ -29156,7 +29156,7 @@
       "market": "TPEX",
       "symbol": "7712.TWO",
       "capital": null,
-      "price": 154.0,
+      "price": null,
       "market_cap": 5014.0,
       "subindustries": [
         "電源管理IC"
@@ -29186,7 +29186,7 @@
       "market": "TPEX",
       "symbol": "7714.TWO",
       "capital": null,
-      "price": 167.0,
+      "price": null,
       "market_cap": 3507.0,
       "subindustries": [
         "網路設備(如數據機、網路卡、閘道器、路由器、網路電話)",
@@ -29229,7 +29229,7 @@
       "market": "TPEX",
       "symbol": "7715.TWO",
       "capital": null,
-      "price": 26.25,
+      "price": null,
       "market_cap": 859.0,
       "subindustries": [
         "環保潔能服務產業"
@@ -29243,7 +29243,7 @@
       "market": "TPEX",
       "symbol": "7716.TWO",
       "capital": null,
-      "price": 24.05,
+      "price": null,
       "market_cap": 541.0,
       "subindustries": [
         "海陸空貨運承攬"
@@ -29257,7 +29257,7 @@
       "market": "TPEX",
       "symbol": "7717.TWO",
       "capital": null,
-      "price": 492.5,
+      "price": null,
       "market_cap": 12229.0,
       "subindustries": [
         "主/被動元件",
@@ -29272,7 +29272,7 @@
       "market": "TPEX",
       "symbol": "7718.TWO",
       "capital": null,
-      "price": 45.85,
+      "price": null,
       "market_cap": 2125.0,
       "subindustries": [
         "其他"
@@ -29286,7 +29286,7 @@
       "market": "TPEX",
       "symbol": "7723.TWO",
       "capital": null,
-      "price": 18.7,
+      "price": null,
       "market_cap": 927.0,
       "subindustries": [
         "餐飲連鎖"
@@ -29300,7 +29300,7 @@
       "market": "TPEX",
       "symbol": "7728.TWO",
       "capital": null,
-      "price": 594.0,
+      "price": null,
       "market_cap": 8311.0,
       "subindustries": [
         "生產製程及檢測設備",
@@ -29315,7 +29315,7 @@
       "market": "TPEX",
       "symbol": "7734.TWO",
       "capital": null,
-      "price": 2400.0,
+      "price": null,
       "market_cap": 67200.0,
       "subindustries": [
         "生產製程及檢測設備"
@@ -29329,7 +29329,7 @@
       "market": "TPEX",
       "symbol": "7738.TWO",
       "capital": null,
-      "price": 166.0,
+      "price": null,
       "market_cap": 4541.0,
       "subindustries": [
         "支付"
@@ -29343,7 +29343,7 @@
       "market": "TPEX",
       "symbol": "7743.TWO",
       "capital": null,
-      "price": 24.2,
+      "price": null,
       "market_cap": 882.0,
       "subindustries": [
         "加工食品"
@@ -29357,7 +29357,7 @@
       "market": "TPEX",
       "symbol": "7744.TWO",
       "capital": null,
-      "price": 489.0,
+      "price": null,
       "market_cap": 15685.0,
       "subindustries": [
         "機殼",
@@ -29378,7 +29378,7 @@
       "market": "TPEX",
       "symbol": "7747.TWO",
       "capital": null,
-      "price": 109.0,
+      "price": null,
       "market_cap": 3288.0,
       "subindustries": [
         "通路經銷",
@@ -29414,7 +29414,7 @@
       "market": "TPEX",
       "symbol": "7751.TWO",
       "capital": null,
-      "price": 1550.0,
+      "price": null,
       "market_cap": 41677.0,
       "subindustries": [
         "生產製程及檢測設備",
@@ -29429,7 +29429,7 @@
       "market": "TPEX",
       "symbol": "7753.TWO",
       "capital": null,
-      "price": 36.15,
+      "price": null,
       "market_cap": 903.0,
       "subindustries": [
         "燈具/應用"
@@ -29443,7 +29443,7 @@
       "market": "TPEX",
       "symbol": "7757.TWO",
       "capital": null,
-      "price": 87.2,
+      "price": null,
       "market_cap": 2101.0,
       "subindustries": [
         "餐飲連鎖"
@@ -29457,7 +29457,7 @@
       "market": "TPEX",
       "symbol": "7767.TWO",
       "capital": null,
-      "price": 45.7,
+      "price": null,
       "market_cap": 1375.0,
       "subindustries": [
         "筆記型電腦",
@@ -29476,7 +29476,7 @@
       "market": "TPEX",
       "symbol": "7770.TWO",
       "capital": null,
-      "price": 39.7,
+      "price": null,
       "market_cap": 1193.0,
       "subindustries": [
         "消費性IC"
@@ -29490,7 +29490,7 @@
       "market": "TPEX",
       "symbol": "7772.TWO",
       "capital": null,
-      "price": 128.0,
+      "price": null,
       "market_cap": 3391.0,
       "subindustries": [
         "生產製程及檢測設備"
@@ -29504,7 +29504,7 @@
       "market": "TPEX",
       "symbol": "7777.TWO",
       "capital": null,
-      "price": 35.05,
+      "price": null,
       "market_cap": 7101.0,
       "subindustries": [
         "其他"
@@ -29536,7 +29536,7 @@
       "market": "TPEX",
       "symbol": "7792.TWO",
       "capital": null,
-      "price": 364.0,
+      "price": null,
       "market_cap": 16984.0,
       "subindustries": [
         "其他電子產品及電子服務產業"
@@ -29550,7 +29550,7 @@
       "market": "TPEX",
       "symbol": "7794.TWO",
       "capital": null,
-      "price": 29.05,
+      "price": null,
       "market_cap": 813.0,
       "subindustries": [
         "旅館服務業",
@@ -29565,7 +29565,7 @@
       "market": "TPEX",
       "symbol": "7805.TWO",
       "capital": null,
-      "price": 472.5,
+      "price": null,
       "market_cap": 18781.0,
       "subindustries": [
         "電腦設備",
@@ -29582,7 +29582,7 @@
       "market": "TPEX",
       "symbol": "7806.TWO",
       "capital": null,
-      "price": 55.3,
+      "price": null,
       "market_cap": 1783.0,
       "subindustries": [
         "加工食品"
@@ -29596,7 +29596,7 @@
       "market": "TPEX",
       "symbol": "7810.TWO",
       "capital": null,
-      "price": 230.0,
+      "price": null,
       "market_cap": 4657.0,
       "subindustries": [
         "生產製程及檢測設備",
@@ -29611,7 +29611,7 @@
       "market": "TPEX",
       "symbol": "7811.TWO",
       "capital": null,
-      "price": 73.0,
+      "price": null,
       "market_cap": 2436.0,
       "subindustries": [
         "運動用品"
@@ -29625,7 +29625,7 @@
       "market": "TPEX",
       "symbol": "7814.TWO",
       "capital": null,
-      "price": 28.1,
+      "price": null,
       "market_cap": 1264.0,
       "subindustries": [
         "臨床實驗、移植技術、疾病治療",
@@ -29640,7 +29640,7 @@
       "market": "TPEX",
       "symbol": "7819.TWO",
       "capital": null,
-      "price": 33.05,
+      "price": null,
       "market_cap": 834.0,
       "subindustries": [
         "娛樂服務業",
@@ -29663,7 +29663,7 @@
       "market": "TPEX",
       "symbol": "7820.TWO",
       "capital": null,
-      "price": 101.0,
+      "price": null,
       "market_cap": 3814.0,
       "subindustries": [
         "環保潔能服務產業"
@@ -29677,7 +29677,7 @@
       "market": "TPEX",
       "symbol": "7825.TWO",
       "capital": null,
-      "price": 69.4,
+      "price": null,
       "market_cap": 1777.0,
       "subindustries": [
         "生產製程及檢測設備",
@@ -29718,7 +29718,7 @@
       "market": "TPEX",
       "symbol": "7828.TWO",
       "capital": null,
-      "price": 1565.0,
+      "price": null,
       "market_cap": 63372.0,
       "subindustries": [
         "生產製程及檢測設備"
@@ -29732,7 +29732,7 @@
       "market": "TPEX",
       "symbol": "7839.TWO",
       "capital": null,
-      "price": 43.65,
+      "price": null,
       "market_cap": 658.0,
       "subindustries": [
         "應用/系統軟體設計開發",
@@ -29768,7 +29768,7 @@
       "market": "TPEX",
       "symbol": "7842.TWO",
       "capital": null,
-      "price": 99.1,
+      "price": null,
       "market_cap": 1808.0,
       "subindustries": [
         "能源管理服務",
@@ -29784,7 +29784,7 @@
       "market": "TPEX",
       "symbol": "7856.TWO",
       "capital": null,
-      "price": 3500.0,
+      "price": null,
       "market_cap": 115500.0,
       "subindustries": [
         "生產製程及檢測設備"
@@ -29798,7 +29798,7 @@
       "market": "TPEX",
       "symbol": "8024.TWO",
       "capital": null,
-      "price": 12.2,
+      "price": null,
       "market_cap": 550.0,
       "subindustries": [
         "消費性IC",
@@ -29813,7 +29813,7 @@
       "market": "TPEX",
       "symbol": "8027.TWO",
       "capital": null,
-      "price": 187.5,
+      "price": null,
       "market_cap": 21205.0,
       "subindustries": [
         "自動化機台",
@@ -29829,7 +29829,7 @@
       "market": "TPEX",
       "symbol": "8032.TWO",
       "capital": null,
-      "price": 35.2,
+      "price": null,
       "market_cap": 1823.0,
       "subindustries": [
         "IC通路"
@@ -29843,7 +29843,7 @@
       "market": "TPEX",
       "symbol": "8034.TWO",
       "capital": null,
-      "price": 19.3,
+      "price": null,
       "market_cap": 1092.0,
       "subindustries": [
         "網路設備(如數據機、網路卡、閘道器、路由器、網路電話)",
@@ -29860,7 +29860,7 @@
       "market": "TPEX",
       "symbol": "8038.TWO",
       "capital": null,
-      "price": 34.0,
+      "price": null,
       "market_cap": 2117.0,
       "subindustries": [
         "鋰電池材料",
@@ -29878,7 +29878,7 @@
       "market": "TPEX",
       "symbol": "8040.TWO",
       "capital": null,
-      "price": 82.0,
+      "price": null,
       "market_cap": 7905.0,
       "subindustries": [
         "網路通訊IC"
@@ -29892,7 +29892,7 @@
       "market": "TPEX",
       "symbol": "8042.TWO",
       "capital": null,
-      "price": 144.0,
+      "price": null,
       "market_cap": 20571.0,
       "subindustries": [
         "電容器"
@@ -29906,7 +29906,7 @@
       "market": "TPEX",
       "symbol": "8043.TWO",
       "capital": null,
-      "price": 141.5,
+      "price": null,
       "market_cap": 11306.0,
       "subindustries": [
         "電容器"
@@ -29920,7 +29920,7 @@
       "market": "TPEX",
       "symbol": "8044.TWO",
       "capital": null,
-      "price": 26.4,
+      "price": null,
       "market_cap": 5405.0,
       "subindustries": [
         "物流倉儲服務",
@@ -29956,7 +29956,7 @@
       "market": "TPEX",
       "symbol": "8048.TWO",
       "capital": null,
-      "price": 51.5,
+      "price": null,
       "market_cap": 3061.0,
       "subindustries": [
         "網路設備(如數據機、網路卡、閘道器、路由器、網路電話)",
@@ -29972,7 +29972,7 @@
       "market": "TPEX",
       "symbol": "8049.TWO",
       "capital": null,
-      "price": 24.25,
+      "price": null,
       "market_cap": 2868.0,
       "subindustries": [
         "顯示器模組"
@@ -29986,7 +29986,7 @@
       "market": "TPEX",
       "symbol": "8050.TWO",
       "capital": null,
-      "price": 65.4,
+      "price": null,
       "market_cap": 13420.0,
       "subindustries": [
         "工業電腦"
@@ -30000,7 +30000,7 @@
       "market": "TPEX",
       "symbol": "8054.TWO",
       "capital": null,
-      "price": 75.2,
+      "price": null,
       "market_cap": 8176.0,
       "subindustries": [
         "IC模組",
@@ -30019,7 +30019,7 @@
       "market": "TPEX",
       "symbol": "8059.TWO",
       "capital": null,
-      "price": 17.25,
+      "price": null,
       "market_cap": 2009.0,
       "subindustries": [
         "網路設備(如數據機、網路卡、閘道器、路由器、網路電話)"
@@ -30033,7 +30033,7 @@
       "market": "TPEX",
       "symbol": "8064.TWO",
       "capital": null,
-      "price": 118.0,
+      "price": null,
       "market_cap": 21808.0,
       "subindustries": [
         "生產製程及檢測設備"
@@ -30047,7 +30047,7 @@
       "market": "TPEX",
       "symbol": "8066.TWO",
       "capital": null,
-      "price": 14.9,
+      "price": null,
       "market_cap": 545.0,
       "subindustries": [
         "貿易商、代理商、經銷商"
@@ -30061,7 +30061,7 @@
       "market": "TPEX",
       "symbol": "8067.TWO",
       "capital": null,
-      "price": 10.8,
+      "price": null,
       "market_cap": 223.0,
       "subindustries": [
         "IC通路"
@@ -30075,7 +30075,7 @@
       "market": "TPEX",
       "symbol": "8068.TWO",
       "capital": null,
-      "price": 18.05,
+      "price": null,
       "market_cap": 1457.0,
       "subindustries": [
         "IC通路"
@@ -30089,7 +30089,7 @@
       "market": "TPEX",
       "symbol": "8069.TWO",
       "capital": null,
-      "price": 155.0,
+      "price": null,
       "market_cap": 179025.0,
       "subindustries": [
         "面板",
@@ -30104,7 +30104,7 @@
       "market": "TPEX",
       "symbol": "8071.TWO",
       "capital": null,
-      "price": 20.9,
+      "price": null,
       "market_cap": 1255.0,
       "subindustries": [
         "印表機、傳真機、掃瞄器、多功能事務機、投影機",
@@ -30124,7 +30124,7 @@
       "market": "TPEX",
       "symbol": "8074.TWO",
       "capital": null,
-      "price": 55.6,
+      "price": null,
       "market_cap": 4835.0,
       "subindustries": [
         "硬板、軟板、IC載板製造"
@@ -30138,7 +30138,7 @@
       "market": "TPEX",
       "symbol": "8076.TWO",
       "capital": null,
-      "price": 20.9,
+      "price": null,
       "market_cap": 6107.0,
       "subindustries": [
         "工業電腦"
@@ -30152,7 +30152,7 @@
       "market": "TPEX",
       "symbol": "8077.TWO",
       "capital": null,
-      "price": 41.9,
+      "price": null,
       "market_cap": 919.0,
       "subindustries": [
         "旅館服務業"
@@ -30166,7 +30166,7 @@
       "market": "TPEX",
       "symbol": "8080.TWO",
       "capital": null,
-      "price": 27.6,
+      "price": null,
       "market_cap": 1853.0,
       "subindustries": [
         "基礎工程"
@@ -30180,7 +30180,7 @@
       "market": "TPEX",
       "symbol": "8083.TWO",
       "capital": null,
-      "price": 159.5,
+      "price": null,
       "market_cap": 5603.0,
       "subindustries": [
         "輸送機械及零配件",
@@ -30195,7 +30195,7 @@
       "market": "TPEX",
       "symbol": "8084.TWO",
       "capital": null,
-      "price": 13.95,
+      "price": null,
       "market_cap": 969.0,
       "subindustries": [
         "IC通路",
@@ -30210,7 +30210,7 @@
       "market": "TPEX",
       "symbol": "8085.TWO",
       "capital": null,
-      "price": 14.3,
+      "price": null,
       "market_cap": 2001.0,
       "subindustries": [
         "其他電腦及週邊設備",
@@ -30229,7 +30229,7 @@
       "market": "TPEX",
       "symbol": "8086.TWO",
       "capital": null,
-      "price": 131.0,
+      "price": null,
       "market_cap": 25743.0,
       "subindustries": [
         "晶圓製造"
@@ -30243,7 +30243,7 @@
       "market": "TPEX",
       "symbol": "8087.TWO",
       "capital": null,
-      "price": 22.7,
+      "price": null,
       "market_cap": 877.0,
       "subindustries": [
         "太陽能發電設備/系統及系統工程",
@@ -30258,7 +30258,7 @@
       "market": "TPEX",
       "symbol": "8088.TWO",
       "capital": null,
-      "price": 42.85,
+      "price": null,
       "market_cap": 2610.0,
       "subindustries": [
         "IC模組",
@@ -30274,7 +30274,7 @@
       "market": "TPEX",
       "symbol": "8089.TWO",
       "capital": null,
-      "price": 21.65,
+      "price": null,
       "market_cap": 1428.0,
       "subindustries": [
         "網路設備(如數據機、網路卡、閘道器、路由器、網路電話)",
@@ -30289,7 +30289,7 @@
       "market": "TPEX",
       "symbol": "8091.TWO",
       "capital": null,
-      "price": 209.0,
+      "price": null,
       "market_cap": 11915.0,
       "subindustries": [
         "生產製程及檢測設備",
@@ -30304,7 +30304,7 @@
       "market": "TPEX",
       "symbol": "8092.TWO",
       "capital": null,
-      "price": 12.3,
+      "price": null,
       "market_cap": 703.0,
       "subindustries": [
         "生產製程及檢測設備",
@@ -30320,7 +30320,7 @@
       "market": "TPEX",
       "symbol": "8093.TWO",
       "capital": null,
-      "price": 27.0,
+      "price": null,
       "market_cap": 1527.0,
       "subindustries": [
         "電源供應器"
@@ -30334,7 +30334,7 @@
       "market": "TPEX",
       "symbol": "8096.TWO",
       "capital": null,
-      "price": 85.3,
+      "price": null,
       "market_cap": 12738.0,
       "subindustries": [
         "IC通路",
@@ -30352,7 +30352,7 @@
       "market": "TPEX",
       "symbol": "8097.TWO",
       "capital": null,
-      "price": 48.2,
+      "price": null,
       "market_cap": 2906.0,
       "subindustries": [
         "網路設備(如數據機、網路卡、閘道器、路由器、網路電話)"
@@ -30366,7 +30366,7 @@
       "market": "TPEX",
       "symbol": "8099.TWO",
       "capital": null,
-      "price": 66.7,
+      "price": null,
       "market_cap": 6674.0,
       "subindustries": [
         "筆記型電腦",
@@ -30411,7 +30411,7 @@
       "market": "TPEX",
       "symbol": "8102.TWO",
       "capital": null,
-      "price": 59.0,
+      "price": null,
       "market_cap": 1378.0,
       "subindustries": [
         "消費性IC"
@@ -30425,7 +30425,7 @@
       "market": "TPEX",
       "symbol": "8107.TWO",
       "capital": null,
-      "price": 11.85,
+      "price": null,
       "market_cap": 888.0,
       "subindustries": [
         "其他"
@@ -30439,7 +30439,7 @@
       "market": "TPEX",
       "symbol": "8109.TWO",
       "capital": null,
-      "price": 134.0,
+      "price": null,
       "market_cap": 11009.0,
       "subindustries": [
         "IC封裝測試",
@@ -30465,7 +30465,7 @@
       "market": "TPEX",
       "symbol": "8111.TWO",
       "capital": null,
-      "price": 83.2,
+      "price": null,
       "market_cap": 9077.0,
       "subindustries": [
         "封裝/模組",
@@ -30480,7 +30480,7 @@
       "market": "TPEX",
       "symbol": "8121.TWO",
       "capital": null,
-      "price": 31.3,
+      "price": null,
       "market_cap": 6666.0,
       "subindustries": [
         "電感器材料(如鐵氧體、導電漿墨)"
@@ -30494,7 +30494,7 @@
       "market": "TPEX",
       "symbol": "8147.TWO",
       "capital": null,
-      "price": 130.5,
+      "price": null,
       "market_cap": 5515.0,
       "subindustries": [
         "連接器設計、組裝及製造"
@@ -30508,7 +30508,7 @@
       "market": "TPEX",
       "symbol": "8155.TWO",
       "capital": null,
-      "price": 302.0,
+      "price": null,
       "market_cap": 18964.0,
       "subindustries": [
         "硬板、軟板、IC載板製造"
@@ -30522,7 +30522,7 @@
       "market": "TPEX",
       "symbol": "8171.TWO",
       "capital": null,
-      "price": 22.2,
+      "price": null,
       "market_cap": 2505.0,
       "subindustries": [
         "其他零組件",
@@ -30538,7 +30538,7 @@
       "market": "TPEX",
       "symbol": "8176.TWO",
       "capital": null,
-      "price": 9.8,
+      "price": null,
       "market_cap": 702.0,
       "subindustries": [
         "網路設備(如數據機、網路卡、閘道器、路由器、網路電話)"
@@ -30552,7 +30552,7 @@
       "market": "TPEX",
       "symbol": "8182.TWO",
       "capital": null,
-      "price": 40.0,
+      "price": null,
       "market_cap": 4281.0,
       "subindustries": [
         "濾波器、振盪器"
@@ -30566,7 +30566,7 @@
       "market": "TPEX",
       "symbol": "8227.TWO",
       "capital": null,
-      "price": 282.0,
+      "price": null,
       "market_cap": 11151.0,
       "subindustries": [
         "IP設計/IC設計代工服務"
@@ -30580,7 +30580,7 @@
       "market": "TPEX",
       "symbol": "8234.TWO",
       "capital": null,
-      "price": 63.4,
+      "price": null,
       "market_cap": 8953.0,
       "subindustries": [
         "工業電腦"
@@ -30594,7 +30594,7 @@
       "market": "TPEX",
       "symbol": "8240.TWO",
       "capital": null,
-      "price": 50.7,
+      "price": null,
       "market_cap": 5070.0,
       "subindustries": [
         "生產製程及檢測設備",
@@ -30614,7 +30614,7 @@
       "market": "TPEX",
       "symbol": "8255.TWO",
       "capital": null,
-      "price": 140.5,
+      "price": null,
       "market_cap": 14327.0,
       "subindustries": [
         "車用機械傳動設備及零配件",
@@ -30629,7 +30629,7 @@
       "market": "TPEX",
       "symbol": "8272.TWO",
       "capital": null,
-      "price": 61.7,
+      "price": null,
       "market_cap": 1172.0,
       "subindustries": [
         "資料安全",
@@ -30649,7 +30649,7 @@
       "market": "TPEX",
       "symbol": "8277.TWO",
       "capital": null,
-      "price": 15.4,
+      "price": null,
       "market_cap": 608.0,
       "subindustries": [
         "IC模組",
@@ -30688,7 +30688,7 @@
       "market": "TPEX",
       "symbol": "8284.TWO",
       "capital": null,
-      "price": 68.0,
+      "price": null,
       "market_cap": 3216.0,
       "subindustries": [
         "應用/系統軟體設計開發",
@@ -30708,7 +30708,7 @@
       "market": "TPEX",
       "symbol": "8289.TWO",
       "capital": null,
-      "price": 53.0,
+      "price": null,
       "market_cap": 3621.0,
       "subindustries": [
         "濾波器、振盪器"
@@ -30722,7 +30722,7 @@
       "market": "TPEX",
       "symbol": "8291.TWO",
       "capital": null,
-      "price": 21.45,
+      "price": null,
       "market_cap": 374.0,
       "subindustries": [
         "銅箔基板"
@@ -30736,7 +30736,7 @@
       "market": "TPEX",
       "symbol": "8299.TWO",
       "capital": null,
-      "price": 1890.0,
+      "price": null,
       "market_cap": 418414.0,
       "subindustries": [
         "IC模組",
@@ -30756,7 +30756,7 @@
       "market": "TPEX",
       "symbol": "8342.TWO",
       "capital": null,
-      "price": 87.0,
+      "price": null,
       "market_cap": 2917.0,
       "subindustries": [
         "其他"
@@ -30770,7 +30770,7 @@
       "market": "TPEX",
       "symbol": "8349.TWO",
       "capital": null,
-      "price": 40.35,
+      "price": null,
       "market_cap": 8425.0,
       "subindustries": [
         "螺絲螺帽",
@@ -30785,7 +30785,7 @@
       "market": "TPEX",
       "symbol": "8354.TWO",
       "capital": null,
-      "price": 17.2,
+      "price": null,
       "market_cap": 1350.0,
       "subindustries": [
         "其他"
@@ -30799,7 +30799,7 @@
       "market": "TPEX",
       "symbol": "8358.TWO",
       "capital": null,
-      "price": 472.0,
+      "price": null,
       "market_cap": 119221.0,
       "subindustries": [
         "銅箔",
@@ -30814,7 +30814,7 @@
       "market": "TPEX",
       "symbol": "8383.TWO",
       "capital": null,
-      "price": 68.9,
+      "price": null,
       "market_cap": 7838.0,
       "subindustries": [
         "生產製程及檢測設備",
@@ -30835,7 +30835,7 @@
       "market": "TPEX",
       "symbol": "8390.TWO",
       "capital": null,
-      "price": 89.7,
+      "price": null,
       "market_cap": 8621.0,
       "subindustries": [
         "環保潔能服務產業"
@@ -30849,7 +30849,7 @@
       "market": "TPEX",
       "symbol": "8401.TWO",
       "capital": null,
-      "price": 22.8,
+      "price": null,
       "market_cap": 1611.0,
       "subindustries": [
         "文化印刷業"
@@ -30863,7 +30863,7 @@
       "market": "TPEX",
       "symbol": "8403.TWO",
       "capital": null,
-      "price": 19.15,
+      "price": null,
       "market_cap": 2635.0,
       "subindustries": [
         "藥品代理銷售及通路",
@@ -30880,7 +30880,7 @@
       "market": "TPEX",
       "symbol": "8409.TWO",
       "capital": null,
-      "price": 18.4,
+      "price": null,
       "market_cap": 588.0,
       "subindustries": [
         "其他"
@@ -30894,7 +30894,7 @@
       "market": "TPEX",
       "symbol": "8410.TWO",
       "capital": null,
-      "price": 27.0,
+      "price": null,
       "market_cap": 987.0,
       "subindustries": [
         "機殼"
@@ -30908,7 +30908,7 @@
       "market": "TPEX",
       "symbol": "8415.TWO",
       "capital": null,
-      "price": 37.5,
+      "price": null,
       "market_cap": 38681.0,
       "subindustries": [
         "螺絲螺帽",
@@ -30923,7 +30923,7 @@
       "market": "TPEX",
       "symbol": "8416.TWO",
       "capital": null,
-      "price": 170.5,
+      "price": null,
       "market_cap": 4809.0,
       "subindustries": [
         "系統整合服務"
@@ -30937,7 +30937,7 @@
       "market": "TPEX",
       "symbol": "8421.TWO",
       "capital": null,
-      "price": 14.1,
+      "price": null,
       "market_cap": 899.0,
       "subindustries": [
         "專用機械(如紡織成衣生產用機械、食品飲料生產用機械、農林用機械等)",
@@ -30952,7 +30952,7 @@
       "market": "TPEX",
       "symbol": "8423.TWO",
       "capital": null,
-      "price": 18.05,
+      "price": null,
       "market_cap": 752.0,
       "subindustries": [
         "環保潔能服務產業"
@@ -30966,7 +30966,7 @@
       "market": "TPEX",
       "symbol": "8424.TWO",
       "capital": null,
-      "price": 68.8,
+      "price": null,
       "market_cap": 2480.0,
       "subindustries": [
         "建材原料"
@@ -30980,7 +30980,7 @@
       "market": "TPEX",
       "symbol": "8426.TWO",
       "capital": null,
-      "price": 20.5,
+      "price": null,
       "market_cap": 1029.0,
       "subindustries": [
         "其他"
@@ -30994,7 +30994,7 @@
       "market": "TPEX",
       "symbol": "8431.TWO",
       "capital": null,
-      "price": 69.0,
+      "price": null,
       "market_cap": 3365.0,
       "subindustries": [
         "電鍍材料",
@@ -31009,7 +31009,7 @@
       "market": "TPEX",
       "symbol": "8432.TWO",
       "capital": null,
-      "price": 56.2,
+      "price": null,
       "market_cap": 2157.0,
       "subindustries": [
         "藥品代理銷售及通路"
@@ -31023,7 +31023,7 @@
       "market": "TPEX",
       "symbol": "8433.TWO",
       "capital": null,
-      "price": 52.0,
+      "price": null,
       "market_cap": 2834.0,
       "subindustries": [
         "貿易商、代理商、經銷商"
@@ -31037,7 +31037,7 @@
       "market": "TPEX",
       "symbol": "8435.TWO",
       "capital": null,
-      "price": 53.1,
+      "price": null,
       "market_cap": 1869.0,
       "subindustries": [
         "環保潔能服務產業",
@@ -31052,7 +31052,7 @@
       "market": "TPEX",
       "symbol": "8436.TWO",
       "capital": null,
-      "price": 101.0,
+      "price": null,
       "market_cap": 11890.0,
       "subindustries": [
         "加工製成品"
@@ -31066,7 +31066,7 @@
       "market": "TPEX",
       "symbol": "8437.TWO",
       "capital": null,
-      "price": 14.9,
+      "price": null,
       "market_cap": 700.0,
       "subindustries": [
         "其他"
@@ -31080,7 +31080,7 @@
       "market": "TPEX",
       "symbol": "8440.TWO",
       "capital": null,
-      "price": 19.95,
+      "price": null,
       "market_cap": 1002.0,
       "subindustries": [
         "環保潔能服務產業"
@@ -31094,7 +31094,7 @@
       "market": "TPEX",
       "symbol": "8444.TWO",
       "capital": null,
-      "price": 3.25,
+      "price": null,
       "market_cap": 406.0,
       "subindustries": [
         "其他"
@@ -31108,7 +31108,7 @@
       "market": "TPEX",
       "symbol": "8446.TWO",
       "capital": null,
-      "price": 85.7,
+      "price": null,
       "market_cap": 4534.0,
       "subindustries": [
         "文化印刷業",
@@ -31123,7 +31123,7 @@
       "market": "TPEX",
       "symbol": "8450.TWO",
       "capital": null,
-      "price": 14.0,
+      "price": null,
       "market_cap": 718.0,
       "subindustries": [
         "流行音樂及文化內容產業"
@@ -31137,7 +31137,7 @@
       "market": "TPEX",
       "symbol": "8455.TWO",
       "capital": null,
-      "price": 24.2,
+      "price": null,
       "market_cap": 610.0,
       "subindustries": [
         "其他電腦及週邊設備之零組件"
@@ -31151,7 +31151,7 @@
       "market": "TPEX",
       "symbol": "8472.TWO",
       "capital": null,
-      "price": 65.5,
+      "price": null,
       "market_cap": 1161.0,
       "subindustries": [
         "原物料",
@@ -31168,7 +31168,7 @@
       "market": "TPEX",
       "symbol": "8477.TWO",
       "capital": null,
-      "price": 13.7,
+      "price": null,
       "market_cap": 1153.0,
       "subindustries": [
         "一般零售"
@@ -31182,7 +31182,7 @@
       "market": "TPEX",
       "symbol": "8489.TWO",
       "capital": null,
-      "price": 21.9,
+      "price": null,
       "market_cap": 1312.0,
       "subindustries": [
         "其他",
@@ -31197,7 +31197,7 @@
       "market": "TPEX",
       "symbol": "8905.TWO",
       "capital": null,
-      "price": 34.8,
+      "price": null,
       "market_cap": 4156.0,
       "subindustries": [
         "原物料",
@@ -31215,7 +31215,7 @@
       "market": "TPEX",
       "symbol": "8906.TWO",
       "capital": null,
-      "price": 27.95,
+      "price": null,
       "market_cap": 1230.0,
       "subindustries": [
         "文化印刷業"
@@ -31229,7 +31229,7 @@
       "market": "TPEX",
       "symbol": "8916.TWO",
       "capital": null,
-      "price": 40.2,
+      "price": null,
       "market_cap": 5973.0,
       "subindustries": [
         "成衣及其它家居紡織類品",
@@ -31259,7 +31259,7 @@
       "market": "TPEX",
       "symbol": "8921.TWO",
       "capital": null,
-      "price": 16.5,
+      "price": null,
       "market_cap": 768.0,
       "subindustries": [
         "文化印刷業"
@@ -31287,7 +31287,7 @@
       "market": "TPEX",
       "symbol": "8924.TWO",
       "capital": null,
-      "price": 47.0,
+      "price": null,
       "market_cap": 3938.0,
       "subindustries": [
         "高爾夫球具業",
@@ -31302,7 +31302,7 @@
       "market": "TPEX",
       "symbol": "8927.TWO",
       "capital": null,
-      "price": 17.3,
+      "price": null,
       "market_cap": 7249.0,
       "subindustries": [
         "加油站"
@@ -31316,7 +31316,7 @@
       "market": "TPEX",
       "symbol": "8928.TWO",
       "capital": null,
-      "price": 21.55,
+      "price": null,
       "market_cap": 1095.0,
       "subindustries": [
         "高爾夫球具業"
@@ -31330,7 +31330,7 @@
       "market": "TPEX",
       "symbol": "8929.TWO",
       "capital": null,
-      "price": 12.85,
+      "price": null,
       "market_cap": 649.0,
       "subindustries": [
         "衛生用品"
@@ -31344,7 +31344,7 @@
       "market": "TPEX",
       "symbol": "8930.TWO",
       "capital": null,
-      "price": 28.1,
+      "price": null,
       "market_cap": 2298.0,
       "subindustries": [
         "金屬製品",
@@ -31359,7 +31359,7 @@
       "market": "TPEX",
       "symbol": "8931.TWO",
       "capital": null,
-      "price": 42.95,
+      "price": null,
       "market_cap": 5250.0,
       "subindustries": [
         "汽電共生"
@@ -31373,7 +31373,7 @@
       "market": "TPEX",
       "symbol": "8932.TWO",
       "capital": null,
-      "price": 89.6,
+      "price": null,
       "market_cap": 38170.0,
       "subindustries": [
         "其他"
@@ -31387,7 +31387,7 @@
       "market": "TPEX",
       "symbol": "8933.TWO",
       "capital": null,
-      "price": 4.51,
+      "price": null,
       "market_cap": 1473.0,
       "subindustries": [
         "休閒車業",
@@ -31402,7 +31402,7 @@
       "market": "TPEX",
       "symbol": "8935.TWO",
       "capital": null,
-      "price": 19.0,
+      "price": null,
       "market_cap": 2156.0,
       "subindustries": [
         "塑膠製品"
@@ -31416,7 +31416,7 @@
       "market": "TPEX",
       "symbol": "8936.TWO",
       "capital": null,
-      "price": 51.5,
+      "price": null,
       "market_cap": 12776.0,
       "subindustries": [
         "製管",
@@ -31431,7 +31431,7 @@
       "market": "TPEX",
       "symbol": "8937.TWO",
       "capital": null,
-      "price": 24.2,
+      "price": null,
       "market_cap": 10688.0,
       "subindustries": [
         "休閒車業",
@@ -31446,7 +31446,7 @@
       "market": "TPEX",
       "symbol": "8938.TWO",
       "capital": null,
-      "price": 50.2,
+      "price": null,
       "market_cap": 7880.0,
       "subindustries": [
         "高爾夫球具業"
@@ -31460,7 +31460,7 @@
       "market": "TPEX",
       "symbol": "8941.TWO",
       "capital": null,
-      "price": 43.35,
+      "price": null,
       "market_cap": 1516.0,
       "subindustries": [
         "製造商",
@@ -31476,7 +31476,7 @@
       "market": "TPEX",
       "symbol": "8942.TWO",
       "capital": null,
-      "price": 40.3,
+      "price": null,
       "market_cap": 8013.0,
       "subindustries": [
         "個人、民間企業、政府機構",
@@ -31491,7 +31491,7 @@
       "market": "TPEX",
       "symbol": "9949.TWO",
       "capital": null,
-      "price": 24.6,
+      "price": null,
       "market_cap": 1103.0,
       "subindustries": [
         "文化印刷業",
@@ -31506,7 +31506,7 @@
       "market": "TPEX",
       "symbol": "9950.TWO",
       "capital": null,
-      "price": 10.35,
+      "price": null,
       "market_cap": 1735.0,
       "subindustries": [
         "塑膠製品"
@@ -31520,7 +31520,7 @@
       "market": "TPEX",
       "symbol": "9951.TWO",
       "capital": null,
-      "price": 47.15,
+      "price": null,
       "market_cap": 3456.0,
       "subindustries": [
         "車用機械傳動設備及零配件",
@@ -31535,7 +31535,7 @@
       "market": "TPEX",
       "symbol": "9960.TWO",
       "capital": null,
-      "price": 40.8,
+      "price": null,
       "market_cap": 1370.0,
       "subindustries": [
         "高爾夫球具業"
@@ -31549,7 +31549,7 @@
       "market": "TPEX",
       "symbol": "9962.TWO",
       "capital": null,
-      "price": 10.15,
+      "price": null,
       "market_cap": 915.0,
       "subindustries": [
         "冷熱軋不鏽鋼板捲"

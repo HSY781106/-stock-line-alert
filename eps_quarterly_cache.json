@@ -1952,7 +1952,7 @@
     "source": "Yahoo earnings dates Reported EPS"
   },
   "1702.TW": {
-    "_cached_at": 1787808904.1678698,
+    "_cached_at": 1792374145.743648,
     "data": [
       {
         "date": "2008-06-30",
@@ -2260,7 +2260,7 @@
     "source": "Yahoo earnings dates Reported EPS"
   },
   "1806.TW": {
-    "_cached_at": 1787808907.40443,
+    "_cached_at": 1792374147.766098,
     "data": [
       {
         "date": "2011-03-31",
@@ -18037,7 +18037,7 @@
     "source": "Yahoo earnings dates Reported EPS"
   },
   "5538.TW": {
-    "_cached_at": 1787833308.6532712,
+    "_cached_at": 1792374167.6509745,
     "data": [
       {
         "date": "2013-12-31",
@@ -23081,7 +23081,7 @@
     "source": "Yahoo earnings dates Reported EPS"
   },
   "2038.TW": {
-    "_cached_at": 1787954022.050587,
+    "_cached_at": 1792374151.3568175,
     "data": [
       {
         "date": "2009-03-31",
@@ -30165,7 +30165,7 @@
     "source": "Yahoo earnings dates Reported EPS"
   },
   "2312.TW": {
-    "_cached_at": 1788163803.3292522,
+    "_cached_at": 1792374153.0071108,
     "data": [
       {
         "date": "2010-12-31",
@@ -37369,7 +37369,7 @@
     "source": "Yahoo earnings dates Reported EPS"
   },
   "2903.TW": {
-    "_cached_at": 1788916605.583028,
+    "_cached_at": 1792374159.1712818,
     "data": [
       {
         "date": "2007-03-31",
@@ -46125,6 +46125,209 @@
       {
         "date": "2020-06-30",
         "eps": 0.22,
+        "source": "Yahoo Reported EPS"
+      }
+    ],
+    "source": "Yahoo earnings dates Reported EPS"
+  },
+  "2017.TW": {
+    "_cached_at": 1792374149.4944081,
+    "data": [
+      {
+        "date": "2018-06-30",
+        "eps": 0.09,
+        "source": "Yahoo Reported EPS"
+      },
+      {
+        "date": "2018-09-30",
+        "eps": 0.09,
+        "source": "Yahoo Reported EPS"
+      }
+    ],
+    "source": "Yahoo earnings dates Reported EPS"
+  },
+  "2413.TW": {
+    "_cached_at": 1792374154.656696,
+    "data": [],
+    "source": "Yahoo earnings dates Reported EPS"
+  },
+  "2440.TW": {
+    "_cached_at": 1792374156.3370109,
+    "data": [],
+    "source": "Yahoo earnings dates Reported EPS"
+  },
+  "9937.TW": {
+    "_cached_at": 1792374169.6132665,
+    "data": [
+      {
+        "date": "2009-09-30",
+        "eps": 0.37,
+        "source": "Yahoo Reported EPS"
+      },
+      {
+        "date": "2010-03-31",
+        "eps": 0.39,
+        "source": "Yahoo Reported EPS"
+      },
+      {
+        "date": "2018-09-30",
+        "eps": 0.64,
+        "source": "Yahoo Reported EPS"
+      },
+      {
+        "date": "2018-12-31",
+        "eps": 0.51,
+        "source": "Yahoo Reported EPS"
+      },
+      {
+        "date": "2019-03-31",
+        "eps": 0.66,
+        "source": "Yahoo Reported EPS"
+      }
+    ],
+    "source": "Yahoo earnings dates Reported EPS"
+  },
+  "9945.TW": {
+    "_cached_at": 1792374171.5068834,
+    "data": [
+      {
+        "date": "2006-09-30",
+        "eps": 0.12,
+        "source": "Yahoo Reported EPS"
+      },
+      {
+        "date": "2006-12-31",
+        "eps": 0.21,
+        "source": "Yahoo Reported EPS"
+      },
+      {
+        "date": "2008-03-31",
+        "eps": 0.24,
+        "source": "Yahoo Reported EPS"
+      },
+      {
+        "date": "2009-03-31",
+        "eps": -0.01,
+        "source": "Yahoo Reported EPS"
+      },
+      {
+        "date": "2009-06-30",
+        "eps": 0.16,
+        "source": "Yahoo Reported EPS"
+      },
+      {
+        "date": "2009-09-30",
+        "eps": 0.05,
+        "source": "Yahoo Reported EPS"
+      },
+      {
+        "date": "2011-03-31",
+        "eps": 0.09,
+        "source": "Yahoo Reported EPS"
+      },
+      {
+        "date": "2011-12-31",
+        "eps": 1.01,
+        "source": "Yahoo Reported EPS"
+      },
+      {
+        "date": "2012-06-30",
+        "eps": 0.77,
+        "source": "Yahoo Reported EPS"
+      },
+      {
+        "date": "2012-09-30",
+        "eps": 0.12,
+        "source": "Yahoo Reported EPS"
+      },
+      {
+        "date": "2012-12-31",
+        "eps": 0.74,
+        "source": "Yahoo Reported EPS"
+      },
+      {
+        "date": "2013-03-31",
+        "eps": 0.41,
+        "source": "Yahoo Reported EPS"
+      },
+      {
+        "date": "2013-09-30",
+        "eps": 11.98,
+        "source": "Yahoo Reported EPS"
+      },
+      {
+        "date": "2013-12-31",
+        "eps": 0.72,
+        "source": "Yahoo Reported EPS"
+      },
+      {
+        "date": "2014-03-31",
+        "eps": 0.38,
+        "source": "Yahoo Reported EPS"
+      },
+      {
+        "date": "2014-06-30",
+        "eps": 0.16,
+        "source": "Yahoo Reported EPS"
+      },
+      {
+        "date": "2014-09-30",
+        "eps": 1.15,
+        "source": "Yahoo Reported EPS"
+      },
+      {
+        "date": "2014-12-31",
+        "eps": 1.09,
+        "source": "Yahoo Reported EPS"
+      },
+      {
+        "date": "2015-03-31",
+        "eps": 0.67,
+        "source": "Yahoo Reported EPS"
+      },
+      {
+        "date": "2015-06-30",
+        "eps": 2.11,
+        "source": "Yahoo Reported EPS"
+      },
+      {
+        "date": "2015-09-30",
+        "eps": 1.33,
+        "source": "Yahoo Reported EPS"
+      },
+      {
+        "date": "2015-12-31",
+        "eps": 0.46,
+        "source": "Yahoo Reported EPS"
+      },
+      {
+        "date": "2016-03-31",
+        "eps": 0.84,
+        "source": "Yahoo Reported EPS"
+      },
+      {
+        "date": "2016-06-30",
+        "eps": 0.2,
+        "source": "Yahoo Reported EPS"
+      },
+      {
+        "date": "2016-09-30",
+        "eps": 0.82,
+        "source": "Yahoo Reported EPS"
+      },
+      {
+        "date": "2016-12-31",
+        "eps": 1.03,
+        "source": "Yahoo Reported EPS"
+      },
+      {
+        "date": "2017-03-31",
+        "eps": 0.16,
+        "source": "Yahoo Reported EPS"
+      },
+      {
+        "date": "2017-06-30",
+        "eps": 0.39,
         "source": "Yahoo Reported EPS"
       }
     ],

@@ -3073,5 +3073,76 @@
       ]
     },
     "provider": "gemini"
+  },
+  "news:3711:92b8b9f67adf714e3f83ee7e": {
+    "ts": 1792374127.0168238,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.8,
+          "reason": "子公司取得廠務工程，持續擴充產能。",
+          "relevant": true
+        },
+        {
+          "id": 1,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.8,
+          "reason": "子公司取得機器設備，展現擴產需求。",
+          "relevant": true
+        },
+        {
+          "id": 2,
+          "direction": "positive",
+          "score": 4,
+          "confidence": 0.85,
+          "reason": "第三季營收將創新高，利好營運展望。",
+          "relevant": true
+        },
+        {
+          "id": 3,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.5,
+          "reason": "社群論壇討論且無具體消息，評估為中立。",
+          "relevant": true
+        }
+      ]
+    },
+    "provider": "gemini"
+  },
+  "final_v21826:3711:0b07f0aac5c332d2bd274775": {
+    "ts": 1792374130.1968837,
+    "data": {
+      "recommendation": "🟡 等待更佳買點",
+      "confidence": 0.65,
+      "core": "長線基本面具支撐，惟短線籌碼過輕且技術面偏空，建議等待回檔止跌。",
+      "fundamental_view": "獲利成長22.96%，但PE為48.55顯著高於同業中位數26.45，估值偏高。",
+      "technical_view": "日線趨勢偏空且跌破MA20，RSI(41.2)偏低，仍處尋求止跌階段。",
+      "chips_view": "三大法人近期賣超，融資反向增加，籌碼面結構不利短期表現。",
+      "risk_view": "跌破月線且融資散戶進場，具拉回修正風險。",
+      "news_view": "擴充設備與營收創新高展望提供基本面正面訊息。",
+      "trump_view": "關稅擴大政策與貿易戰疑慮對半導體族群形成政策壓抑。",
+      "macro_view": "匯率正面助益，但利率傳導偏負，總經環境呈中立偏好。",
+      "buy_view": "投資價值評價暫緩加碼，與等待623-642元回檔止跌買點一致。",
+      "strengths": [
+        "獲利成長顯著",
+        "持續資本支出擴產"
+      ],
+      "risks": [
+        "PE偏高",
+        "法人連續賣超與融資增加"
+      ],
+      "conflict": "基本面營收創新高與技術籌碼偏空修正發生衝擊。",
+      "next_watch": [
+        "月線支撐防守",
+        "RSI是否回升至40以上"
+      ],
+      "reason": "日月光投控雖具備營收與獲利成長優勢，但目前PE偏高且面臨Trump關稅壓抑。籌碼面法人賣超且技術面偏空，建議等待回檔至623-642元止跌訊號出現再行佈局。"
+    },
+    "provider": "gemini"
   }
 }
