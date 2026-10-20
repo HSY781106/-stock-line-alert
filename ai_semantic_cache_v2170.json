@@ -3211,5 +3211,61 @@
       "reason": "日月光投控雖具獲利成長動能，但目前PE偏高且技術面已跌破月線。籌碼面短期遭法人調節，加上川普政策傳導偏負面，建議暫緩加碼並等待回檔止跌訊號。"
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:55ff67fbb4c43143823a8b96": {
+    "ts": 1792519941.3206608,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.8,
+          "policy_stage": "threat",
+          "reason": "特務關稅立場引發市場通膨與升息疑慮，壓抑整體股市估值。",
+          "relevant": true,
+          "affected_channel": "估值與成本",
+          "transmission": "關稅政策→進口成本上升與通膨疑慮升溫→利率預期上揚→整體市場估值承壓",
+          "exposure": "美股整體市場（__MARKET__），受宏觀流動性與通膨預期影響"
+        },
+        {
+          "id": 1,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.6,
+          "policy_stage": "unknown",
+          "reason": "伊朗對美國大選與油價之政治表態，對整體市場直接影響有限。",
+          "relevant": false,
+          "affected_channel": "供應鏈",
+          "transmission": "地緣政治表態→原油供給不確定性→對整體美股傳導不明顯",
+          "exposure": "能源產業／整體市場影響微弱"
+        },
+        {
+          "id": 2,
+          "direction": "neutral",
+          "score": -1,
+          "confidence": 0.7,
+          "policy_stage": "considering",
+          "reason": "能源政策爭議增加政策不確定性，微幅影響市場情緒。",
+          "relevant": true,
+          "affected_channel": "需求與監管",
+          "transmission": "能源行政命令爭議→能源產業政策波動→市場整體風險偏好微幅下降",
+          "exposure": "能源類股與整體市場（__MARKET__）"
+        },
+        {
+          "id": 3,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.8,
+          "policy_stage": "threat",
+          "reason": "市場擔憂關稅政策將推升通膨，對股市估值形成利空。",
+          "relevant": true,
+          "affected_channel": "估值",
+          "transmission": "關稅立場→市場通膨預期上升→聯準會降息空間受限→大盤估值受壓",
+          "exposure": "美股整體市場（__MARKET__）"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
