@@ -3160,5 +3160,25 @@
       ]
     },
     "provider": "groq"
+  },
+  "trump_v21826:__MARKET__:1ab1fe0538189f239581cc9c": {
+    "ts": 1792454890.8156297,
+    "data": {
+      "items": [
+        {
+          "id": 3,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.7,
+          "policy_stage": "announced",
+          "reason": "放寬俄油制裁導致歐洲需求減少",
+          "relevant": true,
+          "affected_channel": "需求",
+          "transmission": "放寬制裁→俄油供應增加→歐洲需求下降→市場受影響",
+          "exposure": "證據不足"
+        }
+      ]
+    },
+    "provider": "groq"
   }
 }
