@@ -3243,5 +3243,25 @@
       ]
     },
     "provider": "groq"
+  },
+  "trump_v21826:__MARKET__:f40a43630b96ef96cecd26d9": {
+    "ts": 1792537020.8752027,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.7,
+          "policy_stage": "considering",
+          "reason": "Trump提及高油價以制止伊朗核武",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "政策→能源成本→油價上升",
+          "exposure": "證據不足"
+        }
+      ]
+    },
+    "provider": "groq"
   }
 }
