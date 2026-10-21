@@ -3377,5 +3377,37 @@
       ]
     },
     "provider": "groq"
+  },
+  "trump_v21826:__MARKET__:b344cae05fc85cf73435a31f": {
+    "ts": 1792606738.9756145,
+    "data": {
+      "items": [
+        {
+          "id": 2,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.7,
+          "policy_stage": "announced",
+          "reason": "國防投資提升",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "國防投資→船廠建設→市場需求提升",
+          "exposure": "受益於國防支出增長"
+        },
+        {
+          "id": 3,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.6,
+          "policy_stage": "threat",
+          "reason": "稀土供應風險",
+          "relevant": true,
+          "affected_channel": "供應鏈",
+          "transmission": "稀土供應不穩→關鍵產業成本上升→市場波動",
+          "exposure": "受影響於稀土供應鏈"
+        }
+      ]
+    },
+    "provider": "groq"
   }
 }
