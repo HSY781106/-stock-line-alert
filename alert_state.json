@@ -22,7 +22,7 @@
       "trigger_week": -0.10616
     },
     "QQQ": {
-      "date": "2026-10-21",
+      "date": "2026-10-22",
       "daily_alert_sent": false,
       "weekly_alert_sent": false,
       "alert_sent": false
@@ -60,12 +60,12 @@
       "session_key": "2026-10-21"
     },
     "QQQ": {
-      "last_check": "2026-10-21T03:51:06.560309+08:00",
-      "last_price": 717.3200073242188,
+      "last_check": "2026-10-22T02:15:51.085735+08:00",
+      "last_price": 727.0598754882812,
       "last_interval_low": 716.8300170898438,
       "last_interval_source": "Yahoo-5m",
       "interval_alert": false,
-      "session_key": "2026-10-20"
+      "session_key": "2026-10-21"
     },
     "台灣加權指數": {
       "last_check": "2026-10-21T13:53:16.688817+08:00",
@@ -82,19 +82,19 @@
   },
   "target_buy_point_alert": {
     "0050 元大台灣50": {
-      "date": "2026-10-21",
+      "date": "2026-10-22",
       "locked": false,
       "notified_at": "2026-09-07 11:59:19",
       "notified_score": 87
     },
     "2330 台積電": {
-      "date": "2026-10-21",
+      "date": "2026-10-22",
       "locked": false,
       "notified_at": "2026-09-07 11:59:22",
       "notified_score": 92
     },
     "QQQ": {
-      "date": "2026-10-21",
+      "date": "2026-10-22",
       "locked": false,
       "notified_at": "2026-09-18 01:46:32",
       "notified_score": 91,
