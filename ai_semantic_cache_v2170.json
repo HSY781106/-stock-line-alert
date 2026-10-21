@@ -3263,5 +3263,99 @@
       ]
     },
     "provider": "groq"
+  },
+  "trump_v21826:__MARKET__:e066f2fdcaafa9f135a721df": {
+    "ts": 1792561942.9657147,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.6,
+          "policy_stage": "unknown",
+          "reason": "未見直接政策影響",
+          "relevant": false,
+          "affected_channel": "需求",
+          "transmission": "無明確政策→產業→標的傳導",
+          "exposure": "證據不足"
+        }
+      ]
+    },
+    "provider": "groq"
+  },
+  "news:3711:cde69cb92a954479e1c81094": {
+    "ts": 1792561980.2195928,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "positive",
+          "score": 1,
+          "confidence": 0.7,
+          "reason": "取得12.29億元設備，屬正常資本支出營運活動。",
+          "relevant": true
+        },
+        {
+          "id": 1,
+          "direction": "positive",
+          "score": 3,
+          "confidence": 0.8,
+          "reason": "預估第三季營收創高，對近期營運展望偏利多。",
+          "relevant": true
+        },
+        {
+          "id": 2,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.5,
+          "reason": "社群論壇討論大盤走勢，無具體營運重大資訊。",
+          "relevant": true
+        },
+        {
+          "id": 3,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.6,
+          "reason": "法人說明會日程公告，尚未提及具體財務展望。",
+          "relevant": true
+        }
+      ]
+    },
+    "provider": "gemini"
+  },
+  "final_v21826:3711:89ac22d2b533c22d05163d9e": {
+    "ts": 1792561990.0917244,
+    "data": {
+      "recommendation": "🟠 暫緩加碼",
+      "confidence": 0.6,
+      "core": "日月光投控基本面成長但估值偏高，技術偏空，籌碼負面，需觀望",
+      "fundamental_view": "獲利成長率22.96%，ROE11.7%，但PE47.8遠高於同業24.99，估值偏高，投資價值有限",
+      "technical_view": "趨勢偏空，RSI43.7接近低點，MA20突破下跌，短期回檔可能，需等待止跌",
+      "chips_view": "融資持續增加，法人持股減少，籌碼負面，可能拖累股價",
+      "risk_view": "融資增加與跌破MA20為主要風險，市場風險偏低但利率負面傳導",
+      "news_view": "正面消息為設備投資與Q3營收創高，但未形成重大利多，需觀望",
+      "trump_view": "全球Trump -3，行業Trump 0，無顯著利多",
+      "macro_view": "利率負面傳導，匯率正面，市場風險偏低，總體環境不利",
+      "buy_view": "買點在回檔止跌區間，與投資價值不完全一致，需先等回檔再分批",
+      "strengths": [
+        "獲利成長率高",
+        "ROE良好",
+        "短期RSI低於50"
+      ],
+      "risks": [
+        "估值偏高",
+        "融資增加",
+        "跌破MA20"
+      ],
+      "conflict": "估值偏高與短期技術偏空形成最大矛盾",
+      "next_watch": [
+        "短期回檔止跌區間",
+        "法人持股變動",
+        "利率走勢"
+      ],
+      "reason": "估值偏高與技術偏空形成最大矛盾，需觀望回檔後再加碼"
+    },
+    "provider": "groq"
   }
 }

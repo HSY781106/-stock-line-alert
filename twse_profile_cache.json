@@ -1,5 +1,5 @@
 {
-  "cached_at": 1792475237.258373,
+  "cached_at": 1792561860.1079183,
   "data": [
     {
       "code": "1101",
@@ -4319,7 +4319,7 @@
       "industry": "電子通路業",
       "market": "TWSE",
       "symbol": "3036.TW",
-      "capital": 12705627010.0
+      "capital": 13455627010.0
     },
     {
       "code": "3037",
@@ -6495,7 +6495,7 @@
       "industry": "通信網路業",
       "market": "TWSE",
       "symbol": "6216.TW",
-      "capital": 972961370.0
+      "capital": 974201370.0
     },
     {
       "code": "6224",
@@ -6760,6 +6760,14 @@
       "market": "TWSE",
       "symbol": "6464.TW",
       "capital": 1339327930.0
+    },
+    {
+      "code": "6467",
+      "name": "泰合",
+      "industry": "生技醫療",
+      "market": "TWSE",
+      "symbol": "6467.TW",
+      "capital": 599086150.0
     },
     {
       "code": "6472",

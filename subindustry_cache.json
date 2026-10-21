@@ -1,5 +1,5 @@
 {
-  "_cached_at": 1792539511.2429671,
+  "_cached_at": 1792561888.1885293,
   "source": "TPEx/TWSE Industry Value Chain",
   "source_url": "https://ic.tpex.org.tw/company_chain.php",
   "cache_days": 30,
@@ -47234,6 +47234,18 @@
           "industry": "食品",
           "sub_industry": "加工食品",
           "date": "2026-10-16"
+        }
+      ]
+    },
+    "6467": {
+      "subindustries": [
+        "中、西藥製劑"
+      ],
+      "records": [
+        {
+          "industry": "製藥",
+          "sub_industry": "中、西藥製劑",
+          "date": "2026-10-21"
         }
       ]
     }

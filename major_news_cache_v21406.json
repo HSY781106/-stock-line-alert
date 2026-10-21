@@ -1,8 +1,28 @@
 {
   "2330": {
-    "fetched_at": "2026-10-21T02:20:16.456210+08:00",
+    "fetched_at": "2026-10-21T13:52:45.464235+08:00",
     "adjustment": -8,
     "events": [
+      {
+        "title": "2330 台積電 - 高雄廠爆工安意外4人送醫台積電回應：相關工程自主停工、配合調查- 股市爆料同學會 - CMoney",
+        "source": "CMoney",
+        "date": "2026-10-20T04:30:39+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE1aMy1odU9BQW42WVBIZzZmSTRkMUNNbnJxLUg1UEU4bl96NU9NUjg3SVJaYWVTdFRYek53Z0RGS1RCWFphVFNUQ2FYWEUzclFaOWNuSHg4Uks?oc=5",
+        "raw_adjustment": -6,
+        "adjustment": -6,
+        "label": "重大營運事故",
+        "status": "重大負面事件"
+      },
+      {
+        "title": "2330 台積電 - 台積電高雄廠工安事故4人墜落送醫相關工程已自主停工- 股市爆料同學會 - CMoney",
+        "source": "CMoney",
+        "date": "2026-10-20T05:52:41+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE9xQmZKeEhNbGxKQUdaS25KQXdiWUQ3aHFqbzJ3NjFOb1Q4MUpPWkVZbEhjaHdBNW1neUFpQ2l0VFctM0NXbzJlR0oxNTNIOUNlYVB1MTBseVg?oc=5",
+        "raw_adjustment": -6,
+        "adjustment": -6,
+        "label": "重大營運事故",
+        "status": "重大負面事件"
+      },
       {
         "title": "2330 台積電 - 台積電楠梓園區工安事故4人墜落廠區停工調查- 股市爆料同學會 - CMoney",
         "source": "CMoney",
@@ -22,26 +42,6 @@
         "adjustment": -6,
         "label": "重大營運事故",
         "status": "重大負面事件"
-      },
-      {
-        "title": "2330 台積電 - 高雄台積電F22 廠區工安意外，螺栓斷裂致4 人墜落送醫後續勒令停工- 股市爆料同學會 - CMoney",
-        "source": "CMoney",
-        "date": "2026-10-20T21:40:50+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE10VEpfc3FLYWJVYkR5WUJ6OC1YbGgtOGZBamxqVElwVmNBU0twR1BmZXh1OGVjaVQ0NW4wSHVVSzdDVDRPX0tIa3FyWlRXaEFFZS1JdUxIRlY?oc=5",
-        "raw_adjustment": -6,
-        "adjustment": -6,
-        "label": "重大營運事故",
-        "status": "重大負面事件"
-      },
-      {
-        "title": "2330 台積電 - 法說會前台積電股價拉回，市場聚焦數項重點將影響後續營運- 股市爆料同學會 - CMoney",
-        "source": "CMoney",
-        "date": "2026-10-15T10:34:09+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE0xU3pBUl95a19lTmZRQnlYcmM3SG9Ea3REQmJHSGM5bk5IczVPZHRTSEpaQXR3UEMxOTlnNGxYNHpUZ0ZkY3VHSWdSZ3lFNzhna1lpdloxUEM?oc=5",
-        "raw_adjustment": 0,
-        "adjustment": 0,
-        "label": "",
-        "status": ""
       },
       {
         "title": "2330台積電財報數據好得嚇人👍 營收年增50.9％ 📈營收年增50.9％ 📈營收季增17.6％ 📈稅後純益年增68.7％ 📈稅後純益季增8％ . EPS則由第二季27.25元升至29.43元。 法人原本預估EPS約28.89元，實際數字高於法人預期 明天該還一個公道價了吧😎 - Facebook",
@@ -74,10 +74,10 @@
         "status": ""
       },
       {
-        "title": "2330 台積電 - 夜盤狂跌- 股市爆料同學會 - CMoney",
+        "title": "2330 台積電 - 三星應輝達要求下一代HBM基礎晶粒將採台積電3奈米- 股市爆料同學會 - CMoney",
         "source": "CMoney",
-        "date": "2026-10-17T02:20:59+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE40dzF3NGxYM2REbExzSlQzUVFmS1B3RXZlaUs2VFdyTW5WSWtKM3BFcTVHMkJKTGFFckVnbHZpa2FJY2hpclpwSHpsRHF0QUFIaDg5dzhtLVo?oc=5",
+        "date": "2026-10-18T06:19:25+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTFBOSnZ5M2w5RlFNSlJRLXhwYktnZFotNFduWWEwelVGV045d3k5QURnVXBfTXNzcGlqVV9udEMzc0dycnMyMWRHWVg0OEpxcWw1ck50RGVXeWw?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
@@ -88,7 +88,7 @@
     "lookback_days": 14
   },
   "3711": {
-    "fetched_at": "2026-10-21T02:20:20.906016+08:00",
+    "fetched_at": "2026-10-21T13:52:55.722386+08:00",
     "adjustment": 0,
     "events": [
       {
@@ -250,7 +250,7 @@
     "lookback_days": 14
   },
   "0050": {
-    "fetched_at": "2026-10-21T02:19:53.723953+08:00",
+    "fetched_at": "2026-10-21T13:52:22.980341+08:00",
     "adjustment": 0,
     "events": [
       {
@@ -284,20 +284,20 @@
         "status": ""
       },
       {
-        "title": "5萬點沒在怕！ 他貸350萬買0050「不停損」：看是要來波大的 - 東森電視",
-        "source": "東森電視",
+        "title": "0050漲近74％還能買？月存1萬回測23年 279萬滾出逾10倍資產- 理財 - 工商時報",
+        "source": "工商時報",
         "date": "2026-10-08T15:00:00+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE92SnQzOG1SWWVqSFh2UU5DT1g2ejByWFBzc0QwOG12YkdmLXBtWlZKZkVNSEg2NzRKQ0JYYlpTUVdBbjJQLWVWZzhpS2g0RHA1RUdRVzNn?oc=5",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE1DVGZlaXZ3RU9uS0Z1c0RQcWxJSnZQaUtVWXdLNkdfZGZDVWtkM0xiYjBqdTc5c3ZJN0hYSFJpTW15cExGUlY1SzNOZU5yYzBiVk9uSGRTZUUzMDJ0Smdz?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
         "status": ""
       },
       {
-        "title": "0050漲近74％還能買？月存1萬回測23年 279萬滾出逾10倍資產- 理財 - 工商時報",
-        "source": "工商時報",
+        "title": "5萬點沒在怕！ 他貸350萬買0050「不停損」：看是要來波大的 - 東森電視",
+        "source": "東森電視",
         "date": "2026-10-08T15:00:00+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE1DVGZlaXZ3RU9uS0Z1c0RQcWxJSnZQaUtVWXdLNkdfZGZDVWtkM0xiYjBqdTc5c3ZJN0hYSFJpTW15cExGUlY1SzNOZU5yYzBiVk9uSGRTZUUzMDJ0Smdz?oc=5",
+        "link": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE92SnQzOG1SWWVqSFh2UU5DT1g2ejByWFBzc0QwOG12YkdmLXBtWlZKZkVNSEg2NzRKQ0JYYlpTUVdBbjJQLWVWZzhpS2g0RHA1RUdRVzNn?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
@@ -338,7 +338,7 @@
     "lookback_days": 14
   },
   "QQQ": {
-    "fetched_at": "2026-10-21T02:20:25.822696+08:00",
+    "fetched_at": "2026-10-21T13:53:15.862270+08:00",
     "adjustment": 0,
     "events": [
       {
@@ -372,30 +372,10 @@
         "status": ""
       },
       {
-        "title": "$納指100ETF-Invesco QQQ Trust (QQQ.US)$ 經典 - Moomoo",
-        "source": "Moomoo",
-        "date": "2026-10-14T15:00:00+08:00",
-        "link": "https://news.google.com/rss/articles/CBMilgFBVV95cUxOV1FrRGVGc29uTHRZYllqRGs3Z2JERkxvbFI3REl1Z1ZvOUVUNWRSN2F5aUJZVVItbGdIWUJwSjd0M0dlendJbDQwOFBPR0QzV0Z4YnRXTU1oQi1heXRYRUtoNlBQeDhma1d6QkJoeEJlX3NiLUZuNlc1VkFpeWxGYzdqcVc5NDF2Qk1CODBwRDNma0ZTRXc?oc=5",
-        "raw_adjustment": 0,
-        "adjustment": 0,
-        "label": "",
-        "status": ""
-      },
-      {
         "title": "RQQQ 對 HKD：Invesco QQQ ETF Tokenized Stock (Reality) 以 Hong Kong Dollar 為單位時的匯率 - CoinGecko",
         "source": "CoinGecko",
         "date": "2026-10-14T18:19:53+08:00",
         "link": "https://news.google.com/rss/articles/CBMilgFBVV95cUxNQjZIU2FWMDBRU3JHamw0emlMb0QySFd1M0IxaktkV3RPLVd6UWE5R1hQRm5nemNNSHJYZFM1OUlsUDJVVkQ0cHAtbkU0T2E4OW1tdDRtRjF6czRpY2hWRl9VUWdUMVI4eTV6cVprczc0Vl9ZUHowMEIyWXZiQk9kR1BVb1RjM05saXR1ald1SEllQWF6dnc?oc=5",
-        "raw_adjustment": 0,
-        "adjustment": 0,
-        "label": "",
-        "status": ""
-      },
-      {
-        "title": "$納指100ETF-Invesco QQQ Trust (QQQ.US)$ 一條消息能玩幾次？我也是服了。 - Moomoo",
-        "source": "Moomoo",
-        "date": "2026-10-15T07:21:00+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxOYXFWNWdqNFlwQmQzclVMdUVGOTFlcU1UVG5mMnNZTVFSRmg4bkROS0NUcW5OM1FRY3pyc1VVWWlxYWtOUUdRRlNsQ2JFV1hBeWZqNWlyX1FkRnJ4NFB5bVp2Ty1RZmNZVDNSR3c2Vlc1MmxkdlZxVWxfRHl0a2VFeF9WQUFJWmhac1dMRVNnWFc4eVVQSHVabHZ1YWU4d0hrMmR4cUstRm9iQQ?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
@@ -416,6 +396,26 @@
         "source": "Yahoo 財經",
         "date": "2026-10-16T15:00:00+08:00",
         "link": "https://news.google.com/rss/articles/CBMigwFBVV95cUxPd3ZEYnkzX0ctY0Y1d0lRUmlOYzM1ZHBCLV9qNHMwSDlPdDNEbV91c3M2cU82NXNtSFNzbk5veFZ6ejlxaWxnX1BORUNfMmQtdWNBLXRLZTVGSmZiNERlN09FSjhqZlF4X19aNkIyTVowVm5PbE0xOXRucW81NHYtOC03Yw?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "VOO與QQQ怎麼選？基本資料、前十大持股、產業分布與適合族群完整比較 - 口袋證券",
+        "source": "口袋證券",
+        "date": "2026-10-16T16:16:46+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE1YSkNmZGVGNGZFM0lta1JRQWVNUXhpZktUSjFhY082ay0zY1NEYVN2TDJJSVVTRVZQenNFZDNlZi1NTHVyYmRJTkhMWUx6WjduRm5IekJB?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "QQQ ETF CFD交易 - ThinkMarkets",
+        "source": "ThinkMarkets",
+        "date": "2026-10-16T21:29:05+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiY0FVX3lxTE5sSEJ4X3ZIOGx1SkhmRXJXZXRTVHpfQVgxd2lFdFZuckl2aHFCWExWc05Ua01zM2pJZE1mSDZUaXA0VDliaXliZTBMTjJSTWVKd2NzQVFnMlJ2c3NncmUxR1Ztcw?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
