@@ -3461,5 +3461,37 @@
       ]
     },
     "provider": "groq"
+  },
+  "trump_v21826:__MARKET__:0d58b1558741a0ee5b73f41c": {
+    "ts": 1792626942.1550415,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.7,
+          "policy_stage": "announced",
+          "reason": "Trump 投資 Meta 與 SpaceX",
+          "relevant": true,
+          "affected_channel": "估值",
+          "transmission": "投資→公司估值提升→市場正面",
+          "exposure": "證據不足"
+        },
+        {
+          "id": 3,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.6,
+          "policy_stage": "considering",
+          "reason": "能源主張可能影響油價",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "政策→能源需求變化→油價下跌",
+          "exposure": "證據不足"
+        }
+      ]
+    },
+    "provider": "groq"
   }
 }
