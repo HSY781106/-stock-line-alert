@@ -3621,33 +3621,21 @@
     },
     "provider": "gemini"
   },
-  "trump_v21826:__MARKET__:4934b3fa82948c115c71067d": {
-    "ts": 1792692960.5815573,
+  "trump_v21826:__MARKET__:f7307f03c8760454d56c0b19": {
+    "ts": 1792693536.3348122,
     "data": {
       "items": [
         {
           "id": 0,
-          "direction": "positive",
-          "score": 2,
-          "confidence": 0.8,
-          "policy_stage": "implemented",
-          "reason": "降油價直接降低成本",
-          "relevant": true,
-          "affected_channel": "成本",
-          "transmission": "降低油價→成本下降→需求上升→市場上漲",
-          "exposure": "受益"
-        },
-        {
-          "id": 3,
-          "direction": "negative",
-          "score": -1,
+          "direction": "neutral",
+          "score": 0,
           "confidence": 0.6,
           "policy_stage": "implemented",
-          "reason": "減少制裁導致油價上升",
+          "reason": "Trump降低能源價格",
           "relevant": true,
           "affected_channel": "成本",
-          "transmission": "減少制裁→俄油供應增加→油價上升→成本上升→市場下跌",
-          "exposure": "受影響"
+          "transmission": "政策→能源產業→市場成本下降",
+          "exposure": "證據不足"
         }
       ]
     },
