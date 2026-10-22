@@ -3640,5 +3640,61 @@
       ]
     },
     "provider": "groq"
+  },
+  "trump_v21826:__MARKET__:30cf4eb826ccfdff97f2dd01": {
+    "ts": 1792698346.5787988,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.7,
+          "policy_stage": "considering",
+          "reason": "開放格陵蘭油氣與礦產勘探，有利能源與資源產業開發。",
+          "relevant": true,
+          "affected_channel": "供應鏈",
+          "transmission": "川普推動格陵蘭資源開發→增加全球資源供給→能源與資源市場獲益",
+          "exposure": "能源與礦業相關大盤標的"
+        },
+        {
+          "id": 1,
+          "direction": "positive",
+          "score": 1,
+          "confidence": 0.6,
+          "policy_stage": "unknown",
+          "reason": "川普個人投資展現對科技及航太巨頭之信心。",
+          "relevant": false,
+          "affected_channel": "估值",
+          "transmission": "川普個人資產配置→提升市場信心→科技與航太板塊估值微幅提振",
+          "exposure": "證據不足"
+        },
+        {
+          "id": 2,
+          "direction": "positive",
+          "score": 3,
+          "confidence": 0.85,
+          "policy_stage": "announced",
+          "reason": "馬里蘭州國防造船廠獲66億美元承諾，國防預算與需求擴張。",
+          "relevant": true,
+          "affected_channel": "需求",
+          "transmission": "政府承諾國防資金→造船廠訂單增加→國防航太板塊整體受惠",
+          "exposure": "國防造船與航太軍工產業標的"
+        },
+        {
+          "id": 3,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.75,
+          "policy_stage": "threat",
+          "reason": "官員警告中國將稀土武器化，供應鏈中斷風險上升。",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "美中關鍵礦物緊張→稀土供應限制風險高升→科技與製造業成本壓力增加",
+          "exposure": "高度依賴稀土供應鏈之高端製造與科技產業"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
