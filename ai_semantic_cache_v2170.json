@@ -3752,5 +3752,61 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:50c725821022cf2dd9a0d214": {
+    "ts": 1792713259.4270098,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "positive",
+          "score": 3,
+          "confidence": 0.85,
+          "policy_stage": "implemented",
+          "reason": "援引國防生產法擴大原油生產與精煉，增加市場供給。",
+          "relevant": true,
+          "affected_channel": "供給與成本",
+          "transmission": "國防生產法→強制/鼓勵油企增產精煉→壓低整體能源價格與市場通膨",
+          "exposure": "整體原油生產商、精煉廠與能源市場"
+        },
+        {
+          "id": 1,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.6,
+          "policy_stage": "considering",
+          "reason": "尋求降低汽油價格方案，政策具體執行措施尚不明確。",
+          "relevant": true,
+          "affected_channel": "供給與需求",
+          "transmission": "印度的精煉油出口政策調整→全球汽油供給增加→對整體市場價格影響待觀察",
+          "exposure": "整體原油市場與油品進出口商"
+        },
+        {
+          "id": 2,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.8,
+          "policy_stage": "implemented",
+          "reason": "釋放東北部取暖油庫存以緩解短期的價格飆漲。",
+          "relevant": true,
+          "affected_channel": "供給與價格",
+          "transmission": "釋放戰略/地區儲備→增加短期市場供給→平抑區域性油價升勢",
+          "exposure": "美國東北部取暖油市場與能源經銷商"
+        },
+        {
+          "id": 3,
+          "direction": "positive",
+          "score": 1,
+          "confidence": 0.7,
+          "policy_stage": "threat",
+          "reason": "口頭呼籲英國全力開發北海天然氣，提振跨國能源開發信心。",
+          "relevant": true,
+          "affected_channel": "供給",
+          "transmission": "政治呼籲→鼓勵英國審批天然氣開採→增加全球/歐洲天然氣供給",
+          "exposure": "北海天然氣油氣營運商與全球能源市場"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
