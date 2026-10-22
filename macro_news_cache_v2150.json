@@ -1,5 +1,5 @@
 {
-  "cached_at": 1792693556.0469682,
+  "cached_at": 1792709323.040542,
   "data": {
     "items": [
       {
@@ -9,14 +9,6 @@
         "query": "Federal Reserve interest rates inflation US economy",
         "direction": "neutral",
         "reason": "中性／待確認"
-      },
-      {
-        "title": "Warsh says Fed is focused on taming rising prices, but gives no hint about next rate hike - NBC News",
-        "link": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxPUm1YY3gtQVZrcEhOQm9iNE1idzlmNnRZTzQxOXd6dUl2XzBhZTBsZk04a1U1R1VBbEw0VG1keFVhdUNrUEc2N3JlOGVCcDhtLXR6NG1OLTc2OE9RM0hKM1J5N2tCTnVvNEJyR1FhUXA4dFYwMS1BTmszaHZSODNHWjJIQ1NvQU1SMGdzbzZjVHhwTWc1VlJqOWlaTXBvWVRjNHNMXy1CdDM?oc=5",
-        "published": "Thu, 15 Oct 2026 19:59:00 GMT",
-        "query": "Federal Reserve interest rates inflation US economy",
-        "direction": "negative",
-        "reason": "緊縮／景氣風險"
       },
       {
         "title": "Fed chair Warsh says price stability is key but shies away from signals about rates - PBS",
@@ -67,9 +59,25 @@
         "reason": "中性／待確認"
       },
       {
+        "title": "Inflation Can’t Solve America’s Debt Problem, President Trump - Cato Institute",
+        "link": "https://news.google.com/rss/articles/CBMijAFBVV95cUxOMmhEbmNTWXBkdGVRU2E3eTVBSy1KcjhwS3lfUjc2QUN2anNWUENwZUNDOFFrcVlwa0NLcEZScGYwSUlFMkRFbW9YVXZsOTBxbUlacEk2SUVIOWNHNmNuNjFoQ2NGVDV6aUk0Q2VRMUlVUy0tZGtzX2h1RlVLdmFXYnN1ZGlQakNJa19ZYw?oc=5",
+        "published": "Mon, 19 Oct 2026 15:18:12 GMT",
+        "query": "Federal Reserve interest rates inflation US economy",
+        "direction": "neutral",
+        "reason": "中性／待確認"
+      },
+      {
         "title": "See What 71 Economists Told Us About Where Growth and Yields Are Headed - WSJ",
         "link": "https://news.google.com/rss/articles/CBMirAFBVV95cUxPTUM0VVRTc2ZGeGRLcC1aWWRGeGNLYnQ1Z2Y2RXM3Ny1YNVMwLVhNZnBQOTZHelVEVVBlZlVOSm5SUFhsbFQ5RmxPeGh1N2UxY1Bob0VaWW54OEVycm9fNFpqWEwwcDdvWnYzQnphYUtJWmZkcU9IRHVjdl9rX2taWmJKUDZmY3o3N1hkbXFqaENvVkpONGFUR2JUY0g1SDdoRllUVWphemo2WHZo?oc=5",
         "published": "Mon, 19 Oct 2026 15:44:00 GMT",
+        "query": "US CPI jobs GDP Treasury yields economy",
+        "direction": "neutral",
+        "reason": "中性／待確認"
+      },
+      {
+        "title": "Rob Kaplan Sees Fed Hike Likely In December — Warns Aggressive Tightening May Hurt Jobs Without Taming Inflation - TradingView",
+        "link": "https://news.google.com/rss/articles/CBMi_wFBVV95cUxQQnVYby1lWnBQUFJoYW9za2oyMGgtb1JfSUJQM1RVTHJOVjFCOEY5bV9QYW1zNjBOUlNMWW94b1NUZnlWYmc0YjdGYUZNU2pTcHNyTEdxRVg4UjVZdm10Vko5RG5WYThocE4wOFFOZ3BqeUlFSGxSTUZ5aEhDU2J4aGtWakVDN3VDbkJ5TG5ZNUxTMnFua1JvQ05qOFNSMWxZeGZDbjluRmV4QjJNS1NQQTNzeGw2c3Vyd0M3OHRhYTRtemc5LUJQSGszc0x2WWFLMVJTbVFnVV9sM1FlWHFhaXBmSk4yM01taGNkODYxSDBuTm9UQ2o2NXdyaURlNDg?oc=5",
+        "published": "Thu, 22 Oct 2026 14:56:15 GMT",
         "query": "US CPI jobs GDP Treasury yields economy",
         "direction": "neutral",
         "reason": "中性／待確認"
@@ -89,17 +97,9 @@
         "query": "US CPI jobs GDP Treasury yields economy",
         "direction": "neutral",
         "reason": "中性／待確認"
-      },
-      {
-        "title": "GDP Nowcasts Point To Faster Growth As Inflation Risks Mount - Seeking Alpha",
-        "link": "https://news.google.com/rss/articles/CBMimwFBVV95cUxPRHNtSHd3OTBJVndyNE95cGM1cWh1akxzYnhvQ1UtLUhrS0t5VnJpbzBlSjZsdmVhV2FRUVBnR21VMGluX01QU0lGc3U5Zy12OGs5V3NYZFVraU1lbURsSXhjcVBKUldZX3Q1LW5qLV9hXzdKOEtsZG1hb3Y5Zk5kVHBUQ3d2WU5MNllxYTNoRFMtcmN6MU1ya0RKcw?oc=5",
-        "published": "Mon, 19 Oct 2026 14:00:00 GMT",
-        "query": "US CPI jobs GDP Treasury yields economy",
-        "direction": "neutral",
-        "reason": "中性／待確認"
       }
     ],
-    "updated_at": "2026-10-23T02:25:56.624332+08:00",
+    "updated_at": "2026-10-23T06:48:43.600537+08:00",
     "errors": []
   }
 }

@@ -3696,5 +3696,61 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:c53eea41af95135c2a9d53af": {
+    "ts": 1792709303.9411514,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "positive",
+          "score": 3,
+          "confidence": 0.85,
+          "policy_stage": "implemented",
+          "reason": "引用國防生產法促進石油生產與精煉，增加國內供應能力。",
+          "relevant": true,
+          "affected_channel": "供應鏈/產能",
+          "transmission": "政策強制支援→擴大石油生產與精煉產能→整體能源市場供給增加",
+          "exposure": "整體原油生產者、精煉業者與能源市場"
+        },
+        {
+          "id": 1,
+          "direction": "positive",
+          "score": 3,
+          "confidence": 0.85,
+          "policy_stage": "implemented",
+          "reason": "引用國防生產法挹注資源，有助提升石油與精煉產能。",
+          "relevant": true,
+          "affected_channel": "供應鏈/產能",
+          "transmission": "政策強制支援→擴大石油生產與精煉產能→整體能源市場供給增加",
+          "exposure": "整體原油生產者、精煉業者與能源市場"
+        },
+        {
+          "id": 2,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.8,
+          "policy_stage": "implemented",
+          "reason": "釋出戰略加熱油儲備以平抑暴漲價格，短期穩定消費端壓力。",
+          "relevant": true,
+          "affected_channel": "價格/需求",
+          "transmission": "釋出燃料儲備→平抑東北部零售油價→穩定短期能源市場",
+          "exposure": "東北部燃料消費市場與煉油供應商"
+        },
+        {
+          "id": 3,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.75,
+          "policy_stage": "announced",
+          "reason": "暗示為制裁伊朗可接受高油價，容許通膨與油價上漲風險。",
+          "relevant": true,
+          "affected_channel": "成本/估值",
+          "transmission": "地緣政治制裁→原油風險溢價上升→企業營運成本增加與市場波動",
+          "exposure": "整體能源市場與高耗能產業"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
