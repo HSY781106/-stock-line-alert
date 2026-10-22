@@ -1,28 +1,8 @@
 {
   "2330": {
-    "fetched_at": "2026-10-22T02:15:45.131776+08:00",
+    "fetched_at": "2026-10-22T13:55:09.990038+08:00",
     "adjustment": -8,
     "events": [
-      {
-        "title": "2330 台積電 - 高雄廠爆工安意外4人送醫台積電回應：相關工程自主停工、配合調查- 股市爆料同學會 - CMoney",
-        "source": "CMoney",
-        "date": "2026-10-20T04:30:39+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE1aMy1odU9BQW42WVBIZzZmSTRkMUNNbnJxLUg1UEU4bl96NU9NUjg3SVJaYWVTdFRYek53Z0RGS1RCWFphVFNUQ2FYWEUzclFaOWNuSHg4Uks?oc=5",
-        "raw_adjustment": -6,
-        "adjustment": -6,
-        "label": "重大營運事故",
-        "status": "重大負面事件"
-      },
-      {
-        "title": "2330 台積電 - 台積電高雄廠工安事故4人墜落送醫相關工程已自主停工- 股市爆料同學會 - CMoney",
-        "source": "CMoney",
-        "date": "2026-10-20T05:52:41+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE9xQmZKeEhNbGxKQUdaS25KQXdiWUQ3aHFqbzJ3NjFOb1Q4MUpPWkVZbEhjaHdBNW1neUFpQ2l0VFctM0NXbzJlR0oxNTNIOUNlYVB1MTBseVg?oc=5",
-        "raw_adjustment": -6,
-        "adjustment": -6,
-        "label": "重大營運事故",
-        "status": "重大負面事件"
-      },
       {
         "title": "2330 台積電 - 台積電楠梓園區工安事故4人墜落廠區停工調查- 股市爆料同學會 - CMoney",
         "source": "CMoney",
@@ -44,12 +24,32 @@
         "status": "重大負面事件"
       },
       {
-        "title": "台積電(2330)高雄廠停工，先進製程擴廠時程會延後嗎？-林彥廷看盤室 - CMoney投資網誌",
-        "source": "CMoney投資網誌",
-        "date": "2026-10-21T16:03:02+08:00",
-        "link": "https://news.google.com/rss/articles/CBMigwFBVV95cUxOZXlwYnZ6TElONVV0V1l1TWd0ZGdVYUVqN01oOC1LLVQ5UURBNU16aldTaDFlUUc4bU5RUmExTlZUQVpvM3hhSm9EcUo5dGRqTnBIX3ViNkJBcEV2SmdzRWd0dG94Ujlka1FmVGdxZDk5Y0NLRjRVYWRsMlU5Zk5GclEtUQ?oc=5",
+        "title": "2330 台積電 - 台積電高雄建廠四死工安事故洪申翰：從源頭加強風險管理- 股市爆料同學會 - CMoney",
+        "source": "CMoney",
+        "date": "2026-10-21T10:21:47+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE1fU0Z2TWZwRkRpcUE0MkdMZzg0dzBkM3ItMVRYOFlHSWR1d3pVcll3OGdmTm1qOGdtTFZXUkY4OVN2YnpwNmo1ODkxMzBMWTl0SzBqNGM3eVc?oc=5",
         "raw_adjustment": -6,
         "adjustment": -6,
+        "label": "重大營運事故",
+        "status": "重大負面事件"
+      },
+      {
+        "title": "2330 台積電 - 高雄廠爆工安意外4人送醫台積電回應：相關工程自主停工、配合調查- 股市爆料同學會 - CMoney",
+        "source": "CMoney",
+        "date": "2026-10-20T04:30:39+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE1aMy1odU9BQW42WVBIZzZmSTRkMUNNbnJxLUg1UEU4bl96NU9NUjg3SVJaYWVTdFRYek53Z0RGS1RCWFphVFNUQ2FYWEUzclFaOWNuSHg4Uks?oc=5",
+        "raw_adjustment": -6,
+        "adjustment": -5,
+        "label": "重大營運事故",
+        "status": "重大負面事件"
+      },
+      {
+        "title": "2330 台積電 - 台積電高雄廠工安事故4人墜落送醫相關工程已自主停工- 股市爆料同學會 - CMoney",
+        "source": "CMoney",
+        "date": "2026-10-20T05:52:41+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE9xQmZKeEhNbGxKQUdaS25KQXdiWUQ3aHFqbzJ3NjFOb1Q4MUpPWkVZbEhjaHdBNW1neUFpQ2l0VFctM0NXbzJlR0oxNTNIOUNlYVB1MTBseVg?oc=5",
+        "raw_adjustment": -6,
+        "adjustment": -5,
         "label": "重大營運事故",
         "status": "重大負面事件"
       },
@@ -64,20 +64,20 @@
         "status": ""
       },
       {
-        "title": "2330 台積電 - 快訊／台積電跌25元至2395 台股跌676點來到46435點 - 股市爆料同學會 - CMoney",
-        "source": "CMoney",
-        "date": "2026-10-19T09:58:29+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTFAxT3lVSFk4Vll3V3RTNHdYdWFUM1A0dEsyTTB6LUNPeHd3c2VEVDhKd3dTV0cyRUU3NF9pNkJmeEswUUdMWGp3ZmExNFpjTVlBQ3hmSG9mNzg?oc=5",
+        "title": "【零股排行榜】 盤中零股成交量TOP 20｜0050 元大台灣50、2330 台積電、2408 南亞科、009816 凱基台灣TOP50、00406A 主動中信台灣收益(1013)｜豐雲學堂2026 年 10 月 - 永豐金證券",
+        "source": "永豐金證券",
+        "date": "2026-10-19T15:31:52+08:00",
+        "link": "https://news.google.com/rss/articles/CBMi5gRBVV95cUxQZkd5QVRnWnI1R1BtblVOWHZMbWRueVNXYmU2d3dWb3NqSFRVakVTdWtBSzNKV1NEY1dQQk82TGNUQUJJN3dqaUlwRzRRazZwQkFzTVZ6eExjSTVFM2JEcFZ6NG5wQzN5NHZTNDB0am1yLWoyejhuOWZOODJ5eUpmME5icFVZMUdlQ2ZLRHZ1TnRqaXppUGZfZmtoM0o2WkI4MWw0RjE0ejN6X3ZjNkZMQkc5Ym9LWXIzNDcxRnh0UzhURkttaTVhc2VXR0xVRkkyMmxRNEFTMmJZNkVNVFdVQ3g4M29oZm5EZUY0cFNTY29VTF96a3BzaVotVGQyLV9GT0c1eTdDZnRFb1NtWGpNVWtZSVFFLXB3QU9pc0dCcHV1Rlc1bVVwUjhvX19LZVNDRVdvZVBNOTkyVGhIRUhrLUFxbE5CNEpqbThORlFQLXJScUpSMDB",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
         "status": ""
       },
       {
-        "title": "【零股排行榜】 盤中零股成交量TOP 20｜0050 元大台灣50、2330 台積電、2408 南亞科、009816 凱基台灣TOP50、00406A 主動中信台灣收益(1013)｜豐雲學堂2026 年 10 月 - 永豐金證券",
+        "title": "【零股排行榜】盤中零股成交量TOP 20｜0050 元大台灣50、2330 台積電、00406A 主動中信台灣收益、1815 富喬、00631L 元大台灣50正2 (1016)｜豐雲學堂2026 年 10 月 - 永豐金證券",
         "source": "永豐金證券",
-        "date": "2026-10-19T15:31:52+08:00",
-        "link": "https://news.google.com/rss/articles/CBMi5gRBVV95cUxQZkd5QVRnWnI1R1BtblVOWHZMbWRueVNXYmU2d3dWb3NqSFRVakVTdWtBSzNKV1NEY1dQQk82TGNUQUJJN3dqaUlwRzRRazZwQkFzTVZ6eExjSTVFM2JEcFZ6NG5wQzN5NHZTNDB0am1yLWoyejhuOWZOODJ5eUpmME5icFVZMUdlQ2ZLRHZ1TnRqaXppUGZfZmtoM0o2WkI4MWw0RjE0ejN6X3ZjNkZMQkc5Ym9LWXIzNDcxRnh0UzhURkttaTVhc2VXR0xVRkkyMmxRNEFTMmJZNkVNVFdVQ3g4M29oZm5EZUY0cFNTY29VTF96a3BzaVotVGQyLV9GT0c1eTdDZnRFb1NtWGpNVWtZSVFFLXB3QU9pc0dCcHV1Rlc1bVVwUjhvX19LZVNDRVdvZVBNOTkyVGhIRUhrLUFxbE5CNEpqbThORlFQLXJScUpSMDB",
+        "date": "2026-10-19T15:31:55+08:00",
+        "link": "https://news.google.com/rss/articles/CBMi4gRBVV95cUxNSFVjQTVrOEYtb0U2dHRqTURPc2NxVkQ3MGpaS2lpcVZZbmxKQ1NvNXZNYnU0WjkyRTRpQnotMktqZnU2QlAyRVF2eDVTbTNuY0xoZFZja3ItY3dWWWc4UlJ4SVo1eWMtcDFvUUluQXM1cXlhQnU3QTkwUmZyXzRvS1RlZS1wZmFENDJONV9vYV9lYU8tSnZNN3YxeU5yM19NRUtfYWhNcDZnZHoycHVSMUlsTWhZUVpEM1NEM09lUXZnQUlXbzV3TzQwRHJJUU9TVzBORzlfQUhiMmdEZmRib3VfRVdnQnlfNlZlR2ZLOGN2S3o5eDZFb2hVWVZmdWY4Y2xSSms2WEgxTHE5TlptejVCVG5idk43QkdNR2RtRWZPdk4zZ3F3cmpxRXhHVDBYSW9TVlF0SWZieEJ6ZEhJclVMZkVYV3NPR2dFYmpScWEwSEdmcGZ",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
@@ -88,7 +88,7 @@
     "lookback_days": 14
   },
   "3711": {
-    "fetched_at": "2026-10-22T02:15:50.330723+08:00",
+    "fetched_at": "2026-10-22T13:55:17.998260+08:00",
     "adjustment": 3,
     "events": [
       {
@@ -112,30 +112,10 @@
         "status": ""
       },
       {
-        "title": "3711 日月光投控- 2026 年第三季法人說明會- 股市爆料同學會 - CMoney",
-        "source": "CMoney",
-        "date": "2026-10-08T16:29:29+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE9CMDJKdnJ3LTBxdnBHLW5lYnNlb1VBVkJJb1BRT2lFRzZnRFpTTV92VjRabXFZQW9QWXRRWU02YzhKRjk2N2ZQX1hiSUZFMlF1N3pkdTJYOEY?oc=5",
-        "raw_adjustment": 0,
-        "adjustment": 0,
-        "label": "",
-        "status": ""
-      },
-      {
         "title": "營收速報 - 日月光投控(3711)9月營收881.30億元年增率高達45.52％｜新聞快訊｜豐雲學堂 - 永豐金證券",
         "source": "永豐金證券",
         "date": "2026-10-12T15:00:00+08:00",
         "link": "https://news.google.com/rss/articles/CBMidkFVX3lxTE1VbXVtQjdPSGhEV0FkdzY0aVpvMk5QVFJZTC1NcmtZYVhFVVlmeGpsNTJENFd1M01rWFhEZjVveUxjQnBGcVdaMVVNX0lGLTlpX2ZuRWtXbG9sVTdxejdFbGJmZzBqT2dxaWpnUnVWSDd1Vm42WlE?oc=5",
-        "raw_adjustment": 0,
-        "adjustment": 0,
-        "label": "",
-        "status": ""
-      },
-      {
-        "title": "3711 日月光投控- 9月單月營收爆發- 股市爆料同學會 - CMoney",
-        "source": "CMoney",
-        "date": "2026-10-12T15:58:27+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTFA1VzRaMzdRWFZJc1lsY2NMdE93N2pOU1RGWlVyekNmS3dha3ltWUp2Ul9uQUxWVTViNEJweUdOOEotcGNpWHlRUTRweFFCcUtwZGxWTVNFZDk?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
@@ -166,6 +146,26 @@
         "source": "CMoney",
         "date": "2026-10-15T14:30:59+08:00",
         "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE1iR1gySVRQWFRJaUJTbmVHUGRhRkhremYwV1otMmNBOFFXc2x2TVZCR2JiZjBzYmhpUjFEalV5YVEwNF8xRGlkOFNaZE5OUG1QeXNWRjVkSm4?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "日月光投控：矽品精密工業10/8~16向聯純取得廠務工程，計約5.17億元 - 台視全球資訊網",
+        "source": "台視全球資訊網",
+        "date": "2026-10-16T17:48:15+08:00",
+        "link": "https://news.google.com/rss/articles/CBMikgFBVV95cUxNRlFUVzhEcXpFRFZCdXM3dWNxVTVyQ2txLWEyamktck1SQTFqQUJ3QjZ0cVIwLUNuZXdSQ2ZXRkdRWU96c0FHYnk0c3F3TVFxU3J1MDVwZHNieFRWMGNoaENTdHJXdmJqU2pzdzBDYi05MkJHRlVrWE5OeldVeEdoNU5vT1RMWDZ6N0xCTnhfdFNKUQ?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "日月光投控 代子公司USI Enterprise Limited公告預計處分大陸投資事業股權案不予執行 - CMoney",
+        "source": "CMoney",
+        "date": "2026-10-20T18:43:46+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE1YMmtNMFVZTkNmTWFFczgyYnBPWmFtTkFxZzYwU2l6dGFvNl9vS2pZb3Y3bVJlcV9KY1VvUEQyVTVoMmpFV2QyZkV0cTRERGt3dGgyNUNNMGc?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
@@ -250,7 +250,7 @@
     "lookback_days": 14
   },
   "0050": {
-    "fetched_at": "2026-10-22T02:15:22.270205+08:00",
+    "fetched_at": "2026-10-22T13:54:47.913838+08:00",
     "adjustment": 0,
     "events": [
       {
@@ -286,7 +286,7 @@
       {
         "title": "【零股排行榜】盤中零股成交量TOP 20｜0050 元大台灣50、009816 凱基台灣TOP50、2317 鴻海、2303 聯電、2330 台積電 (1012)｜豐雲學堂2026 年 10 月 - 永豐金證券",
         "source": "永豐金證券",
-        "date": "2026-10-11T15:00:00+08:00",
+        "date": "2026-10-12T14:11:29+08:00",
         "link": "https://news.google.com/rss/articles/CBMijgRBVV95cUxPOHM3aXJOcXNySGl2dEhOMTVobFBvS0I3QXMwSHlkcVBDQUR4NWZxSVBHd0NnZkM3dk9TRk5QZHRQWHJsQmo0aTI5dFNMSzlqWjZCVXZfb3VjZHhrOUxOc0s0X2RrNmRoQUxuTk1yRXEydGFpeHEwTnhrNGlTYUVwZDFFc0pFak1pRWl6bWJRaEtyTkFuNXEzZE0yT1NCWVNvd1Vjdm4xcy1Mb0VEREpzQkJoOXZubTVhZ2F3eTBJcGJfQ19jMXpfRnRFYllEeko3QnRQd1NFcFlpNmRBT0VFRk1fMFY5d2tYVG82dkVQU1g3N0l2bDF3T1lrWjlOX19rUHI0MmJhNWlHaWw4Rml1OVY3ZldOUTFScXRLaVRvcGxFYWVMRnFNV241V0dCdEVOT200OHY5RmVwZFZhWlYtVk5VOFl2ZnJ2MHB1MWpNOVlnWVVPM1B",
         "raw_adjustment": 0,
         "adjustment": 0,
@@ -324,10 +324,10 @@
         "status": ""
       },
       {
-        "title": "台股暴跌！小資股進場抄底0050、台積電零股 0050零股成交暴增13倍 - 自由財經",
+        "title": "外資大賣超、散戶沒在怕！0050淨申購378億元創歷史新高 - 自由財經",
         "source": "自由財經",
-        "date": "2026-10-15T14:45:34+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE8tOURHZ3ZHVThFVW1QU1I1amhsOVpBV0tMVFR1XzlEMTlIQUZ4TEhxZXhHRnZvTTZXLVFtNXZTN2tYNV9FY2xtczJaVDB6VFIyaWxZNkI3Z2pHV2ZpdUxB0gFkQVVfeXFMTXdqbTRJby1Bc3pmX1dWM1p4YWpnZWR3RXp0VVNORFNMdDI1aVZLUUFSd3RwbTI3U0MwcWgxNk1oWGpJcWpocXJpSjczaFp6aWFHdHNCRDgtVDdUdENiS3ZERVZuXw?oc=5",
+        "date": "2026-10-15T17:14:39+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5Ja0VKdXp6em5IcjZYS0p6SV9maGRCOU5PSE5jNExhamQ0OVJKWHQ4TGdiZmk0VHpfdTV6R2t3bk5iZHJoRzE5eHAzMXplZnc0RGFxWGhJM3drVjJ0SjdF0gFkQVVfeXFMUER0dGkwRWJ0WVhPYldYandaTHJ5bHRIV2x3UHZTbVZKaTc4UmktRHVmZko0QWhTemFIRWxWOXR2bDl3VmlXcThia3lKQ3ppVDItdFJLcGotUlpSWHhKVzNlcnVkeA?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
@@ -338,19 +338,9 @@
     "lookback_days": 14
   },
   "QQQ": {
-    "fetched_at": "2026-10-22T02:15:55.569102+08:00",
+    "fetched_at": "2026-10-22T13:55:39.289925+08:00",
     "adjustment": 0,
     "events": [
-      {
-        "title": "$納指100ETF-Invesco QQQ Trust (QQQ.US)$ 一個字強，兩個字很強， 三個字超級強 - Moomoo",
-        "source": "Moomoo",
-        "date": "2026-10-09T14:39:52+08:00",
-        "link": "https://news.google.com/rss/articles/CBMisAFBVV95cUxNWG9FQmVPT3NheUx5c1N4bE8wQWNoQW1IcjFPdnA4SVlVZFkwNlJmNWNaMUFyOWJ6LU9NQmJqa0huLTIzMTFMZUIyOFlhQXIzTjB6bXJ1cy1ZVm51aWlKYjFVZm1JUzJ1WWhCN3lWcV9DS2J1cGtSSE1Qbk52N013RFhkNkRuNmtXcTh6Q21hbTRFNGJnRDcybmZPb3FJT21ySXpnYmdscWdGUGJDanNfRw?oc=5",
-        "raw_adjustment": 0,
-        "adjustment": 0,
-        "label": "",
-        "status": ""
-      },
       {
         "title": "Invesco QQQ Trust Series I Shs Cert Deposito Arg Repr 0.05 Sh的員工人數 – BCBA:QQQ.CI - TradingView",
         "source": "TradingView",
@@ -366,16 +356,6 @@
         "source": "富途牛牛",
         "date": "2026-10-10T21:33:30+08:00",
         "link": "https://news.google.com/rss/articles/CBMimAFBVV95cUxQNzRuMjBsSHU2NGZKV3JrcW41MVhQdXZHWGtQY25vUWtkeExPZnRYcS1qMElzVTdxMEd3WXpsWnVnX1RVNkdQV1dBeDc4VnoyZmwyYW1jWmJMYkN6LXMwYnlQMTFSLWdvWjN4dE5hbWp4ajBHYUlHdmJad1RkVkR0TnpfM29naWd0QzhuQnY2cFctUW5HTTlldQ?oc=5",
-        "raw_adjustment": 0,
-        "adjustment": 0,
-        "label": "",
-        "status": ""
-      },
-      {
-        "title": "$納指100ETF-Invesco QQQ Trust (QQQ.US)$ 經典 - Moomoo",
-        "source": "Moomoo",
-        "date": "2026-10-14T15:00:00+08:00",
-        "link": "https://news.google.com/rss/articles/CBMilgFBVV95cUxOV1FrRGVGc29uTHRZYllqRGs3Z2JERkxvbFI3REl1Z1ZvOUVUNWRSN2F5aUJZVVItbGdIWUJwSjd0M0dlendJbDQwOFBPR0QzV0Z4YnRXTU1oQi1heXRYRUtoNlBQeDhma1d6QkJoeEJlX3NiLUZuNlc1VkFpeWxGYzdqcVc5NDF2Qk1CODBwRDNma0ZTRXc?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
@@ -402,20 +382,40 @@
         "status": ""
       },
       {
-        "title": "$納指100ETF-Invesco QQQ Trust (QQQ.US)$ 昨日的跳空缺口已在728點回補；今日若低開於... - Moomoo",
-        "source": "Moomoo",
-        "date": "2026-10-15T17:25:32+08:00",
-        "link": "https://news.google.com/rss/articles/CBMisAFBVV95cUxQQmF6NlMzMDdMR3Y1UXFGZXNXc1o4dm1tTG5kbmV6VkMtUElWeFNGSXZudC1mV1dKY3p4V0ZzNmtzNmpQMzNYSXh5Wnc0LWZwNzNrT1p6cUZxelJQM0wtbm5Vc2EtWDJ2TUh1V1hDX0pub0pnZzAyTmtxc09xaE16UEtFXzl1OHpLT29zVFQyT0ZLM21UWDlOb192TGk4OFpoR0JZSk5CaTNuVkIwMWNBMw?oc=5",
+        "title": "VOO與QQQ怎麼選？基本資料、前十大持股、產業分布與適合族群完整比較 - 口袋證券",
+        "source": "口袋證券",
+        "date": "2026-10-16T16:16:46+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE1YSkNmZGVGNGZFM0lta1JRQWVNUXhpZktUSjFhY082ay0zY1NEYVN2TDJJSVVTRVZQenNFZDNlZi1NTHVyYmRJTkhMWUx6WjduRm5IekJB?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
         "status": ""
       },
       {
-        "title": "Invesco QQQ Trust (QQQ) 期權鏈 - Yahoo 財經",
+        "title": "INVESCO QQQ TRUSTSM, SERIES 1 (QQQ1.SN) 期權鏈 - Yahoo 財經",
         "source": "Yahoo 財經",
-        "date": "2026-10-16T15:00:00+08:00",
-        "link": "https://news.google.com/rss/articles/CBMigwFBVV95cUxPd3ZEYnkzX0ctY0Y1d0lRUmlOYzM1ZHBCLV9qNHMwSDlPdDNEbV91c3M2cU82NXNtSFNzbk5veFZ6ejlxaWxnX1BORUNfMmQtdWNBLXRLZTVGSmZiNERlN09FSjhqZlF4X19aNkIyTVowVm5PbE0xOXRucW81NHYtOC03Yw?oc=5",
+        "date": "2026-10-17T00:28:20+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiYEFVX3lxTFB2TUFTSHR5SWprMkZVT2Jyd2NodlVHSVYtejdlNVhuNDlQVFZtMWl1emNnbzgyVlNsaWRnVE5Ec0NZV1lHMWg2aEx3ME5IQ1MzOVhRR2FzTWR2YzNCVWdpMQ?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "QQQ 261016 719.00C(QQQ261016C719000)股票期權和價格 - Moomoo",
+        "source": "Moomoo",
+        "date": "2026-10-17T01:14:41+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiY0FVX3lxTE1yN1BVbTh5a2JhMWxLYUJ1aGZiZHFYdkk2Y2tOVlNUQmZhSFZqR19NM2NaT256VmlnaVhkMFR4dHVaMnRhaWRuUkg2dHR5Ny1UUjJiblhrdzlMcFJCRExfQnU0TQ?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "QQQ Invesco QQQ Trust Series I - 那斯達克重挫2%，這15檔個股領跌- 股市爆料同學會 - CMoney",
+        "source": "CMoney",
+        "date": "2026-10-17T02:23:36+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE1HdzE5ODhDaWI2cGdTYm9FSmJORHNEZzJPeGxRVnh3aHRvT2JYZmREdzk3UUU1RENlZHJBSERiVkxfZkFsN3BSeUJCOHd3aUo2NGNLU01CbEk?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",

@@ -3493,5 +3493,132 @@
       ]
     },
     "provider": "groq"
+  },
+  "trump_v21826:__MARKET__:cbb9ca2abaf326ad3bfab7ad": {
+    "ts": 1792648487.9014478,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.7,
+          "policy_stage": "considering",
+          "reason": "開放格陵蘭油氣礦產探勘，有利全球能源與資源開發",
+          "relevant": true,
+          "affected_channel": "供應鏈",
+          "transmission": "川普支持開放採礦→增加全球油氣資源供給→影響能源市場",
+          "exposure": "全球能源與資源採掘業"
+        },
+        {
+          "id": 1,
+          "direction": "positive",
+          "score": 1,
+          "confidence": 0.6,
+          "policy_stage": "unknown",
+          "reason": "個人投資顯示對科技與太空產業之信心",
+          "relevant": true,
+          "affected_channel": "估值",
+          "transmission": "高層個人資產配置→提升市場信心→利好科技與太空板塊",
+          "exposure": "大型科技股與太空產業"
+        },
+        {
+          "id": 2,
+          "direction": "positive",
+          "score": 1,
+          "confidence": 0.6,
+          "policy_stage": "unknown",
+          "reason": "家族關聯資金注入無人機公司，帶來產業關注度",
+          "relevant": true,
+          "affected_channel": "需求",
+          "transmission": "資本注入無人機企業→推動航太無人機技術發展→利好國防供應鏈",
+          "exposure": "國防無人機產業"
+        },
+        {
+          "id": 3,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.8,
+          "policy_stage": "threat",
+          "reason": "警告中國將稀土武器化，凸顯關鍵礦物供應鏈地緣政治風險",
+          "relevant": true,
+          "affected_channel": "供應鏈",
+          "transmission": "地緣政治緊張→限制稀土出口或加高關稅→增加製造業供應鏈成本與不確定性",
+          "exposure": "高科技製造業與關鍵礦物供應鏈"
+        }
+      ]
+    },
+    "provider": "gemini"
+  },
+  "news:3711:a8b69ba7894d2d96fb645435": {
+    "ts": 1792648521.3635561,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.8,
+          "reason": "僅為收盤價資訊更新，無實質影響。",
+          "relevant": true
+        },
+        {
+          "id": 1,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.7,
+          "reason": "社群討論大盤走勢，無個股基本面消息。",
+          "relevant": true
+        },
+        {
+          "id": 2,
+          "direction": "positive",
+          "score": 4,
+          "confidence": 0.95,
+          "reason": "9月營收年增達45.52%，表現強勁。",
+          "relevant": true
+        },
+        {
+          "id": 3,
+          "direction": "positive",
+          "score": 4,
+          "confidence": 0.9,
+          "reason": "EPS預估上修且目標價大幅調升。",
+          "relevant": true
+        }
+      ]
+    },
+    "provider": "gemini"
+  },
+  "final_v21826:3711:23efb7db20d9b1d879eb57f0": {
+    "ts": 1792648533.9847693,
+    "data": {
+      "recommendation": "🟡 等待更佳買點",
+      "confidence": 0.75,
+      "core": "長線基本面強勁但本益比偏高，短期技術面偏空且法人賣超，宜等待止跌 signals。",
+      "fundamental_view": "EPS年增與9月營收顯著成長，惟PE達49.49高於同業中位數26.22。",
+      "technical_view": "短期跌破MA20且近10日回檔，RSI與KD偏弱，整體呈現偏空修正。",
+      "chips_view": "籌碼面偏弱，近5日法人賣超逾2,300萬股，拖累短線表現。",
+      "risk_view": "已跌破MA20均線，技術面存在下行風險。",
+      "news_view": "9月營收年增45.52%且機構上修目標價，消息面偏正面。",
+      "trump_view": "川普全球政策效應小幅偏負面，產業影響中性。",
+      "macro_view": "匯率利多與低風險偏好支撐，但殖利率傳導偏負面。",
+      "buy_view": "投資價值屬暫緩加碼，買點建議等待回檔止跌至第一買點區(650.1-669.9)。",
+      "strengths": [
+        "營收與EPS預估強勁成長",
+        "機構上修目標價至755-900元"
+      ],
+      "risks": [
+        "PE偏高且跌破MA20",
+        "近5日法人大幅賣超"
+      ],
+      "conflict": "基本面與營收強勁，但估值過高且短線技術面與籌碼面同步回檔。",
+      "next_watch": [
+        "RSI是否回升至40以上",
+        "第一買點區650.1-669.9支撐力道"
+      ],
+      "reason": "日月光投控基本面與營收表現亮眼，並獲法人上修目標價，長線趨勢看好。然目前本益比遠高於同業，加上近5日籌碼遭外資調節且跌破MA20，短線呈偏空修正。建議等待股價於第一買點區(650.1-669.9)止跌並確認RSI回升後再行布局。"
+    },
+    "provider": "gemini"
   }
 }
