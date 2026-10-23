@@ -3840,5 +3840,37 @@
       ]
     },
     "provider": "groq"
+  },
+  "trump_v21826:__MARKET__:b2f9075988dde8d059d80a9c": {
+    "ts": 1792778470.8817675,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.7,
+          "policy_stage": "unknown",
+          "reason": "無人機技術提升需求",
+          "relevant": true,
+          "affected_channel": "需求",
+          "transmission": "無人機技術提升需求→市場需求上升",
+          "exposure": "證據不足"
+        },
+        {
+          "id": 1,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.5,
+          "policy_stage": "unknown",
+          "reason": "關鍵礦物短缺未解決",
+          "relevant": false,
+          "affected_channel": "成本",
+          "transmission": "關鍵礦物短缺→成本波動→市場不確定",
+          "exposure": "證據不足"
+        }
+      ]
+    },
+    "provider": "groq"
   }
 }
