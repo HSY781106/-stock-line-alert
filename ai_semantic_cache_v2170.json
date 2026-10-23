@@ -3872,5 +3872,61 @@
       ]
     },
     "provider": "groq"
+  },
+  "trump_v21826:__MARKET__:63c12afd9a6c3464a1cf526c": {
+    "ts": 1792784859.9973395,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.75,
+          "policy_stage": "unknown",
+          "reason": "美中未解決關鍵礦物短缺，供應風險持續。",
+          "relevant": true,
+          "affected_channel": "供應鏈",
+          "transmission": "美中緊張→關鍵礦物限制→整體製造業成本上升",
+          "exposure": "整體市場與高科技製造業"
+        },
+        {
+          "id": 1,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.7,
+          "policy_stage": "announced",
+          "reason": "開放格陵蘭資源開採，增加傳統能源供應。",
+          "relevant": true,
+          "affected_channel": "供應鏈",
+          "transmission": "川普支持開採→能源與礦產供給增加→降低原料成本",
+          "exposure": "整體市場與傳統能源產業"
+        },
+        {
+          "id": 2,
+          "direction": "positive",
+          "score": 1,
+          "confidence": 0.6,
+          "policy_stage": "unknown",
+          "reason": "川普投資大型科技與太空產業，提振市場信心。",
+          "relevant": true,
+          "affected_channel": "估值",
+          "transmission": "高層投資偏好→資金流入大型科技股→帶動大盤估值",
+          "exposure": "整體市場與大型科技股"
+        },
+        {
+          "id": 3,
+          "direction": "positive",
+          "score": 1,
+          "confidence": 0.6,
+          "policy_stage": "unknown",
+          "reason": "政策高層與科技巨頭互動良好，利好企業環境。",
+          "relevant": true,
+          "affected_channel": "估值",
+          "transmission": "政商關係和諧→降低監管不確定性→支撐市場情緒",
+          "exposure": "整體市場與大型科技股"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
