@@ -1,18 +1,8 @@
 {
   "2330": {
-    "fetched_at": "2026-10-23T02:26:01.250799+08:00",
-    "adjustment": -8,
+    "fetched_at": "2026-10-23T13:53:32.818561+08:00",
+    "adjustment": -7,
     "events": [
-      {
-        "title": "2330 台積電 - 高雄F22廠工安事故4死，初判原因出爐！台積電：全台新廠區鋼構作業停工- 股市爆料同學會 - CMoney",
-        "source": "CMoney",
-        "date": "2026-10-21T05:28:50+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTFBhX0ZzOTRoNmwxT3dtVlItSGxTRk5taTJXS0kzUzNoellfSmg3UkhOUDRmMGFEUC16d0gtNGoxSEl2OWItYk5Hb3dsOTNBYkpFdUZUT1U2cmg?oc=5",
-        "raw_adjustment": -6,
-        "adjustment": -6,
-        "label": "重大營運事故",
-        "status": "重大負面事件"
-      },
       {
         "title": "2330 台積電 - 高雄廠爆工安意外4人送醫台積電回應：相關工程自主停工、配合調查- 股市爆料同學會 - CMoney",
         "source": "CMoney",
@@ -44,24 +34,14 @@
         "status": "重大負面事件"
       },
       {
-        "title": "2330台積電財報數據好得嚇人👍 營收年增50.9％ 📈營收年增50.9％ 📈營收季增17.6％ 📈稅後純益年增68.7％ 📈稅後純益季增8％ . EPS則由第二季27.25元升至29.43元。 法人原本預估EPS約28.89元，實際數字高於法人預期 明天該還一個公道價了吧😎 - Facebook",
-        "source": "Facebook",
-        "date": "2026-10-14T15:00:00+08:00",
-        "link": "https://news.google.com/rss/articles/CBMi7wVBVV95cUxNM2hyT29peGVNa2hZNXdySHdiLU9NSm1TVUl4Z0Zqa3JIbUpiNjc0Y3V5VUQwck9DNDE0NmE4cDNtSndaTXZpS2lxWWJ3WEZYczdhOU9MMF9Fb3k5RzQ2aVVzRXJaTG8xOGlkM3VPWTdzZ3h5S05uZWVYQU1TVmQ3bWlxckFoa3NoV09HVURnc1FBQkZvaVllWXVSQXlrQnpVVmVjWUl5eXhYWHNwWmdaMlA4RTNRaE9nZ2hFVmloVDRnU1BzaXdtblhXQUlRZ3c2aVo5eG13Y3lvUjVZVTM2MG5UVWd4WkhaT0N1bzZZLUNnNkxUMHlQVkxneDY1Z2hyaEJZOXFqc0JMWWRyaGhzaGdZOEUxWlcxTC1TdDMtWkZBWWVrNGtieXlKc0djd2pqTkdLMjV4dVItcHdCdFI2MFlsRjlQZ2Z6eXNxRkZMZEZNREhxN0F",
-        "raw_adjustment": 0,
-        "adjustment": 0,
-        "label": "",
-        "status": ""
-      },
-      {
-        "title": "台積電(2330) 今日股價與討論 - 股市爆料同學會 - CMoney",
+        "title": "2330 台積電 - 台股大跌別慌，台積電、聯發科給機會低接？ 南亞科、日月光拚千... - 股市爆料同學會 - CMoney",
         "source": "CMoney",
-        "date": "2026-10-19T15:00:00+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE03M3BXYmZ0QmJ1bF9rNXlLWkw2Qkp3ek9VMXFyX09kT0poVlRjVFJ4bzBEWFh1aTU0Y3Z0ekJqQ3pJNWVIam5MQzlRM0N4OXc?oc=5",
-        "raw_adjustment": 0,
-        "adjustment": 0,
-        "label": "",
-        "status": ""
+        "date": "2026-10-22T18:47:31+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE5QX1dlZVloUGFmZ3FfSzBOSG1aYS0xWVJFTEM2LVUwVTJzQjVUWVlwS1NRMTJmRkQtcF9ybnN4Z3VVeHk3UjNFcG92WkNXWEY0Nm5JSVFWLVc?oc=5",
+        "raw_adjustment": -5,
+        "adjustment": -5,
+        "label": "股價重大下跌",
+        "status": "重大負面事件"
       },
       {
         "title": "台積電（2330）法說／第三季EPS 29.43元年增68.7%，第四季美元營收看523億至543億美元，全年年增約44%，2奈米放量稀釋毛利率｜股市話題｜豐雲學堂2026 年 10 月 - 永豐金證券",
@@ -82,14 +62,34 @@
         "adjustment": 0,
         "label": "",
         "status": ""
+      },
+      {
+        "title": "2330 台積電 - 😐三大法人再賣超899億😐 - 股市爆料同學會 - CMoney",
+        "source": "CMoney",
+        "date": "2026-10-19T16:01:43+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE5FRkhwbVh1ZzMzZ19OdC16QWhrNXpHcEF5eHQ2U2N1dlA1Sm9RQndWQXU2UGFnRVo1dXE5a2Z6a0d3VGFYTVI2clg5WTJhOWUtTFJXa1UxMFc?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "2330 台積電 - 相信陳嘎偉老蘇，台股再來要走空頭了- 股市爆料同學會 - CMoney",
+        "source": "CMoney",
+        "date": "2026-10-20T04:44:18+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTFBKNllSWVgtcHdMOGR0YlFnN3dkaEhvcE5vYnpsT09rNmwzMnU5WDV2RXlvQTBLSWpqa3hBdmlFT1BMdDdWSEpHbUtNVVJjZHp4bWZqQVdrY1A?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
       }
     ],
     "source": "Google News RSS",
     "lookback_days": 14
   },
   "3711": {
-    "fetched_at": "2026-10-23T02:26:08.073490+08:00",
-    "adjustment": 3,
+    "fetched_at": "2026-10-23T13:53:37.977484+08:00",
+    "adjustment": 2,
     "events": [
       {
         "title": "營收速報 - 日月光投控(3711)9月營收881.30億元年增率高達45.52％｜新聞快訊｜豐雲學堂 - 永豐金證券",
@@ -162,10 +162,10 @@
         "status": ""
       },
       {
-        "title": "日月光投控子公司114/12/26~115/10/21向政美應用取得供營業用機器設備，計約10.8億 - 台視全球資訊網",
-        "source": "台視全球資訊網",
-        "date": "2026-10-21T19:04:47+08:00",
-        "link": "https://news.google.com/rss/articles/CBMinAFBVV95cUxPbkstZ2t5SVpoaGdqcEdKbTVKS0hxU0kzbTRCMExVWXVJeGRjOVY5c2Vrem5SdVJwME9qZGpidzFCUXRtT1kwSWtmZkFZM1lPZ3VMWG1Mc3RCazlHbmVkaFZIdWF0ODlvYTh4eUsxdG5lNjA1THhFSzEtaHEybF85OTQyTXlfdEozTUZiRWJHV3BVd0pPM3BqaXQxMUQ?oc=5",
+        "title": "3711 日月光投控- 日月光中長期都非常看好！！ - 股市爆料同學會 - CMoney",
+        "source": "CMoney",
+        "date": "2026-10-22T03:39:45+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE92YVVlc3otTFFaSm5WR2ZOYjFjNWhTNmlVUmdJNGZNR2E2MmZqSEJpeWRDZXhFeWxhUDRmakZqYnUtMEhJSjNrVUp4RGQ4MW92aXZJbl91dXE?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
@@ -250,19 +250,9 @@
     "lookback_days": 14
   },
   "0050": {
-    "fetched_at": "2026-10-23T02:25:36.350508+08:00",
+    "fetched_at": "2026-10-23T13:53:10.305965+08:00",
     "adjustment": 0,
     "events": [
-      {
-        "title": "【零股排行榜】盤中零股成交量TOP 20｜0050 元大台灣50、009816 凱基台灣TOP50、2317 鴻海、2303 聯電、2330 台積電 (1012)｜豐雲學堂2026 年 10 月 - 永豐金證券",
-        "source": "永豐金證券",
-        "date": "2026-10-12T15:00:00+08:00",
-        "link": "https://news.google.com/rss/articles/CBMijgRBVV95cUxPOHM3aXJOcXNySGl2dEhOMTVobFBvS0I3QXMwSHlkcVBDQUR4NWZxSVBHd0NnZkM3dk9TRk5QZHRQWHJsQmo0aTI5dFNMSzlqWjZCVXZfb3VjZHhrOUxOc0s0X2RrNmRoQUxuTk1yRXEydGFpeHEwTnhrNGlTYUVwZDFFc0pFak1pRWl6bWJRaEtyTkFuNXEzZE0yT1NCWVNvd1Vjdm4xcy1Mb0VEREpzQkJoOXZubTVhZ2F3eTBJcGJfQ19jMXpfRnRFYllEeko3QnRQd1NFcFlpNmRBT0VFRk1fMFY5d2tYVG82dkVQU1g3N0l2bDF3T1lrWjlOX19rUHI0MmJhNWlHaWw4Rml1OVY3ZldOUTFScXRLaVRvcGxFYWVMRnFNV241V0dCdEVOT200OHY5RmVwZFZhWlYtVk5VOFl2ZnJ2MHB1MWpNOVlnWVVPM1B",
-        "raw_adjustment": 0,
-        "adjustment": 0,
-        "label": "",
-        "status": ""
-      },
       {
         "title": "0050 元大台灣50 - ETF規模暴增10倍！最新人氣Top10出爐：第一名以規模成... - 股市爆料同學會 - CMoney",
         "source": "CMoney",
@@ -288,16 +278,6 @@
         "source": "風傳媒",
         "date": "2026-10-15T11:00:00+08:00",
         "link": "https://news.google.com/rss/articles/CBMiUEFVX3lxTE1EZ2tFb0lyYlRfckhrdU5JUXdQWE9FdGFVTkNGbkN1YmR1WGlNUmhTMUl6N3V3VU8zYWpHeEdaYUplUXZsclZFUkEyQ01hSmVt?oc=5",
-        "raw_adjustment": 0,
-        "adjustment": 0,
-        "label": "",
-        "status": ""
-      },
-      {
-        "title": "2026年最新ETF定期定額排行》0050穩坐霸主、009816破10萬戶！0052、00646、00830績效比一比，台美股ETF怎麼選？ - 永豐金證券",
-        "source": "永豐金證券",
-        "date": "2026-10-15T15:00:00+08:00",
-        "link": "https://news.google.com/rss/articles/CBMi-gNBVV95cUxOclRVOV9JamNsMzdqaWpWOVotZTMweXFDWk5TbWVjeTlZdmtkM2RvZ3hVdDAxZEMxY1ZDWGR2YkQ3bDdfVGtYLUE1VkJSV0FzcXFkTTM0VC1YMFZUcmNjOE9zRExrcUJFOUJKeUtLLTNFbDVjMHgtZnhGck9KSVFZOXZCai1yZldlSVpqWFVHUUI5YzRRMVdQOG81VDNMMHdicUVxUFJScFQ0bjBWRHdFX29DNm9WZ2RQOUVWTDVTY0J3YnNDdWJPOVlXRS1qSEF5NWx2cl9Mcm9mdzlHR0I0X1Ryd21kTVFQUUR3WEwwcUxBNDNxVFpoT09lT1VtNlhFMUJTNE45VTRnZTJyZHUyT3AzVU5mc2FWcGRUbF8wc2pBOUpNT3RhSUZqR0FBSWxURVhQdUs5SFB2ZkVfZmRocW9lOGlwSGJINk5IOWlHVmdnNzRlaWZ",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
@@ -332,25 +312,35 @@
         "adjustment": 0,
         "label": "",
         "status": ""
+      },
+      {
+        "title": "0053改名元大科技市值！0050、0052與0053差在哪？含積量比較 - 口袋證券",
+        "source": "口袋證券",
+        "date": "2026-10-17T05:50:05+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE1CUkdSVjFQUi1URTlENElDWDNJT05ISUwwQUVuVXpIczlBakUyaEdWU2hSMjNydzVqQUJQcXRhelNTRHlwSWZoTlpSVnAwOUxSZkFpWWpn?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "0050 元大台灣50 - 週五夜盤震撼：壓力測試，考驗的不只是系統- 股市爆料同學會 - CMoney",
+        "source": "CMoney",
+        "date": "2026-10-18T12:23:44+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE5QNERfa2RnOGhIeTdMNV9VZ3l0WUV6bTZWaW1BTGREei1lU1NwNGhZMjdmYnc3MUJJWHNwUXEtTUFyTUhyNEpHU1BfWENSekU1NXBYR0F3X0k?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
       }
     ],
     "source": "Google News RSS",
     "lookback_days": 14
   },
   "QQQ": {
-    "fetched_at": "2026-10-23T02:26:15.210402+08:00",
+    "fetched_at": "2026-10-23T13:53:43.546879+08:00",
     "adjustment": 0,
     "events": [
-      {
-        "title": "10/14 今晚 AAPL、AAPU、AAPD、QQQ、TQQQ 的關鍵點位速查表🤔🧐 - Moomoo",
-        "source": "Moomoo",
-        "date": "2026-10-14T19:30:00+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxOLVFLbF9DNTVDdFpqNnVsODJCVlo2NmlZclhZbm1jRVpoUmtTR1lCQ2VGbFdES3hDSUpiZzNrcENid05CSW5HRkxzLVhPMFJacTdlZXNVVDJnTFZQblhtRktERElQRVBZZDhGZFlfZTNVbGNqSGNkYUNBYzJZal9IdWdsMFlqcVZuMHpQd3dJLVpMSkI3NnJfeHhHRnNQd3hFenA4b1htS1c?oc=5",
-        "raw_adjustment": 0,
-        "adjustment": 0,
-        "label": "",
-        "status": ""
-      },
       {
         "title": "VOO與QQQ怎麼選？基本資料、前十大持股、產業分布與適合族群完整比較 - 口袋證券",
         "source": "口袋證券",
@@ -416,6 +406,16 @@
         "source": "Moomoo",
         "date": "2026-10-21T15:00:00+08:00",
         "link": "https://news.google.com/rss/articles/CBMitwFBVV95cUxOTThzVlZHNDA0OW1RakZkTlZIaEdnNVJScGdYVlhMb3ZnZ2tqdkg5ZkpPbllVYlc1cFQxcU9tVTBpMFN2VWVDemdMZnE3aE9vNTh5aXF0T1dSV1ZPQUxTaEJiVi1ydUlVTUljSFFqb2lXelhuSFkwWC1fdU5VNzRqaU5pb3pmMFhjd0g2cE1YSm5MczVKMHFETXliYW80cnpOcjMyVHo1dEREU3lXbUc0S0RiYUx1NkU?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "SpaceX人工智能驅動的營收激增提振市場情緒，但QQQ指數的對沖頭寸仍在累積，看跌/看漲期權比率已達1.20 | 期權... - Moomoo",
+        "source": "Moomoo",
+        "date": "2026-10-21T17:25:08+08:00",
+        "link": "https://news.google.com/rss/articles/CBMitgFBVV95cUxOd0FfeFBGRXlocG5RSVoteXBNU3BqeGFTYi1hYmE5ZGRpNzl6SDhzWFhMODdzdVR6dnRCY0VHSVJEZkRsaXotak9Vc1dKRW12d0hZT2RfN0xza1V5RURDa29sdUoxWWYwUTgxdTJscXh5enBDNGd2cjZjMVJRcjN2bjAzdzdKMFVMUFlMal9yeE5qYzhKOTR6OG5NUmVSY3h4bTBuSEVpc3RQQko0NXlyYkNlcW9OQQ?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
