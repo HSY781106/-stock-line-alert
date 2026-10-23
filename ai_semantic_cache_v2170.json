@@ -3928,5 +3928,37 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:3d974bb4ed1c5f9ef7202087": {
+    "ts": 1792796072.167797,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "negative",
+          "score": -3,
+          "confidence": 0.8,
+          "policy_stage": "threat",
+          "reason": "Trump未對能源徵關稅",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "政策→能源產業→市場價格上升",
+          "exposure": "證據不足"
+        },
+        {
+          "id": 2,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.6,
+          "policy_stage": "announced",
+          "reason": "Trump啟用防衛生產法提升油產",
+          "relevant": true,
+          "affected_channel": "供應",
+          "transmission": "政策→能源產業→油產量提升→市場供應增加",
+          "exposure": "證據不足"
+        }
+      ]
+    },
+    "provider": "groq"
   }
 }
