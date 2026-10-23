@@ -3960,5 +3960,61 @@
       ]
     },
     "provider": "groq"
+  },
+  "trump_v21826:__MARKET__:c9410347da89ac2aa9869670": {
+    "ts": 1792799170.5160954,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.5,
+          "policy_stage": "unknown",
+          "reason": "雙方討論北海石油與地緣政治，尚無實質政策宣示。",
+          "relevant": true,
+          "affected_channel": "供應鏈",
+          "transmission": "美英外交對話→影響外交關係與地緣政治情緒→北海油氣業者",
+          "exposure": "英國北海油氣探勘與生產相關業者"
+        },
+        {
+          "id": 1,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.8,
+          "policy_stage": "announced",
+          "reason": "動用國防生產法擴大煉油與原油產能，有利本土能源供應與煉油產業。",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "動用國防生產法→給予資源與優先權→煉油廠與油氣開採業者",
+          "exposure": "美國本土原油開採與煉油業者"
+        },
+        {
+          "id": 2,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.4,
+          "policy_stage": "unknown",
+          "reason": "反映支持者對汽油價格民調，無直接政策行動或產業規範變動。",
+          "relevant": false,
+          "affected_channel": "需求",
+          "transmission": "民眾情緒與政治支持→不直接傳導至政策執行",
+          "exposure": "證據不足"
+        },
+        {
+          "id": 3,
+          "direction": "positive",
+          "score": 1,
+          "confidence": 0.6,
+          "policy_stage": "threat",
+          "reason": "川普呼籲英國全力開採北海天然氣，提振市場對油氣開發政策許可信心。",
+          "relevant": true,
+          "affected_channel": "供給",
+          "transmission": "口頭呼籲放寬鑽探限制→提高業者投資意願→北海天然氣開發商",
+          "exposure": "英國及北海天然氣開採與服務供應商"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
