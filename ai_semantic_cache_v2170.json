@@ -4072,5 +4072,61 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:5a9c41a75d6a375b59466927": {
+    "ts": 1793043108.287692,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.8,
+          "policy_stage": "unknown",
+          "reason": "報導側重川普個人投資與油價關係，無直接政策實施。",
+          "relevant": false,
+          "affected_channel": "估值",
+          "transmission": "新聞聚焦個人財務→無直接產業政策傳導→對整體市場影響有限",
+          "exposure": "整體市場無直接具體曝險"
+        },
+        {
+          "id": 1,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.85,
+          "policy_stage": "unknown",
+          "reason": "川普個人資產配置選擇，非具體產業或關稅政策。",
+          "relevant": false,
+          "affected_channel": "估值",
+          "transmission": "個人投資行為→無具體政策傳導機制→對整體市場無影響",
+          "exposure": "整體市場無直接具體曝險"
+        },
+        {
+          "id": 2,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.8,
+          "policy_stage": "unknown",
+          "reason": "討論地緣政治期間油氣公司獲利與川普持股，無具體政策新作為。",
+          "relevant": false,
+          "affected_channel": "需求",
+          "transmission": "地緣政治事件→能源市場波動→對整體市場影響為中性",
+          "exposure": "整體市場無直接具體曝險"
+        },
+        {
+          "id": 3,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.85,
+          "policy_stage": "threat",
+          "reason": "川普對油價與能源成本之口頭言論，缺乏實質政策細節。",
+          "relevant": false,
+          "affected_channel": "成本",
+          "transmission": "口頭言論→市場預期波動→無具體產業傳導路線",
+          "exposure": "整體市場無直接具體曝險"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
