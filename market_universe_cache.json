@@ -1,5 +1,5 @@
 {
-  "_cached_at": 1792778258.2847362,
+  "_cached_at": 1792994053.8277202,
   "data": {
     "1101": {
       "code": "1101",
@@ -1029,9 +1029,9 @@
       "industry": "建材營造",
       "market": "TWSE",
       "symbol": "1438.TW",
-      "capital": 1112057590.0,
+      "capital": 1201022200.0,
       "price": 21.55,
-      "market_cap": 2396484106.4500003,
+      "market_cap": 2588202841.0,
       "subindustries": [
         "建設業"
       ],
@@ -3613,7 +3613,7 @@
     },
     "2072": {
       "code": "2072",
-      "name": "世紀風電",
+      "name": "世紀能源",
       "industry": "綠能環保",
       "market": "TWSE",
       "symbol": "2072.TW",
@@ -14812,9 +14812,9 @@
       "industry": "其他",
       "market": "TWSE",
       "symbol": "6901.TW",
-      "capital": 8533600000.0,
+      "capital": 8539500000.0,
       "price": 16.75,
-      "market_cap": 14293780000.0,
+      "market_cap": 14303662500.0,
       "subindustries": [
         "其他"
       ],
