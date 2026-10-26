@@ -4184,5 +4184,61 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:a724603fe98d0ea3115e64f0": {
+    "ts": 1793048093.3729813,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "positive",
+          "score": 3,
+          "confidence": 0.8,
+          "policy_stage": "considering",
+          "reason": "地緣政治緊張與能源主導政策利多傳統油氣投資。",
+          "relevant": true,
+          "affected_channel": "需求與價格",
+          "transmission": "地緣衝突/政策支持→油氣價格高企→整體能源市場獲利提升",
+          "exposure": "能源市場與傳統油氣類股"
+        },
+        {
+          "id": 1,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.6,
+          "policy_stage": "unknown",
+          "reason": "市場評論能源政策過度擴張，對大盤實質影響中性。",
+          "relevant": true,
+          "affected_channel": "估值",
+          "transmission": "政策評論→市場情緒觀望→整體能源市場波動",
+          "exposure": "整體美股能源板塊"
+        },
+        {
+          "id": 2,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.75,
+          "policy_stage": "threat",
+          "reason": "高油價加劇通膨疑慮，壓縮消費者可支配所得。",
+          "relevant": true,
+          "affected_channel": "成本與通膨",
+          "transmission": "伊朗地緣局勢/言論支持高油價→油價維持高檔→加劇通膨衝擊整體市場情緒",
+          "exposure": "美股整體市場與消費類股"
+        },
+        {
+          "id": 3,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.2,
+          "policy_stage": "unknown",
+          "reason": "川普個人債券投資行為，對大盤與太空產業無直接影響。",
+          "relevant": false,
+          "affected_channel": "無",
+          "transmission": "個人資產配置→無產業傳導→對大盤無影響",
+          "exposure": "證據不足"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
