@@ -4128,5 +4128,61 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:8d3f82d7273022672388f7f2": {
+    "ts": 1793043522.6108716,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.8,
+          "policy_stage": "threat",
+          "reason": "言論稱不需要加拿大能源，但實務與政策存在矛盾，市場仍在觀望。",
+          "relevant": true,
+          "affected_channel": "出口與供應鏈",
+          "transmission": "口頭宣示關稅威脅→影響跨境石油管道與貿易流向→整體能源市場波動",
+          "exposure": "北美能源市場、加拿大原油進口鏈"
+        },
+        {
+          "id": 1,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.75,
+          "policy_stage": "unknown",
+          "reason": "評論文章分析能源自主政策轉為自大，無實質新政策宣布。",
+          "relevant": true,
+          "affected_channel": "市場估值與信心",
+          "transmission": "政策立場過度樂觀→引發市場對過度開採供過於求的擔憂→整體能源板幅震盪",
+          "exposure": "全球與美國整體能源類股"
+        },
+        {
+          "id": 2,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.85,
+          "policy_stage": "considering",
+          "reason": "對關鍵礦物依賴中國的短缺問題未解決，限制供應鏈自主與科技發展。",
+          "relevant": true,
+          "affected_channel": "供應鏈與成本",
+          "transmission": "中美談判未果→關鍵礦物出口限制持續→引發下游供應鏈缺料與成本上升",
+          "exposure": "稀土磁鐵、國防裝備與高科技製造業"
+        },
+        {
+          "id": 3,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.7,
+          "policy_stage": "considering",
+          "reason": "宣稱啟動格陵蘭油氣與礦產勘探，增添中長期資源開發想像空間。",
+          "relevant": true,
+          "affected_channel": "供應鏈與投資",
+          "transmission": "推動新區域勘探授權→吸引資源開發資本支出→長期增加全球資源供給",
+          "exposure": "上游礦業與油氣勘探開發業"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
