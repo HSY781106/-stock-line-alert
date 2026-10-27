@@ -4316,5 +4316,61 @@
       ]
     },
     "provider": "groq"
+  },
+  "trump_v21826:__MARKET__:e30606131ca2283115ff01b6": {
+    "ts": 1793127644.7677588,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "positive",
+          "score": 3,
+          "confidence": 0.85,
+          "policy_stage": "considering",
+          "reason": "川普擬放寬油井甲烷排放限制以降低營運成本，利好傳統能源業。",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "鬆綁甲烷限制→降低石油開採合規成本→提升傳統能源業獲利能力",
+          "exposure": "能源產業／傳統油氣開採業者"
+        },
+        {
+          "id": 1,
+          "direction": "positive",
+          "score": 3,
+          "confidence": 0.85,
+          "policy_stage": "considering",
+          "reason": "放寬低產量高排放油井規範，直接減少中小型油商合規負擔。",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "鬆綁低產量油井法規→減輕邊際油田營運壓力→推升整體石油供應與獲利",
+          "exposure": "能源產業／邊際油井與小型油商"
+        },
+        {
+          "id": 2,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.6,
+          "policy_stage": "unknown",
+          "reason": "報導川普個人油氣持股價值翻倍，對整體市場實質政策傳導影響有限。",
+          "relevant": false,
+          "affected_channel": "估值",
+          "transmission": "個人投資新聞→市場情緒炒作→對大盤無實質基本面影響",
+          "exposure": "證據不足"
+        },
+        {
+          "id": 3,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.6,
+          "policy_stage": "unknown",
+          "reason": "報導川普個人持股規模及政治批評，缺乏直接政策實施細節。",
+          "relevant": false,
+          "affected_channel": "估值",
+          "transmission": "政治評論與個人資產揭露→無實質政策傳導→市場反應中立",
+          "exposure": "證據不足"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
