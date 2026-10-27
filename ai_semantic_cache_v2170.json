@@ -4484,5 +4484,61 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:b4ef957070a4c0c70507bb4b": {
+    "ts": 1793145407.4055297,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "positive",
+          "score": 3,
+          "confidence": 0.85,
+          "policy_stage": "considering",
+          "reason": "放寬甲烷排放限制可降低油氣業者合規成本。",
+          "relevant": true,
+          "affected_channel": "合規成本",
+          "transmission": "川普減輕環保法規→降低油氣開採營運成本→提振能源產業利潤",
+          "exposure": "美國傳統石油與天然氣探勘及生產業者"
+        },
+        {
+          "id": 1,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.8,
+          "policy_stage": "considering",
+          "reason": "支持德州傳統能源開採，強化產業政策紅利。",
+          "relevant": true,
+          "affected_channel": "供給與投資",
+          "transmission": "政策鼓勵國內採油→增加化石燃料投資→帶動能源產業發展",
+          "exposure": "德州及美國傳統石油與天然氣供應鏈"
+        },
+        {
+          "id": 2,
+          "direction": "positive",
+          "score": 3,
+          "confidence": 0.85,
+          "policy_stage": "considering",
+          "reason": "放寬油氣鑽探甲烷排放限制，直接減輕企業負擔。",
+          "relevant": true,
+          "affected_channel": "營運成本",
+          "transmission": "放寬鑽探環保限制→減少合規與罰款支出→提升油氣業者獲利能力",
+          "exposure": "美國頁岩油與天然氣鑽探商"
+        },
+        {
+          "id": 3,
+          "direction": "positive",
+          "score": 3,
+          "confidence": 0.85,
+          "policy_stage": "considering",
+          "reason": "計畫放寬甲烷規則，利好美國油氣生產商。",
+          "relevant": true,
+          "affected_channel": "合規成本",
+          "transmission": "緩和甲烷政策約束→降低上游生產商營運阻力→改善整體市場投資情緒",
+          "exposure": "美國上游油氣生產商與設備服務商"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
