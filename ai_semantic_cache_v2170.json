@@ -4428,5 +4428,61 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:46af6eaa79403065f75d0cf3": {
+    "ts": 1793132852.48601,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.8,
+          "policy_stage": "considering",
+          "reason": "放寬甲烷排放限制可降低石油業者營運成本",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "放寬環境法規→降低營運成本→提振能源產業獲利",
+          "exposure": "傳統油氣開採與採掘業者"
+        },
+        {
+          "id": 1,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.6,
+          "policy_stage": "unknown",
+          "reason": "市場分析認為俄油供給影響有限，影響中立",
+          "relevant": true,
+          "affected_channel": "供應鏈",
+          "transmission": "國際原油供給變化→影響全球能源價格→整體能源市場受波動",
+          "exposure": "全球原油市場與能源股"
+        },
+        {
+          "id": 2,
+          "direction": "negative",
+          "score": -1,
+          "confidence": 0.7,
+          "policy_stage": "threat",
+          "reason": "地緣政治緊張引發汽油價格上漲壓力",
+          "relevant": true,
+          "affected_channel": "需求",
+          "transmission": "地緣政治風險→油價上漲衝擊消費→影響總體經濟與需求",
+          "exposure": "整體消費與原油市場"
+        },
+        {
+          "id": 3,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.7,
+          "policy_stage": "unknown",
+          "reason": "資本加速流入油氣領域，提振板塊情緒",
+          "relevant": true,
+          "affected_channel": "估值",
+          "transmission": "資金流入油氣資產→提升板塊估值與流動性→能源市場受惠",
+          "exposure": "油氣投資基金與能源上游板塊"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
