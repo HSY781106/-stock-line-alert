@@ -4296,5 +4296,25 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:fe565d2a5791382e4bf56ebe": {
+    "ts": 1793081263.0755584,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.5,
+          "policy_stage": "threat",
+          "reason": "特朗普言論未實施政策",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "特朗普言論→油價上升→汽油成本上升→市場波動",
+          "exposure": "證據不足"
+        }
+      ]
+    },
+    "provider": "groq"
   }
 }
