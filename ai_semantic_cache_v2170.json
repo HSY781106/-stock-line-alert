@@ -4240,5 +4240,61 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:6ea7af86b6003c775b1bb5ab": {
+    "ts": 1793060138.9952223,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.8,
+          "policy_stage": "threat",
+          "reason": "高油價加劇通膨壓力，引發市場對高利率與消費降溫的疑慮。",
+          "relevant": true,
+          "affected_channel": "成本與通膨",
+          "transmission": "地緣政治緊張→油價大漲→企業成本增加與通膨升溫→壓抑整體市場估值",
+          "exposure": "能源進口業與整體消費市場"
+        },
+        {
+          "id": 1,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.6,
+          "policy_stage": "considering",
+          "reason": "屬能源政策輿論分析，對整體市場直接影響有限。",
+          "relevant": false,
+          "affected_channel": "市場情緒",
+          "transmission": "政策討論→媒體評論→對市場無直接實質傳導",
+          "exposure": "整體能源產業"
+        },
+        {
+          "id": 2,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.6,
+          "policy_stage": "considering",
+          "reason": "媒體對能源支配政策的評論，未對整體市場造成直接衝擊。",
+          "relevant": false,
+          "affected_channel": "市場情緒",
+          "transmission": "政策討論→媒體評論→對市場無直接實質傳導",
+          "exposure": "整體能源產業"
+        },
+        {
+          "id": 3,
+          "direction": "negative",
+          "score": -1,
+          "confidence": 0.7,
+          "policy_stage": "announced",
+          "reason": "關鍵礦物短缺限制高科技與供應鏈發展，增添市場不確定性。",
+          "relevant": true,
+          "affected_channel": "供應鏈",
+          "transmission": "美中峰會未解關鍵礦物問題→科技與新能源供應鏈受阻→影響相關產業估值",
+          "exposure": "科技業、電動車與國防供應鏈"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
