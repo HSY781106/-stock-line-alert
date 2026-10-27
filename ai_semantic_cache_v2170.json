@@ -4372,5 +4372,61 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:031f0939295c9877e381d21b": {
+    "ts": 1793127809.333469,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "positive",
+          "score": 3,
+          "confidence": 0.85,
+          "policy_stage": "considering",
+          "reason": "特朗普計劃放寬石油井甲烷限制以降低企業合規成本。",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "放寬環保監管→降低採油營運成本→提振能源產業利潤與整體市場",
+          "exposure": "傳統能源產業、石油與天然氣探勘與生產公司"
+        },
+        {
+          "id": 1,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.6,
+          "policy_stage": "unknown",
+          "reason": "屬於政治評論與新聞報導，無直接實質新政策發佈。",
+          "relevant": false,
+          "affected_channel": "估值",
+          "transmission": "政治言論與輿論→短線市場情緒波動→對市場無實質政策影響",
+          "exposure": "證據不足"
+        },
+        {
+          "id": 2,
+          "direction": "positive",
+          "score": 3,
+          "confidence": 0.85,
+          "policy_stage": "considering",
+          "reason": "擬放寬低產高排放油井的甲烷法規，利好中小型能源業者。",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "放寬邊緣油井監管→減少資本支出與罰款風險→改善能源股基本面",
+          "exposure": "獨立石油與天然氣生產商、低產油井營運商"
+        },
+        {
+          "id": 3,
+          "direction": "positive",
+          "score": 3,
+          "confidence": 0.85,
+          "policy_stage": "considering",
+          "reason": "即將公布放寬油氣業甲烷法規計畫，降低整體產業監管負擔。",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "取消嚴格環保限制→降低合規費用→促進能源產業投資與生產",
+          "exposure": "整體石油與天然氣產業鏈"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
