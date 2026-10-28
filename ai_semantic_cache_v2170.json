@@ -4540,5 +4540,61 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:9bef6f1e3a9c77bd671598f9": {
+    "ts": 1793146588.5878148,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.8,
+          "policy_stage": "threat",
+          "reason": "支持德州石油開採政策，有利傳統能源產業。",
+          "relevant": true,
+          "affected_channel": "需求",
+          "transmission": "放寬開採政策→降低監管阻礙→提升整體石油與天然氣產能",
+          "exposure": "傳統能源業、美國油氣探勘與生產企業"
+        },
+        {
+          "id": 1,
+          "direction": "positive",
+          "score": 3,
+          "confidence": 0.85,
+          "policy_stage": "considering",
+          "reason": "放寬甲烷排放法規，顯著降低油氣業者合規成本。",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "放寬監管→減少設備更新與合規費用→改善油氣業者利潤率",
+          "exposure": "美國頁岩油氣生產商及相關設備供應商"
+        },
+        {
+          "id": 2,
+          "direction": "positive",
+          "score": 3,
+          "confidence": 0.85,
+          "policy_stage": "considering",
+          "reason": "鬆綁鑽探甲烷限制，降低營運成本並利好能源市場。",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "減輕排放限制→降低營運與監管負擔→促進探勘投資",
+          "exposure": "油氣探勘與生產業者（E&P）"
+        },
+        {
+          "id": 3,
+          "direction": "positive",
+          "score": 3,
+          "confidence": 0.85,
+          "policy_stage": "considering",
+          "reason": "計畫放寬美油氣商甲烷法規，利多上游開採業者。",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "政策鬆綁→降低開採合規支出→增加能源產業資本支出靈活性",
+          "exposure": "美國上游油氣開採業"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
