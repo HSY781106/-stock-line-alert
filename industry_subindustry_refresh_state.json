@@ -1,9 +1,9 @@
 {
   "cursor": 1956,
   "total_codes": 1993,
-  "last_run_at": 1793169908.5922203,
-  "last_selected": 2,
-  "last_success": 2,
+  "last_run_at": 1793214214.1088583,
+  "last_selected": 0,
+  "last_success": 0,
   "covered_codes": 1993,
   "coverage": 100.0,
   "complete": true

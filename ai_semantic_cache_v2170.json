@@ -4652,5 +4652,61 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:2293d6faa780f3d1446b25f1": {
+    "ts": 1793214281.140697,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "positive",
+          "score": 3,
+          "confidence": 0.85,
+          "policy_stage": "announced",
+          "reason": "川普放寬油氣井甲烷排放規定，降低能源業者合規成本。",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "放寬環保法規→降低營運與檢測成本→提升傳統能源業獲利",
+          "exposure": "美國傳統石油與天然氣開採及生產業者"
+        },
+        {
+          "id": 1,
+          "direction": "positive",
+          "score": 3,
+          "confidence": 0.85,
+          "policy_stage": "announced",
+          "reason": "放寬甲烷限制可大幅減少傳統能源產業監管負擔。",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "放寬法規限制→減少合規資本支出→改善油氣企業現金流",
+          "exposure": "油氣上游開採與生產企業"
+        },
+        {
+          "id": 2,
+          "direction": "positive",
+          "score": 3,
+          "confidence": 0.85,
+          "policy_stage": "announced",
+          "reason": "放寬拜登時期甲烷規則預計為能源業節省數百億美元。",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "廢除嚴格排放標準→節省營運成本→提高產業利潤率",
+          "exposure": "美國石油與天然氣產業鏈"
+        },
+        {
+          "id": 3,
+          "direction": "positive",
+          "score": 3,
+          "confidence": 0.85,
+          "policy_stage": "announced",
+          "reason": "政府推動削弱甲烷排放監管，有利油氣生產商。",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "政策放鬆監管→降低違規罰款風險與設備更新成本→提升產業估值",
+          "exposure": "傳統能源開發商"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
