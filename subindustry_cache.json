@@ -1,5 +1,5 @@
 {
-  "_cached_at": 1793146540.26519,
+  "_cached_at": 1793169909.947923,
   "source": "TPEx/TWSE Industry Value Chain",
   "source_url": "https://ic.tpex.org.tw/company_chain.php",
   "cache_days": 30,
@@ -47258,6 +47258,36 @@
           "industry": "汽車",
           "sub_industry": "其他",
           "date": "2026-10-24"
+        }
+      ]
+    },
+    "6898": {
+      "subindustries": [
+        "資料處理服務",
+        "顧問諮詢"
+      ],
+      "records": [
+        {
+          "industry": "軟體服務",
+          "sub_industry": "資料處理服務",
+          "date": "2026-10-28"
+        },
+        {
+          "industry": "大數據",
+          "sub_industry": "顧問諮詢",
+          "date": "2026-10-28"
+        }
+      ]
+    },
+    "7710": {
+      "subindustries": [
+        "工業電腦"
+      ],
+      "records": [
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "工業電腦",
+          "date": "2026-10-28"
         }
       ]
     }

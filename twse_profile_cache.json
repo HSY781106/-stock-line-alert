@@ -1,5 +1,5 @@
 {
-  "cached_at": 1793081210.0002096,
+  "cached_at": 1793169901.7157722,
   "data": [
     {
       "code": "1101",
@@ -5159,7 +5159,7 @@
       "industry": "半導體業",
       "market": "TWSE",
       "symbol": "3711.TW",
-      "capital": 44705722820.0
+      "capital": 44880892430.0
     },
     {
       "code": "3712",
@@ -7135,7 +7135,7 @@
       "industry": "電子零組件業",
       "market": "TWSE",
       "symbol": "6715.TW",
-      "capital": 682740260.0
+      "capital": 742740260.0
     },
     {
       "code": "6719",
@@ -7706,6 +7706,14 @@
       "capital": 660673040.0
     },
     {
+      "code": "7710",
+      "name": "東擎科技",
+      "industry": "電腦及週邊設備業",
+      "market": "TWSE",
+      "symbol": "7710.TW",
+      "capital": 639055800.0
+    },
+    {
       "code": "7711",
       "name": "永擎",
       "industry": "電腦及週邊設備業",
@@ -7727,7 +7735,7 @@
       "industry": "數位雲端",
       "market": "TWSE",
       "symbol": "7722.TW",
-      "capital": 714000000.0
+      "capital": 716159000.0
     },
     {
       "code": "7730",

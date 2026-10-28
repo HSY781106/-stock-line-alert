@@ -4596,5 +4596,61 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:dac046cad4725a96c0ca7a30": {
+    "ts": 1793169955.5057404,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "positive",
+          "score": 3,
+          "confidence": 0.85,
+          "policy_stage": "announced",
+          "reason": "放寬甲烷排放限制可降低傳統油氣業者合規成本。",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "政策鬆綁→減少油氣開採合規支出→增加能源產業獲利",
+          "exposure": "整體傳統石油與天然氣開採業者"
+        },
+        {
+          "id": 1,
+          "direction": "positive",
+          "score": 3,
+          "confidence": 0.85,
+          "policy_stage": "announced",
+          "reason": "放寬排放法規有助於降低營運成本，利好能源ETF。",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "鬆綁甲烷法規→能源企業合規成本下降→帶動VDE表現",
+          "exposure": "VDE ETF成分股及能源板塊"
+        },
+        {
+          "id": 2,
+          "direction": "positive",
+          "score": 3,
+          "confidence": 0.30000000000000004,
+          "policy_stage": "announced",
+          "reason": "撤銷拜登時代限制，促進德州油氣開採產量與利潤。",
+          "relevant": true,
+          "affected_channel": "成本與供應鏈",
+          "transmission": "廢除限制→刺激頁岩油氣生產→增加能源產業收益",
+          "exposure": "德州油氣頁岩油業者與能源市場"
+        },
+        {
+          "id": 3,
+          "direction": "positive",
+          "score": 3,
+          "confidence": 0.85,
+          "policy_stage": "announced",
+          "reason": "大幅放寬甲烷規則可為油氣業者節省數百億美元合規支出。",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "放寬監管→顯著降低產業營運成本→提高油氣企業現金流",
+          "exposure": "油氣開採與生產業者"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
