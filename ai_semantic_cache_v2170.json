@@ -4764,5 +4764,61 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:f2247742ebc1d017651f0072": {
+    "ts": 1793220507.1407645,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.6,
+          "policy_stage": "considering",
+          "reason": "巴西稀土供應可能受Trump地緣政策關注，影響尚不明確。",
+          "relevant": true,
+          "affected_channel": "供應鏈",
+          "transmission": "川普政策地緣關注→國際稀土供應鏈重組→全球稀土市場價格與供給波動",
+          "exposure": "全球稀土與關鍵礦物供應鏈及相關開採企業"
+        },
+        {
+          "id": 1,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.5,
+          "policy_stage": "unknown",
+          "reason": "評論川普能源支配政策影響，無具體新政策推出。",
+          "relevant": true,
+          "affected_channel": "估值",
+          "transmission": "能源政策言論論述→市場情緒變動→整體能源市場波動",
+          "exposure": "傳統能源與石油天然氣整體產業市場"
+        },
+        {
+          "id": 2,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.5,
+          "policy_stage": "unknown",
+          "reason": "討論油氣公司獲利與地緣衝突關係，無明確政策傳導。",
+          "relevant": true,
+          "affected_channel": "需求",
+          "transmission": "地緣政治緊張→國際油價波動→美股能源板塊獲利預期變化",
+          "exposure": "美國石油與天然氣龍頭企業"
+        },
+        {
+          "id": 3,
+          "direction": "positive",
+          "score": 1,
+          "confidence": 0.7,
+          "policy_stage": "considering",
+          "reason": "歐美跟進爭奪關鍵礦物，提振關鍵礦物需求與供應鏈價值。",
+          "relevant": true,
+          "affected_channel": "需求",
+          "transmission": "歐美政策搶占關鍵礦物→增加採購與投資→關鍵礦物產業長期受益",
+          "exposure": "關鍵礦物及稀土開採加工供應鏈產業"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
