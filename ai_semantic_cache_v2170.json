@@ -4876,5 +4876,61 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:fa90f125c456d097670da4e9": {
+    "ts": 1793256801.5827582,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.85,
+          "policy_stage": "announced",
+          "reason": "放寬甲烷排放限制，降低油氣業者合規與營運成本。",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "放寬環保法規→降低油氣開採成本→利好整體能源市場",
+          "exposure": "美國傳統油氣開採與生產產業（XLE等）"
+        },
+        {
+          "id": 1,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.85,
+          "policy_stage": "announced",
+          "reason": "擬議放寬甲烷規章，有利減輕油氣企業營運負擔。",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "政策放寬限制→減少監管合規支出→提升業者獲利空間",
+          "exposure": "美國油氣探勘與生產業者"
+        },
+        {
+          "id": 2,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.75,
+          "policy_stage": "unknown",
+          "reason": "能源價格攀升增加消費者燃料支出，引發市場對高通膨與需求壓抑的疑慮。",
+          "relevant": true,
+          "affected_channel": "需求",
+          "transmission": "地緣政治/政策影響→燃料價格大漲→抑制終端消費需求",
+          "exposure": "整體消費市場與下游油品零售業"
+        },
+        {
+          "id": 3,
+          "direction": "positive",
+          "score": 1,
+          "confidence": 0.8,
+          "policy_stage": "threat",
+          "reason": "公開支持德州原油開採，強化市場對傳統能源政策支持的信心。",
+          "relevant": true,
+          "affected_channel": "估值",
+          "transmission": "支持政策立場→提升市場投資信心→利好油氣產業估值",
+          "exposure": "美國德州及本土傳統能源企業"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
