@@ -5044,5 +5044,61 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:6b6109508d13535172f18ad5": {
+    "ts": 1793307221.6365564,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.85,
+          "policy_stage": "announced",
+          "reason": "放寬甲烷排放限制可降低油氣業者合規成本。",
+          "relevant": true,
+          "affected_channel": "合規成本",
+          "transmission": "川普政府鬆綁環保法規→降低油氣開採合規支出→利好整體能源市場",
+          "exposure": "整體能源產業與油氣開採業者"
+        },
+        {
+          "id": 1,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.85,
+          "policy_stage": "announced",
+          "reason": "放寬油氣業甲烷法規直接減輕監管負擔。",
+          "relevant": true,
+          "affected_channel": "營運成本與監管壓力",
+          "transmission": "放寬甲烷限制→減少監管設備投資負擔→提升油氣營運利潤",
+          "exposure": "整體油氣產業"
+        },
+        {
+          "id": 2,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.75,
+          "policy_stage": "implemented",
+          "reason": "地緣政治導致美國消費者負擔高額燃料成本。",
+          "relevant": true,
+          "affected_channel": "消費需求與能源成本",
+          "transmission": "中東局勢與政策影響→燃料價格暴漲→抑制消費需求與增加成本",
+          "exposure": "美國能源消費者與下游零售市場"
+        },
+        {
+          "id": 3,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.6,
+          "policy_stage": "unknown",
+          "reason": "對川普能源主導政策的檢討與評論，影響不明顯。",
+          "relevant": true,
+          "affected_channel": "市場信心",
+          "transmission": "政策檢討評論→市場情緒觀望→對市場無直接實質影響",
+          "exposure": "整體美股與能源市場"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
