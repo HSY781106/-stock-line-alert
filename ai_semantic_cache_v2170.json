@@ -4820,5 +4820,61 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:d7c7af2788ee71a2e0df06ba": {
+    "ts": 1793234288.0121014,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "positive",
+          "score": 3,
+          "confidence": 0.9,
+          "policy_stage": "announced",
+          "reason": "廢除廢氣排放規定可顯著降低油氣業者合規成本。",
+          "relevant": true,
+          "affected_channel": "成本與生產",
+          "transmission": "廢除甲烷限制→降低監管與營運成本→擴大油氣供給與利潤",
+          "exposure": "傳統能源與油氣開採產業（如 XLE, XOM, CVX）"
+        },
+        {
+          "id": 1,
+          "direction": "positive",
+          "score": 3,
+          "confidence": 0.9,
+          "policy_stage": "announced",
+          "reason": "放寬油氣井甲烷排放限制，減少監管負擔。",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "放寬監管規定→減輕油井維護與檢測成本→提升整體市場營利",
+          "exposure": "頁岩油與天然氣生產商"
+        },
+        {
+          "id": 2,
+          "direction": "positive",
+          "score": 3,
+          "confidence": 0.9,
+          "policy_stage": "announced",
+          "reason": "撤銷美國油氣業甲烷法規，直接利好產業利潤率。",
+          "relevant": true,
+          "affected_channel": "監管與成本",
+          "transmission": "取消環保法規限制→降低資本支出要求→提升能源板塊估值",
+          "exposure": "美國本土油氣探勘與生產業者"
+        },
+        {
+          "id": 3,
+          "direction": "positive",
+          "score": 3,
+          "confidence": 0.9,
+          "policy_stage": "announced",
+          "reason": "大幅鬆綁油氣甲烷規定，大幅釋放供給與減少罰則風險。",
+          "relevant": true,
+          "affected_channel": "成本與供給",
+          "transmission": "政策大幅鬆綁→降低開採邊際成本→增加生產意願與市場供給",
+          "exposure": "美國能源市場整體（XLE ETF 代表標的）"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
