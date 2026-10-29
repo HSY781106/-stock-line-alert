@@ -4988,5 +4988,61 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:786f8e3fdef09b610d65ded3": {
+    "ts": 1793301647.0023158,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.75,
+          "policy_stage": "considering",
+          "reason": "政府以關稅減免誘使車廠赴美投資，降低汽車業稅負成本",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "關稅減免政策→降低車廠建廠與進口成本→利好汽車供應鏈與美國製造市場",
+          "exposure": "汽車製造業及相關供應鏈標的"
+        },
+        {
+          "id": 1,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.6,
+          "policy_stage": "threat",
+          "reason": "川普重申關稅將帶來本土製造與就業，屬政治口頭宣示",
+          "relevant": true,
+          "affected_channel": "估值",
+          "transmission": "關稅口頭宣示→市場政策預期調整→整體市場高波動",
+          "exposure": "整體美國製造業與跨國製造業"
+        },
+        {
+          "id": 2,
+          "direction": "positive",
+          "score": 1,
+          "confidence": 0.8,
+          "policy_stage": "paused",
+          "reason": "雖然標示機器人為國安風險，但暫緩課徵關稅，短期利空出盡",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "暫緩關稅政策→自動化與機器人進口成本維持穩定→機器人產業短期解除警報",
+          "exposure": "自動化與工業機器人產業標的"
+        },
+        {
+          "id": 3,
+          "direction": "positive",
+          "score": 3,
+          "confidence": 0.85,
+          "policy_stage": "implemented",
+          "reason": "大幅放寬甲烷排放法規，直接降低石油與天然氣業者合規成本",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "鬆綁環保法規→降低油氣開採成本→提高能源產業獲利能力",
+          "exposure": "傳統能源、石油與天然氣開採相關標的"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
