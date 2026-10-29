@@ -4932,5 +4932,61 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:c89ada6bfdf8a3ac2265255a": {
+    "ts": 1793301462.1189163,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.8,
+          "policy_stage": "implemented",
+          "reason": "總統維安升級帶動陸基防空系統需求",
+          "relevant": true,
+          "affected_channel": "需求",
+          "transmission": "維安需求增加→國防承包商訂單成長→國防航太產業",
+          "exposure": "整體國防軍工產業與航太軍火商"
+        },
+        {
+          "id": 1,
+          "direction": "positive",
+          "score": 3,
+          "confidence": 0.9,
+          "policy_stage": "announced",
+          "reason": "廢除甲烷排放限制合規成本大幅降低",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "放寬環保法規→降低油氣開採合規成本→傳統能源產業",
+          "exposure": "美國石油與天然氣探勘與生產業者"
+        },
+        {
+          "id": 2,
+          "direction": "positive",
+          "score": 3,
+          "confidence": 0.85,
+          "policy_stage": "announced",
+          "reason": "能源部提供50億美元貸款支持核電供電給資料中心",
+          "relevant": true,
+          "affected_channel": "需求",
+          "transmission": "政府資金挹注→加速核能發電擴充→核電與能源基礎建設",
+          "exposure": "核電營運商與AI資料中心電力供應商"
+        },
+        {
+          "id": 3,
+          "direction": "positive",
+          "score": 3,
+          "confidence": 0.9,
+          "policy_stage": "announced",
+          "reason": "弱化油氣業甲烷排放法規可釋放產能",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "法規鬆綁→油氣開採營運成本下降→傳統能源與大宗商品",
+          "exposure": "油氣開採商與能源大宗商品市場"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
