@@ -5268,5 +5268,37 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:7a45ddab8de3d035245a63d6": {
+    "ts": 1793387186.0161965,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.6,
+          "policy_stage": "unknown",
+          "reason": "馬來西亞稀土出口禁令未受美國貿易協議影響",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "美國貿易協議→馬來西亞稀土出口→全球供應鏈成本",
+          "exposure": "證據不足"
+        },
+        {
+          "id": 1,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.8,
+          "policy_stage": "announced",
+          "reason": "特朗普支持的無人機創業公司成長",
+          "relevant": true,
+          "affected_channel": "需求",
+          "transmission": "特朗普支持→無人機公司資金增長→市場需求提升",
+          "exposure": "證據不足"
+        }
+      ]
+    },
+    "provider": "groq"
   }
 }
