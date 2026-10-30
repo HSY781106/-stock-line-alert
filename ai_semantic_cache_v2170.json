@@ -5100,5 +5100,61 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:1d3b2ce338e741cf65364ddb": {
+    "ts": 1793320718.189503,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.7,
+          "policy_stage": "considering",
+          "reason": "政府擬提供關稅減免以吸引投資，有利車企與製造業供應鏈。",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "關稅減免政策→降低車企投資成本→吸引汽車產業鏈本土化",
+          "exposure": "汽車製造業與歐系車企美洲供應鏈"
+        },
+        {
+          "id": 1,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.6,
+          "policy_stage": "threat",
+          "reason": "口頭宣示關稅政策成果，非具體新法案，市場影響中性。",
+          "relevant": true,
+          "affected_channel": "估值",
+          "transmission": "政治言論宣導→市場情緒變化→總體市場中性看待",
+          "exposure": "受關稅影響之進口製造業與整體消費市場"
+        },
+        {
+          "id": 2,
+          "direction": "positive",
+          "score": 3,
+          "confidence": 0.85,
+          "policy_stage": "announced",
+          "reason": "放寬甲烷排放法規，直接降低傳統能源業者合規成本。",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "放寬環保法規→降低油氣開採合規成本→提升傳統能源產業獲利",
+          "exposure": "美國石油與天然氣探勘及生產產業"
+        },
+        {
+          "id": 3,
+          "direction": "positive",
+          "score": 3,
+          "confidence": 0.85,
+          "policy_stage": "announced",
+          "reason": "公佈鬆綁油氣業甲烷排放計畫，減輕監管負擔。",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "放寬監管計畫→減少油氣業者營運合規支出→增加產業自由現金流",
+          "exposure": "美國傳統能源與油氣設備服務業"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
