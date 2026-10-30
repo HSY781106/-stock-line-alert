@@ -5212,5 +5212,61 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:966ac2d6b952d35aa9e7b33d": {
+    "ts": 1793386094.4336936,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.75,
+          "policy_stage": "considering",
+          "reason": "川普將機器人進口視為安全風險並考慮加徵關稅，打擊自動化設備供應鏈。",
+          "relevant": true,
+          "affected_channel": "成本與供應鏈",
+          "transmission": "川普考慮課關稅→自動化進口成本上升→科技與製造業自動化資本支出承壓",
+          "exposure": "工業自動化、機器人設備進口商與自動化製造業"
+        },
+        {
+          "id": 1,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.7,
+          "policy_stage": "exempted",
+          "reason": "美國提供關稅減免以爭取奧迪設廠，顯示製造業本土化可獲得政策利多。",
+          "relevant": true,
+          "affected_channel": "成本與投資",
+          "transmission": "美國提供關稅豁免/優惠→吸引車廠本土投資→汽車供應鏈與當地製造業受惠",
+          "exposure": "汽車製造業、奧迪供應鏈及美國本土汽車零件業"
+        },
+        {
+          "id": 2,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.8,
+          "policy_stage": "unknown",
+          "reason": "智庫研究顯示川普關稅未能有效減少貿易逆差，為既有政策效果檢討，對整體市場直接影響有限。",
+          "relevant": false,
+          "affected_channel": "估值與總體經濟",
+          "transmission": "研究報告發布→總體經濟政策討論→無直接政策動作",
+          "exposure": "整體跨國貿易與受關稅影響之進出口產業"
+        },
+        {
+          "id": 3,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.8,
+          "policy_stage": "unknown",
+          "reason": "報告指出關稅未縮減貿易逆差，屬於既有政策評論，無新政策實施。",
+          "relevant": false,
+          "affected_channel": "估值與總體經濟",
+          "transmission": "智庫評估報告→總體貿易政策檢討→無直接產業影響",
+          "exposure": "整體跨國貿易與受關稅影響之進出口產業"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
