@@ -5300,5 +5300,61 @@
       ]
     },
     "provider": "groq"
+  },
+  "trump_v21826:__MARKET__:de8975fe4a7aa92c915b21b9": {
+    "ts": 1793391949.5818,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.7,
+          "policy_stage": "implemented",
+          "reason": "馬來西亞維持未加工稀土出口禁令，限制關鍵礦物供應。",
+          "relevant": true,
+          "affected_channel": "供應鏈",
+          "transmission": "馬來西亞出口禁令→全球稀土供應受限→市場關鍵礦物成本上升",
+          "exposure": "全球稀土及下游製造業供應鏈"
+        },
+        {
+          "id": 1,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.5,
+          "policy_stage": "unknown",
+          "reason": "能源委員會爭議對整體市場影響不明顯。",
+          "relevant": false,
+          "affected_channel": "估值",
+          "transmission": "政治評論→市場情緒觀望→整體市場無直接影響",
+          "exposure": "整體市場無直接曝險"
+        },
+        {
+          "id": 2,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.8,
+          "policy_stage": "announced",
+          "reason": "放寬甲烷排放法規降低石油與天然氣業者合規成本。",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "放寬環境法規→降低能源業者營運成本→提振傳統能源產業",
+          "exposure": "石油與天然氣能源產業"
+        },
+        {
+          "id": 3,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.8,
+          "policy_stage": "announced",
+          "reason": "公佈放寬甲烷監管計畫，利好傳統能源類股。",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "政策放寬監管→減輕油氣業者合規壓力→改善產業獲利預期",
+          "exposure": "石油與天然氣能源產業"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
