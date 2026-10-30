@@ -5156,5 +5156,61 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:a69456b0f1fc48ef65cf5290": {
+    "ts": 1793343432.6221642,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.85,
+          "policy_stage": "announced",
+          "reason": "放寬甲烷排放限制，降低油氣業者合規成本。",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "放寬監管政策→油氣業者合規成本下降→整體能源市場供給增加",
+          "exposure": "能源市場與傳統油氣開採產業"
+        },
+        {
+          "id": 1,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.85,
+          "policy_stage": "announced",
+          "reason": "揭曉放寬甲烷法規計畫，有利降低採油開銷。",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "放寬監管政策→降低能源業營運監管成本→提升生產效益",
+          "exposure": "能源市場與傳統油氣開採產業"
+        },
+        {
+          "id": 2,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.75,
+          "policy_stage": "implemented",
+          "reason": "地緣政治政策導致美國消費者燃料成本急升。",
+          "relevant": true,
+          "affected_channel": "需求",
+          "transmission": "地緣政策衝擊→燃料價格大漲→抑制終端消費需求與高通膨風險",
+          "exposure": "美股大盤與整體能源消費市場"
+        },
+        {
+          "id": 3,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.85,
+          "policy_stage": "announced",
+          "reason": "廢除甲烷限制政策，直接利好德州等傳統油氣業。",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "廢除排放監管→減少開採業者資本支出→提振能源產業利潤",
+          "exposure": "能源市場與美國陸上油氣探勘業者"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
