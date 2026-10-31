@@ -5376,5 +5376,61 @@
       ]
     },
     "provider": "groq"
+  },
+  "trump_v21826:__MARKET__:619b09580765fcb1e473723b": {
+    "ts": 1793406312.3424659,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.7,
+          "policy_stage": "considering",
+          "reason": "將機器人進口視為安全風險並考慮加徵關稅，壓抑自動化設備貿易。",
+          "relevant": true,
+          "affected_channel": "成本與供應鏈",
+          "transmission": "川普擬對機器人徵稅→提高自動化設備進口成本→影響整體製造業與市場估值",
+          "exposure": "自動化與機器人相關產業／__MARKET__"
+        },
+        {
+          "id": 1,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.8,
+          "policy_stage": "unknown",
+          "reason": "研究顯示關稅未能縮減赤字，屬歷史數據檢視，對市場無直接新衝擊。",
+          "relevant": true,
+          "affected_channel": "貿易與總體經濟",
+          "transmission": "關稅政策評估→政策效果不佳→市場維持觀望",
+          "exposure": "整體跨國貿易產業／__MARKET__"
+        },
+        {
+          "id": 2,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.8,
+          "policy_stage": "unknown",
+          "reason": "智庫報告指出關稅未減赤字，對市場無直接實質政策改變。",
+          "relevant": true,
+          "affected_channel": "貿易與總體經濟",
+          "transmission": "智庫分析發布→總體經濟預期不變→市場評價中性",
+          "exposure": "跨國貿易與製造業／__MARKET__"
+        },
+        {
+          "id": 3,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.8,
+          "policy_stage": "unknown",
+          "reason": "8月赤字數據顯示關稅效果有限，市場已消化相關總經影響。",
+          "relevant": true,
+          "affected_channel": "貿易與總體經濟",
+          "transmission": "貿易赤字數據持續→關稅效應遞減→市場反應中性",
+          "exposure": "跨國貿易相關產業／__MARKET__"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
