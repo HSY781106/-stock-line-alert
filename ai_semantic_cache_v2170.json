@@ -5488,5 +5488,61 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:b52f3f606a2c8c40e233c458": {
+    "ts": 1793658465.519091,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.8,
+          "policy_stage": "threat",
+          "reason": "川普強調美國能源主導地位，有利傳統石油與天然氣產業發展。",
+          "relevant": true,
+          "affected_channel": "需求",
+          "transmission": "能源政策放寬→推動本土油氣開採→提振整體能源板塊估值",
+          "exposure": "美國石油與天然氣相關業者"
+        },
+        {
+          "id": 1,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.7,
+          "policy_stage": "considering",
+          "reason": "國防預算擴增面臨財政缺口挑戰，政策落地與具體分派尚不確定。",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "國防預算提案→面臨財政限制→國防承包商實質訂單增幅尚待觀察",
+          "exposure": "美國國防航太巨頭與軍工供應鏈"
+        },
+        {
+          "id": 2,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.75,
+          "policy_stage": "considering",
+          "reason": "越南新關稅威脅引發跨國科技與電子巨頭抗議，增加供應鏈成本。",
+          "relevant": true,
+          "affected_channel": "供應鏈",
+          "transmission": "擬對越南加徵關稅→跨國企業供應鏈轉移成本增加→打擊科技與消費電子產業",
+          "exposure": "在越南設有主要生產基地之科技與電子產業"
+        },
+        {
+          "id": 3,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.9,
+          "policy_stage": "implemented",
+          "reason": "私人莊園安裝近程防空系統屬個案安保事件，對整體市場無實質影響。",
+          "relevant": false,
+          "affected_channel": "需求",
+          "transmission": "個別安保需求部署→單一軍備採購→對宏觀市場無傳導效應",
+          "exposure": "證據不足"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
