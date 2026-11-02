@@ -5544,5 +5544,61 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:48cbf1b23b600a87676dcc69": {
+    "ts": 1793658692.072055,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.7,
+          "policy_stage": "threat",
+          "reason": "言論強調美國能源主導地位，有利能源產業發展。",
+          "relevant": true,
+          "affected_channel": "供應鏈",
+          "transmission": "放寬能源管制政策→傳統能源產量增加→整體能源市場供給上升",
+          "exposure": "能源產業、石油與天然氣探勘及開採企業"
+        },
+        {
+          "id": 1,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.6,
+          "policy_stage": "considering",
+          "reason": "增產政策可能引發供給過剩及油價下跌風險。",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "擴大油氣開採政策→極端供給過剩→壓低國際油價與業者獲利",
+          "exposure": "大型石油公司、頁岩油開採商"
+        },
+        {
+          "id": 2,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.8,
+          "policy_stage": "announced",
+          "reason": "擬對越南加徵關稅，推升電子與汽車供應鏈成本。",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "越南關稅政策→供應鏈轉移與進口成本增加→企業營運成本上升",
+          "exposure": "消費電子產業、電動車供應鏈、在越設廠之科技巨頭"
+        },
+        {
+          "id": 3,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.4,
+          "policy_stage": "threat",
+          "reason": "地緣政治緊張局勢升溫傳聞，影響難以量化。",
+          "relevant": true,
+          "affected_channel": "估值",
+          "transmission": "中東地緣政治衝突風險→避險情緒升溫→國際油價波動與市場風險溢價",
+          "exposure": "全球原油市場、國防軍工產業"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
