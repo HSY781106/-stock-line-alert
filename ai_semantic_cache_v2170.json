@@ -5600,5 +5600,61 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:0b9c37ef4485d43d76504eb2": {
+    "ts": 1793661608.7244096,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.7,
+          "policy_stage": "considering",
+          "reason": "川普擬推動俄氣重返歐洲，增加天然氣供給。",
+          "relevant": true,
+          "affected_channel": "需求與價格",
+          "transmission": "俄氣解封→全球天然氣供給增加→美國液化天然氣(LNG)出口價格承受下行壓力",
+          "exposure": "美國LNG出口業者與全球液化天然氣市場"
+        },
+        {
+          "id": 1,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.7,
+          "policy_stage": "considering",
+          "reason": "提議允許俄氣經烏克蘭輸歐，削弱美氣競爭力。",
+          "relevant": true,
+          "affected_channel": "出口與供給",
+          "transmission": "歐洲增加俄氣進口→降低對美LNG依賴→壓抑美能源氣價",
+          "exposure": "美國天然氣生產商及LNG供應鏈"
+        },
+        {
+          "id": 2,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.8,
+          "policy_stage": "announced",
+          "reason": "強調美國為最大油氣供應國，支持本土化石燃料開發。",
+          "relevant": true,
+          "affected_channel": "供給與成本",
+          "transmission": "放寬國內油氣開采限制→產量增加→鞏固美國傳統能源龍頭地位",
+          "exposure": "美國傳統石油與天然氣探勘及開採業"
+        },
+        {
+          "id": 3,
+          "direction": "negative",
+          "score": -3,
+          "confidence": 0.85,
+          "policy_stage": "announced",
+          "reason": "宣稱中東地緣風險放緩，引發原油價格重挫。",
+          "relevant": true,
+          "affected_channel": "估值與價格",
+          "transmission": "地緣政治溢價消失→原油期貨價格大跌→整體石油類股估值承壓",
+          "exposure": "全球原油市場與上游石油開採產業"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
