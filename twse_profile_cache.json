@@ -1,5 +1,5 @@
 {
-  "cached_at": 1793343362.4504921,
+  "cached_at": 1793604638.1208122,
   "data": [
     {
       "code": "1101",
@@ -7879,7 +7879,7 @@
       "industry": "通信網路業",
       "market": "TWSE",
       "symbol": "7812.TW",
-      "capital": 1750325594.0
+      "capital": 1749643094.0
     },
     {
       "code": "7818",
@@ -7936,6 +7936,14 @@
       "market": "TWSE",
       "symbol": "7855.TW",
       "capital": 2773049280.0
+    },
+    {
+      "code": "7867",
+      "name": "特力屋",
+      "industry": "居家生活",
+      "market": "TWSE",
+      "symbol": "7867.TW",
+      "capital": 960000000.0
     },
     {
       "code": "8011",

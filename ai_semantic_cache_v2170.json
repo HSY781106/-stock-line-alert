@@ -5432,5 +5432,61 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:f628fe5c144b64ad69094699": {
+    "ts": 1793605123.2018158,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.5,
+          "policy_stage": "threat",
+          "reason": "納坦雅胡施壓地緣風險升溫，但非 Trump 直接政策宣告",
+          "relevant": true,
+          "affected_channel": "供應鏈",
+          "transmission": "中東地緣局勢→原油供給疑慮→整體能源市場震盪",
+          "exposure": "原油與油服產業受地緣政治風險溢價影響"
+        },
+        {
+          "id": 1,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.6,
+          "policy_stage": "threat",
+          "reason": "外交和談與核設施威脅訊號混雜，政策方向未定",
+          "relevant": true,
+          "affected_channel": "供應鏈",
+          "transmission": "美伊關係轉折→原油風險溢價波動→整體能源市場",
+          "exposure": "全球能源與原油相關類股"
+        },
+        {
+          "id": 2,
+          "direction": "negative",
+          "score": -1,
+          "confidence": 0.7,
+          "policy_stage": "considering",
+          "reason": "燃料成本上升帶來政策打壓油價壓力",
+          "relevant": true,
+          "affected_channel": "需求",
+          "transmission": "高油價民怨→政府干預降油價壓力→上游採油利潤受壓制",
+          "exposure": "煉油業與美國零售加油站產業"
+        },
+        {
+          "id": 3,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.75,
+          "policy_stage": "unknown",
+          "reason": "大型油企獲利豐厚，政策傾向支持傳統能源",
+          "relevant": true,
+          "affected_channel": "估值",
+          "transmission": "傳統能源友善環境→油企獲利強勁→帶動能源板塊估值",
+          "exposure": "美國傳統石油與天然氣巨頭產業"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }

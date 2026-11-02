@@ -1,5 +1,5 @@
 {
-  "_cached_at": 1793406276.9012427,
+  "_cached_at": 1793604678.6151383,
   "source": "TPEx/TWSE Industry Value Chain",
   "source_url": "https://ic.tpex.org.tw/company_chain.php",
   "cache_days": 30,
@@ -47477,6 +47477,30 @@
           "industry": "雲端運算",
           "sub_industry": "網路",
           "date": "2026-10-29"
+        }
+      ]
+    },
+    "7867": {
+      "subindustries": [
+        "零售通路"
+      ],
+      "records": [
+        {
+          "industry": "貿易百貨",
+          "sub_industry": "零售通路",
+          "date": "2026-11-02"
+        }
+      ]
+    },
+    "6825": {
+      "subindustries": [
+        "工業電腦"
+      ],
+      "records": [
+        {
+          "industry": "電腦及週邊設備",
+          "sub_industry": "工業電腦",
+          "date": "2026-11-02"
         }
       ]
     }
