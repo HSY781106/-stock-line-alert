@@ -1,6 +1,6 @@
 {
   "2330": {
-    "fetched_at": "2026-11-04T04:25:35.646995+08:00",
+    "fetched_at": "2026-11-04T04:35:41.847542+08:00",
     "adjustment": -6,
     "events": [
       {
@@ -88,7 +88,7 @@
     "lookback_days": 14
   },
   "3711": {
-    "fetched_at": "2026-11-04T04:25:40.312814+08:00",
+    "fetched_at": "2026-11-04T04:35:46.212814+08:00",
     "adjustment": 2,
     "events": [
       {
@@ -250,7 +250,7 @@
     "lookback_days": 14
   },
   "0050": {
-    "fetched_at": "2026-11-04T04:25:05.241569+08:00",
+    "fetched_at": "2026-11-04T04:35:10.933353+08:00",
     "adjustment": -4,
     "events": [
       {
@@ -264,70 +264,70 @@
         "status": "重大負面事件"
       },
       {
-        "title": "元大台灣50(0050)ETF股票型基金的基本資料 - 口袋證券",
-        "source": "口袋證券",
-        "date": "2026-10-30T15:00:00+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiUkFVX3lxTE5SaENLVmV2OXJ1b2JLZExQRUZ4SjEtTXlvUjVpdDJrdndVeGZDV3hvSmNOUWJRU2RTNHJ2bjdkd25oUGM1ZlZVc3JRdzB6dzFnb2c?oc=5",
-        "raw_adjustment": 0,
-        "adjustment": 0,
-        "label": "",
-        "status": ""
-      },
-      {
-        "title": "台股跳樓大拍賣來了！別只看0050？「三大法人、八大官股籌碼大公開」內資獨鍾2檔主動式ETF - 上市櫃 - 旺得富理財網",
-        "source": "旺得富理財網",
-        "date": "2026-11-01T10:44:41+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiakFVX3lxTE9iSjAtLUZFTG5kUVZpclhFM3JkQ1BuVW1ocFplR3U4cVRQcllQa2pYZlcwakc5enRSRW5IN3VXOXhGRmZXQ0ZtZzROc0RaU3U3eWh5Q1RMbmRWeXNvQXdMWmNfYVVuSURqZ1E?oc=5",
-        "raw_adjustment": 0,
-        "adjustment": 0,
-        "label": "",
-        "status": ""
-      },
-      {
-        "title": "台積電0050今年各增百萬持有人 正2、主動式ETF崛起 - Rti 中央廣播電臺",
-        "source": "Rti 中央廣播電臺",
-        "date": "2026-11-01T11:41:40+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiV0FVX3lxTE1tRzJZWXlUTjhBWjhSRm5uR0dnd1c2MUN4WlFZRkF0MG1OQVZ5UGpoV1FUYllOU2RYbm90QzBtaTJmQkVKM0RpeldOaHZBd3FIZnNaeFY3TQ?oc=5",
-        "raw_adjustment": 0,
-        "adjustment": 0,
-        "label": "",
-        "status": ""
-      },
-      {
-        "title": "最牛一輪／元大台灣50認售夯 - UDN",
-        "source": "UDN",
-        "date": "2026-11-02T00:04:22+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiU0FVX3lxTFBOaVdwYzhLdy01NjZBRTdMS3dPZGM4di1UejdqSFlCaUh5U2pBTDRoZ3k3aVZRVmhOQmo4ejd5dUJWRHBITlRueUtLQThzN3JNZkFn0gFYQVVfeXFMTVRFYTEzQ3o1dE9MQVpxN1N6RUxWS0l0eW5adXBvSHFjMlFZY2FWOEtPSUpYWUtFWkFoZnZHRGxlbTg4LXZuVnJGeFRsY2dFWlFBaDFhcngxVA?oc=5",
-        "raw_adjustment": 0,
-        "adjustment": 0,
-        "label": "",
-        "status": ""
-      },
-      {
-        "title": "0050 元大台灣50 - 最牛一輪／元大台灣50認售夯- 股市爆料同學會 - CMoney",
+        "title": "0050 元大台灣50 - 不到40歲就辭職！農夫月領股息5萬投資策略曝光- 股市爆料同學會 - CMoney",
         "source": "CMoney",
-        "date": "2026-11-02T00:06:38+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE9jMWZDaGwzVnpLSlNZZkhEek1rUVNvYnFVT0hRcE1NQVhUb3RxeTlnVlZyYjBiWlI1a29UYlU1dTR1aUoxd2ozVWE1Qnh0aGJsZzVSbVBESkE?oc=5",
+        "date": "2026-10-21T15:00:00+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE1QbUZ4eWV6Qlc2TEtjajF1dmhaMlVGSzhYeDRub29neDNWeGlDbkphSjBkdWZ6NHFqNTNwSGh1dk5kU1c5c0ZNaUQyWkZMNnNVam1uYTVEWmE?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
         "status": ""
       },
       {
-        "title": "0050 元大台灣50 - 反向ETF 認購有戲- 股市爆料同學會 - CMoney",
+        "title": "【零股排行榜】 盤中零股成交量TOP 20｜0050 元大台灣50、0056 元大高股息、2330 台積電、00406A 主動中信台灣收益、00631L 元大台灣50正2 (1022)｜豐雲學堂2026 年 11 月 - 永豐金證券",
+        "source": "永豐金證券",
+        "date": "2026-10-21T15:00:00+08:00",
+        "link": "https://news.google.com/rss/articles/CBMihwVBVV95cUxOeENSaDNzd2FvRHFLZVMxQXdQb1JkYy1OLXlTSGMtdWpnT01SMDNIRUhQaTY0a083Y2RUVnRmN0hBX205NFdMMkJUdmNYWEJJYm10WV9yenVsRkRHejM0UDVRTFlYdHhWQVNNcFFyRWc3cEdLUWc3Qi1vZnJvTThHQ2wyTzJ5azg2bWUzX2plUlBTTVd3Vm5ERU53bnJhNmFuNlVDOXpBdmhZMEhsOWdLMmltWF9VNkMwWnZTOFZoQjZxb2xGaE5kZ05NNHIxSUJlYWh1VFQxZWtadUZ1bEd6QWdVcmpQSU1SWGRKa1UzTE1zaklrSTh1V01VczlveUREVkFRNE9ueW9YV1lIZFQxREtGZFlxMUx2NjBKOEo4dGVQdnZQME1HeDFqQmtSYlhHNGNRNlZibjNUNVBaZEVuMk9ydzgxMnIyRWRKUXhTcjZQSVdnR29",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "【零股排行榜】 盤中零股成交量TOP 20｜0050 元大台灣50、00406A 主動中信台灣收益、1303 南亞、2330 台積電、00981A 主動統一台股增長(1021)｜豐雲學堂2026 年 11 月 - 永豐金證券",
+        "source": "永豐金證券",
+        "date": "2026-10-21T15:00:00+08:00",
+        "link": "https://news.google.com/rss/articles/CBMigwVBVV95cUxOUzN6TnFfWjdzTFZ6ZnZhN2hEeUJkWVpaSWttaWpySldRUWgwdHB4Y1NmTnpBUjdVVjNIaFpIRXZJYWtzTDRqTDIxaXFFRjY4cUhtS1MzN1Bma2dVWXBSMFhPT2tTWW1KX016SDhycnlpVGtfTlh3TzhUOHRRU1dmRjZCWS02bEV6aFBNaVA2S2Y4eHg4bzZKMER3QXBxT2Y4ZFhvc3VsNWNDaGJrcTc0WngwQTVZSFUzbktuSTBkd1ZpU0ZTZU9VbzNMcmx1Ui1wcmNfLTNhSzY5WEpTN1ZfdVdfZlJjOVYyV1A3V3ZCT0UtYXFUOUxWSFhjeVY3cmdvQXRpcElZSXU2WlIzb2RtUWtmbmFqanc5S01aaFIya1J4X25udGxHeTk5RW0xVjY3SVBFbDY5TDdJbDZwUXBCTTRFTm45bWNpQ19rN3dtSnYteTdJck0",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "0050、50正2 選長天期 - 經濟日報",
+        "source": "經濟日報",
+        "date": "2026-10-21T15:00:00+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTFBVcmxkdUkxYy1ZREQ0bEtQZmlFekNubFQ0bjhLc2tWa3A0Y3hIbXF4TzdiQXVoYkgwdGZPVXQ1VjdMRHdmSTRfV1RhUzNRcHpoYTkxb1pKZjAzZ9IBX0FVX3lxTE9VMDd0aXBqaGtFc2hZcFNpVk93ODRBRWh2bmUxZFJiRmFEbDVqVHZMS1RZWjhweFIzTHJOSk16WmljWVBaYzI5YXNiZ25YMWsxdkRFbUE5ME5YSGN0NDJF?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "0050 今年第四度單月破千億元！全年狂攬 7,000 億居「吸金王」 - TechNews 科技新報",
+        "source": "TechNews 科技新報",
+        "date": "2026-10-23T10:50:20+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5Db2pyMW9kOXAtS0oyeThTajJPNFI4WjVfYlNmelE1QTFDcEVrQVd0YXFFalhNYlhsZ013Q1g2WlhIQS1GMHJtNEk2MS1NT09LeV9iX3NnZmJ6ZEN5a1Fj?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "0050 元大台灣50 - 【難道 0050 又要分割了？】 - 股市爆料同學會 - CMoney",
         "source": "CMoney",
-        "date": "2026-11-02T00:39:25+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE1kQS1Hcjh2dDEyTHl6TUNiUlhCeVlIQk44dGZzeTh1LS1xYmwyUFhwZTVFMTdaTWVlZEk5SjdFRmFad1ZJc2dGaXh1UC1wSi04bWVIWnkxbUM?oc=5",
+        "date": "2026-10-25T15:00:00+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE96RzdvbkNjOTBrc0sxWjFsUDlENjNqaXoxSkRYbjRQQmxZZDZMcFphX1k5TlVuSkg0T0xyU0FWN2lma3hEay0xV1ctRWFORFBTTFdjTC1VRko?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
         "status": ""
       },
       {
-        "title": "24檔台股ETF總受益人數創高 0050累計374萬人奪冠 - UDN",
-        "source": "UDN",
-        "date": "2026-11-02T03:38:18+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiU0FVX3lxTFBtcklmV2tvOFg4R3d0Z0NYU0MwcUpneWlpc3oxX2ZIczlLa2tKVldUc2lPLXpUcDNRRl84Zm51QnpJTkd6Q01LcnQ2QzljQUphWE1n0gFYQVVfeXFMT1NmY1gxVjNhbjVYNFpoQTkxNUFYTjR3QWp3dlFDSmJBa05TbHBvakE5emVhU0ZVOS1OQzNEaWxPa1l6QjVOc3h5S2tlNlg3ZTByYUFxanBucg?oc=5",
+        "title": "投資小白問這檔ETF能追上0050嗎？網友神回「台股要上50萬點」 - 自由財經",
+        "source": "自由財經",
+        "date": "2026-10-26T07:14:00+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE85WC15Y2ZTSEdvd2wydmFuZjJkWjk5M3hSZEJNb2U0bFpoU25DWDZ1blZONkxMQ0JiSjZHQmd4cVdlRXlJaTZweVl1bmhzS19abzBaVnJnNVU4ZXc0aFEw0gFkQVVfeXFMTTdGeVhmano0cTFJeEhRazY1Rm5xc2xsT2RqV1I5SHN6RUxOd3JCemg1VVhUS000LWl4eXRTVU1xa1J2SkR5UmgyaFVDOEV6Zk9rTlYtUF8zX05PYmpBbmduODF2QQ?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
@@ -338,7 +338,7 @@
     "lookback_days": 14
   },
   "QQQ": {
-    "fetched_at": "2026-11-04T04:25:46.274257+08:00",
+    "fetched_at": "2026-11-04T04:35:51.972056+08:00",
     "adjustment": 0,
     "events": [
       {
