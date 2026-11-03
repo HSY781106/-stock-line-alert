@@ -5768,5 +5768,61 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:dc1b0f8a128f2cc69a7ffe2a": {
+    "ts": 1793741451.0239758,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.7,
+          "policy_stage": "threat",
+          "reason": "選舉口號重申美國能源優勢，對大盤短期無實質政策變動影響。",
+          "relevant": false,
+          "affected_channel": "估值",
+          "transmission": "競選言論→市場情緒→整體大盤",
+          "exposure": "整體美股市場與能源板塊"
+        },
+        {
+          "id": 1,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.6,
+          "policy_stage": "unknown",
+          "reason": "黨派政治論辯與能源法規爭議，對整體市場傳導有限。",
+          "relevant": false,
+          "affected_channel": "估值",
+          "transmission": "政策辯論→公用事業成本疑慮→整體大盤",
+          "exposure": "整體美股市場與公用事業板塊"
+        },
+        {
+          "id": 2,
+          "direction": "neutral",
+          "score": -1,
+          "confidence": 0.65,
+          "policy_stage": "unknown",
+          "reason": "油價與成品油上升反映市場供需與通膨壓力，政策承諾落空。",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "能源價格上漲→企業營運成本增加與通膨升溫→大盤受壓",
+          "exposure": "整體美股市場與能源下游產業"
+        },
+        {
+          "id": 3,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.8,
+          "policy_stage": "implemented",
+          "reason": "馬來西亞維持稀土出口禁令，加劇關鍵礦物供應鏈緊張。",
+          "relevant": true,
+          "affected_channel": "供應鏈",
+          "transmission": "稀土出口禁令→科技與國防供應鏈受阻→相關產業與整體大盤情緒",
+          "exposure": "科技股、電動車產業與整體美股市場"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
