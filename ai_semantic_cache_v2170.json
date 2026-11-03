@@ -5656,5 +5656,61 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:fd0d2ea627cbef653cade181": {
+    "ts": 1793674026.153985,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.7,
+          "policy_stage": "implemented",
+          "reason": "政府注資未改善基本面，引發市場對效率與財政負擔疑慮",
+          "relevant": true,
+          "affected_channel": "估值",
+          "transmission": "政府干預補助→投資人信心下降→整體市場估值承壓",
+          "exposure": "美股半導體板塊與大盤估值"
+        },
+        {
+          "id": 1,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.75,
+          "policy_stage": "considering",
+          "reason": "債券殖利率上升壓制AI基礎建設高估值與融資需求",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "利率與通膨預期上升→企業融資成本增加→壓抑科技股與大盤動能",
+          "exposure": "美股科技股與整體資本市場"
+        },
+        {
+          "id": 2,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.8,
+          "policy_stage": "announced",
+          "reason": "關稅政策引發通膨與供應鏈成本上升疑慮",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "關稅政策→進口成本與通膨上升→企業獲利受擠壓及大盤承壓",
+          "exposure": "美股進口依賴型產業與整體市場"
+        },
+        {
+          "id": 3,
+          "direction": "negative",
+          "score": -1,
+          "confidence": 0.65,
+          "policy_stage": "implemented",
+          "reason": "大馬維持稀土出口禁令，加劇關鍵礦物供應鏈緊張",
+          "relevant": true,
+          "affected_channel": "供應鏈",
+          "transmission": "出口禁令維持→上游原料供應受限→高科技產業成本增加",
+          "exposure": "高科技與高端製造業供應鏈"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
