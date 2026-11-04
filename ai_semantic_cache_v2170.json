@@ -6189,5 +6189,61 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:4207c786cd07f9b8e380de8d": {
+    "ts": 1793824622.725283,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.6,
+          "policy_stage": "unknown",
+          "reason": "中東政策轉向對整體市場影響不確定，偏向政治討論。",
+          "relevant": false,
+          "affected_channel": "估值",
+          "transmission": "川普中東立場→地緣政治變化→整體市場波動",
+          "exposure": "大盤市場多樣化曝險，無單一方向傳導"
+        },
+        {
+          "id": 1,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.7,
+          "policy_stage": "unknown",
+          "reason": "分析過往期中選舉與能源政策關係，對當前大盤影響中性。",
+          "relevant": false,
+          "affected_channel": "估值",
+          "transmission": "歷史政策檢討→市場情緒波動→大盤整理",
+          "exposure": "整體市場估值受宏觀氛圍影響"
+        },
+        {
+          "id": 2,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.8,
+          "policy_stage": "announced",
+          "reason": "川普支持無人機交易推升科技與國防板塊情緒。",
+          "relevant": true,
+          "affected_channel": "需求",
+          "transmission": "政府政策支持→無人機與國防需求增加→提振相關板塊及整體大盤",
+          "exposure": "科技與國防產業標的受益"
+        },
+        {
+          "id": 3,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.75,
+          "policy_stage": "unknown",
+          "reason": "民主黨控制國會可能制衡川普能源政策，政策僵局下市場反應平淡。",
+          "relevant": true,
+          "affected_channel": "供應鏈",
+          "transmission": "選舉結果→川普能源政策受阻→傳統能源板塊與整體市場觀望",
+          "exposure": "能源板塊受政策不確定性影響"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
