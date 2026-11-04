@@ -1,10 +1,13 @@
 {
   "drop_alert": {
     "0050 元大台灣50": {
-      "date": "2026-11-03",
-      "daily_alert_sent": false,
+      "date": "2026-11-04",
+      "daily_alert_sent": true,
       "weekly_alert_sent": false,
-      "alert_sent": false
+      "alert_sent": true,
+      "alert_time": "2026-11-04T11:51:19.562564+08:00",
+      "trigger_day": -0.055716,
+      "trigger_week": -0.09526
     },
     "2330 台積電": {
       "date": "2026-11-03",
