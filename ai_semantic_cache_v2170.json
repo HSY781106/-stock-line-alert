@@ -5880,5 +5880,202 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:eb201d0c3ecd84bc28241e29": {
+    "ts": 1793764299.3372178,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.8,
+          "policy_stage": "considering",
+          "reason": "企業反對越南關稅，若開徵將推升供應鏈成本。",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "川普擬對越南加徵關稅→製造業供應鏈成本上升→影響市場整體獲利",
+          "exposure": "越南設廠之科技與車用相關產業標的"
+        },
+        {
+          "id": 1,
+          "direction": "negative",
+          "score": -3,
+          "confidence": 0.7,
+          "policy_stage": "threat",
+          "reason": "伊朗核子決策威脅可能引發地緣政治風險及油價飆漲。",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "中東地緣政治緊張→原油供給疑慮→油價上漲衝擊整體通膨與市場",
+          "exposure": "整體美股市場及能源高依賴產業"
+        },
+        {
+          "id": 2,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.75,
+          "policy_stage": "considering",
+          "reason": "扶植美國本土無人機產業有利國防供應鏈。",
+          "relevant": true,
+          "affected_channel": "需求",
+          "transmission": "本土無人機政策→國防與航太供應鏈訂單增加→帶動相關板塊",
+          "exposure": "美國本土無人機與國防航太產業標的"
+        },
+        {
+          "id": 3,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.6,
+          "policy_stage": "unknown",
+          "reason": "民主黨批評氣候政策導致電費上漲，黨派政治攻防影響有限。",
+          "relevant": true,
+          "affected_channel": "估值",
+          "transmission": "氣候政策論戰→能源政策預期分歧→市場維持觀望",
+          "exposure": "美國公用事業與傳統能源產業"
+        }
+      ]
+    },
+    "provider": "gemini"
+  },
+  "news:0050:aa71e6a0e91c407f8a237720": {
+    "ts": 1793764301.995206,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.7,
+          "reason": "為00631L個人買賣行為，對0050基本面無影響",
+          "relevant": false
+        },
+        {
+          "id": 1,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.8,
+          "reason": "零股成交量常態排行報導，對基本面中性",
+          "relevant": true
+        },
+        {
+          "id": 2,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.6,
+          "reason": "個人投資經驗分享，對ETF基本面無實質影響",
+          "relevant": true
+        },
+        {
+          "id": 3,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.8,
+          "reason": "零股成交量常態排行報導，對基本面中性",
+          "relevant": true
+        }
+      ]
+    },
+    "provider": "gemini"
+  },
+  "etf_final_v2237:0050:3c26092b831012bac75ec673": {
+    "ts": 1793764335.292299,
+    "data": {
+      "recommendation": "🟠 暫緩配置",
+      "confidence": 0.85,
+      "core": "技術面偏空且溢價中，建議暫緩配置以避開下行風險。",
+      "value_view": "長期涵蓋台灣核心權值股，基本面具長期持有價值。",
+      "buy_view": "技術指標嚴重超賣且技術線型偏空，目前非良好進場時機。",
+      "macro_view": "總經環境中性，利率與殖利率傳導略呈負面影響。",
+      "news_view": "市場出現股價重大下跌與AI相關利空消息。",
+      "trump_view": "無明顯相關政策或交易訊號影響。",
+      "theme_view": "半導體及AI供應鏈高度集中，受科技產業波動影響大。",
+      "risk_view": "短線跌幅擴大，技術面呈偏空趨勢且仍有些微溢價。",
+      "conflict": "長期權值價值仍存，但短線技術面與消息面面臨劇烈修正。",
+      "strengths": [
+        "台灣大型權值股代表性高",
+        "長期具備半導體與AI產業成長動能"
+      ],
+      "risks": [
+        "技術線型偏空且跌幅較大",
+        "科技權值股集中度高"
+      ],
+      "next_watch": [
+        "RSI與KD指標止跌訊號",
+        "溢價率是否收斂與均線支撐"
+      ],
+      "reason": "目前投資與買點評分偏低，技術趨勢呈現偏空狀態。雖具備台灣核心權值長期價值，但受AI利空及短期重大下跌影響，宜等待技術面止跌與買點浮現。"
+    },
+    "provider": "gemini"
+  },
+  "news:3711:cd12033b3bde61232c1de746": {
+    "ts": 1793764352.2458823,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "positive",
+          "score": 3,
+          "confidence": 0.8,
+          "reason": "機構上修EPS預估與目標價，利於市場信心。",
+          "relevant": true
+        },
+        {
+          "id": 1,
+          "direction": "positive",
+          "score": 1,
+          "confidence": 0.7,
+          "reason": "獲投信買超，籌碼面偏向正面。",
+          "relevant": true
+        },
+        {
+          "id": 2,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.5,
+          "reason": "僅提及法說會消息，無具體營運數據。",
+          "relevant": true
+        },
+        {
+          "id": 3,
+          "direction": "positive",
+          "score": 1,
+          "confidence": 0.65,
+          "reason": "獲主動式ETF經理人加碼，籌碼面偏正面。",
+          "relevant": true
+        }
+      ]
+    },
+    "provider": "gemini"
+  },
+  "final_v21826:3711:9a7c23936f990f01e949adaf": {
+    "ts": 1793764357.918608,
+    "data": {
+      "recommendation": "🟡 等待更佳買點",
+      "confidence": 0.75,
+      "core": "基本面具獲利成長與上修動能，但技術與籌碼面顯著偏空，建議等待止跌。",
+      "fundamental_view": "EPS預估成長達22.96%，雖然PE高於同業，但法調上修EPS與目標價，基本面仍有支撐。",
+      "technical_view": "短期跌幅劇烈，跌破MA20與MA60，RSI達28.32進入超賣區，呈現偏空與超跌狀態。",
+      "chips_view": "法人20日大賣超且融資增加，籌碼面極度疲弱，缺乏主力支撐。",
+      "risk_view": "面臨跌破均線群、法人連續拋售與融資逆向增加之重挫風險。",
+      "news_view": "機構上修EPS至20.33元與目標價至854元，消息面整體偏向正面。",
+      "trump_view": "越南關稅問題與貿易政策可能推升供應鏈成本，產業政策傳導偏負面。",
+      "macro_view": "美元匯率傳導偏正向，市場整體風險低，但利率環境形成些許壓抑。",
+      "buy_view": "投資價值中性偏好，但與目前技術面接刀風險極大的 buy_verdict 矛盾，買點尚未浮現。",
+      "strengths": [
+        "獲利成長強勁且機構上修目標價",
+        "RSI進入超賣區具跌深反彈契機"
+      ],
+      "risks": [
+        "法人20日大賣且融資逆勢增加",
+        "股價跌破MA20與MA60均線"
+      ],
+      "conflict": "基本面獲利成長且機構上修目標價，但籌碼面面臨法人大賣與技術面均線破位。",
+      "next_watch": [
+        "籌碼面外資與投信是否轉買",
+        "技術面能否在第一買進區(606-625元)獲得支撐"
+      ],
+      "reason": "基本面展現獲利成長且機構預估上修，具有長期投資價值。然而技術面跌破MA20/MA60且籌碼面法人大幅賣超，接刀風險極高。建議暫不追價，等待籌碼沉澱與止跌訊號確認後再行佈局。"
+    },
+    "provider": "gemini"
   }
 }
