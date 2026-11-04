@@ -6133,5 +6133,61 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:dcee5047fc14d41bdcc3fc80": {
+    "ts": 1793824398.1188395,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "positive",
+          "score": 3,
+          "confidence": 0.8,
+          "policy_stage": "announced",
+          "reason": "川普支持之無人機交易推升估值與需求。",
+          "relevant": true,
+          "affected_channel": "需求",
+          "transmission": "政府支持→國防訂單增加→無人機產業受益",
+          "exposure": "無人機與國防航太產業"
+        },
+        {
+          "id": 1,
+          "direction": "neutral",
+          "score": -1,
+          "confidence": 0.7,
+          "policy_stage": "considering",
+          "reason": "民主黨控制國會可能阻礙川普傳統能源政策執行。",
+          "relevant": true,
+          "affected_channel": "政策預期",
+          "transmission": "國會制衡→傳統能源法案受阻→油氣產業規劃不確定性增",
+          "exposure": "傳統油氣與能源產業"
+        },
+        {
+          "id": 2,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.75,
+          "policy_stage": "considering",
+          "reason": "民主黨勝選打擊川普概念股及加密貨幣放鬆監管預期。",
+          "relevant": true,
+          "affected_channel": "估值",
+          "transmission": "政治局勢變化→監管放鬆預期落空→高風險資產估值修整",
+          "exposure": "加密貨幣與AI科技產業"
+        },
+        {
+          "id": 3,
+          "direction": "negative",
+          "score": -3,
+          "confidence": 0.85,
+          "policy_stage": "threat",
+          "reason": "川普堅持關稅政策加重出口國貿易成本與負擔。",
+          "relevant": true,
+          "affected_channel": "出口",
+          "transmission": "關稅威脅→貿易壁壘上升→出口導向市場成本增加",
+          "exposure": "韓國及出口導向型製造業"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
