@@ -6077,5 +6077,61 @@
       "reason": "基本面展現獲利成長且機構預估上修，具有長期投資價值。然而技術面跌破MA20/MA60且籌碼面法人大幅賣超，接刀風險極高。建議暫不追價，等待籌碼沉澱與止跌訊號確認後再行佈局。"
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:4219e0baa23c5b67f777efac": {
+    "ts": 1793777091.1543193,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.5,
+          "policy_stage": "unknown",
+          "reason": "油價高漲討論屬歷史政策評價，對整體市場直接影響有限。",
+          "relevant": false,
+          "affected_channel": "成本",
+          "transmission": "能源價格波動→消費通膨疑慮→整體市場波動",
+          "exposure": "美股整體市場"
+        },
+        {
+          "id": 1,
+          "direction": "positive",
+          "score": 1,
+          "confidence": 0.6,
+          "policy_stage": "threat",
+          "reason": "強調美國油氣供應優勢，有利能源相關權重股與傳統產業。",
+          "relevant": true,
+          "affected_channel": "出口",
+          "transmission": "放寬能源開發→提升產能與出口→帶動能源板塊與大盤表現",
+          "exposure": "能源產業、美股整體大盤"
+        },
+        {
+          "id": 2,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.7,
+          "policy_stage": "considering",
+          "reason": "推動本土無人機產業供應鏈，國防與航太板塊受惠。",
+          "relevant": true,
+          "affected_channel": "需求",
+          "transmission": "政策扶植本土國防無人機→增加訂單與資本支出→本土國防航太業者受惠",
+          "exposure": "國防航太產業、無人機供應鏈"
+        },
+        {
+          "id": 3,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.5,
+          "policy_stage": "unknown",
+          "reason": "政黨對氣候政策與電費關聯之爭辯，缺乏具體政策執行細節。",
+          "relevant": false,
+          "affected_channel": "估值",
+          "transmission": "氣候政策爭議→公用事業法規風險→公用事業與能源類股估值震盪",
+          "exposure": "公用事業產業、傳統能源產業"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
