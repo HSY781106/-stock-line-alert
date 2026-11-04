@@ -10,16 +10,19 @@
       "trigger_week": -0.09526
     },
     "2330 台積電": {
-      "date": "2026-11-03",
+      "date": "2026-11-04",
       "daily_alert_sent": false,
       "weekly_alert_sent": false,
       "alert_sent": false
     },
     "3711 日月光投控": {
-      "date": "2026-11-03",
+      "date": "2026-11-04",
       "daily_alert_sent": false,
-      "weekly_alert_sent": false,
-      "alert_sent": false
+      "weekly_alert_sent": true,
+      "alert_sent": true,
+      "alert_time": "2026-11-04T11:52:25.025076+08:00",
+      "trigger_day": -0.024351,
+      "trigger_week": -0.152327
     },
     "QQQ": {
       "date": "2026-11-04",
@@ -36,17 +39,17 @@
   },
   "interval_low": {
     "0050 元大台灣50": {
-      "last_check": "2026-11-04T09:04:19.247933+08:00",
-      "last_price": 104.0999984741211,
-      "last_interval_low": 107.0999984741211,
+      "last_check": "2026-11-04T11:52:16.292351+08:00",
+      "last_price": 98.30000305175781,
+      "last_interval_low": 98.1500015258789,
       "last_interval_source": "Yahoo-5m",
-      "interval_alert": false,
+      "interval_alert": true,
       "session_key": "2026-11-04"
     },
     "2330 台積電": {
-      "last_check": "2026-11-04T09:04:59.791384+08:00",
-      "last_price": 2295.0,
-      "last_interval_low": 2390.0,
+      "last_check": "2026-11-04T11:52:18.264323+08:00",
+      "last_price": 2255.0,
+      "last_interval_low": 2245.0,
       "last_interval_source": "Yahoo-5m",
       "interval_alert": false,
       "session_key": "2026-11-04"
