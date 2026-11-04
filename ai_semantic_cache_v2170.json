@@ -5824,5 +5824,61 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:018a0fcf1843c0984a940116": {
+    "ts": 1793754273.9855573,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.6,
+          "policy_stage": "unknown",
+          "reason": "汽油價格創高屬市場現象，對整體市場影響中性。",
+          "relevant": true,
+          "affected_channel": "通膨與消費",
+          "transmission": "油價高漲→通膨壓力升溫→壓抑整體消費與大盤估值",
+          "exposure": "大盤市場曝險"
+        },
+        {
+          "id": 1,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.5,
+          "policy_stage": "unknown",
+          "reason": "政客對油價發言不一，未具體形成明確政策方向。",
+          "relevant": false,
+          "affected_channel": "市場信心",
+          "transmission": "政客言論歧異→市場觀望→對整體市場無明確傳導",
+          "exposure": "證據不足"
+        },
+        {
+          "id": 2,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.8,
+          "policy_stage": "announced",
+          "reason": "廢除甲烷排放限制規章，降低傳統能源業者合規成本。",
+          "relevant": true,
+          "affected_channel": "生產成本",
+          "transmission": "川普廢除甲烷監管規章→傳統油氣業者合規成本降低→利好能源板塊及整體大盤",
+          "exposure": "傳統能源產業與大盤市場"
+        },
+        {
+          "id": 3,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.5,
+          "policy_stage": "unknown",
+          "reason": "重申美國能源主導地位之政治宣傳，缺乏具體新政策。",
+          "relevant": true,
+          "affected_channel": "市場預期",
+          "transmission": "政治口號宣傳→對實體產業與整體市場影響有限",
+          "exposure": "大盤市場曝險"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
