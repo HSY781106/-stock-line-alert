@@ -6245,5 +6245,61 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:3df867b65652499189db14e2": {
+    "ts": 1793828692.4769442,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.6,
+          "policy_stage": "considering",
+          "reason": "藍浪選舉結果對特朗普能源政策與加拿大油氣影響尚不明朗。",
+          "relevant": true,
+          "affected_channel": "需求與法規",
+          "transmission": "美國大選政策變化→跨境能源管道法規調整→加拿大油氣出口與總體市場",
+          "exposure": "整體能源市場與加拿大油氣產業"
+        },
+        {
+          "id": 1,
+          "direction": "positive",
+          "score": 3,
+          "confidence": 0.8,
+          "policy_stage": "announced",
+          "reason": "特朗普支持的無人機交易推升 Powerus 估值與美股併購熱度。",
+          "relevant": true,
+          "affected_channel": "需求與估值",
+          "transmission": "特朗普政府國防採購偏好→國防無人機訂單增加→相關企業營收與估值提升",
+          "exposure": "國防無人機產業與航太軍工族群"
+        },
+        {
+          "id": 2,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.7,
+          "policy_stage": "threat",
+          "reason": "特朗普淡化美伊衝突升級，中東地緣政治風險溢價回落導致原油走低。",
+          "relevant": true,
+          "affected_channel": "成本與價格",
+          "transmission": "地緣政治局勢緩和→原油風險溢價消除→原油價格下跌影響能源市場",
+          "exposure": "原油市場與能源類股"
+        },
+        {
+          "id": 3,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.75,
+          "policy_stage": "unknown",
+          "reason": "民主黨勝選打擊特朗普概念股，人工智慧與加密貨幣等高估值資產受挫。",
+          "relevant": true,
+          "affected_channel": "估值與資金流",
+          "transmission": "政局轉變動搖政策預期→市場避險情緒上升→加密貨幣與AI科技股估值修正",
+          "exposure": "加密資產、AI科技股及特朗普概念標的"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
