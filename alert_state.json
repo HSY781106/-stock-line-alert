@@ -25,10 +25,13 @@
       "trigger_week": -0.150917
     },
     "QQQ": {
-      "date": "2026-11-05",
-      "daily_alert_sent": false,
-      "weekly_alert_sent": false,
-      "alert_sent": false
+      "date": "2026-11-06",
+      "daily_alert_sent": true,
+      "weekly_alert_sent": true,
+      "alert_sent": true,
+      "alert_time": "2026-11-06T04:56:40.070736+08:00",
+      "trigger_day": -0.062635,
+      "trigger_week": -0.10677
     },
     "台灣加權指數": {
       "date": "2026-11-05",
@@ -85,13 +88,13 @@
   },
   "target_buy_point_alert": {
     "0050 元大台灣50": {
-      "date": "2026-11-05",
+      "date": "2026-11-06",
       "locked": false,
       "notified_at": "2026-09-07 11:59:19",
       "notified_score": 87
     },
     "2330 台積電": {
-      "date": "2026-11-05",
+      "date": "2026-11-06",
       "locked": false,
       "notified_at": "2026-09-07 11:59:22",
       "notified_score": 92
