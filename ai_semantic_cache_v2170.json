@@ -6446,7 +6446,7 @@
     "provider": "gemini"
   },
   "trump_v21826:__MARKET__:632d45c485e696605b8329e8": {
-    "ts": 1793912165.5284452,
+    "ts": 1793912811.2936425,
     "data": {
       "items": [
         {
@@ -6455,23 +6455,23 @@
           "score": -2,
           "confidence": 0.7,
           "policy_stage": "considering",
-          "reason": "藍潮壓制川普支持的關鍵礦物交易，增加審查與不確定性。",
+          "reason": "民主黨掌控國會增加對川普支持項目之審查壓力。",
           "relevant": true,
-          "affected_channel": "供應鏈與資本支出",
-          "transmission": "川普政策受阻→關鍵礦物項目審核變慢→整體市場相關供應鏈受挫",
-          "exposure": "關鍵礦物供應鏈及相關採礦業者"
+          "affected_channel": "估值與政策補助",
+          "transmission": "政治制衡→政策補助受阻→稀土關鍵礦物產業",
+          "exposure": "美系關鍵礦物開發商與相關供應鏈"
         },
         {
           "id": 1,
           "direction": "neutral",
           "score": 0,
           "confidence": 0.8,
-          "policy_stage": "implemented",
-          "reason": "安保部署屬於維安事件，對整體市場經濟影響極微。",
+          "policy_stage": "unknown",
+          "reason": "個人安保措施對整體國防產業無實質基本面影響。",
           "relevant": false,
-          "affected_channel": "估值",
-          "transmission": "安保提升→軍工需求局部增加→對大盤無顯著傳導",
-          "exposure": "國防防禦與雷射武器供應商"
+          "affected_channel": "需求",
+          "transmission": "安保部署→極局部需求→無顯著市場傳導",
+          "exposure": "國防防空與雷射武器供應商"
         },
         {
           "id": 2,
@@ -6479,11 +6479,11 @@
           "score": -2,
           "confidence": 0.75,
           "policy_stage": "considering",
-          "reason": "民主黨掌控國會阻礙川普能源政策，加拿大與美國傳統能源承壓。",
+          "reason": "藍潮壓制川普傳統能源放寬政策，增加監管不確定性。",
           "relevant": true,
-          "affected_channel": "需求與法規限制",
-          "transmission": "國會易主→傳統能源補貼與放寬監管政策受阻→能源類股承壓",
-          "exposure": "傳統石油、天然氣及跨國管道業者"
+          "affected_channel": "需求與監管成本",
+          "transmission": "國力消長→傳統能源政策受阻→石油與天然氣業者",
+          "exposure": "美國與加拿大油氣開採及管線業者"
         },
         {
           "id": 3,
@@ -6491,83 +6491,13 @@
           "score": -2,
           "confidence": 0.8,
           "policy_stage": "announced",
-          "reason": "川普淡化美伊衝突局勢，地緣政治風險溢價消除導致原油重挫。",
+          "reason": "淡化地緣政治衝突淡化地緣溢價，油價下跌壓抑能源板塊。",
           "relevant": true,
-          "affected_channel": "價格與利潤率",
-          "transmission": "川普淡化衝突→原油地緣溢價消退→油價下跌影響能源板塊收益",
-          "exposure": "原油期貨及整體能源產業"
+          "affected_channel": "需求與價格",
+          "transmission": "表態降溫→地緣政治溢價消退→原油期貨與整體能源市場",
+          "exposure": "整體原油市場與石油上游業者"
         }
       ]
-    },
-    "provider": "gemini"
-  },
-  "news:QQQ:f2375c97e8c50a64d7b89dcf": {
-    "ts": 1793912207.9558342,
-    "data": {
-      "items": [
-        {
-          "id": 0,
-          "direction": "neutral",
-          "score": 0,
-          "confidence": 0.8,
-          "reason": "介紹QQQ投資要點與波動，對近期影響中性。",
-          "relevant": true
-        },
-        {
-          "id": 1,
-          "direction": "positive",
-          "score": 2,
-          "confidence": 0.75,
-          "reason": "盤前股價創新高，顯示市場需求與表現正面。",
-          "relevant": true
-        },
-        {
-          "id": 2,
-          "direction": "positive",
-          "score": 2,
-          "confidence": 0.7,
-          "reason": "認沽期權空頭建倉代表看空意願低、偏向看好。",
-          "relevant": true
-        },
-        {
-          "id": 3,
-          "direction": "positive",
-          "score": 2,
-          "confidence": 0.75,
-          "reason": "賣出看跌期權顯示市場信心，政治不確定性消除。",
-          "relevant": true
-        }
-      ]
-    },
-    "provider": "gemini"
-  },
-  "etf_final_v2237:QQQ:2f18f09edff829124b237ef9": {
-    "ts": 1793912214.513891,
-    "data": {
-      "recommendation": "🟠 暫緩配置",
-      "confidence": 0.65,
-      "core": "QQQ技術面呈空頭且修正壓力大，短線宜暫緩配置。",
-      "value_view": "中長期具科技成長價值，惟短期估值與走勢承壓。",
-      "buy_view": "買點評分偏低，技術指標顯示空頭趨勢且短期跌幅較大。",
-      "macro_view": "總經環境中性，受利率及殖利率傳導偏負面影響。",
-      "news_view": "期權市場呈現部分正面看好信心，但波動仍大。",
-      "trump_view": "政策影響微幅偏賣出，相關產業政策中性。",
-      "theme_view": "大型科技與AI雲端成長題材長期仍具優勢。",
-      "risk_view": "科技股高集中度風險、利率敏感度高及空頭修正壓力。",
-      "conflict": "期權消息面偏向正面信心，但技術面與趨勢嚴重偏空。",
-      "strengths": [
-        "期權賣出看跌期權顯現部分信心",
-        "大型科技與AI題材長期具成長性"
-      ],
-      "risks": [
-        "技術趨勢偏空且近20日跌幅較大",
-        "利率與殖利率傳導偏負面"
-      ],
-      "next_watch": [
-        "非農就業數據與利率政策動向",
-        "MA20與MA60均線支撐與轉折"
-      ],
-      "reason": "QQQ目前技術面處於空頭趨勢，短線跌幅較大且買點評分低。總經環境受到利率負面傳導影響，加上Trump政策微幅偏賣出。雖然期權市場出現部分看好訊號，但整體修正壓力尚未解除，建議暫緩配置。"
     },
     "provider": "gemini"
   }

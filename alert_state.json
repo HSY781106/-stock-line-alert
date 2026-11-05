@@ -25,13 +25,10 @@
       "trigger_week": -0.150917
     },
     "QQQ": {
-      "date": "2026-11-06",
-      "daily_alert_sent": true,
-      "weekly_alert_sent": true,
-      "alert_sent": true,
-      "alert_time": "2026-11-06T04:56:40.070736+08:00",
-      "trigger_day": -0.062635,
-      "trigger_week": -0.10677
+      "date": "2026-11-05",
+      "daily_alert_sent": false,
+      "weekly_alert_sent": false,
+      "alert_sent": false
     },
     "台灣加權指數": {
       "date": "2026-11-05",
@@ -66,12 +63,12 @@
       "session_key": "2026-11-05"
     },
     "QQQ": {
-      "last_check": "2026-11-06T04:56:55.282727+08:00",
-      "last_price": 648.6099853515625,
+      "last_check": "2026-11-05T04:37:35.020876+08:00",
+      "last_price": 693.0700073242188,
       "last_interval_low": 692.9500122070312,
       "last_interval_source": "Yahoo-5m",
       "interval_alert": false,
-      "session_key": "2026-11-05"
+      "session_key": "2026-11-04"
     },
     "台灣加權指數": {
       "last_check": "2026-11-05T09:20:42.287738+08:00",

@@ -1,6 +1,6 @@
 {
   "2330": {
-    "fetched_at": "2026-11-06T04:56:34.679872+08:00",
+    "fetched_at": "2026-11-06T05:07:20.716603+08:00",
     "adjustment": -5,
     "events": [
       {
@@ -54,6 +54,16 @@
         "status": ""
       },
       {
+        "title": "2330 台積電 - 〈美股早盤〉晶片股回神！那指反彈走高蘋果卻拖累道瓊- 股市爆料同學會 - CMoney",
+        "source": "CMoney",
+        "date": "2026-11-03T06:50:04+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE5yRlFnZ3hVaUlhSE42TWNfclZtd05NcklpOFNxekdjemxBbWxVOUJ3RDl5ZWJLQXdOb3BoZ3A3Y1hLcHlQbmJmVlZDalY1eFhWbkRlRXV0VTc?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
         "title": "2330 台積電 - 上次融資單日減少超過200億 - 股市爆料同學會 - CMoney",
         "source": "CMoney",
         "date": "2026-11-03T07:50:57+08:00",
@@ -72,23 +82,13 @@
         "adjustment": 0,
         "label": "",
         "status": ""
-      },
-      {
-        "title": "【零股排行榜】 盤中零股成交量TOP 20｜0050 元大台灣50、00878 國泰永續高股息、0056 元大高股息、00406A 主動中信台灣收益、2330 台積電 (1103)｜豐雲學堂2026 年 11 月 - 永豐金證券",
-        "source": "永豐金證券",
-        "date": "2026-11-03T14:30:18+08:00",
-        "link": "https://news.google.com/rss/articles/CBMimgVBVV95cUxPODlEaFJTVzkxeGUyTXNQcHdsd243dENmeWs0U3NBOU1NTFc0VzhuRElaaXRDNWlteUdnandNRzVubEhzODdPVElhNTFNbXJXcGFPMXNSQkx6UTdKdmxyTXRILXdVVHY1OFp0T2pReGFReFdTaUk0cFREbEdEcTd1cDFJY3BSZXFrRFhZN3BZNk1vc1RkdnJkVVZyR1V4dDdUdlh2LXpDTU55ejdxRDM4NnhTZVU0dk1zVEdHUzhUSWJ0X2x1RS1Ec3pZRWR5bkVmVmJ3RDJsaUtuR0EzMWx1Nkk1MzNTSVlpYlFRbkpJZmcyWkhrNzNyMG15dVAyeDZSVVh3M2gxdURqVnlDVk42NHVIMlNOLVRCREt6WEE5Wk1Md1lzbXk5dDM0dHNpZWdYSmV2UXZVY3RMSkFSUnhBUDE3bFRLY251VUpGM3N1ckYzaGtCMkV",
-        "raw_adjustment": 0,
-        "adjustment": 0,
-        "label": "",
-        "status": ""
       }
     ],
     "source": "Google News RSS",
     "lookback_days": 14
   },
   "3711": {
-    "fetched_at": "2026-11-06T04:56:39.339228+08:00",
+    "fetched_at": "2026-11-06T05:07:27.012630+08:00",
     "adjustment": 0,
     "events": [
       {
@@ -240,7 +240,7 @@
     "lookback_days": 14
   },
   "0050": {
-    "fetched_at": "2026-11-06T04:56:05.543254+08:00",
+    "fetched_at": "2026-11-06T05:06:51.313767+08:00",
     "adjustment": -6,
     "events": [
       {
@@ -328,7 +328,7 @@
     "lookback_days": 14
   },
   "QQQ": {
-    "fetched_at": "2026-11-06T04:56:45.188183+08:00",
+    "fetched_at": "2026-11-06T05:07:31.892568+08:00",
     "adjustment": 0,
     "events": [
       {
