@@ -6500,5 +6500,61 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:b2fa91bf3bf2de47357f5b46": {
+    "ts": 1793915235.9662626,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "negative",
+          "score": -3,
+          "confidence": 0.85,
+          "policy_stage": "announced",
+          "reason": "關稅疑慮與科技管制打擊AI晶片股，拖累整體大盤。",
+          "relevant": true,
+          "affected_channel": "估值/需求",
+          "transmission": "關稅政策→AI晶片供應鏈受阻→科技股估值修修正拖累大盤",
+          "exposure": "整體美股市場與科技板塊代表性ETF（如QQQ, SPY）"
+        },
+        {
+          "id": 1,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.7,
+          "policy_stage": "considering",
+          "reason": "民主黨擬調查川普能源交易，增加傳統能源政策不確定性。",
+          "relevant": true,
+          "affected_channel": "估值/法規風險",
+          "transmission": "政黨對立與調查威脅→傳統能源監管風險上升→能源類股承壓",
+          "exposure": "傳統能源產業（如XLE、石油與天然氣巨頭）"
+        },
+        {
+          "id": 2,
+          "direction": "negative",
+          "score": -3,
+          "confidence": 0.85,
+          "policy_stage": "announced",
+          "reason": "關稅政策引發貿易戰擔憂，導致大盤大幅收跌。",
+          "relevant": true,
+          "affected_channel": "需求/估值",
+          "transmission": "關稅壁壘擴大→全球貿易與企業獲利預期下滑→美股大盤賣壓",
+          "exposure": "整體美股市場（如S&P 500指數）"
+        },
+        {
+          "id": 3,
+          "direction": "negative",
+          "score": -3,
+          "confidence": 0.85,
+          "policy_stage": "announced",
+          "reason": "標普500指數大跌3%，關稅重挫晶片股並引發市場恐慌。",
+          "relevant": true,
+          "affected_channel": "估值/供應鏈",
+          "transmission": "關稅言論加劇晶片出口限制預期→半導體領跌→標普500權重股重挫",
+          "exposure": "S&P 500指數及半導體產業（如SOXX）"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
