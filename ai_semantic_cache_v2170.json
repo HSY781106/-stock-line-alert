@@ -6388,5 +6388,61 @@
       "reason": "日月光投控獲利持續成長且獲機構上修目標價，基本面仍具支撐。然而技術面跌破月線與季線，且籌碼面受外資與法人大賣拖累。目前缺乏止跌訊號，建議投資人暫不追價，觀察止跌後再作佈局。"
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:b53219a65263555101ef400e": {
+    "ts": 1793865035.833768,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.7,
+          "policy_stage": "implemented",
+          "reason": "關稅政策降低貿易赤字，有利本土製造業與整體市場自信。",
+          "relevant": true,
+          "affected_channel": "出口",
+          "transmission": "關稅政策→減少進口貿易赤字→本土市場保護增強→大盤受惠",
+          "exposure": "美國整體股票市場與製造業類股"
+        },
+        {
+          "id": 1,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.8,
+          "policy_stage": "implemented",
+          "reason": "民主黨贏得國會但無法否決關稅，政策維持現狀，市場已消化。",
+          "relevant": true,
+          "affected_channel": "估值",
+          "transmission": "政治僵局→關稅權限維持→貿易政策不確定性消除→市場中性看待",
+          "exposure": "跨國企業與受關稅影響之進口產業"
+        },
+        {
+          "id": 2,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.6,
+          "policy_stage": "unknown",
+          "reason": "能源政策轉折，對整體市場衝擊互抵。",
+          "relevant": true,
+          "affected_channel": "供給",
+          "transmission": "能源政策轉向→傳統與新興能源消長→大盤整體影響中性",
+          "exposure": "傳統能源與綠能產業類股"
+        },
+        {
+          "id": 3,
+          "direction": "negative",
+          "score": -1,
+          "confidence": 0.65,
+          "policy_stage": "implemented",
+          "reason": "能源政策引發中期選舉挫敗，增加政治不確定性。",
+          "relevant": true,
+          "affected_channel": "估值",
+          "transmission": "能源政策爭議→執政黨期中選舉失利→政策連續性受疑慮→市場風險偏好下降",
+          "exposure": "整體美股市場情緒與政策敏感型產業"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
