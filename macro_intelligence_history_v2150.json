@@ -638,6 +638,9 @@
       "ts": "11/04/2026T00:00:00+08:00"
     },
     {
+      "ts": "11/05/2026T00:00:00+08:00"
+    },
+    {
       "ts": "2019-01-01T00:00:00+08:00",
       "_bls_cpi_index": 252.561,
       "us_unemployment": 4.0
@@ -1929,6 +1932,23 @@
       "m2_yoy": 7.24,
       "usd_twd": 32.821,
       "overnight": 0.811
+    },
+    {
+      "ts": "2026-11-06T04:56:05.942054+08:00",
+      "fed_rate": 3.63,
+      "us_cpi": 3.3,
+      "us_gdp_growth": 1.5,
+      "us_unemployment": 4.1,
+      "us_10y": 4.72,
+      "us_curve_10y2y": 0.41,
+      "vix": 15.72,
+      "gdp_yoy": 12.93,
+      "cpi_yoy": 2.04,
+      "unemployment": 3.39,
+      "discount_rate": 2.0,
+      "m2_yoy": 7.24,
+      "usd_twd": 32.876,
+      "overnight": 0.813
     }
   ]
 }
