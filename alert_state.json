@@ -31,13 +31,10 @@
       "alert_sent": false
     },
     "台灣加權指數": {
-      "date": "2026-11-04",
+      "date": "2026-11-05",
       "daily_alert_sent": false,
-      "weekly_alert_sent": true,
-      "alert_sent": true,
-      "alert_time": "2026-11-04T11:52:46.447049+08:00",
-      "trigger_day": -0.026087,
-      "trigger_week": -0.103754
+      "weekly_alert_sent": false,
+      "alert_sent": false
     }
   },
   "interval_low": {
@@ -58,12 +55,12 @@
       "session_key": "2026-11-05"
     },
     "3711 日月光投控": {
-      "last_check": "2026-11-04T11:52:38.359683+08:00",
-      "last_price": 601.0,
+      "last_check": "2026-11-05T09:20:34.609941+08:00",
+      "last_price": 602.0,
       "last_interval_low": 600.0,
       "last_interval_source": "Yahoo-5m",
       "interval_alert": false,
-      "session_key": "2026-11-04"
+      "session_key": "2026-11-05"
     },
     "QQQ": {
       "last_check": "2026-11-05T04:37:35.020876+08:00",
@@ -74,16 +71,16 @@
       "session_key": "2026-11-04"
     },
     "台灣加權指數": {
-      "last_check": "2026-11-04T11:52:47.926693+08:00",
-      "last_price": 42177.76953125,
+      "last_check": "2026-11-05T09:20:42.287738+08:00",
+      "last_price": 42490.23828125,
       "last_interval_low": 42152.23046875,
       "last_interval_source": "Yahoo-5m",
-      "interval_alert": true,
-      "session_key": "2026-11-04"
+      "interval_alert": false,
+      "session_key": "2026-11-05"
     }
   },
   "high_score_alert": {
-    "date": "2026-11-04",
+    "date": "2026-11-05",
     "active": []
   },
   "target_buy_point_alert": {

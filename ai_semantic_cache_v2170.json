@@ -6301,5 +6301,92 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:a61da5ce2c8512d3e0a8a045": {
+    "ts": 1793841583.0010548,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.7,
+          "policy_stage": "implemented",
+          "reason": "能源政策引發選民反彈，期中選舉挫敗削弱政策執行力。",
+          "relevant": true,
+          "affected_channel": "估值",
+          "transmission": "選舉失利→政策受阻→能源市場不確定性升高",
+          "exposure": "整體能源產業與傳統油氣標的"
+        },
+        {
+          "id": 1,
+          "direction": "negative",
+          "score": -3,
+          "confidence": 0.8,
+          "policy_stage": "unknown",
+          "reason": "原油價格大跌，地緣政治與政局動盪打壓油價。",
+          "relevant": true,
+          "affected_channel": "需求",
+          "transmission": "地緣動盪與政治言論→市場恐慌→油價崩跌",
+          "exposure": "原油市場與石油上游類股"
+        },
+        {
+          "id": 2,
+          "direction": "positive",
+          "score": 3,
+          "confidence": 0.85,
+          "policy_stage": "announced",
+          "reason": "川普支持的無人機交易推升企業估值與借殼上市進程。",
+          "relevant": true,
+          "affected_channel": "需求",
+          "transmission": "川普政策支持→無人機訂單增加→國防航太板塊受惠",
+          "exposure": "Powerus及軍工無人機供應鏈"
+        },
+        {
+          "id": 3,
+          "direction": "neutral",
+          "score": -1,
+          "confidence": 0.75,
+          "policy_stage": "threat",
+          "reason": "民主黨橫掃國會限制川普能源議程，但加拿大油氣傳導待觀察。",
+          "relevant": true,
+          "affected_channel": "出口",
+          "transmission": "國會易主→川普能源政策受阻→影響跨境油氣貿易",
+          "exposure": "北美油氣產業及加拿大出口業者"
+        }
+      ]
+    },
+    "provider": "gemini"
+  },
+  "final_v21826:3711:ce0dbbc035cf2d0e9d7cdaa3": {
+    "ts": 1793841634.0151908,
+    "data": {
+      "recommendation": "🔴 暫不進場，避免接刀",
+      "confidence": 0.75,
+      "core": "基本面獲利成長，但技術面跌破均線且籌碼面法人賣超，宜等待止跌。",
+      "fundamental_view": "獲利年增22.96%，雖然PE高達45.37倍，但機構上修EPS預估與目標價。",
+      "technical_view": "走勢偏空，跌破MA20與MA60，RSI達29.31呈現超賣，接近20日低點。",
+      "chips_view": "籌碼面拖累，法人20日大賣3596萬股，融資逆勢增加745張。",
+      "risk_view": "面臨法人連續賣超、融資增加及破線多重風險。",
+      "news_view": "機構上修EPS預估至20.33元與目標價854元，消息面偏多。",
+      "trump_view": "川普政策對整體影響偏中性微正面。",
+      "macro_view": "匯率傳導正面，但利率傳導偏負面。",
+      "buy_view": "投資價值中性偏保守，買點與價值一致，目前無止跌訊號，切勿接刀。",
+      "strengths": [
+        "獲利成長22.96%",
+        "機構上修EPS與目標價"
+      ],
+      "risks": [
+        "法人20日大賣超",
+        "跌破MA20與MA60均線"
+      ],
+      "conflict": "基本面獲利成長且機構上修目標價，但技術與籌碼面大幅走弱。",
+      "next_watch": [
+        "籌碼面法人是否轉買",
+        "技術面能否在支衛區止跌"
+      ],
+      "reason": "日月光投控獲利持續成長且獲機構上修目標價，基本面仍具支撐。然而技術面跌破月線與季線，且籌碼面受外資與法人大賣拖累。目前缺乏止跌訊號，建議投資人暫不追價，觀察止跌後再作佈局。"
+    },
+    "provider": "gemini"
   }
 }
