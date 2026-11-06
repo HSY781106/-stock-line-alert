@@ -6802,5 +6802,61 @@
       "reason": "估值偏高且技術趨勢空，籌碼弱，風險高，買點不符投資價值，建議減碼或觀察"
     },
     "provider": "groq"
+  },
+  "trump_v21826:__MARKET__:1254df13dc9b5d37670a292d": {
+    "ts": 1793951420.6045947,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.7,
+          "policy_stage": "considering",
+          "reason": "巴西與中國合作稀土，影響美中供應鏈競爭。",
+          "relevant": true,
+          "affected_channel": "供應鏈",
+          "transmission": "巴西政策調整→影響全球稀土供應布局→影響整體市場",
+          "exposure": "全球稀土產業與關鍵礦物供應鏈"
+        },
+        {
+          "id": 1,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.8,
+          "policy_stage": "considering",
+          "reason": "民主黨勝選可能審查川普支持的關鍵礦物交易。",
+          "relevant": true,
+          "affected_channel": "估值",
+          "transmission": "國會審查加劇→關鍵礦物交易補貼面臨不確定性→衝擊礦業市場",
+          "exposure": "美國關鍵礦物採礦及加工業者"
+        },
+        {
+          "id": 2,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.8,
+          "policy_stage": "considering",
+          "reason": "國會全面被民主黨控制，川普關鍵礦物政策遭嚴格審查。",
+          "relevant": true,
+          "affected_channel": "估值",
+          "transmission": "政策審查阻力增加→法案與補貼延宕→影響市場投資意願",
+          "exposure": "關鍵礦物供應鏈與相關投資標的"
+        },
+        {
+          "id": 3,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.5,
+          "policy_stage": "unknown",
+          "reason": "SpaceX高層個人股票贈與行為，與實質政策傳導無關。",
+          "relevant": false,
+          "affected_channel": "無",
+          "transmission": "個人財務規劃→無產業實質影響→無影響",
+          "exposure": "證據不足"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
