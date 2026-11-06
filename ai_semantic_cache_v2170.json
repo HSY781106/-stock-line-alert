@@ -6970,5 +6970,61 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:7ef00cab0375859228f387e1": {
+    "ts": 1793999861.9959106,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.7,
+          "policy_stage": "considering",
+          "reason": "國會審查川普時期能源交易，增加合規風險與監管壓力。",
+          "relevant": true,
+          "affected_channel": "估值",
+          "transmission": "國會調查→政策合規疑慮→企業估值受壓",
+          "exposure": "川普時期政府合約與補貼項目"
+        },
+        {
+          "id": 1,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.8,
+          "policy_stage": "announced",
+          "reason": "支持資料中心建設，推升電力與能源需求。",
+          "relevant": true,
+          "affected_channel": "需求",
+          "transmission": "政策支持資料中心→電力需求大增→能源市場受益",
+          "exposure": "美國整體電力與能源基礎設施市場"
+        },
+        {
+          "id": 2,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.9,
+          "policy_stage": "unknown",
+          "reason": "個人股票贈與行為，對整體市場無實質政策影響。",
+          "relevant": false,
+          "affected_channel": "估值",
+          "transmission": "個人資產轉移→無產業傳導",
+          "exposure": "無顯著市場曝險"
+        },
+        {
+          "id": 3,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.75,
+          "policy_stage": "announced",
+          "reason": "民主黨掌控國會阻礙川普傳統能源政策，對加拿大油氣出口不利。",
+          "relevant": true,
+          "affected_channel": "需求",
+          "transmission": "政黨輪替政策受阻→傳統能源補貼減少→油氣業者受挫",
+          "exposure": "北美傳統油氣產業與跨境管道項目"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
