@@ -318,7 +318,7 @@
     "lookback_days": 14
   },
   "QQQ": {
-    "fetched_at": "2026-11-06T15:50:56.307908+08:00",
+    "fetched_at": "2026-11-07T04:04:02.215093+08:00",
     "adjustment": -7,
     "events": [
       {
@@ -352,20 +352,20 @@
         "status": "重大負面事件"
       },
       {
+        "title": "每日期權前瞻 | 美光科技盤前漲7.27%，期權成交活躍；非農數據今晚發佈，QQQ大跌後盤前反彈1.5%；英特爾盤前回暖5.14% - 富途牛牛",
+        "source": "富途牛牛",
+        "date": "2026-11-06T18:49:43+08:00",
+        "link": "https://news.google.com/rss/articles/CBMid0FVX3lxTFBZYWZEZjZSS01rZDB4eEpQVGJFVzdZVkgxaDNzRTFNTGo0Wmk1eVV6bnRrc1pPYjZwWUprOUVnUDk0SFBVeWtyMDR0NEkzMF94eTN2WWZsZ0ZSVUhzMVdlRER1dVpUODlZZmltckhPakJOMjdPSUhV?oc=5",
+        "raw_adjustment": -5,
+        "adjustment": -5,
+        "label": "股價重大下跌",
+        "status": "重大負面事件"
+      },
+      {
         "title": "QQQ盤前漲至新高，但一年期引伸波幅百分位仍接近極端水平 | 期權市場統計 - Moomoo",
         "source": "Moomoo",
         "date": "2026-11-03T18:15:00+08:00",
         "link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxNYjlqU0s3ME9ZYjhIYzNyNGhQT3EzY2lMR0lKQkhMWkNUTHg4bDZBMnZWWkJJMU0wT3VZWGJqT09YbUZ1MnhKNEVoSm56dE01LUZCWXJmZUVuQzFPc29STnB0OXFfaXVyRFNla1FaRk96eVRSY0txZXZSRHBEWlBwMDFxOUJtWnlrR0RkekdDYkdRcXZhdWM2Ylc4blBsbm5PUVdXYkhINloxdWpNLUtDQVdQRQ?oc=5",
-        "raw_adjustment": 0,
-        "adjustment": 0,
-        "label": "",
-        "status": ""
-      },
-      {
-        "title": "QQQ、SPY盤前走高，因民主黨掌控國會；SPY看跌/看漲期權比率降至1.12，引伸波幅保持堅挺| 期權市場統計 - Moomoo",
-        "source": "Moomoo",
-        "date": "2026-11-04T18:08:09+08:00",
-        "link": "https://news.google.com/rss/articles/CBMitgFBVV95cUxOMlZFdER6TmdfU3RLWjNzdGVKMXJ1Q0xicnYxYmFJN1ptc1NpVHVPaFJYNGdydVh4Y1pEdWFNMUdqQlQ4UFFTV3VrQzI5RWNVeC1CVUVFNHZlRGhQVkVMN2E3d3dkNUZydTF6d25vZTdKWWNRVTV0S0hoVV9mejRibkpPdFk4VjBwRW1BYTM4ZWdKaUhGUnJlVFdpSWVPczR1LWNwZGJib3c4QVN3RXFPTl9nSFRrdw?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",

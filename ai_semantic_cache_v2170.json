@@ -6858,5 +6858,61 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:9c1d9f3d4902e4cd7719d8ca": {
+    "ts": 1793995442.1878858,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.75,
+          "policy_stage": "considering",
+          "reason": "國會調查川普時期能源交易，增加合規與監管不確定性。",
+          "relevant": true,
+          "affected_channel": "估值",
+          "transmission": "國會審查政策→監管風險上升→關鍵礦物與能源相關板塊估值承壓",
+          "exposure": "美國關鍵礦物與能源開發產業"
+        },
+        {
+          "id": 1,
+          "direction": "negative",
+          "score": -3,
+          "confidence": 0.85,
+          "policy_stage": "threat",
+          "reason": "川普威脅徵收高額關稅，引發市場對貿易戰及全球供應鏈中斷的擔憂。",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "關稅口頭威脅→進口成本預期上升→整體股票市場承壓",
+          "exposure": "跨國製造業與進口依賴型產業"
+        },
+        {
+          "id": 2,
+          "direction": "negative",
+          "score": -3,
+          "confidence": 0.9,
+          "policy_stage": "threat",
+          "reason": "關稅政策預期引發晶片股拋售潮，拖累整體股市表現。",
+          "relevant": true,
+          "affected_channel": "出口",
+          "transmission": "關稅政策限制→半導體出口與供應鏈受阻→AI與科技股重創大盤",
+          "exposure": "半導體與AI科技板塊"
+        },
+        {
+          "id": 3,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.8,
+          "policy_stage": "considering",
+          "reason": "民主黨發起對川普時期能源交易的調查，增加傳統能源政策變數。",
+          "relevant": true,
+          "affected_channel": "估值",
+          "transmission": "政治調查啟動→政策穩定性下降→傳統能源與石油天然氣產業承壓",
+          "exposure": "傳統能源與石油天然氣產業"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
