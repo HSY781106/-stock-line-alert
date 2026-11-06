@@ -6556,5 +6556,251 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:9482341462df80ed173ae77d": {
+    "ts": 1793928284.712473,
+    "data": {
+      "items": [
+        {
+          "id": 1,
+          "direction": "negative",
+          "score": -3,
+          "confidence": 0.8,
+          "policy_stage": "announced",
+          "reason": "Trump tariff policy 2025",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "政策→貿易壁壘→AI產業成本上升→標的下跌",
+          "exposure": "受影響"
+        },
+        {
+          "id": 2,
+          "direction": "negative",
+          "score": -3,
+          "confidence": 0.8,
+          "policy_stage": "announced",
+          "reason": "Trump tariff policy 2025",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "政策→貿易壁壘→半導體成本上升→AI股下跌",
+          "exposure": "受影響"
+        }
+      ]
+    },
+    "provider": "groq"
+  },
+  "news:0050:f8baba95e496ac5b84b62c66": {
+    "ts": 1793928290.9034922,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.8,
+          "reason": "0050持續處於百元下方，行情偏弱。",
+          "relevant": true
+        },
+        {
+          "id": 1,
+          "direction": "negative",
+          "score": -3,
+          "confidence": 0.85,
+          "reason": "報導指出0050出現大跌，表現疲弱。",
+          "relevant": true
+        },
+        {
+          "id": 2,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.9,
+          "reason": "僅為持股明細總覽等客觀公開資訊。",
+          "relevant": true
+        },
+        {
+          "id": 3,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.9,
+          "reason": "僅為ETF基本資料介紹，無影響利多利空。",
+          "relevant": true
+        }
+      ]
+    },
+    "provider": "gemini"
+  },
+  "etf_final_v2237:0050:3d47947eca72ca92736c7b7b": {
+    "ts": 1793928322.6241143,
+    "data": {
+      "recommendation": "🟠 暫緩配置",
+      "confidence": 0.75,
+      "core": "技術面呈現強烈空頭且消息面偏負面，建議暫緩配置。",
+      "value_view": "長中期受台積電等半導體權值帶動，但目前評分不高。",
+      "buy_view": "指標處於嚴重超賣，但趨勢明確走空，不宜接刀。",
+      "macro_view": "總經環境中性，利率傳導偏負面。",
+      "news_view": "近期新聞多聚焦於價格大跌與表現疲弱，偏向利空。",
+      "trump_view": "關稅政策對半導體及AI產業形成負面壓力。",
+      "theme_view": "台灣大型權值與半導體供應鏈短期承受政策與技術面回檔壓力。",
+      "risk_view": "技術面重挫風險及特朗普半導體關稅政策風險。",
+      "conflict": "極度超賣的技術指標與強烈下降趨勢之間的矛盾。",
+      "strengths": [
+        "折價0.41%具極微幅估值優勢",
+        "RSI與KD已進入嚴重超賣區"
+      ],
+      "risks": [
+        "技術面呈短中長期空頭排列",
+        "Trump關稅政策對半導體負面影響"
+      ],
+      "next_watch": [
+        "0050止跌落底訊號",
+        "美國半導體關稅政策動向"
+      ],
+      "reason": "量化與買點評分偏低，技術面呈現急跌空頭格局。雖指標超賣，但結合Trump關稅負面衝擊與負面新聞，目前盲目進場風險高。建議等待趨勢落底再行配置。"
+    },
+    "provider": "gemini"
+  },
+  "news:2330:4277d8b56a71f216d4f6ff04": {
+    "ts": 1793928331.6266448,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "negative",
+          "score": -3,
+          "confidence": 0.85,
+          "reason": "台積電ADR大跌逾8%，短期市場氣氛偏空。",
+          "relevant": true
+        },
+        {
+          "id": 1,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.5,
+          "reason": "僅為ETF募集宣傳，對台積電無直接實質影響。",
+          "relevant": false
+        },
+        {
+          "id": 2,
+          "direction": "negative",
+          "score": -1,
+          "confidence": 0.6,
+          "reason": "列入觸低清單，顯示股價走勢偏弱。",
+          "relevant": true
+        },
+        {
+          "id": 3,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.75,
+          "reason": "電子權值股領跌帶動大盤重挫，影響短線情緒。",
+          "relevant": true
+        }
+      ]
+    },
+    "provider": "gemini"
+  },
+  "final_v21826:2330:0a697aff4a5d39d7672609a5": {
+    "ts": 1793928341.217328,
+    "data": {
+      "recommendation": "🔴 暫不進場，避免接刀",
+      "confidence": 0.85,
+      "core": "台積電基本面優異，但技術面與籌碼面極度弱勢且有ADR重挫消息干擾，宜等待止跌訊號。",
+      "fundamental_view": "ROE達31.7%、EPS成長54.3%，低於自身估值，獲利強勁具投資價值。",
+      "technical_view": "呈空頭趨勢，跌破MA20與MA60，KD/RSI進入超賣區但仍無止跌跡象。",
+      "chips_view": "法人20日大幅賣超逾1.5億張，籌碼面強烈拖累股價。",
+      "risk_view": "法人連續賣超並破雙均線，技術與籌碼風險偏高。",
+      "news_view": "ADR重挫逾8%及權值股領跌衝擊，市場情緒短期極度偏空。",
+      "trump_view": "關稅與半導體政策偏負面，帶來地緣與產業政策風險。",
+      "macro_view": "利率殖利率傳導偏負面，匯率面雖微幅偏正但整體總經偏向謹慎。",
+      "buy_view": "長期投資價值雖佳，但短期買點與價值嚴重背離，目前不宜接刀。",
+      "strengths": [
+        "ROE達31.7%且EPS成長54.3%",
+        "估值低於自身過往與合理區間"
+      ],
+      "risks": [
+        "法人20日籌碼大賣超",
+        "ADR大跌逾8%及均線破位"
+      ],
+      "conflict": "基本面強勁成長與技術面空頭/法人重挫賣超極度衝突。",
+      "next_watch": [
+        "外資法人何時轉賣為買",
+        "股價是否在2206.4-2273.6支撐區止跌"
+      ],
+      "reason": "基本面表現優異且獲利大幅成長，具備長線價值。然而技術面跌破MA20及MA60均線，加上法人巨額賣超與ADR重挫利空衝擊，短期走勢極弱。投資價值與買點嚴重背離，建議等待止跌訊號確認後再行佈局。"
+    },
+    "provider": "gemini"
+  },
+  "news:3711:f7535f50b68b1e3b2049e63e": {
+    "ts": 1793928351.930396,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.7,
+          "reason": "僅提及收盤成交量放大，無明確利多或利空訊息。",
+          "relevant": true
+        },
+        {
+          "id": 1,
+          "direction": "negative",
+          "score": -1,
+          "confidence": 0.7,
+          "reason": "提及股價回檔，屬短期中性偏空市場討論。",
+          "relevant": true
+        },
+        {
+          "id": 2,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.5,
+          "reason": "屬同學會個人討論與猜測，缺乏實質基礎面依據。",
+          "relevant": true
+        },
+        {
+          "id": 3,
+          "direction": "positive",
+          "score": 3,
+          "confidence": 0.8,
+          "reason": "輝達擴大砸錢搶封測產能，有利封測龍頭接單。",
+          "relevant": true
+        }
+      ]
+    },
+    "provider": "gemini"
+  },
+  "final_v21826:3711:48068e1870991224c5fd0b5d": {
+    "ts": 1793928358.4067883,
+    "data": {
+      "recommendation": "🔴 減碼/停損觀察",
+      "confidence": 0.4,
+      "core": "日月光估值偏高，技術趨勢空，籌碼弱，風險高，買點不符投資價值",
+      "fundamental_view": "估值高於同業，PE 41.39 vs 17.8，仍有獲利成長，但估值壓力大",
+      "technical_view": "RSI 31，接近20日低點，趨勢偏空，近期回撤超20%",
+      "chips_view": "法人20日賣超，融資減少，籌碼不支撐",
+      "risk_view": "法人連續賣超，跌破MA20/MA60，風險高",
+      "news_view": "無明確利多，輝達投資利好但影響有限",
+      "trump_view": "貿易/關稅負面，對半導體不利",
+      "macro_view": "利率負面，匯率正面，市場風險低",
+      "buy_view": "買點與投資價值不符，需等止跌確認",
+      "strengths": [
+        "獲利成長22.96%",
+        "PE相對同業低於市場平均"
+      ],
+      "risks": [
+        "估值高於同業",
+        "法人連續賣超",
+        "跌破MA20/MA60"
+      ],
+      "conflict": "基本面看好但估值高，技術與籌碼均呈負面，買點不符",
+      "next_watch": [
+        "持續觀察法人買賣",
+        "MA20/MA60突破",
+        "利率走勢"
+      ],
+      "reason": "估值偏高且技術趨勢空，籌碼弱，風險高，買點不符投資價值，建議減碼或觀察"
+    },
+    "provider": "groq"
   }
 }
