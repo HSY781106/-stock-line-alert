@@ -6914,5 +6914,61 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:2c068dd9267e77dd15d65329": {
+    "ts": 1793995771.761712,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.75,
+          "policy_stage": "considering",
+          "reason": "川普時代能源交易面臨國會審查，監管疑慮增加。",
+          "relevant": true,
+          "affected_channel": "估值",
+          "transmission": "國會調查→法規疑慮→稀土業者估值受壓",
+          "exposure": "美洲稀土市場與相關政府合作計畫"
+        },
+        {
+          "id": 1,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.7,
+          "policy_stage": "considering",
+          "reason": "即使擬減少軍援，軍售積壓高達百億美元支撐國防需求。",
+          "relevant": true,
+          "affected_channel": "需求",
+          "transmission": "軍售積壓訂單→國防供應鏈持續拉貨→整體國防產業受惠",
+          "exposure": "美國軍工航太供應鏈與以色列防務合約"
+        },
+        {
+          "id": 2,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.8,
+          "policy_stage": "considering",
+          "reason": "民主黨發起調查川普時代能源交易，引發政策不確定性。",
+          "relevant": true,
+          "affected_channel": "估值",
+          "transmission": "政黨對立與調查→能源政策持續性受疑慮→傳統能源類股受壓",
+          "exposure": "整體傳統能源與相關投資計畫"
+        },
+        {
+          "id": 3,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.85,
+          "policy_stage": "implemented",
+          "reason": "川普私人莊園部署雷射防禦系統為單一安保事件，市場影響極小。",
+          "relevant": false,
+          "affected_channel": "需求",
+          "transmission": "特勤局維安部署→單一採購→對廣泛國防市場無顯著傳導",
+          "exposure": "證據不足"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
