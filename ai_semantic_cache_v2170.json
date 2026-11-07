@@ -7026,5 +7026,61 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:fa5d3b563be6f239e1f17c54": {
+    "ts": 1794011981.21596,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.5,
+          "policy_stage": "unknown",
+          "reason": "評論文章討論Trump對石油市場影響，缺乏具體政策細節。",
+          "relevant": true,
+          "affected_channel": "供需與估值",
+          "transmission": "政策立場觀望→石油市場情緒波動→整體市場",
+          "exposure": "整體原油市場與能源類股"
+        },
+        {
+          "id": 1,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.7,
+          "policy_stage": "considering",
+          "reason": "國會對Trump時期能源交易展開審查，增加關鍵礦物監管風險。",
+          "relevant": true,
+          "affected_channel": "法規與合規成本",
+          "transmission": "國會調查→關鍵礦物企業面臨審查→影響供應鏈與相關標的估值",
+          "exposure": "稀土與關鍵礦物供應鏈企業"
+        },
+        {
+          "id": 2,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.7,
+          "policy_stage": "considering",
+          "reason": "民主黨擬調查Trump時期能源交易，增加傳統能源政策不確定性。",
+          "relevant": true,
+          "affected_channel": "法規與政策風險",
+          "transmission": "國會調查啟動→傳統能源交易遭審查→能源產業投資信心受挫",
+          "exposure": "傳統能源與油氣探勘產業"
+        },
+        {
+          "id": 3,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.6,
+          "policy_stage": "threat",
+          "reason": "市場預期Trump可能對伊朗實施嚴格制裁，支撐原油價格。",
+          "relevant": true,
+          "affected_channel": "供給與出口",
+          "transmission": "地緣政治制裁威脅→伊朗原油出口受限→原油供給收緊推升油價",
+          "exposure": "全球原油市場與能源類股"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
