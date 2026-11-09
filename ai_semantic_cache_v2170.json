@@ -7138,5 +7138,49 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:0ef33f98ea52478b5ed3460c": {
+    "ts": 1794265686.6204848,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.75,
+          "policy_stage": "announced",
+          "reason": "加快反無人機部署利好國防航太產業。",
+          "relevant": true,
+          "affected_channel": "需求",
+          "transmission": "政府加快採購政策→增加國防廠商訂單→提升整體國防航太板塊估值",
+          "exposure": "國防軍工與反無人機技術相關業者"
+        },
+        {
+          "id": 1,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.6,
+          "policy_stage": "considering",
+          "reason": "民主黨推動清潔能源立場遭川普化石燃料政策抵抗，政策不確定性高。",
+          "relevant": true,
+          "affected_channel": "估值",
+          "transmission": "黨派政策拉鋸→新能源與傳統能源政策前景分歧→市場維持觀望",
+          "exposure": "新能源與化石燃料相關產業"
+        },
+        {
+          "id": 2,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.7,
+          "policy_stage": "announced",
+          "reason": "稀土公司因川普時期能源交易面臨國會審查壓力。",
+          "relevant": true,
+          "affected_channel": "估值",
+          "transmission": "國會調查政策→增加監管與法律風險→壓抑稀土板塊信心",
+          "exposure": "USA Rare Earth 及稀土供應鏈標的"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
