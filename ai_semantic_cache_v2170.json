@@ -7182,5 +7182,61 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:9dab3c8040924e9f3abfdfcc": {
+    "ts": 1794266024.5524695,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.85,
+          "policy_stage": "announced",
+          "reason": "地緣政治風險降溫致原油溢價回落",
+          "relevant": true,
+          "affected_channel": "需求與價格",
+          "transmission": "美不對伊朗動武→中東地緣溢價消除→原油價格下跌→整體能源市場下行",
+          "exposure": "全球原油期貨及上游採油業者"
+        },
+        {
+          "id": 1,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.7,
+          "policy_stage": "threat",
+          "reason": "新聞聚焦於技術面乖離過大及過往歷史比較",
+          "relevant": false,
+          "affected_channel": "估值與市場情緒",
+          "transmission": "關稅威脅歷史回顧→市場情緒波動→整體市場觀望",
+          "exposure": "半導體產業及大型科技股"
+        },
+        {
+          "id": 2,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.8,
+          "policy_stage": "announced",
+          "reason": "加速反無人機部署利好國防供應鏈",
+          "relevant": true,
+          "affected_channel": "政府需求與訂單",
+          "transmission": "政府加快審批部署→國防與反無人機需求增加→航太國防板塊獲利",
+          "exposure": "國防工業、反無人機系統及軍事航太業者"
+        },
+        {
+          "id": 3,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.6,
+          "policy_stage": "unknown",
+          "reason": "外交策略評論對市場無直接明確傳導",
+          "relevant": false,
+          "affected_channel": "市場情緒",
+          "transmission": "地緣外交政策不確定性→政治風險預期→整體市場觀望",
+          "exposure": "證據不足"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
