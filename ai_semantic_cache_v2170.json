@@ -7082,5 +7082,61 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:441ce3a3ebf4457ba2b2b667": {
+    "ts": 1794210766.3575187,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "positive",
+          "score": 3,
+          "confidence": 0.85,
+          "policy_stage": "announced",
+          "reason": "川普支持能源審批法案，有助於加速傳統與整體能源基礎設施建設。",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "審批簡化→縮短能源項目開發週期→降低能源業者合規與營運成本",
+          "exposure": "受惠產業：油氣及能源基礎設施相關企業"
+        },
+        {
+          "id": 1,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.7,
+          "policy_stage": "considering",
+          "reason": "民主黨推動清潔能源法案以對抗川普化石燃料政策，屬於政黨政策立場博弈。",
+          "relevant": true,
+          "affected_channel": "估值",
+          "transmission": "政黨法案主張→法案通過不確定性高→市場維持觀望",
+          "exposure": "受影響產業：綠能及化石燃料板塊"
+        },
+        {
+          "id": 2,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.65,
+          "policy_stage": "threat",
+          "reason": "川普稱若伊朗核計畫與海峽談判有進展則不必然發動攻擊，地緣政治風險暫歇。",
+          "relevant": true,
+          "affected_channel": "需求",
+          "transmission": "地緣緊張局勢緩和緩和→油價風險溢價降低→全球市場波動降低",
+          "exposure": "受影響標的：原油與整體大盤指數"
+        },
+        {
+          "id": 3,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.75,
+          "policy_stage": "considering",
+          "reason": "期中選舉後川普1.5兆美元國防計畫面臨國會阻礙，預算通過難度增加。",
+          "relevant": true,
+          "affected_channel": "需求",
+          "transmission": "國防預算面臨阻力→軍工企業未來訂單預期下修→國防產業估值受壓",
+          "exposure": "受影響標的：XAR ETF及美國國防航太類股"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }

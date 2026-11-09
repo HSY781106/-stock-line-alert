@@ -1,83 +1,83 @@
 {
   "2330": {
-    "fetched_at": "2026-11-06T15:50:47.517994+08:00",
-    "adjustment": -7,
+    "fetched_at": "2026-11-09T15:53:13.027034+08:00",
+    "adjustment": -4,
     "events": [
       {
-        "title": "2330 台積電 - 台積電跌停，台股早盤崩跌3,737 點創盤中最大跌點失守年線- 股市爆料同學會 - CMoney",
+        "title": "2330 台積電 - 連台積電都開盤跌停- 股市爆料同學會 - CMoney",
         "source": "CMoney",
-        "date": "2026-11-05T13:09:24+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE1pMnZjTjdjVVRnUGdKNmtzeFFLWFkyeEJabGN3Y1AxclNlQ3RDYkJIWk5RZDVkSkhBV0FmODZZU1o3OEFqbWZEMnREMkhUS1NSQVB1SnY0UGY?oc=5",
+        "date": "2026-11-07T15:41:08+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTFBib0hZbFhETWdjR3JucDg4Skt6U3hSXzNPS1lSNWNIcFVQaUhuX3V3OTRPTjFoSE9VV1RwOWVjSnRJM3hMMUJWcHZ1SDhjVlEwbGMzdmpzSTc?oc=5",
         "raw_adjustment": -5,
-        "adjustment": -5,
+        "adjustment": -4,
         "label": "股價重大下跌",
         "status": "重大負面事件"
       },
       {
-        "title": "2330 台積電 - 【即時新聞】最新美股AI遭血洗！台積電ADR重挫逾10％衝擊大盤狂瀉3737點 - 股市爆料同學會 - CMoney",
+        "title": "台積電(2330) 今日股價與討論 - 股市爆料同學會 - CMoney",
         "source": "CMoney",
-        "date": "2026-11-05T14:33:25+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE1lbkVyUjExQl9QckFfZkprTWYtb25wZWwwZEF2NllKNFVoUzZHbE1paEhMNnRQWUluNlR4cl9iYTZmVk1PX2FxWm0tX0xXNkI2Z29CaWtXWEI?oc=5",
-        "raw_adjustment": -5,
-        "adjustment": -5,
-        "label": "股價重大下跌",
-        "status": "重大負面事件"
+        "date": "2026-11-05T16:00:00+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE03M3BXYmZ0QmJ1bF9rNXlLWkw2Qkp3ek9VMXFyX09kT0poVlRjVFJ4bzBEWFh1aTU0Y3Z0ekJqQ3pJNWVIam5MQzlRM0N4OXc?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
       },
       {
-        "title": "2330 台積電 - 〈台股開盤〉台積電跌停開出、融資斷頭潮湧現崩跌逾3700點摜破年線- 股市爆料同學會 - CMoney",
+        "title": "2330 台積電 - 怪博士（誠懇哥）艦長日誌｜11/6（五） - 股市爆料同學會 - CMoney",
         "source": "CMoney",
-        "date": "2026-11-05T17:57:20+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE8wVHF0TEZrVEcyZnR6b2dHODJFRF9RVlY5TnJDYXRXOHl6MjUzU29CZUdDZFhOXzloSzA5T1RaVEVTblk1cTliakwxZ3hadV9JbjIzaXh5WjY?oc=5",
-        "raw_adjustment": -5,
-        "adjustment": -5,
-        "label": "股價重大下跌",
-        "status": "重大負面事件"
+        "date": "2026-11-06T07:01:36+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE5VUUZTRkhwdUlYTGpSTkFFTUl1MkpnWU42LVhNWllUQXhUNS1pRlpiZjFaVUZaYlhNUkR2a2tibWc3RWl2bGZiOU9iVkVNOENPaEVrV2szajM?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
       },
       {
-        "title": "2330 台積電 - 選後行情變臉！那指盤中重挫近4%、道瓊翻黑台積電ADR跌逾8% - 股市爆料同學會 - CMoney",
-        "source": "CMoney",
-        "date": "2026-11-05T23:30:07+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE5ta0JxeWQwTF9Ic3JMemhVbFA1OWRtYmtQRVRCSjk5a2EzVmpFR3RQNUE3TDVhSlgzdHRoYTl1YUNwNE1uRzZHMXp5d2tObWZWT3oydGNrU28?oc=5",
-        "raw_adjustment": -5,
-        "adjustment": -5,
-        "label": "股價重大下跌",
-        "status": "重大負面事件"
-      },
-      {
-        "title": "台積電開盤即跌停！一度急殺2020元 法人首開槍「降評」 - TVBS新聞網",
-        "source": "TVBS新聞網",
-        "date": "2026-11-06T10:10:00+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE9aclpTLTRrTGVWdW5LbzdmN2thYTZSNGFGSl9hYTRKUEd5VWdseXFtQ2R0bUs0and6RjdyTkh2R0wySHVCWmJUbmd1WlVMLXc?oc=5",
-        "raw_adjustment": -5,
-        "adjustment": -5,
-        "label": "股價重大下跌",
-        "status": "重大負面事件"
-      },
-      {
-        "title": "台積電一度跌停！跌220元史上最慘 分析師喊「嚇人的送錢機會」 - Yahoo股市",
-        "source": "Yahoo股市",
-        "date": "2026-11-06T10:11:36+08:00",
-        "link": "https://news.google.com/rss/articles/CBMipANBVV95cUxNZ2lWT2dmMEZFd1d4VnNqdGx0VEtvSGRSUWlLZHJBUHBFSHcwR1lkQ1dIT3lXeEJjOVVKQWYyLVRSU0wyU2pKQnVKSDhPVUNaUU02c25DWEtFbkw5VURQdjhQaF9jWlFLcEFsSmJxUy16RWJfUDdyOUlRWWFYUWFlYlNZTmF0QlBrVngtbHpDNk5xRmtwb3B2VHNNc2FlbF9wS3JCUzg1SlhSZFY0eFp5VXc4Y0FuRjZ4eWhRQ0ZiWXpZT0VXT3NtU3pHUjFDc2JhR1lDaVVUZHEzOThUYnVfcHZiaGgtYngzcjRvdXhJeXdTS2J4QmR1aWhCbTBGMnFFUkgzdUF3NDc1Z095blRvMlpmR01UaVZYUWYzczJlMUprVGNWYkluZVk2aHU0T2duNm9nVk42VmVxUEZ6ZmNLSjNSVjBCNGJFY0xYdkg0dWNGWDZJNV8",
-        "raw_adjustment": -5,
-        "adjustment": -5,
-        "label": "股價重大下跌",
-        "status": "重大負面事件"
-      },
-      {
-        "title": "【即時新聞】台積電(2330)今日受AI利空衝擊失守防線，大盤重挫近4000點 - CMoney投資網誌",
-        "source": "CMoney投資網誌",
-        "date": "2026-11-06T12:47:38+08:00",
-        "link": "https://news.google.com/rss/articles/CBMikAFBVV95cUxOVnh5RVc4a3NmNmx2RGJlTG5wVnJLcEVxQlBvcGpob2hjLTlKRXVHV1d1MlJvM1V6NXRiYzRpRThVNmx0ZS1QTW15dzIyTVZoaWM0RExacW9yaGlkUlhpSTl5dm5MZmE4eFVLWnhWczA4SW9YOEEydkdwV0wzbFJDd3BTdGEtaXRYWEt6aW5lYVo?oc=5",
-        "raw_adjustment": -5,
-        "adjustment": -5,
-        "label": "股價重大下跌",
-        "status": "重大負面事件"
-      },
-      {
-        "title": "【零股排行榜】 盤中零股成交量TOP 20｜0050 元大台灣50、00878 國泰永續高股息、0056 元大高股息、00406A 主動中信台灣收益、2330 台積電 (1103)｜豐雲學堂2026 年 11 月 - 永豐金證券",
+        "title": "【零股排行榜】 盤中零股成交量TOP 20｜0050 元大台灣50、2330 台積電、00631L 元大台灣50正2、0056 元大高股息、00878 國泰永續高股息(1106)｜豐雲學堂2026 年 11 月 - 永豐金證券",
         "source": "永豐金證券",
-        "date": "2026-11-03T14:30:18+08:00",
-        "link": "https://news.google.com/rss/articles/CBMimgVBVV95cUxPODlEaFJTVzkxeGUyTXNQcHdsd243dENmeWs0U3NBOU1NTFc0VzhuRElaaXRDNWlteUdnandNRzVubEhzODdPVElhNTFNbXJXcGFPMXNSQkx6UTdKdmxyTXRILXdVVHY1OFp0T2pReGFReFdTaUk0cFREbEdEcTd1cDFJY3BSZXFrRFhZN3BZNk1vc1RkdnJkVVZyR1V4dDdUdlh2LXpDTU55ejdxRDM4NnhTZVU0dk1zVEdHUzhUSWJ0X2x1RS1Ec3pZRWR5bkVmVmJ3RDJsaUtuR0EzMWx1Nkk1MzNTSVlpYlFRbkpJZmcyWkhrNzNyMG15dVAyeDZSVVh3M2gxdURqVnlDVk42NHVIMlNOLVRCREt6WEE5Wk1Md1lzbXk5dDM0dHNpZWdYSmV2UXZVY3RMSkFSUnhBUDE3bFRLY251VUpGM3N1ckYzaGtCMkV",
+        "date": "2026-11-06T14:41:01+08:00",
+        "link": "https://news.google.com/rss/articles/CBMi-gRBVV95cUxOWXBjWXNXX0EtZS1STGNER1lidngxV2JUS0lDa2RTOXZlNG9NYTdMR0xIdlJPRkNvbHVyVWw4NGEwY2JsRTM5aWk3REhSYU9FcDNIMjVOMWRoNmZaQUYwd29WcE9aajVfcmVOVXF0QllmYkVkMHJiZ0pTQnV2RzhIRHdEVnFCUW9UVlB0R25QTGYwN2Q2XzI5eHJMcU1DS0xya3JMZEZJVmk2Q0ptWmFWODRSSHZucDFiaDViYlBmQm1LUW1GVEtISjNhN2VFOFZYOGFDaWJvT2otT3lRQm1ZV1JMMHBNVDE4Mzc4VExtUGdLZDE5MXVQTjlpdDRGLUV6cGQ0TGU1S0NMRWdmVTlWaEJhZ09rN25fb2NBMlNTOURxQ0xSZHg3YXJZSlA1OGZKdVBlOVMyUFhmQXVNSXpqNFJlVnBtSlFHQnBTaWpqdnY0a2JOcEF",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "傳跨足先進記憶體生產？焦佑鈞：台積電與三大記憶體原廠均有合作不會加入競爭 - CMoney",
+        "source": "CMoney",
+        "date": "2026-11-07T00:23:21+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTFBkbERvVFQxdGgtWXJEYTlnZC1KUGRKZlFWNHJkSWZUbmZCd0lIdVluWFB5TFo4ajgzSURrd0ZEa2VvRVR3TEViY2hUaHdTMXVQRDlUU05yYjA?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "2330 台積電 - 特斯拉AI晶片藍圖曝光！Dojo D3導入HBM、SI6效能拚提升80倍、採2奈米製程- 股市爆料同學會 - CMoney",
+        "source": "CMoney",
+        "date": "2026-11-07T04:15:36+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE1DOW1GSGlJMV9ibjQ4OVBwX0tJR052ZWJGNkUwQXdHN3RXcEJLWGIya214WlY3QzZXU1pKS2FxTm95c2tFWHd6LTNQSHg1Q0hua1dfc05XQm0?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "2330 台積電 - 【宏觀週報】台股急跌：上市融資訊號亮了，上櫃槓桿還沒洗完- 股市爆料同學會 - CMoney",
+        "source": "CMoney",
+        "date": "2026-11-07T05:56:22+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE5aTWlCbVN1LXRFUG9UVGsxVXlZMEJNZ0poSHFfcjgzcE9nRzdYdTRrSVNmV0FxeW5leG9rMW1EY0pFOWZjWWtwUmFpRnNDVDFYdnRfRFFPa0M?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "2330 台積電 - 美股晶片股反攻！費半大漲4.21% 台指期夜盤收紅646點 - 股市爆料同學會 - CMoney",
+        "source": "CMoney",
+        "date": "2026-11-07T06:14:45+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE9WNDJfUG93dlRFUHh2cVptUm9vcjVlbnNsZ3BhcnVnMlpHcFJtWlZkdUhVU3VpMURVSktHS2Z2TzNwTkF0NHhnNjNDTzJtRXR1Rkp2ZEo2Nmk?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
@@ -88,19 +88,9 @@
     "lookback_days": 14
   },
   "3711": {
-    "fetched_at": "2026-11-06T15:50:51.486792+08:00",
+    "fetched_at": "2026-11-09T15:53:16.106345+08:00",
     "adjustment": 0,
     "events": [
-      {
-        "title": "《日月光投控》收盤量放大 1.8 倍 - CMoney",
-        "source": "CMoney",
-        "date": "2026-11-01T07:35:11+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE90c2FaUFdITDIxa0dkNWx5UmlFVk9NR2ZNTWR0N1FMYnlteFpJeWhobWxmaDF0Q21HR2NmX3Z0WDdNR0FsOEFFVFBRQ2tCcGV0WTN6TWpHczI?oc=5",
-        "raw_adjustment": 0,
-        "adjustment": 0,
-        "label": "",
-        "status": ""
-      },
       {
         "title": "3711 日月光投控- 封測龍頭日月光回檔- 股市爆料同學會 - CMoney",
         "source": "CMoney",
@@ -112,40 +102,10 @@
         "status": ""
       },
       {
-        "title": "3711 日月光投控- 600破不了信我- 股市爆料同學會 - CMoney",
-        "source": "CMoney",
-        "date": "2026-11-04T11:35:26+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE5INk9xbEJmSU9HQVRKd0NmVmdKcDctWjZzRWRVcW9GLV9KSUxUd1J5cUpzY1k0WE5wTDZrbHBERVVWZmZ1c2c0c011TzkydW9TWERZcnpjRDY?oc=5",
-        "raw_adjustment": 0,
-        "adjustment": 0,
-        "label": "",
-        "status": ""
-      },
-      {
         "title": "3711 日月光投控- 輝達砸40億美元搶封測產能，AI還有看頭嗎？ - 股市爆料同學會 - CMoney",
         "source": "CMoney",
         "date": "2026-11-05T04:47:42+08:00",
         "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE96TXFkYXR4MVhCck51MjMzbUpfTmpwRDJOT0JWVDk2MzluV3VEZ19heTVnV0pkT0ZWVDh6ZGN3bDlkblJIMXhVVW53WHA1SEIweFREVDllOHU?oc=5",
-        "raw_adjustment": 0,
-        "adjustment": 0,
-        "label": "",
-        "status": ""
-      },
-      {
-        "title": "日月光投控：矽品精密工業10/19~11/5向聯純取得廠務工程，計約8.45億元 - 台視全球資訊網",
-        "source": "台視全球資訊網",
-        "date": "2026-11-05T17:17:23+08:00",
-        "link": "https://news.google.com/rss/articles/CBMikgFBVV95cUxQUzFPbEdqQ0lzTFJlOFBPT2RxTnF3X3FlWDZ3bzZ6RmVHdXhMUUw3aVJzU0xMb0FIQ0pydHJ1NFNEOWNZb3Fsc0tyclhuTVBHVnJIZ3ktR0pOTlB2MWRpenl5UTBNNjVGREN4amNQYzlOU0RkbnA3MlNXRVdQOUczWllkcExOTm9kbG1CeXprYlFfZw?oc=5",
-        "raw_adjustment": 0,
-        "adjustment": 0,
-        "label": "",
-        "status": ""
-      },
-      {
-        "title": "日月光投控子公司114/12/9~115/11/5取得供營業用機器設備一批，計約7578萬美元 - 台視全球資訊網",
-        "source": "台視全球資訊網",
-        "date": "2026-11-06T12:17:42+08:00",
-        "link": "https://news.google.com/rss/articles/CBMikgFBVV95cUxPdC04QkZfRm5iRExpTTl6cHA1cVc2UTRpc2hRNFBGVnFKWHNIWDlBMDk3ZThUenhJYkdLYm9KRDVaNmNoUFMwODBtM3FNWGw4MEx0ODU1WWdkRHJ1LXdJcDl1Y1VFalJacHJ3b2p1Vk1nNVQyTG1JV2hFRmNWYjhsR0lwYkJJQWJ0anJxU0hTNkRadw?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
@@ -230,84 +190,84 @@
     "lookback_days": 14
   },
   "0050": {
-    "fetched_at": "2026-11-06T15:50:20.625422+08:00",
-    "adjustment": -7,
+    "fetched_at": "2026-11-09T15:52:46.372960+08:00",
+    "adjustment": -5,
     "events": [
       {
-        "title": "【11/5台股收盤】富喬跌停、0050續處百元下方 - 口袋證券",
-        "source": "口袋證券",
-        "date": "2026-11-05T15:22:21+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiZkFVX3lxTFBVSmhpR2FrM2d6ZU1UTWVPeW9hdTJWZzRTQnhlRlp5ZURpcVd6a0pFNGpuSW5NUVJrbVY3OWRRdWh4a0pEYWF1UUx4T1BKMDVuR1VTN1ZBbFd1ZGdtN2tLNVZ3aVhZQQ?oc=5",
+        "title": "台股暴跌他撿0050！89元買進11張花近百萬…竟後悔沒多買 - UDN",
+        "source": "UDN",
+        "date": "2026-11-09T13:52:26+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiU0FVX3lxTE9OMlY5Y29qRGVRekdEMXlDWnUtaGtud0hVUE1NSnZpOW11WHJ5NS1xY281b2owcnBvZm54b2pHWXFqTmJWRFRpb0JnV2FVWEpDeVlR0gFYQVVfeXFMTnpOcU80NmJHVUJrOGZRQlUxWXZBVFY1bHg3SXRaOWJOWkJ4QTJVOFYwSnlueVZlVnRRM2NQdUtLdTNsamVYOEJWSmV4LXBfNDVLQXU5akhZQg?oc=5",
         "raw_adjustment": -5,
         "adjustment": -5,
         "label": "股價重大下跌",
         "status": "重大負面事件"
       },
       {
-        "title": "美股重挫衝擊0050！台積電跌停開出 十大科技持股風險與歷史股災一次看 - Life 生活網",
-        "source": "Life 生活網",
-        "date": "2026-11-06T10:11:40+08:00",
-        "link": "https://news.google.com/rss/articles/CBMi7wJBVV95cUxPNjJVTHpVemVoY2lTRzhaclNJSXFBU3YwdG94dXlPR0lVNjBTWjJPZmRweW85ZlU5QnVsT1JpTVBiVGE4SFZYcFhCTkh3TEdTTG5nSHkwaC03ZHhDcVd5ZkJZaHROWXB0Rm1DUmNfTVpMRy1ISzFYR0ZaNWlsdkt3bjNEM2RxMXlZNUdVel9lNkJtOUpYYVhCSi1VZHhMNGQwUm1xMHYzRUw2MEZpMjhaVGxfX1IzVlBtMEh4Z1lyQU92c3hxRXZXZEtwc2cxMkRlNjR1WlhZa0VVTVZNTkhzSlY0QnlhQnBxUnBKelk4ZlUwdUl2OWxSb0pZZGwxSi1sMU5kcm9CR2EtQmh1V3J2VGlhaTQwSUFVRHFWX1pJSV9RTUU1TzEtRTVPNXA3SkV0SENOZjBvS203OVBRcmE4LUFMM3N5eThNanRxakNFSlZOUThJcGt",
-        "raw_adjustment": -5,
-        "adjustment": -5,
-        "label": "股價重大下跌",
-        "status": "重大負面事件"
-      },
-      {
-        "title": "台股暴跌3700點，0050、00406A、00927...越跌越買選誰？財金教授曝「黃金加碼名單」分批撿：這種ETF恐越攤越虧 - 今周刊",
-        "source": "今周刊",
-        "date": "2026-11-06T11:00:00+08:00",
-        "link": "https://news.google.com/rss/articles/CBMigAFBVV95cUxOUmFCY3ZWamJ6dk5YUnp3MUR2TEpfZEpvNDVtOERGSV8zUHcxdUw5b3JTekJiWDkzNHVScDYxTkpkR01kbkRxX2VIOWN0WWhXM2laX1NncllkMWdrZlAwb0Q2VlE1cUs4cG80eXVRU3F0VnYzcndNaXZZR3d4ZzhMMw?oc=5",
-        "raw_adjustment": -5,
-        "adjustment": -5,
-        "label": "股價重大下跌",
-        "status": "重大負面事件"
-      },
-      {
-        "title": "台股暴跌蒸發200萬施昇輝不恐慌揭持有0050、0056安心關鍵- 財經新聞 - PChome Online 新聞",
-        "source": "PChome Online 新聞",
-        "date": "2026-11-06T11:04:43+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiigFBVV95cUxOd29SblJTNmI4aE5BWUoxOE83X3I0OFFiVTBVWmt2TGExYUhJU1ItZTBVemdQSzJDMFRjQUN1eUd1b0M1YmRSNFpCUjNvLVJjMlVCa2tieER4WWU4S0oyLUVrUFdEUjA3MnpiX0lvQlpQcWt0ajd6WGJhaHBDN0hTd2NYeERITU41Q3c?oc=5",
-        "raw_adjustment": -5,
-        "adjustment": -5,
-        "label": "股價重大下跌",
-        "status": "重大負面事件"
-      },
-      {
-        "title": "別人恐懼我貪婪？台股崩跌後急拉0050爆量71萬張、正 2 ETF一度搶到溢價| 財經 - Newtalk新聞",
-        "source": "Newtalk新聞",
-        "date": "2026-11-06T12:27:58+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTFByQXJiYTdrVWk2XzMxV3dPOWtucjU0bWVEc3BKX3RaVGc3eUZmV2xLTUE0YmZxaE5FYnVXZ3RWSmZmeGdIZjZqd0hrUnprcnlsZi1xZE02azBVM0U?oc=5",
-        "raw_adjustment": -5,
-        "adjustment": -5,
-        "label": "股價重大下跌",
-        "status": "重大負面事件"
+        "title": "【零股排行榜】 盤中零股成交量TOP 20｜0050 元大台灣50、2330 台積電、00631L 元大台灣50正2、0056 元大高股息、00878 國泰永續高股息(1106)｜豐雲學堂2026 年 11 月 - 永豐金證券",
+        "source": "永豐金證券",
+        "date": "2026-11-06T14:41:01+08:00",
+        "link": "https://news.google.com/rss/articles/CBMi-gRBVV95cUxOWXBjWXNXX0EtZS1STGNER1lidngxV2JUS0lDa2RTOXZlNG9NYTdMR0xIdlJPRkNvbHVyVWw4NGEwY2JsRTM5aWk3REhSYU9FcDNIMjVOMWRoNmZaQUYwd29WcE9aajVfcmVOVXF0QllmYkVkMHJiZ0pTQnV2RzhIRHdEVnFCUW9UVlB0R25QTGYwN2Q2XzI5eHJMcU1DS0xya3JMZEZJVmk2Q0ptWmFWODRSSHZucDFiaDViYlBmQm1LUW1GVEtISjNhN2VFOFZYOGFDaWJvT2otT3lRQm1ZV1JMMHBNVDE4Mzc4VExtUGdLZDE5MXVQTjlpdDRGLUV6cGQ0TGU1S0NMRWdmVTlWaEJhZ09rN25fb2NBMlNTOURxQ0xSZHg3YXJZSlA1OGZKdVBlOVMyUFhmQXVNSXpqNFJlVnBtSlFHQnBTaWpqdnY0a2JOcEF",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
       },
       {
         "title": "元大台灣50(0050)持股明細總覽 - 口袋證券",
         "source": "口袋證券",
-        "date": "2026-10-30T15:00:00+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE53T2lGUmgwLVdJOWNySWFqcUpCLW00dHFhUjJoWGtOdW1acklZdzRhVGFwUWxSdWhWWi0xcldEYjQ2cW1wYWpZWVRibnNMd0FrRjlOZFZUWGJVUQ?oc=5",
+        "date": "2026-11-06T16:00:00+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5hRU94VXAzVzNPbWVxeGJDQWJpU09pbUxBdGdtRkhYcktKWmVjYzhmeHhyUk1icWpQMUdVVmR3eUtqS2dTTWp2SmxhajhYOGt1QUR4V3FHbzBqdw?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
         "status": ""
       },
       {
-        "title": "【零股排行榜】 盤中零股成交量TOP 20｜0050 元大台灣50、00878 國泰永續高股息、0056 元大高股息、00406A 主動中信台灣收益、2330 台積電 (1103)｜豐雲學堂2026 年 11 月 - 永豐金證券",
-        "source": "永豐金證券",
-        "date": "2026-11-03T14:30:18+08:00",
-        "link": "https://news.google.com/rss/articles/CBMimgVBVV95cUxPODlEaFJTVzkxeGUyTXNQcHdsd243dENmeWs0U3NBOU1NTFc0VzhuRElaaXRDNWlteUdnandNRzVubEhzODdPVElhNTFNbXJXcGFPMXNSQkx6UTdKdmxyTXRILXdVVHY1OFp0T2pReGFReFdTaUk0cFREbEdEcTd1cDFJY3BSZXFrRFhZN3BZNk1vc1RkdnJkVVZyR1V4dDdUdlh2LXpDTU55ejdxRDM4NnhTZVU0dk1zVEdHUzhUSWJ0X2x1RS1Ec3pZRWR5bkVmVmJ3RDJsaUtuR0EzMWx1Nkk1MzNTSVlpYlFRbkpJZmcyWkhrNzNyMG15dVAyeDZSVVh3M2gxdURqVnlDVk42NHVIMlNOLVRCREt6WEE5Wk1Md1lzbXk5dDM0dHNpZWdYSmV2UXZVY3RMSkFSUnhBUDE3bFRLY251VUpGM3N1ckYzaGtCMkV",
+        "title": "元大台灣50(0050)ETF股票型基金的基本資料 - 口袋證券",
+        "source": "口袋證券",
+        "date": "2026-11-06T16:00:00+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiUkFVX3lxTE5SaENLVmV2OXJ1b2JLZExQRUZ4SjEtTXlvUjVpdDJrdndVeGZDV3hvSmNOUWJRU2RTNHJ2bjdkd25oUGM1ZlZVc3JRdzB6dzFnb2c?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
         "status": ""
       },
       {
-        "title": "台股盤中暴跌逾千點！0050跌破百元下探98.3元 成交量衝破16萬張 - UDN",
-        "source": "UDN",
-        "date": "2026-11-04T11:12:02+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiU0FVX3lxTE00Y19ycUh5ZUlvZVNxREpHbXdZNDVfUndtTmxjbHV6UGszVFRLUXhadDRqMkZWa3FkRzcxWFZUbkxVeThjc05tVEw5V1hPSDYzeHBB0gFYQVVfeXFMTmJCZnhYR3FqSG00Nmo3UEFHUnZHSWhfMlNVdExmOGlTQXN2eE9pVWRNQ1RiRXdCSU13NzZpTWx3TFJXQXI3c1hYRkZzOVdET1k0RXRabmFaYw?oc=5",
+        "title": "0050 元大台灣50 - 老王日報和直播- 股市爆料同學會 - CMoney",
+        "source": "CMoney",
+        "date": "2026-11-07T16:52:24+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE43dFVZWDByeWd2WlQyVWpCQ2pkVWJEV3BQZnNIQnBMeFRUYnhXTUtZenlmZFBDNDJ5SHoxU0xLUmxIVW9jQUFFMEFmT0prQ0xQeTNHdUtBR0k?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "0050 元大台灣50 - 11/8,國安基金宣布進場護盤- 股市爆料同學會 - CMoney",
+        "source": "CMoney",
+        "date": "2026-11-08T11:44:34+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTFBIbVNkcDdxdmhSejdhMXNZenViOU9IWGtiZHl5dXRkUTZ4RXpFNktsSV81NTRqemxqcWVuZHI3VVNJd3NYQUk0UHRabG5uTzhwbEtZRkwwODQ?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "國安基金進場 法人點名台積電與0050直接受惠 - 自由財經",
+        "source": "自由財經",
+        "date": "2026-11-08T11:58:06+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE0yM0xRN0ttU2oxMWJYbHFnMlZLeWRhRE84c0lNdlk5SUJSUDdBLWRsbDBidktCY21DbFV3dnNlTVp3d05LRzduTzlrMHRzZ0J0b2pyQkV3YWZXbEkxV1hV0gFkQVVfeXFMTjdCZi1JR2dmbHZKMkw3ZVgwVzFxaGV0SHA0dEF3ZUhWenFBOEdXaVlmVVFaZGtCeGNabkxKMmlYOTZPc3hkZmV6aUZwQmMzYUxjakNVRlpQR2tDeGtmLWJPSjlYVw?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "降低投資波動度 元大投信董座看「0050+0056+00713」組合最穩 - 自由財經",
+        "source": "自由財經",
+        "date": "2026-11-08T13:25:21+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFByeWI2Y1JxX3ppb2NRcFFqTHo2OW9KYmZnS3lCWFEwazdwX0ZTTnRuRjJ0aHJxakFZakZOQkRJUFBqM25VcFlnaFpwWk5WOHVWUFIzb0JpdTNkRHVfeElz0gFkQVVfeXFMTURzY3BsT1RfcUV4OExoTHlZUko5WlMwTnB5Z1l3alFfTVhRaUFyd3JsNG5FVnFqVDh3cUhYZGtuTTRnY2dycDFsSUYwWnowWmVPcjBtT04zMlZmRDRGTVB3WmZGbA?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
@@ -318,8 +278,8 @@
     "lookback_days": 14
   },
   "QQQ": {
-    "fetched_at": "2026-11-07T04:04:02.215093+08:00",
-    "adjustment": -7,
+    "fetched_at": "2026-11-09T15:53:20.080567+08:00",
+    "adjustment": -6,
     "events": [
       {
         "title": "科技股重挫 Invesco QQQ 交易量飆破 800 億美元創 27 年新高 - 商傳媒",
@@ -327,7 +287,7 @@
         "date": "2026-11-06T06:55:02+08:00",
         "link": "https://news.google.com/rss/articles/CBMi0wJBVV95cUxQOFJtNmhtbHNOd0EySkRVN1RTcl9aTWZLaXpMWVdCTHgyUUZJbEFZZGI2dkVwUU1wb0lMd2NNR0taRmpzcXVoWDNTbHFNRTdxc29zNG5UcWJOXzRjS25fVTdtdXFOTTlWSlFoRjdUbklsUks4SWxTT19YeUVGeERpMzVyczNZTE9oNjFtX2RJSWhXdGJNT0ZMQlVHckxjMHpla0JWUEZDZ1RibURiZWdfMzdEQVhHZW5QQklBR2RGSFRzWUlGQnJOVF9pODQySTY1ZE10eFU3RVh0bWRreXVQSlg2Z0pnQ0ppODVHV2ZrM0YzVktoeDZPanBvNjZiT0dXamxpcTBKSGx0aEtDTlk3YVZGczRncXd5bVEwT2k0S20zZFBhR2RjOVJqRzlIdk9pSUFsSkwtYll4WnV2LW1qcjBha3VJUktoa2RibFk2RHlLQjQ?oc=",
         "raw_adjustment": -5,
-        "adjustment": -5,
+        "adjustment": -4,
         "label": "股價重大下跌",
         "status": "重大負面事件"
       },
@@ -337,7 +297,7 @@
         "date": "2026-11-06T10:39:25+08:00",
         "link": "https://news.google.com/rss/articles/CBMikgFBVV95cUxNNmJfMWJTVmhENHBJTDFnOG4zZ3FHT0diTmpJUnRTRkFwNGdRRUtIQXYwY0hFUGstVjNUcUM0Z3J3dHAxSHRxYnI5dGVCMjRySWJTZ0RfenU0UHVnemxHcEt3WF9OajVLb1BpNUdDV2VJR2VlOWFoOU5GVTRyQ1NsTWJWSldENmdGYUN3ZG0yU2V2Zw?oc=5",
         "raw_adjustment": -5,
-        "adjustment": -5,
+        "adjustment": -4,
         "label": "股價重大下跌",
         "status": "重大負面事件"
       },
@@ -347,7 +307,7 @@
         "date": "2026-11-06T10:58:07+08:00",
         "link": "https://news.google.com/rss/articles/CBMisAFBVV95cUxPY1ZrMUhrTHpKVEFfWXZ3dlNpb3N3RlZBcVUzLTRjSmthYUxMOGdNZ0MzTW9zdVBsNVliOVRnQXBUR3hpU2RDUmN4bjZKa1RJZTFPaUsxOHV5bzZ6UHpxZFgyRTMxTExJcWpScDNPTFdfRFVJcUxPQ0owYlZiY1BVQlNsNHdzUmxneFRmcnU4U3VGZDZNLTVEN0NCWUZDT0c4VWhqMS05d0tORDQwQk5oSQ?oc=5",
         "raw_adjustment": -5,
-        "adjustment": -5,
+        "adjustment": -4,
         "label": "股價重大下跌",
         "status": "重大負面事件"
       },
@@ -357,7 +317,7 @@
         "date": "2026-11-06T18:49:43+08:00",
         "link": "https://news.google.com/rss/articles/CBMid0FVX3lxTFBZYWZEZjZSS01rZDB4eEpQVGJFVzdZVkgxaDNzRTFNTGo0Wmk1eVV6bnRrc1pPYjZwWUprOUVnUDk0SFBVeWtyMDR0NEkzMF94eTN2WWZsZ0ZSVUhzMVdlRER1dVpUODlZZmltckhPakJOMjdPSUhV?oc=5",
         "raw_adjustment": -5,
-        "adjustment": -5,
+        "adjustment": -4,
         "label": "股價重大下跌",
         "status": "重大負面事件"
       },
