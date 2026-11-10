@@ -1,31 +1,25 @@
 {
   "drop_alert": {
     "0050 元大台灣50": {
-      "date": "2026-11-06",
-      "daily_alert_sent": true,
-      "weekly_alert_sent": true,
-      "alert_sent": true,
-      "alert_time": "2026-11-06T09:24:16.571922+08:00",
-      "trigger_day": -0.118177,
-      "trigger_week": -0.1896
+      "date": "2026-11-10",
+      "daily_alert_sent": false,
+      "weekly_alert_sent": false,
+      "alert_sent": false
     },
     "2330 台積電": {
-      "date": "2026-11-06",
-      "daily_alert_sent": true,
-      "weekly_alert_sent": true,
-      "alert_sent": true,
-      "alert_time": "2026-11-06T09:25:24.335401+08:00",
-      "trigger_day": -0.095982,
-      "trigger_week": -0.164948
+      "date": "2026-11-10",
+      "daily_alert_sent": false,
+      "weekly_alert_sent": false,
+      "alert_sent": false
     },
     "3711 日月光投控": {
-      "date": "2026-11-06",
-      "daily_alert_sent": true,
+      "date": "2026-11-10",
+      "daily_alert_sent": false,
       "weekly_alert_sent": true,
       "alert_sent": true,
-      "alert_time": "2026-11-06T09:25:44.212484+08:00",
-      "trigger_day": -0.09965,
-      "trigger_week": -0.273625
+      "alert_time": "2026-11-10T11:12:47.960226+08:00",
+      "trigger_day": 0.099822,
+      "trigger_week": -0.108382
     },
     "QQQ": {
       "date": "2026-11-07",
@@ -45,20 +39,20 @@
   },
   "interval_low": {
     "0050 元大台灣50": {
-      "last_check": "2026-11-06T09:25:23.387006+08:00",
-      "last_price": 88.05000305175781,
+      "last_check": "2026-11-10T11:11:48.101162+08:00",
+      "last_price": 99.44999694824219,
       "last_interval_low": 98.1500015258789,
       "last_interval_source": "Yahoo-5m",
       "interval_alert": false,
-      "session_key": "2026-11-06"
+      "session_key": "2026-11-10"
     },
     "2330 台積電": {
-      "last_check": "2026-11-06T09:25:41.658861+08:00",
-      "last_price": 2025.0,
+      "last_check": "2026-11-10T11:12:43.750570+08:00",
+      "last_price": 2250.0,
       "last_interval_low": 2245.0,
       "last_interval_source": "Yahoo-5m",
       "interval_alert": false,
-      "session_key": "2026-11-06"
+      "session_key": "2026-11-10"
     },
     "3711 日月光投控": {
       "last_check": "2026-11-06T09:25:59.057503+08:00",
