@@ -7465,5 +7465,61 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:f7e65ada4e7463c64283118d": {
+    "ts": 1794343315.2154374,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.7,
+          "policy_stage": "considering",
+          "reason": "民主黨議員擬加強監管川普家族加密項目，打擊市場信心。",
+          "relevant": true,
+          "affected_channel": "估值與情緒",
+          "transmission": "監管威脅→加密迷因幣情緒受挫→整體市場估值下修",
+          "exposure": "加密貨幣相關資產與概念股"
+        },
+        {
+          "id": 1,
+          "direction": "negative",
+          "score": -3,
+          "confidence": 0.75,
+          "policy_stage": "unknown",
+          "reason": "川普加密概念股在政治不確定性下大幅下挫。",
+          "relevant": true,
+          "affected_channel": "估值與資金流",
+          "transmission": "政治利空情緒→資金撤出概念股→市場價格重挫",
+          "exposure": "川普加密概念股與相關代幣"
+        },
+        {
+          "id": 2,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.8,
+          "policy_stage": "threat",
+          "reason": "川普對伊朗言論緩和地緣政治風險，布蘭特原油大跌。",
+          "relevant": true,
+          "affected_channel": "需求與價格",
+          "transmission": "地緣政治風險溢價消除→原油期貨價格下跌→整體能源市場承壓",
+          "exposure": "原油期貨、石油與天然氣探勘開採業"
+        },
+        {
+          "id": 3,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.65,
+          "policy_stage": "considering",
+          "reason": "美中峰會在即，稀土價格價差顯示供應鏈緊張但政策走向未明。",
+          "relevant": true,
+          "affected_channel": "供應鏈與成本",
+          "transmission": "貿易談判不確定性→關鍵礦物供應緊張→產業等待政策明確",
+          "exposure": "稀土、關鍵礦物供應商及下游磁材製造商"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
