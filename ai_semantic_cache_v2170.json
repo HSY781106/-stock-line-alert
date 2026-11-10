@@ -7238,5 +7238,61 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:3834c1112d6f4503e6e821b8": {
+    "ts": 1794268761.9835448,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.75,
+          "policy_stage": "threat",
+          "reason": "關稅憂慮引發科技股估值修修正與市場恐慌情緒",
+          "relevant": true,
+          "affected_channel": "估值與情緒",
+          "transmission": "關稅威脅→科技股賣壓→大盤市場承壓",
+          "exposure": "半導體與大型科技股"
+        },
+        {
+          "id": 1,
+          "direction": "positive",
+          "score": 1,
+          "confidence": 0.8,
+          "policy_stage": "considering",
+          "reason": "政府加速反無人機部署有利國防航太產業",
+          "relevant": true,
+          "affected_channel": "政府需求",
+          "transmission": "加快部署政策→軍工採購增加→國防航太板塊受惠",
+          "exposure": "國防軍工與航太科技股"
+        },
+        {
+          "id": 2,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.5,
+          "policy_stage": "unknown",
+          "reason": "外交策略評論對大盤短期傳導方向不明確",
+          "relevant": false,
+          "affected_channel": "地緣政治風險",
+          "transmission": "外交政策不確定性→地緣風險波動→整體市場觀望",
+          "exposure": "能源與整體市場"
+        },
+        {
+          "id": 3,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.85,
+          "policy_stage": "announced",
+          "reason": "川普表態降低伊朗衝突機率致原油價格大幅下跌",
+          "relevant": true,
+          "affected_channel": "商品價格",
+          "transmission": "中東局勢降溫言論→地緣溢價消除→原油價格及能源股下挫",
+          "exposure": "原油期貨與能源類股"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
