@@ -24033,7 +24033,7 @@
     "source": "Yahoo earnings dates Reported EPS"
   },
   "8341.TW": {
-    "_cached_at": 1787954082.9106214,
+    "_cached_at": 1794280391.9134963,
     "data": [
       {
         "date": "2015-03-31",
@@ -24258,6 +24258,11 @@
       {
         "date": "2026-06-30",
         "eps": 1.46,
+        "source": "Yahoo Reported EPS"
+      },
+      {
+        "date": "2026-09-30",
+        "eps": 2.11,
         "source": "Yahoo Reported EPS"
       }
     ],
@@ -26403,7 +26408,7 @@
     "source": "Yahoo earnings dates Reported EPS"
   },
   "2880.TW": {
-    "_cached_at": 1788093676.0071943,
+    "_cached_at": 1794280389.9758532,
     "data": [
       {
         "date": "2011-09-30",
@@ -47710,6 +47715,11 @@
   },
   "9926.TW": {
     "_cached_at": 1793928371.7036765,
+    "data": [],
+    "source": "Yahoo earnings dates Reported EPS"
+  },
+  "9931.TW": {
+    "_cached_at": 1794280393.310294,
     "data": [],
     "source": "Yahoo earnings dates Reported EPS"
   }

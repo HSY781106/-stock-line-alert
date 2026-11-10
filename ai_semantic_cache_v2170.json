@@ -7294,5 +7294,120 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:95c533358fdbeef7fb84c9f4": {
+    "ts": 1794280328.247213,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.7,
+          "policy_stage": "considering",
+          "reason": "民主黨推動清潔能源抗衡Trump化石燃料政策，政黨對峙下實施難度高。",
+          "relevant": true,
+          "affected_channel": "估值",
+          "transmission": "民主黨提案→政策分歧→整體市場能源類股影響有限",
+          "exposure": "大盤整體受政策拉鋸影響，具體產業方向未定"
+        },
+        {
+          "id": 1,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.85,
+          "policy_stage": "announced",
+          "reason": "Trump政府加速推進反無人機部署，有利國防與航太國防供應鏈。",
+          "relevant": true,
+          "affected_channel": "需求",
+          "transmission": "政府加快採購→國防航太需求增加→市場相關板塊受益",
+          "exposure": "國防航太與無人機科技產業標的"
+        },
+        {
+          "id": 2,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.75,
+          "policy_stage": "considering",
+          "reason": "Trump時期能源交易面臨國會審查，增加政策監管風險。",
+          "relevant": true,
+          "affected_channel": "供應鏈",
+          "transmission": "國會調查審查→營運合規成本與不確定性上升→關鍵礦物板塊受壓",
+          "exposure": "USA Rare Earth及稀土供應鏈產業標的"
+        }
+      ]
+    },
+    "provider": "gemini"
+  },
+  "news:3711:32f44f43b36f16943141da75": {
+    "ts": 1794280374.624884,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.7,
+          "reason": "僅提及股價回檔，無具體基本面資訊。",
+          "relevant": true
+        },
+        {
+          "id": 1,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.75,
+          "reason": "輝達擴大封測產能需求，有利封測龍頭接單。",
+          "relevant": true
+        },
+        {
+          "id": 2,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.8,
+          "reason": "子公司矽品取得近50億元機器設備，持續擴充產能。",
+          "relevant": true
+        },
+        {
+          "id": 3,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.75,
+          "reason": "外資持續賣超，對短期籌碼面帶來壓力。",
+          "relevant": true
+        }
+      ]
+    },
+    "provider": "gemini"
+  },
+  "final_v21826:3711:8acea3c826ab7be996be8304": {
+    "ts": 1794280380.3027143,
+    "data": {
+      "recommendation": "🔴 暫停加碼",
+      "confidence": 0.75,
+      "core": "基本面獲利成長但本益比偏高，技術面與籌碼面顯著偏空，建議等待止跌。",
+      "fundamental_view": "獲利成長22.96%，但PE達40.59高於同業中位數17.67。",
+      "technical_view": "日K偏空，KD低檔且跌破MA20與MA60，短線呈急跌修正。",
+      "chips_view": "20日法人大幅賣超近5.9萬張且融資增加，籌碼面極為不利。",
+      "risk_view": "均線全面失守且籌碼持續沉淪，面臨續跌風險。",
+      "news_view": "輝達需求與擴廠利多難抵外資賣超之籌碼壓力。",
+      "trump_view": "政策層面總體影響偏正面但無產業特定激勵。",
+      "macro_view": "匯率正面但利率傳導偏負面，總經影響中性偏多。",
+      "buy_view": "投資價值評價暫緩，買點提示避免接刀，兩者皆強烈建議等待止跌。",
+      "strengths": [
+        "EPS成長強勁達22.96%",
+        "大廠擴產帶動中長期需求"
+      ],
+      "risks": [
+        "法人大幅賣超籌碼面惡化",
+        "股價跌破MA20與MA60雙均線"
+      ],
+      "conflict": "基本面獲利成長與擴產利多，與技術籌碼急跌形成顯著矛盾。",
+      "next_watch": [
+        "法人是否轉賣為買",
+        "KD與RSI低檔止跌訊號"
+      ],
+      "reason": "日月光投控基本面具成長性，但目前本益比偏高且技術面呈偏空走勢。籌碼面法人大幅拋售、融資增加，拖累股價跌破中長期均線。考量近期籌碼與技術劣勢，建議暫停加碼，等待止跌訊號浮現。"
+    },
+    "provider": "gemini"
   }
 }
