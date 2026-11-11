@@ -7685,5 +7685,61 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:d24628a5dd61a37e32962605": {
+    "ts": 1794436175.8171914,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.8,
+          "policy_stage": "paused",
+          "reason": "暫緩對伊朗打擊降低地緣政治風險，導致油價下跌。",
+          "relevant": true,
+          "affected_channel": "需求與價格",
+          "transmission": "地緣緊張緩解→原油溢價消除→整體能源市場價格走低",
+          "exposure": "能源產業與石油出口國（如加拿大亞伯達省）"
+        },
+        {
+          "id": 1,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.75,
+          "policy_stage": "unknown",
+          "reason": "市場預期和平局勢，能源價格大幅下挫。",
+          "relevant": true,
+          "affected_channel": "價格",
+          "transmission": "緩和言論→市場避險需求下降→能源期貨價格大跌",
+          "exposure": "整體原油與天然氣市場"
+        },
+        {
+          "id": 2,
+          "direction": "negative",
+          "score": -3,
+          "confidence": 0.85,
+          "policy_stage": "announced",
+          "reason": "加強對華半導體封鎖，限制高階晶片出口。",
+          "relevant": true,
+          "affected_channel": "出口與供應鏈",
+          "transmission": "封鎖政策加碼→高階晶片無法出口中國→半導體類股營收受挫",
+          "exposure": "美系高階晶片設計商與半導體供應鏈"
+        },
+        {
+          "id": 3,
+          "direction": "neutral",
+          "score": -1,
+          "confidence": 0.7,
+          "policy_stage": "considering",
+          "reason": "期中選舉結果可能阻礙能源獨立政策的立法推進。",
+          "relevant": true,
+          "affected_channel": "政策與估值",
+          "transmission": "國會席次變動→能源法案通過阻力增加→傳統能源政策紅利受限",
+          "exposure": "美國傳統能源與頁岩油開採產業"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
