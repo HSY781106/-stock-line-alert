@@ -7553,5 +7553,61 @@
       ]
     },
     "provider": "groq"
+  },
+  "trump_v21826:__MARKET__:9bf264c1d04b1d14640b7ac3": {
+    "ts": 1794358921.9316807,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "negative",
+          "score": -3,
+          "confidence": 0.85,
+          "policy_stage": "announced",
+          "reason": "美對華半導體限制升級，打擊晶片出口。",
+          "relevant": true,
+          "affected_channel": "出口與營收",
+          "transmission": "限制政策→半導體出口受阻→市場整體科技股承壓",
+          "exposure": "晶片與AI供應鏈相關巨頭"
+        },
+        {
+          "id": 1,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.65,
+          "policy_stage": "considering",
+          "reason": "期中選舉結果可能不確定，影響能源政策推進。",
+          "relevant": true,
+          "affected_channel": "估值與政策不確定性",
+          "transmission": "選舉結果不確定→能源法案推動受阻→整體能源市場觀望",
+          "exposure": "整體傳統能源產業標的"
+        },
+        {
+          "id": 2,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.8,
+          "policy_stage": "implemented",
+          "reason": "政府敲定4.8億美元油氣貸款，利好能源業。",
+          "relevant": true,
+          "affected_channel": "資金與成本",
+          "transmission": "政府提供貸款→降低採購與營運資金壓力→能源板塊受惠",
+          "exposure": "墨西哥灣油氣開發與傳統能源鏈"
+        },
+        {
+          "id": 3,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.8,
+          "policy_stage": "implemented",
+          "reason": "政府注資4.8億美元於油氣項目，扶持能源產業。",
+          "relevant": true,
+          "affected_channel": "資金與需求",
+          "transmission": "政府資金注入→加速油氣項目開採→能源市場基本面獲支撐",
+          "exposure": "美國本土及墨西哥灣油氣業者"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
