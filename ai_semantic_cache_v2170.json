@@ -7629,5 +7629,61 @@
       ]
     },
     "provider": "groq"
+  },
+  "trump_v21826:__MARKET__:ba819ecf0aa465d18a263df9": {
+    "ts": 1794430730.3780763,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.7,
+          "policy_stage": "paused",
+          "reason": "Trump暫緩對伊朗打擊，地緣政治風險降溫抑制油價，影響加拿大能源業",
+          "relevant": true,
+          "affected_channel": "估值",
+          "transmission": "地緣政策緩和→原油風險溢價下降→整體能源市場波動",
+          "exposure": "整體原油與能源市場標的"
+        },
+        {
+          "id": 1,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.65,
+          "policy_stage": "considering",
+          "reason": "Eric Trump支持的人形機器人新創擬與以色列軍方合作，利好國防軍工",
+          "relevant": true,
+          "affected_channel": "需求",
+          "transmission": "軍方採購意願→機器人與國防科技需求增加→軍工概念股受惠",
+          "exposure": "國防軍工與AI機器人產業標的"
+        },
+        {
+          "id": 2,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.75,
+          "policy_stage": "unknown",
+          "reason": "油價下跌主因市場供需，Trump和平言論僅為心理面因素之一",
+          "relevant": true,
+          "affected_channel": "需求",
+          "transmission": "地緣局勢緩和→市場溢價收斂→原油價格承壓",
+          "exposure": "原油商品與整體能源市場"
+        },
+        {
+          "id": 3,
+          "direction": "neutral",
+          "score": -1,
+          "confidence": 0.6,
+          "policy_stage": "threat",
+          "reason": "期中選舉結果可能阻礙Trump能源獨立計畫，增加政策不確定性",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "國會政策轉變→能源獨立政策推動受阻→傳統能源監管轉嚴",
+          "exposure": "傳統能源及採掘業標的"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
