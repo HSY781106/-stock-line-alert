@@ -7885,5 +7885,25 @@
       ]
     },
     "provider": "groq"
+  },
+  "trump_v21826:__MARKET__:99bafdde2fdbbe2c0bb010fb": {
+    "ts": 1794518037.394969,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.8,
+          "policy_stage": "announced",
+          "reason": "Trump言論減少伊朗制裁風險",
+          "relevant": true,
+          "affected_channel": "需求",
+          "transmission": "Trump→無伊朗制裁→油價上升→市場需求提升",
+          "exposure": "油價市場"
+        }
+      ]
+    },
+    "provider": "groq"
   }
 }
