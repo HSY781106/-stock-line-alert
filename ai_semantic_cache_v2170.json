@@ -7905,5 +7905,61 @@
       ]
     },
     "provider": "groq"
+  },
+  "trump_v21826:__MARKET__:8bc6bd7c9c0ddf1a1ca6f679": {
+    "ts": 1794521028.883876,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "positive",
+          "score": 3,
+          "confidence": 0.8,
+          "policy_stage": "threat",
+          "reason": "對伊朗強硬態度推升地緣政治風險溢價與原油價格。",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "川普對伊強硬言論→地緣政治風險上升→原油供給疑慮→推升整體市場原油價格",
+          "exposure": "整體原油與能源產業市場"
+        },
+        {
+          "id": 1,
+          "direction": "positive",
+          "score": 3,
+          "confidence": 0.8,
+          "policy_stage": "threat",
+          "reason": "伊朗協議威脅立場帶動油價反彈。",
+          "relevant": true,
+          "affected_channel": "需求",
+          "transmission": "川普表態不需要伊朗協議→市場預期制裁持續→油價反彈上揚",
+          "exposure": "整體原油與能源產業市場"
+        },
+        {
+          "id": 2,
+          "direction": "neutral",
+          "score": 1,
+          "confidence": 0.6,
+          "policy_stage": "considering",
+          "reason": "新國會與川普政府對傳統能源政策利多但細節待定。",
+          "relevant": true,
+          "affected_channel": "估值",
+          "transmission": "川普新政府上任→放寬油氣法規管制預期→推升能源市場長期信心",
+          "exposure": "原油與天然氣產業市場"
+        },
+        {
+          "id": 3,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.4,
+          "policy_stage": "unknown",
+          "reason": "晶片走私調查與高層動向傳聞對大盤直接影響有限。",
+          "relevant": false,
+          "affected_channel": "供應鏈",
+          "transmission": "川普政府晶片管制與調查→半導體供應鏈合規成本增加→對整體大盤影響分散",
+          "exposure": "證據不足"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
