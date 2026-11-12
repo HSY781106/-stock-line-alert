@@ -1,19 +1,11 @@
 {
-  "cached_at": 1794430764.5461621,
+  "cached_at": 1794449356.2679274,
   "data": {
     "items": [
       {
         "title": "Economic and monetary policy outlook - Federal Reserve Bank of Dallas",
         "link": "https://news.google.com/rss/articles/CBMibEFVX3lxTE15eU9IVk90bGxVVFFuMUM5TU1zQ0pORHFjMEptYUJBbUdMSGx6VVE1RnVZZW9KeVc1Yy1XeDJUZnpWckQ1WmgxbzZpTndwUWhiNjhTeEtCdmQ1M1pOM0FTMkpiNFR2NWtnVm03cw?oc=5",
         "published": "Tue, 10 Nov 2026 19:37:51 GMT",
-        "query": "Federal Reserve interest rates inflation US economy",
-        "direction": "neutral",
-        "reason": "中性／待確認"
-      },
-      {
-        "title": "Fed Forced to Confront Case for Bigger and Faster Rate Rises - WSJ",
-        "link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxPelFYdmxqTmVYeGJuX2VCMUg3MFowTVhFV25kb1NUN1Z0QUZuMnNVUmVabWhfZU1PVjVTakhlRVRzdHpvWENxd3Y4Y3RJLURrVmNYMkZ3UnpNZUx1RjJvc0xIZDFsZ0xqcDcxbDAwVHNOaUpNSkRuSW00cnVlRy1uQ1F1MjBydEtZSnNVTDJtM2xxaWFXcUcybTUzVGpoaEpSTDM5REtFQ2J0a3Z3WVEtQ25xdw?oc=5",
-        "published": "Wed, 11 Nov 2026 01:00:00 GMT",
         "query": "Federal Reserve interest rates inflation US economy",
         "direction": "neutral",
         "reason": "中性／待確認"
@@ -35,9 +27,17 @@
         "reason": "緊縮／景氣風險"
       },
       {
-        "title": "Federal Reserve raises interest rates for the 1st time since 2023 - ABC News - Breaking News, Latest News and Videos",
-        "link": "https://news.google.com/rss/articles/CBMipgFBVV95cUxOYktxZlJxRVNrdUZFRWViQjVMLUh3OGJwNGhrVFpJY2E5QTAyajNfcnFSb09rZUVkSnVMUHd4WkpsYktvZGczX05nRzVhSTdKNWtfU2hWb09IYnNQQ01tTlMwMV95YzJkbWVDMklwZ19XMC1RNmVsckpGS3FpNUpiRlUxZkVtNXk5NE5YRnpBSTI4eEhVOWxaUlBzZDlxb3p1ZVBFeHFR0gGrAUFVX3lxTFBrZzU3UXhjRlBBblFYNzJZZ3dINVFwMnpIOFQwRlJ1NmRTa3JNUGlkamJyS08wRjM5UlFuMkRJcHAtUEQxYjF3b2Yyc2E2V1hOOEhQRHRPckpidllEOHpLRG9VUTFxSUwyaE95SzNNZ0pkemQwQkNBYkZPbTBpN0ZMYTBWU25nT3FrUVNNal9Eb0lCNnJwZTVFUVVhM0dDRlMzQ1pQTF8xRTV6bw?oc=5",
-        "published": "Tue, 10 Nov 2026 12:52:26 GMT",
+        "title": "Fed Forced to Confront Case for Bigger and Faster Rate Rises - WSJ",
+        "link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxPelFYdmxqTmVYeGJuX2VCMUg3MFowTVhFV25kb1NUN1Z0QUZuMnNVUmVabWhfZU1PVjVTakhlRVRzdHpvWENxd3Y4Y3RJLURrVmNYMkZ3UnpNZUx1RjJvc0xIZDFsZ0xqcDcxbDAwVHNOaUpNSkRuSW00cnVlRy1uQ1F1MjBydEtZSnNVTDJtM2xxaWFXcUcybTUzVGpoaEpSTDM5REtFQ2J0a3Z3WVEtQ25xdw?oc=5",
+        "published": "Wed, 11 Nov 2026 01:00:21 GMT",
+        "query": "Federal Reserve interest rates inflation US economy",
+        "direction": "neutral",
+        "reason": "中性／待確認"
+      },
+      {
+        "title": "What’s happening this week in economics? - Deloitte",
+        "link": "https://news.google.com/rss/articles/CBMingFBVV95cUxNcV9VYnV0R0RPcWN0d2g1SHJIVlNmaVA1TV9nXzRKdVlFcWtSMjQ1T1B0djE4dDNRanZvSVFGX0ZBNUd6cnZkVnAtenFuMnFzdU9zYzg5cFdkTVRxU1F5YVVXVFhVWGdhd2RsTDBkNS1Xcm9ub1FnMFp5NnB3WVBYa3JJa1FVbG5IT0ZRRHphTUhtNThkenVJS1ZrdWNDdw?oc=5",
+        "published": "Mon, 09 Nov 2026 08:00:00 GMT",
         "query": "Federal Reserve interest rates inflation US economy",
         "direction": "neutral",
         "reason": "中性／待確認"
@@ -60,32 +60,24 @@
       },
       {
         "title": "Americans are on a 'treadmill of high inflation' and more rate hikes are likely, Fed's Daly says - CNBC",
-        "link": "https://news.google.com/rss/articles/CBMiekFVX3lxTE83d09fT01uTmdIZ09Wb0pDYWg4VU5rRTF3MWstQ25hU2dDM011N3k3cVBzRFFOeGtuTjVSMHJVcy1zb25qY0Q4NERLSUIxN3JUN2tUbEZoZ2FLbVBDajRHUFktYVEtOTZ2cWxlX21NbF8xd1JxN25GNkNn0gF_QVVfeXFMUFM0YzVQazV4YXplRlQzdkpaM3ZtTGNVdlU3OG83N1o1ZmhtVFVGaEdvOC1WckhzNEQwNXdLb0hBQWptVjJuOVdNV2hrM0lCbmQzWk1veVdQTnJjbEZJRXJuZXByelRRWHJoakE1UktiTV90Zl90R1M1OHBBTXYxZw?oc=5",
+        "link": "https://news.google.com/rss/articles/CBMiekFVX3lxTE83d09fT01uTmdIZ09Wb0pDYWg4VU5rRTF3MWstQ25hU2dDM011N3k3cVBzRFFOeGtuTjVSMHJVcy1zb25qY0Q4NERLSUIxN3JUN2tUbEZoZ2FLbVBDajRHUFktYVEtOTZ2cWxlX21NbF8xd1JxN25GNkNn?oc=5",
         "published": "Fri, 06 Nov 2026 18:39:20 GMT",
         "query": "Federal Reserve interest rates inflation US economy",
         "direction": "negative",
         "reason": "緊縮／景氣風險"
       },
       {
-        "title": "Weekly market commentary - BlackRock",
-        "link": "https://news.google.com/rss/articles/CBMiogFBVV95cUxORkJPa3I0ekJyVEI0RFJhY210TmplVHJZQ0xJNy1qenNkc0lMMHk0TmZwdDV1TEVZNmJoV3dfVlNTT3UyZHE5Q01SdmQ4eDd4WjAzZVhFMFB3VUd5QjlYXzZ5MWFRYzdIQVRVM1JMZXNyQ05aTExrejM4cHdBSktKSlJOOWxkY0V4YkNRRDZZTzlDZUYzZHlUWXdhTFUxNXJSNXc?oc=5",
-        "published": "Sun, 08 Nov 2026 08:00:00 GMT",
-        "query": "US CPI jobs GDP Treasury yields economy",
-        "direction": "neutral",
-        "reason": "中性／待確認"
-      },
-      {
-        "title": "CPI Live Updates: Inflation Continues to Challenge U.S. Economy - The New York Times",
-        "link": "https://news.google.com/rss/articles/CBMimgFBVV95cUxQSmJfX29QNEQtZ0JiSTgzd2lPYVdyRFpUTnV0bjltajRsYzUtSE4zVWlVOHc2WVVPWFF4RklWNkpLaUJnaWVyLU9DNDA1RzlSTEstelFZQWhneXo2eXhqU3I3T1lpOXl0bUNUOEExN1FxY200SjI1a3N4Wi12MzJYbzB1bjNYMG5TMmYtNzBha2dvYUtEVTdvSlZ3?oc=5",
-        "published": "Wed, 11 Nov 2026 03:03:00 GMT",
-        "query": "US CPI jobs GDP Treasury yields economy",
-        "direction": "neutral",
-        "reason": "中性／待確認"
-      },
-      {
         "title": "The Weekly Bottom Line - TD Economics",
         "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5iS3JheUxIbE9wdXkzWk1rUkxjT1p6VTJWeW1uMVpPY1hKYTMtNFF2Qzh1ck5JNTNKVGRSWXlBOWFta2xtZ2tVUTVhT0FlUmpqX1M2UngxLXRZZw?oc=5",
         "published": "Fri, 06 Nov 2026 08:00:00 GMT",
+        "query": "US CPI jobs GDP Treasury yields economy",
+        "direction": "neutral",
+        "reason": "中性／待確認"
+      },
+      {
+        "title": "Weekly market commentary - BlackRock",
+        "link": "https://news.google.com/rss/articles/CBMingFBVV95cUxQLWJDTjBBalYwVHVpc0VxV1BwRE1xeUt1RWlLQ1VJdnJQRXNnb3p6MnFNbjRBV0s0TnlldW4wSVIycFRQeVNISWJ3VV9wMWdjX1ZndE1Tc24tNzc0anNYWjl0SVBsRDhSa0dVTWlyVVYxX0w5b2JhTFB0Tm9Vb2FwYVZubTU1SVJlcy0zMEpXOEM4ZlhiSU1QazdVQVlldw?oc=5",
+        "published": "Mon, 09 Nov 2026 08:00:00 GMT",
         "query": "US CPI jobs GDP Treasury yields economy",
         "direction": "neutral",
         "reason": "中性／待確認"
@@ -97,9 +89,17 @@
         "query": "US CPI jobs GDP Treasury yields economy",
         "direction": "neutral",
         "reason": "中性／待確認"
+      },
+      {
+        "title": "Fed's Waller plans to support at least a quarter-point rate hike in December - Reuters",
+        "link": "https://news.google.com/rss/articles/CBMirgFBVV95cUxNR3RjbDlfcXFBbHp0SVRSeHIzZHFTTnY5bjBuWGszTTMzUmxLUXNzRTFid29sbXV1emJSZWMwTEo4V2dWYjJ3TGlESmRlRzdFcDdQU3RxWi1QVEZrRlNBU0N3NG50WUNBWVdXbnZFS0RuVDNyRVdGWm1aRjFjWGRlRFRoTFhlbFMwQ1NjbTZMd2x0cnlHR0F4d2JNV3dKcHFOOE5TRFVsSlc5ekxoQ0E?oc=5",
+        "published": "Tue, 10 Nov 2026 14:41:30 GMT",
+        "query": "US CPI jobs GDP Treasury yields economy",
+        "direction": "negative",
+        "reason": "緊縮／景氣風險"
       }
     ],
-    "updated_at": "2026-11-12T04:59:24.952107+08:00",
+    "updated_at": "2026-11-12T10:09:16.655166+08:00",
     "errors": []
   }
 }

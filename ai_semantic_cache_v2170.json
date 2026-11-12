@@ -7741,5 +7741,61 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:e0d0cf0581ae33605d55cb5d": {
+    "ts": 1794449329.0558918,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.7,
+          "policy_stage": "considering",
+          "reason": "強調化石燃料與能源安全，利好能源市場。",
+          "relevant": true,
+          "affected_channel": "需求與供給",
+          "transmission": "政策支持化石燃料→增加探勘與供給→提升傳統能源產業估值",
+          "exposure": "傳統能源產業與整體油氣市場"
+        },
+        {
+          "id": 1,
+          "direction": "positive",
+          "score": 3,
+          "confidence": 0.8,
+          "policy_stage": "announced",
+          "reason": "推動海上油氣平台現代化，降低監管成本。",
+          "relevant": true,
+          "affected_channel": "成本與法規",
+          "transmission": "能源政策放寬監管→降低離岸探勘成本→增強油氣探勘業者獲利",
+          "exposure": "離岸油氣探勘及設備供應商"
+        },
+        {
+          "id": 2,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.6,
+          "policy_stage": "unknown",
+          "reason": "民主黨國會質疑，屬於政治爭議與輿論攻防。",
+          "relevant": false,
+          "affected_channel": "估值",
+          "transmission": "政黨質疑→無實質政策改變→對市場影響中立",
+          "exposure": "證據不足"
+        },
+        {
+          "id": 3,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.7,
+          "policy_stage": "considering",
+          "reason": "家族背景新創與國防合作，帶動人形機器人及軍工話題。",
+          "relevant": true,
+          "affected_channel": "需求與估值",
+          "transmission": "國防需求增加→提升軍用機器人訂單預期→軍工與AI機器人板塊受惠",
+          "exposure": "國防軍工與人形機器人產業"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
