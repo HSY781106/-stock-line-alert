@@ -8149,5 +8149,61 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:c1a7a16ad9ea9b0b7388b9c6": {
+    "ts": 1794606613.1291053,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.5,
+          "policy_stage": "considering",
+          "reason": "伊朗核議題與協議談判言論對大盤直接影響不明顯",
+          "relevant": false,
+          "affected_channel": "地緣政治風險",
+          "transmission": "伊朗政策演變→原油供應預期變化→整體市場波動",
+          "exposure": "能源類股與原油相關ETF"
+        },
+        {
+          "id": 1,
+          "direction": "positive",
+          "score": 1,
+          "confidence": 0.8,
+          "policy_stage": "implemented",
+          "reason": "延長瓊斯法案豁免有助降低能源運輸成本與通膨壓力",
+          "relevant": true,
+          "affected_channel": "運輸成本",
+          "transmission": "豁免瓊斯法案→降低國內石油運輸瓶頸與成本→減緩通膨壓力利好大盤",
+          "exposure": "美國能源板塊與煉油產業"
+        },
+        {
+          "id": 2,
+          "direction": "positive",
+          "score": 1,
+          "confidence": 0.8,
+          "policy_stage": "implemented",
+          "reason": "石油運輸豁免延長90天，短期減輕物流限制",
+          "relevant": true,
+          "affected_channel": "供應鏈成本",
+          "transmission": "放寬航運限制→提高原油轉運效率→平抑能源價格波動",
+          "exposure": "美國原油產業與下游煉油廠"
+        },
+        {
+          "id": 3,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.85,
+          "policy_stage": "implemented",
+          "reason": "石油與化肥航運豁免延長，降低農業與能源供應鏈成本",
+          "relevant": true,
+          "affected_channel": "供應鏈與成本",
+          "transmission": "延長石油及化肥豁免→降低農企與能源物流成本→利好整體市場成本端",
+          "exposure": "能源及農業化肥相關產業標的"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
