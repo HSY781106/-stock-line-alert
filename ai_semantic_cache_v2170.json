@@ -8093,5 +8093,61 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:ea23980d2d776ce0ab12cb10": {
+    "ts": 1794602531.4192417,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.7,
+          "policy_stage": "considering",
+          "reason": "伊朗核議題及地緣政治言論對整體市場影響不直接且充滿不確定性。",
+          "relevant": false,
+          "affected_channel": "估值",
+          "transmission": "地緣政治局勢變動→原油供應預期波動→整體市場風險偏好轉變",
+          "exposure": "整體金融市場與能源類股"
+        },
+        {
+          "id": 1,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.85,
+          "policy_stage": "implemented",
+          "reason": "延長石油與化肥的航運豁免，降低物流成本與供應鏈瓶頸。",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "延長航運豁免→降低能源及物資運輸成本→利好整體市場與供應鏈效率",
+          "exposure": "航運用戶、能源產業與整體市場"
+        },
+        {
+          "id": 2,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.85,
+          "policy_stage": "implemented",
+          "reason": "延長瓊斯法案石油航運豁免，有助於穩定美國國內石油運輸與能源價格。",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "瓊斯法案豁免延長→放寬運輸限制並降低航運成本→穩定能源市場",
+          "exposure": "石油運輸業、能源類股與整體市場"
+        },
+        {
+          "id": 3,
+          "direction": "neutral",
+          "score": -1,
+          "confidence": 0.75,
+          "policy_stage": "threat",
+          "reason": "美中晶片對抗與AI對話並存，半導體出口管制政策前景尚不明朗。",
+          "relevant": true,
+          "affected_channel": "出口",
+          "transmission": "科技貿易限制與地緣競爭→影響半導體供應鏈出口→壓抑科技股估值",
+          "exposure": "半導體產業、科技類股與整體市場"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
