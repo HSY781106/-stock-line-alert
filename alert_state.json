@@ -19,7 +19,7 @@
       "alert_sent": false
     },
     "QQQ": {
-      "date": "2026-11-12",
+      "date": "2026-11-14",
       "daily_alert_sent": false,
       "weekly_alert_sent": false,
       "alert_sent": false
@@ -57,12 +57,12 @@
       "session_key": "2026-11-13"
     },
     "QQQ": {
-      "last_check": "2026-11-12T04:59:34.292907+08:00",
-      "last_price": 690.0399780273438,
+      "last_check": "2026-11-14T04:38:16.927172+08:00",
+      "last_price": 678.9500122070312,
       "last_interval_low": 658.260009765625,
       "last_interval_source": "Yahoo-5m",
       "interval_alert": false,
-      "session_key": "2026-11-11"
+      "session_key": "2026-11-13"
     },
     "台灣加權指數": {
       "last_check": "2026-11-13T09:43:47.973680+08:00",
@@ -91,7 +91,7 @@
       "notified_score": 92
     },
     "QQQ": {
-      "date": "2026-11-13",
+      "date": "2026-11-14",
       "locked": false,
       "notified_at": "2026-09-18 01:46:32",
       "notified_score": 91,
