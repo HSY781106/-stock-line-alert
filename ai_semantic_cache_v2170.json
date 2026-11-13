@@ -7961,5 +7961,61 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:09c03826e41efc46fbd5583f": {
+    "ts": 1794534190.767184,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.75,
+          "policy_stage": "considering",
+          "reason": "民主黨調查輝達晶片出口交易，增添政策審查變數與監管風險。",
+          "relevant": true,
+          "affected_channel": "估值/出口",
+          "transmission": "出口協議遭調查→市場擔心出口管制加嚴→壓抑半導體產業氣氛",
+          "exposure": "AI晶片與半導體出口相關企業"
+        },
+        {
+          "id": 1,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.8,
+          "policy_stage": "considering",
+          "reason": "輝達晶片交易面臨非法出口稅調查，打壓市場對晶片出口放行的樂觀預期。",
+          "relevant": true,
+          "affected_channel": "估值/成本",
+          "transmission": "調查出口稅問題→法規合規與關稅風險上升→影響晶片股投資信心",
+          "exposure": "輝達及整體AI晶片供應鏈"
+        },
+        {
+          "id": 2,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.85,
+          "policy_stage": "announced",
+          "reason": "川普友善政策推動阿拉斯加石油擴產，有利傳統能源產業探勘與產量增長。",
+          "relevant": true,
+          "affected_channel": "供應鏈/成本",
+          "transmission": "放寬管制與開採許可→傳統能源業者擴大投資→能源上游產業獲益",
+          "exposure": "上游石油與天然氣探勘開採業者"
+        },
+        {
+          "id": 3,
+          "direction": "positive",
+          "score": 3,
+          "confidence": 0.85,
+          "policy_stage": "threat",
+          "reason": "川普稱無須與伊朗達成協議，地緣政治風險升溫推升油價。",
+          "relevant": true,
+          "affected_channel": "需求/估值",
+          "transmission": "強硬對伊朗立場→地緣政治緊張與供給中斷疑慮→油價上漲帶動能源股",
+          "exposure": "整體原油與能源市場標的"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
