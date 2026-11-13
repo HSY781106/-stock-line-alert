@@ -1,5 +1,5 @@
 {
-  "cached_at": 1794534215.167957,
+  "cached_at": 1794555896.2077708,
   "data": {
     "items": [
       {
@@ -27,17 +27,17 @@
         "reason": "緊縮／景氣風險"
       },
       {
-        "title": "Economic and monetary policy outlook - Federal Reserve Bank of Dallas",
-        "link": "https://news.google.com/rss/articles/CBMibEFVX3lxTE15eU9IVk90bGxVVFFuMUM5TU1zQ0pORHFjMEptYUJBbUdMSGx6VVE1RnVZZW9KeVc1Yy1XeDJUZnpWckQ1WmgxbzZpTndwUWhiNjhTeEtCdmQ1M1pOM0FTMkpiNFR2NWtnVm03cw?oc=5",
-        "published": "Tue, 10 Nov 2026 19:37:51 GMT",
+        "title": "What’s happening this week in economics? - Deloitte",
+        "link": "https://news.google.com/rss/articles/CBMingFBVV95cUxNcV9VYnV0R0RPcWN0d2g1SHJIVlNmaVA1TV9nXzRKdVlFcWtSMjQ1T1B0djE4dDNRanZvSVFGX0ZBNUd6cnZkVnAtenFuMnFzdU9zYzg5cFdkTVRxU1F5YVVXVFhVWGdhd2RsTDBkNS1Xcm9ub1FnMFp5NnB3WVBYa3JJa1FVbG5IT0ZRRHphTUhtNThkenVJS1ZrdWNDdw?oc=5",
+        "published": "Tue, 10 Nov 2026 08:00:00 GMT",
         "query": "Federal Reserve interest rates inflation US economy",
         "direction": "neutral",
         "reason": "中性／待確認"
       },
       {
-        "title": "What’s happening this week in economics? - Deloitte",
-        "link": "https://news.google.com/rss/articles/CBMingFBVV95cUxNcV9VYnV0R0RPcWN0d2g1SHJIVlNmaVA1TV9nXzRKdVlFcWtSMjQ1T1B0djE4dDNRanZvSVFGX0ZBNUd6cnZkVnAtenFuMnFzdU9zYzg5cFdkTVRxU1F5YVVXVFhVWGdhd2RsTDBkNS1Xcm9ub1FnMFp5NnB3WVBYa3JJa1FVbG5IT0ZRRHphTUhtNThkenVJS1ZrdWNDdw?oc=5",
-        "published": "Tue, 10 Nov 2026 08:00:00 GMT",
+        "title": "Economic and monetary policy outlook - Federal Reserve Bank of Dallas",
+        "link": "https://news.google.com/rss/articles/CBMibEFVX3lxTE15eU9IVk90bGxVVFFuMUM5TU1zQ0pORHFjMEptYUJBbUdMSGx6VVE1RnVZZW9KeVc1Yy1XeDJUZnpWckQ1WmgxbzZpTndwUWhiNjhTeEtCdmQ1M1pOM0FTMkpiNFR2NWtnVm03cw?oc=5",
+        "published": "Tue, 10 Nov 2026 19:37:51 GMT",
         "query": "Federal Reserve interest rates inflation US economy",
         "direction": "neutral",
         "reason": "中性／待確認"
@@ -99,7 +99,7 @@
         "reason": "中性／待確認"
       }
     ],
-    "updated_at": "2026-11-13T09:43:35.504857+08:00",
+    "updated_at": "2026-11-13T15:44:56.546310+08:00",
     "errors": []
   }
 }
