@@ -8205,5 +8205,61 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:d5c751044869eb356ddeb203": {
+    "ts": 1794619108.9883602,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.75,
+          "policy_stage": "threat",
+          "reason": "加拿大大使警告關稅威脅增加資本成本與不確定性。",
+          "relevant": true,
+          "affected_channel": "成本与估值",
+          "transmission": "關稅威脅→增加跨國企業營運不確定性→拖累整體市場估值",
+          "exposure": "受美加貿易影響之跨國企業與整體美股市場"
+        },
+        {
+          "id": 1,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.6,
+          "policy_stage": "considering",
+          "reason": "伊朗核議題局勢與地緣政治變化，對大盤直接影響有限。",
+          "relevant": false,
+          "affected_channel": "供應鏈",
+          "transmission": "地緣政治局勢變化→原油價格波動→整體市場無直接顯著影響",
+          "exposure": "證據不足"
+        },
+        {
+          "id": 2,
+          "direction": "positive",
+          "score": 1,
+          "confidence": 0.7,
+          "policy_stage": "implemented",
+          "reason": "延長瓊斯法案豁免有利於緩解石油運輸瓶頸並降低物流成本。",
+          "relevant": true,
+          "affected_channel": "成本与供應鏈",
+          "transmission": "豁免瓊斯法案→降低能源運輸成本→舒緩整體市場通膨壓力",
+          "exposure": "美國石油運輸業與能源產業"
+        },
+        {
+          "id": 3,
+          "direction": "positive",
+          "score": 1,
+          "confidence": 0.7,
+          "policy_stage": "implemented",
+          "reason": "延長石油運輸瓊斯法案豁免，短期減輕物流壓力。",
+          "relevant": true,
+          "affected_channel": "成本与供應鏈",
+          "transmission": "豁免瓊斯法案→改善油品流通效率→利好整體市場成本結構",
+          "exposure": "美國石油運輸業與能源產業"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
