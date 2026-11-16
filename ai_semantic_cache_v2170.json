@@ -8317,5 +8317,61 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:f32e90a695700646747990e2": {
+    "ts": 1794870057.0858808,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.7,
+          "policy_stage": "considering",
+          "reason": "國會擬限制加拿大關稅，緩解貿易戰隱憂。",
+          "relevant": true,
+          "affected_channel": "成本與供應鏈",
+          "transmission": "國會限制關稅政策→降低進口成本→利好整體市場",
+          "exposure": "受加拿大進口原物料與供應鏈影響之美國企業"
+        },
+        {
+          "id": 1,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.6,
+          "policy_stage": "unknown",
+          "reason": "評論川普油價政策效果，無直接具體新政推出。",
+          "relevant": true,
+          "affected_channel": "需求",
+          "transmission": "油價評論→市場預期→對總體市場影響中性",
+          "exposure": "整體能源市場與消費通膨"
+        },
+        {
+          "id": 2,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.85,
+          "policy_stage": "considering",
+          "reason": "晶片出口限制面臨新壓力，打擊科技股情緒。",
+          "relevant": true,
+          "affected_channel": "出口與估值",
+          "transmission": "限制晶片出口政策→限制科技巨頭中國營收→拖累市場估值",
+          "exposure": "美股科技股與AI晶片供應鏈標的"
+        },
+        {
+          "id": 3,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.8,
+          "policy_stage": "announced",
+          "reason": "美國堵住中國AI晶片漏洞，加劇半導體出口限制。",
+          "relevant": true,
+          "affected_channel": "出口與供應鏈",
+          "transmission": "封堵晶片漏洞政策→半導體出口受阻→壓抑整體科技類股",
+          "exposure": "整體美股半導體與科技板塊"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
