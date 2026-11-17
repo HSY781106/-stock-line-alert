@@ -9642,7 +9642,8 @@
       "margin_change": -263.0,
       "margin_balance": 11508.0,
       "short_change": 62.0,
-      "short_balance": 258.0
+      "short_balance": 258.0,
+      "_cached_at": 1794886082.8152785
     },
     "3712": {
       "margin_change": 70.0,

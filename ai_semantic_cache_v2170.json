@@ -8449,5 +8449,112 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:a3eaf590394b2a948195022e": {
+    "ts": 1794886043.832066,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.7,
+          "policy_stage": "considering",
+          "reason": "美國仍需中國稀土",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "美國稀土需求→中國供應→成本上升",
+          "exposure": "證據不足"
+        },
+        {
+          "id": 1,
+          "direction": "negative",
+          "score": -3,
+          "confidence": 0.8,
+          "policy_stage": "threat",
+          "reason": "美國對加拿大關稅可能被限制",
+          "relevant": true,
+          "affected_channel": "出口",
+          "transmission": "美國關稅威脅→加拿大出口受限→美國市場受影響",
+          "exposure": "受影響"
+        }
+      ]
+    },
+    "provider": "groq"
+  },
+  "news:3711:9037cfc55309aad63930fe7c": {
+    "ts": 1794886124.9893372,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.8,
+          "reason": "取得工程合約6.2億",
+          "relevant": true
+        },
+        {
+          "id": 1,
+          "direction": "positive",
+          "score": 3,
+          "confidence": 0.9,
+          "reason": "啟用一期、二期動土千億元",
+          "relevant": true
+        },
+        {
+          "id": 2,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.6,
+          "reason": "營運追蹤無具體訊息",
+          "relevant": false
+        },
+        {
+          "id": 3,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.8,
+          "reason": "取得機器設備10億",
+          "relevant": true
+        }
+      ]
+    },
+    "provider": "groq"
+  },
+  "final_v21826:3711:737e2f82ebd64421f1f6fbdf": {
+    "ts": 1794886167.1764863,
+    "data": {
+      "recommendation": "🔴 減碼/停損觀察",
+      "confidence": 0.6,
+      "core": "日月光投控估值偏高，技術處於空頭，籌碼負面，買點不符投資價值",
+      "fundamental_view": "估值高於同業，PE 31.57 vs 16.68，雖獲利成長但未能抵消高估值風險",
+      "technical_view": "空頭趨勢，RSI 38，MA20/MA60被跌破，短期回撤顯著",
+      "chips_view": "法人連續賣超，20日賣超，融資短期上升，籌碼負面",
+      "risk_view": "法人連續賣超、跌破MA20/MA60，風險高",
+      "news_view": "AI合約及設備投資利多，但未能彌補估值與技術風險",
+      "trump_view": "貿易關稅負面，對半導體需求不利",
+      "macro_view": "利率負面導致資金成本上升，市場風險偏低",
+      "buy_view": "買點與投資價值不一致，建議等待止跌確認後再進場",
+      "strengths": [
+        "獲利成長 22.96%",
+        "PE 低於市場平均",
+        "AI合約利多"
+      ],
+      "risks": [
+        "高估值 31.57 vs 同業 16.68",
+        "空頭技術趨勢",
+        "法人連續賣超",
+        "跌破MA20/MA60"
+      ],
+      "conflict": "估值與技術面不符，籌碼負面與投資價值衝突",
+      "next_watch": [
+        "MA20/MA60回升",
+        "法人買超",
+        "AI合約進度"
+      ],
+      "reason": "估值偏高且技術空頭，籌碼負面，買點不符投資價值，建議觀察止跌後再決定"
+    },
+    "provider": "groq"
   }
 }
