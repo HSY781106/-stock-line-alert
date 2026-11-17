@@ -1,6 +1,6 @@
 {
   "2330": {
-    "fetched_at": "2026-11-18T06:01:47.636158+08:00",
+    "fetched_at": "2026-11-18T06:09:39.547142+08:00",
     "adjustment": -5,
     "events": [
       {
@@ -44,16 +44,6 @@
         "status": ""
       },
       {
-        "title": "2330 台積電 - 乾你老媽，怎麼沒有魏折價？！瞧不起嗎？ 你堂堂彭博跟輝達董事... - 股市爆料同學會 - CMoney",
-        "source": "CMoney",
-        "date": "2026-11-15T18:00:54+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE8wTFRvRHFDQXAwUTVlRjlHblRtalhhMEUyYkt1SlZBWnNKMjd6SG9mTklrVEMzNGoyME14TW1kakJJZ2x3VHVQUHpyYzdZM0U2SmtnOHpuVmM?oc=5",
-        "raw_adjustment": 0,
-        "adjustment": 0,
-        "label": "",
-        "status": ""
-      },
-      {
         "title": "2330 台積電 - 盧比歐- 股市爆料同學會 - CMoney",
         "source": "CMoney",
         "date": "2026-11-15T19:43:10+08:00",
@@ -82,13 +72,23 @@
         "adjustment": 0,
         "label": "",
         "status": ""
+      },
+      {
+        "title": "2330 台積電 - 扶植下一個輝達？台積電5億美元內設投資公司為半導體產業出一份力- 股市爆料同學會 - CMoney",
+        "source": "CMoney",
+        "date": "2026-11-16T00:29:52+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTFBkUVN3UmpQTUxPZjhKWnpHTzFhRHM4bk1ybGVscFktWTBpYjhTRUtCbEFKSThwR0JzV1o3ZUJtV1k3ak80U2NFVVk5NGFncGNTczRBZUYtOHM?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
       }
     ],
     "source": "Google News RSS",
     "lookback_days": 14
   },
   "3711": {
-    "fetched_at": "2026-11-18T06:01:51.877312+08:00",
+    "fetched_at": "2026-11-18T06:09:43.548840+08:00",
     "adjustment": 0,
     "events": [
       {
@@ -126,6 +126,16 @@
         "source": "台視全球資訊網",
         "date": "2026-11-13T22:16:37+08:00",
         "link": "https://news.google.com/rss/articles/CBMikgFBVV95cUxNT1ZQVlczN2NhNHU5eGZDd1lSZ2tCQnluY0JlaUd6eS1DbmRNVXhFSWREejN1Zzk0TW4yTnBkVXdsTWJaX2lUbW1yTFNieHgwbnJzSk9TZ25KOVZUNDNSdVBQRWlsZUdGXzhLUEJxMmNwbGl6RGZNRElROUtjTDduTjV4Mlg2bGlpVGwzbGZMTTA1QQ?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "日月光投控成長加速矽品CoWoS、CPO背後共同貴人是輝達 - CMoney",
+        "source": "CMoney",
+        "date": "2026-11-15T10:11:16+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE0tNVozV0pPSnRUWDJEaFc3Xzc5MDNDZzNWZzVmOUp4dDJWVVR6M2FaODRWdFRXYUNsVlB0Mnd3dmZaeGdPZmR0NVN0d3dxMXAzaUk5aVUyd0I?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
@@ -230,7 +240,7 @@
     "lookback_days": 14
   },
   "0050": {
-    "fetched_at": "2026-11-18T06:01:16.266244+08:00",
+    "fetched_at": "2026-11-18T06:09:10.774198+08:00",
     "adjustment": -6,
     "events": [
       {
@@ -318,7 +328,7 @@
     "lookback_days": 14
   },
   "QQQ": {
-    "fetched_at": "2026-11-18T06:01:57.326497+08:00",
+    "fetched_at": "2026-11-18T06:09:48.839212+08:00",
     "adjustment": -2,
     "events": [
       {
