@@ -8608,5 +8608,25 @@
       ]
     },
     "provider": "groq"
+  },
+  "trump_v21826:__MARKET__:03a2c58c14468aa14af96e06": {
+    "ts": 1794957685.3186276,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.6,
+          "policy_stage": "announced",
+          "reason": "新AI晶片規則影響供應鏈",
+          "relevant": true,
+          "affected_channel": "供應鏈",
+          "transmission": "政策→半導體產業→供應鏈受阻",
+          "exposure": "證據不足"
+        }
+      ]
+    },
+    "provider": "groq"
   }
 }
