@@ -8393,5 +8393,61 @@
       ]
     },
     "provider": "groq"
+  },
+  "trump_v21826:__MARKET__:1839f34d1d3e6a9184ab3da5": {
+    "ts": 1794873593.5887935,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.7,
+          "policy_stage": "considering",
+          "reason": "中美雙方會晤對稀土依賴進行討論，政策尚無實質改變。",
+          "relevant": true,
+          "affected_channel": "供應鏈",
+          "transmission": "川習會討論→稀土關稅與供應鏈不確定性→整體市場評估風險",
+          "exposure": "美國科技與製造業整體供應鏈曝險"
+        },
+        {
+          "id": 1,
+          "direction": "negative",
+          "score": -3,
+          "confidence": 0.85,
+          "policy_stage": "announced",
+          "reason": "政府推進限制AI晶片出口，衝擊半導體板塊與科技股估值。",
+          "relevant": true,
+          "affected_channel": "出口",
+          "transmission": "出口禁令限制→半導體廠商營收受限→大盤科技股承壓",
+          "exposure": "半導體及AI晶片產業出口曝險"
+        },
+        {
+          "id": 2,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.8,
+          "policy_stage": "announced",
+          "reason": "封殺中國透過第三地取得AI晶片漏洞，科技出口監管趨嚴。",
+          "relevant": true,
+          "affected_channel": "出口",
+          "transmission": "封堵貿易漏洞→全球供應鏈審查加嚴→大盤科技股承壓",
+          "exposure": "晶片設計與代工封測供應鏈"
+        },
+        {
+          "id": 3,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.8,
+          "policy_stage": "announced",
+          "reason": "美國進一步遏制中國獲取AI晶片，打壓半導體相關需求。",
+          "relevant": true,
+          "affected_channel": "需求",
+          "transmission": "國家安全限制出口→降低相關晶片海外需求→壓抑市場風險偏好",
+          "exposure": "高階運算晶片與AI伺服器產業"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
