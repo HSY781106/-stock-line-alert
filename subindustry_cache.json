@@ -1,5 +1,5 @@
 {
-  "_cached_at": 1794885954.8077376,
+  "_cached_at": 1794905934.0316446,
   "source": "TPEx/TWSE Industry Value Chain",
   "source_url": "https://ic.tpex.org.tw/company_chain.php",
   "cache_days": 30,
@@ -47501,6 +47501,29 @@
           "industry": "電腦及週邊設備",
           "sub_industry": "工業電腦",
           "date": "2026-11-02"
+        }
+      ]
+    },
+    "7848": {
+      "subindustries": [
+        "生產製程及檢測設備",
+        "其他電子產品及電子服務產業"
+      ],
+      "records": [
+        {
+          "industry": "半導體",
+          "sub_industry": "生產製程及檢測設備",
+          "date": "2026-11-17"
+        },
+        {
+          "industry": "平面顯示器",
+          "sub_industry": "生產製程及檢測設備",
+          "date": "2026-11-17"
+        },
+        {
+          "industry": "其他",
+          "sub_industry": "其他電子產品及電子服務產業",
+          "date": "2026-11-17"
         }
       ]
     }

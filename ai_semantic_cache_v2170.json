@@ -8556,5 +8556,37 @@
       "reason": "估值偏高且技術空頭，籌碼負面，買點不符投資價值，建議觀察止跌後再決定"
     },
     "provider": "groq"
+  },
+  "trump_v21826:__MARKET__:506ace4f548fc53ca8073db3": {
+    "ts": 1794905978.9590604,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.6,
+          "policy_stage": "considering",
+          "reason": "美國仍需中國稀土，可能加強自產",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "政策→稀土供應鏈→成本上升",
+          "exposure": "證據不足"
+        },
+        {
+          "id": 1,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.7,
+          "policy_stage": "announced",
+          "reason": "特朗普投資Nvidia，促進美國半導體",
+          "relevant": true,
+          "affected_channel": "需求",
+          "transmission": "政策→半導體產業→Nvidia需求上升",
+          "exposure": "Nvidia受益"
+        }
+      ]
+    },
+    "provider": "groq"
   }
 }
