@@ -8840,5 +8840,37 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:62296fa6db59919134a26678": {
+    "ts": 1795038052.9021318,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.6,
+          "policy_stage": "announced",
+          "reason": "美國提議與菲律賓合作油管",
+          "relevant": true,
+          "affected_channel": "供應鏈",
+          "transmission": "美國政策→能源產業→市場",
+          "exposure": "證據不足"
+        },
+        {
+          "id": 1,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.5,
+          "policy_stage": "announced",
+          "reason": "美國全球天然氣策略",
+          "relevant": true,
+          "affected_channel": "需求",
+          "transmission": "美國政策→能源產業→市場",
+          "exposure": "證據不足"
+        }
+      ]
+    },
+    "provider": "groq"
   }
 }
