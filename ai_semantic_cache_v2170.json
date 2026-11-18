@@ -8764,5 +8764,25 @@
       "reason": "基本面優勢被技術與籌碼疲弱抵消，風險偏高，建議觀望。"
     },
     "provider": "groq"
+  },
+  "trump_v21826:__MARKET__:59d295bb990acdbaff9c914b": {
+    "ts": 1794990224.3359132,
+    "data": {
+      "items": [
+        {
+          "id": 1,
+          "direction": "positive",
+          "score": 1,
+          "confidence": 0.6,
+          "policy_stage": "announced",
+          "reason": "擴大美菲防務合作",
+          "relevant": true,
+          "affected_channel": "需求",
+          "transmission": "美國擴大防務合作→國防產業需求上升→市場表現提升",
+          "exposure": "證據不足"
+        }
+      ]
+    },
+    "provider": "groq"
   }
 }
