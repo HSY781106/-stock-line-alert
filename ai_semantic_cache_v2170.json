@@ -8784,5 +8784,61 @@
       ]
     },
     "provider": "groq"
+  },
+  "trump_v21826:__MARKET__:e1366c3d9e3f14f2b809ab63": {
+    "ts": 1795037676.7035737,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.7,
+          "policy_stage": "considering",
+          "reason": "特朗普通過擴建阿拉斯加管道與菲律賓合作，提振美國石油出口與整體市場能源供應。",
+          "relevant": true,
+          "affected_channel": "出口",
+          "transmission": "美國政府推動能源合作→擴大液化天然氣/原油出口能力→提升整體美股能源板塊與大盤氣氛",
+          "exposure": "整體美股市場及能源類股（如XLE）"
+        },
+        {
+          "id": 1,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.75,
+          "policy_stage": "considering",
+          "reason": "特朗普推動美國天然氣在全球市場擴張，有助於提振能源出口與相關產業。",
+          "relevant": true,
+          "affected_channel": "出口",
+          "transmission": "推動天然氣出口政策→擴大美企海外市場佔有率→對美股大盤及能源板塊帶來正面效應",
+          "exposure": "整體美股市場及液化天然氣供應商"
+        },
+        {
+          "id": 2,
+          "direction": "positive",
+          "score": 3,
+          "confidence": 0.85,
+          "policy_stage": "announced",
+          "reason": "特朗普促成逾170億美元亞洲貿易協議，波音與GE獲百億訂單，顯著提振市場情緒。",
+          "relevant": true,
+          "affected_channel": "需求",
+          "transmission": "政府外交促成大型訂單→工業與航太巨頭營收增加→直接拉動美股大盤與相關供應鏈",
+          "exposure": "波音、GE Aerospace及整體美股工業板塊"
+        },
+        {
+          "id": 3,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.8,
+          "policy_stage": "considering",
+          "reason": "特朗普擬全球推廣美國能源，旨在主導全球能源市場，為美股能源股注入強心針。",
+          "relevant": true,
+          "affected_channel": "需求",
+          "transmission": "美國政府出面拓展全球市場需求→提振美國化石燃料產量與出口額→支撐整體市場營運氣氛",
+          "exposure": "整體美股市場及化石燃料板塊"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
