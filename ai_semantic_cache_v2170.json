@@ -8872,5 +8872,61 @@
       ]
     },
     "provider": "groq"
+  },
+  "trump_v21826:__MARKET__:822bec381a2778db88b70665": {
+    "ts": 1795042287.761715,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.8,
+          "policy_stage": "considering",
+          "reason": "川普團隊轉向支持核能，可能削減電動車補貼。",
+          "relevant": true,
+          "affected_channel": "需求與補貼",
+          "transmission": "川普轉向核能政策→削減電動車補貼→影響電動車產業鏈需求",
+          "exposure": "整體電動車產業與供應鏈標的"
+        },
+        {
+          "id": 1,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.7,
+          "policy_stage": "considering",
+          "reason": "阿拉斯加油管合作屬合作意向，影響尚不明顯。",
+          "relevant": true,
+          "affected_channel": "供應鏈與資本支出",
+          "transmission": "提及基礎建設合作→能源開發需求潛在增加→對整體市場影響中性",
+          "exposure": "油氣能源開發與管道設備產業"
+        },
+        {
+          "id": 2,
+          "direction": "positive",
+          "score": 3,
+          "confidence": 0.9,
+          "policy_stage": "announced",
+          "reason": "大型航太與能源協議提供重大出口訂單利多。",
+          "relevant": true,
+          "affected_channel": "出口與營收",
+          "transmission": "海外商業協議簽署→波音與GE獲百億訂單→挹注航太與工業板塊",
+          "exposure": "波音(BA)、GE Aerospace(GE)及航太供應鏈"
+        },
+        {
+          "id": 3,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.6,
+          "policy_stage": "considering",
+          "reason": "全球天然氣戰略細節未定，多空影響相互抵銷。",
+          "relevant": true,
+          "affected_channel": "出口與價格",
+          "transmission": "推動天然氣出口政策→供給增加但地緣政治變數仍多→影響中性",
+          "exposure": "天然氣出口商與液化天然氣(LNG)產業"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
