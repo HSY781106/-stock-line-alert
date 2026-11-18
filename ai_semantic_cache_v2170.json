@@ -8628,5 +8628,141 @@
       ]
     },
     "provider": "groq"
+  },
+  "trump_v21826:__MARKET__:ab534e766a5a053eca33654e": {
+    "ts": 1794969991.1282117,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.8,
+          "policy_stage": "announced",
+          "reason": "促進稀土磁鐵出口",
+          "relevant": true,
+          "affected_channel": "出口",
+          "transmission": "政策→稀土產業→出口增長",
+          "exposure": "受益於稀土出口需求上升"
+        },
+        {
+          "id": 1,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.7,
+          "policy_stage": "announced",
+          "reason": "AI晶片限制影響東南亞供應鏈",
+          "relevant": true,
+          "affected_channel": "供應鏈",
+          "transmission": "政策→半導體產業→東南亞供應鏈受阻",
+          "exposure": "受限於AI晶片出口管制"
+        }
+      ]
+    },
+    "provider": "groq"
+  },
+  "news:0050:a28b67378d936acd0bc0d6f1": {
+    "ts": 1794970033.049611,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "negative",
+          "score": -3,
+          "confidence": 0.8,
+          "reason": "外資大量拋售，股價跌破關鍵點",
+          "relevant": true
+        },
+        {
+          "id": 1,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.7,
+          "reason": "開盤大跌，投資者恐慌",
+          "relevant": true
+        },
+        {
+          "id": 2,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.6,
+          "reason": "持股明細無重大變動",
+          "relevant": true
+        },
+        {
+          "id": 3,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.5,
+          "reason": "零股成交量高，無實質影響",
+          "relevant": true
+        }
+      ]
+    },
+    "provider": "groq"
+  },
+  "etf_final_v2237:0050:5a820876cc48083f313ebfbe": {
+    "ts": 1794970102.2221925,
+    "data": {
+      "recommendation": "🔴 不宜配置",
+      "confidence": 0.3,
+      "core": "短期負面，長期價值不明",
+      "value_view": "台股大型股估值偏高，利率上升壓力大",
+      "buy_view": "目前處於跌破關鍵點，無明顯買點",
+      "macro_view": "總經環境中性，利率傳導負面",
+      "news_view": "外資大量拋售，股價跌破百元大關，市場恐慌",
+      "trump_view": "半導體/AI政策偏負面，供應鏈受限",
+      "theme_view": "台灣大型權值與半導體重倉，風險集中",
+      "risk_view": "利率上升、外資拋售、AI政策風險",
+      "conflict": "外資拋售與市場中性環境衝突",
+      "strengths": [
+        "大型股基礎穩定",
+        "高股息潛力"
+      ],
+      "risks": [
+        "利率上升壓力",
+        "外資拋售",
+        "AI政策限制"
+      ],
+      "next_watch": [
+        "利率走勢",
+        "外資持續拋售"
+      ],
+      "reason": "外資拋售造成股價跌破關鍵點，利率傳導負面，AI政策不利，短期風險高。"
+    },
+    "provider": "groq"
+  },
+  "final_v21826:3711:f141833f73168f9ccece05d6": {
+    "ts": 1794970154.5103533,
+    "data": {
+      "recommendation": "🔴 不宜加碼",
+      "confidence": 0.6,
+      "core": "日月光估值低、獲利成長，但技術與籌碼疲弱，風險高。",
+      "fundamental_view": "估值低於同業，EPS成長22.96%，ROE 11.69%，但PE 29.85高於同業中值。",
+      "technical_view": "空頭趨勢，RSI 28.8、MA20跌破MA60，近期回撤超20%。",
+      "chips_view": "法人20日賣超，機構持股減少，融資餘額下降。",
+      "risk_view": "法人連續賣超、跌破MA20/MA60，風險分數4/10。",
+      "news_view": "近期合約與設備投資正面，但未形成即時利好。",
+      "trump_view": "半導體/AI負面，關稅負面，對需求構成壓力。",
+      "macro_view": "利率負面、匯率正面，市場風險偏低。",
+      "buy_view": "買點與投資價值不一致，建議等待止跌。",
+      "strengths": [
+        "低估值",
+        "獲利成長"
+      ],
+      "risks": [
+        "技術空頭",
+        "籌碼疲弱",
+        "負面宏觀"
+      ],
+      "conflict": "基本面看好但技術與籌碼顯示下行壓力，風險與負面宏觀加劇。",
+      "next_watch": [
+        "MA20/MA60回升",
+        "法人持股回升",
+        "宏觀利率變動"
+      ],
+      "reason": "基本面優勢被技術與籌碼疲弱抵消，風險偏高，建議觀望。"
+    },
+    "provider": "groq"
   }
 }

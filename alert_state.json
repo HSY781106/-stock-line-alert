@@ -74,16 +74,16 @@
       "session_key": "2026-11-13"
     },
     "台灣加權指數": {
-      "last_check": "2026-11-17T11:29:35.089811+08:00",
-      "last_price": 40589.51171875,
+      "last_check": "2026-11-18T10:49:21.955290+08:00",
+      "last_price": 39937.1484375,
       "last_interval_low": 42152.23046875,
       "last_interval_source": "Yahoo-5m",
       "interval_alert": false,
-      "session_key": "2026-11-17"
+      "session_key": "2026-11-18"
     }
   },
   "high_score_alert": {
-    "date": "2026-11-17",
+    "date": "2026-11-18",
     "active": []
   },
   "target_buy_point_alert": {
