@@ -9162,5 +9162,25 @@
       "reason": "基本面仍具吸引力，但技術與籌碼顯示賣壓，風險高，建議觀望。"
     },
     "provider": "groq"
+  },
+  "trump_v21826:__MARKET__:878b7c9fd198427d578cd2ad": {
+    "ts": 1795077280.9230585,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.6,
+          "policy_stage": "unknown",
+          "reason": "無明確政策變動",
+          "relevant": true,
+          "affected_channel": "需求",
+          "transmission": "無具體政策→能源需求→市場",
+          "exposure": "證據不足"
+        }
+      ]
+    },
+    "provider": "groq"
   }
 }
