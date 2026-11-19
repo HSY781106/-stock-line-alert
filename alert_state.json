@@ -10,10 +10,13 @@
       "trigger_week": -0.117337
     },
     "2330 台積電": {
-      "date": "2026-11-18",
+      "date": "2026-11-19",
       "daily_alert_sent": false,
-      "weekly_alert_sent": false,
-      "alert_sent": false
+      "weekly_alert_sent": true,
+      "alert_sent": true,
+      "alert_time": "2026-11-19T10:20:04.827215+08:00",
+      "trigger_day": -0.009195,
+      "trigger_week": -0.100209
     },
     "3711 日月光投控": {
       "date": "2026-11-18",
@@ -42,12 +45,12 @@
   },
   "interval_low": {
     "0050 元大台灣50": {
-      "last_check": "2026-11-18T10:48:23.016318+08:00",
-      "last_price": 93.30000305175781,
+      "last_check": "2026-11-19T10:20:04.278521+08:00",
+      "last_price": 92.1500015258789,
       "last_interval_low": 98.1500015258789,
       "last_interval_source": "Yahoo-5m",
       "interval_alert": false,
-      "session_key": "2026-11-18"
+      "session_key": "2026-11-19"
     },
     "2330 台積電": {
       "last_check": "2026-11-18T10:48:23.758930+08:00",
