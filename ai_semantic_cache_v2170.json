@@ -8928,5 +8928,239 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:f59c1555ed76861b88716c41": {
+    "ts": 1795054747.059847,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.7,
+          "policy_stage": "announced",
+          "reason": "推動核能替代電動車",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "政策→能源產業→核能成本上升→市場價格上升",
+          "exposure": "證據不足"
+        },
+        {
+          "id": 3,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.6,
+          "policy_stage": "announced",
+          "reason": "美國航空銷售增長",
+          "relevant": true,
+          "affected_channel": "需求",
+          "transmission": "政策→航空產業→銷售額提升→市場估值上升",
+          "exposure": "證據不足"
+        }
+      ]
+    },
+    "provider": "groq"
+  },
+  "news:0050:4bbb232312c9c18cf9a15987": {
+    "ts": 1795054773.5675259,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.6,
+          "reason": "開盤跌幅無公司事件",
+          "relevant": true
+        },
+        {
+          "id": 1,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.6,
+          "reason": "買進行為無實質影響",
+          "relevant": true
+        },
+        {
+          "id": 2,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.6,
+          "reason": "零股成交量排行無事件",
+          "relevant": true
+        },
+        {
+          "id": 3,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.6,
+          "reason": "標題無具體事件",
+          "relevant": true
+        }
+      ]
+    },
+    "provider": "groq"
+  },
+  "etf_final_v2237:0050:40bdfaa5190f6f80eb3eae44": {
+    "ts": 1795054803.9332352,
+    "data": {
+      "recommendation": "🟠 暫緩配置",
+      "confidence": 0.4,
+      "core": "台50短期偏空，長期仍具價值",
+      "value_view": "台50因半導體權重高，長期成長潛力仍在",
+      "buy_view": "目前處於負利差，建議觀望",
+      "macro_view": "利率偏負面，市場風險低",
+      "news_view": "近期無重大事件，零股成交量正常",
+      "trump_view": "無政策影響",
+      "theme_view": "台灣大型股與半導體主題",
+      "risk_view": "短期空頭趨勢與利率風險",
+      "conflict": "空頭技術與長期價值衝突",
+      "strengths": [
+        "半導體權重高",
+        "長期成長潛力"
+      ],
+      "risks": [
+        "短期空頭趨勢",
+        "利率負面"
+      ],
+      "next_watch": [
+        "利率走勢",
+        "台50技術轉折"
+      ],
+      "reason": "技術指標顯示空頭，利率負面加劇風險。長期半導體權重仍具吸引力，但短期不宜進場。"
+    },
+    "provider": "groq"
+  },
+  "news:2330:fe04786f8b6e88121cccafea": {
+    "ts": 1795054812.7295005,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.6,
+          "reason": "未影響台積電投資",
+          "relevant": true
+        },
+        {
+          "id": 3,
+          "direction": "positive",
+          "score": 3,
+          "confidence": 0.8,
+          "reason": "台積電投資5億美元支持半導體",
+          "relevant": true
+        }
+      ]
+    },
+    "provider": "groq"
+  },
+  "final_v21826:2330:db5c427a0779c6f65426ff6b": {
+    "ts": 1795054817.066943,
+    "data": {
+      "recommendation": "🔴 減碼/停損觀察",
+      "confidence": 0.6,
+      "core": "台積電基本面優秀但技術與籌碼負面，需觀望",
+      "fundamental_view": "估值低於同業，PEG吸引，ROE高，獲利成長強勁，基本面堅固",
+      "technical_view": "空頭趨勢，RSI低於30，接近20日低點，MA20/MA60被跌破，短期回調風險大",
+      "chips_view": "法人20日賣超，融資增加，機構持股減少，籌碼偏弱",
+      "risk_view": "法人連續賣超、融資增加、跌破MA20/MA60，風險指標高",
+      "news_view": "近期AI利空、台股大跌，台積電股價受拖累，投資者情緒低迷",
+      "trump_view": "關稅/貿易偏負面，對半導體需求不利",
+      "macro_view": "利率/殖利率負面，匯率正面，市場風險偏低，宏觀環境不佳",
+      "buy_view": "買點與投資價值不一致，建議等待止跌確認後再進場",
+      "strengths": [
+        "低估值/PEG吸引",
+        "高ROE與獲利成長",
+        "同業估值優勢"
+      ],
+      "risks": [
+        "法人連續賣超",
+        "融資增加",
+        "跌破MA20/MA60",
+        "AI利空"
+      ],
+      "conflict": "技術面空頭與基本面優秀形成最大矛盾",
+      "next_watch": [
+        "AI利空事件後股價回調",
+        "法人持股變動",
+        "MA20/MA60突破"
+      ],
+      "reason": "基本面堅固但技術與籌碼負面，需觀望止跌後再決定進場"
+    },
+    "provider": "groq"
+  },
+  "news:3711:ca38560152180820f4d849ce": {
+    "ts": 1795054824.1914537,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "positive",
+          "score": 3,
+          "confidence": 0.9,
+          "reason": "啟用與擴產提升產能",
+          "relevant": true
+        },
+        {
+          "id": 1,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.7,
+          "reason": "僅營運追蹤無具體影響",
+          "relevant": true
+        },
+        {
+          "id": 2,
+          "direction": "positive",
+          "score": 3,
+          "confidence": 0.85,
+          "reason": "成長加速帶來利好",
+          "relevant": true
+        },
+        {
+          "id": 3,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.6,
+          "reason": "輝達財報與本公司無直接關聯",
+          "relevant": true
+        }
+      ]
+    },
+    "provider": "groq"
+  },
+  "final_v21826:3711:703b44db162cc2e2b897f233": {
+    "ts": 1795054825.2167766,
+    "data": {
+      "recommendation": "🔴 減碼/停損觀察",
+      "confidence": 0.45,
+      "core": "日月光投控目前處於空頭趨勢，籌碼與風險指標顯示賣壓加劇，買點不符合投資價值。",
+      "fundamental_view": "估值低於同業但PE仍高於同行中位數，獲利成長穩健，基本面仍具吸引力。",
+      "technical_view": "RSI低於30，處於超賣區，但空頭趨勢持續，MA20/MA60被跌破，短期回升機會有限。",
+      "chips_view": "法人20日賣超、融資增加，籌碼負面，支持力度不足。",
+      "risk_view": "法人連續賣超、融資增加、跌破MA20/MA60，風險高。",
+      "news_view": "啟用與擴產利好，但未形成即時股價上升，其他新聞中性。",
+      "trump_view": "關稅／貿易偏負面，對業績成長構成壓力。",
+      "macro_view": "利率／殖利率傳導偏負面，匯率正面，市場風險偏低。",
+      "buy_view": "買點與投資價值不一致，建議暫不進場。",
+      "strengths": [
+        "獲利成長穩健",
+        "估值相對同業低"
+      ],
+      "risks": [
+        "法人連續賣超",
+        "融資增加",
+        "跌破MA20/MA60"
+      ],
+      "conflict": "技術面超賣但趨勢空頭，籌碼負面與基本面正面形成最大矛盾。",
+      "next_watch": [
+        "MA20/MA60回升",
+        "法人買超",
+        "利率走低"
+      ],
+      "reason": "基本面仍具吸引力，但技術與籌碼顯示賣壓，風險高，建議觀望。"
+    },
+    "provider": "groq"
   }
 }
