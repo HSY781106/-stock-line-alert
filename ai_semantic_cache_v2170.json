@@ -9222,5 +9222,61 @@
       ]
     },
     "provider": "groq"
+  },
+  "trump_v21826:__MARKET__:61e129b1c3539e13c6dbea4c": {
+    "ts": 1795128907.8470528,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "positive",
+          "score": 3,
+          "confidence": 0.85,
+          "policy_stage": "implemented",
+          "reason": "批准晶片出口中國，放寬科技管制。",
+          "relevant": true,
+          "affected_channel": "出口與營收",
+          "transmission": "批准出口放寬限制→半導體廠商銷量增加→整體市場獲利提升",
+          "exposure": "美國晶片巨頭與AI晶片供應鏈"
+        },
+        {
+          "id": 1,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.75,
+          "policy_stage": "announced",
+          "reason": "揭露持股透露政策支持與市場信心。",
+          "relevant": true,
+          "affected_channel": "估值與情緒",
+          "transmission": "總統揭露個人投資→提升相關產業信心→帶動整體市場估值",
+          "exposure": "Tesla、SpaceX及相關電動車/太空供應鏈"
+        },
+        {
+          "id": 2,
+          "direction": "negative",
+          "score": -3,
+          "confidence": 0.8,
+          "policy_stage": "threat",
+          "reason": "中東地緣衝突引發原油供給危機疑慮。",
+          "relevant": true,
+          "affected_channel": "成本與通膨",
+          "transmission": "地緣政治緊張→原油價格大漲通膨升溫→市場成本壓力增加",
+          "exposure": "整體股市、能源與消費性產業"
+        },
+        {
+          "id": 3,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.7,
+          "policy_stage": "announced",
+          "reason": "核子峰會未達成重大協議，符合預期。",
+          "relevant": true,
+          "affected_channel": "市場情緒",
+          "transmission": "外交峰會無重大突破→地緣不確定性延續→市場維持觀望",
+          "exposure": "國防與軍工產業"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
