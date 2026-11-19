@@ -1,5 +1,5 @@
 {
-  "cached_at": 1795037596.8446956,
+  "cached_at": 1795124668.0837133,
   "data": [
     {
       "code": "1101",
@@ -1096,14 +1096,6 @@
       "market": "TWSE",
       "symbol": "1587.TW",
       "capital": 800556720.0
-    },
-    {
-      "code": "1589",
-      "name": "永冠-KY",
-      "industry": "電機機械",
-      "market": "TWSE",
-      "symbol": "1589.TW",
-      "capital": 1531359410.0
     },
     {
       "code": "1590",
@@ -2839,7 +2831,7 @@
       "industry": "半導體業",
       "market": "TWSE",
       "symbol": "2436.TW",
-      "capital": 2041775610.0
+      "capital": 2210709950.0
     },
     {
       "code": "2438",
@@ -2927,7 +2919,7 @@
       "industry": "半導體業",
       "market": "TWSE",
       "symbol": "2454.TW",
-      "capital": 16049526130.0
+      "capital": 16049239070.0
     },
     {
       "code": "2455",
@@ -3303,7 +3295,7 @@
       "industry": "建材營造",
       "market": "TWSE",
       "symbol": "2528.TW",
-      "capital": 5015904370.0
+      "capital": 5032949820.0
     },
     {
       "code": "2530",
@@ -4095,7 +4087,7 @@
       "industry": "鋼鐵工業",
       "market": "TWSE",
       "symbol": "3004.TW",
-      "capital": 643831550.0
+      "capital": 644209550.0
     },
     {
       "code": "3005",
@@ -5183,7 +5175,7 @@
       "industry": "電子零組件業",
       "market": "TWSE",
       "symbol": "3715.TW",
-      "capital": 2835745840.0
+      "capital": 2835753020.0
     },
     {
       "code": "3716",
@@ -6423,7 +6415,7 @@
       "industry": "電子零組件業",
       "market": "TWSE",
       "symbol": "6197.TW",
-      "capital": 1234391280.0
+      "capital": 1261527850.0
     },
     {
       "code": "6201",
@@ -6711,7 +6703,7 @@
       "industry": "通信網路業",
       "market": "TWSE",
       "symbol": "6442.TW",
-      "capital": 818175520.0
+      "capital": 818625520.0
     },
     {
       "code": "6443",
@@ -7495,7 +7487,7 @@
       "industry": "生技醫療",
       "market": "TWSE",
       "symbol": "6919.TW",
-      "capital": 778600430.0
+      "capital": 780224430.0
     },
     {
       "code": "6921",
@@ -7623,7 +7615,7 @@
       "industry": "其他",
       "market": "TWSE",
       "symbol": "6957.TW",
-      "capital": 569453940.0
+      "capital": 585930560.0
     },
     {
       "code": "6958",
@@ -7711,7 +7703,7 @@
       "industry": "電腦及週邊設備業",
       "market": "TWSE",
       "symbol": "7710.TW",
-      "capital": 639055800.0
+      "capital": 700195800.0
     },
     {
       "code": "7711",
@@ -8087,7 +8079,7 @@
       "industry": "電腦及週邊設備業",
       "market": "TWSE",
       "symbol": "8114.TW",
-      "capital": 1076409190.0
+      "capital": 1079439190.0
     },
     {
       "code": "8131",

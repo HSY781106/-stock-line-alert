@@ -1,17 +1,17 @@
 {
   "2330": {
-    "fetched_at": "2026-11-19T16:35:10.108815+08:00",
-    "adjustment": 4,
+    "fetched_at": "2026-11-20T05:53:00.244431+08:00",
+    "adjustment": -9,
     "events": [
       {
-        "title": "【零股排行榜】 盤中零股成交量TOP 20｜0050 元大台灣50、00878 國泰永續高股息、0056 元大高股息、00631L 元大台灣50正2、2330 台積電 (1116)｜豐雲學堂2026 年 11 月 - 永豐金證券",
-        "source": "永豐金證券",
-        "date": "2026-11-16T14:41:12+08:00",
-        "link": "https://news.google.com/rss/articles/CBMi-gRBVV95cUxNbFRKRVBiUS1IaGs5VGN3b0xCX1pieUstSUhiSTlEMWw4NjJFZXlwY1N0TGdLUWJGZXgyYUNHMXY1UzRfdjdEVldCTjk5Z0FESmprSmdTdmR1YXlrZXNJakpybzdSc2FuNUdMX1gxOGVaM2pJSFdKMng4NVltN2dRWUhwNDlSRXNZUGJkSDB4anlYU3Y3WGRKbjZRN0E0MXlVMG5jNG5zcjJGV3ZoRTdsb09nY0tZSDN0WEVYVmQxNExueFN1SEFRZ2VKOUJVc1BJbWJHb1ZWOGNqVXNDdVU3WmhMSlV5NEJ3di1jSDhhSTV6cHRpZV94ZUg5OGVYWDViczBYM09pY1JXdmVrQURrWW1VTDVfOXI2ZEJTR3duZi1GcmxnYk9kdEZ4R29NVm9TaVhtbnAzZ1Yxdk1VSUJ0SWJLMjlYTTRqNXlQSHJlcVdDSlM5aW5",
-        "raw_adjustment": 0,
-        "adjustment": 0,
-        "label": "",
-        "status": ""
+        "title": "美國加強出口管制 金融時報：台積電、三星暫停部分對中晶片出貨 - CMoney",
+        "source": "CMoney",
+        "date": "2026-11-19T21:46:18+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE91ZU9QRV95bmM0VjA2X2lQXy1sbTMxZm1pNDYwUVRIZHY5TVpidVNEQk8zbHBFQWxvR0RMN010YWREc0c3LWY1VnBuUnU3Z211UjNMQWx3Nlg?oc=5",
+        "raw_adjustment": -9,
+        "adjustment": -9,
+        "label": "監管/法規風險",
+        "status": "重大負面事件"
       },
       {
         "title": "2026台積電配息整理｜什麼時候除息？下季調升至9元？同步通過認購Anthropic、OpenAI，最後買進日、股利發放日一次看｜股市話題｜豐雲學堂2026 年 11 月 - 永豐金證券",
@@ -24,20 +24,20 @@
         "status": ""
       },
       {
-        "title": "【即時新聞】最新！美銀重申台積電買進評等，看好擴廠上看600億美元營收貢獻 - CMoney",
+        "title": "2330 台積電 - 指數今天反彈後續跌若向上重疊40005才可偏多夜盤看15中軌- 股市爆料同學會 - CMoney",
         "source": "CMoney",
-        "date": "2026-11-17T08:05:33+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE5zYnJsRWRWaUFVck5lWVhXN1M5bFlETW9la1ZsN3VKOVF4dGx5ZjFYRWFiVXNhYVlzc3R5dTF2bzNNaTNMcFI5Sm10cEZnRkhVTkJrMHU2bnM?oc=5",
+        "date": "2026-11-17T06:40:21+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE1yWG8tVWRtRUYtOWRuV1BNTnk4Umk3bGhSZ240Wko0dnp4eXZLUWZQRVYyVl9WZ1JjR1EyUFFxUDN0Y2xsVWhxQ2d5UnFCRktITjNRMHNZZFo?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
         "status": ""
       },
       {
-        "title": "2330 台積電 - 黃仁勳釋出回任意願- 股市爆料同學會 - CMoney",
+        "title": "【即時新聞】最新！美銀重申台積電買進評等，看好擴廠上看600億美元營收貢獻 - CMoney",
         "source": "CMoney",
-        "date": "2026-11-17T08:42:01+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE1VcGloWWI4RFVIdVdBR19wek5EQ20wOExQdWV5MUJoVjFlbE9PQUN1M2V1N2N2d3o1Uy14UUxJOGpKTjhhd3FwcUNiR3Z3aG44MVBVcUdUNHY?oc=5",
+        "date": "2026-11-17T08:05:33+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE5zYnJsRWRWaUFVck5lWVhXN1M5bFlETW9la1ZsN3VKOVF4dGx5ZjFYRWFiVXNhYVlzc3R5dTF2bzNNaTNMcFI5Sm10cEZnRkhVTkJrMHU2bnM?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
@@ -88,7 +88,7 @@
     "lookback_days": 14
   },
   "3711": {
-    "fetched_at": "2026-11-19T16:35:14.710985+08:00",
+    "fetched_at": "2026-11-20T05:53:05.359244+08:00",
     "adjustment": 0,
     "events": [
       {
@@ -132,16 +132,6 @@
         "status": ""
       },
       {
-        "title": "日月光投控：矽品精密工業6/29~11/17取得營業用機器設備14批，計約11.48億元 - 台視全球資訊網",
-        "source": "台視全球資訊網",
-        "date": "2026-11-18T11:16:37+08:00",
-        "link": "https://news.google.com/rss/articles/CBMikgFBVV95cUxOWkhTQlRDamE0RXhDQ0tXQU54NW9zelFGWGEwX01OcVlFcjhxWlVRNFRnbno3eXhhcHdwcVdNOHI4QVVwZUhicGEySGxRR3BnTFY4OUhZY0FOT2JoQTNCT1JpOW9JLWYxSkFZSHVCVk0zQTR3MVBkTm9hUzl3aTV3Q2VJc3NhY2I3Z1NrajYwLUtMQQ?oc=5",
-        "raw_adjustment": 0,
-        "adjustment": 0,
-        "label": "",
-        "status": ""
-      },
-      {
         "title": "日月光投控：矽品精密工業7/23~11/17取得廠務工程，計約22.94億元 - 台視全球資訊網",
         "source": "台視全球資訊網",
         "date": "2026-11-18T11:17:39+08:00",
@@ -156,6 +146,16 @@
         "source": "永豐金證券",
         "date": "2026-11-18T20:30:30+08:00",
         "link": "https://news.google.com/rss/articles/CBMi6wRBVV95cUxQUUtfZlBqODZrZ3JfSGt2eWZ6a1p5RGcxcjJBLWlFVDlZV3RNVnNYX19BTGhMTno5NXltZmtQSjRlYmwzY2ZiWnJISW1LV0RrcmFiam5iU3ZXLTNQUUF3UGFwcFc5aFVJcU4xakdPbC05dm56bEJhM0JUVTcwOXNSVHpaS1FfU0hyQ0pHS0RXMklDNi1CbnJrYjFXbkdaNHF6ZkJfdHRIdW9pZzgtVkg3bHpVMmpSbEJKZ2d2SjYyd3NNVk9veFNpWXRHb2FSSlRPdV9MMjNTOS0xOVEzdTkwZ3VTcHo4WVhCZTZPLXI2SnVBcGU1SzRNNEhRU2lxV2RaLVhkS3pURDlZcERuaUZzbVRJT1NRc29kQmNSQWJXNEZKSHpqd2VRZUo1cFFNaUVaZHdNRWs4Yjlqd0NyTTVLeWg5Z2lRd1FFRHFlTnE3dkVnaHlfaWh",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "同學會熱門 NO.39《日月光投控》11/19 怎麼走？盤後一次看懂 - CMoney",
+        "source": "CMoney",
+        "date": "2026-11-19T09:24:07+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE85LVFGWXpPMmlRdjZqTzZycFp1WmtGdGUtMzB0THBma21fTjJTQW16Z0pQcjRTQlUxMmxxTU53c3Q4NDZvbE1VVlEzRTRYQkZ2YXR4cGhTVVM?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
@@ -240,9 +240,19 @@
     "lookback_days": 14
   },
   "0050": {
-    "fetched_at": "2026-11-19T16:34:40.958978+08:00",
-    "adjustment": 0,
+    "fetched_at": "2026-11-20T05:52:29.345152+08:00",
+    "adjustment": -5,
     "events": [
+      {
+        "title": "【盤前】外資殺出甜甜價？連4日狠砍「0050」25.2萬張 股價重挫逾4% - 三立新聞網SETN.com",
+        "source": "三立新聞網SETN.com",
+        "date": "2026-11-20T05:31:40+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE5MVWE4WDlObHRVRzQ4aTc5QVBlT2txZ3FzRE4yS3YzQzZ2MmwwdzJURmhLY1NoWGJ2TVQ2alNTYXVVdGp6MlVIb0hRZw?oc=5",
+        "raw_adjustment": -5,
+        "adjustment": -5,
+        "label": "股價重大下跌",
+        "status": "重大負面事件"
+      },
       {
         "title": "元大台灣50(0050)持股明細總覽 - 口袋證券",
         "source": "口袋證券",
@@ -256,18 +266,8 @@
       {
         "title": "誤買1張0050慘了！他帳戶只剩幾百元急問補救方法 網勸：趕快借錢 - Yahoo股市",
         "source": "Yahoo股市",
-        "date": "2026-11-17T14:15:00+08:00",
+        "date": "2026-11-17T14:24:47+08:00",
         "link": "https://news.google.com/rss/articles/CBMikgNBVV95cUxOV1JQOFl3STI1NjVBRVlNcEoxcU5vNG5OZ3poNlJBWW9RX0ZKQi1BaXdMaDEwT2FLN1pEUEE2V2UxUm1qUkdkeXEyZlNMQTBSTHF2MmdFZUZpVFJFc2c4UmVYdTFjVEZKNFZTeWRGb3Ryb2l3MVg1UjdlaElBUFlZN0JaMXc4ZVFNT3V0RHJmZzcxeV9rZUJmNy1wY29IVk15LWZIOVVtUTJpZlQ2Yjhpb0VCRUdQcERPbG5SVFQ1bHluVVgyV1hMbm80YWJzZnRmV2tJNzRjU20zZThMV2FkMjZpbFlfdGQyZlVRLUg2SlB0ZUR0Qk9ZVVpndkpjSlpDTUFZOThkYng0aHdIZ19tSVFqeERIWGtZTzdzYk5HSGJMWlRPaDBuZTNFT3cyQzdrVGFCUG0yWndfT0JScFN2VEVBSEpkdVFfb3hmU3hZblVxWEctN2p",
-        "raw_adjustment": 0,
-        "adjustment": 0,
-        "label": "",
-        "status": ""
-      },
-      {
-        "title": "【零股排行榜】 盤中零股成交量TOP 20｜0050 元大台灣50、00406A 主動中信台灣收益、00878 國泰永續高股息、2330 台積電、0056 元大高股息(1117)｜豐雲學堂2026 年 11 月 - 永豐金證券",
-        "source": "永豐金證券",
-        "date": "2026-11-17T20:25:53+08:00",
-        "link": "https://news.google.com/rss/articles/CBMimgVBVV95cUxPaXJmR3p0dTNEdFM2TUwtc3BlbWxKNG1jeHB2b2JybHV6Vm04RFRMTjFybGlmcWlZMFRENGR6ZkEtZkI3c1JDSV9GcE95YWhsbE9qUEFvWnJVMTh5cE0yUFd6bk4wUlhlaVloOGRpYlI2Um9sZlNOR0JiUExyY1BJY290WFZnZ29taGI5QldYUXVCMjlkNW0xYkpqSU1YNlNxNk1fV0dvS2U0bFh0d2xTOUZyZUZHQktlU2RhckxaRjFhZUpfZ29MLUItSWowdkh5TjZ3RFo0N1VkTlo1bVpBTjRWc00xMHFlOUFITm9remE1WmRDTXozZ1E0SG5yWnQyV3dQeHhrZzZXb1RMMHJMLWgtTHJRYzZzd2NEMUhaWlpaaTBJYXBOTGtkX1Brdl9tYnp2aXJoZTh4M25IUTVVeUIxdFpYWk5BM01WN0dyRTdDNm5LblN",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
@@ -314,10 +314,10 @@
         "status": ""
       },
       {
-        "title": "0050、正2全遭殃！外資單日狂倒5檔ETF「投信也連7砍元大金、玉山金」內外資聯手狙擊這幾檔- 上市櫃 - 旺得富理財網",
-        "source": "旺得富理財網",
-        "date": "2026-11-18T18:19:41+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiakFVX3lxTFBJR2UxTGxVaF85SDA5YXp1Zl90ekYxZ055Nk10UGdWLTFnd0dwcXRTQkVKRUNSN1BjUk9SNG93V3FLSjVKNHBJN1A4dmRWbEVBNlBNVFEydTlYUWlqNUV5NW03ejhLSFhEbHc?oc=5",
+        "title": "旺宏慘賠48％想抱10年！聯發科賺57元卻想賣掉換0050 投資人勸先存本金 - UDN",
+        "source": "UDN",
+        "date": "2026-11-19T08:00:47+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiU0FVX3lxTFB4ekF4MEI1SWhlYlFFYlF2cm5LcG54d3h2RU5LTUgwRXh5SjlUeGhZTGFWYklGdnJEY2dJS3c4RjA0cFNkREstc0FEZ3Q0eURCcXZJ0gFYQVVfeXFMTkJKMGlSVFplaUlMZXVnZWdDSUdEWG1QdlNfemVIMUVvN1VlOFVMaldFUTNjNW5SWTllME1EeWdvOUpncEt2Wl9uU204RElpalI2M2Y4OFZMQg?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
@@ -328,13 +328,13 @@
     "lookback_days": 14
   },
   "QQQ": {
-    "fetched_at": "2026-11-19T16:35:19.900517+08:00",
+    "fetched_at": "2026-11-20T05:53:10.927216+08:00",
     "adjustment": 0,
     "events": [
       {
         "title": "【QQQM 值得買嗎？】QQQ vs. QQQM 費用率與差異解析，加碼看QQQM、0050、VOO 配置比例｜豐雲學堂2026 年 11 月 - 永豐金證券",
         "source": "永豐金證券",
-        "date": "2026-11-13T01:00:01+08:00",
+        "date": "2026-11-12T15:42:09+08:00",
         "link": "https://news.google.com/rss/articles/CBMikANBVV95cUxOR3loMnFqakFRR2JVU3NYVXY2RXIyb0RMVU14SFdETXJKMHRnOVRmbVZoYjJ4aXVYTlBwdFdtZERXaUZwOXNnTDBEMmU5Y0hPMzMtYURtMW5Ea0xBZjZEQWkxNm5zMFcyOHVfYzNUTHdRcXpXWmhCSmViOERnOEUtUTJXblhuQ3RNWV9VVmd0RmdjLUdPaFQwMmRjLVA0UHdSLUNyLTVfNGZ3WWh6N0Jsd3huN2NGODZKUUtGODU2dVBxaWN6ZDBQdkl6dUF5R3F0MTk3Ym9fcXVvV3htLXJqTWtUNU5rWVp2TkJnVm9uS2hWZ25FY3oyRnpKMjlCZGNpTFFkZXlXNVVYdjdMS2ItMkh5dTBFTkU4eUlaano2T0lyaHc3TENuWWplWGJoaG5hb1FILU12NENoUGZ6cF8wLWZuYUZtQnZGMWhaTFRzbTRfV1J0a0N",
         "raw_adjustment": 0,
         "adjustment": 0,

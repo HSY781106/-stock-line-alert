@@ -1,19 +1,11 @@
 {
-  "cached_at": 1795077307.3114507,
+  "cached_at": 1795125176.523227,
   "data": {
     "items": [
       {
         "title": "Fed holds interest rates steady in 1st move since Iran war spiked oil prices - ABC News - Breaking News, Latest News and Videos",
         "link": "https://news.google.com/rss/articles/CBMilAFBVV95cUxOWVgwU0l2bjYwREJ2NE9WVC1ObnpJa3Qxa2syS0lmUXphVm8zTWpnYVJ5NXpFZmxWYUZlVXpmc3ZFQzk2ZnZlYjNSUHRPb3F1emZhVDdPNEMxak1mM2wzOEZtYnA5dklfUFlfOUdVRU5lSXNmTlhqMy1pUElaMjNBTEFJbV9IRHNkRGt1NHJKVDVFd1Za0gGaAUFVX3lxTE9IOWFDX2MzMVhjUXl2VE1oTGNTTlowMmxkMUZnNEQ1TzhKemJ3TmlSTElmdzVPQ3VmR2E3OGdNLXN2dVBHQ2xiLXl0WWJfdjBUQktuSnNwbTNQV3puQzBJTUVZS295S2lHYU9iQVpFd05FQkw4WmhmZ2EyU3dCUWt0bHNCUy1xX0pHME5ZbVBlZ1RXSkxnSVZ1TWc?oc=5",
         "published": "Tue, 17 Nov 2026 13:13:19 GMT",
-        "query": "Federal Reserve interest rates inflation US economy",
-        "direction": "neutral",
-        "reason": "中性／待確認"
-      },
-      {
-        "title": "Inflation isn't going away. Here's what that means for interest rates. - CBS News",
-        "link": "https://news.google.com/rss/articles/CBMiekFVX3lxTE53dzBGV004V2lLZGdMR2FUVjByX1E4Q3BCemoxSzhCWF9YVEpJZUo4ejJlcktSeGdSWEozX0NFaEc2V29IYVJaZGpfN2p6WmNaeWpDa0dYc25LaU9NdVJJS1o2d290X2R4S3ZCWlpELVpraUc2bm42VXRn?oc=5",
-        "published": "Fri, 13 Nov 2026 20:19:31 GMT",
         "query": "Federal Reserve interest rates inflation US economy",
         "direction": "neutral",
         "reason": "中性／待確認"
@@ -27,9 +19,9 @@
         "reason": "中性／待確認"
       },
       {
-        "title": "U.S. inflation report highlights strain of rising food, energy and housing costs - PBS",
-        "link": "https://news.google.com/rss/articles/CBMi2wFBVV95cUxOVEI0ajRDVk9UaDlyeXZSYVhqSDlXcDlzZGtJcURDM0plUHhkMklBX3E0VXA2bTNpZ0FYaV8wRkRoZW5OQ1VrQUkzSTJZYU1mMUJVV2E0Tjk5NzBzVk9pQlZxMWVqQnkxT002X3c0WXo0SFlUemdOUEVXbXZ2WG1jaUJaY2l2MVFINjBjV2RBQVFTRVVSQ3dCVG5GN1F3V0pjVFlCa3pvZzZTZ3JMdDVYcGZJNTdDVVY4RFpEMGV1U2VMZ1R3VUowSDBWT2hCVGdZR3JYdERwNlRscEk?oc=5",
-        "published": "Mon, 16 Nov 2026 16:40:13 GMT",
+        "title": "Inflation isn't going away. Here's what that means for interest rates. - CBS News",
+        "link": "https://news.google.com/rss/articles/CBMiekFVX3lxTE53dzBGV004V2lLZGdMR2FUVjByX1E4Q3BCemoxSzhCWF9YVEpJZUo4ejJlcktSeGdSWEozX0NFaEc2V29IYVJaZGpfN2p6WmNaeWpDa0dYc25LaU9NdVJJS1o2d290X2R4S3ZCWlpELVpraUc2bm42VXRn?oc=5",
+        "published": "Fri, 13 Nov 2026 20:19:31 GMT",
         "query": "Federal Reserve interest rates inflation US economy",
         "direction": "neutral",
         "reason": "中性／待確認"
@@ -43,6 +35,22 @@
         "reason": "緊縮／景氣風險"
       },
       {
+        "title": "U.S. inflation report highlights strain of rising food, energy and housing costs - PBS",
+        "link": "https://news.google.com/rss/articles/CBMi2wFBVV95cUxOVEI0ajRDVk9UaDlyeXZSYVhqSDlXcDlzZGtJcURDM0plUHhkMklBX3E0VXA2bTNpZ0FYaV8wRkRoZW5OQ1VrQUkzSTJZYU1mMUJVV2E0Tjk5NzBzVk9pQlZxMWVqQnkxT002X3c0WXo0SFlUemdOUEVXbXZ2WG1jaUJaY2l2MVFINjBjV2RBQVFTRVVSQ3dCVG5GN1F3V0pjVFlCa3pvZzZTZ3JMdDVYcGZJNTdDVVY4RFpEMGV1U2VMZ1R3VUowSDBWT2hCVGdZR3JYdERwNlRscEk?oc=5",
+        "published": "Mon, 16 Nov 2026 16:40:13 GMT",
+        "query": "Federal Reserve interest rates inflation US economy",
+        "direction": "neutral",
+        "reason": "中性／待確認"
+      },
+      {
+        "title": "Fed Saw Need to Keep Raising Interest Rates Despite Holding Steady in October - The New York Times",
+        "link": "https://news.google.com/rss/articles/CBMimgFBVV95cUxQZWNVYnFNZV9nd0xLQW9EenZFTEJZS1A0VF9jcXgydHdZMlNUY21sTndVYzZXTThLS19UOThYOF9oZS1hbURtSlBhcUYyTVB1XzB2QUk5dlZva3RlNzlyWmtweDNhUUdyNVJGV290RzNLYTBEU1RXMlpiNEtHZ09HTVFyZ09ldVdKUXNiMHFLSk45Y3RiOWEzWDFB?oc=5",
+        "published": "Wed, 18 Nov 2026 19:09:22 GMT",
+        "query": "Federal Reserve interest rates inflation US economy",
+        "direction": "neutral",
+        "reason": "中性／待確認"
+      },
+      {
         "title": "U.S. Inflation Rate Is 3.7%: Why It Matters - NerdWallet",
         "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5Za3phOE0tNW9aSnJBY1BuMVVxTW43ZzhnUWVqUlE0cWxLNnktQjRiZC1nR0VwVnVHaDdxRUIwRGNjMDZuVW5CVFZPV1BtUjJhSlZYV3FnTUU0V2doMzRB?oc=5",
         "published": "Fri, 13 Nov 2026 08:00:00 GMT",
@@ -51,17 +59,9 @@
         "reason": "中性／待確認"
       },
       {
-        "title": "Fed Officials Saw Higher Rates Ahead When They Held Steady Last Month - WSJ",
-        "link": "https://news.google.com/rss/articles/CBMivwFBVV95cUxPX01kNDVqdGtHNWs5RVhUbkRTbUdMd1hkWDBJU0x6NVdIWVptS0tJTk1GR1dnajI5Z19HNlppb2ZhWVpWVnQ5eUxXSko1VVl3bERZbVV1enFVWFhsd3ozMDAtQ0RXYjZtX25DRm9QTzRqVFQ2MmdMMk5yeGluNGhjMEpJU1lZWG5DSVRQdzg1UHc2SzM1cWFVXzh6b2Q4YTY2T1NjWHBOU3RQLTg2cFVkSldPSUx2VjhjM0p0OUZESQ?oc=5",
-        "published": "Wed, 18 Nov 2026 19:41:00 GMT",
-        "query": "Federal Reserve interest rates inflation US economy",
-        "direction": "negative",
-        "reason": "緊縮／景氣風險"
-      },
-      {
-        "title": "Here’s why last year’s government shutdown will haunt October’s inflation data. - The New York Times",
-        "link": "https://news.google.com/rss/articles/CBMi6AFBVV95cUxNTURSbDVXem9tdDZRMUxySnE0T2J0ckxKdTN1cFdMOFBzOVJyQnVCWTdpcVZCTWtwTVR0YmFiajAwMk13UHVTVDJtSEdnSjR3TUFUWmZFZmlKNk5jdzlUQ2pndHFtcV8yYnhTb3FIc0hXeDh6NnVoX0Z3RWJpam45ZjNpWnNHcUxmYUFrUmRSZVoyYklEMjMwaHFFZjI5cFpEVkxhZGRiWk9aYUZQaHdDbHRVVHdITmFCUlgxMmVuVHF4c1ExSFRKZl9fWjJaSlNVT1VzaFBNdHVLa2JUWEI1N3BzeU53QzZz?oc=5",
-        "published": "Sun, 15 Nov 2026 08:00:00 GMT",
+        "title": "Inflation Is Sending US Bond Yields Higher Again. Here’s Why We’re Not Worried - Morningstar",
+        "link": "https://news.google.com/rss/articles/CBMivAFBVV95cUxQUFpadnR4a3lSYlpoZ3lSTnowS0phdkpBd2p1MS1tUGV5UnpmWlhwdjNVUVdjdFhtV2RTR09ldW5NazF2bUx6bkRoOEF3VWU3bHBiY2JvNXhqMkVNRW1wbTlfOVU2NXZPcmRQd0E5ZmtlTldUZllwUmdwODlwQjdia05yZ1pjMWc1WEtKNDQzaFFlOC1MazQwQVVjRTRJU01jcnNaSVFTUlJlX2tZMGtPbno4aTJrd21UajktLQ?oc=5",
+        "published": "Tue, 17 Nov 2026 07:07:37 GMT",
         "query": "Federal Reserve interest rates inflation US economy",
         "direction": "neutral",
         "reason": "中性／待確認"
@@ -83,23 +83,23 @@
         "reason": "中性／待確認"
       },
       {
-        "title": "The Global Economy Is Forecast to Grow 2.8% in 2027 as Oil Prices Decline - Goldman Sachs",
-        "link": "https://news.google.com/rss/articles/CBMizgFBVV95cUxNaVN6c05ZMXB0aDFpXzBnazNkc29iejZSdmY4ZGxDYUx1bUFjUlNPVm1sRkljdUlDZnBkUnJVbFVPZU1JMkhid2xRWk1HWXlyV3ZVejBnSm1KeUJyNUgtemRvRnJuUlpDdTlxWXdXNm1QZXFKMExlNVZDOXA1VlotTGNROV82OFE4ODU5aDlZNDhSSmc4YkxGRDhZRXZlWVNGWllDQU1DMUxlc1kwR0xtQzAzMS1OLUZvRm45SHZoQ0FMbmxTVFZ0R3JKVTVQQQ?oc=5",
-        "published": "Fri, 13 Nov 2026 17:23:30 GMT",
+        "title": "AUD/USD Bears Tighten Their Grip Into AU Jobs, RBA Minutes - FOREX.com",
+        "link": "https://news.google.com/rss/articles/CBMiowFBVV95cUxNWWlaUzFtQWctOGFXc2RWdDl0UmpzdUR2NTZNV1FzcjMyZ21GRHF4cE4weW1PTjhtX0N6X2RpMGl6cWpsU3hLOHpEY1dhYWlsbzJRVDB6ekpyWVFWaE9VRDVqaWN2c3JPRUZtaEh3ZDZKTlJ6VzRfVzkxUGZ4a1lROF9JVXhoUXhzU0w1MDBVRFZ0OVp4UVNBcjhKZW82TEFjaHd30gGvAUFVX3lxTE9hTXRYV1VUa0pONExBVC1NVlp5NlFnNzFvekJHbUV6N2ZjcDEwS0FpNmpqVXFBUVNEN2dVdVQ1c1dhUEpWM2pzN0lzT00wYlRmelB1N1JiN1pjZDl3TXIyczAwWk1wN0dYMm5KdnZOemZfb2RtNnMxVlJXWlFacE0xcTg3VWJIZzVrWTRZeEJiTHdHVVhhTl82MUFRV1ZYcC1ESmwyUGZGdmVjSm1yaXM?oc=5",
+        "published": "Sun, 15 Nov 2026 19:38:17 GMT",
         "query": "US CPI jobs GDP Treasury yields economy",
         "direction": "neutral",
         "reason": "中性／待確認"
       },
       {
-        "title": "How Is the Economy Doing Right Now? - NerdWallet",
-        "link": "https://news.google.com/rss/articles/CBMibkFVX3lxTE1nRU1VZTZjeXA1TTdRU1g5d1Zha0RvU1phVU1LaGIwVmN6Wk5wTk5WRG5fTHMxZUZCZkdrb0oyVk1DU1VhM05Felp2WXNmbHktdzEwSTNYOTlTWmNtMmYyMjV6RkFTYUYwSVEtRWZn?oc=5",
-        "published": "Fri, 13 Nov 2026 08:00:00 GMT",
+        "title": "American Century High Income Fund Q3 2026 Commentary (AHIVX) - Seeking Alpha",
+        "link": "https://news.google.com/rss/articles/CBMimAFBVV95cUxNZ0FybGx2VUZMNjRXU3liSjAwcVB0My1xeHB4VWhIOTVaVUhXVXhDbF9SUUJlZXgtWVoxNXh0MzVLV1JpSEVKOHRzMDhaNjdXZllyVnVueFJhcWNueGNjX3ZYRV9zX0x0aTl3VEhqOTk0bXBNbzN2WUVVN3BLaHZZYXo1TDV1T0pmUEE5bXNmRVFhZWdESWM0aw?oc=5",
+        "published": "Tue, 17 Nov 2026 05:25:00 GMT",
         "query": "US CPI jobs GDP Treasury yields economy",
         "direction": "neutral",
         "reason": "中性／待確認"
       }
     ],
-    "updated_at": "2026-11-19T16:35:07.652868+08:00",
+    "updated_at": "2026-11-20T05:52:56.953394+08:00",
     "errors": []
   }
 }
