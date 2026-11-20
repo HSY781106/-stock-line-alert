@@ -9422,5 +9422,61 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:d603d0c3b6c723663e89cad8": {
+    "ts": 1795210602.694464,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.7,
+          "policy_stage": "unknown",
+          "reason": "Trump言論屬政治口水，對整體市場實質影響有限。",
+          "relevant": false,
+          "affected_channel": "估值",
+          "transmission": "政治言論→市場情緒→整體大盤",
+          "exposure": "整體美股市場估值波動"
+        },
+        {
+          "id": 1,
+          "direction": "positive",
+          "score": 1,
+          "confidence": 0.6,
+          "policy_stage": "unknown",
+          "reason": "Trump個人投資買入，對科技股與大盤帶來短期情緒信心。",
+          "relevant": true,
+          "affected_channel": "估值",
+          "transmission": "高層投資消息→投資人信心→科技股及大盤估值",
+          "exposure": "大型科技股與大盤指數標的"
+        },
+        {
+          "id": 2,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.8,
+          "policy_stage": "implemented",
+          "reason": "批准晶片出口中國，有利半導體產業供應鏈與市場出口。",
+          "relevant": true,
+          "affected_channel": "出口",
+          "transmission": "出口核准政策→半導體廠商營收→科技股與整體市場",
+          "exposure": "半導體產業與相關指數標的"
+        },
+        {
+          "id": 3,
+          "direction": "positive",
+          "score": 1,
+          "confidence": 0.75,
+          "policy_stage": "considering",
+          "reason": "兩黨推進能源法案，利好傳統能源產業與市場成本負擔。",
+          "relevant": true,
+          "affected_channel": "需求",
+          "transmission": "能源法案推進→傳統能源企業盈利→市場整體供應與估值",
+          "exposure": "傳統能源產業及大盤指數"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
