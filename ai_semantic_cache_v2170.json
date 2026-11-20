@@ -9366,5 +9366,61 @@
       ]
     },
     "provider": "groq"
+  },
+  "trump_v21826:__MARKET__:c8cbe0058bc2877141dc35a5": {
+    "ts": 1795210147.3988733,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.7,
+          "policy_stage": "unknown",
+          "reason": "政治口角與市場聲稱，無具體政策實施",
+          "relevant": true,
+          "affected_channel": "估值",
+          "transmission": "政治言論→市場情緒→大盤波動",
+          "exposure": "整體股票市場與能源板塊"
+        },
+        {
+          "id": 1,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.8,
+          "policy_stage": "considering",
+          "reason": "限制高階晶片對華出口，打壓先進製程出口需求",
+          "relevant": true,
+          "affected_channel": "出口",
+          "transmission": "晶片管制擴大→高階AI晶片出口受阻→半導體類股",
+          "exposure": "半導體與先進製程供應鏈"
+        },
+        {
+          "id": 2,
+          "direction": "positive",
+          "score": 1,
+          "confidence": 0.6,
+          "policy_stage": "unknown",
+          "reason": "個人投資持股消息，短期提振市場信心",
+          "relevant": true,
+          "affected_channel": "估值",
+          "transmission": "名人/高官持股消息→散戶資金進場→市場信心提升",
+          "exposure": "科技股與AI概念股"
+        },
+        {
+          "id": 3,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.85,
+          "policy_stage": "implemented",
+          "reason": "核准大量AI晶片出口中國，優於嚴格禁令預期",
+          "relevant": true,
+          "affected_channel": "出口",
+          "transmission": "出口許可批准→AI晶片出貨量增加→半導體板塊營收成長",
+          "exposure": "AI晶片設計與半導體供應鏈"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
