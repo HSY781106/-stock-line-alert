@@ -9478,5 +9478,61 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:4807c44da9a4f87a1f67070f": {
+    "ts": 1795213841.1298923,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.85,
+          "policy_stage": "implemented",
+          "reason": "財政部延續 H200 出口政策並批准大量晶片，利好半導體出口。",
+          "relevant": true,
+          "affected_channel": "出口與需求",
+          "transmission": "美財政部維持出口政策→AI晶片核准出口中國→提升半導體與AI產業營收",
+          "exposure": "全球半導體與AI硬體產業（如 Nvidia、AMD）"
+        },
+        {
+          "id": 1,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.7,
+          "policy_stage": "unknown",
+          "reason": "川普言論歸咎股市下跌並歸功低油價，屬於政治表態，實質政策影響中立。",
+          "relevant": true,
+          "affected_channel": "市場信心",
+          "transmission": "總統口頭政治言論→引發市場關注→對總體市場實質基本面影響有限",
+          "exposure": "整體美國股票市場與能源類股"
+        },
+        {
+          "id": 2,
+          "direction": "positive",
+          "score": 1,
+          "confidence": 0.65,
+          "policy_stage": "unknown",
+          "reason": "川普購買 Nvidia 股票增加市場關注度與樂觀情緒。",
+          "relevant": true,
+          "affected_channel": "估值與情緒",
+          "transmission": "川普個人投資曝光→提升市場對科技股關注→短期提振市場信心",
+          "exposure": "科技股與AI產業標的"
+        },
+        {
+          "id": 3,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.85,
+          "policy_stage": "implemented",
+          "reason": "政府批准近90萬顆AI晶片出口中國，實質減輕供應鏈與出口限制疑慮。",
+          "relevant": true,
+          "affected_channel": "出口與營收",
+          "transmission": "政府核准出口許可→AI晶片大廠順利出貨中國→挹注半導體供應鏈業績",
+          "exposure": "美國AI晶片設計與半導體供應鏈產業"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
