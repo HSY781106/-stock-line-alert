@@ -9278,5 +9278,61 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:75a14419f1feb819974edd12": {
+    "ts": 1795140175.119121,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "positive",
+          "score": 3,
+          "confidence": 0.8,
+          "policy_stage": "implemented",
+          "reason": "批准晶片出口中國，放寬對華晶片限制。",
+          "relevant": true,
+          "affected_channel": "出口與營收",
+          "transmission": "批准出口許可→晶片大廠對華出貨增加→提升半導體產業營收",
+          "exposure": "整體半導體與AI晶片產業"
+        },
+        {
+          "id": 1,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.7,
+          "policy_stage": "unknown",
+          "reason": "川普持股揭露，提振市場對相關企業信心。",
+          "relevant": true,
+          "affected_channel": "估值與市場信心",
+          "transmission": "個人持股曝光→市場信心提升→資金流入科技與太空產業",
+          "exposure": "電動車與太空科技產業標的"
+        },
+        {
+          "id": 2,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.75,
+          "policy_stage": "implemented",
+          "reason": "簽署泰國貿易協定，促進跨國經濟與科技合作。",
+          "relevant": true,
+          "affected_channel": "需求與供應鏈",
+          "transmission": "簽署貿易協定→降低關稅與貿易障礙→東南亞供應鏈與相關資產受益",
+          "exposure": "新興市場與相關跨境資產"
+        },
+        {
+          "id": 3,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.7,
+          "policy_stage": "unknown",
+          "reason": "揭露購買NVDA股票，利多半導體板塊情緒。",
+          "relevant": true,
+          "affected_channel": "估值與市場信心",
+          "transmission": "政治高層持股揭露→市場樂觀情緒增加→半導體龍頭及大盤受惠",
+          "exposure": "AI晶片龍頭與整體股市"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
