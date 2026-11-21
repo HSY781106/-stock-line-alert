@@ -9534,5 +9534,61 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:f43ee95493099e574d9e8400": {
+    "ts": 1795226377.0683815,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.5,
+          "policy_stage": "unknown",
+          "reason": "SEC對特定公司調查，對整體市場影響有限",
+          "relevant": false,
+          "affected_channel": "估值",
+          "transmission": "監管調查→個別公司情緒→市場情緒波動",
+          "exposure": "整體美股市場情緒影響小"
+        },
+        {
+          "id": 1,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.8,
+          "policy_stage": "implemented",
+          "reason": "財政部維持輝達H200晶片出口許可，有利半導體產業",
+          "relevant": true,
+          "affected_channel": "出口",
+          "transmission": "保留出口許可→半導體企業獲利維持→支撐市場指數",
+          "exposure": "科技股與半導體板塊占比高"
+        },
+        {
+          "id": 2,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.6,
+          "policy_stage": "threat",
+          "reason": "油價下跌言論屬選舉討論，無具體政策執行",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "政治言論→能源價格預期→市場總體通膨期待",
+          "exposure": "能源板塊與消費類股"
+        },
+        {
+          "id": 3,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.75,
+          "policy_stage": "considering",
+          "reason": "建議僅向中國出售舊款晶片，加深半導體出口限制隱憂",
+          "relevant": true,
+          "affected_channel": "出口",
+          "transmission": "收緊晶片出口限制→科技股營收受限→拖累市場大盤",
+          "exposure": "高科技與半導體產業曝險較大"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
