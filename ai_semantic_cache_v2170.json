@@ -9590,5 +9590,61 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:d0b51da948445f00a88e84f0": {
+    "ts": 1795424011.345998,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.7,
+          "policy_stage": "unknown",
+          "reason": "美中晶片規則未定，維持政策不確定性。",
+          "relevant": true,
+          "affected_channel": "供應鏈與出口限制",
+          "transmission": "川習會未達協議→晶片出口規則維持原狀→半導體市場觀望",
+          "exposure": "整體美中半導體與AI供應鏈"
+        },
+        {
+          "id": 1,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.6,
+          "policy_stage": "threat",
+          "reason": "口頭政治批評與言論，缺乏實質政策動作。",
+          "relevant": true,
+          "affected_channel": "市場情緒與估值",
+          "transmission": "政治言論→股市與原油市場情緒波動→大盤短期震盪",
+          "exposure": "整體美股市場與能源板塊標的"
+        },
+        {
+          "id": 2,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.75,
+          "policy_stage": "considering",
+          "reason": "國會與財政部向輝達施壓，中國銷售面臨監管風險。",
+          "relevant": true,
+          "affected_channel": "出口與營收受限",
+          "transmission": "政府加強監管審查→限制輝達對華晶片出口→影響AI半導體鏈營收",
+          "exposure": "Nvidia及高度依賴中國市場的晶片製造商"
+        },
+        {
+          "id": 3,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.5,
+          "policy_stage": "unknown",
+          "reason": "個人投資組合轉移至債券與ETF，對整體市場直接影響有限。",
+          "relevant": false,
+          "affected_channel": "資金流向",
+          "transmission": "個人資產配置變更→市場話題→對科技產業實質傳導極低",
+          "exposure": "證據不足"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
