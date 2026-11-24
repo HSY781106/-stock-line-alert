@@ -9678,5 +9678,135 @@
       ]
     },
     "provider": "groq"
+  },
+  "trump_v21826:__MARKET__:7d019bdbdc7df2b83b048d1e": {
+    "ts": 1795483218.3841908,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.75,
+          "policy_stage": "threat",
+          "reason": "川普發出新警告導致中國股市大跌",
+          "relevant": true,
+          "affected_channel": "估值",
+          "transmission": "川普貿易政策威脅→市場避險情緒升溫→中概股與中國市場重措",
+          "exposure": "中概股及中國整體股市整體市場曝險"
+        },
+        {
+          "id": 1,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.8,
+          "policy_stage": "threat",
+          "reason": "韓國面臨關稅與民主黨審查雙重壓力",
+          "relevant": true,
+          "affected_channel": "出口",
+          "transmission": "關稅威脅與政治審查→韓國出口產業受阻→韓國股市承受下行壓力",
+          "exposure": "韓國出口導向型企業與韓國整體市場"
+        },
+        {
+          "id": 2,
+          "direction": "negative",
+          "score": -1,
+          "confidence": 0.65,
+          "policy_stage": "considering",
+          "reason": "川普希望政府入股Nvidia引發市場對介入營運的疑慮",
+          "relevant": true,
+          "affected_channel": "估值",
+          "transmission": "政府入股主張→市場疑慮管制增加與營運干預→科技股估值受壓",
+          "exposure": "Nvidia及半導體科技板塊"
+        },
+        {
+          "id": 3,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.7,
+          "policy_stage": "implemented",
+          "reason": "地緣政治緊張局勢加劇推升原油風險溢價",
+          "relevant": true,
+          "affected_channel": "需求",
+          "transmission": "中東軍事行動→供應中斷擔憂升溫→原油價格與能源板塊上漲",
+          "exposure": "原油商品與整體能源產業標的"
+        }
+      ]
+    },
+    "provider": "gemini"
+  },
+  "news:3711:3f23e7c241e4c49d32a51617": {
+    "ts": 1795483297.1194708,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.6,
+          "reason": "未提及日月光直接影響",
+          "relevant": false
+        },
+        {
+          "id": 1,
+          "direction": "positive",
+          "score": 3,
+          "confidence": 0.8,
+          "reason": "AI封測買盤回流利好",
+          "relevant": true
+        },
+        {
+          "id": 2,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.5,
+          "reason": "法人買賣超不明確影響",
+          "relevant": false
+        },
+        {
+          "id": 3,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.6,
+          "reason": "未說明日月光具體走勢",
+          "relevant": false
+        }
+      ]
+    },
+    "provider": "groq"
+  },
+  "final_v21826:3711:5175e4c58f8a13d42ad42ccc": {
+    "ts": 1795483339.269987,
+    "data": {
+      "recommendation": "🔴 減碼/停損觀察",
+      "confidence": 0.4,
+      "core": "日月光投控估值低但技術與籌碼疲弱，風險偏高",
+      "fundamental_view": "估值低於同業，獲利成長強勁，ROE 11.7%，但PE 27.7仍偏高於同業中值14.2",
+      "technical_view": "空頭趨勢，RSI 35.6低於50，MA20跌破MA60，近期回撤超20%",
+      "chips_view": "法人20日賣超，融資增加，機構持股減少，籌碼負面",
+      "risk_view": "法人連續賣超、融資增加、跌破MA20/MA60，風險高",
+      "news_view": "近期AI封測買盤回流利好，但法人大額賣超，訊息混雜",
+      "trump_view": "關稅/貿易負面影響，對半導體產業壓力大",
+      "macro_view": "利率傳導負面，匯率正面，市場風險偏低，但整體環境不佳",
+      "buy_view": "買點與投資價值不一致，建議暫不進場",
+      "strengths": [
+        "估值低於同業",
+        "獲利成長",
+        "ROE 11.7%"
+      ],
+      "risks": [
+        "法人連續賣超",
+        "融資增加",
+        "跌破MA20/MA60"
+      ],
+      "conflict": "技術與籌碼顯示下跌趨勢，基本面仍具吸引力，風險與趨勢不符",
+      "next_watch": [
+        "MA20/MA60回升",
+        "法人持股回升",
+        "AI封測買盤持續"
+      ],
+      "reason": "基本面吸引但技術與籌碼顯示下跌風險，建議觀察並避免接刀"
+    },
+    "provider": "groq"
   }
 }
