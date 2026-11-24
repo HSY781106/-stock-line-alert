@@ -9864,5 +9864,61 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:8a585fe3fe6af6e9a182f6e5": {
+    "ts": 1795496993.9262016,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.7,
+          "policy_stage": "considering",
+          "reason": "美國政策促使晶片供應鏈轉移，對整體市場影響尚需觀察。",
+          "relevant": true,
+          "affected_channel": "供應鏈與資本支出",
+          "transmission": "川普限制中國政策→台灣晶片業者加速赴美設廠→市場觀望成本與獲利影響",
+          "exposure": "半導體產業及整體股市指數"
+        },
+        {
+          "id": 1,
+          "direction": "negative",
+          "score": -3,
+          "confidence": 0.85,
+          "policy_stage": "threat",
+          "reason": "川普發出新關稅威脅，引發中概股與區域市場賣壓。",
+          "relevant": true,
+          "affected_channel": "市場情緒與估值",
+          "transmission": "川普口頭威脅加徵關稅→市場避險情緒升溫→中概股及新興市場重挫",
+          "exposure": "中概股、新興市場 ETF及相關大盤指數"
+        },
+        {
+          "id": 2,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.8,
+          "policy_stage": "threat",
+          "reason": "韓國面臨川普關稅威脅與內部政治審查，出口與經濟承壓。",
+          "relevant": true,
+          "affected_channel": "出口與企業獲利",
+          "transmission": "川普主張對韓加徵關稅→韓國製造業出口預期轉弱→大盤承壓",
+          "exposure": "韓國股市、出口型科技與汽車產業"
+        },
+        {
+          "id": 3,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.75,
+          "policy_stage": "threat",
+          "reason": "中東地緣政治風險上升，短期推升原油價格與市場波動。",
+          "relevant": true,
+          "affected_channel": "原油供應與能源成本",
+          "transmission": "地緣衝突加劇→油價上漲疑慮再起→能源類股及大盤波動",
+          "exposure": "能源產業、原油期貨及整體市場"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
