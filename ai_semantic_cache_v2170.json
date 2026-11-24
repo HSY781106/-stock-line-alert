@@ -9920,5 +9920,61 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:8a13c4efc1dcf3eed4e6d58e": {
+    "ts": 1795517293.646632,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.8,
+          "policy_stage": "threat",
+          "reason": "言論聲稱不需加拿大能源，但實際供需依賴度高，政策影響有限。",
+          "relevant": true,
+          "affected_channel": "供應鏈",
+          "transmission": "口頭威脅→加美能源貿易疑慮→能源市場波動",
+          "exposure": "整體能源市場與跨境管道業者"
+        },
+        {
+          "id": 1,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.85,
+          "policy_stage": "considering",
+          "reason": "川普承諾追趕中國稀土優勢，激勵本土關鍵礦物供應鏈。",
+          "relevant": true,
+          "affected_channel": "需求",
+          "transmission": "扶植本土政策→政府補貼與去中國化→稀土業者受惠",
+          "exposure": "美國本土稀土與關鍵礦物採掘業者"
+        },
+        {
+          "id": 2,
+          "direction": "positive",
+          "score": 3,
+          "confidence": 0.9,
+          "policy_stage": "announced",
+          "reason": "川普促進亞洲大型外交訂單，直接帶動航太巨頭巨額銷售。",
+          "relevant": true,
+          "affected_channel": "出口",
+          "transmission": "外交談判→取得海外商業訂單→航太與國防供應鏈營收增加",
+          "exposure": "波音及航太國防供應鏈產業"
+        },
+        {
+          "id": 3,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.75,
+          "policy_stage": "unknown",
+          "reason": "強調美國油氣產量領先，屬事實陳述與口頭宣示。",
+          "relevant": true,
+          "affected_channel": "估值",
+          "transmission": "政治宣示→強化傳統能源市場信心→提振市場情緒",
+          "exposure": "美國傳統石油與天然氣產業"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
