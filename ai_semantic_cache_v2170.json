@@ -9808,5 +9808,61 @@
       "reason": "基本面吸引但技術與籌碼顯示下跌風險，建議觀察並避免接刀"
     },
     "provider": "groq"
+  },
+  "trump_v21826:__MARKET__:23147bc812d86e87233ee127": {
+    "ts": 1795488367.3398464,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "negative",
+          "score": -3,
+          "confidence": 0.85,
+          "policy_stage": "threat",
+          "reason": "Trump對華警告引發中概股重挫及市場避險情緒",
+          "relevant": true,
+          "affected_channel": "估值",
+          "transmission": "關稅威脅→中概股拋售→整體市場避險情緒升溫",
+          "exposure": "中國股市及相關ADR、離岸中資股"
+        },
+        {
+          "id": 1,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.8,
+          "policy_stage": "threat",
+          "reason": "韓國面臨美關稅與內部政治監管雙重壓力",
+          "relevant": true,
+          "affected_channel": "出口",
+          "transmission": "美國關稅政策→韓國出口受阻→韓國市場與製造業受創",
+          "exposure": "韓國出口型企業（如汽車、半導體）"
+        },
+        {
+          "id": 2,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.7,
+          "policy_stage": "considering",
+          "reason": "政府欲干預Nvidia股權增加政策不確定性",
+          "relevant": true,
+          "affected_channel": "估值",
+          "transmission": "政府入股提議→企業治理與監管風險增加→科技股估值承壓",
+          "exposure": "Nvidia及美國大型科技股"
+        },
+        {
+          "id": 3,
+          "direction": "negative",
+          "score": -3,
+          "confidence": 0.85,
+          "policy_stage": "threat",
+          "reason": "晶圓代工暫停出貨中國加上海外資料中心稅收威脅",
+          "relevant": true,
+          "affected_channel": "供應鏈",
+          "transmission": "晶片禁令與數據中心稅收威脅→科技供應鏈中斷→半導體板塊受創",
+          "exposure": "台積電、三星及全球AI半導體供應鏈"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
