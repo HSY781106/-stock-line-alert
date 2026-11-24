@@ -9976,5 +9976,61 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:5715d9950425f8bd1c6816e6": {
+    "ts": 1795562332.219286,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.7,
+          "policy_stage": "threat",
+          "reason": "口頭威脅對晶片課徵高額關稅，加劇半導體供應鏈不確定性與赴美投資成本壓力。",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "高關稅威脅→晶片製造商加速赴美建廠→增加資本支出與短期營運成本",
+          "exposure": "晶片代工龍頭及全球晶片供應鏈"
+        },
+        {
+          "id": 1,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.7,
+          "policy_stage": "threat",
+          "reason": "晶片關稅言論引發對供應鏈重組及建廠成本增加的疑慮。",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "關稅威脅→逼迫半導體業者轉向美國設廠→提高整體營運成本",
+          "exposure": "先進晶片製造與設計廠商"
+        },
+        {
+          "id": 2,
+          "direction": "negative",
+          "score": -3,
+          "confidence": 0.8,
+          "policy_stage": "considering",
+          "reason": "考慮擴大貿易關稅範疇，直接打擊美系半導體巨頭估值與出口預期。",
+          "relevant": true,
+          "affected_channel": "出口",
+          "transmission": "貿易關稅擴大→限制半導體產品出口與海外需求→壓抑晶片股估值",
+          "exposure": "美國晶片巨頭（AMD、Micron、Intel、Qualcomm）"
+        },
+        {
+          "id": 3,
+          "direction": "negative",
+          "score": -3,
+          "confidence": 0.85,
+          "policy_stage": "considering",
+          "reason": "考慮對多國提高關稅，增加整體美股市場系統性風險。",
+          "relevant": true,
+          "affected_channel": "估值",
+          "transmission": "多國關稅威脅→全球貿易摩擦加劇→影響企業獲利並壓抑整體股市估值",
+          "exposure": "整體美股市場與跨國企業"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
