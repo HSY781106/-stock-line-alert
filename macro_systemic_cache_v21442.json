@@ -1,8 +1,8 @@
 {
-  "_cached_at": 1795424011.7308707,
+  "_cached_at": 1795482717.1327524,
   "_version": 8,
   "data": {
-    "updated_at": "2026-11-23T16:53:31.731130+08:00",
+    "updated_at": "2026-11-24T09:11:57.132945+08:00",
     "us": {
       "fed_rate": {
         "value": 3.63,
@@ -60,7 +60,7 @@
       "unemployment": 3.39,
       "usd_twd": 32.895,
       "m2_yoy": 7.11,
-      "overnight": 0.813,
+      "overnight": 0.812,
       "discount_rate": 2.0,
       "source": "https://www.cbc.gov.tw/app.asp?xdUrl=appKeyIndicators.asp",
       "fallback_dates": {}

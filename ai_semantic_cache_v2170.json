@@ -9646,5 +9646,37 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:bb81fc24f44ca0bb47080a31": {
+    "ts": 1795482716.6744993,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "negative",
+          "score": -3,
+          "confidence": 0.8,
+          "policy_stage": "threat",
+          "reason": "特朗普警告導致市場恐慌",
+          "relevant": true,
+          "affected_channel": "需求",
+          "transmission": "特朗普警告→市場恐慌→投資者撤資",
+          "exposure": "受影響的產業／代表性標的：證券市場"
+        },
+        {
+          "id": 2,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.7,
+          "policy_stage": "threat",
+          "reason": "特朗普威脅稅收導致供應鏈中斷",
+          "relevant": true,
+          "affected_channel": "供應鏈",
+          "transmission": "特朗普威脅→台積電停產→中國客戶供應受限",
+          "exposure": "受影響的產業／代表性標的：半導體產業"
+        }
+      ]
+    },
+    "provider": "groq"
   }
 }

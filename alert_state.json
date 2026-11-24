@@ -45,28 +45,28 @@
   },
   "interval_low": {
     "0050 元大台灣50": {
-      "last_check": "2026-11-19T10:20:04.278521+08:00",
-      "last_price": 92.1500015258789,
+      "last_check": "2026-11-24T09:11:03.028064+08:00",
+      "last_price": 87.0,
       "last_interval_low": 98.1500015258789,
       "last_interval_source": "Yahoo-5m",
       "interval_alert": false,
-      "session_key": "2026-11-19"
+      "session_key": "2026-11-24"
     },
     "2330 台積電": {
-      "last_check": "2026-11-19T10:20:17.759794+08:00",
-      "last_price": 2155.0,
+      "last_check": "2026-11-24T09:12:22.163072+08:00",
+      "last_price": 2030.0,
       "last_interval_low": 2245.0,
       "last_interval_source": "Yahoo-5m",
       "interval_alert": false,
-      "session_key": "2026-11-19"
+      "session_key": "2026-11-24"
     },
     "3711 日月光投控": {
-      "last_check": "2026-11-19T10:20:25.527067+08:00",
-      "last_price": 517.0,
+      "last_check": "2026-11-24T09:12:26.083828+08:00",
+      "last_price": 482.0,
       "last_interval_low": 600.0,
       "last_interval_source": "Yahoo-5m",
       "interval_alert": false,
-      "session_key": "2026-11-19"
+      "session_key": "2026-11-24"
     },
     "QQQ": {
       "last_check": "2026-11-14T04:41:57.423443+08:00",
@@ -77,33 +77,33 @@
       "session_key": "2026-11-13"
     },
     "台灣加權指數": {
-      "last_check": "2026-11-19T10:20:31.454929+08:00",
-      "last_price": 39098.73046875,
+      "last_check": "2026-11-24T09:12:31.870965+08:00",
+      "last_price": 36033.2890625,
       "last_interval_low": 42152.23046875,
       "last_interval_source": "Yahoo-5m",
       "interval_alert": false,
-      "session_key": "2026-11-19"
+      "session_key": "2026-11-24"
     }
   },
   "high_score_alert": {
-    "date": "2026-11-19",
+    "date": "2026-11-24",
     "active": []
   },
   "target_buy_point_alert": {
     "0050 元大台灣50": {
-      "date": "2026-11-23",
+      "date": "2026-11-24",
       "locked": false,
       "notified_at": "2026-09-07 11:59:19",
       "notified_score": 87
     },
     "2330 台積電": {
-      "date": "2026-11-23",
+      "date": "2026-11-24",
       "locked": false,
       "notified_at": "2026-09-07 11:59:22",
       "notified_score": 92
     },
     "QQQ": {
-      "date": "2026-11-23",
+      "date": "2026-11-24",
       "locked": false,
       "notified_at": "2026-09-18 01:46:32",
       "notified_score": 91,
