@@ -1,18 +1,8 @@
 {
   "2330": {
-    "fetched_at": "2026-11-25T07:19:19.455478+08:00",
+    "fetched_at": "2026-11-25T07:28:40.193055+08:00",
     "adjustment": 3,
     "events": [
-      {
-        "title": "三大法人買賣超 – 外資買超(2330)台積電、(2408)南亞科，投信買超(2330)台積電、(1303)南亞，法人合計買超202.56億元 - 永豐金證券",
-        "source": "永豐金證券",
-        "date": "2026-11-11T16:00:00+08:00",
-        "link": "https://news.google.com/rss/articles/CBMi3wRBVV95cUxQRVBwZzdEVHlCd0FySnFISUxTalVHMUpRSlNVdFo3cXExdGFzdDVQbVhsaWZMcUQwRmN0WFZkdzFrQWxwa05rZ2RBTzZtaFlxc2x0OTRCSElNOG1MY0FNcG94SC1QWTl6MmtCWDhWSWFGZ0hyUmt1a29CZHFMVW5QS19OWkMzdElMMC0tRXpqeG9ER2daTDY0TVltYTVyWmRxUzZLRWJWNDdPTjRKekNORElCSk9GUWZEZERpa21tNy1JRzhzUjY3cDE5SGF5QTQ1TDZDTGFlMmdKUWEwZUJGd2dGTko3anJaNFdIX1VfblJQcm44VmRzVnZVUzFRMmNUdGVaaUZpRVNOTWI1YXl1OVdNLUdTOWg2dks5UnFQc0prMElQQWJpZUNKbW1aRDYyUXU1UXhvZC1pbDN6VE8tcjRRSElsTmNhc05EMXVkcThtaXUzeWx",
-        "raw_adjustment": 0,
-        "adjustment": 0,
-        "label": "",
-        "status": ""
-      },
       {
         "title": "2330 台積電 - 黃仁勳回歸恢復輝達CEO職位💥台股夜盤漲瘋了😆 - 股市爆料同學會 - CMoney",
         "source": "CMoney",
@@ -82,15 +72,75 @@
         "adjustment": 0,
         "label": "",
         "status": ""
+      },
+      {
+        "title": "2330 台積電 - 你敢嘴老黃？你敢嘴哲哲？你比他們有錢？你只是股市低能兒！ - 股市爆料同學會 - CMoney",
+        "source": "CMoney",
+        "date": "2026-11-23T16:50:36+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE9zOWhMTzBVVTNBZ1c1eTZ6QW5sRnZ1OS1fZDlpRG9hMlZlR2YyaWs1bUE3Z21oVkdMeXBRU0w5WjdZR21ySDlxTkhTM29KSHdPTjFYQXlQWDE?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
       }
     ],
     "source": "Google News RSS",
     "lookback_days": 14
   },
   "3711": {
-    "fetched_at": "2026-11-25T07:19:23.642498+08:00",
-    "adjustment": 0,
+    "fetched_at": "2026-11-25T07:28:44.598090+08:00",
+    "adjustment": 3,
     "events": [
+      {
+        "title": "日月光投控：矽品精密工業11/6~12向聖暉*取得廠務工程，計約24.3億元 - 台視全球資訊網",
+        "source": "台視全球資訊網",
+        "date": "2026-11-12T16:00:00+08:00",
+        "link": "https://news.google.com/rss/articles/CBMikgFBVV95cUxOeTVJdnE3WDI3WlppLUxFdE83VUdBQ0NBdlY0ZnlPc1BNcXRqMEJfSHBDRFF2SDFZaW8zVHByUkozNGthTHJRVjFNOGx5alFGNXZVWW1JblBybURSaU5vV25ObEJDTXdCTEhmWG5zRWhDVUI3SS01WVdXYWFMajg1NUI1aUx3Q25aYUl5aVpBN2xTZw?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "日月光投控：日月光半導體製造11/5~12取得供營業用廠務工程一批，計約7.13億元 - 台視全球資訊網",
+        "source": "台視全球資訊網",
+        "date": "2026-11-13T12:12:44+08:00",
+        "link": "https://news.google.com/rss/articles/CBMikgFBVV95cUxORFBLckk1LTVDejI5dHNaOUxVemVGejA4SWtDc252b21aem9jMU9McGkzZnV2TEtocGFLME11anpjRGVzTVJES0hzNUNwa3Z2S3JYTWRJSGhPLUFnLTNOZ1Y5U1ZMVllOemJGQ3hieE1kTG9CY2NUaGpyTXQ0WE4tTEpBOXVPREdwSEtyYmxsREV2dw?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "3711 日月光投控- 日月光長期如何？ - 股市爆料同學會 - CMoney",
+        "source": "CMoney",
+        "date": "2026-11-13T15:41:07+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE1mQWJsT1dQZ2IxaktOZ1U3Nzc2d3YweWx0QXcwS21VVHpVU0MzZmIyNWduMFp1OHZsVUFSSHBVckdtSnlHdUxIekUtU3dNcGRRcklYNUxrWkw?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "日月光投控：日月光半導體製造7/9~11/13向印能科技取得營業用機器設備，計約10億 - 台視全球資訊網",
+        "source": "台視全球資訊網",
+        "date": "2026-11-13T22:16:37+08:00",
+        "link": "https://news.google.com/rss/articles/CBMikgFBVV95cUxNT1ZQVlczN2NhNHU5eGZDd1lSZ2tCQnluY0JlaUd6eS1DbmRNVXhFSWREejN1Zzk0TW4yTnBkVXdsTWJaX2lUbW1yTFNieHgwbnJzSk9TZ25KOVZUNDNSdVBQRWlsZUdGXzhLUEJxMmNwbGl6RGZNRElROUtjTDduTjV4Mlg2bGlpVGwzbGZMTTA1QQ?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "【09:10 即時新聞】日月光投控(3711)盤中走強，AI封測族群買盤回流 - CMoney投資網誌",
+        "source": "CMoney投資網誌",
+        "date": "2026-11-18T09:10:32+08:00",
+        "link": "https://news.google.com/rss/articles/CBMijgFBVV95cUxQbFFUN0F3Zm9hUWJtMHVMSDlLTHdBSmJ0cmUza2JhS2R3a05PNnNuT0xQWmFsZk80dDdWZnJDcDhTY2d3c00teTNnd1NqRkdRcUhDRDd0Y2pFVldJUnE4QXowNmpJWVZGSmdWNWswbFdaYnJvb3VrLUs3YXFJR295a3ljekhTLXI3WGgwX3BB?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
       {
         "title": "三大法人買賣超 – 外資買超(6274)台燿、(8046)南電，投信買超(2330)台積電、(3711)日月光投控，法人合計賣超632.07億元 - 永豐金證券",
         "source": "永豐金證券",
@@ -102,70 +152,20 @@
         "status": ""
       },
       {
+        "title": "3711 日月光投控- 外資連續賣超一個月- 股市爆料同學會 - CMoney",
+        "source": "CMoney",
+        "date": "2026-11-19T19:59:43+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE9JNmtieTAtNXlZeDYzbERtWG9SV1RJMTR1U2N5NEp3S0pWMDFjWVYwRERvUUdjRldadlR6YjRLTFpmTWQ4WWllRWFxMzBCQVVNUElvQmdrdUU?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
         "title": "同學會熱門 NO.39《日月光投控》11/19 怎麼走？盤後一次看懂 - CMoney",
         "source": "CMoney",
-        "date": "2026-11-19T09:24:07+08:00",
+        "date": "2026-11-20T01:24:07+08:00",
         "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE85LVFGWXpPMmlRdjZqTzZycFp1WmtGdGUtMzB0THBma21fTjJTQW16Z0pQcjRTQlUxMmxxTU53c3Q4NDZvbE1VVlEzRTRYQkZ2YXR4cGhTVVM?oc=5",
-        "raw_adjustment": 0,
-        "adjustment": 0,
-        "label": "",
-        "status": ""
-      },
-      {
-        "title": "日月光投控：矽品精密工業11/11~20取得廠務工程，計約7.62億元 - CMoney",
-        "source": "CMoney",
-        "date": "2026-11-20T16:56:11+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE5ka0djYy1HbU1EenNkRDV3X3YzR0VuNHN5Z0lDcXM0dEgxN3R4NGM4NWNBQTdueGFpNjNwNUJWeG5URWV2T0lpWXhxVlowMG1vdXhZMkdXdGo?oc=5",
-        "raw_adjustment": 0,
-        "adjustment": 0,
-        "label": "",
-        "status": ""
-      },
-      {
-        "title": "個股：日月光投控(3711)11/24受邀參加「Citi Taiwan Corporate Day」 - 富聯網",
-        "source": "富聯網",
-        "date": "2026-11-23T13:47:00+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxObWlma1IydC1FellZMXFLSlNPSGF6VWF0WlYxVmtXVm9KT3FBVS0yWFFSTGlmOVZmQkQ4amRaODhXMWhDNjhQeVRRY1l3X25VVjVnbTRrVVc4N1d5dmVycy11ZVk2cmlEQndoNFJnWjJ0c2hwOFVfVkhMOFBGOU8tdENkZ3FRMHll?oc=5",
-        "raw_adjustment": 0,
-        "adjustment": 0,
-        "label": "",
-        "status": ""
-      },
-      {
-        "title": "3711 日月光投控- 兩根漲停板不過分吧？ - 股市爆料同學會 - CMoney",
-        "source": "CMoney",
-        "date": "2026-11-23T23:54:35+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE5QMDRlUjE5X0RNdVlMUkRJMzQzODk0c3M2dGFhbHlxSG9ScWl4Sk5CTllUWXpHb3FWNndZUzh6azdVNjB5NHdISXROY3FkS3dsY2o3WEpxXzE?oc=5",
-        "raw_adjustment": 0,
-        "adjustment": 0,
-        "label": "",
-        "status": ""
-      },
-      {
-        "title": "3711 日月光投控- 行情總在悲觀中看見曙光，也在過度樂觀中埋下風險。 市場最有... - 股市爆料同學會 - CMoney",
-        "source": "CMoney",
-        "date": "2026-11-24T07:38:18+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE43WHVLT1Q4TDc2SmF4TGtsZkdmaGZpdHFoNlg5Q2hrbmRXbVJKLVU3Wjl5RWhOano1NlI4WXlaRzliUVBEUW5XN29ZLU9ILXRyRGI4SlJCY3c?oc=5",
-        "raw_adjustment": 0,
-        "adjustment": 0,
-        "label": "",
-        "status": ""
-      },
-      {
-        "title": "焦點股》日月光投控：跳空漲停 近2萬張排隊等著買 - 自由時報",
-        "source": "自由時報",
-        "date": "2026-11-24T10:34:47+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTFBnbUJrdlVPWnpodUIxa3VydXlMd0lJQks1YnNoZ0ZDbFVmemFfdlRPbEZEaUcxcWFhYkIyWVU5eTdfemp2MzFpc0stNks3cEJpQmpsc2NFOVk?oc=5",
-        "raw_adjustment": 0,
-        "adjustment": 0,
-        "label": "",
-        "status": ""
-      },
-      {
-        "title": "3711 日月光投控 - 希望明天再漲停⋯加油👏 - 股市爆料同學會 - CMoney",
-        "source": "CMoney",
-        "date": "2026-11-24T15:35:19+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTFBKZ1FTTjN2M0tnN3ctUm1LY01YOW5LVGJUcGdhem5PdnRCLWxWNUVrSkNfLWpWTVBCWEJqa3V3dTlYVnRtMTRjWTRBV2NNMFlQZ0xCREl5T00?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
@@ -250,7 +250,7 @@
     "lookback_days": 14
   },
   "0050": {
-    "fetched_at": "2026-11-25T07:18:52.250273+08:00",
+    "fetched_at": "2026-11-25T07:28:09.922715+08:00",
     "adjustment": -5,
     "events": [
       {
@@ -314,20 +314,20 @@
         "status": ""
       },
       {
-        "title": "不到半年再增百萬 0050投資人數突破400萬新高 - UDN",
-        "source": "UDN",
-        "date": "2026-11-23T11:28:13+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiU0FVX3lxTFBRWDJISkJVd2JoOFNJZkFkbVdTUldSWjJJVVNBWnVNallzVGlWY3Rjd0tkVGpoZnZNbUVIU0JWbEhUUi04QkxwdFQ3TEJkdjRsQkZn0gFYQVVfeXFMT01Yb09oVVhRLXhRXzBtTzVhR09lMXJzTlFnaDRNaHM4TVJEM0EtTW5ubUd6V3NVUm1KTUphWERta3U1Wjd4UVFwQ0w0VTBtRkJMMEdKMEV4Yg?oc=5",
+        "title": "該加碼了？「0050」成交量衝破40萬張 股價噴漲近3% - 三立新聞",
+        "source": "三立新聞",
+        "date": "2026-11-23T12:30:31+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE1mM1l5NG0wQThMUUFqT2pJZ3BZOHhhaW96R3pwbWpSczRDT1JPTVg3bXJjaUY2Z0YtQ2xZVEdubnVtaGxqM0NzQm1yQQ?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
         "status": ""
       },
       {
-        "title": "該加碼了？「0050」成交量衝破40萬張 股價噴漲近3% - 三立新聞",
-        "source": "三立新聞",
-        "date": "2026-11-23T12:30:31+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE1mM1l5NG0wQThMUUFqT2pJZ3BZOHhhaW96R3pwbWpSczRDT1JPTVg3bXJjaUY2Z0YtQ2xZVEdubnVtaGxqM0NzQm1yQQ?oc=5",
+        "title": "400萬人都抱0050！不到半年股民增百萬「單月淨申購破2500億元」 - TVBS新聞網",
+        "source": "TVBS新聞網",
+        "date": "2026-11-23T13:29:00+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE9OWTgzYXBoa2xsR3hRcGVGWWZXbWZ5ZXdoT2RlVmh2QVFEQW1WejdTVGVsTzI4QWJUN3B2a3NwYk5OLUdNQnJZV0lRTGR5TTQ?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
@@ -338,9 +338,19 @@
     "lookback_days": 14
   },
   "QQQ": {
-    "fetched_at": "2026-11-25T07:19:28.451877+08:00",
+    "fetched_at": "2026-11-25T07:28:50.692929+08:00",
     "adjustment": 0,
     "events": [
+      {
+        "title": "QQQ Invesco QQQ Trust Series I - Oppenheimer：八檔科技股賣出建議及賣出時機- 股市爆料同學會 - CMoney",
+        "source": "CMoney",
+        "date": "2026-11-16T16:00:00+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE93TnQzUUFscEtwLVpLdGxBdDF2T0JXTGRNeEZrUFUwN1M0alo3UW9hSlFnaWlyY05RVTd0eE5TWktDclhpbXVKY2RaTV9CUXdlQnhHYzk5WTM?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
       {
         "title": "QQQ盤前上漲，到期日前最大痛苦價爲671美元 | 期權市場統計 - Moomoo",
         "source": "Moomoo",
