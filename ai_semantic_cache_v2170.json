@@ -10032,5 +10032,61 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:5cd61485a00d5d59a2a0bf85": {
+    "ts": 1795566132.1219325,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.75,
+          "policy_stage": "threat",
+          "reason": "口頭威脅高額晶片關稅，促使台積電加速赴美設廠以規避風險",
+          "relevant": true,
+          "affected_channel": "供應鏈與成本",
+          "transmission": "關稅威脅→促使晶片廠赴美建廠→減輕未來關稅衝擊並分散供應鏈風險",
+          "exposure": "半導體製造業及赴美設廠晶圓代工業者"
+        },
+        {
+          "id": 1,
+          "direction": "negative",
+          "score": -3,
+          "confidence": 0.85,
+          "policy_stage": "considering",
+          "reason": "研擬擴大貿易關稅，引發晶片巨頭股價下挫與供應鏈成本擔憂",
+          "relevant": true,
+          "affected_channel": "成本與出口需求",
+          "transmission": "研擬擴大關稅→提高進口與終端成本→抑制晶片與硬體出口需求",
+          "exposure": "美國晶片設計與製造業者（AMD, Micron, Intel, Qualcomm）"
+        },
+        {
+          "id": 2,
+          "direction": "negative",
+          "score": -3,
+          "confidence": 0.8,
+          "policy_stage": "considering",
+          "reason": "研擬對中國、印度及歐盟等多國加徵關稅，引發整體市場系統性風險",
+          "relevant": true,
+          "affected_channel": "估值與整體需求",
+          "transmission": "廣泛關稅政策→全球貿易摩擦加劇→打擊美股整體市場情緒與企業盈利估值",
+          "exposure": "美股整體市場（__MARKET__）及跨國貿易相關產業"
+        },
+        {
+          "id": 3,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.65,
+          "policy_stage": "considering",
+          "reason": "推動沙烏地核能協議，長期有利於核能技術與能源產業發展",
+          "relevant": true,
+          "affected_channel": "出口與需求",
+          "transmission": "核能合作協議→拓展海外核能技術出口市場→帶動核能產業鏈需求",
+          "exposure": "核能技術供應商與整體能源產業"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
