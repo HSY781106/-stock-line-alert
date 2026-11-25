@@ -1,15 +1,7 @@
 {
-  "cached_at": 1795579156.174855,
+  "cached_at": 1795599802.4101014,
   "data": {
     "items": [
-      {
-        "title": "Monetary Policy - Federal Reserve (.gov)",
-        "link": "https://news.google.com/rss/articles/CBMiXkFVX3lxTE92VDNIRjQ1Wk9RMzBEV3dQS1FTcnh4X0dtTXhXaEZTTGc5S01NY0lWX0hIaFNyNTAyeVpqdnNVYVZ2Tnl5MFRvdURiWlFaOEVEcFhtTlBYbjJaV3o3S3c?oc=5",
-        "published": "Wed, 18 Nov 2026 08:00:00 GMT",
-        "query": "Federal Reserve interest rates inflation US economy",
-        "direction": "neutral",
-        "reason": "中性／待確認"
-      },
       {
         "title": "Fed's Williams says inflation still too high, signals more rate hikes possible - Reuters",
         "link": "https://news.google.com/rss/articles/CBMilAFBVV95cUxNa3lvbHFTMGFKUm9paUJYVzFoQzd1QnQtSzAtTlZmSlFyRW5Sc1hic3p2MVV0VWVrYjFkNDdQZlFTUWMzZGFueG5yMTVMcGhLWUxwQi16Ujk5b2ppMVRWTGowaHlMZDQ4Z19xbWpCQTRFVzFHSHhxeW9kbG80OTVtSEZsb3REX29FRFFPR0xzTnFjYXh6?oc=5",
@@ -17,22 +9,6 @@
         "query": "Federal Reserve interest rates inflation US economy",
         "direction": "negative",
         "reason": "緊縮／景氣風險"
-      },
-      {
-        "title": "'Almost all' Fed policymakers saw further interest rate hikes as likely - AFP.com",
-        "link": "https://news.google.com/rss/articles/CBMikwFBVV95cUxQUFNmTll2QU0tdk1Rd0ZxNWFwOUJ0bEZtMmxQYkFvRnQ3RkVBY214dlZkd0Nqbk5zdnJySkttR3NSSE56WkdyajVjNG9lYzlOMkw4Q19HMWg5UUpfeXlKX3ljT201LWNjRXhVNVFhbWtZaVJOLXR0UXNOQmFubGduR21RZ1d1QkE1eDJicXlHTHFWZmM?oc=5",
-        "published": "Wed, 18 Nov 2026 20:06:05 GMT",
-        "query": "Federal Reserve interest rates inflation US economy",
-        "direction": "negative",
-        "reason": "緊縮／景氣風險"
-      },
-      {
-        "title": "Bessent Says Fed Risks Jeopardizing Economy by Overtightening - Bloomberg.com",
-        "link": "https://news.google.com/rss/articles/CBMirgFBVV95cUxNcXh5Rm5oX0xZaXpqczkwRTFfM2gzWGFGQzNsOWZlVVFuOTU1dHgwN1YwektGRmFBOW5LWUltcUE2Q0d2YThXTFQtSHctaFZmcUFWWTRsX0dMaWpKRUtnd2cyUFViMGt6b2N1RGJRMmdmUjF4aUlJR1J2dDF5c2lTZXd4dlFyVG5IQ2hFR2VyTG8zTWZvQ09Oc25Cd2x1Q2pFMFQtOW9FMjV4RnR1Vmc?oc=5",
-        "published": "Mon, 23 Nov 2026 03:29:00 GMT",
-        "query": "Federal Reserve interest rates inflation US economy",
-        "direction": "neutral",
-        "reason": "中性／待確認"
       },
       {
         "title": "Fed's John Williams indicates higher interest rates likely 'over time' to address inflation - CNBC",
@@ -43,15 +19,23 @@
         "reason": "中性／待確認"
       },
       {
-        "title": "Fed Governor Lisa Cook Says Her October Dissent Reflected Inflation Fight’s Urgency - WSJ",
-        "link": "https://news.google.com/rss/articles/CBMingFBVV95cUxNYnFFaTJhWE1OUWZkZzM5R3cxZmt3WEppdzUtS1JKcHdzUkxKVXZnSVJpT2V5QUREQTZBZ004VUl0QlExbW10VFpCeVpkSVE3UVBablVPbDhKcmFWcWg3V1R5U2pzbVptdHk2MDhFeVg3R1o1WktBWnMwTmotVWwzbkFZem5FakRSY0lvRDZ5TzlXTjJNcGhLaUhzbE1Qdw?oc=5",
-        "published": "Fri, 20 Nov 2026 18:23:00 GMT",
+        "title": "Bessent Says Fed Risks Jeopardizing Economy by Overtightening - Bloomberg.com",
+        "link": "https://news.google.com/rss/articles/CBMirgFBVV95cUxNcXh5Rm5oX0xZaXpqczkwRTFfM2gzWGFGQzNsOWZlVVFuOTU1dHgwN1YwektGRmFBOW5LWUltcUE2Q0d2YThXTFQtSHctaFZmcUFWWTRsX0dMaWpKRUtnd2cyUFViMGt6b2N1RGJRMmdmUjF4aUlJR1J2dDF5c2lTZXd4dlFyVG5IQ2hFR2VyTG8zTWZvQ09Oc25Cd2x1Q2pFMFQtOW9FMjV4RnR1Vmc?oc=5",
+        "published": "Mon, 23 Nov 2026 03:29:00 GMT",
         "query": "Federal Reserve interest rates inflation US economy",
         "direction": "neutral",
         "reason": "中性／待確認"
       },
       {
-        "title": "Fed Saw Need to Keep Raising Rates Despite Holding Steady in October - The New York Times",
+        "title": "Fed Officials Saw Higher Rates Ahead When They Held Steady Last Month - WSJ",
+        "link": "https://news.google.com/rss/articles/CBMivwFBVV95cUxPX01kNDVqdGtHNWs5RVhUbkRTbUdMd1hkWDBJU0x6NVdIWVptS0tJTk1GR1dnajI5Z19HNlppb2ZhWVpWVnQ5eUxXSko1VVl3bERZbVV1enFVWFhsd3ozMDAtQ0RXYjZtX25DRm9QTzRqVFQ2MmdMMk5yeGluNGhjMEpJU1lZWG5DSVRQdzg1UHc2SzM1cWFVXzh6b2Q4YTY2T1NjWHBOU3RQLTg2cFVkSldPSUx2VjhjM0p0OUZESQ?oc=5",
+        "published": "Wed, 18 Nov 2026 19:41:00 GMT",
+        "query": "Federal Reserve interest rates inflation US economy",
+        "direction": "negative",
+        "reason": "緊縮／景氣風險"
+      },
+      {
+        "title": "Fed Saw Need to Keep Raising Interest Rates Despite Holding Steady in October - The New York Times",
         "link": "https://news.google.com/rss/articles/CBMimgFBVV95cUxQZWNVYnFNZV9nd0xLQW9EenZFTEJZS1A0VF9jcXgydHdZMlNUY21sTndVYzZXTThLS19UOThYOF9oZS1hbURtSlBhcUYyTVB1XzB2QUk5dlZva3RlNzlyWmtweDNhUUdyNVJGV290RzNLYTBEU1RXMlpiNEtHZ09HTVFyZ09ldVdKUXNiMHFLSk45Y3RiOWEzWDFB?oc=5",
         "published": "Wed, 18 Nov 2026 19:09:22 GMT",
         "query": "Federal Reserve interest rates inflation US economy",
@@ -67,9 +51,25 @@
         "reason": "中性／待確認"
       },
       {
+        "title": "Bill Ackman says the U.S. economy could be headed for another recession—and is blaming Kevin Warsh’s Fed - Fortune",
+        "link": "https://news.google.com/rss/articles/CBMijwFBVV95cUxQN3VCOE5ObEdOWFpHOUdKMmRIa2RKNjdkVEFia3VpTzFLSlZyZkhoaVVhSDNZQVdwMElQNG9ya0ZFZXhFcTFnS0ZkdDZ6T1hWYWRVQTV1V0diTzVjSldtQmFmdmZFQzllQjBHNVJCcFhnSXNRZTlqZXVLS0JvQUZaWEtndFY5QU5aV0VRN1VMdw?oc=5",
+        "published": "Tue, 24 Nov 2026 14:59:00 GMT",
+        "query": "Federal Reserve interest rates inflation US economy",
+        "direction": "negative",
+        "reason": "緊縮／景氣風險"
+      },
+      {
+        "title": "The Iran war raised household costs in 2026. Here’s how much – and why - Chase Bank",
+        "link": "https://news.google.com/rss/articles/CBMiyAFBVV95cUxNbGJFUG14UE9xYm1tMVRKR2hGN0lYel9jRUIwdlg4TThiODJ1MEJOQXZGdVAwRlZ1c0Y3LVl1ZUlhdjE4WTgtbVB6bGdzMk0zR3F4MDV5cVdHajYyN0NlbDFpN1lTekZKYVZ6bkN6Tjh0OWxabXd3cThpVXpmMG5CaDdEU3BYYWoxdkRReXZGS2E1eVhVUUg2QTZkYzIzSk02TEstaVNRS0hCcVd6eEMyV2NtUTJjV1VDX0NTaFRCWXlhaEI2d0VuYg?oc=5",
+        "published": "Wed, 18 Nov 2026 15:34:26 GMT",
+        "query": "Federal Reserve interest rates inflation US economy",
+        "direction": "neutral",
+        "reason": "中性／待確認"
+      },
+      {
         "title": "Weekly market commentary - BlackRock",
         "link": "https://news.google.com/rss/articles/CBMingFBVV95cUxQLWJDTjBBalYwVHVpc0VxV1BwRE1xeUt1RWlLQ1VJdnJQRXNnb3p6MnFNbjRBV0s0TnlldW4wSVIycFRQeVNISWJ3VV9wMWdjX1ZndE1Tc24tNzc0anNYWjl0SVBsRDhSa0dVTWlyVVYxX0w5b2JhTFB0Tm9Vb2FwYVZubTU1SVJlcy0zMEpXOEM4ZlhiSU1QazdVQVlldw?oc=5",
-        "published": "Tue, 24 Nov 2026 00:29:20 GMT",
+        "published": "Mon, 23 Nov 2026 08:00:00 GMT",
         "query": "US CPI jobs GDP Treasury yields economy",
         "direction": "neutral",
         "reason": "中性／待確認"
@@ -91,15 +91,15 @@
         "reason": "中性／待確認"
       },
       {
-        "title": "American Century Inflation-Adjusted Bond Fund Q3 2026 Commentary (ACITX) - Seeking Alpha",
-        "link": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxOQjNmQ2Z2anNIY3phdGJiNS1jRS1NVGNwN0I1eGllRXZBd3pXT2xpd0JHaURkOUdrX3BQTFYwcTdMM3hmaVZIam9TV2hyelR6TWVVMktpR0VLRURJT2pjQlpFSTFmYVl1S0ZlM3R0Qm00SVNjd0lDMEh1MkVYM2puYm9MNFBVcU5wWU1iZXBZa3VFX3pmdV83ZU1iZXl0bkw4cU5CcjJ4MHo?oc=5",
-        "published": "Fri, 20 Nov 2026 00:50:00 GMT",
+        "title": "US dollar playbook: Can the dollar stay strong if US growth starts to weaken? - Saxo",
+        "link": "https://news.google.com/rss/articles/CBMifEFVX3lxTE9SaUJsd1FzS1R4aDVWdHozbUdCZnBNVnhUTXgybktvNVJNTjJPWmExa0ZrdWhBUXZ1VnYwb3hmRlVVekstZUd5WkpSeDlpNG11cjczRk84a0tobjNQNWN1d2tpaXZWZXVLVFBEaFNqRGIxTXdhNkJRVVBTRm0?oc=5",
+        "published": "Mon, 23 Nov 2026 06:56:58 GMT",
         "query": "US CPI jobs GDP Treasury yields economy",
         "direction": "neutral",
         "reason": "中性／待確認"
       }
     ],
-    "updated_at": "2026-11-25T11:59:16.542237+08:00",
+    "updated_at": "2026-11-25T17:43:22.985133+08:00",
     "errors": []
   }
 }

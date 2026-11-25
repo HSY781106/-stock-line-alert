@@ -10285,5 +10285,61 @@
       "reason": "日月光投控基本面表現亮眼且獲利持續成長，惟技術面呈現空頭排列並跌破多條均線。籌碼面法人大幅賣超且融資增長，加上川普政策對半導體族群偏負面。目前進場接刀風險過高，建議暫停加碼並觀察止跌訊號。"
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:f5bb0bf31b8632afb1d22395": {
+    "ts": 1795599775.503437,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.7,
+          "policy_stage": "threat",
+          "reason": "川普關稅言論引發避險情緒，加密貨幣市場承壓。",
+          "relevant": true,
+          "affected_channel": "估值",
+          "transmission": "關稅威脅→風險偏好下降→加密資產資金流出",
+          "exposure": "整體加密貨幣市場風險資產"
+        },
+        {
+          "id": 1,
+          "direction": "positive",
+          "score": 3,
+          "confidence": 0.8,
+          "policy_stage": "considering",
+          "reason": "國防科技與AI政策獲小川普支持，激勵國防科技供應鏈。",
+          "relevant": true,
+          "affected_channel": "需求",
+          "transmission": "政府國防預算支持→AI國防工廠訂單增加→國防科技業受惠",
+          "exposure": "美國國防科技與軍工自動化產業"
+        },
+        {
+          "id": 2,
+          "direction": "negative",
+          "score": -3,
+          "confidence": 0.85,
+          "policy_stage": "threat",
+          "reason": "關稅疑慮與AI回檔重創亞洲股市風險偏好。",
+          "relevant": true,
+          "affected_channel": "需求",
+          "transmission": "貿易關稅威脅→出口預期下滑→亞股整體回檔",
+          "exposure": "亞洲出口導向型科技與製造業"
+        },
+        {
+          "id": 3,
+          "direction": "negative",
+          "score": -3,
+          "confidence": 0.85,
+          "policy_stage": "threat",
+          "reason": "晶片與關稅政策擔憂導致台積電及台股大跌。",
+          "relevant": true,
+          "affected_channel": "出口",
+          "transmission": "對台半導體關稅威脅→供應鏈成本與貿易障礙上升→晶片龍頭股價承壓",
+          "exposure": "晶片代工龍頭與台灣半導體供應鏈"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
