@@ -10088,5 +10088,202 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:ee3a59176922226248fcc045": {
+    "ts": 1795579129.5351608,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.8,
+          "policy_stage": "threat",
+          "reason": "言論與美國能源現實矛盾，缺乏具體政策執行細節。",
+          "relevant": true,
+          "affected_channel": "供應鏈",
+          "transmission": "口頭言論→加拿大能源進口預期→美國整體能源市場",
+          "exposure": "北美傳統能源與天然氣產業"
+        },
+        {
+          "id": 1,
+          "direction": "neutral",
+          "score": -1,
+          "confidence": 0.75,
+          "policy_stage": "threat",
+          "reason": "晶片關稅威脅促使赴美設廠，短期成本與資本支出增加。",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "晶片關稅威脅→加速赴美建廠→半導體供應鏈資本支出上升",
+          "exposure": "全球晶片代工與先進製程產業"
+        },
+        {
+          "id": 2,
+          "direction": "negative",
+          "score": -3,
+          "confidence": 0.85,
+          "policy_stage": "considering",
+          "reason": "研議擴大貿易關稅，引發晶片股普遍重挫。",
+          "relevant": true,
+          "affected_channel": "出口",
+          "transmission": "關稅政策研議→海外市場報復風險→晶片廠出口營收受壓",
+          "exposure": "美國跨國晶片與晶圓設計巨頭"
+        },
+        {
+          "id": 3,
+          "direction": "negative",
+          "score": -3,
+          "confidence": 0.85,
+          "policy_stage": "considering",
+          "reason": "對多國提高關稅研議打壓美股大盤整體估值。",
+          "relevant": true,
+          "affected_channel": "估值",
+          "transmission": "全面性關稅研議→通膨與貿易戰疑慮→美股大盤估值承壓",
+          "exposure": "美股大盤指數與跨國企業標的"
+        }
+      ]
+    },
+    "provider": "gemini"
+  },
+  "news:0050:7974a457599942c7d993255d": {
+    "ts": 1795579131.646378,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "positive",
+          "score": 3,
+          "confidence": 0.85,
+          "reason": "台股大漲帶動0050價格大增，呈現利多趨勢。",
+          "relevant": true
+        },
+        {
+          "id": 1,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.9,
+          "reason": "僅為ETF基本資料簡介，對近期股價無直接影響。",
+          "relevant": true
+        },
+        {
+          "id": 2,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.7,
+          "reason": "為高股息ETF市場討論，對0050無明確直接利多利空。",
+          "relevant": true
+        },
+        {
+          "id": 3,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.75,
+          "reason": "爆量且獲官股低接買盤，顯示市場資金支撐。",
+          "relevant": true
+        }
+      ]
+    },
+    "provider": "gemini"
+  },
+  "etf_final_v2237:0050:0529c43cab8dbf0874c025fc": {
+    "ts": 1795579160.0882018,
+    "data": {
+      "recommendation": "🟡 等待更佳買點",
+      "confidence": 0.65,
+      "core": "長線價值尚可，但技術面走空且溢價過高，暫不宜追高。",
+      "value_view": "長線具台灣大型權值與半導體競爭力，但投資分數中性。",
+      "buy_view": "技術面呈現空頭趨勢且買點分數低，應避免接刀。",
+      "macro_view": "總經環境中性，利率傳導偏負面。",
+      "news_view": "爆量獲官股低接，市場具一定買盤支撐。",
+      "trump_view": "半導體與AI政策偏負面衝擊持股表現。",
+      "theme_view": "高度集中於台灣大型權值與半導體供應鏈。",
+      "risk_view": "溢價高達4.77%、技術面走空及政策面利空。",
+      "conflict": "新聞面獲官股低接護盤，但技術面與政策面傳送強烈空頭與利空訊號。",
+      "strengths": [
+        "官股爆量低接買盤支撐",
+        "台灣大型權值龍頭地位"
+      ],
+      "risks": [
+        "溢價率高達 4.77%",
+        "均線呈現空頭排列"
+      ],
+      "next_watch": [
+        "溢價是否收斂至合理區間",
+        "技術面止跌反轉訊號"
+      ],
+      "reason": "0050長線投資價值猶存，但目前技術線型偏空且買點分數僅29分。高達4.77%的溢價顯示追高風險大。建議等待回檔止跌與溢價收斂後再進行配置。"
+    },
+    "provider": "gemini"
+  },
+  "news:3711:64a0b22d05de1f211c89bbb8": {
+    "ts": 1795579172.9859018,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.7,
+          "reason": "子公司取得廠務工程，屬正常資本支出，影響中性。",
+          "relevant": true
+        },
+        {
+          "id": 1,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.7,
+          "reason": "子公司取得廠務工程，屬日常營運資本支出。",
+          "relevant": true
+        },
+        {
+          "id": 2,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.5,
+          "reason": "社群論壇討論話題，無具體利多或利空訊息。",
+          "relevant": true
+        },
+        {
+          "id": 3,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.7,
+          "reason": "子公司取得機器設備，屬常態性資本支出。",
+          "relevant": true
+        }
+      ]
+    },
+    "provider": "gemini"
+  },
+  "final_v21826:3711:1ed4d540762863d2b91fcb96": {
+    "ts": 1795579177.983575,
+    "data": {
+      "recommendation": "🔴 不宜加碼",
+      "confidence": 0.85,
+      "core": "基本面成長但技術與籌碼極度疲弱，建議暫不進場觀望止跌。",
+      "fundamental_view": "EPS成長22.96%且估值合理，但本益比30.42高於同業中位數。",
+      "technical_view": "空頭趨勢，股價跌破MA20與MA60，僅KD低檔轉強。",
+      "chips_view": "籌碼極差，20日法人大賣逾5.8萬張且融資持續增加。",
+      "risk_view": "技術面破線疊加法人連賣與融資增加，籌碼面沉重。",
+      "news_view": "消息面均為日常資本支出與常態設備取得，影響中性。",
+      "trump_view": "關稅與半導體政策研議偏負面，壓抑晶片股估值。",
+      "macro_view": "利率殖利率傳導偏負面，僅匯率傳導微幅利多。",
+      "buy_view": "價值面尚可但買點極差，目前屬於接刀風險區，暫不進場。",
+      "strengths": [
+        "EPS年成長達22.96%",
+        "KD低檔出現轉強訊號"
+      ],
+      "risks": [
+        "三大法人20日大幅賣超",
+        "股價跌破MA20與MA60均線"
+      ],
+      "conflict": "獲利成長且評價合理，但籌碼遭法人持續拋售且均線破線。",
+      "next_watch": [
+        "法人賣超是否止血",
+        "股價能否站回MA20"
+      ],
+      "reason": "日月光投控基本面表現亮眼且獲利持續成長，惟技術面呈現空頭排列並跌破多條均線。籌碼面法人大幅賣超且融資增長，加上川普政策對半導體族群偏負面。目前進場接刀風險過高，建議暫停加碼並觀察止跌訊號。"
+    },
+    "provider": "gemini"
   }
 }
