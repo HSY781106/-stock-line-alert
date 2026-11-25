@@ -10373,5 +10373,25 @@
       ]
     },
     "provider": "groq"
+  },
+  "trump_v21826:__MARKET__:d5c33b2120656bcb2d9da9d4": {
+    "ts": 1795647136.8772187,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "negative",
+          "score": -3,
+          "confidence": 0.8,
+          "policy_stage": "announced",
+          "reason": "特朗普關稅導致成本上升",
+          "relevant": true,
+          "affected_channel": "成本",
+          "transmission": "關稅→成本↑→市場情緒↓→股價下跌",
+          "exposure": "受影響"
+        }
+      ]
+    },
+    "provider": "groq"
   }
 }
