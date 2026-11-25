@@ -10341,5 +10341,37 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:d9096e8398b0abd23a257597": {
+    "ts": 1795646638.1833029,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.7,
+          "policy_stage": "announced",
+          "reason": "特朗普加徵關稅導致AI股價下跌",
+          "relevant": true,
+          "affected_channel": "成本、供應鏈",
+          "transmission": "關稅→AI產業成本上升→市場下跌",
+          "exposure": "證據不足"
+        },
+        {
+          "id": 1,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.5,
+          "policy_stage": "unknown",
+          "reason": "國防承包商投資無直接影響",
+          "relevant": false,
+          "affected_channel": "估值",
+          "transmission": "投資→無直接市場影響",
+          "exposure": "證據不足"
+        }
+      ]
+    },
+    "provider": "groq"
   }
 }
