@@ -10560,5 +10560,25 @@
       ]
     },
     "provider": "groq"
+  },
+  "trump_v21826:__MARKET__:52b54e0d9e4b9edfca0399f7": {
+    "ts": 1795733385.9977999,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.5,
+          "policy_stage": "unknown",
+          "reason": "無直接影響",
+          "relevant": false,
+          "affected_channel": "無",
+          "transmission": "無",
+          "exposure": "證據不足"
+        }
+      ]
+    },
+    "provider": "groq"
   }
 }
