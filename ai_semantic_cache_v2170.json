@@ -10413,5 +10413,132 @@
       ]
     },
     "provider": "groq"
+  },
+  "trump_v21826:__MARKET__:4be75440c654e536afc08d05": {
+    "ts": 1795663436.482198,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.75,
+          "policy_stage": "announced",
+          "reason": "川普出席台積電亞利桑那廠擴建，象徵晶片法案與晶片本土製造趨勢延續。",
+          "relevant": true,
+          "affected_channel": "估值、本土製造供應鏈",
+          "transmission": "川普支持晶片製造→半導體資本支出增加→帶動整體市場與科技股氣氛",
+          "exposure": "整體科技股與半導體供應鏈產業"
+        },
+        {
+          "id": 1,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.6,
+          "policy_stage": "unknown",
+          "reason": "與整體市場無直接具體政策關聯，屬於單一企業營銷或社交媒體活動。",
+          "relevant": false,
+          "affected_channel": "無",
+          "transmission": "無具體政策傳導路線",
+          "exposure": "證據不足"
+        },
+        {
+          "id": 2,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.8,
+          "policy_stage": "considering",
+          "reason": "關稅政策長期化可能性增加，推升通膨疑慮並壓抑市場風險偏好。",
+          "relevant": true,
+          "affected_channel": "成本、通膨、估值",
+          "transmission": "關稅政策→進口成本與通膨預估上升→壓抑大盤估值與消費需求",
+          "exposure": "跨國貿易敏感型產業與整體大盤"
+        },
+        {
+          "id": 3,
+          "direction": "negative",
+          "score": -3,
+          "confidence": 0.85,
+          "policy_stage": "threat",
+          "reason": "對中國與歐盟加徵關稅將引發貿易摩擦，衝擊全球供應鏈與出口。",
+          "relevant": true,
+          "affected_channel": "出口、供應鏈、國際貿易",
+          "transmission": "關稅威脅→貿易夥伴報復風險→全球供應鏈成本上升與市場震盪",
+          "exposure": "出口導向產業與跨國製造業標的"
+        }
+      ]
+    },
+    "provider": "gemini"
+  },
+  "news:3711:6f02b18d5fae5caf6f70165d": {
+    "ts": 1795663495.014033,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "negative",
+          "score": -4,
+          "confidence": 0.9,
+          "reason": "股價重挫逾9%",
+          "relevant": true
+        },
+        {
+          "id": 1,
+          "direction": "negative",
+          "score": -4,
+          "confidence": 0.9,
+          "reason": "股價重挫逾9%",
+          "relevant": true
+        },
+        {
+          "id": 2,
+          "direction": "negative",
+          "score": -3,
+          "confidence": 0.8,
+          "reason": "股價重挫近7%",
+          "relevant": true
+        },
+        {
+          "id": 3,
+          "direction": "negative",
+          "score": -3,
+          "confidence": 0.8,
+          "reason": "股價重挫近7%",
+          "relevant": true
+        }
+      ]
+    },
+    "provider": "groq"
+  },
+  "final_v21826:3711:f78ffd4118d412908f3cc9eb": {
+    "ts": 1795663498.6334674,
+    "data": {
+      "recommendation": "🔴 暫停加碼",
+      "confidence": 0.75,
+      "core": "日月光投控基本面獲利成長，但受法人拋售與技術面均線破位拖累，宜暫停加碼等待止跌。",
+      "fundamental_view": "獲利成長22.96%且低於同業估值，具持有價值。",
+      "technical_view": "均線呈空頭排列，跌破MA20與MA60，KD低檔轉強但短期趨勢偏弱。",
+      "chips_view": "籌碼面極差，20日外資/法人大賣超逾6,469萬張。",
+      "risk_view": "法人持續賣超且均線全數失守，短線修正風險高。",
+      "news_view": "受AI利空事件影響，股價重挫逾9%，短線情緒悲觀。",
+      "trump_view": "半導體本土化中性偏多，但關稅與貿易戰疑慮壓抑供應鏈。",
+      "macro_view": "利率殖利率偏負面，雖匯率傳導偏正但整體總經中性。",
+      "buy_view": "投資價值與買點不一致，目前屬於無效接刀區，暫不進場。",
+      "strengths": [
+        "EPS成長22.96%",
+        "估值低於同業與歷史"
+      ],
+      "risks": [
+        "法人20日大賣超",
+        "跌破MA20與MA60均線"
+      ],
+      "conflict": "基本面具備投資價值，但籌碼與技術面極度偏空。",
+      "next_watch": [
+        "法人賣超是否收斂",
+        "股價是否在買進區間止跌"
+      ],
+      "reason": "日月光獲利維持成長且估值偏低，基本面具吸引力。然而法人20日鉅額賣超且跌破多頭均線，加上新聞事件衝擊股價重挫。目前買點與價值嚴重脫鉤，建議暫停加碼並等待止跌訊號。"
+    },
+    "provider": "gemini"
   }
 }
