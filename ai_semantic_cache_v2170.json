@@ -10540,5 +10540,25 @@
       "reason": "日月光獲利維持成長且估值偏低，基本面具吸引力。然而法人20日鉅額賣超且跌破多頭均線，加上新聞事件衝擊股價重挫。目前買點與價值嚴重脫鉤，建議暫停加碼並等待止跌訊號。"
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:4128824d5047b049e3bbe61b": {
+    "ts": 1795684785.4810805,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "negative",
+          "score": -3,
+          "confidence": 0.8,
+          "policy_stage": "announced",
+          "reason": "新關稅導致成本上升",
+          "relevant": true,
+          "affected_channel": "成本、供應鏈",
+          "transmission": "關稅→成本上升→需求減少→股價下跌",
+          "exposure": "Nasdaq、Nvidia"
+        }
+      ]
+    },
+    "provider": "groq"
   }
 }

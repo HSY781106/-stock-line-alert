@@ -1,6 +1,6 @@
 {
   "2330": {
-    "fetched_at": "2026-11-26T06:44:28.868620+08:00",
+    "fetched_at": "2026-11-26T17:20:14.443825+08:00",
     "adjustment": -7,
     "events": [
       {
@@ -54,16 +54,6 @@
         "status": "重大負面事件"
       },
       {
-        "title": "2330 台積電 - 台積電重挫80元！台股殺1926點寫第6大收盤跌點 各類股慘... - 股市爆料同學會 - CMoney",
-        "source": "CMoney",
-        "date": "2026-11-25T15:04:39+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE5RV0RoS2psTlhxNDlCeFlKUDRNdHNxNlFucXB3ZGtKWkMzR2h6cEVUOUQ1LVJHcGc5TndWd29yZ21PWHN2cWxNeENfM3l5U3JJUEtNRUtMMEQ?oc=5",
-        "raw_adjustment": -5,
-        "adjustment": -5,
-        "label": "股價重大下跌",
-        "status": "重大負面事件"
-      },
-      {
         "title": "【零股排行榜】 盤中零股成交量TOP 20｜0050 元大台灣50、00878 國泰永續高股息、0056 元大高股息、00631L 元大台灣50正2、2330 台積電 (1116)｜豐雲學堂2026 年 11 月 - 永豐金證券",
         "source": "永豐金證券",
         "date": "2026-11-16T16:00:00+08:00",
@@ -82,13 +72,23 @@
         "adjustment": 0,
         "label": "",
         "status": ""
+      },
+      {
+        "title": "三大法人買賣超 – 外資買超(3653)健策、(3008)大立光，投信買超(3665)貿聯-KY、(2330)台積電，法人合計賣超461.03億元 - 永豐金證券",
+        "source": "永豐金證券",
+        "date": "2026-11-20T13:19:00+08:00",
+        "link": "https://news.google.com/rss/articles/CBMi1wRBVV95cUxPM3NPYkQ4c0Iyd09yekFaeVdrQTBDNUt1OFBIZ1Eya0puLWdwSEdpajZaaGZoaG9HVjRlQy1qcnNGdW9ZZ3VTenNQU1hxaFhQQktsaFZWd1Bwem9TTGJPbG0xQ1pYbWJmcGVadTlMQ2FNM2pZYnZpeDZxeXA4UUJ5MFFnTGZpQTVNcDRjQVhoVF9WLVhDRUE0YVhFaVd0c1pCeTloNy0yVmdiLWdmTUpfNWVkYWpWTkhzN2wtVkJUMnlhemhKSkYtdk5hVDVtT0pZcTBQeWZWM3V3dkR3X3NmV1RMUi1jYkllWmJ0SXZ2Uk1lWlFaV08wNFg5Q1dRR0xvNW5nUjJWQkt4elQ3NFk1TVlRcFVfcXBiZXRCeHpfRVV6OFQ0cUhzZkFMRVZPMV9qUEF1b1ZuRjVQYk5uV2UwZjBueHg2Z0E1N3hCdFhTcDhacUFGVE9",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
       }
     ],
     "source": "Google News RSS",
     "lookback_days": 14
   },
   "3711": {
-    "fetched_at": "2026-11-26T06:44:33.709740+08:00",
+    "fetched_at": "2026-11-26T17:20:19.947784+08:00",
     "adjustment": -7,
     "events": [
       {
@@ -132,16 +132,6 @@
         "status": "重大負面事件"
       },
       {
-        "title": "日月光投控：矽品精密工業11/6~12向聖暉*取得廠務工程，計約24.3億元 - 台視全球資訊網",
-        "source": "台視全球資訊網",
-        "date": "2026-11-12T16:00:00+08:00",
-        "link": "https://news.google.com/rss/articles/CBMikgFBVV95cUxOeTVJdnE3WDI3WlppLUxFdE83VUdBQ0NBdlY0ZnlPc1BNcXRqMEJfSHBDRFF2SDFZaW8zVHByUkozNGthTHJRVjFNOGx5alFGNXZVWW1JblBybURSaU5vV25ObEJDTXdCTEhmWG5zRWhDVUI3SS01WVdXYWFMajg1NUI1aUx3Q25aYUl5aVpBN2xTZw?oc=5",
-        "raw_adjustment": 0,
-        "adjustment": 0,
-        "label": "",
-        "status": ""
-      },
-      {
         "title": "日月光投控：日月光半導體製造11/5~12取得供營業用廠務工程一批，計約7.13億元 - 台視全球資訊網",
         "source": "台視全球資訊網",
         "date": "2026-11-13T12:12:44+08:00",
@@ -166,6 +156,16 @@
         "source": "CMoney投資網誌",
         "date": "2026-11-18T09:10:32+08:00",
         "link": "https://news.google.com/rss/articles/CBMijgFBVV95cUxQbFFUN0F3Zm9hUWJtMHVMSDlLTHdBSmJ0cmUza2JhS2R3a05PNnNuT0xQWmFsZk80dDdWZnJDcDhTY2d3c00teTNnd1NqRkdRcUhDRDd0Y2pFVldJUnE4QXowNmpJWVZGSmdWNWswbFdaYnJvb3VrLUs3YXFJR295a3ljekhTLXI3WGgwX3BB?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "三大法人買賣超 – 外資買超(6274)台燿、(8046)南電，投信買超(2330)台積電、(3711)日月光投控，法人合計賣超632.07億元 - 永豐金證券",
+        "source": "永豐金證券",
+        "date": "2026-11-18T20:30:30+08:00",
+        "link": "https://news.google.com/rss/articles/CBMi6wRBVV95cUxQUUtfZlBqODZrZ3JfSGt2eWZ6a1p5RGcxcjJBLWlFVDlZV3RNVnNYX19BTGhMTno5NXltZmtQSjRlYmwzY2ZiWnJISW1LV0RrcmFiam5iU3ZXLTNQUUF3UGFwcFc5aFVJcU4xakdPbC05dm56bEJhM0JUVTcwOXNSVHpaS1FfU0hyQ0pHS0RXMklDNi1CbnJrYjFXbkdaNHF6ZkJfdHRIdW9pZzgtVkg3bHpVMmpSbEJKZ2d2SjYyd3NNVk9veFNpWXRHb2FSSlRPdV9MMjNTOS0xOVEzdTkwZ3VTcHo4WVhCZTZPLXI2SnVBcGU1SzRNNEhRU2lxV2RaLVhkS3pURDlZcERuaUZzbVRJT1NRc29kQmNSQWJXNEZKSHpqd2VRZUo1cFFNaUVaZHdNRWs4Yjlqd0NyTTVLeWg5Z2lRd1FFRHFlTnE3dkVnaHlfaWh",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
@@ -250,7 +250,7 @@
     "lookback_days": 14
   },
   "0050": {
-    "fetched_at": "2026-11-26T06:43:58.222978+08:00",
+    "fetched_at": "2026-11-26T17:19:45.519736+08:00",
     "adjustment": -7,
     "events": [
       {
@@ -258,16 +258,6 @@
         "source": "CMoney",
         "date": "2026-11-24T18:22:34+08:00",
         "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE9wRHR3OHdFVTZKemY3MVNhY3cwdmo2WXozek1GQ0RKYWNYWG55LWxJQm5wZ05GTTFuWDl2VWRkeXAyNGRTeHljS2NMRmFBRkFSNUlfUUl2NG4?oc=5",
-        "raw_adjustment": -5,
-        "adjustment": -5,
-        "label": "股價重大下跌",
-        "status": "重大負面事件"
-      },
-      {
-        "title": "【即時新聞】0050最新狂吸2200億，今日盤中重挫近10%還能追？ - CMoney投資網誌",
-        "source": "CMoney投資網誌",
-        "date": "2026-11-25T10:22:31+08:00",
-        "link": "https://news.google.com/rss/articles/CBMikAFBVV95cUxOSVYwbWR1WUtHTWFtaHRTbTFwZUgyakE3WGE0TThBM2tTVHVXcGpiN2lFMTVyMmtUX2RNRmVyR3h2Q0wzZTVXb2ZleUxyQTM2TnpqaHh2WXdGb21HbXFFVG83YkExZ2xGLUlTYzJUaVRaM1o3c2Y2LXgyMXRoRlJOcXNUT3o2ckwyWGJueEhQeW4?oc=5",
         "raw_adjustment": -5,
         "adjustment": -5,
         "label": "股價重大下跌",
@@ -304,10 +294,10 @@
         "status": "重大負面事件"
       },
       {
-        "title": "元大台灣50(0050)持股明細總覽 - 口袋證券",
-        "source": "口袋證券",
-        "date": "2026-11-20T16:00:00+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE53T2lGUmgwLVdJOWNySWFqcUpCLW00dHFhUjJoWGtOdW1acklZdzRhVGFwUWxSdWhWWi0xcldEYjQ2cW1wYWpZWVRibnNMd0FrRjlOZFZUWGJVUQ?oc=5",
+        "title": "0050 元大台灣50 - 台灣投資人太會買！0050全年淨申購破兆元亞太第一強- 股市爆料同學會 - CMoney",
+        "source": "CMoney",
+        "date": "2026-11-23T15:40:30+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE85U3dQLVc4UzF4ZlNNOTZpb1g5c21IX2FMaEQ2MkNPNFRibkdXNC03blVGS3dDbmFGTkx1aVlHbFpxUHJRU1dUYVN3SFEyeDZ2Tlp3RDdycXE?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
@@ -316,7 +306,7 @@
       {
         "title": "元大台灣50(0050)ETF股票型基金的基本資料 - 口袋證券",
         "source": "口袋證券",
-        "date": "2026-11-20T16:00:00+08:00",
+        "date": "2026-11-23T16:00:00+08:00",
         "link": "https://news.google.com/rss/articles/CBMiUkFVX3lxTE5SaENLVmV2OXJ1b2JLZExQRUZ4SjEtTXlvUjVpdDJrdndVeGZDV3hvSmNOUWJRU2RTNHJ2bjdkd25oUGM1ZlZVc3JRdzB6dzFnb2c?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
@@ -324,10 +314,20 @@
         "status": ""
       },
       {
-        "title": "0050 元大台灣50 - 【即時新聞】最新0050爆量逾30萬張，官股低接狂掃要反轉了？ - 股市爆料同學會 - CMoney",
+        "title": "0050 元大台灣50 - 【即時新聞】0050最新亮燈漲停，官股狂掃2萬張卡位還能追嗎？ - 股市爆料同學會 - CMoney",
         "source": "CMoney",
-        "date": "2026-11-22T18:22:51+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE1LMFRYUUtSVUIwcWZTUmVKdkVwdGw4bTd4ZktLUEYyZDBzNTIwSTQwX3g1N2tONHg0RVRUbUtjSzNMVHZGSi1CSk5LS2lFcHRFc3ZWN2I3cks?oc=5",
+        "date": "2026-11-23T18:22:38+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE9CU0hUZjcwa21ibTlTbFhPN0xGWFp5VGU3N0pFMHdFUjZLTTVEWE0wLV91VVdNQjkySUV5WXBUdmUxOV9WOW53al9NeDFGYVJzdDBMN0EySmo?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "0050 元大台灣50 - 【即時新聞】最新0050股價爆量亮燈，官股狂掃7萬張卡位還能追嗎？ - 股市爆料同學會 - CMoney",
+        "source": "CMoney",
+        "date": "2026-11-23T18:26:18+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE9YNExPdGtGR0t1aW9uYTM5LVU2V3dVS0xIcGw3SndCRTJyQ0tnR1pFbUpmQmR5Qzl5eTNyd1BJd0NGYnV4QUhiQkhxS0RoZjVTNmNtelI0Z0M?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
@@ -338,9 +338,59 @@
     "lookback_days": 14
   },
   "QQQ": {
-    "fetched_at": "2026-11-26T06:44:38.490384+08:00",
+    "fetched_at": "2026-11-26T17:20:25.664532+08:00",
     "adjustment": 0,
     "events": [
+      {
+        "title": "$納指100ETF-Invesco QQQ Trust (QQQ.US)$ 在200日均線處承壓。 - Moomoo",
+        "source": "Moomoo",
+        "date": "2026-11-13T16:00:00+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxQbDRjRWZPQVdIQ0EzUlRiY2pLVHVjcGhnaVl0ZXpuYm5LejMtamxFMEtYU2UwLXJ4OFVueGRhTml4LUUwN2U0NUVLV09yaG1NZGpMVWVjS29LSjhOMDl2ejBickNMNUk4UF9PN1U4QVpuNU9yTVRUNGNaV0RHYVNfNFBoWUltWGloa0lUczJ5V2NGVnh2R3hPTGVaTTFKcFVMLV93MVNpRnRLMUU?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "$納指 100 ETF - Invesco(QQQ.US)市場已成驚弓之鳥，多空都無法確定方向，IV…｜長橋證券 - Longbridge",
+        "source": "Longbridge",
+        "date": "2026-11-14T02:19:22+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiV0FVX3lxTE02dmRiVHN1czFzR1FRMGhacHdqUk9tNFl5SUxONElrVmRkVTJrWDVhRDVRUGl2eTNlaGMyZjd6a08yX2VEWmJGT0ZkYVJlRnVkT1Fzek04dw?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "納指100ETF-Invesco QQQ Trust期權聚焦：11月20日成交1,127.25萬張，未平倉合約為1,549.97萬張 - 富途牛牛",
+        "source": "富途牛牛",
+        "date": "2026-11-17T17:51:00+08:00",
+        "link": "https://news.google.com/rss/articles/CBMinAFBVV95cUxNQnpueE1UaGR2blRlaThmb0ZvQklzZWNmOFFDaEdOTWE3ODA4aG1KSG14R0JUMEQwNUoxTVFJdEUyeXhRQl9LOFNLcUNEYWZwZUJXZjYyclREUFNEX0c1WGxnU3QtazlzTVdoS3hUU0JjcUlySEVIbXMwWklSdlhuX291TjJueEJmSl9LMEl0OFFyZnhIZEx5YklqOUk?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "$納指100ETF-Invesco QQQ Trust (QQQ.US)$ 我們可能處於anger 的位置 - Moomoo",
+        "source": "Moomoo",
+        "date": "2026-11-20T22:03:27+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiiwFBVV95cUxPbFhpY3duT1d4RVBuWUMzTzQ1YmZrTktqR1VNdTZrVk9YbEZmNUFsc2M1T0lfVi1aajBEUEVzV0Z3Yk5GVXRFcGlFU2FzaEZRQVBUdWJ0cmxmQzRhYnlxeDJJaFNMWEdmak5yZkdhcVJGV0tBTGhadWEtZk9MbmJKZzktV3ctNk1DZ2dv?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "Invesco QQQ Trust Tokenized bStocks QQQB (QQQB-USD) 的即時價格、新聞、圖表及價格記錄 - Yahoo 財經",
+        "source": "Yahoo 財經",
+        "date": "2026-11-23T10:10:03+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiV0FVX3lxTFB4cU1OZUFYTFYzbl95QkpFYWJPbnhaLUotZkVaellWS0tCU19GMXRDUVZlcUF0YzZ0YnNyWlk0aDdYeUhFcGJRVEc4TFVpd3ZPWDdqdmNScw?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
       {
         "title": "Invesco QQQ Trust closes above $618 on November 27? | 免費參與，贏取獎勵 - OKX",
         "source": "OKX",
@@ -356,6 +406,16 @@
         "source": "Longbridge",
         "date": "2026-11-24T23:47:55+08:00",
         "link": "https://news.google.com/rss/articles/CBMiV0FVX3lxTE82SXpJVTJqNU85djFQTmVPMEU2ZElXbHNlLURNMG9KYV9jNjZpS3hwdnBTaF9IOUVNRi1iLUx0SWM0QURuV0F1VXgzdFB6SjZXcTExcUo5aw?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "Invesco QQQ Tokenized Stock (Reality) RQQQ (RQQQ-USD) 的即時價格、新聞、圖表及價格記錄 - Yahoo 財經",
+        "source": "Yahoo 財經",
+        "date": "2026-11-25T13:23:25+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiV0FVX3lxTFA4S2xJeFZVeXVNT2lIbEZ2UDIydC1qOWVTeS1mblR5QmdWYjlPclFYOVd4dmNua1REbWV6UFFJSjlfY3hIdTdJODhHUXRRMUVmMVBnMjZGQQ?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
