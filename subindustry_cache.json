@@ -1,5 +1,5 @@
 {
-  "_cached_at": 1795732898.3826807,
+  "_cached_at": 1795738757.40103,
   "source": "TPEx/TWSE Industry Value Chain",
   "source_url": "https://ic.tpex.org.tw/company_chain.php",
   "cache_days": 30,
@@ -47524,6 +47524,36 @@
           "industry": "其他",
           "sub_industry": "其他電子產品及電子服務產業",
           "date": "2026-11-17"
+        }
+      ]
+    },
+    "7869": {
+      "subindustries": [
+        "機電系統工程",
+        "金屬加工處理",
+        "能源管理服務",
+        "系統整合服務"
+      ],
+      "records": [
+        {
+          "industry": "電機機械",
+          "sub_industry": "機電系統工程",
+          "date": "2026-11-27"
+        },
+        {
+          "industry": "電機機械",
+          "sub_industry": "金屬加工處理",
+          "date": "2026-11-27"
+        },
+        {
+          "industry": "智慧電網",
+          "sub_industry": "能源管理服務",
+          "date": "2026-11-27"
+        },
+        {
+          "industry": "智慧電網",
+          "sub_industry": "系統整合服務",
+          "date": "2026-11-27"
         }
       ]
     }

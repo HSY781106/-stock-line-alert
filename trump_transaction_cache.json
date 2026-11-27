@@ -1,7 +1,7 @@
 {
   "_version": 14,
-  "_cached_at": 1795733429.1777265,
-  "_generated_at": "2026-11-27T06:50:29.177732+08:00",
+  "_cached_at": 1795738869.495979,
+  "_generated_at": "2026-11-27T08:21:09.495982+08:00",
   "_source_count": 5,
   "_parsed_count": 24615,
   "_stock_etf_count": 24615,
@@ -30,7 +30,7 @@
       }
     }
   ],
-  "_freshness_checked_at": 1795733429.1793172,
+  "_freshness_checked_at": 1795738869.4968824,
   "data": [
     {
       "ticker": "",
