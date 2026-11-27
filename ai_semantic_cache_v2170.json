@@ -10676,5 +10676,61 @@
       ]
     },
     "provider": "groq"
+  },
+  "trump_v21826:__MARKET__:7bcf4bf5932c3b5ec099f9f7": {
+    "ts": 1795817799.0362527,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.6,
+          "policy_stage": "threat",
+          "reason": "彈劾言論屬於政治評論，非正式政策或實質制裁。",
+          "relevant": true,
+          "affected_channel": "估值",
+          "transmission": "政治言論→市場情緒波動→整體晶片板塊估值受干擾",
+          "exposure": "美股半導體與AI產業整體市場"
+        },
+        {
+          "id": 1,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.7,
+          "policy_stage": "considering",
+          "reason": "國防部考慮提供鉅額貸款，利好國防無人機供應鏈。",
+          "relevant": true,
+          "affected_channel": "需求",
+          "transmission": "政府國防預算與貸款→採購需求增加→國防航太產業獲利提升",
+          "exposure": "國防航太與無人機供應鏈企業"
+        },
+        {
+          "id": 2,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.8,
+          "policy_stage": "unknown",
+          "reason": "個人與企業股票捐贈活動，對整體市場基本面無直接影響。",
+          "relevant": false,
+          "affected_channel": "估值",
+          "transmission": "政治捐贈→媒體關注→對市場整體基本面無傳導",
+          "exposure": "證據不足"
+        },
+        {
+          "id": 3,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.8,
+          "policy_stage": "announced",
+          "reason": "川普將前往亞利桑那州視察台積電建廠，象徵美晶片法案與在地製造政策延續。",
+          "relevant": true,
+          "affected_channel": "供應鏈",
+          "transmission": "川普背書半導體在地化政策→促進美國境內建廠投資→強化半導體供應鏈韌性",
+          "exposure": "美國半導體製造與設備產業"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }

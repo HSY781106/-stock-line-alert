@@ -338,14 +338,14 @@
     "lookback_days": 14
   },
   "QQQ": {
-    "fetched_at": "2026-11-27T17:35:10.830250+08:00",
+    "fetched_at": "2026-11-28T06:16:39.059303+08:00",
     "adjustment": 0,
     "events": [
       {
-        "title": "$納指 100 ETF - Invesco(QQQ.US)市場已成驚弓之鳥，多空都無法確定方向，IV…｜長橋證券 - Longbridge",
-        "source": "Longbridge",
-        "date": "2026-11-14T02:19:22+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiV0FVX3lxTE02dmRiVHN1czFzR1FRMGhacHdqUk9tNFl5SUxONElrVmRkVTJrWDVhRDVRUGl2eTNlaGMyZjd6a08yX2VEWmJGT0ZkYVJlRnVkT1Fzek04dw?oc=5",
+        "title": "$納指100ETF-Invesco QQQ Trust (QQQ.US)$ 不懂爲什麼盤後還在跌的可以看看這個。 - Moomoo",
+        "source": "Moomoo",
+        "date": "2026-11-16T16:00:00+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxPb2hNY0RZR2xhM3B2MllpYmFjWEtVV1dGYW9ueTFlVE43bGtQYzE1WnBIYm1xRjdNWlhiSUJhNlBjZ3NKOFZDUmJHMmJmVEUzNE1OclFFY1kwMVJVekJCR2RkNTNzdlJmYTR0QW1jazBHR3loZ3BKMFlvRlhWOHRGM2lVa0RNbWtzSlhRaUo5RjY0WGd5TmNBWnpiRmd3VkhLeEVqbC14NENWODA?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
@@ -356,16 +356,6 @@
         "source": "富途牛牛",
         "date": "2026-11-17T17:51:00+08:00",
         "link": "https://news.google.com/rss/articles/CBMinAFBVV95cUxNQnpueE1UaGR2blRlaThmb0ZvQklzZWNmOFFDaEdOTWE3ODA4aG1KSG14R0JUMEQwNUoxTVFJdEUyeXhRQl9LOFNLcUNEYWZwZUJXZjYyclREUFNEX0c1WGxnU3QtazlzTVdoS3hUU0JjcUlySEVIbXMwWklSdlhuX291TjJueEJmSl9LMEl0OFFyZnhIZEx5YklqOUk?oc=5",
-        "raw_adjustment": 0,
-        "adjustment": 0,
-        "label": "",
-        "status": ""
-      },
-      {
-        "title": "$納指100ETF-Invesco QQQ Trust (QQQ.US)$ 我們可能處於anger 的位置 - Moomoo",
-        "source": "Moomoo",
-        "date": "2026-11-20T22:03:27+08:00",
-        "link": "https://news.google.com/rss/articles/CBMiiwFBVV95cUxPbFhpY3duT1d4RVBuWUMzTzQ1YmZrTktqR1VNdTZrVk9YbEZmNUFsc2M1T0lfVi1aajBEUEVzV0Z3Yk5GVXRFcGlFU2FzaEZRQVBUdWJ0cmxmQzRhYnlxeDJJaFNMWEdmak5yZkdhcVJGV0tBTGhadWEtZk9MbmJKZzktV3ctNk1DZ2dv?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
@@ -416,6 +406,16 @@
         "source": "CMoney",
         "date": "2026-11-26T09:09:40+08:00",
         "link": "https://news.google.com/rss/articles/CBMiZkFVX3lxTE1zRUtsbDZfR0NlMzl1ZF9pZnNuaktmMzBTaUMwTG10bmdfakdlNlJ1dkVWQmVaeFRFRk92WmNOeG55aXVRUXpKamNTU1ZFc3hDU2NTN0V4T2dkX3Y2ZTNDYW5MeFNpdw?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "標題 : QQQ日內波動擴至19個月高點！5日均幅4.1%揭示科技股潛藏風險 - CMoney投資網誌",
+        "source": "CMoney投資網誌",
+        "date": "2026-11-26T18:04:16+08:00",
+        "link": "https://news.google.com/rss/articles/CBMijgFBVV95cUxPMzJSS1Jvd3lESWpMcGpiYXNMdlhqRGNMNWpqTXZtcktkaTUyLWZiZjBCdWwzUENFLWE5b2xRWXZ5dlNEUE1QbTZhWmZwQU1GWVJ0LWxkMXQyb0NwYTVwbm92ZnVaaExKdTZ1cFhLNjhHeHl4dU1LTFJUSkcyMDFwMlNjR0R5NERxdGlLYVln?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
