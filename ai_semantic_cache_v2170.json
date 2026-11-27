@@ -10656,5 +10656,25 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:3e17898cfc4cbf7fe9bc5ff3": {
+    "ts": 1795772072.982284,
+    "data": {
+      "items": [
+        {
+          "id": 3,
+          "direction": "negative",
+          "score": -3,
+          "confidence": 0.8,
+          "policy_stage": "announced",
+          "reason": "新關稅針對中國與歐盟",
+          "relevant": true,
+          "affected_channel": "出口",
+          "transmission": "關稅→出口成本上升→市場需求下降",
+          "exposure": "受影響的產業／代表性標的"
+        }
+      ]
+    },
+    "provider": "groq"
   }
 }
