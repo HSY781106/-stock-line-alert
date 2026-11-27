@@ -512,14 +512,44 @@
     "lookback_days": 14
   },
   "2548": {
-    "fetched_at": "2026-11-25T11:59:49.046334+08:00",
+    "fetched_at": "2026-11-27T11:31:53.805377+08:00",
     "adjustment": 0,
     "events": [
       {
         "title": "【13:24 即時新聞】華固(2548)盤中穩在95元附近，焦點在法人與主力同步偏多 - CMoney",
         "source": "CMoney",
-        "date": "2026-11-16T13:27:07+08:00",
+        "date": "2026-11-15T16:00:00+08:00",
         "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE4tRWd0RUZCdHRCcjFGMHJRdWtCVS1LN0x2eXRXNlFidktkcFFyTU9QQ3BERmxzbUprWFpKMWU1YVkwamNQbzd3cWhvaF9ObXZiUGZ5SG9CU0c?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "【13:24 即時新聞】華固(2548)盤中穩在95元附近，焦點在法人與主力同步偏多 - CMoney投資網誌",
+        "source": "CMoney投資網誌",
+        "date": "2026-11-16T16:00:00+08:00",
+        "link": "https://news.google.com/rss/articles/CBMijgFBVV95cUxQWVUya2RmSGRIRWRJU2ZXb1Q0OGw3SnhxSkNKeWY4ZFpfODdWMGlFV0M1cEpfSWh6WlJWWEs5Zl9OWGxXbXZEbDV5UGJSTGFOSG5oUElOS1VkV1o0eXR5MDZDWml3NkRsQWdLRGtPZDV6M3FZTEJleU9EN0NEZG80RjMtMEIyOWk1SWhla2F3?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "2548 華固- 【本週復盤】興富發、潤泰新、華固最深跌11.11%，營建／都更危老13檔全收黑- 股市爆料同學會 - CMoney",
+        "source": "CMoney",
+        "date": "2026-11-22T11:40:34+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE91OFV0enAyMlJaVFg4UzVGVUlybV9FcFJJbDkzZlBaZWZTdkhhSm9GSHZoU2szWlItMHRNaEVZQ19HT3hYTDRHRHdKY0lkUmw4WWlhb1VwM18?oc=5",
+        "raw_adjustment": 0,
+        "adjustment": 0,
+        "label": "",
+        "status": ""
+      },
+      {
+        "title": "2548 華固- 【即時新聞】華固大直商辦81億售予全聯，預估貢獻EPS上看2.84元 - 股市爆料同學會 - CMoney",
+        "source": "CMoney",
+        "date": "2026-11-26T06:03:04+08:00",
+        "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE5NSGE2dUU5YTNVQkt4YW5TMzRMdnJPS3lhTW5OeE9GOGI3SUJMaUhfenZQMERZUDRWQjZGcnBHMFlNdHFkUXBydk56cXB4NDBZT09Tci11X2w?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,
         "label": "",
@@ -528,7 +558,7 @@
       {
         "title": "華固(2548) 個股概覽 | 個股 - 股市 - CMoney",
         "source": "CMoney",
-        "date": "2026-11-24T20:51:35+08:00",
+        "date": "2026-11-26T10:21:06+08:00",
         "link": "https://news.google.com/rss/articles/CBMiU0FVX3lxTE9NcTRobGdJYmFWanlneGloMmlIakFENTc4QzFUektuemhNd3F6LVMyV2dyWm9WeEwwVllUNmQyUEJKbzE0MDNZSGotMnNjdllFTnNn?oc=5",
         "raw_adjustment": 0,
         "adjustment": 0,

@@ -1,71 +1,7 @@
 {
-  "cached_at": 1795733414.5011146,
+  "cached_at": 1795750299.594409,
   "data": {
     "items": [
-      {
-        "title": "Inflation gets worse. Now the Fed has no choice but to raise U.S. interest rates. - MarketWatch",
-        "link": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxOLXEwWmxfQlloLXRNcENFN0UwSmFNV0Z1VW9aMzNSeGU3ajdlUVlVNUdKMGNDZTk1a3RjNVJ3ZkNyWXQ3YUN1dEZCMmV5allEUDNVd2FoSnBINFRiYTdXTFh4ajFtNm5HUjVBVmJIT3YwYnlzS3lnMUFycDdwSlpRRlRqV01ZMlpmRGZZb0xVOEF2Y2FrdVlMeGVuNWxJZjlaQWZMV2YzTlVmTkpZQmJCRFRfSlU5azVt?oc=5",
-        "published": "Wed, 25 Nov 2026 17:31:00 GMT",
-        "query": "Federal Reserve interest rates inflation US economy",
-        "direction": "neutral",
-        "reason": "中性／待確認"
-      },
-      {
-        "title": "Fed's Cook says rate hikes needed to lower high inflation - Reuters",
-        "link": "https://news.google.com/rss/articles/CBMinwFBVV95cUxNV0pwMURCc1diYXRGTmtCaC0tNnZac3RIMEtTT1BCMGxpZ093OTRFdVJpRGx4TW5YRENNTWxpN0dYLTZpQ0ZXOC1sby1jNUtYbVNseHFWN2J3MGFuQjNwa3lOR2F4S1JicENRMzQ1ZWlDMkRyRzk5eG5IcVFpQXkyS0kzYU15a1RCWXNwWERBVFRmbUFZbE80WHhKUmVoejA?oc=5",
-        "published": "Fri, 20 Nov 2026 17:19:43 GMT",
-        "query": "Federal Reserve interest rates inflation US economy",
-        "direction": "negative",
-        "reason": "緊縮／景氣風險"
-      },
-      {
-        "title": "Inflation rises and income is stout as U.S. imposes new tariffs - The Real Economy Blog",
-        "link": "https://news.google.com/rss/articles/CBMimAFBVV95cUxOT0xmenhmT09TQzVTUmJvdGFha2dkU0FlYWNiQmZoY2RhZmNNbHJtR2FZdlVreHRsTnpKLXJuNzJWSnBMV0JpZDh1SUVuajgzellMWjE4aGd2ZUJ4VVFHYWx6UEx5bk1FRVNtM2ZlRnoyZzF1UGVwdlcwcGFMRmc3eGlyVWZZR01tWXY3OTlWSXBwX2NZZE56cw?oc=5",
-        "published": "Wed, 25 Nov 2026 15:45:10 GMT",
-        "query": "Federal Reserve interest rates inflation US economy",
-        "direction": "negative",
-        "reason": "緊縮／景氣風險"
-      },
-      {
-        "title": "Fed's John Williams indicates higher interest rates likely 'over time' to address inflation - CNBC",
-        "link": "https://news.google.com/rss/articles/CBMigAFBVV95cUxNTEpFREZWNnVpcVBFY3pxbHBnbkFJTWRxZjlBOHNLdFkxb1JEVWdUX2VfWlJhU0dwZEFJc0RUY2w2THFBaWVjbkxpSGRubWxQdHdSYWJFdmc2VVhUX0F1S1gwYXYxcUlsQUY0T0pIQnhhNkNFRXFCWHA3M2xVZWRITtIBhgFBVV95cUxNN0wxOFpVd01FWG9EWlppMC02d1RtcG5wZ1V1a3N1bklHZGFHWDYzUk80cnMwa00yblpXZUdfQV9SMk1fVVRrM0c0OWZuSDlGWjQtN0hUWW1mMTNHVTZObmhSeTllcDZIUE85S2duamlXdE5hNExsamtsaDU2LUJveEF0Q1ZIQQ?oc=5",
-        "published": "Mon, 23 Nov 2026 21:00:01 GMT",
-        "query": "Federal Reserve interest rates inflation US economy",
-        "direction": "neutral",
-        "reason": "中性／待確認"
-      },
-      {
-        "title": "Fed Governor Lisa Cook Says Her October Dissent Reflected Inflation Fight’s Urgency - WSJ",
-        "link": "https://news.google.com/rss/articles/CBMingFBVV95cUxNYnFFaTJhWE1OUWZkZzM5R3cxZmt3WEppdzUtS1JKcHdzUkxKVXZnSVJpT2V5QUREQTZBZ004VUl0QlExbW10VFpCeVpkSVE3UVBablVPbDhKcmFWcWg3V1R5U2pzbVptdHk2MDhFeVg3R1o1WktBWnMwTmotVWwzbkFZem5FakRSY0lvRDZ5TzlXTjJNcGhLaUhzbE1Qdw?oc=5",
-        "published": "Fri, 20 Nov 2026 18:23:00 GMT",
-        "query": "Federal Reserve interest rates inflation US economy",
-        "direction": "neutral",
-        "reason": "中性／待確認"
-      },
-      {
-        "title": "Another Hot Inflation Reading Keeps Fed on Track to Raise Rates Again - The New York Times",
-        "link": "https://news.google.com/rss/articles/CBMijgFBVV95cUxNVmt0OG9famdFX2l1SjBPc1A0aWZYc3Aza2tac0ZTYWk0bWplX2xRWVBUdjh3ZEtOQ1RQbFdhaUc0Wl8zZkpKaGV5c3Q1R3AxZHF0VjBqZ0RicnRRNVZ6X2RfYmNQUnBtTXBfbmNQUWRuZXpVcXFGa2pyRXhJZmhIWUxjXzc5cm1RTG1HSm1n?oc=5",
-        "published": "Wed, 25 Nov 2026 13:32:17 GMT",
-        "query": "Federal Reserve interest rates inflation US economy",
-        "direction": "neutral",
-        "reason": "中性／待確認"
-      },
-      {
-        "title": "Why are investors freaking out even as the U.S. economy surges? - CBS News",
-        "link": "https://news.google.com/rss/articles/CBMibEFVX3lxTFBSTTFwUEpMWjI1TFJzbVRra3BraEh3czZ6ZGpWNmItT2pMeDhlOWdEb0hneXhtaDhncmhiMDlmcDRENlJlMl9hLTd0anlDQXpqWDRYb1RsUEZTSUpoSXhsaEF1VTFKZVN1TlQ1Yg?oc=5",
-        "published": "Wed, 25 Nov 2026 19:45:38 GMT",
-        "query": "Federal Reserve interest rates inflation US economy",
-        "direction": "neutral",
-        "reason": "中性／待確認"
-      },
-      {
-        "title": "Bill Ackman says the U.S. economy could be headed for another recession—and is blaming Kevin Warsh’s Fed - Fortune",
-        "link": "https://news.google.com/rss/articles/CBMijwFBVV95cUxQN3VCOE5ObEdOWFpHOUdKMmRIa2RKNjdkVEFia3VpTzFLSlZyZkhoaVVhSDNZQVdwMElQNG9ya0ZFZXhFcTFnS0ZkdDZ6T1hWYWRVQTV1V0diTzVjSldtQmFmdmZFQzllQjBHNVJCcFhnSXNRZTlqZXVLS0JvQUZaWEtndFY5QU5aV0VRN1VMdw?oc=5",
-        "published": "Tue, 24 Nov 2026 14:59:00 GMT",
-        "query": "Federal Reserve interest rates inflation US economy",
-        "direction": "negative",
-        "reason": "緊縮／景氣風險"
-      },
       {
         "title": "Weekly market commentary - BlackRock",
         "link": "https://news.google.com/rss/articles/CBMingFBVV95cUxQLWJDTjBBalYwVHVpc0VxV1BwRE1xeUt1RWlLQ1VJdnJQRXNnb3p6MnFNbjRBV0s0TnlldW4wSVIycFRQeVNISWJ3VV9wMWdjX1ZndE1Tc24tNzc0anNYWjl0SVBsRDhSa0dVTWlyVVYxX0w5b2JhTFB0Tm9Vb2FwYVZubTU1SVJlcy0zMEpXOEM4ZlhiSU1QazdVQVlldw?oc=5",
@@ -97,9 +33,75 @@
         "query": "US CPI jobs GDP Treasury yields economy",
         "direction": "neutral",
         "reason": "中性／待確認"
+      },
+      {
+        "title": "The Week Ahead: Global PMIs, US PCE, Dell earnings - CMC Markets",
+        "link": "https://news.google.com/rss/articles/CBMinwFBVV95cUxNRk1BR0RIaTBXZk5ISW9fdmp4TzRZc3JmaklVbmFYV1dGWnREZTV2OXBZVFg0WDRCM19OdEhybkFVdGRrRTZOY3FIVjltY2xHSHBMUDZkbGxqczd6TzBZZ1NSUDJkZ3lId212WkNHajg2Nllvd1BMQWExaENZSGpSUk4zR2RlRFZNQjlZRjkzLXJTQVJ5OXlSMVhQSzZNeW8?oc=5",
+        "published": "Fri, 20 Nov 2026 12:31:11 GMT",
+        "query": "US CPI jobs GDP Treasury yields economy",
+        "direction": "neutral",
+        "reason": "中性／待確認"
+      },
+      {
+        "title": "US Dollar Price Forecast: Yields Slide, DXY Eyes 104.08 as EUR/USD, GBP/USD Stall - Yahoo Finance Australia",
+        "link": "https://news.google.com/rss/articles/CBMihwFBVV95cUxPaVY4X0hraWRXLVhybmUwbk85ZDdjemNxVzNfUlRXVkpJRkVXRnFCUVpaWThKLXI5bmNZSkhqTVZEMHhPVTlQaEh1QWYzQ3REMkM1SmxuRWlnNG9XRzBucGUxRk5rVjJjUVUyTk9YamRxaHNzclV4aHA4eE9KNXpuUldDR1cyN3M?oc=5",
+        "published": "Thu, 26 Nov 2026 06:50:00 GMT",
+        "query": "US CPI jobs GDP Treasury yields economy",
+        "direction": "neutral",
+        "reason": "中性／待確認"
+      },
+      {
+        "title": "Market Movers blog: Global markets fall as Trump plans new tariffs - Investment Week",
+        "link": "https://news.google.com/rss/articles/CBMickFVX3lxTE5mZHNUUnlOeExDV2hSRjhxWEs0blpwaGhqUzIzQ054d1JaTnNIcGZWbkhtTDVwZFdwUXM5ekRkX2Z5UFJEWW5uMGtRSzVnd2NwZDFRUWZnYm9JWHFlTUptZzJGSHdKOS1oTEJxOUk0bFRWdw?oc=5",
+        "published": "Wed, 25 Nov 2026 08:00:00 GMT",
+        "query": "US CPI jobs GDP Treasury yields economy",
+        "direction": "neutral",
+        "reason": "中性／待確認"
+      },
+      {
+        "title": "US dollar playbook: Can the dollar stay strong if US growth starts to weaken? - Saxo",
+        "link": "https://news.google.com/rss/articles/CBMifEFVX3lxTE9SaUJsd1FzS1R4aDVWdHozbUdCZnBNVnhUTXgybktvNVJNTjJPWmExa0ZrdWhBUXZ1VnYwb3hmRlVVekstZUd5WkpSeDlpNG11cjczRk84a0tobjNQNWN1d2tpaXZWZXVLVFBEaFNqRGIxTXdhNkJRVVBTRm0?oc=5",
+        "published": "Mon, 23 Nov 2026 06:56:58 GMT",
+        "query": "US CPI jobs GDP Treasury yields economy",
+        "direction": "neutral",
+        "reason": "中性／待確認"
+      },
+      {
+        "title": "Weekly market insights: Why the AI story may be stronger than skeptics think - Invesco",
+        "link": "https://news.google.com/rss/articles/CBMingFBVV95cUxNeHJFRFJ2YWM3dVZnOWVCTlZYMTJDX3lqZk9POXZhWklSMDVGSEQ2cXYtXzgzZ2RVaGdpZVNmZUI1bkthWEMxdmUwM3dOZDNiRzYyREVIdXRaM3VFTHNKZ2Jxdkt4N1pELXRqOTJLRlJVQVdSVFBDdDdBOUVBLUNFWHdyRGNSYmxObXNpQ0txSUNjNkxINUdialVraHpXdw?oc=5",
+        "published": "Fri, 20 Nov 2026 08:00:00 GMT",
+        "query": "Taiwan central bank interest rate CPI GDP economy",
+        "direction": "neutral",
+        "reason": "中性／待確認"
+      },
+      {
+        "title": "US Consumers Are Holding Up Against Inflation Going Into Holiday Season - Bloomberg.com",
+        "link": "https://news.google.com/rss/articles/CBMivwFBVV95cUxOVzdHalZYY2s3bHVEeENKX0g4T0M4WWxHV3lacDRlejl2b2E5VWNPd1AxbXhaaUVyNXBFLWlYZFlKTk93R3QzeFdVazI3ajljUFVLYnFpb1VVQmNrVlNvYTIyajhxM1JBbjYxTkhJMkhObEJGSVdRdmZDVzItblZFd1A4NHZaWTZiZWdFVVc4REI2RGF5UjlGWndXeDFha2k0MWdqRkE4X1ozQ1h5N0ZxZmVVTVFldC1VRi1keUdBQQ?oc=5",
+        "published": "Sun, 22 Nov 2026 16:46:04 GMT",
+        "query": "Taiwan central bank interest rate CPI GDP economy",
+        "direction": "neutral",
+        "reason": "中性／待確認"
+      },
+      {
+        "title": "Australia’s CPI surprise keeps RBA on alert, but weak growth signals argue for patience - ing think",
+        "link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxPVDhSSUNOVWFLN1pSaUVNMnYyZVhsQXNRRlNKMzNfZXNxUDRiajlENEF6Yk1VM3NPb0JMX1g0MmR5bnM5OGhWd29uVnhYbktHVXl1RTBZU01ERUMtX3RYN3huMFhKZVNRRERMZHMxbTNrRk1Bb0FBcEdfVklNeUpCNjdPMS1VWkphWVhBeGFQMWdvX29WNVVYT2tSc1k3ZndGRTg2ellYQkE5Nk95dDVLWnBDbw?oc=5",
+        "published": "Thu, 26 Nov 2026 14:25:44 GMT",
+        "query": "Taiwan central bank interest rate CPI GDP economy",
+        "direction": "neutral",
+        "reason": "中性／待確認"
+      },
+      {
+        "title": "Trump Calls for Rate Cuts to World's Lowest, but Market Bets Over 90% Odds of a Fed Hike in December - BigGo Finance",
+        "link": "https://news.google.com/rss/articles/CBMidkFVX3lxTFBNZ1RjcmN4eDV0ZlN1M1NLSmRIWG0yeWp3TGZsZmtlUldiX1RHei1ZUVN5dFBMLVFQeW0yMTV0MUlkNzFwMVUwOXhZWHgyWnNmUjVqOGZKS09lNWttakhCYmVxbDZVSTh2LU8yVVFFM25qdzA5WXc?oc=5",
+        "published": "Sun, 22 Nov 2026 00:05:00 GMT",
+        "query": "Taiwan central bank interest rate CPI GDP economy",
+        "direction": "positive",
+        "reason": "寬鬆／景氣改善"
       }
     ],
-    "updated_at": "2026-11-27T06:50:15.064041+08:00",
-    "errors": []
+    "updated_at": "2026-11-27T11:31:40.143776+08:00",
+    "errors": [
+      "HTTPError: 429 Client Error: Too Many Requests for url: https://news.google.com/rss/search?q=Federal+Reserve+interest+rates+inflation+US+economy+when%3A7d&hl=en-US&gl=US&ceid=US%3Aen"
+    ]
   }
 }

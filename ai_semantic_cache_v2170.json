@@ -10600,5 +10600,61 @@
       ]
     },
     "provider": "groq"
+  },
+  "trump_v21826:__MARKET__:f3287470a6bfb34b9b1738ef": {
+    "ts": 1795750272.0025213,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.75,
+          "policy_stage": "announced",
+          "reason": "川普造訪台積電亞利桑那廠，顯示對美國本土半導體製造擴張之支持。",
+          "relevant": true,
+          "affected_channel": "估值與本土製造投資",
+          "transmission": "川普支持晶片法案與本土建廠→推動美半導體產業鏈→提升市場整體信心",
+          "exposure": "美股半導體板塊與整體科技股"
+        },
+        {
+          "id": 1,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.4,
+          "policy_stage": "unknown",
+          "reason": "馬斯克與SpaceX社群活動對大盤整體市場實質經濟影響極微。",
+          "relevant": false,
+          "affected_channel": "無",
+          "transmission": "政治言論與社群活動→對總體市場缺乏明確傳導機制→無影響",
+          "exposure": "證據不足"
+        },
+        {
+          "id": 2,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.8,
+          "policy_stage": "considering",
+          "reason": "關稅政策引發通膨與升息疑慮，壓抑大盤估值與整體市場情緒。",
+          "relevant": true,
+          "affected_channel": "估值與融資成本",
+          "transmission": "關稅威脅→通膨預期上升→聯準會降息受阻→壓抑整體股市估值",
+          "exposure": "整體美股市場（__MARKET__）"
+        },
+        {
+          "id": 3,
+          "direction": "negative",
+          "score": -2,
+          "confidence": 0.8,
+          "policy_stage": "considering",
+          "reason": "關稅不確定性重創市場信心，短期引發整體股市波動與避險情緒。",
+          "relevant": true,
+          "affected_channel": "市場情緒與風險偏好",
+          "transmission": "關稅政策不確定性擴大→避險情緒上升→大盤整體面臨賣壓",
+          "exposure": "整體美股市場（__MARKET__）"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
