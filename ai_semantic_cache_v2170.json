@@ -10788,5 +10788,61 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:7087fb5660cbed7d72fff39d": {
+    "ts": 1795823719.4805727,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.7,
+          "policy_stage": "announced",
+          "reason": "出席動工典禮屬象徵性活動，具體補貼與關稅政策尚未變更。",
+          "relevant": true,
+          "affected_channel": "估值",
+          "transmission": "Trump出席典禮→提升晶片法案討論度→半導體整體市場維持觀望",
+          "exposure": "整體半導體產業與美國本土建廠供應鏈"
+        },
+        {
+          "id": 1,
+          "direction": "positive",
+          "score": 3,
+          "confidence": 0.8,
+          "policy_stage": "considering",
+          "reason": "國防部考慮提供鉅額貸款，利多國防無人機與供應鏈。",
+          "relevant": true,
+          "affected_channel": "需求",
+          "transmission": "政府考慮提供150億貸款→國防採購需求增加→國防軍工板塊受惠",
+          "exposure": "國防無人機及國防工業供應鏈"
+        },
+        {
+          "id": 2,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.7,
+          "policy_stage": "announced",
+          "reason": "參訪晶片廠屬政治行程，暫無實質政策變更。",
+          "relevant": true,
+          "affected_channel": "估值",
+          "transmission": "政治人物參訪→短線話題關注→市場等待實質關稅或補貼政策",
+          "exposure": "美洲半導體製造及設備供應商"
+        },
+        {
+          "id": 3,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.5,
+          "policy_stage": "unknown",
+          "reason": "政治捐贈與商業基本面無直接傳導關係。",
+          "relevant": false,
+          "affected_channel": "估值",
+          "transmission": "個人股票捐贈→無直接產業傳導機制→市場影響中立",
+          "exposure": "證據不足"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
