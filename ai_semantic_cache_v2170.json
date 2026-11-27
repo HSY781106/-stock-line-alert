@@ -10732,5 +10732,61 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:e6732068384f3a5ed0d6ac52": {
+    "ts": 1795818295.4786162,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.7,
+          "policy_stage": "threat",
+          "reason": "宣稱不需中東石油屬口頭言論，對大盤整體影響有限。",
+          "relevant": true,
+          "affected_channel": "需求",
+          "transmission": "能源政策宣示→油價波動預期→整體市場情緒",
+          "exposure": "整體美股市場曝險分散"
+        },
+        {
+          "id": 1,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.6,
+          "policy_stage": "threat",
+          "reason": "對伊朗地緣政治批評未形成具體經濟政策。",
+          "relevant": true,
+          "affected_channel": "估值",
+          "transmission": "地緣政治風險升溫→避險情緒波動→大盤估值調整",
+          "exposure": "地緣政治風險相關資產"
+        },
+        {
+          "id": 2,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.8,
+          "policy_stage": "announced",
+          "reason": "關稅方案比預期溫和，亞股反彈激勵全球市場情緒。",
+          "relevant": true,
+          "affected_channel": "出口",
+          "transmission": "關稅政策利空出盡→全球貿易疑慮緩解→市場整體反彈",
+          "exposure": "全球供應鏈與跨國企業標的"
+        },
+        {
+          "id": 3,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.5,
+          "policy_stage": "unknown",
+          "reason": "馬斯克政治捐款屬個人與特定企業行為，與大盤無關。",
+          "relevant": false,
+          "affected_channel": "估值",
+          "transmission": "政治捐款→個別企業關係→無直接大盤傳導機制",
+          "exposure": "證據不足"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
