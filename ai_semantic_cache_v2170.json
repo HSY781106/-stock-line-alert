@@ -10844,5 +10844,61 @@
       ]
     },
     "provider": "gemini"
+  },
+  "trump_v21826:__MARKET__:8dee4153fe9d590c8e32ff9b": {
+    "ts": 1795835207.1333034,
+    "data": {
+      "items": [
+        {
+          "id": 0,
+          "direction": "neutral",
+          "score": 0,
+          "confidence": 0.7,
+          "policy_stage": "threat",
+          "reason": "口頭宣稱不需加拿大能源，實務與政策仍具依賴性，短期政策不確定性增加。",
+          "relevant": true,
+          "affected_channel": "供應鏈",
+          "transmission": "川普口頭言論→美加能源貿易疑慮→整體能源市場波動",
+          "exposure": "受影響產業：傳統能源與跨境油氣運輸業者"
+        },
+        {
+          "id": 1,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.8,
+          "policy_stage": "announced",
+          "reason": "川普出席台積電亞利桑那廠動土，傳遞支持晶片在地化生產信號。",
+          "relevant": true,
+          "affected_channel": "需求",
+          "transmission": "美半導體扶植政策→晶片在地化晶圓廠投資→美國半導體產業供應鏈受惠",
+          "exposure": "受影響產業：美國半導體、晶片設備與先進製造業"
+        },
+        {
+          "id": 2,
+          "direction": "positive",
+          "score": 3,
+          "confidence": 0.85,
+          "policy_stage": "considering",
+          "reason": "國防部考慮向與川普家族相關企業貸款150億美元，利多無人機與國防產業。",
+          "relevant": true,
+          "affected_channel": "需求",
+          "transmission": "新政府國防偏好→國防預算與貸款支持擴增→國防航太無人機供應鏈受惠",
+          "exposure": "受影響產業：美國國防航太、軍事無人機供應鏈"
+        },
+        {
+          "id": 3,
+          "direction": "positive",
+          "score": 2,
+          "confidence": 0.8,
+          "policy_stage": "announced",
+          "reason": "川普赴亞利桑那考察台積電晶圓廠擴建，強化半導體美國製造預期。",
+          "relevant": true,
+          "affected_channel": "需求",
+          "transmission": "政策支持美國製造→半導體供應鏈資本支出擴張→科技產業受惠",
+          "exposure": "受影響產業：美國半導體製造與AI供應鏈"
+        }
+      ]
+    },
+    "provider": "gemini"
   }
 }
